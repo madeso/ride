@@ -1,4 +1,4 @@
-find_package(wxWidgets COMPONENTS core base stc REQUIRED)
+find_package(wxWidgets COMPONENTS core aui base stc REQUIRED)
 
 include( "${wxWidgets_USE_FILE}" )
 

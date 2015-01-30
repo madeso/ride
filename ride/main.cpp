@@ -1,5 +1,6 @@
 #include <wx/wx.h>
 #include <wx/stc/stc.h>
+#include <wx/aui/aui.h>
 
 class MyApp: public wxApp
 {
@@ -17,7 +18,8 @@ class MainWindow: public wxFrame
 {
 public:
 	MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
-	
+  ~MainWindow();
+
 private:
 	void OnHello(wxCommandEvent& event);
 	void OnExit(wxCommandEvent& event);
@@ -28,7 +30,10 @@ private:
 
 private:
   void setupEdit();
-  wxStyledTextCtrl* text;
+  void createNotebook();
+
+  wxAuiManager aui;
+  wxAuiNotebook* notebook;
 };
 
 enum
@@ -54,6 +59,8 @@ bool MyApp::OnInit()
 MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
 	: wxFrame(NULL, wxID_ANY, title, pos, size)
 {
+  aui.SetManagedWindow(this);
+
 	wxMenu *menuFile = new wxMenu;
 	menuFile->Append(ID_Hello, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
 	menuFile->AppendSeparator();
@@ -66,12 +73,31 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 	SetMenuBar( menuBar );
 	CreateStatusBar();
 	SetStatusText("");
-
+  createNotebook();
+  aui.Update();
+  setupEdit();
   setupEdit();
 }
 
+void MainWindow::createNotebook() {
+  wxSize client_size = GetClientSize();
+  wxAuiNotebook* ctrl = new wxAuiNotebook(this, wxID_ANY,
+    wxPoint(client_size.x, client_size.y),
+    wxSize(430, 200),
+    wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxNO_BORDER);
+  ctrl->Freeze();
+  ctrl->Thaw();
+  notebook = ctrl;
+
+  aui.AddPane(notebook, wxAuiPaneInfo().Name(wxT("notebook_content")).CenterPane().PaneBorder(true));
+}
+
+MainWindow::~MainWindow() {
+  aui.UnInit();
+}
+
 void MainWindow::setupEdit() {
-  text = new wxStyledTextCtrl(this, wxID_ANY);
+  wxStyledTextCtrl* text = new wxStyledTextCtrl(this, wxID_ANY);
 
   text->StyleClearAll();
   text->SetLexer(wxSTC_LEX_CPP);
@@ -148,24 +174,23 @@ void MainWindow::setupEdit() {
   text->SetKeyWords(0, wxT("return for while break continue"));
   text->SetKeyWords(1, wxT("const int float void char double"));
 
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(text, 1, wxEXPAND);
-  SetSizer(sizer);
+  text->Connect(wxEVT_STC_MARGINCLICK, wxStyledTextEventHandler(MainWindow::OnMarginClick), text, this);
 
-  text->Connect(wxEVT_STC_MARGINCLICK, wxStyledTextEventHandler(MainWindow::OnMarginClick), NULL, this);
+  notebook->AddPage(text, wxT("document"));
 }
 
 /** Event callback when a margin is clicked, used here for code folding */
 void MainWindow::OnMarginClick(wxStyledTextEvent& event)
 {
+  wxStyledTextCtrl* ctrl = reinterpret_cast<wxStyledTextCtrl*>(event.GetEventUserData());
   if (event.GetMargin() == MARGIN_FOLD)
   {
-    int lineClick = text->LineFromPosition(event.GetPosition());
-    int levelClick = text->GetFoldLevel(lineClick);
+    int lineClick = ctrl->LineFromPosition(event.GetPosition());
+    int levelClick = ctrl->GetFoldLevel(lineClick);
 
     if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0)
     {
-      text->ToggleFold(lineClick);
+      ctrl->ToggleFold(lineClick);
     }
   }
 }
