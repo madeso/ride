@@ -4,7 +4,7 @@
 class MyApp: public wxApp
 {
 public:
-virtual bool OnInit();
+  virtual bool OnInit();
 };
 
 enum
@@ -46,7 +46,7 @@ wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
-	MyFrame *frame = new MyFrame("Pegasus - Rust IDE", wxPoint(50, 50), wxSize(450, 340) );
+	MyFrame *frame = new MyFrame("RIDE - Rust IDE", wxPoint(50, 50), wxSize(450, 340) );
 	frame->Show( true );
 	return true;
 }
