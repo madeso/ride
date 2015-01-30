@@ -71,14 +71,6 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& s
   filename = file;
   dirty = false;
 
-  if (filename.IsEmpty()) {
-    docname = "Untitled";
-  }
-  else {
-    wxFileName fn(filename);
-    docname = fn.GetFullName();
-  }
-
   text->StyleSetForeground(wxSTC_C_STRING, wxColour(150, 0, 0));
   text->StyleSetForeground(wxSTC_C_PREPROCESSOR, wxColour(165, 105, 0));
   text->StyleSetForeground(wxSTC_C_IDENTIFIER, wxColour(40, 0, 60));
@@ -106,7 +98,20 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& s
   SetSizer(sizer);
 
   notebook->AddPage(this, wxT(""), true);
+  updateFilename();
   updateTitle();
+}
+
+unsigned int UntitledCount = 0;
+
+void FileEdit::updateFilename() {
+  if (filename.IsEmpty()) {
+    docname = wxString::Format("Untitled %d", ++UntitledCount);
+  }
+  else {
+    wxFileName fn(filename);
+    docname = fn.GetFullName();
+  }
 
   if (filename.IsEmpty() == false) {
     size_t index = notebook->GetPageIndex(this);

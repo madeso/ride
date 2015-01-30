@@ -18,6 +18,7 @@ public:
   ~FileEdit();
 
 private:
+  void updateFilename();
   void updateTitle();
 
 private:
