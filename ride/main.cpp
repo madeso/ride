@@ -13,10 +13,10 @@ enum
   MARGIN_FOLD
 };
 
-class MyFrame: public wxFrame
+class MainWindow: public wxFrame
 {
 public:
-	MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+	MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
 	
 private:
 	void OnHello(wxCommandEvent& event);
@@ -36,22 +36,22 @@ enum
 	ID_Hello = 1
 };
 
-wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
-	EVT_MENU(ID_Hello, MyFrame::OnHello)
-	EVT_MENU(wxID_EXIT, MyFrame::OnExit)
-	EVT_MENU(wxID_ABOUT, MyFrame::OnAbout)
+wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
+	EVT_MENU(ID_Hello, MainWindow::OnHello)
+	EVT_MENU(wxID_EXIT, MainWindow::OnExit)
+	EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
 wxEND_EVENT_TABLE()
 
 wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
-	MyFrame *frame = new MyFrame("RIDE - Rust IDE", wxPoint(50, 50), wxSize(450, 340) );
+	MainWindow *frame = new MainWindow("RIDE - Rust IDE", wxPoint(50, 50), wxSize(450, 340) );
 	frame->Show( true );
 	return true;
 }
 
-MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
+MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
 	: wxFrame(NULL, wxID_ANY, title, pos, size)
 {
 	wxMenu *menuFile = new wxMenu;
@@ -70,7 +70,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
   setupEdit();
 }
 
-void MyFrame::setupEdit() {
+void MainWindow::setupEdit() {
   text = new wxStyledTextCtrl(this, wxID_ANY);
 
   text->StyleClearAll();
@@ -152,11 +152,11 @@ void MyFrame::setupEdit() {
   sizer->Add(text, 1, wxEXPAND);
   SetSizer(sizer);
 
-  text->Connect(wxEVT_STC_MARGINCLICK, wxStyledTextEventHandler(MyFrame::OnMarginClick), NULL, this);
+  text->Connect(wxEVT_STC_MARGINCLICK, wxStyledTextEventHandler(MainWindow::OnMarginClick), NULL, this);
 }
 
 /** Event callback when a margin is clicked, used here for code folding */
-void MyFrame::OnMarginClick(wxStyledTextEvent& event)
+void MainWindow::OnMarginClick(wxStyledTextEvent& event)
 {
   if (event.GetMargin() == MARGIN_FOLD)
   {
@@ -170,17 +170,17 @@ void MyFrame::OnMarginClick(wxStyledTextEvent& event)
   }
 }
 
-void MyFrame::OnExit(wxCommandEvent& event)
+void MainWindow::OnExit(wxCommandEvent& event)
 {
 	Close( true );
 }
 
-void MyFrame::OnAbout(wxCommandEvent& event)
+void MainWindow::OnAbout(wxCommandEvent& event)
 {
 	wxMessageBox( "This is a wxWidgets' Hello world sample", "About Hello World", wxOK | wxICON_INFORMATION );
 }
 
-void MyFrame::OnHello(wxCommandEvent& event)
+void MainWindow::OnHello(wxCommandEvent& event)
 {
 	wxLogMessage("Hello world from wxWidgets!");
 }
