@@ -2,9 +2,7 @@ find_package(wxWidgets COMPONENTS core aui base stc REQUIRED)
 
 include( "${wxWidgets_USE_FILE}" )
 
-set (src
-	main.cpp
-)
+FILE(GLOB src *.cpp;*.h)
 
 source_group("" FILES ${src})
 
