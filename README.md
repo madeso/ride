@@ -1,0 +1,2 @@
+# pegasus
+Rust IDE
