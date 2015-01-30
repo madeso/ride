@@ -1,6 +1,7 @@
 #include <wx/wx.h>
 #include <wx/stc/stc.h>
 #include <wx/aui/aui.h>
+#include <wx/filename.h>
 
 #include "ride/fileedit.h"
 
@@ -11,7 +12,7 @@ enum
 };
 
 
-FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent) : wxControl(parent, wxID_ANY), notebook(anotebook) {
+FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), notebook(anotebook), dirty(false) {
   text = new wxStyledTextCtrl(this, wxID_ANY);
 
   text->StyleClearAll();
@@ -66,7 +67,17 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent) : wxControl(paren
 
   text->SetWrapMode(wxSTC_WRAP_WORD); // other choice is wxSCI_WRAP_NONE
 
-  // text->SetText(source);
+  text->SetText(source);
+  filename = file;
+  dirty = false;
+
+  if (filename.IsEmpty()) {
+    docname = "Untitled";
+  }
+  else {
+    wxFileName fn(filename);
+    docname = fn.GetFullName();
+  }
 
   text->StyleSetForeground(wxSTC_C_STRING, wxColour(150, 0, 0));
   text->StyleSetForeground(wxSTC_C_PREPROCESSOR, wxColour(165, 105, 0));
@@ -94,9 +105,19 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent) : wxControl(paren
   sizer->Add(text, 1, wxEXPAND);
   SetSizer(sizer);
 
-  //size_t count = notebook->GetPageCount();
-  notebook->AddPage(this, wxT("document"));
-  //page = notebook->GetPage(count);
+  notebook->AddPage(this, wxT(""), true);
+  updateTitle();
+
+  if (filename.IsEmpty() == false) {
+    size_t index = notebook->GetPageIndex(this);
+    notebook->SetPageToolTip(index, filename);
+  }
+}
+
+void FileEdit::updateTitle() {
+  size_t index = notebook->GetPageIndex(this);
+  const wxString changestar = dirty ? "*" : "";
+  notebook->SetPageText(index, docname+ changestar);
 }
 
 bool FileEdit::canClose() const {

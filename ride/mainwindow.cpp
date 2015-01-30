@@ -39,8 +39,8 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   createNotebook();
   aui.Update();
 
-  setupEdit();
-  setupEdit();
+  new FileEdit(notebook, this, "", "");
+  new FileEdit(notebook, this, "hello world", "C:\\hello.txt");
 }
 
 void MainWindow::createNotebook() {
@@ -58,10 +58,6 @@ void MainWindow::createNotebook() {
 
 MainWindow::~MainWindow() {
   aui.UnInit();
-}
-
-void MainWindow::setupEdit() {
-  new FileEdit(notebook, this);
 }
 
 void MainWindow::OnExit(wxCommandEvent& event)

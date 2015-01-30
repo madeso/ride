@@ -8,7 +8,7 @@ class wxAuiNotebook;
 
 class FileEdit : public wxControl {
 public:
-  FileEdit(wxAuiNotebook* anotebook, wxWindow* parent);
+  FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& source, const wxString& file);
 
   bool canClose() const;
 
@@ -18,8 +18,14 @@ public:
   ~FileEdit();
 
 private:
+  void updateTitle();
+
+private:
   wxStyledTextCtrl* text;
   wxAuiNotebook* notebook;
+  wxString filename;
+  wxString docname;
+  bool dirty;
 
 private:
   wxDECLARE_EVENT_TABLE();

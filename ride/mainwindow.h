@@ -21,7 +21,6 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 private:
-  void setupEdit();
   void createNotebook();
 
   wxAuiManager aui;
