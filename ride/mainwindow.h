@@ -20,6 +20,8 @@ private:
 	void OnExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
 
+  void OnClose(wxCloseEvent& event);
+
   void OnNotebookPageClose(wxAuiNotebookEvent& evt);
   void OnNotebookPageClosed(wxAuiNotebookEvent& evt);
 

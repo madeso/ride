@@ -19,6 +19,8 @@ EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
 EVT_MENU(wxID_SAVE, MainWindow::OnSave)
 EVT_MENU(wxID_SAVEAS, MainWindow::OnSaveAs)
 
+EVT_CLOSE(OnClose)
+
 EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
 EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainWindow::OnNotebookPageClosed)
 wxEND_EVENT_TABLE()
@@ -120,6 +122,21 @@ void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
       evt.Veto();
     }
   }
+}
+
+void MainWindow::OnClose(wxCloseEvent& evt) {
+  for (int i = 0; i < notebook->GetPageCount(); ++i) {
+    wxWindow* window = notebook->GetPage(i);
+    if (window->IsKindOf(CLASSINFO(FileEdit))) {
+      FileEdit* edit = reinterpret_cast<FileEdit*>(window);
+      if (edit->canClose() == false) {
+        // todo: support evt.CanVeto()
+        evt.Veto();
+      }
+    }
+  }
+
+  evt.Skip();
 }
 
 void MainWindow::OnNotebookPageClosed(wxAuiNotebookEvent& evt) {
