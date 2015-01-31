@@ -163,12 +163,24 @@ bool FileEdit::shouldBeSaved() {
 
 bool FileEdit::canClose() {
   if (shouldBeSaved()) {
-    int answer = wxMessageBox("\"" + docname + "\" has changed since last time, save it?", "Save file?",
-      wxYES_NO | wxICON_QUESTION, this);
-    if (answer != wxYES) {
+    wxMessageDialog dlg(this, _(""), _("Save file?"), wxYES_NO | wxCANCEL | wxICON_QUESTION);
+    if (dlg.SetYesNoCancelLabels(_("&Save it"), _("&Discard changes"), _("&Abort"))) {
+      dlg.SetMessage("\"" + docname + "\" has changed since last time...");
+    }
+    else {
+      dlg.SetMessage("\"" + docname + "\" has changed since last time, save it?");
+    }
+
+    const int answer = dlg.ShowModal();
+    if (answer == wxYES) {
+      return save();
+    }
+    else if ( answer == wxNO ) {
+      return true;
+    }
+    else {
       return false;
     }
-    // save file
   }
   return true;
 }
