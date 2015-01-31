@@ -10,10 +10,11 @@ class FileEdit : public wxControl {
 public:
   FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& source, const wxString& file);
 
-  bool canClose() const;
+  bool canClose();
 
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
+  void OnTextChanged(wxStyledTextEvent& event);
 
   ~FileEdit();
 

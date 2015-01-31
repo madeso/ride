@@ -2,6 +2,7 @@
 #include <wx/stc/stc.h>
 #include <wx/aui/aui.h>
 #include <wx/filename.h>
+#include <wx/msgdlg.h>
 
 #include "ride/fileedit.h"
 
@@ -132,7 +133,15 @@ void FileEdit::updateTitle() {
   notebook->SetPageText(index, docname+ changestar);
 }
 
-bool FileEdit::canClose() const {
+bool FileEdit::canClose() {
+  if (dirty || filename.IsEmpty()) {
+    int answer = wxMessageBox("\"" + docname + "\" has changed since last time, save it?", "Save file?",
+      wxYES_NO | wxICON_QUESTION, this);
+    if (answer != wxYES) {
+      return false;
+    }
+    // save file
+  }
   return true;
 }
 
@@ -142,6 +151,7 @@ FileEdit::~FileEdit() {
 
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
   EVT_STC_MARGINCLICK(wxID_ANY, OnMarginClick)
+  EVT_STC_CHANGE(wxID_ANY, OnTextChanged)
 wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
@@ -155,5 +165,13 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
     {
       text->ToggleFold(lineClick);
     }
+  }
+}
+
+void FileEdit::OnTextChanged(wxStyledTextEvent& event)
+{
+  if (dirty == false) {
+    dirty = true;
+    updateTitle();
   }
 }
