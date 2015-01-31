@@ -12,6 +12,8 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * build output
 * error list
 * visual studio like debug settings
+* context menu support
+* go to next error shortcut
 * quick open file from solution/project
 * scintilla text commands
 * settings/options window
