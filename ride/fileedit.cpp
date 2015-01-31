@@ -21,6 +21,9 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& s
   text->StyleClearAll();
   text->SetLexer(wxSTC_LEX_CPP);
 
+  wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+  text->SetFont(font);
+
   text->SetMarginWidth(MARGIN_LINE_NUMBERS, 50);
   text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(75, 75, 75));
   text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, wxColour(220, 220, 220));
