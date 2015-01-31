@@ -16,7 +16,6 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& s
   text = new wxStyledTextCtrl(this, wxID_ANY);
 
   filename = file;
-  dirty = false;
 
   text->StyleClearAll();
   text->SetLexer(wxSTC_LEX_CPP);
@@ -79,6 +78,7 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& s
   else {
     text->LoadFile(filename);
   }
+  dirty = false;
 
   text->StyleSetForeground(wxSTC_C_STRING, wxColour(150, 0, 0));
   text->StyleSetForeground(wxSTC_C_PREPROCESSOR, wxColour(165, 105, 0));
@@ -172,10 +172,10 @@ bool FileEdit::canClose() {
     }
 
     const int answer = dlg.ShowModal();
-    if (answer == wxYES) {
+    if (answer == wxID_YES) {
       return save();
     }
-    else if ( answer == wxNO ) {
+    else if (answer == wxID_NO) {
       return true;
     }
     else {
@@ -191,7 +191,7 @@ FileEdit::~FileEdit() {
 
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
   EVT_STC_MARGINCLICK(wxID_ANY, OnMarginClick)
-  EVT_STC_CHANGE(wxID_ANY, OnTextChanged)
+  EVT_STC_CHARADDED(wxID_ANY, OnTextChanged)
 wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
