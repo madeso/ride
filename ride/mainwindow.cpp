@@ -61,6 +61,18 @@ void MainWindow::createNotebook() {
   aui.AddPane(notebook, wxAuiPaneInfo().Name(wxT("notebook_content")).CenterPane().PaneBorder(true));
 }
 
+const Settings& MainWindow::getSettings() const {
+  return settings;
+}
+
+const std::vector<LanguageInfo>& MainWindow::getLanguages() const {
+  return languages;
+}
+
+const std::vector<StyleInfo>& MainWindow::getStyles() const {
+  return styles;
+}
+
 MainWindow::~MainWindow() {
   aui.UnInit();
 }

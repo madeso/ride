@@ -5,10 +5,11 @@
 #include <wx/stc/stc.h>
 
 class wxAuiNotebook;
+class MainWindow;
 
 class FileEdit : public wxControl {
 public:
-  FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& source, const wxString& file);
+  FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file);
 
   bool canClose(bool canAbort);
   bool save();
@@ -19,15 +20,18 @@ public:
   void OnTextChanged(wxStyledTextEvent& event);
 
   ~FileEdit();
-
 private:
+  int DeterminePrefs(const wxString &filename);
   void updateFilename();
   void updateTitle();
   bool saveTo(const wxString& target);
 
   bool shouldBeSaved();
 
+  bool InitializePrefs(int index);
+
 private:
+  MainWindow* main;
   wxStyledTextCtrl* text;
   wxAuiNotebook* notebook;
   wxString filename;
