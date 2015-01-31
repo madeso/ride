@@ -16,6 +16,9 @@ EVT_MENU(wxID_OPEN, MainWindow::OnOpen)
 EVT_MENU(wxID_EXIT, MainWindow::OnExit)
 EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
 
+EVT_MENU(wxID_SAVE, MainWindow::OnSave)
+EVT_MENU(wxID_SAVEAS, MainWindow::OnSaveAs)
+
 EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
 EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainWindow::OnNotebookPageClosed)
 wxEND_EVENT_TABLE()
@@ -27,6 +30,8 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
+  menuFile->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
+  menuFile->Append(wxID_SAVEAS, "Save &as...\tCtrl-Shift-S", "Save the file as a new file");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
   wxMenu *menuHelp = new wxMenu;
@@ -74,13 +79,37 @@ void MainWindow::OnOpen(wxCommandEvent& event)
 {
   wxFileDialog
     openFileDialog(this, _("Open file"), "", "",
-    "All files (*.*)|*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    FILE_PATTERN, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (openFileDialog.ShowModal() == wxID_CANCEL)
     return;
   
   wxFileName w(openFileDialog.GetPath());
   w.Normalize();
   new FileEdit(notebook, this, "", w.GetFullPath());
+}
+
+FileEdit* MainWindow::getSelectedEditorNull() {
+  const int selected = notebook->GetSelection();
+  wxWindow* window = notebook->GetPage(selected);
+  if (window->IsKindOf(CLASSINFO(FileEdit))) {
+    FileEdit* edit = reinterpret_cast<FileEdit*>(window);
+    return edit;
+  }
+  else {
+    return NULL;
+  }
+}
+
+void MainWindow::OnSave(wxCommandEvent& event) {
+  FileEdit* selected = getSelectedEditorNull();
+  if (selected == NULL) return;
+  selected->save();
+}
+
+void MainWindow::OnSaveAs(wxCommandEvent& event) {
+  FileEdit* selected = getSelectedEditorNull();
+  if (selected == NULL) return;
+  selected->saveAs();
 }
 
 void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {

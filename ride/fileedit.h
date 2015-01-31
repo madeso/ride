@@ -11,6 +11,8 @@ public:
   FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& source, const wxString& file);
 
   bool canClose();
+  bool save();
+  bool saveAs();
 
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
@@ -21,6 +23,9 @@ public:
 private:
   void updateFilename();
   void updateTitle();
+  bool saveTo(const wxString& target);
+
+  bool shouldBeSaved();
 
 private:
   wxStyledTextCtrl* text;
@@ -32,5 +37,7 @@ private:
 private:
   wxDECLARE_EVENT_TABLE();
 };
+
+#define FILE_PATTERN "All files (*.*)|*.*"
 
 #endif  // RIDE_FILEEDIT_H

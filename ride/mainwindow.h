@@ -4,6 +4,8 @@
 #include <wx/wx.h>
 #include <wx/aui/aui.h>
 
+class FileEdit;
+
 class MainWindow: public wxFrame
 {
 public:
@@ -12,6 +14,9 @@ public:
 
 private:
 	void OnOpen(wxCommandEvent& event);
+  void OnSave(wxCommandEvent& event);
+  void OnSaveAs(wxCommandEvent& event);
+
 	void OnExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
 
@@ -22,6 +27,7 @@ private:
 
 private:
   void createNotebook();
+  FileEdit* getSelectedEditorNull();
 
   wxAuiManager aui;
   wxAuiNotebook* notebook;

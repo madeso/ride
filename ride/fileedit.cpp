@@ -12,7 +12,6 @@ enum
   MARGIN_FOLD
 };
 
-
 FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), notebook(anotebook), dirty(false) {
   text = new wxStyledTextCtrl(this, wxID_ANY);
 
@@ -110,6 +109,31 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& s
   updateTitle();
 }
 
+bool FileEdit::save() {
+  if (shouldBeSaved() == false) return true;
+  if (filename.IsEmpty()) return saveAs();
+  else return saveTo(filename);
+}
+
+bool FileEdit::saveAs() {
+  wxFileDialog saveFileDialog(this, _("Save file"), "", "",
+    FILE_PATTERN, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+  if (saveFileDialog.ShowModal() == wxID_CANCEL)
+    return false;
+  return saveTo(saveFileDialog.GetPath());
+}
+
+bool FileEdit::saveTo(const wxString& target) {
+  if (false == text->SaveFile(target)) {
+    return false;
+  }
+  filename = target;
+  dirty = false;
+  updateFilename();
+  updateTitle();
+  return true;
+}
+
 unsigned int UntitledCount = 0;
 
 void FileEdit::updateFilename() {
@@ -133,8 +157,12 @@ void FileEdit::updateTitle() {
   notebook->SetPageText(index, docname+ changestar);
 }
 
+bool FileEdit::shouldBeSaved() {
+  return dirty || filename.IsEmpty();
+}
+
 bool FileEdit::canClose() {
-  if (dirty || filename.IsEmpty()) {
+  if (shouldBeSaved()) {
     int answer = wxMessageBox("\"" + docname + "\" has changed since last time, save it?", "Save file?",
       wxYES_NO | wxICON_QUESTION, this);
     if (answer != wxYES) {
