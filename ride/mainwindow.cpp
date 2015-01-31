@@ -118,7 +118,7 @@ void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
   wxWindow* window = notebook->GetPage(evt.GetSelection());
   if (window->IsKindOf(CLASSINFO(FileEdit))) {
     FileEdit* edit = reinterpret_cast<FileEdit*>(window);
-    if (edit->canClose() == false) {
+    if (edit->canClose(true) == false) {
       evt.Veto();
     }
   }
@@ -129,9 +129,8 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
     wxWindow* window = notebook->GetPage(i);
     if (window->IsKindOf(CLASSINFO(FileEdit))) {
       FileEdit* edit = reinterpret_cast<FileEdit*>(window);
-      // todo: support evt.CanVeto()
-      const bool canVeto = evt.CanVeto();
-      if (edit->canClose() == false) {
+      const bool canAbort = evt.CanVeto();
+      if (edit->canClose(canAbort) == false) {
         evt.Veto();
         return;
       }

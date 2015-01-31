@@ -10,7 +10,7 @@ class FileEdit : public wxControl {
 public:
   FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& source, const wxString& file);
 
-  bool canClose();
+  bool canClose(bool canAbort);
   bool save();
   bool saveAs();
 

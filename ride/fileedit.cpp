@@ -161,10 +161,21 @@ bool FileEdit::shouldBeSaved() {
   return dirty || filename.IsEmpty();
 }
 
-bool FileEdit::canClose() {
+bool FileEdit::canClose(bool canAbort) {
   if (shouldBeSaved()) {
-    wxMessageDialog dlg(this, _(""), _("Save file?"), wxYES_NO | wxCANCEL | wxICON_QUESTION);
-    if (dlg.SetYesNoCancelLabels(_("&Save it"), _("&Discard changes"), _("&Abort"))) {
+    const int yesNoFlags = canAbort ? (wxYES_NO | wxCANCEL) : wxYES_NO;
+    wxMessageDialog dlg(this, _(""), _("Save file?"), yesNoFlags | wxICON_QUESTION);
+
+    const wxMessageDialogBase::ButtonLabel yesButton = _("&Save it");
+    const wxMessageDialogBase::ButtonLabel noButton = _("&Discard changes");
+    const wxMessageDialogBase::ButtonLabel cancelButton = _("&Abort");
+
+    const bool labelChangeOk = canAbort
+      ? dlg.SetYesNoCancelLabels(yesButton, noButton, cancelButton)
+      : dlg.SetYesNoLabels(yesButton, noButton)
+      ;
+
+    if (labelChangeOk) {
       dlg.SetMessage("\"" + docname + "\" has changed since last time...");
     }
     else {
