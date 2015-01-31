@@ -7,13 +7,13 @@
 
 enum FoldType {
   FOLD_NONE = 0,
-  mySTC_FOLD_COMMENT,
-  mySTC_FOLD_COMPACT,
-  mySTC_FOLD_PREPROC,
-  mySTC_FOLD_HTML,
-  mySTC_FOLD_HTMLPREP,
-  mySTC_FOLD_COMMENTPY,
-  mySTC_FOLD_QUOTESPY
+  mySTC_FOLD_COMMENT = 1 << 1,
+  mySTC_FOLD_COMPACT = 1 << 2,
+  mySTC_FOLD_PREPROC = 1 << 3,
+  mySTC_FOLD_HTML = 1 << 4,
+  mySTC_FOLD_HTMLPREP = 1 << 5,
+  mySTC_FOLD_COMMENTPY = 1 << 6,
+  mySTC_FOLD_QUOTESPY = 1 << 7
 };
 
 class LanguageInfo {

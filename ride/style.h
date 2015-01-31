@@ -6,6 +6,8 @@
 class StyleLink {
 public:
   StyleLink();
+  StyleLink(int type);
+  StyleLink(int type, const wxString& words);
 
   int type; // the index to the style
   bool hasWords;
@@ -15,6 +17,7 @@ public:
 class StyleInfo {
 public:
   StyleInfo();
+  StyleInfo(const wxString& fontname, int fontsize, wxColour foreground, bool bold);
 
   int fontsize;
   wxString fontname;

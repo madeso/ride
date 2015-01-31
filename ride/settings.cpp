@@ -1,9 +1,9 @@
 #include "ride/settings.h"
 
 Settings::Settings()
-  : syntaxEnable(false)
-  , foldEnable(false)
-  , indentEnable(false)
+  : syntaxEnable(true)
+  , foldEnable(true)
+  , indentEnable(true)
   , displayEOLEnable(false)
   , indentGuideEnable(false)
   , longLineOnEnable(false)
