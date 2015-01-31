@@ -100,8 +100,6 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& s
   text->SetKeyWords(0, wxT("return for while break continue"));
   text->SetKeyWords(1, wxT("const int float void char double"));
 
-  text->Connect(wxEVT_STC_MARGINCLICK, wxStyledTextEventHandler(FileEdit::OnMarginClick), NULL, this);
-
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(text, 1, wxEXPAND);
   SetSizer(sizer);
@@ -158,4 +156,5 @@ FileEdit::~FileEdit() {
 }
 
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
+  EVT_STC_MARGINCLICK(wxID_ANY, OnMarginClick)
 wxEND_EVENT_TABLE()
