@@ -136,7 +136,14 @@ bool FileEdit::canClose() const {
   return true;
 }
 
-/** Event callback when a margin is clicked, used here for code folding */
+FileEdit::~FileEdit() {
+  text->SetClientData(NULL);
+}
+
+wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
+  EVT_STC_MARGINCLICK(wxID_ANY, OnMarginClick)
+wxEND_EVENT_TABLE()
+
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 {
   if (event.GetMargin() == MARGIN_FOLD)
@@ -150,11 +157,3 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
     }
   }
 }
-
-FileEdit::~FileEdit() {
-  text->SetClientData(NULL);
-}
-
-wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
-  EVT_STC_MARGINCLICK(wxID_ANY, OnMarginClick)
-wxEND_EVENT_TABLE()
