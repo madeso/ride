@@ -1,17 +1,18 @@
 #include <wx/wx.h>
 #include <wx/stc/stc.h>
 #include <wx/aui/aui.h>
+#include <wx/filename.h>
 
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
 
 enum
 {
-  ID_Hello = 1
+  ID_Random = 1
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
-EVT_MENU(ID_Hello, MainWindow::OnHello)
+EVT_MENU(wxID_OPEN, MainWindow::OnOpen)
 EVT_MENU(wxID_EXIT, MainWindow::OnExit)
 EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
 
@@ -25,7 +26,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   aui.SetManagedWindow(this);
 
   wxMenu *menuFile = new wxMenu;
-  menuFile->Append(ID_Hello, "&Hello...\tCtrl-H", "Help string shown in status bar for this menu item");
+  menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
   wxMenu *menuHelp = new wxMenu;
@@ -40,7 +41,6 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   aui.Update();
 
   new FileEdit(notebook, this, "", "");
-  new FileEdit(notebook, this, "hello world", "C:\\hello.txt");
 }
 
 void MainWindow::createNotebook() {
@@ -70,9 +70,17 @@ void MainWindow::OnAbout(wxCommandEvent& event)
   wxMessageBox("This is a wxWidgets' Hello world sample", "About Hello World", wxOK | wxICON_INFORMATION);
 }
 
-void MainWindow::OnHello(wxCommandEvent& event)
+void MainWindow::OnOpen(wxCommandEvent& event)
 {
-  wxLogMessage("Hello world from wxWidgets!");
+  wxFileDialog
+    openFileDialog(this, _("Open file"), "", "",
+    "All files (*.*)|*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+  if (openFileDialog.ShowModal() == wxID_CANCEL)
+    return;
+  
+  wxFileName w(openFileDialog.GetPath());
+  w.Normalize();
+  new FileEdit(notebook, this, "", w.GetFullPath());
 }
 
 void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {

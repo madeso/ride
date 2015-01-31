@@ -15,6 +15,9 @@ enum
 FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), notebook(anotebook), dirty(false) {
   text = new wxStyledTextCtrl(this, wxID_ANY);
 
+  filename = file;
+  dirty = false;
+
   text->StyleClearAll();
   text->SetLexer(wxSTC_LEX_CPP);
 
@@ -67,9 +70,12 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, wxWindow* parent, const wxString& s
 
   text->SetWrapMode(wxSTC_WRAP_WORD); // other choice is wxSCI_WRAP_NONE
 
-  text->SetText(source);
-  filename = file;
-  dirty = false;
+  if (filename.IsEmpty()) {
+    text->SetText(source);
+  }
+  else {
+    text->LoadFile(filename);
+  }
 
   text->StyleSetForeground(wxSTC_C_STRING, wxColour(150, 0, 0));
   text->StyleSetForeground(wxSTC_C_PREPROCESSOR, wxColour(165, 105, 0));
