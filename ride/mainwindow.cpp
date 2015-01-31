@@ -125,13 +125,15 @@ void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
 }
 
 void MainWindow::OnClose(wxCloseEvent& evt) {
-  for (int i = 0; i < notebook->GetPageCount(); ++i) {
+  for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
     wxWindow* window = notebook->GetPage(i);
     if (window->IsKindOf(CLASSINFO(FileEdit))) {
       FileEdit* edit = reinterpret_cast<FileEdit*>(window);
+      // todo: support evt.CanVeto()
+      const bool canVeto = evt.CanVeto();
       if (edit->canClose() == false) {
-        // todo: support evt.CanVeto()
         evt.Veto();
+        return;
       }
     }
   }
