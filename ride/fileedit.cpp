@@ -26,8 +26,37 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
 
   wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
   text->SetFont(font);
-
   text->SetWrapMode(wxSTC_WRAP_WORD); // other choice is wxSCI_WRAP_NONE
+
+
+  // Use all the bits in the style byte as styles, not indicators.
+  text->SetStyleBits(8);
+
+  // default font for all styles
+  text->SetViewEOL(main->getSettings().displayEOLEnable);
+  text->SetIndentationGuides(main->getSettings().indentGuideEnable);
+  text->SetEdgeMode(main->getSettings().longLineOnEnable ?
+  wxSTC_EDGE_LINE : wxSTC_EDGE_NONE);
+  text->SetViewWhiteSpace(main->getSettings().whiteSpaceEnable ?
+  wxSTC_WS_VISIBLEALWAYS : wxSTC_WS_INVISIBLE);
+  text->SetOvertype(main->getSettings().overTypeInitial);
+  text->SetReadOnly(false);
+  text->SetWrapMode(main->getSettings().wrapModeInitial ?
+  wxSTC_WRAP_WORD : wxSTC_WRAP_NONE);
+  // wxFont font(10, wxMODERN, wxNORMAL, wxNORMAL);
+  text->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
+  text->StyleSetForeground(wxSTC_STYLE_DEFAULT, *wxBLACK);
+  text->StyleSetBackground(wxSTC_STYLE_DEFAULT, *wxWHITE);
+  text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(wxT("DARK GREY")));
+  text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, *wxWHITE);
+  text->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColour(wxT("DARK GREY")));
+  // InitializePrefs(DEFAULT_LANGUAGE);
+
+  // set visibility
+  text->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
+  text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+  text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+
 
   if (filename.IsEmpty()) {
     text->SetText(source);
@@ -36,6 +65,8 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
     text->LoadFile(filename);
   }
   dirty = false;
+
+  m_LineNrMargin = text->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_999999"));
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(text, 1, wxEXPAND);
@@ -112,7 +143,7 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetMarginType(m_LineNrID, wxSTC_MARGIN_NUMBER);
   text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(wxT("DARK GREY")));
   text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, *wxWHITE);
-  text->SetMarginWidth(m_LineNrID, 0); // start out not visible
+  text->SetMarginWidth(m_LineNrID,  main->getSettings().lineNumberEnable ? m_LineNrMargin : 0 ); // start out not visible
 
   // annotations style
   text->StyleSetBackground(ANNOTATION_STYLE, wxColour(244, 220, 220));
@@ -241,6 +272,14 @@ void FileEdit::updateTitle() {
   notebook->SetPageText(index, docname+ changestar);
 }
 
+void FileEdit::OnSize(wxSizeEvent& event) {
+  int x = text->GetClientSize().x +
+    (main->getSettings().lineNumberEnable ? m_LineNrMargin : 0) +
+    (main->getSettings().foldEnable ? m_FoldingMargin : 0);
+  if (x > 0) text->SetScrollWidth(x);
+  event.Skip();
+}
+
 bool FileEdit::shouldBeSaved() {
   return dirty || filename.IsEmpty();
 }
@@ -285,6 +324,7 @@ FileEdit::~FileEdit() {
 }
 
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
+  EVT_SIZE(OnSize)
   EVT_STC_MARGINCLICK(wxID_ANY, OnMarginClick)
   EVT_STC_CHARADDED(wxID_ANY, OnTextChanged)
 wxEND_EVENT_TABLE()

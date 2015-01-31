@@ -2,10 +2,11 @@
 
 Settings::Settings()
   : syntaxEnable(true)
-  , foldEnable(true)
+  , lineNumberEnable(true)
+  , foldEnable(false)
   , indentEnable(true)
   , displayEOLEnable(false)
-  , indentGuideEnable(false)
+  , indentGuideEnable(true)
   , longLineOnEnable(false)
   , whiteSpaceEnable(false)
   , overTypeInitial(false)

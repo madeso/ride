@@ -6,6 +6,7 @@ public:
   Settings();
 
   bool syntaxEnable;
+  bool lineNumberEnable;
   bool foldEnable;
   bool indentEnable;
   bool displayEOLEnable;
