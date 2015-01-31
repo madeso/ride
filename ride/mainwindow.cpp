@@ -46,8 +46,6 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   SetStatusText("");
   createNotebook();
   aui.Update();
-
-  new FileEdit(notebook, this, "", "");
 }
 
 void MainWindow::createNotebook() {
