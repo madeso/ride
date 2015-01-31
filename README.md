@@ -15,6 +15,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * context menu support
 * go to next error shortcut
 * quick open file from solution/project
+* remember opened file since last time
 * scintilla text commands
 * settings/options window
 * cpack support (=installer for ride)
