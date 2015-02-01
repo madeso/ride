@@ -206,6 +206,7 @@ bool FileEdit::InitializePrefs(int index) {
   */
 
   // setup style colors and font
+  // todo, move to settings
   text->StyleSetForeground(wxSTC_STYLE_DEFAULT, darkgray);
   text->StyleSetBackground(wxSTC_STYLE_DEFAULT, white);
   text->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
@@ -294,15 +295,6 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetOvertype(false);
   text->SetReadOnly(false);
   text->SetWrapMode(C(main->getSettings().wordWrap));
-
-  // default font for all styles
-  // todo: move to settings
-  text->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
-  text->StyleSetForeground(wxSTC_STYLE_DEFAULT, *wxBLACK);
-  text->StyleSetBackground(wxSTC_STYLE_DEFAULT, *wxWHITE);
-  text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(wxT("DARK GREY")));
-  text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, *wxWHITE);
-  text->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColour(wxT("DARK GREY")));
 
   // set visibility
   // todo: investigate this
