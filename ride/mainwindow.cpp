@@ -104,13 +104,17 @@ void MainWindow::OnOpen(wxCommandEvent& event)
 {
   wxFileDialog
     openFileDialog(this, _("Open file"), "", "",
-    FILE_PATTERN, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+    FILE_PATTERN, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE );
   if (openFileDialog.ShowModal() == wxID_CANCEL)
     return;
-  
-  wxFileName w(openFileDialog.GetPath());
-  w.Normalize();
-  new FileEdit(notebook, this, "", w.GetFullPath());
+
+  wxArrayString paths;
+  openFileDialog.GetPaths(paths);
+  for (wxArrayString::iterator path = paths.begin(); path != paths.end(); ++path) {
+    wxFileName w(*path);
+    w.Normalize();
+    new FileEdit(notebook, this, "", w.GetFullPath());
+  }
 }
 
 FileEdit* MainWindow::getSelectedEditorNull() {
