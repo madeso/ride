@@ -195,29 +195,6 @@ public:
   }
 } g_language_null;
 
-#define wxSTC_MARKDOWN_DEFAULT 0
-#define wxSTC_MARKDOWN_LINE_BEGIN 1
-#define wxSTC_MARKDOWN_STRONG1 2
-#define wxSTC_MARKDOWN_STRONG2 3
-#define wxSTC_MARKDOWN_EM1 4
-#define wxSTC_MARKDOWN_EM2 5
-#define wxSTC_MARKDOWN_HEADER1 6
-#define wxSTC_MARKDOWN_HEADER2 7
-#define wxSTC_MARKDOWN_HEADER3 8
-#define wxSTC_MARKDOWN_HEADER4 9
-#define wxSTC_MARKDOWN_HEADER5 10
-#define wxSTC_MARKDOWN_HEADER6 11
-#define wxSTC_MARKDOWN_PRECHAR 12
-#define wxSTC_MARKDOWN_ULIST_ITEM 13
-#define wxSTC_MARKDOWN_OLIST_ITEM 14
-#define wxSTC_MARKDOWN_BLOCKQUOTE 15
-#define wxSTC_MARKDOWN_STRIKEOUT 16
-#define wxSTC_MARKDOWN_HRULE 17
-#define wxSTC_MARKDOWN_LINK 18
-#define wxSTC_MARKDOWN_CODE 19
-#define wxSTC_MARKDOWN_CODE2 20
-#define wxSTC_MARKDOWN_CODEBK 21
-
 class MarkdownLanguage : public Language {
 public:
   MarkdownLanguage() : Language(_("Markdown"), wxSTC_LEX_MARKDOWN) {
@@ -253,14 +230,6 @@ public:
 } g_language_markdown;
 
 
-#define wxSTC_PROPS_DEFAULT 0
-#define wxSTC_PROPS_COMMENT 1
-#define wxSTC_PROPS_SECTION 2
-#define wxSTC_PROPS_ASSIGNMENT 3
-#define wxSTC_PROPS_DEFVAL 4
-#define wxSTC_PROPS_KEY 5
-
-
 class PropertiesLanguage : public Language {
 public:
   PropertiesLanguage() : Language(_("Properties"), wxSTC_LEX_PROPERTIES) {
@@ -280,8 +249,6 @@ public:
     SetStyle(text, wxSTC_PROPS_KEY, Style(font, wxColor(70, 70, 70)));
   }
 } g_language_properties;
-
-// #define  5
 
 class XmlLanguage : public Language {
 public:
