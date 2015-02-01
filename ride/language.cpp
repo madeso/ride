@@ -301,12 +301,42 @@ public:
   }
 } g_language_xml;
 
+class CmakeLanguage : public Language {
+public:
+  CmakeLanguage() : Language(_("CMake"), wxSTC_LEX_CMAKE) {
+    (*this)
+      (".cmake")
+      ("CMakeLists.txt")
+      ;
+  }
+  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+    wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+
+    SetStyle(text, wxSTC_CMAKE_DEFAULT, Style(font));
+    SetStyle(text, wxSTC_CMAKE_COMMENT, Style(font, wxColor(0,100,0) ));
+    SetStyle(text, wxSTC_CMAKE_STRINGDQ, Style(font));
+    SetStyle(text, wxSTC_CMAKE_STRINGLQ, Style(font));
+    SetStyle(text, wxSTC_CMAKE_STRINGRQ, Style(font));
+    SetStyle(text, wxSTC_CMAKE_COMMANDS, Style(font, wxColor(0, 0, 100)));
+    SetStyle(text, wxSTC_CMAKE_PARAMETERS, Style(font));
+    SetStyle(text, wxSTC_CMAKE_VARIABLE, Style(font, wxColor(100, 100, 100)));
+    SetStyle(text, wxSTC_CMAKE_USERDEFINED, Style(font));
+    SetStyle(text, wxSTC_CMAKE_WHILEDEF, Style(font));
+    SetStyle(text, wxSTC_CMAKE_FOREACHDEF, Style(font));
+    SetStyle(text, wxSTC_CMAKE_IFDEFINEDEF, Style(font));
+    SetStyle(text, wxSTC_CMAKE_MACRODEF, Style(font));
+    SetStyle(text, wxSTC_CMAKE_STRINGVAR, Style(font));
+    SetStyle(text, wxSTC_CMAKE_NUMBER, Style(font));
+  }
+} g_language_cmake;
+
 std::vector<Language*> BuildLanguageList() {
   std::vector<Language*> ret;
   ret.push_back(&g_language_cpp);
   ret.push_back(&g_language_markdown);
   ret.push_back(&g_language_properties);
   ret.push_back(&g_language_xml);
+  ret.push_back(&g_language_cmake);
   return ret;
 }
 
