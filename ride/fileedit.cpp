@@ -5,6 +5,7 @@
 #include <wx/msgdlg.h>
 
 #include <vector>
+#include <cassert>
 
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
@@ -19,63 +20,74 @@ enum
 
 const int ANNOTATION_STYLE = wxSTC_STYLE_LASTPREDEFINED + 1;
 
+int C(EdgeStyle::Type e) {
+  switch (e) {
+  case EdgeStyle::BACKGROUND:
+    return wxSTC_EDGE_BACKGROUND;
+  case EdgeStyle::LINE:
+    return wxSTC_EDGE_LINE;
+  case EdgeStyle::NONE:
+    return wxSTC_EDGE_NONE;
+  default:
+    assert(false && "Invalid edge style");
+    return wxSTC_EDGE_NONE;
+  }
+}
+
+int C(ViewWhitespace::Type e) {
+  switch (e) {
+  case ViewWhitespace::ALWAYS:
+    return wxSTC_WS_VISIBLEALWAYS;
+  case ViewWhitespace::AFTER_IDENT:
+    return wxSTC_WS_VISIBLEAFTERINDENT;
+  case ViewWhitespace::HIDDEN:
+    return wxSTC_WS_INVISIBLE;
+  default:
+    assert(false && "Invalid whitespace style");
+    return wxSTC_WS_INVISIBLE;
+  }
+}
+
+int C(WrapMode::Type e) {
+  switch (e) {
+  case WrapMode::CHAR:
+    return wxSTC_WRAP_CHAR;
+  case WrapMode::WORD:
+    return wxSTC_WRAP_WORD;
+  case WrapMode::NONE:
+    return wxSTC_WRAP_NONE;
+  default:
+    assert(false && "Invalid wrap mode");
+    return wxSTC_WRAP_NONE;
+  }
+}
+
+int C(FoldFlags f) {
+  int ret = 0;
+
+  if (f.LINEBEFORE_EXPANDED) {
+    ret |= wxSTC_FOLDFLAG_LINEBEFORE_EXPANDED;
+  }
+  if (f.LINEBEFORE_CONTRACTED) {
+    ret |= wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED;
+  }
+  if (f.LINEAFTER_EXPANDED) {
+    ret |= wxSTC_FOLDFLAG_LINEAFTER_EXPANDED;
+  }
+  if (f.LINEAFTER_CONTRACTED) {
+    ret |= wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED;
+  }
+  if (f.LEVELNUMBERS) {
+    ret |= wxSTC_FOLDFLAG_LEVELNUMBERS;
+  }
+
+  return ret;
+}
+
 FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), dirty(false) {
   text = new wxStyledTextCtrl(this, wxID_ANY);
 
   filename = file;
-
-  wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
-  text->SetFont(font);
-  text->SetWrapMode(wxSTC_WRAP_WORD); // other choice is wxSCI_WRAP_NONE
-
-
-  // Use all the bits in the style byte as styles, not indicators.
-  text->SetStyleBits(8);
-
-  // default font for all styles
-  text->SetViewEOL(main->getSettings().displayEOLEnable);
-  text->SetIndentationGuides(main->getSettings().indentGuideEnable);
-  text->SetEdgeMode(main->getSettings().longLineOnEnable ?
-  wxSTC_EDGE_LINE : wxSTC_EDGE_NONE);
-  text->SetViewWhiteSpace(main->getSettings().whiteSpaceEnable ?
-  wxSTC_WS_VISIBLEALWAYS : wxSTC_WS_INVISIBLE);
-  text->SetOvertype(main->getSettings().overTypeInitial);
-  text->SetReadOnly(false);
-  text->SetWrapMode(main->getSettings().wrapModeInitial ?
-  wxSTC_WRAP_WORD : wxSTC_WRAP_NONE);
-  // wxFont font(10, wxMODERN, wxNORMAL, wxNORMAL);
-  text->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
-  text->StyleSetForeground(wxSTC_STYLE_DEFAULT, *wxBLACK);
-  text->StyleSetBackground(wxSTC_STYLE_DEFAULT, *wxWHITE);
-  text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(wxT("DARK GREY")));
-  text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, *wxWHITE);
-  text->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColour(wxT("DARK GREY")));
-  // InitializePrefs(DEFAULT_LANGUAGE);
-
-  // set visibility
-  text->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
-  text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
-  text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
-
-  /*
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_DOTDOTDOT, wxT("BLACK"), wxT("BLACK"));
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, wxT("BLACK"), wxT("BLACK"));
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, wxT("BLACK"), wxT("BLACK"));
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_DOTDOTDOT, wxT("BLACK"), wxT("WHITE"));
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, wxT("BLACK"), wxT("WHITE"));
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, wxT("BLACK"), wxT("BLACK"));
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, wxT("BLACK"), wxT("BLACK"));
-  */
-
-  const wxColor grey(100, 100, 100);
-  const wxColor white(255, 255, 255);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
   if (filename.IsEmpty()) {
     text->SetText(source);
@@ -144,6 +156,10 @@ int FileEdit::DeterminePrefs(const wxString &filename) {
 bool FileEdit::InitializePrefs(int index) {
   // initialize styles
   text->StyleClearAll();
+  wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+  const wxColor grey(100, 100, 100);
+  const wxColor white(255, 255, 255);
+  const wxColor darkgray = wxColour(wxT("DARK GREY"));
 
   if (index >= main->getLanguages().size()){
     return false;
@@ -157,54 +173,71 @@ bool FileEdit::InitializePrefs(int index) {
   // set lexer and language
   text->SetLexer(curInfo->lexer);
 
-  // set margin for line numbers
-  text->SetMarginType(m_LineNrID, wxSTC_MARGIN_NUMBER);
-  text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(wxT("DARK GREY")));
-  text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, *wxWHITE);
-  text->SetMarginWidth(m_LineNrID, main->getSettings().lineNumberEnable ? m_LineNrMargin : 0); // start out not visible
-
-  // default fonts for all styles!
-  for (size_t Nr = 0; Nr < wxSTC_STYLE_LASTPREDEFINED; Nr++) {
-    wxFont font(10, wxMODERN, wxNORMAL, wxNORMAL);
-    text->StyleSetFont(Nr, font);
-  }
-
-  // set common styles
-  text->StyleSetForeground(wxSTC_STYLE_DEFAULT, wxColour(wxT("DARK GREY")));
-  text->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColour(wxT("DARK GREY")));
-
   // initialize settings
-  if (main->getSettings().syntaxEnable) {
-    int keywordnr = 0;
-    for (size_t Nr = 0; Nr < curInfo->styles.size(); Nr++) {
-      if (curInfo->styles[Nr].type == -1) continue;
-      const StyleLink& stylelink = curInfo->styles[Nr];
-      const StyleInfo &curType = main->getStyles()[stylelink.type];
-      wxFont font(curType.fontsize, wxMODERN, wxNORMAL, wxNORMAL, false,
-        curType.fontname);
-      text->StyleSetFont(Nr, font);
-      if (curType.hasforeground) {
-        text->StyleSetForeground(Nr, curType.foreground);
-      }
-      if (curType.hasbackground) {
-        text->StyleSetBackground(Nr, curType.background);
-      }
-      text->StyleSetBold(Nr, curType.bold);
-      text->StyleSetItalic(Nr, curType.italic);
-      text->StyleSetUnderline(Nr, curType.underline);
-      text->StyleSetVisible(Nr, curType.visible);
-      /*
+  int keywordnr = 0;
+  for (size_t Nr = 0; Nr < curInfo->styles.size(); Nr++) {
+    if (curInfo->styles[Nr].type == -1) continue;
+    const StyleLink& stylelink = curInfo->styles[Nr];
+    const StyleInfo &curType = main->getStyles()[stylelink.type];
+    wxFont font(curType.fontsize, wxMODERN, wxNORMAL, wxNORMAL, false,
+      curType.fontname);
+    text->StyleSetFont(Nr, font);
+    if (curType.hasforeground) {
+      text->StyleSetForeground(Nr, curType.foreground);
+    }
+    if (curType.hasbackground) {
+      text->StyleSetBackground(Nr, curType.background);
+    }
+    text->StyleSetBold(Nr, curType.bold);
+    text->StyleSetItalic(Nr, curType.italic);
+    text->StyleSetUnderline(Nr, curType.underline);
+    text->StyleSetVisible(Nr, curType.visible);
+    /*
 #define wxSTC_CASE_MIXED 0
 #define wxSTC_CASE_UPPER 1
 #define wxSTC_CASE_LOWER 2
-      */
-      text->StyleSetCase(Nr, wxSTC_CASE_MIXED);
-      if (stylelink.hasWords) {
-        text->SetKeyWords(keywordnr, stylelink.words);
-        keywordnr += 1;
-      }
+    */
+    text->StyleSetCase(Nr, wxSTC_CASE_MIXED);
+    if (stylelink.hasWords) {
+      text->SetKeyWords(keywordnr, stylelink.words);
+      keywordnr += 1;
     }
   }
+
+  // setup style colors and font
+  text->StyleSetForeground(wxSTC_STYLE_DEFAULT, darkgray);
+  text->StyleSetBackground(wxSTC_STYLE_DEFAULT, white);
+  text->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
+  
+  text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, darkgray);
+  text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, white);
+  text->StyleSetFont(wxSTC_STYLE_LINENUMBER, font);
+
+  text->StyleSetForeground(wxSTC_STYLE_BRACELIGHT, darkgray);
+  text->StyleSetBackground(wxSTC_STYLE_BRACELIGHT, white);
+  text->StyleSetFont(wxSTC_STYLE_BRACELIGHT, font);
+  
+  text->StyleSetForeground(wxSTC_STYLE_BRACEBAD, darkgray);
+  text->StyleSetBackground(wxSTC_STYLE_BRACEBAD, white);
+  text->StyleSetFont(wxSTC_STYLE_BRACEBAD, font);
+  
+  text->StyleSetForeground(wxSTC_STYLE_CONTROLCHAR, darkgray);
+  text->StyleSetBackground(wxSTC_STYLE_CONTROLCHAR, white);
+  text->StyleSetFont(wxSTC_STYLE_CONTROLCHAR, font);
+  
+  text->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, darkgray);
+  text->StyleSetBackground(wxSTC_STYLE_INDENTGUIDE, white);
+  text->StyleSetFont(wxSTC_STYLE_INDENTGUIDE, font);
+
+  text->StyleSetForeground(wxSTC_STYLE_CALLTIP, darkgray);
+  text->StyleSetBackground(wxSTC_STYLE_CALLTIP, white);
+  text->StyleSetFont(wxSTC_STYLE_CALLTIP, font);
+
+  //////////////////////////////////////////////////////////////////////////
+
+  // set margin for line numbers
+  text->SetMarginType(m_LineNrID, wxSTC_MARGIN_NUMBER);
+  text->SetMarginWidth(m_LineNrID, main->getSettings().lineNumberEnable ? m_LineNrMargin : 0);
 
   // set margin as unused
   text->SetMarginType(m_DividerID, wxSTC_MARGIN_SYMBOL);
@@ -218,11 +251,9 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetMarginWidth(m_FoldingID, 15);
   text->SetMarginSensitive(m_FoldingID, true);
   // text->SetFoldMarginColour(true, wxColor(200, 200, 200));
-
   text->SetProperty(wxT("fold"), wxT("1"));
   text->SetProperty(wxT("fold.comment"), wxT("1"));
   text->SetProperty(wxT("fold.compact"), wxT("1"));
-
   if (main->getSettings().foldEnable) {
     text->SetMarginWidth(m_FoldingID, curInfo->folds != 0 ? m_FoldingMargin : 0);
     text->SetMarginSensitive(m_FoldingID, curInfo->folds != 0);
@@ -242,26 +273,51 @@ bool FileEdit::InitializePrefs(int index) {
     text->SetProperty(wxT("fold.quotes.python"),
       (curInfo->folds & mySTC_FOLD_QUOTESPY) > 0 ? wxT("1") : wxT("0"));
   }
-  text->SetFoldFlags(wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED |
-    wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED);
+  text->SetFoldFlags(C(main->getSettings().foldflags));
 
   // set spaces and indention
-  text->SetTabWidth(4);
-  text->SetUseTabs(false);
-  text->SetTabIndents(true);
-  text->SetBackSpaceUnIndents(true);
-  text->SetIndent(main->getSettings().indentEnable ? 4 : 0);
+  text->SetTabWidth(main->getSettings().tabWidth);
+  text->SetUseTabs(main->getSettings().useTabs);
+  text->SetTabIndents(main->getSettings().tabIndents);
+  text->SetBackSpaceUnIndents(main->getSettings().backspaceUnindents);
+  text->SetIndent(main->getSettings().tabWidth);
 
-  // others
+  text->SetFont(font);
+
   text->SetViewEOL(main->getSettings().displayEOLEnable);
   text->SetIndentationGuides(main->getSettings().indentGuideEnable);
-  text->SetEdgeColumn(80);
-  text->SetEdgeMode(main->getSettings().longLineOnEnable ? wxSTC_EDGE_LINE : wxSTC_EDGE_NONE);
-  text->SetViewWhiteSpace(main->getSettings().whiteSpaceEnable ?
-  wxSTC_WS_VISIBLEALWAYS : wxSTC_WS_INVISIBLE);
-  text->SetOvertype(main->getSettings().overTypeInitial);
+  text->SetEdgeMode(C(main->getSettings().edgeStyle));
+  text->SetEdgeColour(main->getSettings().edgeColor);
+  text->SetEdgeColumn(main->getSettings().edgeColumn);
+  text->SetViewWhiteSpace(C(main->getSettings().whitespace));
+  text->SetOvertype(false);
   text->SetReadOnly(false);
-  text->SetWrapMode(main->getSettings().wrapModeInitial ? wxSTC_WRAP_WORD : wxSTC_WRAP_NONE);
+  text->SetWrapMode(C(main->getSettings().wordWrap));
+
+  // default font for all styles
+  // todo: move to settings
+  text->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
+  text->StyleSetForeground(wxSTC_STYLE_DEFAULT, *wxBLACK);
+  text->StyleSetBackground(wxSTC_STYLE_DEFAULT, *wxWHITE);
+  text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(wxT("DARK GREY")));
+  text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, *wxWHITE);
+  text->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, wxColour(wxT("DARK GREY")));
+
+  // set visibility
+  // todo: investigate this
+  text->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
+  text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+  text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+
+  // folding settings
+  // todo: move to settings
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
   return true;
 }
