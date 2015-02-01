@@ -36,6 +36,7 @@ enum
 	ID_Hello = 1
 };
 
+//{ wx widget macros
 wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
 	EVT_MENU(ID_Hello, MyFrame::OnHello)
 	EVT_MENU(wxID_EXIT, MyFrame::OnExit)
@@ -43,6 +44,7 @@ wxBEGIN_EVENT_TABLE(MyFrame, wxFrame)
 wxEND_EVENT_TABLE()
 
 wxIMPLEMENT_APP(MyApp);
+//}
 
 bool MyApp::OnInit()
 {

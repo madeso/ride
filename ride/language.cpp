@@ -27,13 +27,13 @@ wxString PropTypeToString(int type) {
   switch (type)
   {
   case wxSTC_TYPE_BOOLEAN:
-    return _("bool");
+    return _("bool    ");
   case wxSTC_TYPE_INTEGER:
-    return _("int");
+    return _("int     ");
   case wxSTC_TYPE_STRING:
-    return _("string");
+    return _("wxString");
   default:
-    return _("unknown");
+    return _("XXXXXXXX");
   }
 }
 
@@ -53,7 +53,7 @@ void Language::style(wxStyledTextCtrl* text, const Settings& settings) {
       const wxString desc = text->DescribeProperty(prop_name);
       const wxString value = text->GetProperty(prop_name);
       const wxString type = PropTypeToString(text->PropertyType(prop_name));
-      wxLogWarning(_("Property for %s was not set: %s %s = %s // %s"), language_name, type, prop_name, value, desc);
+      wxLogWarning(_("Property for %s was not set: %s %s; // %s %s"), language_name, type, prop_name, value, desc);
     }
   }
 
@@ -129,6 +129,19 @@ public:
     SetProp(text, wxT("fold.comment"), b2s01(settings.foldComment));
     SetProp(text, wxT("fold.compact"), b2s01(settings.foldCompact));
     SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldPreproc));
+    SetProp(text, wxT("styling.within.preprocessor"), b2s01(settings.styling_within_preprocessor));
+    SetProp(text, wxT("lexer.cpp.allow.dollars"), b2s01(settings.lexer_cpp_allow_dollars));
+    SetProp(text, wxT("lexer.cpp.track.preprocessor"), b2s01(settings.lexer_cpp_track_preprocessor));
+    SetProp(text, wxT("lexer.cpp.update.preprocessor"), b2s01(settings.lexer_cpp_update_preprocessor));
+    SetProp(text, wxT("lexer.cpp.triplequoted.strings"), b2s01(settings.lexer_cpp_triplequoted_strings));
+    SetProp(text, wxT("lexer.cpp.hashquoted.strings"), b2s01(settings.lexer_cpp_hashquoted_strings));
+    SetProp(text, wxT("fold.cpp.syntax.based"), b2s01(settings.fold_cpp_syntax_based));
+    SetProp(text, wxT("fold.cpp.comment.multiline"), b2s01(settings.fold_cpp_comment_multiline));
+    SetProp(text, wxT("fold.cpp.comment.explicit"), b2s01(settings.fold_cpp_comment_explicit));
+    SetProp(text, wxT("fold.cpp.explicit.anywhere"), b2s01(settings.fold_cpp_explicit_anywhere));
+    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else));
+    SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
+    SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 
     const wxString CppWordlist1 =
       "asm auto bool break case catch char class const const_cast "
