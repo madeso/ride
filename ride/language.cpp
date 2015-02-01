@@ -265,11 +265,48 @@ public:
   }
 } g_language_properties;
 
+// #define  5
+
+class XmlLanguage : public Language {
+public:
+  XmlLanguage() : Language(_("XML"), wxSTC_LEX_XML) {
+    (*this)
+      (".xml")
+      ;
+  }
+  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+    wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+
+    SetStyle(text, wxSTC_H_DEFAULT, Style(font));
+    SetStyle(text, wxSTC_H_TAG, Style(font, wxColor(0, 0, 200)));
+    SetStyle(text, wxSTC_H_TAGUNKNOWN, Style(font, wxColor(0, 0, 200)));
+    SetStyle(text, wxSTC_H_ATTRIBUTE, Style(font, wxColor(100, 0, 0)));
+    SetStyle(text, wxSTC_H_ATTRIBUTEUNKNOWN, Style(font, wxColor(100, 0, 0)));
+    SetStyle(text, wxSTC_H_NUMBER, Style(font));
+    SetStyle(text, wxSTC_H_DOUBLESTRING, Style(font));
+    SetStyle(text, wxSTC_H_SINGLESTRING, Style(font));
+    SetStyle(text, wxSTC_H_OTHER, Style(font));
+    SetStyle(text, wxSTC_H_COMMENT, Style(font, wxColor(0, 200, 0) ));
+    SetStyle(text, wxSTC_H_ENTITY, Style(font));
+    SetStyle(text, wxSTC_H_TAGEND, Style(font));
+    SetStyle(text, wxSTC_H_XMLSTART, Style(font));
+    SetStyle(text, wxSTC_H_XMLEND, Style(font));
+    SetStyle(text, wxSTC_H_SCRIPT, Style(font));
+    SetStyle(text, wxSTC_H_ASP, Style(font));
+    SetStyle(text, wxSTC_H_ASPAT, Style(font));
+    SetStyle(text, wxSTC_H_CDATA, Style(font, wxColor(100, 100, 100)));
+    SetStyle(text, wxSTC_H_QUESTION, Style(font));
+    SetStyle(text, wxSTC_H_VALUE, Style(font));
+    SetStyle(text, wxSTC_H_XCCOMMENT, Style(font));
+  }
+} g_language_xml;
+
 std::vector<Language*> BuildLanguageList() {
   std::vector<Language*> ret;
   ret.push_back(&g_language_cpp);
   ret.push_back(&g_language_markdown);
   ret.push_back(&g_language_properties);
+  ret.push_back(&g_language_xml);
   return ret;
 }
 
