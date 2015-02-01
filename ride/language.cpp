@@ -330,6 +330,40 @@ public:
   }
 } g_language_cmake;
 
+class LuaLanguage : public Language {
+public:
+  LuaLanguage() : Language(_("Lua"), wxSTC_LEX_LUA) {
+    (*this)
+      (".lua")
+      ;
+  }
+  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+    wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+    
+    SetStyle(text, wxSTC_LUA_DEFAULT, Style(font));
+    SetStyle(text, wxSTC_LUA_COMMENT, Style(font, wxColor(0,200,0)));
+    SetStyle(text, wxSTC_LUA_COMMENTLINE, Style(font, wxColor(0, 200, 0)));
+    SetStyle(text, wxSTC_LUA_COMMENTDOC, Style(font, wxColor(0, 200, 0)));
+    SetStyle(text, wxSTC_LUA_NUMBER, Style(font, wxColor(0, 0, 100)));
+    SetStyle(text, wxSTC_LUA_WORD, Style(font));
+    SetStyle(text, wxSTC_LUA_STRING, Style(font));
+    SetStyle(text, wxSTC_LUA_CHARACTER, Style(font));
+    SetStyle(text, wxSTC_LUA_LITERALSTRING, Style(font));
+    SetStyle(text, wxSTC_LUA_PREPROCESSOR, Style(font, wxColor(0, 0, 200)));
+    SetStyle(text, wxSTC_LUA_OPERATOR, Style(font, wxColor(0, 0, 100)));
+    SetStyle(text, wxSTC_LUA_IDENTIFIER, Style(font));
+    SetStyle(text, wxSTC_LUA_STRINGEOL, Style(font));
+    SetStyle(text, wxSTC_LUA_WORD2, Style(font, wxColor(0, 0, 200)));
+    SetStyle(text, wxSTC_LUA_WORD3, Style(font));
+    SetStyle(text, wxSTC_LUA_WORD4, Style(font));
+    SetStyle(text, wxSTC_LUA_WORD5, Style(font));
+    SetStyle(text, wxSTC_LUA_WORD6, Style(font));
+    SetStyle(text, wxSTC_LUA_WORD7, Style(font));
+    SetStyle(text, wxSTC_LUA_WORD8, Style(font));
+    SetStyle(text, wxSTC_LUA_LABEL, Style(font));
+  }
+} g_language_lua;
+
 std::vector<Language*> BuildLanguageList() {
   std::vector<Language*> ret;
   ret.push_back(&g_language_cpp);
@@ -337,6 +371,7 @@ std::vector<Language*> BuildLanguageList() {
   ret.push_back(&g_language_properties);
   ret.push_back(&g_language_xml);
   ret.push_back(&g_language_cmake);
+  ret.push_back(&g_language_lua);
   return ret;
 }
 
