@@ -181,6 +181,9 @@ public:
     SetKeys(text, 0, CppWordlist1);
     SetKeys(text, 1, CppWordlist2);
     SetKeys(text, 2, CppWordlist3);
+
+    SetKeys(text, 3, ""); // global classes and typedefs
+    SetKeys(text, 4, ""); // preprocessor defines
   }
 } g_language_cpp;
 
