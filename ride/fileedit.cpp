@@ -84,7 +84,7 @@ int C(FoldFlags f) {
   return ret;
 }
 
-FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), dirty(false) {
+FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), dirty(false), currentLanguage(NULL) {
   text = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__
     wxSUNKEN_BORDER |
@@ -139,24 +139,6 @@ bool FileEdit::saveTo(const wxString& target) {
 
 unsigned int UntitledCount = 0;
 
-int FileEdit::DeterminePrefs(const wxString &filename) {
-  for (size_t languageNr = 0; languageNr < main->getLanguages().size(); languageNr++) {
-    const LanguageInfo* curInfo = &main->getLanguages()[languageNr];
-    wxString filepattern = curInfo->filepattern;
-    filepattern.Lower();
-    while (!filepattern.empty()) {
-      wxString cur = filepattern.BeforeFirst(';');
-      if ((cur == filename) ||
-        (cur == (filename.BeforeLast('.') + wxT(".*"))) ||
-        (cur == (wxT("*.") + filename.AfterLast('.')))) {
-        return languageNr;
-      }
-      filepattern = filepattern.AfterFirst(';');
-    }
-  }
-  return -1;
-}
-
 void SetStyle(wxStyledTextCtrl* text, int id, const Style& style) {
   if (style.foreground != wxNullColour) {
     text->StyleSetForeground(id, style.foreground);
@@ -173,7 +155,7 @@ wxString b2s01(bool b) {
   else return _("0");
 }
 
-bool FileEdit::InitializePrefs(int index) {
+bool FileEdit::UpdateTextControl() {
   // initialize styles
   text->StyleClearAll();
   wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
@@ -182,65 +164,8 @@ bool FileEdit::InitializePrefs(int index) {
   const wxColor darkgray = wxColour(20, 20, 20);
 
   // setup language color
-  text->SetLexer(wxSTC_LEX_CPP);
-  SetStyle(text, wxSTC_C_DEFAULT, Style(font));
-  SetStyle(text, wxSTC_C_COMMENT, Style(font, wxColor(0, 255, 0)));
-  SetStyle(text, wxSTC_C_COMMENTLINE, Style(font));
-  SetStyle(text, wxSTC_C_COMMENTDOC, Style(font));
-  SetStyle(text, wxSTC_C_NUMBER, Style(font));
-  SetStyle(text, wxSTC_C_WORD, Style(font, wxColor(0,0, 255)));
-  SetStyle(text, wxSTC_C_STRING, Style(font));
-  SetStyle(text, wxSTC_C_CHARACTER, Style(font));
-  SetStyle(text, wxSTC_C_UUID, Style(font));
-  SetStyle(text, wxSTC_C_PREPROCESSOR, Style(font));
-  SetStyle(text, wxSTC_C_OPERATOR, Style(font));
-  SetStyle(text, wxSTC_C_IDENTIFIER, Style(font));
-  SetStyle(text, wxSTC_C_STRINGEOL, Style(font));
-  SetStyle(text, wxSTC_C_VERBATIM, Style(font));
-  SetStyle(text, wxSTC_C_REGEX, Style(font));
-  SetStyle(text, wxSTC_C_COMMENTLINEDOC, Style(font));
-  SetStyle(text, wxSTC_C_WORD2, Style(font));
-  SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, Style(font));
-  SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, Style(font));
-  SetStyle(text, wxSTC_C_GLOBALCLASS, Style(font));
-  SetStyle(text, wxSTC_C_STRINGRAW, Style(font));
-  SetStyle(text, wxSTC_C_TRIPLEVERBATIM, Style(font));
-  SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, Style(font));
-  SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, Style(font));
-  text->SetProperty(wxT("fold"), b2s01(main->getSettings().foldEnable));
-  text->SetProperty(wxT("fold.comment"), b2s01(main->getSettings().foldComment));
-  text->SetProperty(wxT("fold.compact"), b2s01(main->getSettings().foldCompact));
-  text->SetProperty(wxT("fold.preprocessor"), b2s01(main->getSettings().foldPreproc));
-
-  const wxString props = text->PropertyNames();
-  const wxString keywords = text->DescribeKeyWordSets();
-
-  const wxString CppWordlist1 =
-    "asm auto bool break case catch char class const const_cast "
-    "continue default delete do double dynamic_cast else enum explicit "
-    "export extern false float for friend goto if inline int long "
-    "mutable namespace new operator private protected public register "
-    "reinterpret_cast return short signed sizeof static static_cast "
-    "struct switch template this throw true try typedef typeid "
-    "typename union unsigned using virtual void volatile wchar_t "
-    "while";
-  const wxString CppWordlist2 =
-    "file";
-  const wxString CppWordlist3 =
-    "a addindex addtogroup anchor arg attention author b brief bug c "
-    "class code date def defgroup deprecated dontinclude e em endcode "
-    "endhtmlonly endif endlatexonly endlink endverbatim enum example "
-    "exception f$ f[ f] file fn hideinitializer htmlinclude "
-    "htmlonly if image include ingroup internal invariant interface "
-    "latexonly li line link mainpage name namespace nosubgrouping note "
-    "overload p page par param post pre ref relates remarks return "
-    "retval sa section see showinitializer since skip skipline struct "
-    "subsection test throw todo typedef union until var verbatim "
-    "verbinclude version warning weakgroup $ @ \"\" & < > # { }";
-  text->SetKeyWords(0, CppWordlist1);
-  text->SetKeyWords(1, CppWordlist2);
-  text->SetKeyWords(2, CppWordlist3);
-
+  assert(currentLanguage);
+  currentLanguage->style(text, main->getSettings());
 
   // setup style colors and font
   SetStyle(text, wxSTC_STYLE_DEFAULT, Style(font, darkgray, white));
@@ -326,7 +251,8 @@ void FileEdit::updateFilename() {
     notebook->SetPageToolTip(index, filename);
 
     wxFileName fname(filename);
-    InitializePrefs(DeterminePrefs(fname.GetFullName()));
+    currentLanguage = DetermineLanguage(fname.GetFullName());
+    UpdateTextControl();
   }
 }
 

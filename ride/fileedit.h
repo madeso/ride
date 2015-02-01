@@ -21,14 +21,13 @@ public:
 
   ~FileEdit();
 private:
-  int DeterminePrefs(const wxString &filename);
   void updateFilename();
   void updateTitle();
   bool saveTo(const wxString& target);
 
   bool shouldBeSaved();
 
-  bool InitializePrefs(int index);
+  bool UpdateTextControl();
 
 private:
   MainWindow* main;
@@ -38,6 +37,8 @@ private:
   wxString docname;
   bool dirty;
   int m_LineNrMargin;
+
+  Language* currentLanguage;
 
 private:
   wxDECLARE_EVENT_TABLE();

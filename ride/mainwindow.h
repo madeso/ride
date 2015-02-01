@@ -6,7 +6,6 @@
 
 #include "ride/language.h"
 #include "ride/settings.h"
-#include "ride/style.h"
 
 class FileEdit;
 
@@ -17,8 +16,6 @@ public:
   ~MainWindow();
 
   const Settings& getSettings() const;
-  const std::vector<LanguageInfo>& getLanguages() const;
-  const std::vector<StyleInfo>& getStyles() const;
 
 private:
 	void OnOpen(wxCommandEvent& event);
@@ -43,8 +40,6 @@ private:
   wxAuiNotebook* notebook;
 
   Settings settings;
-  std::vector<LanguageInfo> languages;
-  std::vector<StyleInfo> styles;
 };
 
 #endif  // RIDE_MAINWINDOW_H
