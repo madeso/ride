@@ -307,6 +307,8 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
   text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
 
+  text->SetCaretLineVisible(true);
+
   return true;
 }
 
