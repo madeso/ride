@@ -18,7 +18,6 @@ public:
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
   void OnTextChanged(wxStyledTextEvent& event);
-  void OnSize(wxSizeEvent& event);
 
   ~FileEdit();
 private:

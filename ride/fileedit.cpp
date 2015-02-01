@@ -85,7 +85,11 @@ int C(FoldFlags f) {
 }
 
 FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), dirty(false) {
-  text = new wxStyledTextCtrl(this, wxID_ANY);
+  text = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
+#ifndef __WXMAC__
+    wxSUNKEN_BORDER |
+#endif
+    wxVSCROLL);
 
   filename = file;
 
@@ -159,7 +163,7 @@ bool FileEdit::InitializePrefs(int index) {
   wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
   const wxColor grey(100, 100, 100);
   const wxColor white(255, 255, 255);
-  const wxColor darkgray = wxColour(wxT("DARK GREY"));
+  const wxColor darkgray = wxColour(20, 20, 20);
 
   if (index >= main->getLanguages().size()){
     return false;
@@ -174,6 +178,7 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetLexer(curInfo->lexer);
 
   // initialize settings
+  /*
   int keywordnr = 0;
   for (size_t Nr = 0; Nr < curInfo->styles.size(); Nr++) {
     if (curInfo->styles[Nr].type == -1) continue;
@@ -192,17 +197,13 @@ bool FileEdit::InitializePrefs(int index) {
     text->StyleSetItalic(Nr, curType.italic);
     text->StyleSetUnderline(Nr, curType.underline);
     text->StyleSetVisible(Nr, curType.visible);
-    /*
-#define wxSTC_CASE_MIXED 0
-#define wxSTC_CASE_UPPER 1
-#define wxSTC_CASE_LOWER 2
-    */
     text->StyleSetCase(Nr, wxSTC_CASE_MIXED);
     if (stylelink.hasWords) {
       text->SetKeyWords(keywordnr, stylelink.words);
       keywordnr += 1;
     }
   }
+  */
 
   // setup style colors and font
   text->StyleSetForeground(wxSTC_STYLE_DEFAULT, darkgray);
@@ -346,14 +347,6 @@ void FileEdit::updateTitle() {
   notebook->SetPageText(index, docname + changestar);
 }
 
-void FileEdit::OnSize(wxSizeEvent& event) {
-  int x = text->GetClientSize().x +
-    (main->getSettings().lineNumberEnable ? m_LineNrMargin : 0) +
-    (main->getSettings().foldEnable ? m_FoldingMargin : 0);
-  if (x > 0) text->SetScrollWidth(x);
-  event.Skip();
-}
-
 bool FileEdit::shouldBeSaved() {
   return dirty || filename.IsEmpty();
 }
@@ -398,7 +391,6 @@ FileEdit::~FileEdit() {
 }
 
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
-  EVT_SIZE(OnSize)
   EVT_STC_MARGINCLICK(wxID_ANY, OnMarginClick)
   EVT_STC_CHARADDED(wxID_ANY, OnTextChanged)
 wxEND_EVENT_TABLE()
