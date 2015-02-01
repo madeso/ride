@@ -57,6 +57,25 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
   text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
   text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
 
+  /*
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_DOTDOTDOT, wxT("BLACK"), wxT("BLACK"));
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, wxT("BLACK"), wxT("BLACK"));
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, wxT("BLACK"), wxT("BLACK"));
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_DOTDOTDOT, wxT("BLACK"), wxT("WHITE"));
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, wxT("BLACK"), wxT("WHITE"));
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, wxT("BLACK"), wxT("BLACK"));
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, wxT("BLACK"), wxT("BLACK"));
+  */
+
+  const wxColor grey(100, 100, 100);
+  const wxColor white(255, 255, 255);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
   if (filename.IsEmpty()) {
     text->SetText(source);
@@ -202,9 +221,15 @@ bool FileEdit::InitializePrefs(int index) {
   // folding
   text->SetMarginType(m_FoldingID, wxSTC_MARGIN_SYMBOL);
   text->SetMarginMask(m_FoldingID, wxSTC_MASK_FOLDERS);
-  text->StyleSetBackground(m_FoldingID, *wxWHITE);
-  text->SetMarginWidth(m_FoldingID, 0);
-  text->SetMarginSensitive(m_FoldingID, false);
+  // text->StyleSetBackground(m_FoldingID, wxColor(200, 200, 200));
+  text->SetMarginWidth(m_FoldingID, 15);
+  text->SetMarginSensitive(m_FoldingID, true);
+  // text->SetFoldMarginColour(true, wxColor(200, 200, 200));
+
+  text->SetProperty(wxT("fold"), wxT("1"));
+  text->SetProperty(wxT("fold.comment"), wxT("1"));
+  text->SetProperty(wxT("fold.compact"), wxT("1"));
+
   if (main->getSettings().foldEnable) {
     text->SetMarginWidth(m_FoldingID, curInfo->folds != 0 ? m_FoldingMargin : 0);
     text->SetMarginSensitive(m_FoldingID, curInfo->folds != 0);

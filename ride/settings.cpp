@@ -3,7 +3,7 @@
 Settings::Settings()
   : syntaxEnable(true)
   , lineNumberEnable(true)
-  , foldEnable(false)
+  , foldEnable(true)
   , indentEnable(true)
   , displayEOLEnable(false)
   , indentGuideEnable(true)
