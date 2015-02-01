@@ -40,6 +40,7 @@ wxString PropTypeToString(int type) {
 void Language::style(wxStyledTextCtrl* text, const Settings& settings) {
 #ifdef _DEBUG
   props.clear();
+  used_keywords.clear();
 #endif
   text->SetLexer(lexstyle);
   dostyle(text, settings);
@@ -57,7 +58,11 @@ void Language::style(wxStyledTextCtrl* text, const Settings& settings) {
     }
   }
 
-  int dog = 3;
+  for (int i = 0; i < available_keywords.size(); ++i) {
+    if (used_keywords.find(i) == used_keywords.end()) {
+      wxLogWarning(_("Keyword %d for %s was not set: %s"), i, language_name, available_keywords[i]);
+    }
+  }
 #endif
 }
 
@@ -66,6 +71,14 @@ void Language::SetProp(wxStyledTextCtrl* text, const wxString& name, const wxStr
 #ifdef _DEBUG
   assert(props.find(name) == props.end());
   props.insert(name);
+#endif
+}
+
+void Language::SetKeys(wxStyledTextCtrl* text, int id, const wxString& keywords) {
+  text->SetKeyWords(id, keywords);
+#ifdef _DEBUG
+  assert(used_keywords.find(id) == used_keywords.end());
+  used_keywords.insert(id);
 #endif
 }
 
@@ -165,9 +178,9 @@ public:
       "retval sa section see showinitializer since skip skipline struct "
       "subsection test throw todo typedef union until var verbatim "
       "verbinclude version warning weakgroup $ @ \"\" & < > # { }";
-    text->SetKeyWords(0, CppWordlist1);
-    text->SetKeyWords(1, CppWordlist2);
-    text->SetKeyWords(2, CppWordlist3);
+    SetKeys(text, 0, CppWordlist1);
+    SetKeys(text, 1, CppWordlist2);
+    SetKeys(text, 2, CppWordlist3);
   }
 } g_language_cpp;
 
