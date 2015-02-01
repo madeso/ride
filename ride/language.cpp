@@ -1,29 +1,71 @@
 #include "ride/language.h"
 #include "ride/settings.h"
 #include <wx/stc/stc.h>
+#include <cassert>
 
 void SetStyle(wxStyledTextCtrl* text, int id, const Style& style);
 wxString b2s01(bool b);
 
-Language::Language(int style) : lexstyle(style) {
+std::vector<wxString> Split(const wxString& str, char c) {
+  wxString temp = str;
+  std::vector <wxString> ret;
+  while (!temp.empty()) {
+    wxString cur = temp.BeforeFirst(c);
+    ret.push_back(cur);
+    temp = temp.AfterFirst(c);
+  }
+
+  return ret;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+Language::Language(const wxString& name, int style) : language_name(name), lexstyle(style) {
+}
+
+wxString PropTypeToString(int type) {
+  switch (type)
+  {
+  case wxSTC_TYPE_BOOLEAN:
+    return _("bool");
+  case wxSTC_TYPE_INTEGER:
+    return _("int");
+  case wxSTC_TYPE_STRING:
+    return _("string");
+  default:
+    return _("unknown");
+  }
 }
 
 void Language::style(wxStyledTextCtrl* text, const Settings& settings) {
 #ifdef _DEBUG
-  props.reserve(0);
+  props.clear();
 #endif
   text->SetLexer(lexstyle);
   dostyle(text, settings);
 #ifdef _DEBUG
-  const wxString available_props = text->PropertyNames();
-  const wxString available_keywords = text->DescribeKeyWordSets();
+  const std::vector<wxString> available_props = Split(text->PropertyNames(), '\n');
+  const std::vector<wxString> available_keywords = Split(text->DescribeKeyWordSets(), '\n');
+
+  for (std::vector<wxString>::const_iterator p = available_props.begin(); p != available_props.end(); ++p) {
+    const wxString prop_name = *p;
+    if (props.find(prop_name) == props.end()) {
+      const wxString desc = text->DescribeProperty(prop_name);
+      const wxString value = text->GetProperty(prop_name);
+      const wxString type = PropTypeToString(text->PropertyType(prop_name));
+      wxLogWarning(_("Property for %s was not set: %s %s = %s // %s"), language_name, type, prop_name, value, desc);
+    }
+  }
+
+  int dog = 3;
 #endif
 }
 
 void Language::SetProp(wxStyledTextCtrl* text, const wxString& name, const wxString& value) {
   text->SetProperty(name, value);
 #ifdef _DEBUG
-  props.push_back(name);
+  assert(props.find(name) == props.end());
+  props.insert(name);
 #endif
 }
 
@@ -45,7 +87,7 @@ bool Language::matchPattern(const wxString& file) const {
 
 class CppLanguage : public Language {
 public:
-  CppLanguage() : Language(wxSTC_LEX_CPP){
+  CppLanguage() : Language(_("C++"), wxSTC_LEX_CPP){
     (*this)
       (".c")
       (".cc")
@@ -118,7 +160,7 @@ public:
 
 class NullLanguage : public Language {
 public:
-  NullLanguage() : Language(wxSTC_LEX_NULL) {
+  NullLanguage() : Language(_("NULL"), wxSTC_LEX_NULL) {
   }
   void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
   }
@@ -134,7 +176,10 @@ const std::vector<Language*> LanguageList = BuildLanguageList();
 
 Language* DetermineLanguage(const wxString& filepath) {
   for (std::vector<Language*>::const_iterator l = LanguageList.begin(); l != LanguageList.end(); ++l) {
-    return *l;
+    Language* lang = *l;
+    if (lang->matchPattern(filepath)) {
+      return lang;
+    }
   }
   return &g_language_null;
 }

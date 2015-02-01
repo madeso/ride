@@ -3,6 +3,7 @@
 
 #include <wx/wx.h>
 #include <vector>
+#include <set>
 
 class wxStyledTextCtrl;
 class Settings;
@@ -17,14 +18,15 @@ public:
 
   void style(wxStyledTextCtrl* text, const Settings& settings);
 protected:
-  Language(int style);
+  Language(const wxString& name, int style);
   virtual void dostyle(wxStyledTextCtrl* text, const Settings& settings) = 0;
   void SetProp(wxStyledTextCtrl* text, const wxString& name, const wxString& value);
 private:
+  wxString language_name;
   int lexstyle;
   std::vector<wxString> patterns;
 #ifdef _DEBUG
-  std::vector<wxString> props;
+  std::set<wxString> props;
 #endif
 };
 
