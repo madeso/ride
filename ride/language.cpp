@@ -179,9 +179,67 @@ public:
   }
 } g_language_null;
 
+#define wxSTC_MARKDOWN_DEFAULT 0
+#define wxSTC_MARKDOWN_LINE_BEGIN 1
+#define wxSTC_MARKDOWN_STRONG1 2
+#define wxSTC_MARKDOWN_STRONG2 3
+#define wxSTC_MARKDOWN_EM1 4
+#define wxSTC_MARKDOWN_EM2 5
+#define wxSTC_MARKDOWN_HEADER1 6
+#define wxSTC_MARKDOWN_HEADER2 7
+#define wxSTC_MARKDOWN_HEADER3 8
+#define wxSTC_MARKDOWN_HEADER4 9
+#define wxSTC_MARKDOWN_HEADER5 10
+#define wxSTC_MARKDOWN_HEADER6 11
+#define wxSTC_MARKDOWN_PRECHAR 12
+#define wxSTC_MARKDOWN_ULIST_ITEM 13
+#define wxSTC_MARKDOWN_OLIST_ITEM 14
+#define wxSTC_MARKDOWN_BLOCKQUOTE 15
+#define wxSTC_MARKDOWN_STRIKEOUT 16
+#define wxSTC_MARKDOWN_HRULE 17
+#define wxSTC_MARKDOWN_LINK 18
+#define wxSTC_MARKDOWN_CODE 19
+#define wxSTC_MARKDOWN_CODE2 20
+#define wxSTC_MARKDOWN_CODEBK 21
+
+class MarkdownLanguage : public Language {
+public:
+  MarkdownLanguage() : Language(_("Markdown"), wxSTC_LEX_MARKDOWN) {
+    (*this)
+      (".md")
+      ;
+  }
+  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+    wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+    SetStyle(text, wxSTC_MARKDOWN_DEFAULT, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_LINE_BEGIN, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_STRONG1, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_STRONG2, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_EM1, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_EM2, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_HEADER1, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_HEADER2, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_HEADER3, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_HEADER4, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_HEADER5, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_HEADER6, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_PRECHAR, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_ULIST_ITEM, Style(font, wxColor(0, 255, 0)));
+    SetStyle(text, wxSTC_MARKDOWN_OLIST_ITEM, Style(font, wxColor(0, 100, 0)));
+    SetStyle(text, wxSTC_MARKDOWN_BLOCKQUOTE, Style(font, wxColor(100, 100, 100)));
+    SetStyle(text, wxSTC_MARKDOWN_STRIKEOUT, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_HRULE, Style(font));
+    SetStyle(text, wxSTC_MARKDOWN_LINK, Style(font, wxColor(0, 0, 255)));
+    SetStyle(text, wxSTC_MARKDOWN_CODE, Style(font, wxColor(200, 0, 0)));
+    SetStyle(text, wxSTC_MARKDOWN_CODE2, Style(font, wxColor(200, 0, 0)));
+    SetStyle(text, wxSTC_MARKDOWN_CODEBK, Style(font));
+  }
+} g_language_markdown;
+
 std::vector<Language*> BuildLanguageList() {
   std::vector<Language*> ret;
   ret.push_back(&g_language_cpp);
+  ret.push_back(&g_language_markdown);
   return ret;
 }
 
