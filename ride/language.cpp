@@ -236,10 +236,40 @@ public:
   }
 } g_language_markdown;
 
+
+#define wxSTC_PROPS_DEFAULT 0
+#define wxSTC_PROPS_COMMENT 1
+#define wxSTC_PROPS_SECTION 2
+#define wxSTC_PROPS_ASSIGNMENT 3
+#define wxSTC_PROPS_DEFVAL 4
+#define wxSTC_PROPS_KEY 5
+
+
+class PropertiesLanguage : public Language {
+public:
+  PropertiesLanguage() : Language(_("Properties"), wxSTC_LEX_PROPERTIES) {
+    (*this)
+      (".props")
+      (".toml") // properties are kinda like toml
+      ;
+  }
+  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+    wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+
+    SetStyle(text, wxSTC_PROPS_DEFAULT, Style(font));
+    SetStyle(text, wxSTC_PROPS_COMMENT, Style(font, wxColor(0, 255, 0) ));
+    SetStyle(text, wxSTC_PROPS_SECTION, Style(font, wxColor(0, 0, 255)));
+    SetStyle(text, wxSTC_PROPS_ASSIGNMENT, Style(font, wxColor(0, 0, 100)));
+    SetStyle(text, wxSTC_PROPS_DEFVAL, Style(font));
+    SetStyle(text, wxSTC_PROPS_KEY, Style(font, wxColor(70, 70, 70)));
+  }
+} g_language_properties;
+
 std::vector<Language*> BuildLanguageList() {
   std::vector<Language*> ret;
   ret.push_back(&g_language_cpp);
   ret.push_back(&g_language_markdown);
+  ret.push_back(&g_language_properties);
   return ret;
 }
 
