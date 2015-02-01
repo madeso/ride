@@ -21,4 +21,4 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * cpack support (=installer for ride)
 * phaser support
 * investigate debugging support (gdb?)
-* custom styles
+* custom styles (like zenburn, obsidian, ...)
