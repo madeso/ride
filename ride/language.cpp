@@ -314,6 +314,13 @@ public:
     SetStyle(text, wxSTC_H_QUESTION, Style(font));
     SetStyle(text, wxSTC_H_VALUE, Style(font));
     SetStyle(text, wxSTC_H_XCCOMMENT, Style(font));
+
+    SetKeys(text, 0, "html body a head b div ul li"); // HTML elements and attributes
+    SetKeys(text, 1, "if while"); // JavaScript keywords
+    SetKeys(text, 2, ""); // VBScript keywords
+    SetKeys(text, 3, ""); // Python keywords
+    SetKeys(text, 4, ""); // PHP keywords
+    SetKeys(text, 5, ""); // SGML and DTD keywords
   }
 } g_language_xml;
 
@@ -343,6 +350,20 @@ public:
     SetStyle(text, wxSTC_CMAKE_MACRODEF, Style(font));
     SetStyle(text, wxSTC_CMAKE_STRINGVAR, Style(font));
     SetStyle(text, wxSTC_CMAKE_NUMBER, Style(font));
+
+    SetKeys(text, 0, 
+      "add_compile_options add_custom_command add_custom_target add_definitions add_dependencies add_executable add_library add_subdirectory "
+      "add_test aux_source_directory break build_command cmake_host_system_information cmake_minimum_required cmake_policy configure_file "
+      "create_test_sourcelist define_property elseif else enable_language enable_testing endforeach endfunction endif endmacro endwhile "
+      "execute_process export file find_file find_library find_package find_path find_program fltk_wrap_ui foreach function get_cmake_property "
+      "get_directory_property get_filename_component get_property get_source_file_property get_target_property get_test_property if include_directories "
+      "include_external_msproject include_regular_expression include install link_directories list load_cache load_command macro mark_as_advanced math "
+      "message option project qt_wrap_cpp qt_wrap_ui remove_definitions return separate_arguments set_directory_properties set_property set set_source_files_properties "
+      "set_target_properties set_tests_properties site_name source_group string target_compile_definitions target_compile_options target_include_directories target_link_libraries "
+      "try_compile try_run unset variable_watch while"
+      ); // Commands
+    SetKeys(text, 1, "CMAKE_ROOT CMAKE_SOURCE_DIR"); // Parameters
+    SetKeys(text, 2, ""); // UserDefined
   }
 } g_language_cmake;
 
@@ -361,7 +382,7 @@ public:
     SetStyle(text, wxSTC_LUA_COMMENTLINE, Style(font, wxColor(0, 200, 0)));
     SetStyle(text, wxSTC_LUA_COMMENTDOC, Style(font, wxColor(0, 200, 0)));
     SetStyle(text, wxSTC_LUA_NUMBER, Style(font, wxColor(0, 0, 100)));
-    SetStyle(text, wxSTC_LUA_WORD, Style(font));
+    SetStyle(text, wxSTC_LUA_WORD, Style(font, wxColor(0, 0, 200)));
     SetStyle(text, wxSTC_LUA_STRING, Style(font));
     SetStyle(text, wxSTC_LUA_CHARACTER, Style(font));
     SetStyle(text, wxSTC_LUA_LITERALSTRING, Style(font));
@@ -369,7 +390,7 @@ public:
     SetStyle(text, wxSTC_LUA_OPERATOR, Style(font, wxColor(0, 0, 100)));
     SetStyle(text, wxSTC_LUA_IDENTIFIER, Style(font));
     SetStyle(text, wxSTC_LUA_STRINGEOL, Style(font));
-    SetStyle(text, wxSTC_LUA_WORD2, Style(font, wxColor(0, 0, 200)));
+    SetStyle(text, wxSTC_LUA_WORD2, Style(font));
     SetStyle(text, wxSTC_LUA_WORD3, Style(font));
     SetStyle(text, wxSTC_LUA_WORD4, Style(font));
     SetStyle(text, wxSTC_LUA_WORD5, Style(font));
@@ -377,6 +398,20 @@ public:
     SetStyle(text, wxSTC_LUA_WORD7, Style(font));
     SetStyle(text, wxSTC_LUA_WORD8, Style(font));
     SetStyle(text, wxSTC_LUA_LABEL, Style(font));
+
+    SetKeys(text, 0,
+      "and break do else elseif "
+      "end false for function if "
+      "in local nil not or "
+      "repeat return then true until while"
+      );  // Keywords
+    SetKeys(text, 1, "");  // Basic functions
+    SetKeys(text, 2, "");  // String, (table) & math functions
+    SetKeys(text, 3, "");  // (coroutines), I/O & system facilities
+    SetKeys(text, 4, "");  // user1
+    SetKeys(text, 5, "");  // user2
+    SetKeys(text, 6, "");  // user3
+    SetKeys(text, 7, "");  // user4
   }
 } g_language_lua;
 
@@ -402,6 +437,8 @@ public:
     SetStyle(text, wxSTC_YAML_TEXT, Style(font));
     SetStyle(text, wxSTC_YAML_ERROR, Style(font, wxColor(200, 0, 0)));
     SetStyle(text, wxSTC_YAML_OPERATOR, Style(font));
+
+    SetKeys(text, 0, ""); // keywords
   }
 } g_language_yaml;
 
