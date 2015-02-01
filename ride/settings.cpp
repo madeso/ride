@@ -29,4 +29,7 @@ Settings::Settings()
   , useTabs(false)
   , tabIndents(true)
   , backspaceUnindents(true)
+  , foldComment(true)
+  , foldCompact(true)
+  , foldPreproc(true)
 {}

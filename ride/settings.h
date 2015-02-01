@@ -60,6 +60,10 @@ public:
   bool backspaceUnindents;
 
   FoldFlags foldflags;
+
+  bool foldComment;
+  bool foldCompact;
+  bool foldPreproc;
 };
 
 #endif  // RIDE_SETTINGS_H

@@ -168,6 +168,11 @@ void SetStyle(wxStyledTextCtrl* text, int id, const Style& style) {
   text->StyleSetFont(id, temp);
 }
 
+wxString b2s01(bool b) {
+  if (b) return _("1");
+  else return _("0");
+}
+
 bool FileEdit::InitializePrefs(int index) {
   // initialize styles
   text->StyleClearAll();
@@ -176,46 +181,8 @@ bool FileEdit::InitializePrefs(int index) {
   const wxColor white(255, 255, 255);
   const wxColor darkgray = wxColour(20, 20, 20);
 
-  if (index >= main->getLanguages().size()){
-    return false;
-  }
-  if (index < 0) {
-    return false;
-  }
-
-  LanguageInfo const* curInfo = &main->getLanguages()[index];
-
-  // set lexer and language
-  text->SetLexer(curInfo->lexer);
-
-  // initialize settings
-  /*
-  int keywordnr = 0;
-  for (size_t Nr = 0; Nr < curInfo->styles.size(); Nr++) {
-    if (curInfo->styles[Nr].type == -1) continue;
-    const StyleLink& stylelink = curInfo->styles[Nr];
-    const StyleInfo &curType = main->getStyles()[stylelink.type];
-    wxFont font(curType.fontsize, wxMODERN, wxNORMAL, wxNORMAL, false,
-      curType.fontname);
-    text->StyleSetFont(Nr, font);
-    if (curType.hasforeground) {
-      text->StyleSetForeground(Nr, curType.foreground);
-    }
-    if (curType.hasbackground) {
-      text->StyleSetBackground(Nr, curType.background);
-    }
-    text->StyleSetBold(Nr, curType.bold);
-    text->StyleSetItalic(Nr, curType.italic);
-    text->StyleSetUnderline(Nr, curType.underline);
-    text->StyleSetVisible(Nr, curType.visible);
-    text->StyleSetCase(Nr, wxSTC_CASE_MIXED);
-    if (stylelink.hasWords) {
-      text->SetKeyWords(keywordnr, stylelink.words);
-      keywordnr += 1;
-    }
-  }
-  */
-
+  // setup language color
+  text->SetLexer(wxSTC_LEX_CPP);
   SetStyle(text, wxSTC_C_DEFAULT, Style(font));
   SetStyle(text, wxSTC_C_COMMENT, Style(font, wxColor(0, 255, 0)));
   SetStyle(text, wxSTC_C_COMMENTLINE, Style(font));
@@ -240,6 +207,13 @@ bool FileEdit::InitializePrefs(int index) {
   SetStyle(text, wxSTC_C_TRIPLEVERBATIM, Style(font));
   SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, Style(font));
   SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, Style(font));
+  text->SetProperty(wxT("fold"), b2s01(main->getSettings().foldEnable));
+  text->SetProperty(wxT("fold.comment"), b2s01(main->getSettings().foldComment));
+  text->SetProperty(wxT("fold.compact"), b2s01(main->getSettings().foldCompact));
+  text->SetProperty(wxT("fold.preprocessor"), b2s01(main->getSettings().foldPreproc));
+
+  const wxString props = text->PropertyNames();
+  const wxString keywords = text->DescribeKeyWordSets();
 
   const wxString CppWordlist1 =
     "asm auto bool break case catch char class const const_cast "
@@ -263,7 +237,6 @@ bool FileEdit::InitializePrefs(int index) {
     "retval sa section see showinitializer since skip skipline struct "
     "subsection test throw todo typedef union until var verbatim "
     "verbinclude version warning weakgroup $ @ \"\" & < > # { }";
-
   text->SetKeyWords(0, CppWordlist1);
   text->SetKeyWords(1, CppWordlist2);
   text->SetKeyWords(2, CppWordlist3);
@@ -298,25 +271,8 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetMarginSensitive(m_FoldingID, true);
   text->SetFoldMarginColour(true, wxColor(200, 200, 200));
   text->SetFoldMarginHiColour(true, wxColor(200, 200, 200));
-  if (main->getSettings().foldEnable) {
-    text->SetMarginWidth(m_FoldingID, curInfo->folds != 0 ? m_FoldingMargin : 0);
-    text->SetMarginSensitive(m_FoldingID, curInfo->folds != 0);
-    text->SetProperty(wxT("fold"), curInfo->folds != 0 ? wxT("1") : wxT("0"));
-    text->SetProperty(wxT("fold.comment"),
-      (curInfo->folds & mySTC_FOLD_COMMENT) > 0 ? wxT("1") : wxT("0"));
-    text->SetProperty(wxT("fold.compact"),
-      (curInfo->folds & mySTC_FOLD_COMPACT) > 0 ? wxT("1") : wxT("0"));
-    text->SetProperty(wxT("fold.preprocessor"),
-      (curInfo->folds & mySTC_FOLD_PREPROC) > 0 ? wxT("1") : wxT("0"));
-    text->SetProperty(wxT("fold.html"),
-      (curInfo->folds & mySTC_FOLD_HTML) > 0 ? wxT("1") : wxT("0"));
-    text->SetProperty(wxT("fold.html.preprocessor"),
-      (curInfo->folds & mySTC_FOLD_HTMLPREP) > 0 ? wxT("1") : wxT("0"));
-    text->SetProperty(wxT("fold.comment.python"),
-      (curInfo->folds & mySTC_FOLD_COMMENTPY) > 0 ? wxT("1") : wxT("0"));
-    text->SetProperty(wxT("fold.quotes.python"),
-      (curInfo->folds & mySTC_FOLD_QUOTESPY) > 0 ? wxT("1") : wxT("0"));
-  }
+  text->SetMarginWidth(m_FoldingID, main->getSettings().foldEnable ? m_FoldingMargin : 0);
+  text->SetMarginSensitive(m_FoldingID, main->getSettings().foldEnable);
   text->SetFoldFlags(C(main->getSettings().foldflags));
   text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
   text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
