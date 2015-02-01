@@ -1,0 +1,5 @@
+[package]
+
+name = "librust"
+version = "0.0.1"
+authors = ["Gustav <hidden@email.com>"]
