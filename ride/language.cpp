@@ -5,6 +5,33 @@
 void SetStyle(wxStyledTextCtrl* text, int id, const Style& style);
 wxString b2s01(bool b);
 
+Language::Language(int style) : lexstyle(style) {
+}
+
+void Language::style(wxStyledTextCtrl* text, const Settings& settings) {
+#ifdef _DEBUG
+  props.reserve(0);
+#endif
+  text->SetLexer(lexstyle);
+  dostyle(text, settings);
+#ifdef _DEBUG
+  const wxString available_props = text->PropertyNames();
+  const wxString available_keywords = text->DescribeKeyWordSets();
+#endif
+}
+
+void Language::SetProp(wxStyledTextCtrl* text, const wxString& name, const wxString& value) {
+  text->SetProperty(name, value);
+#ifdef _DEBUG
+  props.push_back(name);
+#endif
+}
+
+Language& Language::operator()(const wxString& ext) {
+  patterns.push_back(ext);
+  return *this;
+}
+
 bool Language::matchPattern(const wxString& file) const {
   for (std::vector<wxString>::const_iterator p = patterns.begin(); p != patterns.end(); ++p) {
     if (file.EndsWith(*p)) {
@@ -14,22 +41,24 @@ bool Language::matchPattern(const wxString& file) const {
   return false;
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 class CppLanguage : public Language {
 public:
-  CppLanguage() {
-    patterns.push_back(".c");
-    patterns.push_back(".cc");
-    patterns.push_back(".cpp");
-    patterns.push_back(".cs");
-    patterns.push_back(".h");
-    patterns.push_back(".hh");
-    patterns.push_back(".hpp");
-    patterns.push_back(".hxx");
+  CppLanguage() : Language(wxSTC_LEX_CPP){
+    (*this)
+      (".c")
+      (".cc")
+      (".cpp")
+      (".cs")
+      (".h")
+      (".hh")
+      (".hpp")
+      (".hxx")
+      ;
   }
-  void style(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
-
-    text->SetLexer(wxSTC_LEX_CPP);
     SetStyle(text, wxSTC_C_DEFAULT, Style(font));
     SetStyle(text, wxSTC_C_COMMENT, Style(font, wxColor(0, 255, 0)));
     SetStyle(text, wxSTC_C_COMMENTLINE, Style(font));
@@ -54,10 +83,10 @@ public:
     SetStyle(text, wxSTC_C_TRIPLEVERBATIM, Style(font));
     SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, Style(font));
     SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, Style(font));
-    text->SetProperty(wxT("fold"), b2s01(settings.foldEnable));
-    text->SetProperty(wxT("fold.comment"), b2s01(settings.foldComment));
-    text->SetProperty(wxT("fold.compact"), b2s01(settings.foldCompact));
-    text->SetProperty(wxT("fold.preprocessor"), b2s01(settings.foldPreproc));
+    SetProp(text, wxT("fold"), b2s01(settings.foldEnable));
+    SetProp(text, wxT("fold.comment"), b2s01(settings.foldComment));
+    SetProp(text, wxT("fold.compact"), b2s01(settings.foldCompact));
+    SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldPreproc));
 
     const wxString CppWordlist1 =
       "asm auto bool break case catch char class const const_cast "
@@ -89,8 +118,9 @@ public:
 
 class NullLanguage : public Language {
 public:
-  void style(wxStyledTextCtrl* text, const Settings& settings) {
-    text->SetLexer(wxSTC_LEX_NULL);
+  NullLanguage() : Language(wxSTC_LEX_NULL) {
+  }
+  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
   }
 } g_language_null;
 
@@ -108,8 +138,3 @@ Language* DetermineLanguage(const wxString& filepath) {
   }
   return &g_language_null;
 }
-
-/*
-const wxString props = text->PropertyNames();
-const wxString keywords = text->DescribeKeyWordSets();
-*/
