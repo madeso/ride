@@ -145,7 +145,6 @@ bool FileEdit::InitializePrefs(int index) {
   // initialize styles
   text->StyleClearAll();
 
-  // determine language
   if (index >= main->getLanguages().size()){
     return false;
   }
@@ -163,12 +162,6 @@ bool FileEdit::InitializePrefs(int index) {
   text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(wxT("DARK GREY")));
   text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, *wxWHITE);
   text->SetMarginWidth(m_LineNrID, main->getSettings().lineNumberEnable ? m_LineNrMargin : 0); // start out not visible
-
-  // annotations style
-  text->StyleSetBackground(ANNOTATION_STYLE, wxColour(244, 220, 220));
-  text->StyleSetForeground(ANNOTATION_STYLE, *wxBLACK);
-  text->StyleSetSizeFractional(ANNOTATION_STYLE,
-    (text->StyleGetSizeFractional(wxSTC_STYLE_DEFAULT) * 4) / 5);
 
   // default fonts for all styles!
   for (size_t Nr = 0; Nr < wxSTC_STYLE_LASTPREDEFINED; Nr++) {
@@ -215,7 +208,7 @@ bool FileEdit::InitializePrefs(int index) {
 
   // set margin as unused
   text->SetMarginType(m_DividerID, wxSTC_MARGIN_SYMBOL);
-  text->SetMarginWidth(m_DividerID, 0);
+  text->SetMarginWidth(m_DividerID, 15);
   text->SetMarginSensitive(m_DividerID, false);
 
   // folding
