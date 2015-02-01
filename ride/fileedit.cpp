@@ -157,6 +157,17 @@ int FileEdit::DeterminePrefs(const wxString &filename) {
   return -1;
 }
 
+void SetStyle(wxStyledTextCtrl* text, int id, const Style& style) {
+  if (style.foreground != wxNullColour) {
+    text->StyleSetForeground(id, style.foreground);
+  }
+  if (style.background != wxNullColour) {
+    text->StyleSetBackground(id, style.background);
+  }
+  wxFont temp = style.font;
+  text->StyleSetFont(id, temp);
+}
+
 bool FileEdit::InitializePrefs(int index) {
   // initialize styles
   text->StyleClearAll();
@@ -205,35 +216,67 @@ bool FileEdit::InitializePrefs(int index) {
   }
   */
 
+  SetStyle(text, wxSTC_C_DEFAULT, Style(font));
+  SetStyle(text, wxSTC_C_COMMENT, Style(font, wxColor(0, 255, 0)));
+  SetStyle(text, wxSTC_C_COMMENTLINE, Style(font));
+  SetStyle(text, wxSTC_C_COMMENTDOC, Style(font));
+  SetStyle(text, wxSTC_C_NUMBER, Style(font));
+  SetStyle(text, wxSTC_C_WORD, Style(font, wxColor(0,0, 255)));
+  SetStyle(text, wxSTC_C_STRING, Style(font));
+  SetStyle(text, wxSTC_C_CHARACTER, Style(font));
+  SetStyle(text, wxSTC_C_UUID, Style(font));
+  SetStyle(text, wxSTC_C_PREPROCESSOR, Style(font));
+  SetStyle(text, wxSTC_C_OPERATOR, Style(font));
+  SetStyle(text, wxSTC_C_IDENTIFIER, Style(font));
+  SetStyle(text, wxSTC_C_STRINGEOL, Style(font));
+  SetStyle(text, wxSTC_C_VERBATIM, Style(font));
+  SetStyle(text, wxSTC_C_REGEX, Style(font));
+  SetStyle(text, wxSTC_C_COMMENTLINEDOC, Style(font));
+  SetStyle(text, wxSTC_C_WORD2, Style(font));
+  SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, Style(font));
+  SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, Style(font));
+  SetStyle(text, wxSTC_C_GLOBALCLASS, Style(font));
+  SetStyle(text, wxSTC_C_STRINGRAW, Style(font));
+  SetStyle(text, wxSTC_C_TRIPLEVERBATIM, Style(font));
+  SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, Style(font));
+  SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, Style(font));
+
+  const wxString CppWordlist1 =
+    "asm auto bool break case catch char class const const_cast "
+    "continue default delete do double dynamic_cast else enum explicit "
+    "export extern false float for friend goto if inline int long "
+    "mutable namespace new operator private protected public register "
+    "reinterpret_cast return short signed sizeof static static_cast "
+    "struct switch template this throw true try typedef typeid "
+    "typename union unsigned using virtual void volatile wchar_t "
+    "while";
+  const wxString CppWordlist2 =
+    "file";
+  const wxString CppWordlist3 =
+    "a addindex addtogroup anchor arg attention author b brief bug c "
+    "class code date def defgroup deprecated dontinclude e em endcode "
+    "endhtmlonly endif endlatexonly endlink endverbatim enum example "
+    "exception f$ f[ f] file fn hideinitializer htmlinclude "
+    "htmlonly if image include ingroup internal invariant interface "
+    "latexonly li line link mainpage name namespace nosubgrouping note "
+    "overload p page par param post pre ref relates remarks return "
+    "retval sa section see showinitializer since skip skipline struct "
+    "subsection test throw todo typedef union until var verbatim "
+    "verbinclude version warning weakgroup $ @ \"\" & < > # { }";
+
+  text->SetKeyWords(0, CppWordlist1);
+  text->SetKeyWords(1, CppWordlist2);
+  text->SetKeyWords(2, CppWordlist3);
+
+
   // setup style colors and font
-  // todo, move to settings
+  SetStyle(text, wxSTC_STYLE_DEFAULT, Style(font, darkgray, white));
   text->StyleSetForeground(wxSTC_STYLE_DEFAULT, darkgray);
-  text->StyleSetBackground(wxSTC_STYLE_DEFAULT, white);
-  text->StyleSetFont(wxSTC_STYLE_DEFAULT, font);
-  
-  text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, darkgray);
-  text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, white);
-  text->StyleSetFont(wxSTC_STYLE_LINENUMBER, font);
-
-  text->StyleSetForeground(wxSTC_STYLE_BRACELIGHT, darkgray);
-  text->StyleSetBackground(wxSTC_STYLE_BRACELIGHT, white);
-  text->StyleSetFont(wxSTC_STYLE_BRACELIGHT, font);
-  
-  text->StyleSetForeground(wxSTC_STYLE_BRACEBAD, darkgray);
-  text->StyleSetBackground(wxSTC_STYLE_BRACEBAD, white);
-  text->StyleSetFont(wxSTC_STYLE_BRACEBAD, font);
-  
-  text->StyleSetForeground(wxSTC_STYLE_CONTROLCHAR, darkgray);
-  text->StyleSetBackground(wxSTC_STYLE_CONTROLCHAR, white);
-  text->StyleSetFont(wxSTC_STYLE_CONTROLCHAR, font);
-  
-  text->StyleSetForeground(wxSTC_STYLE_INDENTGUIDE, darkgray);
-  text->StyleSetBackground(wxSTC_STYLE_INDENTGUIDE, white);
-  text->StyleSetFont(wxSTC_STYLE_INDENTGUIDE, font);
-
-  text->StyleSetForeground(wxSTC_STYLE_CALLTIP, darkgray);
-  text->StyleSetBackground(wxSTC_STYLE_CALLTIP, white);
-  text->StyleSetFont(wxSTC_STYLE_CALLTIP, font);
+  SetStyle(text, wxSTC_STYLE_BRACELIGHT, Style(font, darkgray, white));
+  SetStyle(text, wxSTC_STYLE_BRACEBAD, Style(font, darkgray, white));
+  SetStyle(text, wxSTC_STYLE_CONTROLCHAR, Style(font, darkgray, white));
+  SetStyle(text, wxSTC_STYLE_INDENTGUIDE, Style(font, darkgray, white));
+  SetStyle(text, wxSTC_STYLE_CALLTIP, Style(font, darkgray, white));
 
   //////////////////////////////////////////////////////////////////////////
 
@@ -246,16 +289,15 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetMarginWidth(m_DividerID, 15);
   text->SetMarginSensitive(m_DividerID, false);
 
-  // folding
+  // folding settings
+  // todo: move to settings
   text->SetMarginType(m_FoldingID, wxSTC_MARGIN_SYMBOL);
   text->SetMarginMask(m_FoldingID, wxSTC_MASK_FOLDERS);
   // text->StyleSetBackground(m_FoldingID, wxColor(200, 200, 200));
   text->SetMarginWidth(m_FoldingID, 15);
   text->SetMarginSensitive(m_FoldingID, true);
-  // text->SetFoldMarginColour(true, wxColor(200, 200, 200));
-  text->SetProperty(wxT("fold"), wxT("1"));
-  text->SetProperty(wxT("fold.comment"), wxT("1"));
-  text->SetProperty(wxT("fold.compact"), wxT("1"));
+  text->SetFoldMarginColour(true, wxColor(200, 200, 200));
+  text->SetFoldMarginHiColour(true, wxColor(200, 200, 200));
   if (main->getSettings().foldEnable) {
     text->SetMarginWidth(m_FoldingID, curInfo->folds != 0 ? m_FoldingMargin : 0);
     text->SetMarginSensitive(m_FoldingID, curInfo->folds != 0);
@@ -276,6 +318,13 @@ bool FileEdit::InitializePrefs(int index) {
       (curInfo->folds & mySTC_FOLD_QUOTESPY) > 0 ? wxT("1") : wxT("0"));
   }
   text->SetFoldFlags(C(main->getSettings().foldflags));
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
+  text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
   // set spaces and indention
   text->SetTabWidth(main->getSettings().tabWidth);
@@ -301,16 +350,6 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
   text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
   text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
-
-  // folding settings
-  // todo: move to settings
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
   return true;
 }

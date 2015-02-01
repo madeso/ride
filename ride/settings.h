@@ -31,6 +31,14 @@ struct FoldFlags {
   bool LEVELNUMBERS;
 };
 
+class Style {
+public:
+  Style(const wxFont& font, const wxColor& foreground=wxColor(0,0,0), const wxColor& background = wxNullColour);
+  wxFont font;
+  wxColor foreground;
+  wxColor background;
+};
+
 class Settings {
 public:
   Settings();

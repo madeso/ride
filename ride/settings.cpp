@@ -8,6 +8,12 @@ FoldFlags::FoldFlags()
   , LEVELNUMBERS(false)
 {}
 
+Style::Style(const wxFont& font, const wxColor& foreground, const wxColor& background)
+  : font(font)
+  , foreground(foreground)
+  , background(background)
+{}
+
 
 Settings::Settings()
   : lineNumberEnable(true)
