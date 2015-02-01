@@ -162,7 +162,7 @@ bool FileEdit::InitializePrefs(int index) {
   text->SetMarginType(m_LineNrID, wxSTC_MARGIN_NUMBER);
   text->StyleSetForeground(wxSTC_STYLE_LINENUMBER, wxColour(wxT("DARK GREY")));
   text->StyleSetBackground(wxSTC_STYLE_LINENUMBER, *wxWHITE);
-  text->SetMarginWidth(m_LineNrID,  main->getSettings().lineNumberEnable ? m_LineNrMargin : 0 ); // start out not visible
+  text->SetMarginWidth(m_LineNrID, main->getSettings().lineNumberEnable ? m_LineNrMargin : 0); // start out not visible
 
   // annotations style
   text->StyleSetBackground(ANNOTATION_STYLE, wxColour(244, 220, 220));
@@ -294,7 +294,7 @@ void FileEdit::updateFilename() {
 void FileEdit::updateTitle() {
   size_t index = notebook->GetPageIndex(this);
   const wxString changestar = dirty ? "*" : "";
-  notebook->SetPageText(index, docname+ changestar);
+  notebook->SetPageText(index, docname + changestar);
 }
 
 void FileEdit::OnSize(wxSizeEvent& event) {
