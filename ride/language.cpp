@@ -364,6 +364,31 @@ public:
   }
 } g_language_lua;
 
+class YamlLanguage : public Language {
+public:
+  YamlLanguage() : Language(_("YAML"), wxSTC_LEX_YAML) {
+    (*this)
+      (".yaml")
+      ;
+  }
+  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+    wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+
+    SetStyle(text, wxSTC_LUA_DEFAULT, Style(font));
+    
+    SetStyle(text, wxSTC_YAML_DEFAULT, Style(font));
+    SetStyle(text, wxSTC_YAML_COMMENT, Style(font, wxColor(0,200,0)));
+    SetStyle(text, wxSTC_YAML_IDENTIFIER, Style(font, wxColor(0, 0, 100)));
+    SetStyle(text, wxSTC_YAML_KEYWORD, Style(font, wxColor(0, 0, 255)));
+    SetStyle(text, wxSTC_YAML_NUMBER, Style(font));
+    SetStyle(text, wxSTC_YAML_REFERENCE, Style(font));
+    SetStyle(text, wxSTC_YAML_DOCUMENT, Style(font));
+    SetStyle(text, wxSTC_YAML_TEXT, Style(font));
+    SetStyle(text, wxSTC_YAML_ERROR, Style(font, wxColor(200, 0, 0)));
+    SetStyle(text, wxSTC_YAML_OPERATOR, Style(font));
+  }
+} g_language_yaml;
+
 std::vector<Language*> BuildLanguageList() {
   std::vector<Language*> ret;
   ret.push_back(&g_language_cpp);
@@ -372,6 +397,7 @@ std::vector<Language*> BuildLanguageList() {
   ret.push_back(&g_language_xml);
   ret.push_back(&g_language_cmake);
   ret.push_back(&g_language_lua);
+  ret.push_back(&g_language_yaml);
   return ret;
 }
 
