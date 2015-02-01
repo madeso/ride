@@ -58,7 +58,7 @@ void Language::style(wxStyledTextCtrl* text, const Settings& settings) {
     }
   }
 
-  for (int i = 0; i < available_keywords.size(); ++i) {
+  for (unsigned int i = 0; i < available_keywords.size(); ++i) {
     if (used_keywords.find(i) == used_keywords.end()) {
       wxLogWarning(_("Keyword %d for %s was not set: %s"), i, language_name, available_keywords[i]);
     }
@@ -74,7 +74,7 @@ void Language::SetProp(wxStyledTextCtrl* text, const wxString& name, const wxStr
 #endif
 }
 
-void Language::SetKeys(wxStyledTextCtrl* text, int id, const wxString& keywords) {
+void Language::SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords) {
   text->SetKeyWords(id, keywords);
 #ifdef _DEBUG
   assert(used_keywords.find(id) == used_keywords.end());
