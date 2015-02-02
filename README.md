@@ -5,7 +5,8 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 # Unsorted Roadmap
 
-* Fix syntax scintilla syntax highlighting.
+* Fix syntax scintilla syntax highlighting
+	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
 * project/solution explorer
 * project/solution(=cargo) commands
 * start page
