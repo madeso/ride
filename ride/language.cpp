@@ -4,6 +4,7 @@
 #include <cassert>
 
 void SetStyle(wxStyledTextCtrl* text, int id, const Style& style);
+
 wxString b2s01(bool b);
 
 std::vector<wxString> Split(const wxString& str, char c) {
