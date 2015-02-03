@@ -11,12 +11,12 @@
         <property name="embedded_files_path">res</property>
         <property name="encoding">UTF-8</property>
         <property name="event_generation">connect</property>
-        <property name="file"></property>
+        <property name="file">ui</property>
         <property name="first_id">1000</property>
         <property name="help_provider">none</property>
         <property name="internationalize">0</property>
-        <property name="name">MyProject1</property>
-        <property name="namespace"></property>
+        <property name="name">ui</property>
+        <property name="namespace">&quot;ui&quot;</property>
         <property name="path">.</property>
         <property name="precompiled_header"></property>
         <property name="relative_path">1</property>
@@ -24,7 +24,7 @@
         <property name="skip_php_events">1</property>
         <property name="skip_python_events">1</property>
         <property name="ui_table">UI</property>
-        <property name="use_enum">0</property>
+        <property name="use_enum">1</property>
         <property name="use_microsoft_bom">0</property>
         <object class="Frame" expanded="1">
             <property name="aui_managed">0</property>
