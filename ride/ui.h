@@ -32,7 +32,6 @@
 #include <wx/valgen.h>
 #include <wx/notebook.h>
 #include <wx/button.h>
-#include <wx/frame.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -41,7 +40,7 @@ namespace ui
 	///////////////////////////////////////////////////////////////////////////////
 	/// Class Settings
 	///////////////////////////////////////////////////////////////////////////////
-	class Settings : public wxFrame 
+	class Settings : public wxPanel 
 	{
 		private:
 		
@@ -86,12 +85,18 @@ namespace ui
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;
 			wxButton* m_sdbSizer1OK;
+			wxButton* m_sdbSizer1Apply;
 			wxButton* m_sdbSizer1Cancel;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+			
 		
 		public:
 			
-			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 733,470 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-			
+			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 604,400 ), long style = wxTAB_TRAVERSAL ); 
 			~Settings();
 		
 	};

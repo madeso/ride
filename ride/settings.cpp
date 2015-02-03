@@ -45,3 +45,12 @@ Settings::Settings()
   , fold_at_else(true)
 
 {}
+
+
+void Settings::load() {
+  // todo
+}
+
+void Settings::save() {
+  // todo
+}

@@ -43,6 +43,9 @@ class Settings {
 public:
   Settings();
 
+  void load();
+  void save();
+
   bool lineNumberEnable;
   bool foldEnable;
   bool displayEOLEnable;

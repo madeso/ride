@@ -10,10 +10,8 @@
 ///////////////////////////////////////////////////////////////////////////
 using namespace ui;
 
-Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+Settings::Settings( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
-	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
-	
 	wxFlexGridSizer* fgSizer1;
 	fgSizer1 = new wxFlexGridSizer( 0, 1, 0, 0 );
 	fgSizer1->AddGrowableCol( 0 );
@@ -226,6 +224,8 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_sdbSizer1 = new wxStdDialogButtonSizer();
 	m_sdbSizer1OK = new wxButton( this, wxID_OK );
 	m_sdbSizer1->AddButton( m_sdbSizer1OK );
+	m_sdbSizer1Apply = new wxButton( this, wxID_APPLY );
+	m_sdbSizer1->AddButton( m_sdbSizer1Apply );
 	m_sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
 	m_sdbSizer1->AddButton( m_sdbSizer1Cancel );
 	m_sdbSizer1->Realize();
@@ -237,9 +237,17 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->SetSizer( fgSizer1 );
 	this->Layout();
 	
-	this->Centre( wxBOTH );
+	// Connect Events
+	m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
+	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
+	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
 }
 
 Settings::~Settings()
 {
+	// Disconnect Events
+	m_sdbSizer1Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
+	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
+	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
+	
 }

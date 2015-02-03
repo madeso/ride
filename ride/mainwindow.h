@@ -16,6 +16,7 @@ public:
   ~MainWindow();
 
   const Settings& getSettings() const;
+  void setSettings(const Settings& settings);
 
 private:
 	void OnOpen(wxCommandEvent& event);
@@ -33,6 +34,7 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 private:
+  void updateAllEdits();
   void createNotebook();
   FileEdit* getSelectedEditorNull();
 

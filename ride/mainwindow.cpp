@@ -51,6 +51,8 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 {
   aui.SetManagedWindow(this);
 
+  settings.load();
+
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
   menuFile->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
@@ -167,5 +169,15 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
   evt.Skip();
 }
 
+void MainWindow::setSettings(const Settings& settings) {
+  assert(this);
+  this->settings = settings;
+  updateAllEdits();
+}
+
 void MainWindow::OnNotebookPageClosed(wxAuiNotebookEvent& evt) {
+}
+
+void MainWindow::updateAllEdits() {
+  // todo
 }
