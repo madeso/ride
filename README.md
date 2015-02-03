@@ -24,3 +24,8 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * phaser support
 * investigate debugging support (gdb?)
 * custom styles (like zenburn, obsidian, ...)
+
+
+# Debug ideas
+
+- Color tint IDE depending on current thread executing?
