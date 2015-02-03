@@ -8,6 +8,7 @@
 #include "ride/settings.h"
 
 class FileEdit;
+class SettingsDlg;
 
 class MainWindow: public wxFrame
 {
@@ -17,7 +18,7 @@ public:
 
   const Settings& getSettings() const;
   void setSettings(const Settings& settings);
-
+  void hideSettingsDlg();
 private:
 	void OnOpen(wxCommandEvent& event);
   void OnSave(wxCommandEvent& event);
@@ -25,6 +26,7 @@ private:
 
 	void OnExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
+  void ShowSettings(wxCommandEvent& event);
 
   void OnClose(wxCloseEvent& event);
 
@@ -40,6 +42,7 @@ private:
 
   wxAuiManager aui;
   wxAuiNotebook* notebook;
+  SettingsDlg* settingsdlg;
 
   Settings settings;
 };

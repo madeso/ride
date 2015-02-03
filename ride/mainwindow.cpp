@@ -6,15 +6,20 @@
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
 
+#include "ride/settingsdlg.h"
+
 enum
 {
-  ID_Random = 1
+  ID_SHOW_SETTINGS = wxID_HIGHEST + 1
 };
+
+#define RIDE_AUI_SETTINGS_ID "settings"
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 EVT_MENU(wxID_OPEN, MainWindow::OnOpen)
 EVT_MENU(wxID_EXIT, MainWindow::OnExit)
 EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
+EVT_MENU(ID_SHOW_SETTINGS, MainWindow::ShowSettings)
 
 EVT_MENU(wxID_SAVE, MainWindow::OnSave)
 EVT_MENU(wxID_SAVEAS, MainWindow::OnSaveAs)
@@ -58,6 +63,8 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuFile->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
   menuFile->Append(wxID_SAVEAS, "Save &as...\tCtrl-Shift-S", "Save the file as a new file");
   menuFile->AppendSeparator();
+  menuFile->Append(ID_SHOW_SETTINGS, "S&ettings...", "Change the settings of RIDE");
+  menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(wxID_ABOUT);
@@ -68,6 +75,13 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   CreateStatusBar();
   SetStatusText("");
   createNotebook();
+
+  settingsdlg = new SettingsDlg(this, this);
+  aui.AddPane(settingsdlg, wxAuiPaneInfo().
+    Name(wxT(RIDE_AUI_SETTINGS_ID)).Caption(wxT("Settings")).
+    DestroyOnClose(false).CloseButton(false).
+    Dockable(false).Float().Hide());
+
   aui.Update();
 }
 
@@ -81,7 +95,7 @@ void MainWindow::createNotebook() {
   ctrl->Thaw();
   notebook = ctrl;
 
-  aui.AddPane(notebook, wxAuiPaneInfo().Name(wxT("notebook_content")).CenterPane().PaneBorder(true));
+  aui.AddPane(notebook, wxAuiPaneInfo().Name(wxT("notebook_content")).PaneBorder(true));
 }
 
 const Settings& MainWindow::getSettings() const {
@@ -180,4 +194,15 @@ void MainWindow::OnNotebookPageClosed(wxAuiNotebookEvent& evt) {
 
 void MainWindow::updateAllEdits() {
   // todo
+}
+
+void MainWindow::ShowSettings(wxCommandEvent& event) {
+  settingsdlg->PrepareForShow();
+  wxAuiPaneInfo& sett = aui.GetPane(wxT(RIDE_AUI_SETTINGS_ID)).Float().Show();
+  aui.Update();
+}
+
+void MainWindow::hideSettingsDlg() {
+  aui.GetPane(wxT(RIDE_AUI_SETTINGS_ID)).Float().Hide();
+  aui.Update();
 }
