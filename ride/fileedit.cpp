@@ -155,7 +155,7 @@ wxString b2s01(bool b) {
   else return _("0");
 }
 
-bool FileEdit::UpdateTextControl() {
+void FileEdit::UpdateTextControl() {
   // initialize styles
   text->StyleClearAll();
   wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
@@ -233,8 +233,6 @@ bool FileEdit::UpdateTextControl() {
   text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
 
   text->SetCaretLineVisible(true);
-
-  return true;
 }
 
 void FileEdit::updateFilename() {

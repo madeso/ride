@@ -19,6 +19,8 @@ public:
   void OnMarginClick(wxStyledTextEvent& event);
   void OnTextChanged(wxStyledTextEvent& event);
 
+  void UpdateTextControl();
+
   ~FileEdit();
 private:
   void updateFilename();
@@ -26,8 +28,6 @@ private:
   bool saveTo(const wxString& target);
 
   bool shouldBeSaved();
-
-  bool UpdateTextControl();
 
 private:
   MainWindow* main;

@@ -193,7 +193,13 @@ void MainWindow::OnNotebookPageClosed(wxAuiNotebookEvent& evt) {
 }
 
 void MainWindow::updateAllEdits() {
-  // todo
+  for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
+    wxWindow* window = notebook->GetPage(i);
+    if (window->IsKindOf(CLASSINFO(FileEdit))) {
+      FileEdit* edit = reinterpret_cast<FileEdit*>(window);
+      edit->UpdateTextControl();
+    }
+  }
 }
 
 void MainWindow::ShowSettings(wxCommandEvent& event) {
