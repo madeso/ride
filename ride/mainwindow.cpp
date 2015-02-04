@@ -28,27 +28,6 @@ EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
 EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainWindow::OnNotebookPageClosed)
 wxEND_EVENT_TABLE()
 
-enum {
-  mySTC_TYPE_DEFAULT,
-  mySTC_TYPE_COMMENT,
-  mySTC_TYPE_COMMENT_LINE,
-  mySTC_TYPE_COMMENT_DOC,
-  mySTC_TYPE_NUMBER,
-  mySTC_TYPE_WORD1,
-  mySTC_TYPE_STRING,
-  mySTC_TYPE_CHARACTER,
-  mySTC_TYPE_UUID,
-  mySTC_TYPE_PREPROCESSOR,
-  mySTC_TYPE_OPERATOR,
-  mySTC_TYPE_IDENTIFIER,
-  mySTC_TYPE_STRING_EOL,
-  mySTC_TYPE_REGEX,
-  mySTC_TYPE_COMMENT_SPECIAL,
-  mySTC_TYPE_WORD2,
-  mySTC_TYPE_WORD3,
-  mySTC_TYPE_ERROR
-};
-
 MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
