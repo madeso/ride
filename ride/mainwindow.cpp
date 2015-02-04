@@ -152,6 +152,8 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
     }
   }
 
+  // shutdown protobuf now, to avoid spewing out memory leaks...
+  google::protobuf::ShutdownProtobufLibrary();
   evt.Skip();
 }
 
