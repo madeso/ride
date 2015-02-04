@@ -33,8 +33,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 {
   aui.SetManagedWindow(this);
 
-  // todo: load settings from user
-  // settings.load();
+  LoadSettings(settings);
 
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");

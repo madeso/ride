@@ -1,5 +1,36 @@
 #include "ride/settings.h"
 
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
+#include <fstream>
+
+wxFileName GetConfigFile() {
+  // wxStandardPaths::Get().UseAppInfo(wxStandardPaths::AppInfo_AppName | wxStandardPaths::AppInfo_VendorName);
+  wxFileName folder(wxStandardPaths::Get().GetUserDataDir(), "settings", "data");
+  return folder;
+}
+
+void LoadSettings(::ride::Settings& settings) {
+  const wxFileName confPath = GetConfigFile();
+  const wxString path = confPath.GetFullPath();
+  if (confPath.IsFileReadable()) {
+    std::fstream input(path.c_str().AsChar(), std::ios::in | std::ios::binary);
+    const bool parse_result = settings.ParseFromIstream(&input);
+  }
+}
+
+bool SaveSettings(::ride::Settings& settings) {
+  const wxFileName confPath = GetConfigFile();
+  const bool create_result = confPath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  if (confPath.FileExists() && confPath.IsFileWritable() == false) {
+    // abort if the file exist and isn't writable
+    return false;
+  }
+  const wxString path = confPath.GetFullPath();
+  std::fstream input(path.c_str().AsChar(), std::ios::out | std::ios::trunc | std::ios::binary);
+  return settings.SerializeToOstream(&input);
+}
+
 /*
 FoldFlags::FoldFlags()
   : LINEBEFORE_EXPANDED(false)
@@ -49,11 +80,9 @@ Settings::Settings()
 
 
 void Settings::load() {
-  // todo
 }
 
 void Settings::save() {
-  // todo
 }
 
 */

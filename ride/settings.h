@@ -3,4 +3,7 @@
 
 #include "settings.pb.h"
 
+void LoadSettings(::ride::Settings& settings);
+bool SaveSettings(::ride::Settings& settings);
+
 #endif  // RIDE_SETTINGS_H

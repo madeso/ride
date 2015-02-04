@@ -25,8 +25,9 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
 {
   editToGui(false);
   main->setSettings(edit);
-  // todo: save
-  // edit.save();
+  if (false == SaveSettings(edit)) {
+    wxMessageBox("Failed to save settings", "Failed!", wxOK | wxICON_ERROR);
+  }
   EndModal(wxOK);
 }
 
