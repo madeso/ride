@@ -33,7 +33,8 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 {
   aui.SetManagedWindow(this);
 
-  settings.load();
+  // todo: load settings from user
+  // settings.load();
 
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
@@ -69,7 +70,7 @@ void MainWindow::createNotebook() {
   aui.AddPane(notebook, wxAuiPaneInfo().Name(wxT("notebook_content")).PaneBorder(true));
 }
 
-const Settings& MainWindow::getSettings() const {
+const ride::Settings& MainWindow::getSettings() const {
   return settings;
 }
 
@@ -154,7 +155,7 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
   evt.Skip();
 }
 
-void MainWindow::setSettings(const Settings& settings) {
+void MainWindow::setSettings(const ride::Settings& settings) {
   assert(this);
   this->settings = settings;
   updateAllEdits();

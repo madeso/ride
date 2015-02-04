@@ -17,8 +17,8 @@ protected:
 private:
   void editToGui(bool togui);
   MainWindow* main;
-  ::Settings global;
-  ::Settings edit;
+  ride::Settings global;
+  ride::Settings edit;
 };
 
 #endif // SETTINGS_DLG_H

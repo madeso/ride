@@ -25,22 +25,23 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
 {
   editToGui(false);
   main->setSettings(edit);
-  edit.save();
+  // todo: save
+  // edit.save();
   EndModal(wxOK);
 }
 
-void DoIt(bool& data, wxCheckBox* gui, bool togui)  {
-  if (togui) {
-    gui->SetValue(data);
-  }
-  else {
-    data = gui->GetValue();
-  }
+void ToGui(bool data, wxCheckBox* gui)  {
+  gui->SetValue(data);
+}
+bool ToData(wxCheckBox* gui)  {
+  return gui->GetValue();
 }
 
+#define DIALOG_DATA(ROOT, FUN, UI) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_##FUN(ToData(UI)); } } while(false)
+
 void SettingsDlg::editToGui(bool togui) {
-  DoIt(edit.displayEOLEnable, uiDisplayEOL, togui);
-  DoIt(edit.lineNumberEnable, uiShowLineNumbers, togui);
-  DoIt(edit.indentGuideEnable, uiIndentGuide, togui);
+  DIALOG_DATA(edit, displayeolenable, uiDisplayEOL);
+  DIALOG_DATA(edit, linenumberenable, uiShowLineNumbers);
+  DIALOG_DATA(edit, indentguideenable, uiIndentGuide);
 }
 

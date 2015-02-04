@@ -16,8 +16,8 @@ public:
 	MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
   ~MainWindow();
 
-  const Settings& getSettings() const;
-  void setSettings(const Settings& settings);
+  const ride::Settings& getSettings() const;
+  void setSettings(const ride::Settings& settings);
 private:
 	void OnOpen(wxCommandEvent& event);
   void OnSave(wxCommandEvent& event);
@@ -42,7 +42,7 @@ private:
   wxAuiManager aui;
   wxAuiNotebook* notebook;
 
-  Settings settings;
+  ride::Settings settings;
 };
 
 #endif  // RIDE_MAINWINDOW_H

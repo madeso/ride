@@ -3,7 +3,7 @@
 #include <wx/stc/stc.h>
 #include <cassert>
 
-void SetStyle(wxStyledTextCtrl* text, int id, const Style& style);
+void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style);
 
 wxString b2s01(bool b);
 
@@ -38,7 +38,7 @@ wxString PropTypeToString(int type) {
   }
 }
 
-void Language::style(wxStyledTextCtrl* text, const Settings& settings) {
+void Language::style(wxStyledTextCtrl* text, const ride::Settings& settings) {
 #ifdef _DEBUG
   props.clear();
   used_keywords.clear();
@@ -113,7 +113,8 @@ public:
       (".hxx")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+    /*
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
     SetStyle(text, wxSTC_C_DEFAULT, Style(font));
     SetStyle(text, wxSTC_C_COMMENT, Style(font, wxColor(0, 255, 0)));
@@ -139,21 +140,22 @@ public:
     SetStyle(text, wxSTC_C_TRIPLEVERBATIM, Style(font));
     SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, Style(font));
     SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, Style(font));
-    SetProp(text, wxT("fold"), b2s01(settings.foldEnable));
-    SetProp(text, wxT("fold.comment"), b2s01(settings.foldComment));
-    SetProp(text, wxT("fold.compact"), b2s01(settings.foldCompact));
-    SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldPreproc));
-    SetProp(text, wxT("styling.within.preprocessor"), b2s01(settings.styling_within_preprocessor));
-    SetProp(text, wxT("lexer.cpp.allow.dollars"), b2s01(settings.lexer_cpp_allow_dollars));
-    SetProp(text, wxT("lexer.cpp.track.preprocessor"), b2s01(settings.lexer_cpp_track_preprocessor));
-    SetProp(text, wxT("lexer.cpp.update.preprocessor"), b2s01(settings.lexer_cpp_update_preprocessor));
-    SetProp(text, wxT("lexer.cpp.triplequoted.strings"), b2s01(settings.lexer_cpp_triplequoted_strings));
-    SetProp(text, wxT("lexer.cpp.hashquoted.strings"), b2s01(settings.lexer_cpp_hashquoted_strings));
-    SetProp(text, wxT("fold.cpp.syntax.based"), b2s01(settings.fold_cpp_syntax_based));
-    SetProp(text, wxT("fold.cpp.comment.multiline"), b2s01(settings.fold_cpp_comment_multiline));
-    SetProp(text, wxT("fold.cpp.comment.explicit"), b2s01(settings.fold_cpp_comment_explicit));
-    SetProp(text, wxT("fold.cpp.explicit.anywhere"), b2s01(settings.fold_cpp_explicit_anywhere));
-    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else));
+    */
+    SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
+    SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
+    SetProp(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
+    SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
+    SetProp(text, wxT("styling.within.preprocessor"), b2s01(settings.styling_within_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.allow.dollars"), b2s01(settings.lexer_cpp_allow_dollars()));
+    SetProp(text, wxT("lexer.cpp.track.preprocessor"), b2s01(settings.lexer_cpp_track_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.update.preprocessor"), b2s01(settings.lexer_cpp_update_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.triplequoted.strings"), b2s01(settings.lexer_cpp_triplequoted_strings()));
+    SetProp(text, wxT("lexer.cpp.hashquoted.strings"), b2s01(settings.lexer_cpp_hashquoted_strings()));
+    SetProp(text, wxT("fold.cpp.syntax.based"), b2s01(settings.fold_cpp_syntax_based()));
+    SetProp(text, wxT("fold.cpp.comment.multiline"), b2s01(settings.fold_cpp_comment_multiline()));
+    SetProp(text, wxT("fold.cpp.comment.explicit"), b2s01(settings.fold_cpp_comment_explicit()));
+    SetProp(text, wxT("fold.cpp.explicit.anywhere"), b2s01(settings.fold_cpp_explicit_anywhere()));
+    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
     SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
     SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 
@@ -192,7 +194,7 @@ class NullLanguage : public Language {
 public:
   NullLanguage() : Language(_("NULL"), wxSTC_LEX_NULL) {
   }
-  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
   }
 } g_language_null;
 
@@ -203,7 +205,8 @@ public:
       (".md")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+    /*
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
     SetStyle(text, wxSTC_MARKDOWN_DEFAULT, Style(font));
     SetStyle(text, wxSTC_MARKDOWN_LINE_BEGIN, Style(font));
@@ -227,6 +230,7 @@ public:
     SetStyle(text, wxSTC_MARKDOWN_CODE, Style(font, wxColor(200, 0, 0)));
     SetStyle(text, wxSTC_MARKDOWN_CODE2, Style(font, wxColor(200, 0, 0)));
     SetStyle(text, wxSTC_MARKDOWN_CODEBK, Style(font));
+    */
   }
 } g_language_markdown;
 
@@ -239,15 +243,17 @@ public:
       (".toml") // properties are kinda like toml
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
+    /*
     SetStyle(text, wxSTC_PROPS_DEFAULT, Style(font));
     SetStyle(text, wxSTC_PROPS_COMMENT, Style(font, wxColor(0, 255, 0) ));
     SetStyle(text, wxSTC_PROPS_SECTION, Style(font, wxColor(0, 0, 255)));
     SetStyle(text, wxSTC_PROPS_ASSIGNMENT, Style(font, wxColor(0, 0, 100)));
     SetStyle(text, wxSTC_PROPS_DEFVAL, Style(font));
     SetStyle(text, wxSTC_PROPS_KEY, Style(font, wxColor(70, 70, 70)));
+    */
   }
 } g_language_properties;
 
@@ -258,9 +264,10 @@ public:
       (".xml")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
+    /*
     SetStyle(text, wxSTC_H_DEFAULT, Style(font));
     SetStyle(text, wxSTC_H_TAG, Style(font, wxColor(0, 0, 200)));
     SetStyle(text, wxSTC_H_TAGUNKNOWN, Style(font, wxColor(0, 0, 200)));
@@ -282,6 +289,7 @@ public:
     SetStyle(text, wxSTC_H_QUESTION, Style(font));
     SetStyle(text, wxSTC_H_VALUE, Style(font));
     SetStyle(text, wxSTC_H_XCCOMMENT, Style(font));
+    */
 
     SetKeys(text, 0, "html body a head b div ul li"); // HTML elements and attributes
     SetKeys(text, 1, "if while"); // JavaScript keywords
@@ -300,9 +308,10 @@ public:
       ("CMakeLists.txt")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
+    /*
     SetStyle(text, wxSTC_CMAKE_DEFAULT, Style(font));
     SetStyle(text, wxSTC_CMAKE_COMMENT, Style(font, wxColor(0,100,0) ));
     SetStyle(text, wxSTC_CMAKE_STRINGDQ, Style(font));
@@ -318,6 +327,7 @@ public:
     SetStyle(text, wxSTC_CMAKE_MACRODEF, Style(font));
     SetStyle(text, wxSTC_CMAKE_STRINGVAR, Style(font));
     SetStyle(text, wxSTC_CMAKE_NUMBER, Style(font));
+    */
 
     SetKeys(text, 0, 
       "add_compile_options add_custom_command add_custom_target add_definitions add_dependencies add_executable add_library add_subdirectory "
@@ -342,9 +352,10 @@ public:
       (".lua")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
     
+    /*
     SetStyle(text, wxSTC_LUA_DEFAULT, Style(font));
     SetStyle(text, wxSTC_LUA_COMMENT, Style(font, wxColor(0,200,0)));
     SetStyle(text, wxSTC_LUA_COMMENTLINE, Style(font, wxColor(0, 200, 0)));
@@ -366,6 +377,7 @@ public:
     SetStyle(text, wxSTC_LUA_WORD7, Style(font));
     SetStyle(text, wxSTC_LUA_WORD8, Style(font));
     SetStyle(text, wxSTC_LUA_LABEL, Style(font));
+    */
 
     SetKeys(text, 0,
       "and break do else elseif "
@@ -390,11 +402,10 @@ public:
       (".yaml")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const Settings& settings) {
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
-    SetStyle(text, wxSTC_LUA_DEFAULT, Style(font));
-    
+    /*
     SetStyle(text, wxSTC_YAML_DEFAULT, Style(font));
     SetStyle(text, wxSTC_YAML_COMMENT, Style(font, wxColor(0,200,0)));
     SetStyle(text, wxSTC_YAML_IDENTIFIER, Style(font, wxColor(0, 0, 100)));
@@ -405,6 +416,7 @@ public:
     SetStyle(text, wxSTC_YAML_TEXT, Style(font));
     SetStyle(text, wxSTC_YAML_ERROR, Style(font, wxColor(200, 0, 0)));
     SetStyle(text, wxSTC_YAML_OPERATOR, Style(font));
+    */
 
     SetKeys(text, 0, ""); // keywords
   }

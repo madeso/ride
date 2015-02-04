@@ -1,21 +1,21 @@
 package ride;
 
 enum EdgeStyle {
-  ES_NONE = 0;
-  ES_LINE = 1;
-  ES_BACKGROUND = 2;
+  EDGESTYLE_NONE = 0;
+  EDGESTYLE_LINE = 1;
+  EDGESTYLE_BACKGROUND = 2;
 }
 
 enum ViewWhitespace {
-  VW_HIDDEN = 0;
-  VW_ALWAYS = 1;
-  VW_AFTER_IDENT = 2;
+  VIEWWHITESPACE_HIDDEN = 0;
+  VIEWWHITESPACE_ALWAYS = 1;
+  VIEWWHITESPACE_AFTER_IDENT = 2;
 }
 
 enum WrapMode {
-  WM_NONE = 0;
-  WM_CHAR = 1;
-  WM_WORD = 2;
+  WRAPMODE_NONE = 0;
+  WRAPMODE_CHAR = 1;
+  WRAPMODE_WORD = 2;
 }
 
 message FoldFlags {
@@ -57,6 +57,7 @@ message Settings {
 
   optional FoldFlags foldflags = 14;
 
+  // C++
   optional bool foldComment = 15;
   optional bool foldCompact = 16;
   optional bool foldPreproc = 17;
@@ -72,4 +73,11 @@ message Settings {
   optional bool     fold_cpp_comment_explicit = 26;       //  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
   optional bool     fold_cpp_explicit_anywhere = 27;      //  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
   optional bool     fold_at_else = 28;                    //  This option enables C++ folding on a "} else {" line of an if statement.
+
+  optional Style default_style = 29;
+  optional Style bracelight_style = 30;
+  optional Style bracebad_style = 31;
+  optional Style controlchar_style = 32;
+  optional Style indentguide_style = 33;
+  optional Style calltip_style = 34;
 }

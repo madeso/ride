@@ -20,13 +20,13 @@ enum
 
 const int ANNOTATION_STYLE = wxSTC_STYLE_LASTPREDEFINED + 1;
 
-int C(EdgeStyle::Type e) {
+int C(ride::EdgeStyle e) {
   switch (e) {
-  case EdgeStyle::BACKGROUND:
+  case ride::EDGESTYLE_BACKGROUND:
     return wxSTC_EDGE_BACKGROUND;
-  case EdgeStyle::LINE:
+  case ride::EDGESTYLE_LINE:
     return wxSTC_EDGE_LINE;
-  case EdgeStyle::NONE:
+  case ride::EDGESTYLE_NONE:
     return wxSTC_EDGE_NONE;
   default:
     assert(false && "Invalid edge style");
@@ -34,13 +34,13 @@ int C(EdgeStyle::Type e) {
   }
 }
 
-int C(ViewWhitespace::Type e) {
+int C(ride::ViewWhitespace e) {
   switch (e) {
-  case ViewWhitespace::ALWAYS:
+  case ride::VIEWWHITESPACE_ALWAYS:
     return wxSTC_WS_VISIBLEALWAYS;
-  case ViewWhitespace::AFTER_IDENT:
+  case ride::VIEWWHITESPACE_AFTER_IDENT:
     return wxSTC_WS_VISIBLEAFTERINDENT;
-  case ViewWhitespace::HIDDEN:
+  case ride::VIEWWHITESPACE_HIDDEN:
     return wxSTC_WS_INVISIBLE;
   default:
     assert(false && "Invalid whitespace style");
@@ -48,13 +48,13 @@ int C(ViewWhitespace::Type e) {
   }
 }
 
-int C(WrapMode::Type e) {
+int C(ride::WrapMode e) {
   switch (e) {
-  case WrapMode::CHAR:
+  case ride::WRAPMODE_CHAR:
     return wxSTC_WRAP_CHAR;
-  case WrapMode::WORD:
+  case ride::WRAPMODE_WORD:
     return wxSTC_WRAP_WORD;
-  case WrapMode::NONE:
+  case ride::WRAPMODE_NONE:
     return wxSTC_WRAP_NONE;
   default:
     assert(false && "Invalid wrap mode");
@@ -62,26 +62,30 @@ int C(WrapMode::Type e) {
   }
 }
 
-int C(FoldFlags f) {
+int C(ride::FoldFlags f) {
   int ret = 0;
 
-  if (f.LINEBEFORE_EXPANDED) {
+  if (f.linebefore_expanded()) {
     ret |= wxSTC_FOLDFLAG_LINEBEFORE_EXPANDED;
   }
-  if (f.LINEBEFORE_CONTRACTED) {
+  if (f.linebefore_contracted()) {
     ret |= wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED;
   }
-  if (f.LINEAFTER_EXPANDED) {
+  if (f.lineafter_expanded()) {
     ret |= wxSTC_FOLDFLAG_LINEAFTER_EXPANDED;
   }
-  if (f.LINEAFTER_CONTRACTED) {
+  if (f.lineafter_contracted()) {
     ret |= wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED;
   }
-  if (f.LEVELNUMBERS) {
+  if (f.levelnumbers()) {
     ret |= wxSTC_FOLDFLAG_LEVELNUMBERS;
   }
 
   return ret;
+}
+
+wxColor C(const ride::Color& c) {
+  return wxColor(c.r(), c.g(), c.b());
 }
 
 FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), dirty(false), currentLanguage(NULL) {
@@ -139,15 +143,19 @@ bool FileEdit::saveTo(const wxString& target) {
 
 unsigned int UntitledCount = 0;
 
-void SetStyle(wxStyledTextCtrl* text, int id, const Style& style) {
-  if (style.foreground != wxNullColour) {
-    text->StyleSetForeground(id, style.foreground);
+void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style) {
+  if (C(style.foreground()) != wxNullColour) {
+    // todo: check this
+    text->StyleSetForeground(id, C(style.foreground()));
   }
-  if (style.background != wxNullColour) {
-    text->StyleSetBackground(id, style.background);
+  if (C(style.background()) != wxNullColour) {
+    // todo: check this
+    text->StyleSetBackground(id, C(style.background()));
   }
+  /*
+  // todo...
   wxFont temp = style.font;
-  text->StyleSetFont(id, temp);
+  text->StyleSetFont(id, temp);*/
 }
 
 wxString b2s01(bool b) {
@@ -163,24 +171,25 @@ void FileEdit::UpdateTextControl() {
   const wxColor white(255, 255, 255);
   const wxColor darkgray = wxColour(20, 20, 20);
 
+  const ride::Settings& set = main->getSettings();
+
   // setup language color
   assert(currentLanguage);
-  currentLanguage->style(text, main->getSettings());
+  currentLanguage->style(text, set);
 
   // setup style colors and font
-  SetStyle(text, wxSTC_STYLE_DEFAULT, Style(font, darkgray, white));
-  text->StyleSetForeground(wxSTC_STYLE_DEFAULT, darkgray);
-  SetStyle(text, wxSTC_STYLE_BRACELIGHT, Style(font, darkgray, white));
-  SetStyle(text, wxSTC_STYLE_BRACEBAD, Style(font, darkgray, white));
-  SetStyle(text, wxSTC_STYLE_CONTROLCHAR, Style(font, darkgray, white));
-  SetStyle(text, wxSTC_STYLE_INDENTGUIDE, Style(font, darkgray, white));
-  SetStyle(text, wxSTC_STYLE_CALLTIP, Style(font, darkgray, white));
+  SetStyle(text, wxSTC_STYLE_DEFAULT,  set.default_style());
+  SetStyle(text, wxSTC_STYLE_BRACELIGHT, set.bracelight_style());
+  SetStyle(text, wxSTC_STYLE_BRACEBAD, set.bracebad_style());
+  SetStyle(text, wxSTC_STYLE_CONTROLCHAR, set.controlchar_style());
+  SetStyle(text, wxSTC_STYLE_INDENTGUIDE, set.indentguide_style());
+  SetStyle(text, wxSTC_STYLE_CALLTIP, set.calltip_style());
 
   //////////////////////////////////////////////////////////////////////////
 
   // set margin for line numbers
   text->SetMarginType(m_LineNrID, wxSTC_MARGIN_NUMBER);
-  text->SetMarginWidth(m_LineNrID, main->getSettings().lineNumberEnable ? m_LineNrMargin : 0);
+  text->SetMarginWidth(m_LineNrID, set.linenumberenable() ? m_LineNrMargin : 0);
 
   // set margin as unused
   text->SetMarginType(m_DividerID, wxSTC_MARGIN_SYMBOL);
@@ -196,9 +205,10 @@ void FileEdit::UpdateTextControl() {
   text->SetMarginSensitive(m_FoldingID, true);
   text->SetFoldMarginColour(true, wxColor(200, 200, 200));
   text->SetFoldMarginHiColour(true, wxColor(200, 200, 200));
-  text->SetMarginWidth(m_FoldingID, main->getSettings().foldEnable ? m_FoldingMargin : 0);
-  text->SetMarginSensitive(m_FoldingID, main->getSettings().foldEnable);
-  text->SetFoldFlags(C(main->getSettings().foldflags));
+  text->SetMarginWidth(m_FoldingID, set.foldenable() ? m_FoldingMargin : 0);
+  text->SetMarginSensitive(m_FoldingID, set.foldenable());
+  text->SetFoldFlags(C(set.foldflags()));
+  // todo: expose theese
   text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
   text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
   text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
@@ -208,23 +218,23 @@ void FileEdit::UpdateTextControl() {
   text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
   // set spaces and indention
-  text->SetTabWidth(main->getSettings().tabWidth);
-  text->SetUseTabs(main->getSettings().useTabs);
-  text->SetTabIndents(main->getSettings().tabIndents);
-  text->SetBackSpaceUnIndents(main->getSettings().backspaceUnindents);
-  text->SetIndent(main->getSettings().tabWidth);
+  text->SetTabWidth(set.tabwidth());
+  text->SetUseTabs(set.usetabs());
+  text->SetTabIndents(set.tabindents());
+  text->SetBackSpaceUnIndents(set.backspaceunindents());
+  text->SetIndent(set.tabwidth());
 
   text->SetFont(font);
 
-  text->SetViewEOL(main->getSettings().displayEOLEnable);
-  text->SetIndentationGuides(main->getSettings().indentGuideEnable);
-  text->SetEdgeMode(C(main->getSettings().edgeStyle));
-  text->SetEdgeColour(main->getSettings().edgeColor);
-  text->SetEdgeColumn(main->getSettings().edgeColumn);
-  text->SetViewWhiteSpace(C(main->getSettings().whitespace));
+  text->SetViewEOL(set.displayeolenable());
+  text->SetIndentationGuides(set.indentguideenable());
+  text->SetEdgeMode(C(set.edgestyle()));
+  text->SetEdgeColour(C(set.edgecolor()));
+  text->SetEdgeColumn(set.edgecolumn());
+  text->SetViewWhiteSpace(C(set.whitespace()));
   text->SetOvertype(false);
   text->SetReadOnly(false);
-  text->SetWrapMode(C(main->getSettings().wordWrap));
+  text->SetWrapMode(C(set.wordwrap()));
 
   // set visibility
   // todo: investigate this
@@ -232,6 +242,7 @@ void FileEdit::UpdateTextControl() {
   text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
   text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
 
+  // todo: expose this
   text->SetCaretLineVisible(true);
 }
 

@@ -1,5 +1,6 @@
 #include "ride/settings.h"
 
+/*
 FoldFlags::FoldFlags()
   : LINEBEFORE_EXPANDED(false)
   , LINEBEFORE_CONTRACTED(false)
@@ -54,3 +55,5 @@ void Settings::load() {
 void Settings::save() {
   // todo
 }
+
+*/

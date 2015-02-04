@@ -5,8 +5,9 @@
 #include <vector>
 #include <set>
 
+#include "ride/settings.h"
+
 class wxStyledTextCtrl;
-class Settings;
 
 class Language {
 public:
@@ -16,10 +17,10 @@ public:
   // internal
   Language& operator()(const wxString& ext);
 
-  void style(wxStyledTextCtrl* text, const Settings& settings);
+  void style(wxStyledTextCtrl* text, const ride::Settings& settings);
 protected:
   Language(const wxString& name, int style);
-  virtual void dostyle(wxStyledTextCtrl* text, const Settings& settings) = 0;
+  virtual void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) = 0;
   void SetProp(wxStyledTextCtrl* text, const wxString& name, const wxString& value);
   void SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords);
 private:
