@@ -22,10 +22,11 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * scintilla text commands
 * settings/options window
 * cpack support (=installer for ride)
-* phaser support
+* Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
 * investigate debugging support (gdb?)
 * custom styles (like zenburn, obsidian, ...)
 * numbered bookmarks
+- built in syntax highlight for shading languges like glsl like http://nshader.codeplex.com/
 
 # Debug ideas
 
