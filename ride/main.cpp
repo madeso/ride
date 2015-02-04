@@ -1,6 +1,7 @@
 #include <wx/wx.h>
 
 #include "ride/mainwindow.h"
+#include "settings.pb.h"
 
 class MyApp: public wxApp
 {
@@ -12,6 +13,7 @@ wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit()
 {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
 	MainWindow *frame = new MainWindow("RIDE - Rust IDE", wxPoint(50, 50), wxSize(450, 340) );
 	frame->Show( true );
 	return true;
