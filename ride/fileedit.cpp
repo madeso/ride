@@ -144,11 +144,11 @@ bool FileEdit::saveTo(const wxString& target) {
 unsigned int UntitledCount = 0;
 
 void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style) {
-  if (C(style.foreground()) != wxNullColour) {
+  if (style.has_foreground()) {
     // todo: check this
     text->StyleSetForeground(id, C(style.foreground()));
   }
-  if (C(style.background()) != wxNullColour) {
+  if (style.has_background()) {
     // todo: check this
     text->StyleSetBackground(id, C(style.background()));
   }
