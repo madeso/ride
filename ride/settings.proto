@@ -1,0 +1,75 @@
+package ride;
+
+enum EdgeStyle {
+  ES_NONE = 0;
+  ES_LINE = 1;
+  ES_BACKGROUND = 2;
+}
+
+enum ViewWhitespace {
+  VW_HIDDEN = 0;
+  VW_ALWAYS = 1;
+  VW_AFTER_IDENT = 2;
+}
+
+enum WrapMode {
+  WM_NONE = 0;
+  WM_CHAR = 1;
+  WM_WORD = 2;
+}
+
+message FoldFlags {
+  optional bool LINEBEFORE_EXPANDED = 1;
+  optional bool LINEBEFORE_CONTRACTED = 2;
+  optional bool LINEAFTER_EXPANDED = 3;
+  optional bool LINEAFTER_CONTRACTED = 4;
+  optional bool LEVELNUMBERS = 5;
+};
+
+message Color {
+	optional int32 r = 1;
+	optional int32 g = 2;
+	optional int32 b = 3;
+}
+
+message Style {
+  // wxFont font = 1;
+  optional Color foreground = 2;
+  optional Color background = 3;
+};
+
+message Settings {
+  optional bool lineNumberEnable = 1;
+  optional bool foldEnable = 2;
+  optional bool displayEOLEnable = 3;
+  optional bool indentGuideEnable = 4;
+  optional ViewWhitespace whitespace = 5;
+  optional WrapMode wordWrap = 6;
+
+  optional EdgeStyle edgeStyle = 7;
+  optional Color edgeColor = 8;
+  optional int32 edgeColumn = 9;
+
+  optional int32 tabWidth = 10;
+  optional bool useTabs = 11;
+  optional bool tabIndents = 12;
+  optional bool backspaceUnindents = 13;
+
+  optional FoldFlags foldflags = 14;
+
+  optional bool foldComment = 15;
+  optional bool foldCompact = 16;
+  optional bool foldPreproc = 17;
+
+  optional bool     styling_within_preprocessor = 18;     //  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
+  optional bool     lexer_cpp_allow_dollars = 19;         // Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
+  optional bool     lexer_cpp_track_preprocessor = 20;    //  Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
+  optional bool     lexer_cpp_update_preprocessor = 21;   //  Set to 1 to update preprocessor definitions when #define found.
+  optional bool     lexer_cpp_triplequoted_strings = 22;  //  Set to 1 to enable highlighting of triple-quoted strings.
+  optional bool     lexer_cpp_hashquoted_strings = 23;    //  Set to 1 to enable highlighting of hash-quoted strings.
+  optional bool     fold_cpp_syntax_based = 24;           //  Set this property to 0 to disable syntax based folding.
+  optional bool     fold_cpp_comment_multiline = 25;      //  Set this property to 0 to disable folding multi-line comments when fold.comment=1.
+  optional bool     fold_cpp_comment_explicit = 26;       //  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
+  optional bool     fold_cpp_explicit_anywhere = 27;      //  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
+  optional bool     fold_at_else = 28;                    //  This option enables C++ folding on a "} else {" line of an if statement.
+}
