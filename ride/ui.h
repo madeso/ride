@@ -32,6 +32,7 @@
 #include <wx/valgen.h>
 #include <wx/notebook.h>
 #include <wx/button.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +41,7 @@ namespace ui
 	///////////////////////////////////////////////////////////////////////////////
 	/// Class Settings
 	///////////////////////////////////////////////////////////////////////////////
-	class Settings : public wxPanel 
+	class Settings : public wxDialog 
 	{
 		private:
 		
@@ -96,7 +97,7 @@ namespace ui
 		
 		public:
 			
-			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 604,400 ), long style = wxTAB_TRAVERSAL ); 
+			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 			~Settings();
 		
 	};

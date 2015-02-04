@@ -18,7 +18,6 @@ public:
 
   const Settings& getSettings() const;
   void setSettings(const Settings& settings);
-  void hideSettingsDlg();
 private:
 	void OnOpen(wxCommandEvent& event);
   void OnSave(wxCommandEvent& event);
@@ -42,7 +41,6 @@ private:
 
   wxAuiManager aui;
   wxAuiNotebook* notebook;
-  SettingsDlg* settingsdlg;
 
   Settings settings;
 };

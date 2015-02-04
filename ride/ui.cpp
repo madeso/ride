@@ -10,8 +10,10 @@
 ///////////////////////////////////////////////////////////////////////////
 using namespace ui;
 
-Settings::Settings( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
 	wxFlexGridSizer* fgSizer1;
 	fgSizer1 = new wxFlexGridSizer( 0, 1, 0, 0 );
 	fgSizer1->AddGrowableCol( 0 );
@@ -236,6 +238,9 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxPoint& pos, const w
 	
 	this->SetSizer( fgSizer1 );
 	this->Layout();
+	fgSizer1->Fit( this );
+	
+	this->Centre( wxBOTH );
 	
 	// Connect Events
 	m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );

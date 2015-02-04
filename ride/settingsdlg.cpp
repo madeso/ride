@@ -4,6 +4,9 @@
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
 ::ui::Settings(parent, wxID_ANY), main(mainwindow)
 {
+  global = main->getSettings();
+  edit = global;
+  editToGui(true);
 }
 
 void SettingsDlg::OnApply( wxCommandEvent& event )
@@ -15,13 +18,7 @@ void SettingsDlg::OnApply( wxCommandEvent& event )
 void SettingsDlg::OnCancel( wxCommandEvent& event )
 {
   main->setSettings(global);
-  main->hideSettingsDlg();
-}
-
-void SettingsDlg::PrepareForShow() {
-  global = main->getSettings();
-  edit = global;
-  editToGui(true);
+  EndModal(wxCANCEL);
 }
 
 void SettingsDlg::OnOk( wxCommandEvent& event )
@@ -29,7 +26,7 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
   editToGui(false);
   main->setSettings(edit);
   edit.save();
-  main->hideSettingsDlg();
+  EndModal(wxOK);
 }
 
 void DoIt(bool& data, wxCheckBox* gui, bool togui)  {

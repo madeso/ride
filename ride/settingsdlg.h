@@ -10,7 +10,6 @@ class SettingsDlg : public ui::Settings
 {
 public:
   SettingsDlg(wxWindow* parent, MainWindow* mainwindow);
-  void PrepareForShow();
 protected:
   void OnApply(wxCommandEvent& event);
   void OnCancel(wxCommandEvent& event);

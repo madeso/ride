@@ -13,8 +13,6 @@ enum
   ID_SHOW_SETTINGS = wxID_HIGHEST + 1
 };
 
-#define RIDE_AUI_SETTINGS_ID "settings"
-
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 EVT_MENU(wxID_OPEN, MainWindow::OnOpen)
 EVT_MENU(wxID_EXIT, MainWindow::OnExit)
@@ -75,12 +73,6 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   CreateStatusBar();
   SetStatusText("");
   createNotebook();
-
-  settingsdlg = new SettingsDlg(this, this);
-  aui.AddPane(settingsdlg, wxAuiPaneInfo().
-    Name(wxT(RIDE_AUI_SETTINGS_ID)).Caption(wxT("Settings")).
-    DestroyOnClose(false).CloseButton(false).
-    Dockable(false).Float().Hide());
 
   aui.Update();
 }
@@ -203,12 +195,6 @@ void MainWindow::updateAllEdits() {
 }
 
 void MainWindow::ShowSettings(wxCommandEvent& event) {
-  settingsdlg->PrepareForShow();
-  wxAuiPaneInfo& sett = aui.GetPane(wxT(RIDE_AUI_SETTINGS_ID)).Float().Show();
-  aui.Update();
-}
-
-void MainWindow::hideSettingsDlg() {
-  aui.GetPane(wxT(RIDE_AUI_SETTINGS_ID)).Float().Hide();
-  aui.Update();
+  SettingsDlg settingsdlg(this, this);
+  settingsdlg.ShowModal();
 }
