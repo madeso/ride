@@ -25,6 +25,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
 * investigate debugging support (gdb?)
 * custom styles (like zenburn, obsidian, ...)
+* import styles from other editors (like visualstudio / https://studiostyl.es/ )
 * code snippets
 * numbered bookmarks
 * built in syntax highlight for shading languges like glsl like http://nshader.codeplex.com/
