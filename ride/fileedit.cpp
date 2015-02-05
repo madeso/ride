@@ -84,10 +84,6 @@ int C(ride::FoldFlags f) {
   return ret;
 }
 
-wxColor C(const ride::Color& c) {
-  return wxColor(c.r(), c.g(), c.b());
-}
-
 FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), dirty(false), currentLanguage(NULL) {
   text = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__

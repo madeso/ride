@@ -31,6 +31,18 @@ bool SaveSettings(::ride::Settings& settings) {
   return settings.SerializeToOstream(&input);
 }
 
+wxColor C(const ride::Color& c) {
+  return wxColor(c.r(), c.g(), c.b());
+}
+
+ride::Color C(const wxColor& c) {
+  ride::Color r;
+  r.set_r(c.Red());
+  r.set_g(c.Green());
+  r.set_b(c.Blue());
+  return r;
+}
+
 /*
 FoldFlags::FoldFlags()
   : LINEBEFORE_EXPANDED(false)
