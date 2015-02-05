@@ -38,6 +38,19 @@ message Style {
   optional Color background = 3;
 };
 
+// the idea of moving out all fonts and colors is that likely theese are
+// what people want share: obsidian/zenburn/monokai and https://studiostyl.es/
+message FontsAndColors {
+  optional Style default_style = 29;
+  optional Style bracelight_style = 30;
+  optional Style bracebad_style = 31;
+  optional Style controlchar_style = 32;
+  optional Style indentguide_style = 33;
+  optional Style calltip_style = 34;
+
+  optional Color edgeColor = 8;
+}
+
 message Settings {
   optional bool lineNumberEnable = 1 [default=true];
   optional bool foldEnable = 2 [default=true];
@@ -46,8 +59,10 @@ message Settings {
   optional ViewWhitespace whitespace = 5;
   optional WrapMode wordWrap = 6;
 
-  optional EdgeStyle edgeStyle = 7;
-  optional Color edgeColor = 8;
+  optional EdgeStyle edgeStyle = 7 [default=EDGESTYLE_LINE];
+  
+  optional FontsAndColors fonts_and_colors = 8;
+
   optional int32 edgeColumn = 9 [default=80];
 
   optional int32 tabWidth = 10 [default=4];
@@ -73,11 +88,4 @@ message Settings {
   optional bool     fold_cpp_comment_explicit = 26 [default=true];       //  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
   optional bool     fold_cpp_explicit_anywhere = 27 [default=false];      //  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
   optional bool     fold_at_else = 28 [default=true];                    //  This option enables C++ folding on a "} else {" line of an if statement.
-
-  optional Style default_style = 29;
-  optional Style bracelight_style = 30;
-  optional Style bracebad_style = 31;
-  optional Style controlchar_style = 32;
-  optional Style indentguide_style = 33;
-  optional Style calltip_style = 34;
 }

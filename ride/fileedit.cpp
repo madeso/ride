@@ -178,12 +178,12 @@ void FileEdit::UpdateTextControl() {
   currentLanguage->style(text, set);
 
   // setup style colors and font
-  SetStyle(text, wxSTC_STYLE_DEFAULT,  set.default_style());
-  SetStyle(text, wxSTC_STYLE_BRACELIGHT, set.bracelight_style());
-  SetStyle(text, wxSTC_STYLE_BRACEBAD, set.bracebad_style());
-  SetStyle(text, wxSTC_STYLE_CONTROLCHAR, set.controlchar_style());
-  SetStyle(text, wxSTC_STYLE_INDENTGUIDE, set.indentguide_style());
-  SetStyle(text, wxSTC_STYLE_CALLTIP, set.calltip_style());
+  SetStyle(text, wxSTC_STYLE_DEFAULT,  set.fonts_and_colors().default_style());
+  SetStyle(text, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
+  SetStyle(text, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
+  SetStyle(text, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
+  SetStyle(text, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
+  SetStyle(text, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
 
   //////////////////////////////////////////////////////////////////////////
 
@@ -229,7 +229,7 @@ void FileEdit::UpdateTextControl() {
   text->SetViewEOL(set.displayeolenable());
   text->SetIndentationGuides(set.indentguideenable());
   text->SetEdgeMode(C(set.edgestyle()));
-  text->SetEdgeColour(C(set.edgecolor()));
+  text->SetEdgeColour(C(set.fonts_and_colors().edgecolor()));
   text->SetEdgeColumn(set.edgecolumn());
   text->SetViewWhiteSpace(C(set.whitespace()));
   text->SetOvertype(false);
