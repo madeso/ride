@@ -1,7 +1,7 @@
 #ifndef RIDE_FILEEDIT_H
 #define RIDE_FILEEDIT_H
 
-#include <wx/wx.h>
+#include "ride/wx.h"
 #include <wx/stc/stc.h>
 
 class wxAuiNotebook;

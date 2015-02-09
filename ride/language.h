@@ -1,7 +1,7 @@
 #ifndef RIDE_LANGUAGE_H
 #define RIDE_LANGUAGE_H
 
-#include <wx/wx.h>
+
 #include <vector>
 #include <set>
 

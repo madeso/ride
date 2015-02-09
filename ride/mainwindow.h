@@ -1,7 +1,7 @@
 #ifndef RIDE_MAINWINDOW_H
 #define RIDE_MAINWINDOW_H
 
-#include <wx/wx.h>
+
 #include <wx/aui/aui.h>
 
 #include "ride/language.h"
