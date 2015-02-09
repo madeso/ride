@@ -1,3 +1,4 @@
+#include "localwx.h"
 #include "ride/settings.h"
 
 #include <wx/filename.h>

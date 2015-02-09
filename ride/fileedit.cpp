@@ -1,3 +1,4 @@
+#include "localwx.h"
 #include <wx/wx.h>
 #include <wx/stc/stc.h>
 #include <wx/aui/aui.h>
@@ -311,8 +312,8 @@ FileEdit::~FileEdit() {
 }
 
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
-  EVT_STC_MARGINCLICK(wxID_ANY, OnMarginClick)
-  EVT_STC_CHARADDED(wxID_ANY, OnTextChanged)
+EVT_STC_MARGINCLICK(wxID_ANY, FileEdit::OnMarginClick)
+EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnTextChanged)
 wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)

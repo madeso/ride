@@ -1,3 +1,4 @@
+#include "localwx.h"
 #include "ride/settingsdlg.h"
 #include "ride/mainwindow.h"
 

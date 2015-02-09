@@ -1,3 +1,4 @@
+#include "localwx.h"
 #include <wx/wx.h>
 #include <wx/stc/stc.h>
 #include <wx/aui/aui.h>
@@ -22,7 +23,7 @@ EVT_MENU(ID_SHOW_SETTINGS, MainWindow::ShowSettings)
 EVT_MENU(wxID_SAVE, MainWindow::OnSave)
 EVT_MENU(wxID_SAVEAS, MainWindow::OnSaveAs)
 
-EVT_CLOSE(OnClose)
+EVT_CLOSE(MainWindow::OnClose)
 
 EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
 EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainWindow::OnNotebookPageClosed)
