@@ -1,4 +1,4 @@
-#include "localwx.h"
+#include "ride/wx.h"
 #include <wx/wx.h>
 #include <wx/stc/stc.h>
 #include <wx/aui/aui.h>
