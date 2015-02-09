@@ -14,4 +14,9 @@
 #define HAVE_TR1_TYPE_TRAITS
 #endif
 
+#include <wx/wxprec.h>
+#ifndef WX_PRECOMP
+#include <wx/wx.h>
+#endif
+
 #endif  // RIDE_LOCALWX_H
