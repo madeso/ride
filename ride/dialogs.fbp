@@ -18,7 +18,7 @@
         <property name="name">ui</property>
         <property name="namespace">&quot;ui&quot;</property>
         <property name="path">.</property>
-        <property name="precompiled_header"></property>
+        <property name="precompiled_header">#include &quot;ride/wx.h&quot;</property>
         <property name="relative_path">1</property>
         <property name="skip_lua_events">1</property>
         <property name="skip_php_events">1</property>
@@ -3211,7 +3211,7 @@
                                                                                 <property name="minimize_button">0</property>
                                                                                 <property name="minimum_size"></property>
                                                                                 <property name="moveable">1</property>
-                                                                                <property name="name">uiLineAfterExpanded</property>
+                                                                                <property name="name">uiFoldLineAfterExpanded</property>
                                                                                 <property name="pane_border">1</property>
                                                                                 <property name="pane_position"></property>
                                                                                 <property name="pane_size"></property>
@@ -3299,7 +3299,7 @@
                                                                                 <property name="minimize_button">0</property>
                                                                                 <property name="minimum_size"></property>
                                                                                 <property name="moveable">1</property>
-                                                                                <property name="name">uiLineAfterContracted</property>
+                                                                                <property name="name">uiFoldLineAfterContracted</property>
                                                                                 <property name="pane_border">1</property>
                                                                                 <property name="pane_position"></property>
                                                                                 <property name="pane_size"></property>

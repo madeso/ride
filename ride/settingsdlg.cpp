@@ -93,6 +93,7 @@ T* Allocate(const T& t) {
 
 void SettingsDlg::editToGui(bool togui) {
   ride::FontsAndColors fonts_and_colors = edit.fonts_and_colors();
+  ride::FoldFlags foldflags = edit.foldflags();
 
   DIALOG_DATA(edit, displayeolenable, uiDisplayEOL,);
   DIALOG_DATA(edit, linenumberenable, uiShowLineNumbers,);
@@ -105,10 +106,23 @@ void SettingsDlg::editToGui(bool togui) {
   DIALOG_DATA(edit, wordwrap, uiWordwrap, _WM);
   DIALOG_DATA(edit, edgestyle, uiEdgeStyle, _ES);
 
+  DIALOG_DATA(edit, tabindents, uiTabIndents, );
+  DIALOG_DATA(edit, usetabs, uiUseTabs, );
+  DIALOG_DATA(edit, backspaceunindents, uiBackspaceUnindents, );
+
+  DIALOG_DATA(edit, foldenable, uiAllowFolding, );
+  
+  DIALOG_DATA(foldflags, levelnumbers, uiFoldLevelNumbers, );
+  DIALOG_DATA(foldflags, linebefore_expanded, uiFoldLineBeforeExpanded, );
+  DIALOG_DATA(foldflags, linebefore_contracted, uiFoldLineBeforeContracted, );
+  DIALOG_DATA(foldflags, lineafter_expanded, uiFoldLineAfterExpanded, );
+  DIALOG_DATA(foldflags, lineafter_contracted, uiFoldLineAfterContracted, );
+
   DIALOG_DATAX(fonts_and_colors, edgecolor, uiEdgeColor);
 
   if (togui == false) {
     edit.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
+    edit.set_allocated_foldflags(Allocate(foldflags));
   }
 }
 

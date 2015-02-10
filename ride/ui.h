@@ -80,8 +80,8 @@ namespace ui
 			wxCheckBox* uiFoldLevelNumbers;
 			wxCheckBox* uiFoldLineBeforeExpanded;
 			wxCheckBox* uiFoldLineBeforeContracted;
-			wxCheckBox* uiLineAfterExpanded;
-			wxCheckBox* uiLineAfterContracted;
+			wxCheckBox* uiFoldLineAfterExpanded;
+			wxCheckBox* uiFoldLineAfterContracted;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;

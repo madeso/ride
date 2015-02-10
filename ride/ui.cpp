@@ -6,6 +6,7 @@
 ///////////////////////////////////////////////////////////////////////////
 
 #include "ride/wx.h"
+
 #include "ui.h"
 
 ///////////////////////////////////////////////////////////////////////////
@@ -192,11 +193,12 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiFoldLineBeforeContracted = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line before (contracted)"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer5->Add( uiFoldLineBeforeContracted, 0, wxALL, 5 );
 	
-	uiLineAfterExpanded = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line after (expanded)"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( uiLineAfterExpanded, 0, wxALL, 5 );
+	uiFoldLineAfterExpanded = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line after (expanded)"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiFoldLineAfterExpanded->SetValue(true); 
+	fgSizer5->Add( uiFoldLineAfterExpanded, 0, wxALL, 5 );
 	
-	uiLineAfterContracted = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line After (contracted)"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( uiLineAfterContracted, 0, wxALL, 5 );
+	uiFoldLineAfterContracted = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line After (contracted)"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( uiFoldLineAfterContracted, 0, wxALL, 5 );
 	
 	
 	sbSizerFolding->Add( fgSizer5, 1, wxEXPAND, 5 );
