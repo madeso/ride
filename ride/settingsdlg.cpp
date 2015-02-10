@@ -69,6 +69,20 @@ ride::EdgeStyle ToData_ES(wxComboBox* gui)  {
   RETURN_COMBOBOX_VALUE(EdgeStyle, gui->GetSelection());
 }
 
+void ToGui(google::protobuf::int32 data, wxTextCtrl* gui)  {
+  wxString value = wxString::FromDouble(data, 0);
+  gui->SetValue(value);
+}
+google::protobuf::int32 ToData(wxTextCtrl* gui)  {
+  const wxString value = gui->GetValue();
+  long ret = 0;
+  if (true == value.ToLong(&ret)) {
+    return ret;
+  }
+  assert(false && "Unable to get integer value");
+  return -1;
+}
+
 template<typename T>
 T* Allocate(const T& t) {
   return new T(t);
@@ -83,6 +97,9 @@ void SettingsDlg::editToGui(bool togui) {
   DIALOG_DATA(edit, displayeolenable, uiDisplayEOL,);
   DIALOG_DATA(edit, linenumberenable, uiShowLineNumbers,);
   DIALOG_DATA(edit, indentguideenable, uiIndentGuide,);
+
+  DIALOG_DATA(edit, tabwidth, uiTabWidth, );
+  DIALOG_DATA(edit, edgecolumn, uiEdgeColumn, );
 
   DIALOG_DATA(edit, whitespace, uiViewWhitespace, _VW);
   DIALOG_DATA(edit, wordwrap, uiWordwrap, _WM);
