@@ -6,6 +6,7 @@ endif()
 
 find_package(wxWidgets COMPONENTS core aui base stc REQUIRED)
 include( "${wxWidgets_USE_FILE}" )
+message(status "wxWidgets use file: ${wxWidgets_USE_FILE}")
 
 find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
