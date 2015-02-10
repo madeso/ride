@@ -1,6 +1,65 @@
 #include "ride/wx.h"
 #include "ride/settingsdlg.h"
 #include "ride/mainwindow.h"
+#include <functional>
+
+//////////////////////////////////////////////////////////////////////////
+
+template<typename T>
+T* Allocate(const T& t) {
+  return new T(t);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+typedef std::function<const ride::Style(const ride::FontsAndColors&)> GetSubStyleFunction;
+typedef std::function<void(ride::FontsAndColors&, const ride::Style&)> SetSubStyleFunction;
+
+class StyleLink {
+public:
+  StyleLink(const wxString& name, GetSubStyleFunction get, SetSubStyleFunction set)
+    : name_(name)
+    , get_(get)
+    , set_(set)
+  {
+  }
+
+  const wxString& name() const {
+    assert(this);
+    return name_;
+  }
+
+  void updateGui(ride::FontsAndColors& settings, bool toGui) const {
+    // todo
+  }
+
+  // todo: add some form of group so we can easily group styles in the gui
+
+private:
+  wxString name_;
+  GetSubStyleFunction get_;
+  SetSubStyleFunction set_;
+};
+
+std::vector<StyleLink> BuildStyleLinks() {
+  std::vector<StyleLink> ret;
+#define DEF_STYLE(NAME, STYLE) ret.push_back(StyleLink(NAME, [](const ride::FontsAndColors& co)->const ride::Style&{return co.STYLE();}, [](ride::FontsAndColors& co, const ride::Style& style)->void{co.set_allocated_ ## STYLE(Allocate(style));}))
+  DEF_STYLE("Default", default_style);
+  DEF_STYLE("Brace light", bracelight_style);
+  DEF_STYLE("Brace bad", bracebad_style);
+  DEF_STYLE("Control char", controlchar_style);
+  DEF_STYLE("Indent guide", indentguide_style);
+  DEF_STYLE("Calltip stype", calltip_style);
+#undef DEF_STYLE
+  return ret;
+}
+
+const std::vector<StyleLink>& StyleLinks() {
+  static std::vector<StyleLink> links = BuildStyleLinks();
+  return links;
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
 ::ui::Settings(parent, wxID_ANY), main(mainwindow), allowApply(false)
@@ -9,6 +68,10 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   edit = global;
   editToGui(true);
   allowApply = true;
+
+  for (auto link: StyleLinks()) {
+    uiFontStyles->AppendString(link.name());
+  }
 }
 
 void SettingsDlg::OnApply( wxCommandEvent& event )
@@ -63,6 +126,8 @@ void SettingsDlg::apply()
   main->setSettings(edit);
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 void ToGui(bool data, wxCheckBox* gui)  {
   gui->SetValue(data);
 }
@@ -115,13 +180,10 @@ google::protobuf::int32 ToData(wxTextCtrl* gui)  {
   return -1;
 }
 
-template<typename T>
-T* Allocate(const T& t) {
-  return new T(t);
-}
-
 #define DIALOG_DATA(ROOT, FUN, UI, SETNAME) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_##FUN(ToData##SETNAME(UI)); } } while(false)
 #define DIALOG_DATAX(ROOT, FUN, UI) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_allocated_##FUN(Allocate(ToData(UI))); } } while(false)
+
+//////////////////////////////////////////////////////////////////////////
 
 void SettingsDlg::editToGui(bool togui) {
   ride::FontsAndColors fonts_and_colors = edit.fonts_and_colors();
