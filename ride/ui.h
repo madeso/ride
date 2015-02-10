@@ -90,6 +90,10 @@ namespace ui
 			wxButton* m_sdbSizer1Cancel;
 			
 			// Virtual event handlers, overide them in your derived class
+			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnEditChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }

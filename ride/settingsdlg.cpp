@@ -3,17 +3,17 @@
 #include "ride/mainwindow.h"
 
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
-::ui::Settings(parent, wxID_ANY), main(mainwindow)
+::ui::Settings(parent, wxID_ANY), main(mainwindow), allowApply(false)
 {
   global = main->getSettings();
   edit = global;
   editToGui(true);
+  allowApply = true;
 }
 
 void SettingsDlg::OnApply( wxCommandEvent& event )
 {
-  editToGui(false);
-  main->setSettings(edit);
+  apply();
 }
 
 void SettingsDlg::OnCancel( wxCommandEvent& event )
@@ -30,6 +30,37 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
     wxMessageBox("Failed to save settings", "Failed!", wxOK | wxICON_ERROR);
   }
   EndModal(wxOK);
+}
+
+void SettingsDlg::OnCheckboxChanged(wxCommandEvent& event)
+{
+  assert(this);
+  apply();
+}
+
+void SettingsDlg::OnComboboxChanged(wxCommandEvent& event)
+{
+  assert(this);
+  apply();
+}
+
+void SettingsDlg::OnColorChanged(wxColourPickerEvent& event)
+{
+  assert(this);
+  apply();
+}
+
+void SettingsDlg::OnEditChanged(wxCommandEvent& event)
+{
+  assert(this);
+  apply();
+}
+
+void SettingsDlg::apply()
+{
+  if (allowApply == false) { return; }
+  editToGui(false);
+  main->setSettings(edit);
 }
 
 void ToGui(bool data, wxCheckBox* gui)  {
@@ -79,6 +110,7 @@ google::protobuf::int32 ToData(wxTextCtrl* gui)  {
   if (true == value.ToLong(&ret)) {
     return ret;
   }
+  if (value.length() == 0) return -1;
   assert(false && "Unable to get integer value");
   return -1;
 }

@@ -14,7 +14,16 @@ protected:
   void OnApply(wxCommandEvent& event);
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
+
+  void OnCheckboxChanged(wxCommandEvent& event);
+  void OnComboboxChanged(wxCommandEvent& event);
+  void OnColorChanged(wxColourPickerEvent& event);
+  void OnEditChanged(wxCommandEvent& event);
+
 private:
+  bool allowApply;
+
+  void apply();
   void editToGui(bool togui);
   MainWindow* main;
   ride::Settings global;
