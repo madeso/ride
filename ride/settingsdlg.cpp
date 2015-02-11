@@ -187,8 +187,8 @@ void SettingsDlg::styleToGui(bool togui) {
   ride::Style style = link->get( edit.fonts_and_colors() );
 
   DIALOG_DATA(style, use_foreground, uiStyleUseForeground,);
-  DIALOG_DATA(style, use_background, uiStyleUseBackground,);
   DIALOG_DATAX(style, foreground, uiStyleForeground);
+  DIALOG_DATA(style, use_background, uiStyleUseBackground,);
   DIALOG_DATAX(style, background, uiStyleBackground);
 
   if (togui == false) {
