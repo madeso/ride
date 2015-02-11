@@ -96,9 +96,9 @@ namespace ui
 			
 			// Virtual event handlers, overide them in your derived class
 			virtual void OnSelectedStyleChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnStyleCheckChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOnlyFixedSysChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStyleFontChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnStyleCheckChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStyleComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStyleColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }

@@ -627,7 +627,7 @@
                                                                 <property name="window_name"></property>
                                                                 <property name="window_style"></property>
                                                                 <event name="OnChar"></event>
-                                                                <event name="OnCheckBox"></event>
+                                                                <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                                 <event name="OnEnterWindow"></event>
                                                                 <event name="OnEraseBackground"></event>
                                                                 <event name="OnKeyDown"></event>
@@ -987,7 +987,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -1169,7 +1169,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -1351,7 +1351,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -1536,7 +1536,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -1717,7 +1717,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -1898,7 +1898,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>

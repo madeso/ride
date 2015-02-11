@@ -174,6 +174,7 @@ void SettingsDlg::styleChanged() {
   if (allowStyleChange == false) return;
   styleToGui(false);
   main->setSettings(edit);
+  main->setSettings(edit); // update seems to lag behind one setSettings, this seems to fix that, weird... I should investigate this...
 }
 
 void SettingsDlg::styleToGui(bool togui) {
@@ -185,11 +186,11 @@ void SettingsDlg::styleToGui(bool togui) {
 
   ride::Style style;
   
-  if (togui) {
-    if (edit.has_fonts_and_colors()) {
+  /*if (togui) {
+    if (edit.has_fonts_and_colors()) {*/
       style = link->get( edit.fonts_and_colors() );
-    }
-  }
+    /*}
+  }*/
 
   DIALOG_DATA(style, use_foreground, uiStyleUseForeground,);
   DIALOG_DATA(style, use_background, uiStyleUseBackground,);
