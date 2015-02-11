@@ -184,13 +184,7 @@ void SettingsDlg::styleToGui(bool togui) {
   assert(link);
   if (link == NULL) return;
 
-  ride::Style style;
-  
-  /*if (togui) {
-    if (edit.has_fonts_and_colors()) {*/
-      style = link->get( edit.fonts_and_colors() );
-    /*}
-  }*/
+  ride::Style style = link->get( edit.fonts_and_colors() );
 
   DIALOG_DATA(style, use_foreground, uiStyleUseForeground,);
   DIALOG_DATA(style, use_background, uiStyleUseBackground,);
@@ -198,10 +192,7 @@ void SettingsDlg::styleToGui(bool togui) {
   DIALOG_DATAX(style, background, uiStyleBackground);
 
   if (togui == false) {
-    ride::FontsAndColors color;
-    if (edit.has_fonts_and_colors()) {
-      color = edit.fonts_and_colors();
-    }
+    ride::FontsAndColors color = edit.fonts_and_colors();
     link->set(color, style);
 
     edit.set_allocated_fonts_and_colors(Allocate(color));
