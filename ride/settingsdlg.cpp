@@ -88,7 +88,8 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   }
 
   FontLister allfonts;
-  allfonts.EnumerateFacenames();
+  allfonts.EnumerateFacenames(wxFONTENCODING_SYSTEM, true);
+  uiStyleTypeface->Clear();
   for (auto name: allfonts.fonts) {
     uiStyleTypeface->AppendString(name);
   }
