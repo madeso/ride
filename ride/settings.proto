@@ -33,9 +33,26 @@ message Color {
 }
 
 message Style {
-  // wxFont font = 1;
-  optional Color foreground = 2;
-  optional Color background = 3;
+  optional bool use_typeface = 1;
+  optional string typeface = 2;
+
+  optional bool use_bold = 3;
+  optional bool bold = 4;
+
+  optional bool use_italic = 5;
+  optional bool italic = 6;
+
+  optional bool use_underline = 7;
+  optional bool underline = 8;
+
+  optional bool use_font_size = 9;
+  optional int32 font_size = 10;
+
+  optional bool use_foreground = 11;
+  optional Color foreground = 12;
+
+  optional bool use_background = 13;
+  optional Color background = 14;
 };
 
 // the idea of moving out all fonts and colors is that likely theese are
