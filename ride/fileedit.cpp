@@ -140,18 +140,36 @@ bool FileEdit::saveTo(const wxString& target) {
 unsigned int UntitledCount = 0;
 
 void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style) {
-  if (style.has_foreground()) {
-    // todo: check this
+  if (style.use_typeface()) {
+    text->StyleSetFaceName(id, style.typeface());
+  }
+
+  if (style.use_bold()) {
+    //optional bool bold = 4;
+    text->StyleSetBold(id, style.bold());
+  }
+
+  if (style.use_italic()) {
+    //optional bool italic = 6;
+    text->StyleSetItalic(id, style.italic());
+  }
+
+  if (style.use_underline()) {
+    //optional bool underline = 8;
+    text->StyleSetUnderline(id, style.underline());
+  }
+
+  if (style.use_font_size()) {
+    //optional int32 font_size = 10;
+    text->StyleSetSize(id, style.font_size());
+  }
+
+  if (style.use_foreground()) {
     text->StyleSetForeground(id, C(style.foreground()));
   }
-  if (style.has_background()) {
-    // todo: check this
+  if (style.use_background()) {
     text->StyleSetBackground(id, C(style.background()));
   }
-  /*
-  // todo...
-  wxFont temp = style.font;
-  text->StyleSetFont(id, temp);*/
 }
 
 wxString b2s01(bool b) {
