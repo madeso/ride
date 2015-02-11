@@ -22,7 +22,6 @@
 #include <wx/checkbox.h>
 #include <wx/combobox.h>
 #include <wx/clrpicker.h>
-#include <wx/stattext.h>
 #include <wx/textctrl.h>
 #include <wx/gbsizer.h>
 #include <wx/bitmap.h>
@@ -51,17 +50,21 @@ namespace ui
 			wxPanel* m_panel9;
 			wxListBox* uiFontStyles;
 			wxPanel* m_panel7;
+			wxCheckBox* usFontUseTypeface;
 			wxCheckBox* uiOnlyFixedSize;
 			wxListBox* uiStyleTypeface;
 			wxCheckBox* uiStyleBold;
+			wxCheckBox* uiFontUseBold;
 			wxCheckBox* uiStyleItalic;
+			wxCheckBox* uiFontUseItalic;
 			wxCheckBox* uiStyleUnderline;
+			wxCheckBox* uiFontUseUnderline;
 			wxComboBox* uiStyleSize;
+			wxCheckBox* uiFontUseSize;
 			wxColourPickerCtrl* uiStyleForeground;
+			wxCheckBox* uiFontUseForeground;
 			wxColourPickerCtrl* uiStyleBackground;
-			wxStaticText* m_staticText1;
-			wxStaticText* m_staticText2;
-			wxStaticText* m_staticText3;
+			wxCheckBox* uiFontUseBackground;
 			wxTextCtrl* uiFontExample;
 			wxPanel* m_editor;
 			wxNotebook* m_notebook2;
