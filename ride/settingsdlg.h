@@ -29,6 +29,7 @@ protected:
   void OnStyleColorChanged(wxColourPickerEvent& event);
 
 private:
+  void updateStyleEnable();
   bool allowStyleChange;
   void styleChanged();
   void styleToGui(bool togui);

@@ -172,6 +172,7 @@ void SettingsDlg::updateFonts() {
 void SettingsDlg::OnSelectedStyleChanged(wxCommandEvent& event) {
   allowStyleChange = false;
   styleToGui(true);
+  updateStyleEnable();
   allowStyleChange = true;
 }
 
@@ -181,6 +182,7 @@ void SettingsDlg::OnStyleFontChanged(wxCommandEvent& event) {
 }
 
 void SettingsDlg::OnStyleCheckChanged(wxCommandEvent& event) {
+  updateStyleEnable();
   styleChanged();
 }
 
@@ -197,6 +199,21 @@ void SettingsDlg::styleChanged() {
   styleToGui(false);
   main->setSettings(edit);
   main->setSettings(edit); // update seems to lag behind one setSettings, this seems to fix that, weird... I should investigate this...
+}
+
+void UpdateCheckEnabled(wxCheckBox* check, wxWindow* slave)
+{
+  slave->Enable( check->IsChecked() );
+}
+
+void SettingsDlg::updateStyleEnable() {
+  UpdateCheckEnabled(uiStyleUseBold, uiStyleBold);
+  UpdateCheckEnabled(uiStyleUseItalic, uiStyleUnderline);
+  UpdateCheckEnabled(uiStyleUseUnderline, uiStyleItalic);
+
+  UpdateCheckEnabled(uiStyleUseForeground, uiStyleForeground);
+  UpdateCheckEnabled(uiStyleUseBackground, uiStyleBackground);
+  UpdateCheckEnabled(uiStyleUseTypeface, uiStyleUseTypeface);
 }
 
 void SettingsDlg::styleToGui(bool togui) {
