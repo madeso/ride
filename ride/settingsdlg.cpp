@@ -64,7 +64,11 @@ class FontLister : public wxFontEnumerator {
 public:
   std::vector<wxString> fonts;
   virtual bool OnFacename(const wxString& font) {
-    fonts.push_back(font);
+    // The version of the font with the '@' is a version optimized for writing in the vertical direction.
+    // https://groups.google.com/forum/#!topic/wx-users/3hjrhPlSULI
+    if (font.StartsWith("@") == false) {
+      fonts.push_back(font);
+    }
     return true;
   }
 };
