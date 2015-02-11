@@ -25,8 +25,10 @@ protected:
   void OnSelectedStyleChanged(wxCommandEvent& event);
   void OnStyleFontChanged(wxCommandEvent& event);
   void OnStyleCheckChanged(wxCommandEvent& event);
-  void OnStyleComboboxChanged(wxCommandEvent& event);
+  void OnStyleTextChanged(wxCommandEvent& event);
   void OnStyleColorChanged(wxColourPickerEvent& event);
+
+  void OnlyAllowNumberChars(wxKeyEvent& event);
 
 private:
   void updateStyleEnable();

@@ -20,14 +20,14 @@
 #include <wx/statbox.h>
 #include <wx/panel.h>
 #include <wx/checkbox.h>
-#include <wx/combobox.h>
-#include <wx/clrpicker.h>
 #include <wx/textctrl.h>
+#include <wx/valtext.h>
+#include <wx/clrpicker.h>
 #include <wx/gbsizer.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/valtext.h>
+#include <wx/combobox.h>
 #include <wx/valgen.h>
 #include <wx/notebook.h>
 #include <wx/button.h>
@@ -59,7 +59,7 @@ namespace ui
 			wxCheckBox* uiStyleUseItalic;
 			wxCheckBox* uiStyleUnderline;
 			wxCheckBox* uiStyleUseUnderline;
-			wxComboBox* uiStyleSize;
+			wxTextCtrl* uiStyleSize;
 			wxCheckBox* uiStyleUseSize;
 			wxColourPickerCtrl* uiStyleForeground;
 			wxCheckBox* uiStyleUseForeground;
@@ -99,7 +99,8 @@ namespace ui
 			virtual void OnStyleCheckChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOnlyFixedSysChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStyleFontChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnStyleComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
+			virtual void OnStyleTextChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStyleColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }

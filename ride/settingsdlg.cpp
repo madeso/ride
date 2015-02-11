@@ -186,7 +186,7 @@ void SettingsDlg::OnStyleCheckChanged(wxCommandEvent& event) {
   styleChanged();
 }
 
-void SettingsDlg::OnStyleComboboxChanged(wxCommandEvent& event) {
+void SettingsDlg::OnStyleTextChanged(wxCommandEvent& event) {
   styleChanged();
 }
 
@@ -210,6 +210,7 @@ void SettingsDlg::updateStyleEnable() {
   UpdateCheckEnabled(uiStyleUseBold, uiStyleBold);
   UpdateCheckEnabled(uiStyleUseItalic, uiStyleUnderline);
   UpdateCheckEnabled(uiStyleUseUnderline, uiStyleItalic);
+  UpdateCheckEnabled(uiStyleUseSize, uiStyleSize);
 
   UpdateCheckEnabled(uiStyleUseForeground, uiStyleForeground);
   UpdateCheckEnabled(uiStyleUseBackground, uiStyleBackground);
@@ -234,6 +235,9 @@ void SettingsDlg::styleToGui(bool togui) {
 
   DIALOG_DATA(style, use_typeface, uiStyleUseTypeface, );
   DIALOG_DATA(style, typeface, uiStyleTypeface,);
+
+  DIALOG_DATA(style, use_font_size, uiStyleUseSize, );
+  DIALOG_DATA(style, font_size, uiStyleSize, );
 
   DIALOG_DATA(style, use_foreground, uiStyleUseForeground,);
   DIALOG_DATAX(style, foreground, uiStyleForeground);
@@ -357,6 +361,22 @@ void SettingsDlg::editToGui(bool togui) {
   if (togui == false) {
     edit.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
     edit.set_allocated_foldflags(Allocate(foldflags));
+  }
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void SettingsDlg::OnlyAllowNumberChars(wxKeyEvent& event) {
+  const wxString Numbers = "0123456789";
+  if (event.m_uniChar == 0) {
+    event.Skip();
+  }
+  int index = Numbers.Index(event.m_uniChar);
+  if (index < 0) {
+    // event.Skip();
+  }
+  else {
+    event.Skip();
   }
 }
 
