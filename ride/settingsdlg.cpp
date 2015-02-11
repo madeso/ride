@@ -2,7 +2,6 @@
 #include "ride/settingsdlg.h"
 #include "ride/mainwindow.h"
 #include <wx/fontenum.h>
-#include <functional>
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -69,42 +68,41 @@ google::protobuf::int32 ToData(wxTextCtrl* gui)  {
 
 //////////////////////////////////////////////////////////////////////////
 
-typedef std::function<const ride::Style(const ride::FontsAndColors&)> GetSubStyleFunction;
-typedef std::function<void(ride::FontsAndColors&, const ride::Style&)> SetSubStyleFunction;
-
 class StyleLink {
 public:
-  StyleLink(const wxString& name, GetSubStyleFunction get, SetSubStyleFunction set)
+  StyleLink(const wxString& name)
     : name_(name)
-    , get_(get)
-    , set_(set)
-  {
-  }
+  { }
+
+  virtual ~StyleLink() {
+  };
 
   const wxString& name() const {
     assert(this);
     return name_;
   }
 
-  const ride::Style get(const ride::FontsAndColors& color) {
-    return get_(color);
-  }
+  virtual const ride::Style get(const ride::FontsAndColors& color) = 0;
 
-  void set(ride::FontsAndColors& color, const ride::Style& style) {
-    set_(color, style);
-  }
+  virtual void set(ride::FontsAndColors& color, const ride::Style& style) = 0;
 
   // todo: add some form of group so we can easily group styles in the gui
 
 private:
   wxString name_;
-  GetSubStyleFunction get_;
-  SetSubStyleFunction set_;
 };
 
-std::vector<StyleLink> BuildStyleLinks() {
-  std::vector<StyleLink> ret;
-#define DEF_STYLE(NAME, STYLE) ret.push_back(StyleLink(NAME, [](const ride::FontsAndColors& co)->const ride::Style{return co.has_ ## STYLE() ? co.STYLE() : ride::Style();}, [](ride::FontsAndColors& co, const ride::Style& style)->void{co.set_allocated_ ## STYLE(Allocate(style));}))
+std::vector<StyleLink*> BuildStyleLinks() {
+  std::vector<StyleLink*> ret;
+#define DEF_STYLE(NAME, STYLE) \
+  struct StyleLink##STYLE : public StyleLink { \
+  StyleLink##STYLE() : StyleLink(NAME) {} \
+  const ride::Style get(const ride::FontsAndColors& co){return co.has_ ## STYLE() ? co.STYLE() : ride::Style();}\
+  void set(ride::FontsAndColors& co, const ride::Style& style){co.set_allocated_ ## STYLE(Allocate(style));} \
+  };\
+  static StyleLink##STYLE styleLink##STYLE;\
+  ret.push_back(&styleLink##STYLE)
+
   DEF_STYLE("Default", default_style);
   DEF_STYLE("Brace light", bracelight_style);
   DEF_STYLE("Brace bad", bracebad_style);
@@ -115,8 +113,8 @@ std::vector<StyleLink> BuildStyleLinks() {
   return ret;
 }
 
-const std::vector<StyleLink>& StyleLinks() {
-  static std::vector<StyleLink> links = BuildStyleLinks();
+const std::vector<StyleLink*>& StyleLinks() {
+  static std::vector<StyleLink*> links = BuildStyleLinks();
   return links;
 }
 
@@ -225,7 +223,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   allowApply = true;
 
   for (auto link: StyleLinks()) {
-    uiFontStyles->Append(link.name(), &link);
+    uiFontStyles->Append(link->name(), link);
   }
   updateFonts();
 }
