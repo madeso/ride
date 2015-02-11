@@ -191,14 +191,6 @@ void FileEdit::UpdateTextControl() {
   assert(currentLanguage);
   currentLanguage->style(text, set);
 
-  // setup style colors and font
-  SetStyle(text, wxSTC_STYLE_DEFAULT,  set.fonts_and_colors().default_style());
-  SetStyle(text, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
-  SetStyle(text, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
-  SetStyle(text, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
-  SetStyle(text, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
-  SetStyle(text, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
-
   //////////////////////////////////////////////////////////////////////////
 
   // set margin for line numbers
@@ -238,8 +230,6 @@ void FileEdit::UpdateTextControl() {
   text->SetBackSpaceUnIndents(set.backspaceunindents());
   text->SetIndent(set.tabwidth());
 
-  text->SetFont(font);
-
   text->SetViewEOL(set.displayeolenable());
   text->SetIndentationGuides(set.indentguideenable());
   text->SetEdgeMode(C(set.edgestyle()));
@@ -255,6 +245,14 @@ void FileEdit::UpdateTextControl() {
   text->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
   text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
   text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+
+  // setup style colors and font
+  SetStyle(text, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
+  SetStyle(text, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
+  SetStyle(text, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
+  SetStyle(text, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
+  SetStyle(text, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
+  SetStyle(text, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
 
   // todo: expose this
   text->SetCaretLineVisible(true);
@@ -276,6 +274,7 @@ void FileEdit::updateFilename() {
     wxFileName fname(filename);
     currentLanguage = DetermineLanguage(fname.GetFullName());
     UpdateTextControl();
+    UpdateTextControl(); // update colors again, doing it twice seems to be needed to apply the colors
   }
 }
 
