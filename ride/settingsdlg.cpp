@@ -66,6 +66,28 @@ google::protobuf::int32 ToData(wxTextCtrl* gui)  {
   return -1;
 }
 
+void ToGui(std::string data, wxListBox* gui)  {
+  if (data == "") {
+    gui->SetSelection(wxNOT_FOUND);
+    return;
+  }
+
+  wxString str(data);
+  int index = gui->FindString(str);
+  if (index == wxNOT_FOUND) {
+    index = gui->GetCount();
+    gui->AppendString(str);
+  }
+  gui->EnsureVisible(index);
+  gui->SetSelection(index);
+}
+
+std::string ToData(wxListBox* gui)  {
+  int selected = gui->GetSelection();
+  if (selected == wxNOT_FOUND) return "";
+  else return gui->GetString(selected);
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 class StyleLink {
@@ -185,6 +207,16 @@ void SettingsDlg::styleToGui(bool togui) {
   if (link == NULL) return;
 
   ride::Style style = link->get( edit.fonts_and_colors() );
+
+  DIALOG_DATA(style, use_bold, uiStyleUseBold, );
+  DIALOG_DATA(style, bold, uiStyleBold,);
+  DIALOG_DATA(style, use_italic, uiStyleUseItalic, );
+  DIALOG_DATA(style, italic, uiStyleItalic,);
+  DIALOG_DATA(style, use_underline, uiStyleUseUnderline, );
+  DIALOG_DATA(style, underline, uiStyleUnderline,);
+
+  DIALOG_DATA(style, use_typeface, uiStyleUseTypeface, );
+  DIALOG_DATA(style, typeface, uiStyleTypeface,);
 
   DIALOG_DATA(style, use_foreground, uiStyleUseForeground,);
   DIALOG_DATAX(style, foreground, uiStyleForeground);

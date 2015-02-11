@@ -50,7 +50,7 @@ namespace ui
 			wxPanel* m_panel9;
 			wxListBox* uiFontStyles;
 			wxPanel* m_panel7;
-			wxCheckBox* usStyleUseTypeface;
+			wxCheckBox* uiStyleUseTypeface;
 			wxCheckBox* uiStyleOnlyFixedSize;
 			wxListBox* uiStyleTypeface;
 			wxCheckBox* uiStyleBold;

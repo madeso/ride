@@ -61,8 +61,8 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxStaticBoxSizer* sbSizer2;
 	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( m_panel7, wxID_ANY, wxT("Typefaces") ), wxVERTICAL );
 	
-	usStyleUseTypeface = new wxCheckBox( m_panel7, wxID_ANY, wxT("Use typeface?"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer2->Add( usStyleUseTypeface, 0, wxALL, 5 );
+	uiStyleUseTypeface = new wxCheckBox( m_panel7, wxID_ANY, wxT("Use typeface?"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer2->Add( uiStyleUseTypeface, 0, wxALL, 5 );
 	
 	uiStyleOnlyFixedSize = new wxCheckBox( m_panel7, wxID_ANY, wxT("Only fixed sizes"), wxDefaultPosition, wxDefaultSize, 0 );
 	uiStyleOnlyFixedSize->SetValue(true); 
@@ -262,7 +262,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	// Connect Events
 	uiFontStyles->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnSelectedStyleChanged ), NULL, this );
-	usStyleUseTypeface->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
+	uiStyleUseTypeface->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
 	uiStyleOnlyFixedSize->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnOnlyFixedSysChanged ), NULL, this );
 	uiStyleTypeface->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnStyleFontChanged ), NULL, this );
 	uiStyleBold->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
@@ -304,7 +304,7 @@ Settings::~Settings()
 {
 	// Disconnect Events
 	uiFontStyles->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnSelectedStyleChanged ), NULL, this );
-	usStyleUseTypeface->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
+	uiStyleUseTypeface->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
 	uiStyleOnlyFixedSize->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnOnlyFixedSysChanged ), NULL, this );
 	uiStyleTypeface->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnStyleFontChanged ), NULL, this );
 	uiStyleBold->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
