@@ -138,7 +138,7 @@ void SettingsDlg::OnOnlyFixedSysChanged(wxCommandEvent& event) {
 void SettingsDlg::updateFonts() {
   FontLister allfonts;
 
-  const bool fixedSize = uiOnlyFixedSize->GetValue();
+  const bool fixedSize = uiStyleOnlyFixedSize->GetValue();
 
   allfonts.EnumerateFacenames(wxFONTENCODING_SYSTEM, fixedSize);
   uiStyleTypeface->Clear();
@@ -191,6 +191,8 @@ void SettingsDlg::styleToGui(bool togui) {
     }
   }
 
+  DIALOG_DATA(style, use_foreground, uiStyleUseForeground,);
+  DIALOG_DATA(style, use_background, uiStyleUseBackground,);
   DIALOG_DATAX(style, foreground, uiStyleForeground);
   DIALOG_DATAX(style, background, uiStyleBackground);
 
@@ -209,7 +211,7 @@ void SettingsDlg::updateFontDisplay() {
   int selectedId = uiStyleTypeface->GetSelection();
   wxString faceName = selectedId > 0 ? uiStyleTypeface->GetString(selectedId) : "";
   wxFont font( wxFontInfo(12).FaceName(faceName) );
-  uiFontExample->SetFont(font);
+  uiStyleExample->SetFont(font);
 }
 
 //////////////////////////////////////////////////////////////////////////
