@@ -273,6 +273,11 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
     uiFontStyles->Append(link->name(), link);
   }
   updateFonts();
+  allowStyleChange = true;
+  uiFontStyles->SetSelection(0);
+  styleToGui(true);
+  updateStyleEnable();
+  allowStyleChange = false;
 }
 
 void SettingsDlg::OnApply( wxCommandEvent& event )
