@@ -1,6 +1,7 @@
 #include "ride/wx.h"
 #include "ride/settingsdlg.h"
 #include "ride/mainwindow.h"
+#include <wx/fontenum.h>
 #include <functional>
 
 //////////////////////////////////////////////////////////////////////////
@@ -59,6 +60,15 @@ const std::vector<StyleLink>& StyleLinks() {
   return links;
 }
 
+class FontLister : public wxFontEnumerator {
+public:
+  std::vector<wxString> fonts;
+  virtual bool OnFacename(const wxString& font) {
+    fonts.push_back(font);
+    return true;
+  }
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
@@ -71,6 +81,12 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
 
   for (auto link: StyleLinks()) {
     uiFontStyles->AppendString(link.name());
+  }
+
+  FontLister allfonts;
+  allfonts.EnumerateFacenames();
+  for (auto name: allfonts.fonts) {
+    uiStyleTypeface->AppendString(name);
   }
 }
 
