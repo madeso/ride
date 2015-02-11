@@ -6,9 +6,65 @@
 
 //////////////////////////////////////////////////////////////////////////
 
+#define RETURN_COMBOBOX_VALUE(TYPE, VALUE) assert(ride::TYPE##_IsValid(VALUE)); return static_cast<ride::TYPE>(VALUE)
+#define DIALOG_DATA(ROOT, FUN, UI, SETNAME) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_##FUN(ToData##SETNAME(UI)); } } while(false)
+#define DIALOG_DATAX(ROOT, FUN, UI) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_allocated_##FUN(Allocate(ToData(UI))); } } while(false)
+
 template<typename T>
 T* Allocate(const T& t) {
   return new T(t);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void ToGui(bool data, wxCheckBox* gui)  {
+  gui->SetValue(data);
+}
+bool ToData(wxCheckBox* gui)  {
+  return gui->GetValue();
+}
+
+void ToGui(ride::Color data, wxColourPickerCtrl* gui)  {
+  gui->SetColour(C(data));
+}
+ride::Color ToData(wxColourPickerCtrl* gui)  {
+  return C(gui->GetColour());
+}
+
+void ToGui(ride::ViewWhitespace data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::ViewWhitespace ToData_VW(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(ViewWhitespace, gui->GetSelection());
+}
+
+void ToGui(ride::WrapMode data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::WrapMode ToData_WM(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(WrapMode, gui->GetSelection());
+}
+
+void ToGui(ride::EdgeStyle data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::EdgeStyle ToData_ES(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(EdgeStyle, gui->GetSelection());
+}
+
+void ToGui(google::protobuf::int32 data, wxTextCtrl* gui)  {
+  wxString value = wxString::FromDouble(data, 0);
+  gui->SetValue(value);
+}
+google::protobuf::int32 ToData(wxTextCtrl* gui)  {
+  const wxString value = gui->GetValue();
+  long ret = 0;
+  if (true == value.ToLong(&ret)) {
+    return ret;
+  }
+  if (value.length() == 0) return -1;
+  assert(false && "Unable to get integer value");
+  return -1;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -30,8 +86,12 @@ public:
     return name_;
   }
 
-  void updateGui(ride::FontsAndColors& settings, bool toGui) const {
-    // todo
+  const ride::Style get(const ride::FontsAndColors& color) {
+    return get_(color);
+  }
+
+  void set(ride::FontsAndColors& color, const ride::Style& style) {
+    set_(color, style);
   }
 
   // todo: add some form of group so we can easily group styles in the gui
@@ -44,7 +104,7 @@ private:
 
 std::vector<StyleLink> BuildStyleLinks() {
   std::vector<StyleLink> ret;
-#define DEF_STYLE(NAME, STYLE) ret.push_back(StyleLink(NAME, [](const ride::FontsAndColors& co)->const ride::Style&{return co.STYLE();}, [](ride::FontsAndColors& co, const ride::Style& style)->void{co.set_allocated_ ## STYLE(Allocate(style));}))
+#define DEF_STYLE(NAME, STYLE) ret.push_back(StyleLink(NAME, [](const ride::FontsAndColors& co)->const ride::Style{return co.has_ ## STYLE() ? co.STYLE() : ride::Style();}, [](ride::FontsAndColors& co, const ride::Style& style)->void{co.set_allocated_ ## STYLE(Allocate(style));}))
   DEF_STYLE("Default", default_style);
   DEF_STYLE("Brace light", bracelight_style);
   DEF_STYLE("Brace bad", bracebad_style);
@@ -89,8 +149,62 @@ void SettingsDlg::updateFonts() {
   }
 }
 
-void SettingsDlg::OnFontChanged(wxCommandEvent& event) {
+void SettingsDlg::OnSelectedStyleChanged(wxCommandEvent& event) {
+  allowStyleChange = false;
+  styleToGui(true);
+  allowStyleChange = true;
+}
+
+void SettingsDlg::OnStyleFontChanged(wxCommandEvent& event) {
   updateFontDisplay();
+  styleChanged();
+}
+
+void SettingsDlg::OnStyleCheckChanged(wxCommandEvent& event) {
+  styleChanged();
+}
+
+void SettingsDlg::OnStyleComboboxChanged(wxCommandEvent& event) {
+  styleChanged();
+}
+
+void SettingsDlg::OnStyleColorChanged(wxColourPickerEvent& event) {
+  styleChanged();
+}
+
+void SettingsDlg::styleChanged() {
+  if (allowStyleChange == false) return;
+  styleToGui(false);
+  main->setSettings(edit);
+}
+
+void SettingsDlg::styleToGui(bool togui) {
+  const int selection = uiFontStyles->GetSelection();
+  if (selection == wxNOT_FOUND) return;
+  StyleLink* link = reinterpret_cast<StyleLink*>(uiFontStyles->GetClientData(selection));
+  assert(link);
+  if (link == NULL) return;
+
+  ride::Style style;
+  
+  if (togui) {
+    if (edit.has_fonts_and_colors()) {
+      style = link->get( edit.fonts_and_colors() );
+    }
+  }
+
+  DIALOG_DATAX(style, foreground, uiStyleForeground);
+  DIALOG_DATAX(style, background, uiStyleBackground);
+
+  if (togui == false) {
+    ride::FontsAndColors color;
+    if (edit.has_fonts_and_colors()) {
+      color = edit.fonts_and_colors();
+    }
+    link->set(color, style);
+
+    edit.set_allocated_fonts_and_colors(Allocate(color));
+  }
 }
 
 void SettingsDlg::updateFontDisplay() {
@@ -103,7 +217,7 @@ void SettingsDlg::updateFontDisplay() {
 //////////////////////////////////////////////////////////////////////////
 
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
-::ui::Settings(parent, wxID_ANY), main(mainwindow), allowApply(false)
+::ui::Settings(parent, wxID_ANY), main(mainwindow), allowApply(false), allowStyleChange(false)
 {
   global = main->getSettings();
   edit = global;
@@ -111,7 +225,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   allowApply = true;
 
   for (auto link: StyleLinks()) {
-    uiFontStyles->AppendString(link.name());
+    uiFontStyles->Append(link.name(), &link);
   }
   updateFonts();
 }
@@ -167,63 +281,6 @@ void SettingsDlg::apply()
   editToGui(false);
   main->setSettings(edit);
 }
-
-//////////////////////////////////////////////////////////////////////////
-
-void ToGui(bool data, wxCheckBox* gui)  {
-  gui->SetValue(data);
-}
-bool ToData(wxCheckBox* gui)  {
-  return gui->GetValue();
-}
-
-void ToGui(ride::Color data, wxColourPickerCtrl* gui)  {
-  gui->SetColour(C(data));
-}
-ride::Color ToData(wxColourPickerCtrl* gui)  {
-  return C(gui->GetColour());
-}
-
-#define RETURN_COMBOBOX_VALUE(TYPE, VALUE) assert(ride::TYPE##_IsValid(VALUE)); return static_cast<ride::TYPE>(VALUE)
-
-void ToGui(ride::ViewWhitespace data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::ViewWhitespace ToData_VW(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(ViewWhitespace, gui->GetSelection());
-}
-
-void ToGui(ride::WrapMode data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::WrapMode ToData_WM(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(WrapMode, gui->GetSelection());
-}
-
-void ToGui(ride::EdgeStyle data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::EdgeStyle ToData_ES(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(EdgeStyle, gui->GetSelection());
-}
-
-void ToGui(google::protobuf::int32 data, wxTextCtrl* gui)  {
-  wxString value = wxString::FromDouble(data, 0);
-  gui->SetValue(value);
-}
-google::protobuf::int32 ToData(wxTextCtrl* gui)  {
-  const wxString value = gui->GetValue();
-  long ret = 0;
-  if (true == value.ToLong(&ret)) {
-    return ret;
-  }
-  if (value.length() == 0) return -1;
-  assert(false && "Unable to get integer value");
-  return -1;
-}
-
-#define DIALOG_DATA(ROOT, FUN, UI, SETNAME) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_##FUN(ToData##SETNAME(UI)); } } while(false)
-#define DIALOG_DATAX(ROOT, FUN, UI) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_allocated_##FUN(Allocate(ToData(UI))); } } while(false)
 
 //////////////////////////////////////////////////////////////////////////
 

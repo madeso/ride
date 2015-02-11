@@ -19,11 +19,19 @@ protected:
   void OnComboboxChanged(wxCommandEvent& event);
   void OnColorChanged(wxColourPickerEvent& event);
   void OnEditChanged(wxCommandEvent& event);
-  void OnFontChanged(wxCommandEvent& event);
 
   void OnOnlyFixedSysChanged(wxCommandEvent& event);
 
+  void OnSelectedStyleChanged(wxCommandEvent& event);
+  void OnStyleFontChanged(wxCommandEvent& event);
+  void OnStyleCheckChanged(wxCommandEvent& event);
+  void OnStyleComboboxChanged(wxCommandEvent& event);
+  void OnStyleColorChanged(wxColourPickerEvent& event);
+
 private:
+  bool allowStyleChange;
+  void styleChanged();
+  void styleToGui(bool togui);
   bool allowApply;
   void updateFonts();
   void updateFontDisplay();

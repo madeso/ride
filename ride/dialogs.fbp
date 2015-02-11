@@ -438,7 +438,7 @@
                                                                 <event name="OnLeftDClick"></event>
                                                                 <event name="OnLeftDown"></event>
                                                                 <event name="OnLeftUp"></event>
-                                                                <event name="OnListBox"></event>
+                                                                <event name="OnListBox">OnSelectedStyleChanged</event>
                                                                 <event name="OnListBoxDClick"></event>
                                                                 <event name="OnMiddleDClick"></event>
                                                                 <event name="OnMiddleDown"></event>
@@ -723,7 +723,7 @@
                                                                 <event name="OnLeftDClick"></event>
                                                                 <event name="OnLeftDown"></event>
                                                                 <event name="OnLeftUp"></event>
-                                                                <event name="OnListBox">OnFontChanged</event>
+                                                                <event name="OnListBox">OnStyleFontChanged</event>
                                                                 <event name="OnListBoxDClick"></event>
                                                                 <event name="OnMiddleDClick"></event>
                                                                 <event name="OnMiddleDown"></event>
@@ -808,7 +808,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -899,7 +899,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -990,7 +990,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCheckBox"></event>
+                                                        <event name="OnCheckBox">OnStyleCheckChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -1082,7 +1082,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnCombobox"></event>
+                                                        <event name="OnCombobox">OnStyleComboboxChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -1174,7 +1174,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnColourChanged"></event>
+                                                        <event name="OnColourChanged">OnStyleColorChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
@@ -1264,7 +1264,7 @@
                                                         <property name="window_name"></property>
                                                         <property name="window_style"></property>
                                                         <event name="OnChar"></event>
-                                                        <event name="OnColourChanged"></event>
+                                                        <event name="OnColourChanged">OnStyleColorChanged</event>
                                                         <event name="OnEnterWindow"></event>
                                                         <event name="OnEraseBackground"></event>
                                                         <event name="OnKeyDown"></event>
