@@ -20,8 +20,11 @@ protected:
   void OnColorChanged(wxColourPickerEvent& event);
   void OnEditChanged(wxCommandEvent& event);
 
+  void OnOnlyFixedSysChanged(wxCommandEvent& event);
+
 private:
   bool allowApply;
+  void updateFonts();
 
   void apply();
   void editToGui(bool togui);

@@ -61,6 +61,10 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxStaticBoxSizer* sbSizer2;
 	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( m_panel7, wxID_ANY, wxT("Typefaces") ), wxVERTICAL );
 	
+	uiOnlyFixedSize = new wxCheckBox( m_panel7, wxID_ANY, wxT("Only fixed sizes"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiOnlyFixedSize->SetValue(true); 
+	sbSizer2->Add( uiOnlyFixedSize, 0, wxALL, 5 );
+	
 	uiStyleTypeface = new wxListBox( m_panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	sbSizer2->Add( uiStyleTypeface, 1, wxALL|wxEXPAND, 5 );
 	
@@ -116,7 +120,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_fonts->SetSizer( fgSizer6 );
 	m_fonts->Layout();
 	fgSizer6->Fit( m_fonts );
-	m_notebook1->AddPage( m_fonts, wxT("Fonts && Colors"), false );
+	m_notebook1->AddPage( m_fonts, wxT("Fonts && Colors"), true );
 	m_editor = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -219,7 +223,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_editor->SetSizer( bSizer2 );
 	m_editor->Layout();
 	bSizer2->Fit( m_editor );
-	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), true );
+	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), false );
 	m_window = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook1->AddPage( m_window, wxT("Window behaviour"), false );
 	
@@ -245,6 +249,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	uiOnlyFixedSize->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnOnlyFixedSysChanged ), NULL, this );
 	uiShowLineNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiDisplayEOL->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiIndentGuide->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
@@ -271,6 +276,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 Settings::~Settings()
 {
 	// Disconnect Events
+	uiOnlyFixedSize->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnOnlyFixedSysChanged ), NULL, this );
 	uiShowLineNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiDisplayEOL->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiIndentGuide->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );

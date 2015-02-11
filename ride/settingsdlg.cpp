@@ -73,6 +73,22 @@ public:
   }
 };
 
+void SettingsDlg::OnOnlyFixedSysChanged(wxCommandEvent& event) {
+  updateFonts();
+}
+
+void SettingsDlg::updateFonts() {
+  FontLister allfonts;
+
+  const bool fixedSize = uiOnlyFixedSize->GetValue();
+
+  allfonts.EnumerateFacenames(wxFONTENCODING_SYSTEM, fixedSize);
+  uiStyleTypeface->Clear();
+  for (auto name : allfonts.fonts) {
+    uiStyleTypeface->AppendString(name);
+  }
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
@@ -86,13 +102,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   for (auto link: StyleLinks()) {
     uiFontStyles->AppendString(link.name());
   }
-
-  FontLister allfonts;
-  allfonts.EnumerateFacenames(wxFONTENCODING_SYSTEM, true);
-  uiStyleTypeface->Clear();
-  for (auto name: allfonts.fonts) {
-    uiStyleTypeface->AppendString(name);
-  }
+  updateFonts();
 }
 
 void SettingsDlg::OnApply( wxCommandEvent& event )

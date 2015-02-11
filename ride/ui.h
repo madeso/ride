@@ -51,6 +51,7 @@ namespace ui
 			wxPanel* m_panel9;
 			wxListBox* uiFontStyles;
 			wxPanel* m_panel7;
+			wxCheckBox* uiOnlyFixedSize;
 			wxListBox* uiStyleTypeface;
 			wxCheckBox* uiStyleBold;
 			wxCheckBox* uiStyleItalic;
@@ -90,6 +91,7 @@ namespace ui
 			wxButton* m_sdbSizer1Cancel;
 			
 			// Virtual event handlers, overide them in your derived class
+			virtual void OnOnlyFixedSysChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
