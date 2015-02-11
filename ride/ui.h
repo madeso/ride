@@ -23,11 +23,11 @@
 #include <wx/combobox.h>
 #include <wx/clrpicker.h>
 #include <wx/stattext.h>
+#include <wx/textctrl.h>
 #include <wx/gbsizer.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/textctrl.h>
 #include <wx/valtext.h>
 #include <wx/valgen.h>
 #include <wx/notebook.h>
@@ -62,6 +62,7 @@ namespace ui
 			wxStaticText* m_staticText1;
 			wxStaticText* m_staticText2;
 			wxStaticText* m_staticText3;
+			wxTextCtrl* uiFontExample;
 			wxPanel* m_editor;
 			wxNotebook* m_notebook2;
 			wxPanel* m_panel10;
@@ -92,6 +93,7 @@ namespace ui
 			
 			// Virtual event handlers, overide them in your derived class
 			virtual void OnOnlyFixedSysChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnFontChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }

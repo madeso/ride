@@ -89,6 +89,17 @@ void SettingsDlg::updateFonts() {
   }
 }
 
+void SettingsDlg::OnFontChanged(wxCommandEvent& event) {
+  updateFontDisplay();
+}
+
+void SettingsDlg::updateFontDisplay() {
+  int selectedId = uiStyleTypeface->GetSelection();
+  wxString faceName = selectedId > 0 ? uiStyleTypeface->GetString(selectedId) : "";
+  wxFont font( wxFontInfo(12).FaceName(faceName) );
+  uiFontExample->SetFont(font);
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :

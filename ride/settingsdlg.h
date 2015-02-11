@@ -19,12 +19,14 @@ protected:
   void OnComboboxChanged(wxCommandEvent& event);
   void OnColorChanged(wxColourPickerEvent& event);
   void OnEditChanged(wxCommandEvent& event);
+  void OnFontChanged(wxCommandEvent& event);
 
   void OnOnlyFixedSysChanged(wxCommandEvent& event);
 
 private:
   bool allowApply;
   void updateFonts();
+  void updateFontDisplay();
 
   void apply();
   void editToGui(bool togui);
