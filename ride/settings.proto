@@ -66,6 +66,31 @@ message FontsAndColors {
   optional Style calltip_style = 34;
 
   optional Color edgeColor = 8;
+
+  optional Style C_DEFAULT = 100;
+  optional Style C_COMMENT = 101;
+  optional Style C_COMMENTLINE = 102;
+  optional Style C_COMMENTDOC = 103;
+  optional Style C_NUMBER = 104;
+  optional Style C_WORD = 105;
+  optional Style C_STRING = 106;
+  optional Style C_CHARACTER = 107;
+  optional Style C_UUID = 108;
+  optional Style C_PREPROCESSOR = 109;
+  optional Style C_OPERATOR = 110;
+  optional Style C_IDENTIFIER = 111;
+  optional Style C_STRINGEOL = 112;
+  optional Style C_VERBATIM = 113;
+  optional Style C_REGEX = 114;
+  optional Style C_COMMENTLINEDOC = 115;
+  optional Style C_WORD2 = 116;
+  optional Style C_COMMENTDOCKEYWORD = 117;
+  optional Style C_COMMENTDOCKEYWORDERROR = 118;
+  optional Style C_GLOBALCLASS = 119;
+  optional Style C_STRINGRAW = 120;
+  optional Style C_TRIPLEVERBATIM = 121;
+  optional Style C_HASHQUOTEDSTRING = 122;
+  optional Style C_PREPROCESSORCOMMENT = 123;
 }
 
 message Settings {

@@ -131,6 +131,31 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("Control char", controlchar_style);
   DEF_STYLE("Indent guide", indentguide_style);
   DEF_STYLE("Calltip stype", calltip_style);
+
+  DEF_STYLE("C/C++ Default", c_default);
+  DEF_STYLE("C/C++ Comment", c_comment);
+  DEF_STYLE("C/C++ Commentline", c_commentline);
+  DEF_STYLE("C/C++ Commentdoc", c_commentdoc);
+  DEF_STYLE("C/C++ Number", c_number);
+  DEF_STYLE("C/C++ Word", c_word);
+  DEF_STYLE("C/C++ String", c_string);
+  DEF_STYLE("C/C++ Character", c_character);
+  DEF_STYLE("C/C++ UUID", c_uuid);
+  DEF_STYLE("C/C++ Preprocessor", c_preprocessor);
+  DEF_STYLE("C/C++ Operator", c_operator);
+  DEF_STYLE("C/C++ Identifier", c_identifier);
+  DEF_STYLE("C/C++ String EOL", c_stringeol);
+  DEF_STYLE("C/C++ Verbatim", c_verbatim);
+  DEF_STYLE("C/C++ Regex", c_regex);
+  DEF_STYLE("C/C++ Commentline doc", c_commentlinedoc);
+  DEF_STYLE("C/C++ Keyword 2", c_word2);
+  DEF_STYLE("C/C++ Comment doc keyword", c_commentdockeyword);
+  DEF_STYLE("C/C++ Comment doc keyword error", c_commentdockeyworderror);
+  DEF_STYLE("C/C++ Global class", c_globalclass);
+  DEF_STYLE("C/C++ String raw", c_stringraw);
+  DEF_STYLE("C/C++ Triple verbatim", c_tripleverbatim);
+  DEF_STYLE("C/C++ Hash quoted string", c_hashquotedstring);
+  DEF_STYLE("C/C++ Preprocessor comment", c_preprocessorcomment);
 #undef DEF_STYLE
   return ret;
 }
