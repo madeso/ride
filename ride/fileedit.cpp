@@ -21,22 +21,32 @@ enum
 //////////////////////////////////////////////////////////////////////////
 
 void FileEdit::Undo() {
+  if (!text->CanUndo()) return;
+  text->Undo();
 }
 
 
 void FileEdit::Redo() {
+  if (!text->CanRedo()) return;
+  text->Redo();
 }
 
 
 void FileEdit::Cut() {
+  if (text->GetReadOnly() || (text->GetSelectionEnd() - text->GetSelectionStart() <= 0)) return;
+  text->Cut();
 }
 
 
 void FileEdit::Copy() {
+  if (text->GetSelectionEnd() - text->GetSelectionStart() <= 0) return;
+  text->Copy();
 }
 
 
 void FileEdit::Paste() {
+  if (!text->CanPaste()) return;
+  text->Paste();
 }
 
 
@@ -45,6 +55,8 @@ void FileEdit::Duplicate() {
 
 
 void FileEdit::Delete() {
+  if (text->GetReadOnly()) return;
+  text->Clear();
 }
 
 
@@ -57,10 +69,28 @@ void FileEdit::Replace() {
 
 
 void FileEdit::MatchBrace() {
+  int min = text->GetCurrentPos();
+  int max = text->BraceMatch(min);
+  if (max > (min + 1)) {
+    text->BraceHighlight(min + 1, max);
+    text->SetSelection(min + 1, max);
+  }
+  else{
+    text->BraceBadLight(min);
+  }
 }
 
 
 void FileEdit::SelectBrace() {
+  int min = text->GetCurrentPos();
+  int max = text->BraceMatch(min);
+  if (max > (min + 1)) {
+    text->BraceHighlight(min + 1, max);
+    text->SetSelection(min + 1, max);
+  }
+  else{
+    text->BraceBadLight(min);
+  }
 }
 
 
@@ -69,18 +99,24 @@ void FileEdit::GotoLine() {
 
 
 void FileEdit::Indent() {
+  text->CmdKeyExecute(wxSTC_CMD_TAB);
 }
 
 
 void FileEdit::UnIndent() {
+  text->CmdKeyExecute(wxSTC_CMD_DELETEBACK);
 }
 
 
 void FileEdit::SelectAll() {
+  text->SetSelection(0, text->GetTextLength());
 }
 
 
 void FileEdit::SelectLine() {
+  int lineStart = text->PositionFromLine(text->GetCurrentLine());
+  int lineEnd = text->PositionFromLine(text->GetCurrentLine() + 1);
+  text->SetSelection(lineStart, lineEnd);
 }
 
 
