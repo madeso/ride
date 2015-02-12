@@ -402,11 +402,13 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   }
   updateFonts();
   allowStyleChange = true;
+  
   uiFontStyles->SetSelection(gFontStyleIndex);
   uiFontStyles->EnsureVisible(gFontStyleIndex);
+
+  allowStyleChange = false;
   styleToGui(true);
   updateStyleEnable();
-  allowStyleChange = false;
 }
 
 void SettingsDlg::saveSelectedIndex() {
