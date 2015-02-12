@@ -5,7 +5,9 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 # Unsorted Roadmap
 
-* Refactor settings class to use [protobuf generated code](https://code.google.com/p/protobuf/)
+* Expose all scintilla settings in gui + settings
+* scintilla text commands (edit->select all, etc)
+* Indeting feature: None, block, smart
 * Create filter list from known languages
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
@@ -19,7 +21,6 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * go to next error shortcut
 * quick open file from solution/project
 * remember opened file since last time
-* scintilla text commands
 * settings/options window
 * cpack support (=installer for ride)
 * Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
@@ -27,6 +28,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * custom styles (like zenburn, obsidian, ...)
 * import styles from other editors (like visualstudio / https://studiostyl.es/ )
 * code snippets
+* file templates
 * numbered bookmarks
 * built in syntax highlight for shading languges like glsl like http://nshader.codeplex.com/
 
