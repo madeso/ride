@@ -7,7 +7,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 * Expose all scintilla settings in gui + settings
 * scintilla text commands (edit->select all, etc)
-* Indeting feature: None, block, smart
+* Indenting feature: None, block, smart
 * Create filter list from known languages
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
