@@ -13,7 +13,7 @@ enum
   ID_FIRST = wxID_HIGHEST,
   ID_SHOW_SETTINGS,
 
-  ID_MATCH_BRACE, ID_GOTO_LINE, ID_SELECT_LINE
+  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -65,6 +65,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   // menuEdit->Append(wxID_OPEN, "Replace again\tShift-F4", "");
   menuEdit->AppendSeparator();
   menuEdit->Append(ID_MATCH_BRACE, "Match brace\tCtrl-M", "");
+  menuEdit->Append(ID_SELECT_BRACE, "Select to matching brace\tCtrl-Shift-M", "");
   menuEdit->Append(ID_GOTO_LINE, "Goto line\tCtrl-G", "");
   menuEdit->AppendSeparator();
   menuEdit->Append(wxID_INDENT, "Increase indent\tTab", "");
