@@ -171,18 +171,6 @@ FileEdit* MainWindow::getSelectedEditorNull() {
   }
 }
 
-void MainWindow::OnSave(wxCommandEvent& event) {
-  FileEdit* selected = getSelectedEditorNull();
-  if (selected == NULL) return;
-  selected->save();
-}
-
-void MainWindow::OnSaveAs(wxCommandEvent& event) {
-  FileEdit* selected = getSelectedEditorNull();
-  if (selected == NULL) return;
-  selected->saveAs();
-}
-
 void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
   wxWindow* window = notebook->GetPage(evt.GetSelection());
   if (window->IsKindOf(CLASSINFO(FileEdit))) {
@@ -242,6 +230,8 @@ void MainWindow::ShowSettings(wxCommandEvent& event) {
     selected->X();\
   }
 
+MEM_FUN(Save)
+MEM_FUN(SaveAs)
 MEM_FUN(Undo)
 MEM_FUN(Redo)
 MEM_FUN(Cut)

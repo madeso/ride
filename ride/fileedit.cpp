@@ -181,13 +181,13 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
   updateTitle();
 }
 
-bool FileEdit::save() {
+bool FileEdit::Save() {
   if (shouldBeSaved() == false) return true;
-  if (filename.IsEmpty()) return saveAs();
+  if (filename.IsEmpty()) return SaveAs();
   else return saveTo(filename);
 }
 
-bool FileEdit::saveAs() {
+bool FileEdit::SaveAs() {
   wxFileDialog saveFileDialog(this, _("Save file"), "", "",
     FILE_PATTERN, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   if (saveFileDialog.ShowModal() == wxID_CANCEL)
@@ -380,7 +380,7 @@ bool FileEdit::canClose(bool canAbort) {
 
     const int answer = dlg.ShowModal();
     if (answer == wxID_YES) {
-      return save();
+      return Save();
     }
     else if (answer == wxID_NO) {
       return true;

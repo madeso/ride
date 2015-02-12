@@ -12,6 +12,8 @@ public:
   FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file);
 
 public:
+  bool Save();
+  bool SaveAs();
   void Undo();
   void Redo();
   void Cut();
@@ -31,8 +33,6 @@ public:
 
 public:
   bool canClose(bool canAbort);
-  bool save();
-  bool saveAs();
 
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
