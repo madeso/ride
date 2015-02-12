@@ -106,6 +106,9 @@ void MainWindow::OnOpen(wxCommandEvent& event)
 
 FileEdit* MainWindow::getSelectedEditorNull() {
   const int selected = notebook->GetSelection();
+  if (selected == -1) {
+    return NULL;
+  }
   wxWindow* window = notebook->GetPage(selected);
   if (window->IsKindOf(CLASSINFO(FileEdit))) {
     FileEdit* edit = reinterpret_cast<FileEdit*>(window);
