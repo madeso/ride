@@ -72,7 +72,7 @@ void ToGui(std::string data, wxListBox* gui)  {
     return;
   }
 
-  wxString str(data);
+  wxString str = wxString::FromUTF8(data.c_str());
   int index = gui->FindString(str);
   if (index == wxNOT_FOUND) {
     index = gui->GetCount();
@@ -85,7 +85,7 @@ void ToGui(std::string data, wxListBox* gui)  {
 std::string ToData(wxListBox* gui)  {
   int selected = gui->GetSelection();
   if (selected == wxNOT_FOUND) return "";
-  else return gui->GetString(selected);
+  else return std::string(gui->GetString(selected).ToUTF8());
 }
 
 //////////////////////////////////////////////////////////////////////////
