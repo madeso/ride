@@ -21,7 +21,6 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * go to next error shortcut
 * quick open file from solution/project
 * remember opened file since last time
-* settings/options window
 * cpack support (=installer for ride)
 * Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
 * investigate debugging support (gdb?)
