@@ -29,6 +29,8 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * code snippets
 * file templates
 * numbered bookmarks
+* open type in online documentation command/do a search...
+* search google for this compiler error
 * built in syntax highlight for shading languges like glsl like http://nshader.codeplex.com/
 
 # Debug ideas
