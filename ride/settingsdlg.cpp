@@ -387,6 +387,8 @@ void SettingsDlg::updateFontDisplay() {
 
 //////////////////////////////////////////////////////////////////////////
 
+int gFontStyleIndex = 0;
+
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
 ::ui::Settings(parent, wxID_ANY), main(mainwindow), allowApply(false), allowStyleChange(false)
 {
@@ -400,25 +402,36 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   }
   updateFonts();
   allowStyleChange = true;
-  uiFontStyles->SetSelection(0);
+  uiFontStyles->SetSelection(gFontStyleIndex);
+  uiFontStyles->EnsureVisible(gFontStyleIndex);
   styleToGui(true);
   updateStyleEnable();
   allowStyleChange = false;
 }
 
+void SettingsDlg::saveSelectedIndex() {
+  gFontStyleIndex = uiFontStyles->GetSelection();
+  if (gFontStyleIndex == -1) {
+    gFontStyleIndex = 0;
+  }
+}
+
 void SettingsDlg::OnApply( wxCommandEvent& event )
 {
+  saveSelectedIndex();
   apply();
 }
 
 void SettingsDlg::OnCancel( wxCommandEvent& event )
 {
   main->setSettings(global);
+  saveSelectedIndex();
   EndModal(wxCANCEL);
 }
 
 void SettingsDlg::OnOk( wxCommandEvent& event )
 {
+  saveSelectedIndex();
   editToGui(false);
   main->setSettings(edit);
   if (false == SaveSettings(edit)) {
