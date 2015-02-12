@@ -137,7 +137,7 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("C/C++ Commentline", c_commentline);
   DEF_STYLE("C/C++ Commentdoc", c_commentdoc);
   DEF_STYLE("C/C++ Number", c_number);
-  DEF_STYLE("C/C++ Word", c_word);
+  DEF_STYLE("C/C++ Keyword", c_word);
   DEF_STYLE("C/C++ String", c_string);
   DEF_STYLE("C/C++ Character", c_character);
   DEF_STYLE("C/C++ UUID", c_uuid);
