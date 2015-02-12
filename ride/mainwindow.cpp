@@ -25,6 +25,23 @@ EVT_MENU(ID_SHOW_SETTINGS, MainWindow::ShowSettings)
 EVT_MENU(wxID_SAVE, MainWindow::OnSave)
 EVT_MENU(wxID_SAVEAS, MainWindow::OnSaveAs)
 
+EVT_MENU(wxID_UNDO, MainWindow::OnUndo)
+EVT_MENU(wxID_REDO, MainWindow::OnRedo)
+EVT_MENU(wxID_CUT, MainWindow::OnCut)
+EVT_MENU(wxID_COPY, MainWindow::OnCopy)
+EVT_MENU(wxID_PASTE, MainWindow::OnPaste)
+EVT_MENU(wxID_DUPLICATE, MainWindow::OnDuplicate)
+EVT_MENU(wxID_DELETE, MainWindow::OnDelete)
+EVT_MENU(wxID_FIND, MainWindow::OnFind)
+EVT_MENU(wxID_REPLACE, MainWindow::OnReplace)
+EVT_MENU(ID_MATCH_BRACE, MainWindow::OnMatchBrace)
+EVT_MENU(ID_SELECT_BRACE, MainWindow::OnSelectBrace)
+EVT_MENU(ID_GOTO_LINE, MainWindow::OnGotoLine)
+EVT_MENU(wxID_INDENT, MainWindow::OnIndent)
+EVT_MENU(wxID_UNINDENT, MainWindow::OnUnIndent)
+EVT_MENU(wxID_SELECTALL, MainWindow::OnSelectAll)
+EVT_MENU(ID_SELECT_LINE, MainWindow::OnSelectLine)
+
 EVT_CLOSE(MainWindow::OnClose)
 
 EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
@@ -217,3 +234,29 @@ void MainWindow::ShowSettings(wxCommandEvent& event) {
   SettingsDlg settingsdlg(this, this);
   settingsdlg.ShowModal();
 }
+
+#define MEM_FUN(X) \
+  void MainWindow::On ## X(wxCommandEvent& event) {\
+    FileEdit* selected = getSelectedEditorNull();\
+    if (selected == NULL) return;\
+    selected->X();\
+  }
+
+MEM_FUN(Undo)
+MEM_FUN(Redo)
+MEM_FUN(Cut)
+MEM_FUN(Copy)
+MEM_FUN(Paste)
+MEM_FUN(Duplicate)
+MEM_FUN(Delete)
+MEM_FUN(Find)
+MEM_FUN(Replace)
+MEM_FUN(MatchBrace)
+MEM_FUN(SelectBrace)
+MEM_FUN(GotoLine)
+MEM_FUN(Indent)
+MEM_FUN(UnIndent)
+MEM_FUN(SelectAll)
+MEM_FUN(SelectLine)
+
+#undef MEM_FUN

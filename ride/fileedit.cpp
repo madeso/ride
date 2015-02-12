@@ -18,6 +18,75 @@ enum
   m_FoldingMargin = 16
 };
 
+//////////////////////////////////////////////////////////////////////////
+
+void FileEdit::Undo() {
+}
+
+
+void FileEdit::Redo() {
+}
+
+
+void FileEdit::Cut() {
+}
+
+
+void FileEdit::Copy() {
+}
+
+
+void FileEdit::Paste() {
+}
+
+
+void FileEdit::Duplicate() {
+}
+
+
+void FileEdit::Delete() {
+}
+
+
+void FileEdit::Find() {
+}
+
+
+void FileEdit::Replace() {
+}
+
+
+void FileEdit::MatchBrace() {
+}
+
+
+void FileEdit::SelectBrace() {
+}
+
+
+void FileEdit::GotoLine() {
+}
+
+
+void FileEdit::Indent() {
+}
+
+
+void FileEdit::UnIndent() {
+}
+
+
+void FileEdit::SelectAll() {
+}
+
+
+void FileEdit::SelectLine() {
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////
+
 const int ANNOTATION_STYLE = wxSTC_STYLE_LASTPREDEFINED + 1;
 
 int C(ride::EdgeStyle e) {

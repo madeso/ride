@@ -11,6 +11,25 @@ class FileEdit : public wxControl {
 public:
   FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file);
 
+public:
+  void Undo();
+  void Redo();
+  void Cut();
+  void Copy();
+  void Paste();
+  void Duplicate();
+  void Delete();
+  void Find();
+  void Replace();
+  void MatchBrace();
+  void SelectBrace();
+  void GotoLine();
+  void Indent();
+  void UnIndent();
+  void SelectAll();
+  void SelectLine();
+
+public:
   bool canClose(bool canAbort);
   bool save();
   bool saveAs();
