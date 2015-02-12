@@ -233,8 +233,8 @@ void UpdateCheckEnabled(wxCheckBox* check, wxWindow* slave)
 
 void SettingsDlg::updateStyleEnable() {
   UpdateCheckEnabled(uiStyleUseBold, uiStyleBold);
-  UpdateCheckEnabled(uiStyleUseItalic, uiStyleUnderline);
-  UpdateCheckEnabled(uiStyleUseUnderline, uiStyleItalic);
+  UpdateCheckEnabled(uiStyleUseUnderline, uiStyleUnderline);
+  UpdateCheckEnabled(uiStyleUseItalic, uiStyleItalic);
   UpdateCheckEnabled(uiStyleUseSize, uiStyleSize);
 
   UpdateCheckEnabled(uiStyleUseForeground, uiStyleForeground);
