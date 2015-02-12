@@ -10,7 +10,10 @@
 
 enum
 {
-  ID_SHOW_SETTINGS = wxID_HIGHEST + 1
+  ID_FIRST = wxID_HIGHEST,
+  ID_SHOW_SETTINGS,
+
+  ID_MATCH_BRACE, ID_GOTO_LINE, ID_SELECT_LINE
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -35,6 +38,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 
   LoadSettings(settings);
 
+  //////////////////////////////////////////////////////////////////////////
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
   menuFile->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
@@ -43,10 +47,40 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuFile->Append(ID_SHOW_SETTINGS, "S&ettings...", "Change the settings of RIDE");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
+
+  //////////////////////////////////////////////////////////////////////////
+  wxMenu *menuEdit = new wxMenu;
+  menuEdit->Append(wxID_UNDO, "Undo\tCtrl-Z", "");
+  menuEdit->Append(wxID_REDO, "Redo\tCtrl-Shift-Z", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(wxID_CUT, "Cut\tCtrl-X", "");
+  menuEdit->Append(wxID_COPY, "Copy\tCtrl-C", "");
+  menuEdit->Append(wxID_PASTE, "Paste\tCtrl-V", "");
+  menuEdit->Append(wxID_DUPLICATE, "Duplicate line\tCtrl-D", "");
+  menuEdit->Append(wxID_DELETE, "Delete\tDel", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(wxID_FIND, "Find\tCtrl-F", "");
+  // menuEdit->Append(wxID_OPEN, "Find next\tF3", "");
+  menuEdit->Append(wxID_REPLACE, "Replace\tCtrl-H", "");
+  // menuEdit->Append(wxID_OPEN, "Replace again\tShift-F4", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(ID_MATCH_BRACE, "Match brace\tCtrl-M", "");
+  menuEdit->Append(ID_GOTO_LINE, "Goto line\tCtrl-G", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(wxID_INDENT, "Increase indent\tTab", "");
+  menuEdit->Append(wxID_UNINDENT, "Reduce indent\tShift-Tab", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(wxID_SELECTALL, "Select all\tCtrl-A", "");
+  menuEdit->Append(ID_SELECT_LINE, "Select line\tCtrl-L", "");
+
+  //////////////////////////////////////////////////////////////////////////
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(wxID_ABOUT);
+
+  //////////////////////////////////////////////////////////////////////////
   wxMenuBar *menuBar = new wxMenuBar;
   menuBar->Append(menuFile, "&File");
+  menuBar->Append(menuEdit, "&Edit");
   menuBar->Append(menuHelp, "&Help");
   SetMenuBar(menuBar);
   CreateStatusBar();
