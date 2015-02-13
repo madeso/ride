@@ -69,28 +69,25 @@ void FileEdit::Replace() {
 
 
 void FileEdit::MatchBrace() {
-  int min = text->GetCurrentPos();
-  int max = text->BraceMatch(min);
-  if (max > (min + 1)) {
-    text->BraceHighlight(min + 1, max);
-    text->SetSelection(min + 1, max);
-  }
-  else{
-    text->BraceBadLight(min);
-  }
+  int start_brace = text->GetCurrentPos();
+  int other_brace = text->BraceMatch(start_brace);
+  if (other_brace == -1) return;
+
+  text->SetSelection(other_brace, other_brace);
 }
 
 
 void FileEdit::SelectBrace() {
-  int min = text->GetCurrentPos();
-  int max = text->BraceMatch(min);
-  if (max > (min + 1)) {
-    text->BraceHighlight(min + 1, max);
-    text->SetSelection(min + 1, max);
+  int start_brace = text->GetCurrentPos();
+  int other_brace = text->BraceMatch(start_brace);
+  if (other_brace == -1) return;
+
+  if (other_brace < start_brace) {
+    std::swap(start_brace, other_brace);
   }
-  else{
-    text->BraceBadLight(min);
-  }
+
+  assert(start_brace < other_brace);
+  text->SetSelection(start_brace, other_brace + 1);
 }
 
 
