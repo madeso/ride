@@ -48,6 +48,8 @@ private:
 
   bool shouldBeSaved();
 
+  void makeDirty();
+
 private:
   MainWindow* main;
   wxStyledTextCtrl* text;

@@ -24,18 +24,21 @@ enum
 void FileEdit::Undo() {
   if (!text->CanUndo()) return;
   text->Undo();
+  makeDirty();
 }
 
 
 void FileEdit::Redo() {
   if (!text->CanRedo()) return;
   text->Redo();
+  makeDirty();
 }
 
 
 void FileEdit::Cut() {
   if (text->GetReadOnly() || (text->GetSelectionEnd() - text->GetSelectionStart() <= 0)) return;
   text->Cut();
+  makeDirty();
 }
 
 
@@ -48,6 +51,7 @@ void FileEdit::Copy() {
 void FileEdit::Paste() {
   if (!text->CanPaste()) return;
   text->Paste();
+  makeDirty();
 }
 
 
@@ -56,12 +60,14 @@ void FileEdit::Duplicate() {
   int lineEnd = text->PositionFromLine(text->GetCurrentLine() + 1);
   const wxString current_line = text->GetTextRange(lineStart, lineEnd);
   text->InsertText(lineEnd, current_line);
+  makeDirty();
 }
 
 
 void FileEdit::Delete() {
   if (text->GetReadOnly()) return;
   text->Clear();
+  makeDirty();
 }
 
 
@@ -110,12 +116,14 @@ void FileEdit::GotoLine() {
 void FileEdit::Indent() {
   // todo: fix issue with replacing selection
   text->CmdKeyExecute(wxSTC_CMD_TAB);
+  makeDirty();
 }
 
 
 void FileEdit::UnIndent() {
   // todo: fix issue with replacing selection
   text->CmdKeyExecute(wxSTC_CMD_DELETEBACK);
+  makeDirty();
 }
 
 
@@ -463,6 +471,11 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 }
 
 void FileEdit::OnTextChanged(wxStyledTextEvent& event)
+{
+  makeDirty();
+}
+
+void FileEdit::makeDirty()
 {
   if (dirty == false) {
     dirty = true;
