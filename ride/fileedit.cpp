@@ -9,6 +9,7 @@
 
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
+#include <wx/numdlg.h> 
 
 enum
 {
@@ -92,6 +93,13 @@ void FileEdit::SelectBrace() {
 
 
 void FileEdit::GotoLine() {
+  const int total_plus_one = text->GetLineCount()+1;
+  const wxString message = wxString::Format("Enter line number(1-%d)", total_plus_one);
+  const long new_line_one_based = wxGetNumberFromUser(message, wxEmptyString, "Goto line", text->GetCurrentLine()+1, 1, total_plus_one);
+  if (new_line_one_based == -1) return;
+  const int pos = text->PositionFromLine(new_line_one_based-1);
+  text->SetSelection(pos, pos);
+  text->ScrollToLine(new_line_one_based - 1);
 }
 
 
