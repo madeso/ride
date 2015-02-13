@@ -473,7 +473,7 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 void FileEdit::OnTextChanged(wxStyledTextEvent& event)
 {
   makeDirty();
-
+  // todo: add settings for this...
   // auto-indenting
 
   int chr = event.GetKey(); // the key seems to be the char that was added
