@@ -5,7 +5,6 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 # Unsorted Roadmap
 
-=======
 * Create filter list from known languages
 * Remember session data
 * Expose all scintilla settings in gui + settings
