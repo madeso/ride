@@ -14,6 +14,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * project/solution explorer
 * project/solution(=cargo) commands
 * start page
+* option to force charset, lineending and ending with newline when saving
 * build output
 * error list
 * visual studio like debug settings
