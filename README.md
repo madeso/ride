@@ -5,6 +5,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 # Unsorted Roadmap
 
+* remember session data
 * Expose all scintilla settings in gui + settings
 * scintilla text commands (edit->select all, etc)
 * Indenting feature: None, block, smart
