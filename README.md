@@ -10,17 +10,19 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Remember session data
 * Expose all scintilla settings in gui + settings
 * Expose all aui settings in gui + settings
-* scintilla text commands (edit->select all, etc)
+* Scintilla text commands (edit->select all, etc)
 * Indenting feature: None, block, smart
 * Find in files, find in solution, incremental search, other searches
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
 * Project/solution explorer
+* Create project with cargo and add a README.md file
 * Project/solution(=cargo) commands
-* Start page
-* Option to force charset, lineending and ending with newline when saving
 * Build output
 * Error list
+* Optionally place (compile) error inline in source
+* Start page
+* Option to force charset, lineending and ending with newline when saving
 * Visual studio like debug settings
 * Context menu support
 * Go to next error shortcut
