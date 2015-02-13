@@ -96,11 +96,13 @@ void FileEdit::GotoLine() {
 
 
 void FileEdit::Indent() {
+  // todo: fix issue with replacing selection
   text->CmdKeyExecute(wxSTC_CMD_TAB);
 }
 
 
 void FileEdit::UnIndent() {
+  // todo: fix issue with replacing selection
   text->CmdKeyExecute(wxSTC_CMD_DELETEBACK);
 }
 
