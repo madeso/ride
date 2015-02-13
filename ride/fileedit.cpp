@@ -52,6 +52,10 @@ void FileEdit::Paste() {
 
 
 void FileEdit::Duplicate() {
+  int lineStart = text->PositionFromLine(text->GetCurrentLine());
+  int lineEnd = text->PositionFromLine(text->GetCurrentLine() + 1);
+  const wxString current_line = text->GetTextRange(lineStart, lineEnd);
+  text->InsertText(lineEnd, current_line);
 }
 
 
