@@ -11,9 +11,28 @@ class FileEdit : public wxControl {
 public:
   FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file);
 
+public:
+  bool Save();
+  bool SaveAs();
+  void Undo();
+  void Redo();
+  void Cut();
+  void Copy();
+  void Paste();
+  void Duplicate();
+  void Delete();
+  void Find();
+  void Replace();
+  void MatchBrace();
+  void SelectBrace();
+  void GotoLine();
+  void Indent();
+  void UnIndent();
+  void SelectAll();
+  void SelectLine();
+
+public:
   bool canClose(bool canAbort);
-  bool save();
-  bool saveAs();
 
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
@@ -28,6 +47,8 @@ private:
   bool saveTo(const wxString& target);
 
   bool shouldBeSaved();
+
+  void makeDirty();
 
 private:
   MainWindow* main;

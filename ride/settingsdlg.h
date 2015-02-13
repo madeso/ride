@@ -39,6 +39,8 @@ private:
   void updateFonts();
   void updateFontDisplay();
 
+  void saveSelectedIndex();
+
   void apply();
   void editToGui(bool togui);
   MainWindow* main;

@@ -5,7 +5,9 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 # Unsorted Roadmap
 
+=======
 * Create filter list from known languages
+* remember session data
 * Expose all scintilla settings in gui + settings
 * scintilla text commands (edit->select all, etc)
 * Indenting feature: None, block, smart
@@ -15,6 +17,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * project/solution explorer
 * project/solution(=cargo) commands
 * start page
+* option to force charset, lineending and ending with newline when saving
 * build output
 * error list
 * visual studio like debug settings
@@ -30,6 +33,9 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * code snippets
 * file templates
 * numbered bookmarks
+* implement ctrl+tab like visual studio to switch between open documents
+* open type in online documentation command/do a search...
+* search google for this compiler error
 * built in syntax highlight for shading languges like glsl like http://nshader.codeplex.com/
 
 # Debug ideas

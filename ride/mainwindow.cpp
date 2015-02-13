@@ -10,7 +10,10 @@
 
 enum
 {
-  ID_SHOW_SETTINGS = wxID_HIGHEST + 1
+  ID_FIRST = wxID_HIGHEST,
+  ID_SHOW_SETTINGS,
+
+  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -21,6 +24,23 @@ EVT_MENU(ID_SHOW_SETTINGS, MainWindow::ShowSettings)
 
 EVT_MENU(wxID_SAVE, MainWindow::OnSave)
 EVT_MENU(wxID_SAVEAS, MainWindow::OnSaveAs)
+
+EVT_MENU(wxID_UNDO, MainWindow::OnUndo)
+EVT_MENU(wxID_REDO, MainWindow::OnRedo)
+EVT_MENU(wxID_CUT, MainWindow::OnCut)
+EVT_MENU(wxID_COPY, MainWindow::OnCopy)
+EVT_MENU(wxID_PASTE, MainWindow::OnPaste)
+EVT_MENU(wxID_DUPLICATE, MainWindow::OnDuplicate)
+EVT_MENU(wxID_DELETE, MainWindow::OnDelete)
+EVT_MENU(wxID_FIND, MainWindow::OnFind)
+EVT_MENU(wxID_REPLACE, MainWindow::OnReplace)
+EVT_MENU(ID_MATCH_BRACE, MainWindow::OnMatchBrace)
+EVT_MENU(ID_SELECT_BRACE, MainWindow::OnSelectBrace)
+EVT_MENU(ID_GOTO_LINE, MainWindow::OnGotoLine)
+EVT_MENU(wxID_INDENT, MainWindow::OnIndent)
+EVT_MENU(wxID_UNINDENT, MainWindow::OnUnIndent)
+EVT_MENU(wxID_SELECTALL, MainWindow::OnSelectAll)
+EVT_MENU(ID_SELECT_LINE, MainWindow::OnSelectLine)
 
 EVT_CLOSE(MainWindow::OnClose)
 
@@ -35,6 +55,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 
   LoadSettings(settings);
 
+  //////////////////////////////////////////////////////////////////////////
   wxMenu *menuFile = new wxMenu;
   menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
   menuFile->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
@@ -43,10 +64,41 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuFile->Append(ID_SHOW_SETTINGS, "S&ettings...", "Change the settings of RIDE");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
+
+  //////////////////////////////////////////////////////////////////////////
+  wxMenu *menuEdit = new wxMenu;
+  menuEdit->Append(wxID_UNDO, "Undo\tCtrl-Z", "");
+  menuEdit->Append(wxID_REDO, "Redo\tCtrl-Shift-Z", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(wxID_CUT, "Cut\tCtrl-X", "");
+  menuEdit->Append(wxID_COPY, "Copy\tCtrl-C", "");
+  menuEdit->Append(wxID_PASTE, "Paste\tCtrl-V", "");
+  menuEdit->Append(wxID_DUPLICATE, "Duplicate line\tCtrl-D", "");
+  menuEdit->Append(wxID_DELETE, "Delete\tDel", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(wxID_FIND, "Find\tCtrl-F", "");
+  // menuEdit->Append(wxID_OPEN, "Find next\tF3", "");
+  menuEdit->Append(wxID_REPLACE, "Replace\tCtrl-H", "");
+  // menuEdit->Append(wxID_OPEN, "Replace again\tShift-F4", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(ID_MATCH_BRACE, "Match brace\tCtrl-M", "");
+  menuEdit->Append(ID_SELECT_BRACE, "Select to matching brace\tCtrl-Shift-M", "");
+  menuEdit->Append(ID_GOTO_LINE, "Goto line\tCtrl-G", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(wxID_INDENT, "Increase indent\tTab", "");
+  menuEdit->Append(wxID_UNINDENT, "Reduce indent\tShift-Tab", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(wxID_SELECTALL, "Select all\tCtrl-A", "");
+  menuEdit->Append(ID_SELECT_LINE, "Select line\tCtrl-L", "");
+
+  //////////////////////////////////////////////////////////////////////////
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(wxID_ABOUT);
+
+  //////////////////////////////////////////////////////////////////////////
   wxMenuBar *menuBar = new wxMenuBar;
   menuBar->Append(menuFile, "&File");
+  menuBar->Append(menuEdit, "&Edit");
   menuBar->Append(menuHelp, "&Help");
   SetMenuBar(menuBar);
   CreateStatusBar();
@@ -106,6 +158,9 @@ void MainWindow::OnOpen(wxCommandEvent& event)
 
 FileEdit* MainWindow::getSelectedEditorNull() {
   const int selected = notebook->GetSelection();
+  if (selected == -1) {
+    return NULL;
+  }
   wxWindow* window = notebook->GetPage(selected);
   if (window->IsKindOf(CLASSINFO(FileEdit))) {
     FileEdit* edit = reinterpret_cast<FileEdit*>(window);
@@ -114,18 +169,6 @@ FileEdit* MainWindow::getSelectedEditorNull() {
   else {
     return NULL;
   }
-}
-
-void MainWindow::OnSave(wxCommandEvent& event) {
-  FileEdit* selected = getSelectedEditorNull();
-  if (selected == NULL) return;
-  selected->save();
-}
-
-void MainWindow::OnSaveAs(wxCommandEvent& event) {
-  FileEdit* selected = getSelectedEditorNull();
-  if (selected == NULL) return;
-  selected->saveAs();
 }
 
 void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
@@ -179,3 +222,31 @@ void MainWindow::ShowSettings(wxCommandEvent& event) {
   SettingsDlg settingsdlg(this, this);
   settingsdlg.ShowModal();
 }
+
+#define MEM_FUN(X) \
+  void MainWindow::On ## X(wxCommandEvent& event) {\
+    FileEdit* selected = getSelectedEditorNull();\
+    if (selected == NULL) return;\
+    selected->X();\
+  }
+
+MEM_FUN(Save)
+MEM_FUN(SaveAs)
+MEM_FUN(Undo)
+MEM_FUN(Redo)
+MEM_FUN(Cut)
+MEM_FUN(Copy)
+MEM_FUN(Paste)
+MEM_FUN(Duplicate)
+MEM_FUN(Delete)
+MEM_FUN(Find)
+MEM_FUN(Replace)
+MEM_FUN(MatchBrace)
+MEM_FUN(SelectBrace)
+MEM_FUN(GotoLine)
+MEM_FUN(Indent)
+MEM_FUN(UnIndent)
+MEM_FUN(SelectAll)
+MEM_FUN(SelectLine)
+
+#undef MEM_FUN

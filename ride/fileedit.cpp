@@ -9,6 +9,7 @@
 
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
+#include <wx/numdlg.h> 
 
 enum
 {
@@ -17,6 +18,129 @@ enum
   m_FoldingID = 2,
   m_FoldingMargin = 16
 };
+
+//////////////////////////////////////////////////////////////////////////
+
+void FileEdit::Undo() {
+  if (!text->CanUndo()) return;
+  text->Undo();
+  makeDirty();
+}
+
+
+void FileEdit::Redo() {
+  if (!text->CanRedo()) return;
+  text->Redo();
+  makeDirty();
+}
+
+
+void FileEdit::Cut() {
+  if (text->GetReadOnly() || (text->GetSelectionEnd() - text->GetSelectionStart() <= 0)) return;
+  text->Cut();
+  makeDirty();
+}
+
+
+void FileEdit::Copy() {
+  if (text->GetSelectionEnd() - text->GetSelectionStart() <= 0) return;
+  text->Copy();
+}
+
+
+void FileEdit::Paste() {
+  if (!text->CanPaste()) return;
+  text->Paste();
+  makeDirty();
+}
+
+
+void FileEdit::Duplicate() {
+  int lineStart = text->PositionFromLine(text->GetCurrentLine());
+  int lineEnd = text->PositionFromLine(text->GetCurrentLine() + 1);
+  const wxString current_line = text->GetTextRange(lineStart, lineEnd);
+  text->InsertText(lineEnd, current_line);
+  makeDirty();
+}
+
+
+void FileEdit::Delete() {
+  if (text->GetReadOnly()) return;
+  text->Clear();
+  makeDirty();
+}
+
+
+void FileEdit::Find() {
+}
+
+
+void FileEdit::Replace() {
+}
+
+
+void FileEdit::MatchBrace() {
+  int start_brace = text->GetCurrentPos();
+  int other_brace = text->BraceMatch(start_brace);
+  if (other_brace == -1) return;
+
+  text->SetSelection(other_brace, other_brace);
+}
+
+
+void FileEdit::SelectBrace() {
+  int start_brace = text->GetCurrentPos();
+  int other_brace = text->BraceMatch(start_brace);
+  if (other_brace == -1) return;
+
+  if (other_brace < start_brace) {
+    std::swap(start_brace, other_brace);
+  }
+
+  assert(start_brace < other_brace);
+  text->SetSelection(start_brace, other_brace + 1);
+}
+
+
+void FileEdit::GotoLine() {
+  const int total_plus_one = text->GetLineCount()+1;
+  const wxString message = wxString::Format("Enter line number(1-%d)", total_plus_one);
+  const long new_line_one_based = wxGetNumberFromUser(message, wxEmptyString, "Goto line", text->GetCurrentLine()+1, 1, total_plus_one);
+  if (new_line_one_based == -1) return;
+  const int pos = text->PositionFromLine(new_line_one_based-1);
+  text->SetSelection(pos, pos);
+  text->ScrollToLine(new_line_one_based - 1);
+}
+
+
+void FileEdit::Indent() {
+  // todo: fix issue with replacing selection
+  text->CmdKeyExecute(wxSTC_CMD_TAB);
+  makeDirty();
+}
+
+
+void FileEdit::UnIndent() {
+  // todo: fix issue with replacing selection
+  text->CmdKeyExecute(wxSTC_CMD_DELETEBACK);
+  makeDirty();
+}
+
+
+void FileEdit::SelectAll() {
+  text->SetSelection(0, text->GetTextLength());
+}
+
+
+void FileEdit::SelectLine() {
+  int lineStart = text->PositionFromLine(text->GetCurrentLine());
+  int lineEnd = text->PositionFromLine(text->GetCurrentLine() + 1);
+  text->SetSelection(lineStart, lineEnd);
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////
 
 const int ANNOTATION_STYLE = wxSTC_STYLE_LASTPREDEFINED + 1;
 
@@ -112,13 +236,13 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
   updateTitle();
 }
 
-bool FileEdit::save() {
+bool FileEdit::Save() {
   if (shouldBeSaved() == false) return true;
-  if (filename.IsEmpty()) return saveAs();
+  if (filename.IsEmpty()) return SaveAs();
   else return saveTo(filename);
 }
 
-bool FileEdit::saveAs() {
+bool FileEdit::SaveAs() {
   wxFileDialog saveFileDialog(this, _("Save file"), "", "",
     FILE_PATTERN, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   if (saveFileDialog.ShowModal() == wxID_CANCEL)
@@ -311,7 +435,7 @@ bool FileEdit::canClose(bool canAbort) {
 
     const int answer = dlg.ShowModal();
     if (answer == wxID_YES) {
-      return save();
+      return Save();
     }
     else if (answer == wxID_NO) {
       return true;
@@ -347,6 +471,11 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 }
 
 void FileEdit::OnTextChanged(wxStyledTextEvent& event)
+{
+  makeDirty();
+}
+
+void FileEdit::makeDirty()
 {
   if (dirty == false) {
     dirty = true;

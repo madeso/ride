@@ -20,8 +20,25 @@ public:
   void setSettings(const ride::Settings& settings);
 private:
 	void OnOpen(wxCommandEvent& event);
+  
   void OnSave(wxCommandEvent& event);
   void OnSaveAs(wxCommandEvent& event);
+  void OnUndo(wxCommandEvent& event);
+  void OnRedo(wxCommandEvent& event);
+  void OnCut(wxCommandEvent& event);
+  void OnCopy(wxCommandEvent& event);
+  void OnPaste(wxCommandEvent& event);
+  void OnDuplicate(wxCommandEvent& event);
+  void OnDelete(wxCommandEvent& event);
+  void OnFind(wxCommandEvent& event);
+  void OnReplace(wxCommandEvent& event);
+  void OnMatchBrace(wxCommandEvent& event);
+  void OnSelectBrace(wxCommandEvent& event);
+  void OnGotoLine(wxCommandEvent& event);
+  void OnIndent(wxCommandEvent& event);
+  void OnUnIndent(wxCommandEvent& event);
+  void OnSelectAll(wxCommandEvent& event);
+  void OnSelectLine(wxCommandEvent& event);
 
 	void OnExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);

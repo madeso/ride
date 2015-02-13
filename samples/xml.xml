@@ -3,5 +3,6 @@
   <to> Tove</to>
   <from>Jani</from>
   <heading>Reminder</heading>
+  <!-- This is a comment -->
   <body>Don't forget me this weekend!</body>
 </note>
