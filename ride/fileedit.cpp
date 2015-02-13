@@ -473,6 +473,35 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 void FileEdit::OnTextChanged(wxStyledTextEvent& event)
 {
   makeDirty();
+
+  // auto-indenting
+
+  int chr = event.GetKey(); // the key seems to be the char that was added
+  if (chr == '\n' || chr == '\r')
+  {
+    const int current_line = text->GetCurrentLine();
+
+    const int indentation_in_spaces = current_line > 0
+      ? text->GetLineIndentation(current_line - 1)
+      : 0;
+
+    const int indentation_in_tabs = indentation_in_spaces / main->getSettings().tabwidth();
+
+    // if we use tabs, divide the number of character by the char width to get the actual width
+    const int indentation_in_chars = main->getSettings().usetabs()
+      ? indentation_in_tabs
+      : indentation_in_spaces;
+
+    // adjust to remove weird spaces from indentation settings
+    const int indentation_in_spaces_ajdusted = indentation_in_tabs * main->getSettings().tabwidth();
+
+    if (indentation_in_spaces_ajdusted != 0)   // NOT in the beginning
+    {
+      text->SetLineIndentation(current_line, indentation_in_spaces_ajdusted);
+      
+      text->GotoPos(text->PositionFromLine(current_line) + indentation_in_chars);
+    }
+  }
 }
 
 void FileEdit::makeDirty()
