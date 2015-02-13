@@ -5,10 +5,11 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 # Unsorted Roadmap
 
+* Create filter list from known languages
 * Expose all scintilla settings in gui + settings
 * scintilla text commands (edit->select all, etc)
 * Indenting feature: None, block, smart
-* Create filter list from known languages
+* Find in files, find in solution, incremental search, other searches
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
 * project/solution explorer
