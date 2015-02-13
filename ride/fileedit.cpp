@@ -454,6 +454,7 @@ FileEdit::~FileEdit() {
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
 EVT_STC_MARGINCLICK(wxID_ANY, FileEdit::OnMarginClick)
 EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnTextChanged)
+// EVT_STC_MODIFIED(wxID_ANY, FileEdit::OnTextModified) // this was not a good idea for makeDiry calls, OnPaint seems to generate modified messages
 wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
@@ -473,9 +474,9 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 void FileEdit::OnTextChanged(wxStyledTextEvent& event)
 {
   makeDirty();
-  // todo: add settings for this...
-  // auto-indenting
 
+  // auto-indenting
+  // todo: add settings for this...
   int chr = event.GetKey(); // the key seems to be the char that was added
   if (chr == '\n' || chr == '\r')
   {
