@@ -27,6 +27,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Context menu support
 * Go to next error shortcut
 * Quick open file from solution/project
+* Simple/basic git commit shortcut with specifying the commit message
 * Cpack support (=installer for ride)
 * Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
 * Investigate debugging support (gdb?)
