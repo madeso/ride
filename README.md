@@ -10,6 +10,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Expose all scintilla settings in gui + settings
 * Detect changes outside ride and ask to reload file
 * Comment / uncomment selection
+* Automatically insert/complete () and {}
 * Expose all aui settings in gui + settings
 * Scintilla text commands (edit->select all, etc)
 * Indenting feature: None, block, smart

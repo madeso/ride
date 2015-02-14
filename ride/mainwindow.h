@@ -6,6 +6,7 @@
 
 #include "ride/language.h"
 #include "ride/settings.h"
+#include "ride/project.h"
 
 class FileEdit;
 class SettingsDlg;
@@ -76,6 +77,7 @@ private:
   wxAuiNotebook* notebook;
 
   ride::Settings settings;
+  Project project;
 };
 
 #endif  // RIDE_MAINWINDOW_H
