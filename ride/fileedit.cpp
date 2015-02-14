@@ -370,6 +370,10 @@ void FileEdit::UpdateTextControl() {
   text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
   text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
 
+  text->SetAdditionalSelectionTyping(true);
+  text->SetAdditionalCaretsBlink(true);
+  text->SetAdditionalCaretsVisible(true);
+
   // setup style colors and font
   SetStyle(text, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
   SetStyle(text, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
