@@ -13,8 +13,10 @@ enum
   ID_FIRST = wxID_HIGHEST,
   ID_SHOW_SETTINGS,
 
-  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE,
-  ID_TOUPPER, ID_TOLOWER
+  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE, ID_TOUPPER, ID_TOLOWER,
+
+  ID_PROJECT_NEW, ID_PROJECT_OPEN, ID_PROJECT_SETTINGS, ID_PROJECT_BUILD, ID_PROJECT_CLEAN,
+  ID_PROJECT_REBUILD, ID_PROJECT_DOC, ID_PROJECT_RUN, ID_PROJECT_TEST, ID_PROJECT_BENCH, ID_PROJECT_UPDATE
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -98,6 +100,22 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuEdit->Append(ID_TOLOWER, "to lowercase\tCtrl-Alt-L", "");
 
   //////////////////////////////////////////////////////////////////////////
+
+  wxMenu *menuProject = new wxMenu;
+  menuProject->Append(ID_PROJECT_NEW, "New project...", "Create a new cargo project");
+  menuProject->Append(ID_PROJECT_OPEN, "Open project...", "Open a existing cargo or ride project");
+  menuProject->Append(ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings");
+  menuProject->AppendSeparator();
+  menuProject->Append(ID_PROJECT_BUILD, "Build\tCtrl-B", "Compile the current project");
+  menuProject->Append(ID_PROJECT_CLEAN, "Clean", "Remove the target directory");
+  menuProject->Append(ID_PROJECT_REBUILD, "Rebuild\tCtrl-Shift-B", "Clean + Build");
+  menuProject->Append(ID_PROJECT_DOC, "Doc", "Build this project's and its dependencies' documentation");
+  menuProject->Append(ID_PROJECT_RUN, "Run\tF5", "Build and execute src/main.rs");
+  menuProject->Append(ID_PROJECT_TEST, "Test", "Run the tests");
+  menuProject->Append(ID_PROJECT_BENCH, "Bench", "Run the benchmarks");
+  menuProject->Append(ID_PROJECT_UPDATE, "Update", "Update dependencies listed in Cargo.lock");
+
+  //////////////////////////////////////////////////////////////////////////
   wxMenu *menuHelp = new wxMenu;
   menuHelp->Append(wxID_ABOUT);
 
@@ -105,6 +123,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   wxMenuBar *menuBar = new wxMenuBar;
   menuBar->Append(menuFile, "&File");
   menuBar->Append(menuEdit, "&Edit");
+  menuBar->Append(menuProject, "&Project");
   menuBar->Append(menuHelp, "&Help");
   SetMenuBar(menuBar);
   CreateStatusBar();
