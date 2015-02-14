@@ -41,6 +41,8 @@ private:
   void OnSelectLine(wxCommandEvent& event);
   void OnToUpper(wxCommandEvent& event);
   void OnToLower(wxCommandEvent& event);
+  void OnMoveLinesUp(wxCommandEvent& event);
+  void OnMoveLinesDown(wxCommandEvent& event);
 
   void OnProjectNew     (wxCommandEvent& event);
   void OnProjectOpen    (wxCommandEvent& event);

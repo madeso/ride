@@ -154,6 +154,16 @@ void FileEdit::ToLower() {
   updateTitle();
 }
 
+void FileEdit::MoveLinesUp() {
+  text->MoveSelectedLinesUp();
+  updateTitle();
+}
+
+void FileEdit::MoveLinesDown() {
+  text->MoveSelectedLinesDown();
+  updateTitle();
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 int C(ride::EdgeStyle e) {

@@ -32,6 +32,8 @@ public:
   void SelectLine();
   void ToUpper();
   void ToLower();
+  void MoveLinesUp();
+  void MoveLinesDown();
 
 public:
   bool canClose(bool canAbort);

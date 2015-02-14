@@ -13,7 +13,7 @@ enum
   ID_FIRST = wxID_HIGHEST,
   ID_SHOW_SETTINGS,
 
-  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE, ID_TOUPPER, ID_TOLOWER,
+  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE, ID_TOUPPER, ID_TOLOWER, ID_MOVELINESUP, ID_MOVELINESDOWN,
 
   ID_PROJECT_NEW, ID_PROJECT_OPEN, ID_PROJECT_SETTINGS, ID_PROJECT_BUILD, ID_PROJECT_CLEAN,
   ID_PROJECT_REBUILD, ID_PROJECT_DOC, ID_PROJECT_RUN, ID_PROJECT_TEST, ID_PROJECT_BENCH, ID_PROJECT_UPDATE
@@ -46,6 +46,8 @@ EVT_MENU(wxID_SELECTALL, MainWindow::OnSelectAll)
 EVT_MENU(ID_SELECT_LINE, MainWindow::OnSelectLine)
 EVT_MENU(ID_TOUPPER, MainWindow::OnToUpper)
 EVT_MENU(ID_TOLOWER, MainWindow::OnToLower)
+EVT_MENU(ID_MOVELINESUP, MainWindow::OnMoveLinesUp)
+EVT_MENU(ID_MOVELINESDOWN, MainWindow::OnMoveLinesDown)
 
 EVT_MENU(ID_PROJECT_NEW       , MainWindow::OnProjectNew     )
 EVT_MENU(ID_PROJECT_OPEN      , MainWindow::OnProjectOpen    )
@@ -108,8 +110,11 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuEdit->Append(wxID_SELECTALL, "Select all\tCtrl-A", "");
   menuEdit->Append(ID_SELECT_LINE, "Select line\tCtrl-L", "");
   menuEdit->AppendSeparator();
-  menuEdit->Append(ID_TOUPPER, "TO UPPERCASE\tCtrl-Alt-U", "");
-  menuEdit->Append(ID_TOLOWER, "to lowercase\tCtrl-Alt-L", "");
+  menuEdit->Append(ID_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "");
+  menuEdit->Append(ID_TOLOWER, "Make lowercase\tCtrl-U", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(ID_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
+  menuEdit->Append(ID_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
 
   //////////////////////////////////////////////////////////////////////////
 
@@ -288,6 +293,8 @@ MEM_FUN(SelectAll)
 MEM_FUN(SelectLine)
 MEM_FUN(ToUpper)
 MEM_FUN(ToLower)
+MEM_FUN(MoveLinesUp)
+MEM_FUN(MoveLinesDown)
 #undef MEM_FUN
 //////////////////////////////////////////////////////////////////////////
 
