@@ -42,26 +42,26 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(wxID_SAVE              , MainWindow::OnFileSave)
   EVT_MENU(wxID_SAVEAS            , MainWindow::OnFileSaveAs)
   
-  EVT_MENU(wxID_UNDO              , MainWindow::OnUndo)
-  EVT_MENU(wxID_REDO              , MainWindow::OnRedo)
-  EVT_MENU(wxID_CUT               , MainWindow::OnCut)
-  EVT_MENU(wxID_COPY              , MainWindow::OnCopy)
-  EVT_MENU(wxID_PASTE             , MainWindow::OnPaste)
-  EVT_MENU(wxID_DUPLICATE         , MainWindow::OnDuplicate)
-  EVT_MENU(wxID_DELETE            , MainWindow::OnDelete)
-  EVT_MENU(wxID_FIND              , MainWindow::OnFind)
-  EVT_MENU(wxID_REPLACE           , MainWindow::OnReplace)
-  EVT_MENU(ID_EDIT_MATCH_BRACE    , MainWindow::OnMatchBrace)
-  EVT_MENU(ID_EDIT_SELECT_BRACE   , MainWindow::OnSelectBrace)
-  EVT_MENU(ID_EDIT_GOTO_LINE      , MainWindow::OnGotoLine)
-  EVT_MENU(wxID_INDENT            , MainWindow::OnIndent)
-  EVT_MENU(wxID_UNINDENT          , MainWindow::OnUnIndent)
-  EVT_MENU(wxID_SELECTALL         , MainWindow::OnSelectAll)
-  EVT_MENU(ID_EDIT_SELECT_LINE    , MainWindow::OnSelectLine)
-  EVT_MENU(ID_EDIT_TOUPPER        , MainWindow::OnToUpper)
-  EVT_MENU(ID_EDIT_TOLOWER        , MainWindow::OnToLower)
-  EVT_MENU(ID_EDIT_MOVELINESUP    , MainWindow::OnMoveLinesUp)
-  EVT_MENU(ID_EDIT_MOVELINESDOWN  , MainWindow::OnMoveLinesDown)
+  EVT_MENU(wxID_UNDO              , MainWindow::OnEditUndo)
+  EVT_MENU(wxID_REDO              , MainWindow::OnEditRedo)
+  EVT_MENU(wxID_CUT               , MainWindow::OnEditCut)
+  EVT_MENU(wxID_COPY              , MainWindow::OnEditCopy)
+  EVT_MENU(wxID_PASTE             , MainWindow::OnEditPaste)
+  EVT_MENU(wxID_DUPLICATE         , MainWindow::OnEditDuplicate)
+  EVT_MENU(wxID_DELETE            , MainWindow::OnEditDelete)
+  EVT_MENU(wxID_FIND              , MainWindow::OnEditFind)
+  EVT_MENU(wxID_REPLACE           , MainWindow::OnEditReplace)
+  EVT_MENU(ID_EDIT_MATCH_BRACE    , MainWindow::OnEditMatchBrace)
+  EVT_MENU(ID_EDIT_SELECT_BRACE   , MainWindow::OnEditSelectBrace)
+  EVT_MENU(ID_EDIT_GOTO_LINE      , MainWindow::OnEditGotoLine)
+  EVT_MENU(wxID_INDENT            , MainWindow::OnEditIndent)
+  EVT_MENU(wxID_UNINDENT          , MainWindow::OnEditUnIndent)
+  EVT_MENU(wxID_SELECTALL         , MainWindow::OnEditSelectAll)
+  EVT_MENU(ID_EDIT_SELECT_LINE    , MainWindow::OnEditSelectLine)
+  EVT_MENU(ID_EDIT_TOUPPER        , MainWindow::OnEditToUpper)
+  EVT_MENU(ID_EDIT_TOLOWER        , MainWindow::OnEditToLower)
+  EVT_MENU(ID_EDIT_MOVELINESUP    , MainWindow::OnEditMoveLinesUp)
+  EVT_MENU(ID_EDIT_MOVELINESDOWN  , MainWindow::OnEditMoveLinesDown)
   
   EVT_MENU(ID_PROJECT_NEW         , MainWindow::OnProjectNew     )
   EVT_MENU(ID_PROJECT_OPEN        , MainWindow::OnProjectOpen    )
@@ -295,7 +295,7 @@ void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
 
 //////////////////////////////////////////////////////////////////////////
 #define MEM_FUN(X) \
-  void MainWindow::On ## X(wxCommandEvent& event) {\
+  void MainWindow::OnEdit ## X(wxCommandEvent& event) {\
     FileEdit* selected = getSelectedEditorNull();\
     if (selected == NULL) return;\
     selected->X();\
