@@ -208,7 +208,7 @@ int C(ride::FoldFlags f) {
   return ret;
 }
 
-FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), dirty(false), currentLanguage(NULL) {
+FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), currentLanguage(NULL) {
   text = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__
     wxSUNKEN_BORDER |
@@ -223,7 +223,6 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
   else {
     text->LoadFile(filename);
   }
-  dirty = false;
 
   m_LineNrMargin = text->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_999999"));
 
@@ -255,7 +254,6 @@ bool FileEdit::saveTo(const wxString& target) {
     return false;
   }
   filename = target;
-  dirty = false;
   updateFilename();
   updateTitle();
   return true;
@@ -408,12 +406,12 @@ void FileEdit::updateFilename() {
 
 void FileEdit::updateTitle() {
   size_t index = notebook->GetPageIndex(this);
-  const wxString changestar = dirty ? "*" : "";
+  const wxString changestar = text->IsModified() ? "*" : "";
   notebook->SetPageText(index, docname + changestar);
 }
 
 bool FileEdit::shouldBeSaved() {
-  return dirty || filename.IsEmpty();
+  return text->IsModified() || filename.IsEmpty();
 }
 
 bool FileEdit::canClose(bool canAbort) {
@@ -535,8 +533,5 @@ void FileEdit::OnTextChanged(wxStyledTextEvent& event)
 
 void FileEdit::makeDirty()
 {
-  if (dirty == false) {
-    dirty = true;
-    updateTitle();
-  }
+  updateTitle();
 }

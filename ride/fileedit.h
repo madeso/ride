@@ -56,7 +56,7 @@ private:
   wxAuiNotebook* notebook;
   wxString filename;
   wxString docname;
-  bool dirty;
+  // bool dirty;
   int m_LineNrMargin;
 
   Language* currentLanguage;
