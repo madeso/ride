@@ -11,7 +11,7 @@
 enum
 {
   ID_FIRST = wxID_HIGHEST,
-  ID_SHOW_SETTINGS,
+  ID_FILE_RIDE_SETTINGS,
 
   ID_EDIT_MATCH_BRACE,
   ID_EDIT_SELECT_BRACE,
@@ -39,7 +39,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 EVT_MENU(wxID_OPEN, MainWindow::OnOpen)
 EVT_MENU(wxID_EXIT, MainWindow::OnExit)
 EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
-EVT_MENU(ID_SHOW_SETTINGS, MainWindow::ShowSettings)
+EVT_MENU(ID_FILE_RIDE_SETTINGS, MainWindow::ShowSettings)
 
 EVT_MENU(wxID_SAVE, MainWindow::OnSave)
 EVT_MENU(wxID_SAVEAS, MainWindow::OnSaveAs)
@@ -96,7 +96,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuFile->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
   menuFile->Append(wxID_SAVEAS, "Save &as...\tCtrl-Shift-S", "Save the file as a new file");
   menuFile->AppendSeparator();
-  menuFile->Append(ID_SHOW_SETTINGS, "S&ettings...", "Change the settings of RIDE");
+  menuFile->Append(ID_FILE_RIDE_SETTINGS, "S&ettings...", "Change the settings of RIDE");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
 
