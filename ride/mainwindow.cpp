@@ -76,7 +76,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuEdit->Append(wxID_CUT, "Cut\tCtrl-X", "");
   menuEdit->Append(wxID_COPY, "Copy\tCtrl-C", "");
   menuEdit->Append(wxID_PASTE, "Paste\tCtrl-V", "");
-  menuEdit->Append(wxID_DUPLICATE, "Duplicate line\tCtrl-D", "");
+  menuEdit->Append(wxID_DUPLICATE, "Duplicate selection or line\tCtrl-D", "");
   menuEdit->Append(wxID_DELETE, "Delete\tDel", "");
   menuEdit->AppendSeparator();
   menuEdit->Append(wxID_FIND, "Find\tCtrl-F", "");

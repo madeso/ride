@@ -65,7 +65,7 @@ void FileEdit::Paste() {
 
 
 void FileEdit::Duplicate() {
-  text->LineDuplicate();
+  text->SelectionDuplicate();
   updateTitle();
 }
 
