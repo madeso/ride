@@ -326,6 +326,7 @@ MEM_FUN(MoveLinesDown)
 //////////////////////////////////////////////////////////////////////////
 
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
+  // todo: implement me
 }
 
 void MainWindow::OnProjectOpen(wxCommandEvent& event) {

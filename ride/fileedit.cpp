@@ -78,10 +78,12 @@ void FileEdit::Delete() {
 
 
 void FileEdit::Find() {
+  // todo: implement me
 }
 
 
 void FileEdit::Replace() {
+  // todo: implement me
 }
 
 

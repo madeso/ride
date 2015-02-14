@@ -11,6 +11,7 @@ const wxString& Project::root_folder() const {
 }
 
 void Project::Settings() {
+  // todo: implement me
 }
 
 void Project::Build() {
