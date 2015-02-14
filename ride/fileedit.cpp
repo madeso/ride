@@ -24,21 +24,21 @@ enum
 void FileEdit::Undo() {
   if (!text->CanUndo()) return;
   text->Undo();
-  makeDirty();
+  updateTitle();
 }
 
 
 void FileEdit::Redo() {
   if (!text->CanRedo()) return;
   text->Redo();
-  makeDirty();
+  updateTitle();
 }
 
 
 void FileEdit::Cut() {
   if (text->GetReadOnly() || (text->GetSelectionEnd() - text->GetSelectionStart() <= 0)) return;
   text->Cut();
-  makeDirty();
+  updateTitle();
 }
 
 
@@ -51,7 +51,7 @@ void FileEdit::Copy() {
 void FileEdit::Paste() {
   if (!text->CanPaste()) return;
   text->Paste();
-  makeDirty();
+  updateTitle();
 }
 
 
@@ -60,14 +60,14 @@ void FileEdit::Duplicate() {
   int line_end = text->PositionFromLine(text->GetCurrentLine() + 1);
   const wxString current_line = text->GetTextRange(line_start, line_end);
   text->InsertText(line_end, current_line);
-  makeDirty();
+  updateTitle();
 }
 
 
 void FileEdit::Delete() {
   if (text->GetReadOnly()) return;
   text->Clear();
-  makeDirty();
+  updateTitle();
 }
 
 
@@ -116,14 +116,14 @@ void FileEdit::GotoLine() {
 void FileEdit::Indent() {
   // todo: fix issue with replacing selection
   text->CmdKeyExecute(wxSTC_CMD_TAB);
-  makeDirty();
+  updateTitle();
 }
 
 
 void FileEdit::UnIndent() {
   // todo: fix issue with replacing selection
   text->CmdKeyExecute(wxSTC_CMD_DELETEBACK);
-  makeDirty();
+  updateTitle();
 }
 
 
@@ -490,7 +490,7 @@ int GetIndentationChange(const wxString& str) {
 
 void FileEdit::OnTextChanged(wxStyledTextEvent& event)
 {
-  makeDirty();
+  updateTitle();
 
   // auto-indenting
   // todo: add settings for this...
@@ -531,7 +531,3 @@ void FileEdit::OnTextChanged(wxStyledTextEvent& event)
   }
 }
 
-void FileEdit::makeDirty()
-{
-  updateTitle();
-}

@@ -48,15 +48,12 @@ private:
 
   bool shouldBeSaved();
 
-  void makeDirty();
-
 private:
   MainWindow* main;
   wxStyledTextCtrl* text;
   wxAuiNotebook* notebook;
   wxString filename;
   wxString docname;
-  // bool dirty;
   int m_LineNrMargin;
 
   Language* currentLanguage;
