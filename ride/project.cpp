@@ -18,24 +18,31 @@ void Project::Build() {
 }
 
 void Project::Clean() {
+  RunCmd("cargo clean");
 }
 
 void Project::Rebuild() {
+  Clean();
+  Build();
 }
 
 void Project::Doc() {
+  RunCmd("cargo doc");
 }
 
 void Project::Run() {
 }
 
 void Project::Test() {
+  RunCmd("cargo test");
 }
 
 void Project::Bench() {
+  RunCmd("cargo bench");
 }
 
 void Project::Update() {
+  RunCmd("cargo update");
 }
 
 //////////////////////////////////////////////////////////////////////////
