@@ -47,6 +47,18 @@ EVT_MENU(ID_SELECT_LINE, MainWindow::OnSelectLine)
 EVT_MENU(ID_TOUPPER, MainWindow::OnToUpper)
 EVT_MENU(ID_TOLOWER, MainWindow::OnToLower)
 
+EVT_MENU(ID_PROJECT_NEW       , MainWindow::OnProjectNew     )
+EVT_MENU(ID_PROJECT_OPEN      , MainWindow::OnProjectOpen    )
+EVT_MENU(ID_PROJECT_SETTINGS  , MainWindow::OnProjectSettings)
+EVT_MENU(ID_PROJECT_BUILD     , MainWindow::OnProjectBuild   )
+EVT_MENU(ID_PROJECT_CLEAN     , MainWindow::OnProjectClean   )
+EVT_MENU(ID_PROJECT_REBUILD   , MainWindow::OnProjectRebuild )
+EVT_MENU(ID_PROJECT_DOC       , MainWindow::OnProjectDoc     )
+EVT_MENU(ID_PROJECT_RUN       , MainWindow::OnProjectRun     )
+EVT_MENU(ID_PROJECT_TEST      , MainWindow::OnProjectTest    )
+EVT_MENU(ID_PROJECT_BENCH     , MainWindow::OnProjectBench   )
+EVT_MENU(ID_PROJECT_UPDATE    , MainWindow::OnProjectUpdate  )
+
 EVT_CLOSE(MainWindow::OnClose)
 
 EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
@@ -248,6 +260,7 @@ void MainWindow::ShowSettings(wxCommandEvent& event) {
   settingsdlg.ShowModal();
 }
 
+//////////////////////////////////////////////////////////////////////////
 #define MEM_FUN(X) \
   void MainWindow::On ## X(wxCommandEvent& event) {\
     FileEdit* selected = getSelectedEditorNull();\
@@ -275,5 +288,26 @@ MEM_FUN(SelectAll)
 MEM_FUN(SelectLine)
 MEM_FUN(ToUpper)
 MEM_FUN(ToLower)
+#undef MEM_FUN
+//////////////////////////////////////////////////////////////////////////
 
+void MainWindow::OnProjectNew(wxCommandEvent& event) {
+}
+
+void MainWindow::OnProjectOpen(wxCommandEvent& event) {
+}
+
+#define MEM_FUN(X) \
+  void MainWindow::OnProject ## X(wxCommandEvent& event) {\
+  }
+
+MEM_FUN(Settings)
+MEM_FUN(Build   )
+MEM_FUN(Clean   )
+MEM_FUN(Rebuild )
+MEM_FUN(Doc     )
+MEM_FUN(Run     )
+MEM_FUN(Test    )
+MEM_FUN(Bench   )
+MEM_FUN(Update  )
 #undef MEM_FUN

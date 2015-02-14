@@ -42,6 +42,18 @@ private:
   void OnToUpper(wxCommandEvent& event);
   void OnToLower(wxCommandEvent& event);
 
+  void OnProjectNew     (wxCommandEvent& event);
+  void OnProjectOpen    (wxCommandEvent& event);
+  void OnProjectSettings(wxCommandEvent& event);
+  void OnProjectBuild   (wxCommandEvent& event);
+  void OnProjectClean   (wxCommandEvent& event);
+  void OnProjectRebuild (wxCommandEvent& event);
+  void OnProjectDoc     (wxCommandEvent& event);
+  void OnProjectRun     (wxCommandEvent& event);
+  void OnProjectTest    (wxCommandEvent& event);
+  void OnProjectBench   (wxCommandEvent& event);
+  void OnProjectUpdate  (wxCommandEvent& event);
+
 	void OnExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
   void ShowSettings(wxCommandEvent& event);
