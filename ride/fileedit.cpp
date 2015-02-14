@@ -472,6 +472,7 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 }
 
 int GetIndentationChange(const wxString& str) {
+  // todo: move to language...
   int change = 0;
   for (size_t i = 0; i < str.Length(); ++i) {
     const wxUniChar c = str.at(i);
