@@ -38,9 +38,7 @@ enum
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
 EVT_MENU(wxID_OPEN, MainWindow::OnOpen)
 EVT_MENU(wxID_EXIT, MainWindow::OnExit)
-EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
 EVT_MENU(ID_FILE_RIDE_SETTINGS, MainWindow::ShowSettings)
-
 EVT_MENU(wxID_SAVE, MainWindow::OnSave)
 EVT_MENU(wxID_SAVEAS, MainWindow::OnSaveAs)
 
@@ -76,6 +74,8 @@ EVT_MENU(ID_PROJECT_RUN       , MainWindow::OnProjectRun     )
 EVT_MENU(ID_PROJECT_TEST      , MainWindow::OnProjectTest    )
 EVT_MENU(ID_PROJECT_BENCH     , MainWindow::OnProjectBench   )
 EVT_MENU(ID_PROJECT_UPDATE    , MainWindow::OnProjectUpdate  )
+
+EVT_MENU(wxID_ABOUT, MainWindow::OnAbout)
 
 EVT_CLOSE(MainWindow::OnClose)
 
