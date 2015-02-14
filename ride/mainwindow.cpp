@@ -13,10 +13,26 @@ enum
   ID_FIRST = wxID_HIGHEST,
   ID_SHOW_SETTINGS,
 
-  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE, ID_TOUPPER, ID_TOLOWER, ID_MOVELINESUP, ID_MOVELINESDOWN,
+  ID_EDIT_MATCH_BRACE,
+  ID_EDIT_SELECT_BRACE,
+  ID_EDIT_GOTO_LINE,
+  ID_EDIT_SELECT_LINE,
+  ID_EDIT_TOUPPER,
+  ID_EDIT_TOLOWER,
+  ID_EDIT_MOVELINESUP,
+  ID_EDIT_MOVELINESDOWN,
 
-  ID_PROJECT_NEW, ID_PROJECT_OPEN, ID_PROJECT_SETTINGS, ID_PROJECT_BUILD, ID_PROJECT_CLEAN,
-  ID_PROJECT_REBUILD, ID_PROJECT_DOC, ID_PROJECT_RUN, ID_PROJECT_TEST, ID_PROJECT_BENCH, ID_PROJECT_UPDATE
+  ID_PROJECT_NEW,
+  ID_PROJECT_OPEN,
+  ID_PROJECT_SETTINGS,
+  ID_PROJECT_BUILD,
+  ID_PROJECT_CLEAN,
+  ID_PROJECT_REBUILD,
+  ID_PROJECT_DOC,
+  ID_PROJECT_RUN,
+  ID_PROJECT_TEST,
+  ID_PROJECT_BENCH,
+  ID_PROJECT_UPDATE
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -37,17 +53,17 @@ EVT_MENU(wxID_DUPLICATE, MainWindow::OnDuplicate)
 EVT_MENU(wxID_DELETE, MainWindow::OnDelete)
 EVT_MENU(wxID_FIND, MainWindow::OnFind)
 EVT_MENU(wxID_REPLACE, MainWindow::OnReplace)
-EVT_MENU(ID_MATCH_BRACE, MainWindow::OnMatchBrace)
-EVT_MENU(ID_SELECT_BRACE, MainWindow::OnSelectBrace)
-EVT_MENU(ID_GOTO_LINE, MainWindow::OnGotoLine)
+EVT_MENU(ID_EDIT_MATCH_BRACE, MainWindow::OnMatchBrace)
+EVT_MENU(ID_EDIT_SELECT_BRACE, MainWindow::OnSelectBrace)
+EVT_MENU(ID_EDIT_GOTO_LINE, MainWindow::OnGotoLine)
 EVT_MENU(wxID_INDENT, MainWindow::OnIndent)
 EVT_MENU(wxID_UNINDENT, MainWindow::OnUnIndent)
 EVT_MENU(wxID_SELECTALL, MainWindow::OnSelectAll)
-EVT_MENU(ID_SELECT_LINE, MainWindow::OnSelectLine)
-EVT_MENU(ID_TOUPPER, MainWindow::OnToUpper)
-EVT_MENU(ID_TOLOWER, MainWindow::OnToLower)
-EVT_MENU(ID_MOVELINESUP, MainWindow::OnMoveLinesUp)
-EVT_MENU(ID_MOVELINESDOWN, MainWindow::OnMoveLinesDown)
+EVT_MENU(ID_EDIT_SELECT_LINE, MainWindow::OnSelectLine)
+EVT_MENU(ID_EDIT_TOUPPER, MainWindow::OnToUpper)
+EVT_MENU(ID_EDIT_TOLOWER, MainWindow::OnToLower)
+EVT_MENU(ID_EDIT_MOVELINESUP, MainWindow::OnMoveLinesUp)
+EVT_MENU(ID_EDIT_MOVELINESDOWN, MainWindow::OnMoveLinesDown)
 
 EVT_MENU(ID_PROJECT_NEW       , MainWindow::OnProjectNew     )
 EVT_MENU(ID_PROJECT_OPEN      , MainWindow::OnProjectOpen    )
@@ -100,21 +116,21 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuEdit->Append(wxID_REPLACE, "Replace\tCtrl-H", "");
   // menuEdit->Append(wxID_OPEN, "Replace again\tShift-F4", "");
   menuEdit->AppendSeparator();
-  menuEdit->Append(ID_MATCH_BRACE, "Match brace\tCtrl-M", "");
-  menuEdit->Append(ID_SELECT_BRACE, "Select to matching brace\tCtrl-Shift-M", "");
-  menuEdit->Append(ID_GOTO_LINE, "Goto line\tCtrl-G", "");
+  menuEdit->Append(ID_EDIT_MATCH_BRACE, "Match brace\tCtrl-M", "");
+  menuEdit->Append(ID_EDIT_SELECT_BRACE, "Select to matching brace\tCtrl-Shift-M", "");
+  menuEdit->Append(ID_EDIT_GOTO_LINE, "Goto line\tCtrl-G", "");
   menuEdit->AppendSeparator();
   menuEdit->Append(wxID_INDENT, "Increase indent\tTab", "");
   menuEdit->Append(wxID_UNINDENT, "Reduce indent\tShift-Tab", "");
   menuEdit->AppendSeparator();
   menuEdit->Append(wxID_SELECTALL, "Select all\tCtrl-A", "");
-  menuEdit->Append(ID_SELECT_LINE, "Select line\tCtrl-L", "");
+  menuEdit->Append(ID_EDIT_SELECT_LINE, "Select line\tCtrl-L", "");
   menuEdit->AppendSeparator();
-  menuEdit->Append(ID_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "");
-  menuEdit->Append(ID_TOLOWER, "Make lowercase\tCtrl-U", "");
+  menuEdit->Append(ID_EDIT_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "");
+  menuEdit->Append(ID_EDIT_TOLOWER, "Make lowercase\tCtrl-U", "");
   menuEdit->AppendSeparator();
-  menuEdit->Append(ID_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
-  menuEdit->Append(ID_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
+  menuEdit->Append(ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
+  menuEdit->Append(ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
 
   //////////////////////////////////////////////////////////////////////////
 
