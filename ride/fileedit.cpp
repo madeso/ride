@@ -13,11 +13,12 @@
 
 enum
 {
-  m_LineNrID = 0,
-  m_DividerID = 1,
-  m_FoldingID = 2,
-  m_FoldingMargin = 16
+  ID_MARGIN_LINENUMBER = 0,
+  ID_MARGIN_DIVIDER = 1,
+  ID_MARGIN_FOLDING = 2
 };
+
+const int FOLDING_WIDTH = 16;
 
 enum
 {
@@ -354,25 +355,25 @@ void FileEdit::UpdateTextControl() {
   //////////////////////////////////////////////////////////////////////////
 
   // set margin for line numbers
-  text->SetMarginType(m_LineNrID, wxSTC_MARGIN_NUMBER);
-  text->SetMarginWidth(m_LineNrID, set.linenumberenable() ? m_LineNrMargin : 0);
+  text->SetMarginType(ID_MARGIN_LINENUMBER, wxSTC_MARGIN_NUMBER);
+  text->SetMarginWidth(ID_MARGIN_LINENUMBER, set.linenumberenable() ? m_LineNrMargin : 0);
 
   // set margin as unused
-  text->SetMarginType(m_DividerID, wxSTC_MARGIN_SYMBOL);
-  text->SetMarginWidth(m_DividerID, 15);
-  text->SetMarginSensitive(m_DividerID, false);
+  text->SetMarginType(ID_MARGIN_DIVIDER, wxSTC_MARGIN_SYMBOL);
+  text->SetMarginWidth(ID_MARGIN_DIVIDER, 15);
+  text->SetMarginSensitive(ID_MARGIN_DIVIDER, false);
 
   // folding settings
   // todo: move to settings
-  text->SetMarginType(m_FoldingID, wxSTC_MARGIN_SYMBOL);
-  text->SetMarginMask(m_FoldingID, wxSTC_MASK_FOLDERS);
+  text->SetMarginType(ID_MARGIN_FOLDING, wxSTC_MARGIN_SYMBOL);
+  text->SetMarginMask(ID_MARGIN_FOLDING, wxSTC_MASK_FOLDERS);
   // text->StyleSetBackground(m_FoldingID, wxColor(200, 200, 200));
-  text->SetMarginWidth(m_FoldingID, 15);
-  text->SetMarginSensitive(m_FoldingID, true);
+  text->SetMarginWidth(ID_MARGIN_FOLDING, 15);
+  text->SetMarginSensitive(ID_MARGIN_FOLDING, true);
   text->SetFoldMarginColour(true, wxColor(200, 200, 200));
   text->SetFoldMarginHiColour(true, wxColor(200, 200, 200));
-  text->SetMarginWidth(m_FoldingID, set.foldenable() ? m_FoldingMargin : 0);
-  text->SetMarginSensitive(m_FoldingID, set.foldenable());
+  text->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
+  text->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
   text->SetFoldFlags(C(set.foldflags()));
   // todo: expose theese
   text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
@@ -504,7 +505,7 @@ wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 {
-  if (event.GetMargin() == m_FoldingID)
+  if (event.GetMargin() == ID_MARGIN_FOLDING)
   {
     int lineClick = text->LineFromPosition(event.GetPosition());
     int levelClick = text->GetFoldLevel(lineClick);
