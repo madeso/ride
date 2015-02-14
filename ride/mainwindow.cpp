@@ -336,8 +336,7 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
     return;
   wxFileName file(openFileDialog.GetPath());
   file.Normalize();
-  file.RemoveLastDir();
-  project = Project(file.GetPath());
+  project = Project(file.GetPathWithSep());
 }
 
 #define MEM_FUN(X) \

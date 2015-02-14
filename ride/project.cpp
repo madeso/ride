@@ -125,8 +125,16 @@ void Project::Append(const wxString str) {
 
 void Project::RunCmd(const wxString& cmd) {
   MyPipedProcess* process = new MyPipedProcess(this, cmd);
+
+  if (root_folder_.IsEmpty()) {
+    wxMessageBox("No project open, you need to open a cargo project first!", "No project open!", wxICON_INFORMATION);
+    return;
+  }
+
+  wxExecuteEnv env;
+  env.cwd = root_folder_;
   
-  if (!wxExecute(cmd, wxEXEC_ASYNC, process)) {
+  if (!wxExecute(cmd, wxEXEC_ASYNC | wxEXEC_HIDE_CONSOLE, process, &env)) {
     Append(wxString::Format(wxT("Execution of '%s' failed."), cmd.c_str()));
     delete process;
   }
