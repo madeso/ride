@@ -1,9 +1,6 @@
 #include "ride/project.h"
 
-Project::Project() {
-}
-
-void Project::Open(const wxString& cargo_filename) {
+Project::Project(const wxString& root_folder) : root_folder_(root_folder) {
 
 }
 

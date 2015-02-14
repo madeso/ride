@@ -5,9 +5,7 @@
 
 class Project {
 public:
-  Project();
-
-  void Open(const wxString& cargo_filename);
+  Project(const wxString& root_folder);
   const wxString& root_folder() const;
 
 private:

@@ -85,6 +85,7 @@ wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, title, pos, size)
+, project(wxEmptyString)
 {
   aui.SetManagedWindow(this);
 
@@ -336,8 +337,7 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
   wxFileName file(openFileDialog.GetPath());
   file.Normalize();
   file.RemoveLastDir();
-  project = Project();
-  project.Open(file.GetPath());
+  project = Project(file.GetPath());
 }
 
 #define MEM_FUN(X) \
