@@ -342,6 +342,7 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
 
 #define MEM_FUN(X) \
   void MainWindow::OnProject ## X(wxCommandEvent& event) {\
+    project. ## X ();\
   }
 
 MEM_FUN(Settings)
