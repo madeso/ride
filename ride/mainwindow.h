@@ -19,10 +19,10 @@ public:
   const ride::Settings& getSettings() const;
   void setSettings(const ride::Settings& settings);
 private:
-	void OnOpen(wxCommandEvent& event);
-  
-  void OnSave(wxCommandEvent& event);
-  void OnSaveAs(wxCommandEvent& event);
+	void OnFileOpen(wxCommandEvent& event);
+  void OnFileSave(wxCommandEvent& event);
+  void OnFileSaveAs(wxCommandEvent& event);
+
   void OnUndo(wxCommandEvent& event);
   void OnRedo(wxCommandEvent& event);
   void OnCut(wxCommandEvent& event);
@@ -56,9 +56,9 @@ private:
   void OnProjectBench   (wxCommandEvent& event);
   void OnProjectUpdate  (wxCommandEvent& event);
 
-	void OnExit(wxCommandEvent& event);
+	void OnFileExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
-  void ShowSettings(wxCommandEvent& event);
+  void OnFileShowSettings(wxCommandEvent& event);
 
   void OnClose(wxCloseEvent& event);
 

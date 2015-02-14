@@ -36,11 +36,11 @@ enum
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
-  EVT_MENU(wxID_OPEN              , MainWindow::OnOpen)
-  EVT_MENU(wxID_EXIT              , MainWindow::OnExit)
-  EVT_MENU(ID_FILE_RIDE_SETTINGS  , MainWindow::ShowSettings)
-  EVT_MENU(wxID_SAVE              , MainWindow::OnSave)
-  EVT_MENU(wxID_SAVEAS            , MainWindow::OnSaveAs)
+  EVT_MENU(wxID_OPEN              , MainWindow::OnFileOpen)
+  EVT_MENU(wxID_EXIT              , MainWindow::OnFileExit)
+  EVT_MENU(ID_FILE_RIDE_SETTINGS  , MainWindow::OnFileShowSettings)
+  EVT_MENU(wxID_SAVE              , MainWindow::OnFileSave)
+  EVT_MENU(wxID_SAVEAS            , MainWindow::OnFileSaveAs)
   
   EVT_MENU(wxID_UNDO              , MainWindow::OnUndo)
   EVT_MENU(wxID_REDO              , MainWindow::OnRedo)
@@ -187,7 +187,7 @@ MainWindow::~MainWindow() {
   aui.UnInit();
 }
 
-void MainWindow::OnExit(wxCommandEvent& event)
+void MainWindow::OnFileExit(wxCommandEvent& event)
 {
   Close(true);
 }
@@ -197,7 +197,7 @@ void MainWindow::OnAbout(wxCommandEvent& event)
   wxMessageBox("Ride is a Rust IDE. It's named after concatenating R from rust and IDE.\nFor more information: https://github.com/madeso/ride", "About Ride", wxOK | wxICON_INFORMATION);
 }
 
-void MainWindow::OnOpen(wxCommandEvent& event)
+void MainWindow::OnFileOpen(wxCommandEvent& event)
 {
   wxFileDialog
     openFileDialog(this, _("Open file"), "", "",
@@ -276,9 +276,21 @@ void MainWindow::updateAllEdits() {
   }
 }
 
-void MainWindow::ShowSettings(wxCommandEvent& event) {
+void MainWindow::OnFileShowSettings(wxCommandEvent& event) {
   SettingsDlg settingsdlg(this, this);
   settingsdlg.ShowModal();
+}
+
+void MainWindow::OnFileSave(wxCommandEvent& event) {
+  FileEdit* selected = getSelectedEditorNull();
+  if (selected == NULL) return;
+  selected->Save();
+}
+
+void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
+  FileEdit* selected = getSelectedEditorNull();
+  if (selected == NULL) return;
+  selected->SaveAs();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -289,8 +301,6 @@ void MainWindow::ShowSettings(wxCommandEvent& event) {
     selected->X();\
   }
 
-MEM_FUN(Save)
-MEM_FUN(SaveAs)
 MEM_FUN(Undo)
 MEM_FUN(Redo)
 MEM_FUN(Cut)
