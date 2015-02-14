@@ -30,6 +30,8 @@ public:
   void UnIndent();
   void SelectAll();
   void SelectLine();
+  void ToUpper();
+  void ToLower();
 
 public:
   bool canClose(bool canAbort);

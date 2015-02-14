@@ -39,6 +39,8 @@ private:
   void OnUnIndent(wxCommandEvent& event);
   void OnSelectAll(wxCommandEvent& event);
   void OnSelectLine(wxCommandEvent& event);
+  void OnToUpper(wxCommandEvent& event);
+  void OnToLower(wxCommandEvent& event);
 
 	void OnExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);

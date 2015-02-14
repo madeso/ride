@@ -147,7 +147,15 @@ void FileEdit::SelectLine() {
   text->SetSelection(lineStart, lineEnd);
 }
 
+void FileEdit::ToUpper() {
+  text->UpperCase();
+  updateTitle();
+}
 
+void FileEdit::ToLower() {
+  text->LowerCase();
+  updateTitle();
+}
 
 //////////////////////////////////////////////////////////////////////////
 

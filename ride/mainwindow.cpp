@@ -13,7 +13,8 @@ enum
   ID_FIRST = wxID_HIGHEST,
   ID_SHOW_SETTINGS,
 
-  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE
+  ID_MATCH_BRACE, ID_SELECT_BRACE, ID_GOTO_LINE, ID_SELECT_LINE,
+  ID_TOUPPER, ID_TOLOWER
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -41,6 +42,8 @@ EVT_MENU(wxID_INDENT, MainWindow::OnIndent)
 EVT_MENU(wxID_UNINDENT, MainWindow::OnUnIndent)
 EVT_MENU(wxID_SELECTALL, MainWindow::OnSelectAll)
 EVT_MENU(ID_SELECT_LINE, MainWindow::OnSelectLine)
+EVT_MENU(ID_TOUPPER, MainWindow::OnToUpper)
+EVT_MENU(ID_TOLOWER, MainWindow::OnToLower)
 
 EVT_CLOSE(MainWindow::OnClose)
 
@@ -90,6 +93,9 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuEdit->AppendSeparator();
   menuEdit->Append(wxID_SELECTALL, "Select all\tCtrl-A", "");
   menuEdit->Append(ID_SELECT_LINE, "Select line\tCtrl-L", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(ID_TOUPPER, "TO UPPERCASE\tCtrl-Alt-U", "");
+  menuEdit->Append(ID_TOLOWER, "to lowercase\tCtrl-Alt-L", "");
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menuHelp = new wxMenu;
@@ -248,5 +254,7 @@ MEM_FUN(Indent)
 MEM_FUN(UnIndent)
 MEM_FUN(SelectAll)
 MEM_FUN(SelectLine)
+MEM_FUN(ToUpper)
+MEM_FUN(ToLower)
 
 #undef MEM_FUN
