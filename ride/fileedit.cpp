@@ -471,6 +471,20 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
   }
 }
 
+int GetIndentationChange(const wxString& str) {
+  int change = 0;
+  for (size_t i = 0; i < str.Length(); ++i) {
+    const wxUniChar c = str.at(i);
+    if (c == '{') {
+      change += 1;
+    }
+    else if (c == '}') {
+      change += 1;
+    }
+  }
+  return change;
+}
+
 void FileEdit::OnTextChanged(wxStyledTextEvent& event)
 {
   makeDirty();
@@ -483,9 +497,17 @@ void FileEdit::OnTextChanged(wxStyledTextEvent& event)
   {
     const int current_line = text->GetCurrentLine();
 
+    const int line_start = text->PositionFromLine(text->GetCurrentLine()-1);
+    const int line_end = text->PositionFromLine(text->GetCurrentLine());
+    const wxString previous_line_content = text->GetTextRange(line_start, line_end);
+    const int indent_change = GetIndentationChange(previous_line_content);
+    const int indent_change_in_spaces = indent_change * main->getSettings().tabwidth();
+
+    const int smart_indent = indent_change_in_spaces;
+
     const int indentation_in_spaces = current_line > 0
-      ? text->GetLineIndentation(current_line - 1)
-      : 0;
+      ?  std::max(0, text->GetLineIndentation(current_line - 1) + smart_indent)
+      : smart_indent;
 
     const int indentation_in_tabs = indentation_in_spaces / main->getSettings().tabwidth();
 
