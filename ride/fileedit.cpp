@@ -159,8 +159,6 @@ void FileEdit::ToLower() {
 
 //////////////////////////////////////////////////////////////////////////
 
-const int ANNOTATION_STYLE = wxSTC_STYLE_LASTPREDEFINED + 1;
-
 int C(ride::EdgeStyle e) {
   switch (e) {
   case ride::EDGESTYLE_BACKGROUND:
