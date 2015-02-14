@@ -18,6 +18,30 @@ enum WrapMode {
   WRAPMODE_WORD = 2;
 }
 
+enum IndicatorStyle {
+  INDICATORSTYLE_PLAIN = 0;
+  INDICATORSTYLE_SQUIGGLE = 1;
+  INDICATORSTYLE_TT = 2;
+  INDICATORSTYLE_DIAGONAL = 3;
+  INDICATORSTYLE_STRIKE = 4;
+  INDICATORSTYLE_HIDDEN = 5;
+  INDICATORSTYLE_BOX = 6;
+  INDICATORSTYLE_ROUNDBOX = 7;
+  INDICATORSTYLE_STRAIGHTBOX = 8;
+  INDICATORSTYLE_DASH = 9;
+  INDICATORSTYLE_DOTS = 10;
+  INDICATORSTYLE_SQUIGGLELOW = 11;
+  INDICATORSTYLE_DOTBOX = 12;
+}
+
+message Indicator {
+	optional IndicatorStyle style = 1 [default=INDICATORSTYLE_HIDDEN];
+	optional Color foreground = 2;
+	optional bool under = 3 [default=true];
+	optional int32 alpha = 4 [default=255];
+	optional int32 outline_alpha = 5 [default=255];
+}
+
 message FoldFlags {
   optional bool LINEBEFORE_EXPANDED = 1;
   optional bool LINEBEFORE_CONTRACTED = 2;
@@ -215,20 +239,26 @@ message Settings {
 
   optional FoldFlags foldflags = 14;
 
-  // C++
-  optional bool foldComment = 15 [default=true];
-  optional bool foldCompact = 16 [default=true];
-  optional bool foldPreproc = 17 [default=true];
+  // indicators
+  optional Indicator indicator_error = 100;
+  optional Indicator indicator_warning = 101;
+  optional Indicator indicator_search_highlight = 102;
+  optional Indicator indicator_select_highlight = 103;
 
-  optional bool     styling_within_preprocessor = 18 [default=false];     //  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
-  optional bool     lexer_cpp_allow_dollars = 19 [default=false];         // Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
-  optional bool     lexer_cpp_track_preprocessor = 20 [default=false];    //  Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
-  optional bool     lexer_cpp_update_preprocessor = 21 [default=false];   //  Set to 1 to update preprocessor definitions when #define found.
-  optional bool     lexer_cpp_triplequoted_strings = 22 [default=false];  //  Set to 1 to enable highlighting of triple-quoted strings.
-  optional bool     lexer_cpp_hashquoted_strings = 23 [default=false];    //  Set to 1 to enable highlighting of hash-quoted strings.
-  optional bool     fold_cpp_syntax_based = 24 [default=true];           //  Set this property to 0 to disable syntax based folding.
-  optional bool     fold_cpp_comment_multiline = 25 [default=true];      //  Set this property to 0 to disable folding multi-line comments when fold.comment=1.
-  optional bool     fold_cpp_comment_explicit = 26 [default=true];       //  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
-  optional bool     fold_cpp_explicit_anywhere = 27 [default=false];      //  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
-  optional bool     fold_at_else = 28 [default=true];                    //  This option enables C++ folding on a "} else {" line of an if statement.
+  // settings for c++
+  optional bool foldComment = 200 [default=true];
+  optional bool foldCompact = 201 [default=true];
+  optional bool foldPreproc = 202 [default=true];
+
+  optional bool     styling_within_preprocessor = 203 [default=false];     //  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
+  optional bool     lexer_cpp_allow_dollars = 204 [default=false];         // Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
+  optional bool     lexer_cpp_track_preprocessor = 205 [default=false];    //  Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
+  optional bool     lexer_cpp_update_preprocessor = 206 [default=false];   //  Set to 1 to update preprocessor definitions when #define found.
+  optional bool     lexer_cpp_triplequoted_strings = 207 [default=false];  //  Set to 1 to enable highlighting of triple-quoted strings.
+  optional bool     lexer_cpp_hashquoted_strings = 208 [default=false];    //  Set to 1 to enable highlighting of hash-quoted strings.
+  optional bool     fold_cpp_syntax_based = 209 [default=true];           //  Set this property to 0 to disable syntax based folding.
+  optional bool     fold_cpp_comment_multiline = 210 [default=true];      //  Set this property to 0 to disable folding multi-line comments when fold.comment=1.
+  optional bool     fold_cpp_comment_explicit = 211 [default=true];       //  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
+  optional bool     fold_cpp_explicit_anywhere = 212 [default=false];      //  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
+  optional bool     fold_at_else = 213 [default=true];                    //  This option enables C++ folding on a "} else {" line of an if statement.
 }

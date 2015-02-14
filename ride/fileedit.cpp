@@ -19,6 +19,14 @@ enum
   m_FoldingMargin = 16
 };
 
+enum
+{
+  ID_INDICATOR_ERROR,
+  ID_INDICATOR_WARNING,
+  ID_INDICATOR_SEARCH_HIGHLIGHT,
+  ID_INDICATOR_SELECT_HIGHLIGHT
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 void FileEdit::Undo() {
@@ -294,6 +302,36 @@ void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style) {
   }
 }
 
+int C(const ride::IndicatorStyle style) {
+  switch (style)
+  {
+    case ride::INDICATORSTYLE_PLAIN      : return wxSTC_INDIC_PLAIN       ;
+    case ride::INDICATORSTYLE_SQUIGGLE   : return wxSTC_INDIC_SQUIGGLE    ;
+    case ride::INDICATORSTYLE_TT         : return wxSTC_INDIC_TT          ;
+    case ride::INDICATORSTYLE_DIAGONAL   : return wxSTC_INDIC_DIAGONAL    ;
+    case ride::INDICATORSTYLE_STRIKE     : return wxSTC_INDIC_STRIKE      ;
+    case ride::INDICATORSTYLE_HIDDEN     : return wxSTC_INDIC_HIDDEN      ;
+    case ride::INDICATORSTYLE_BOX        : return wxSTC_INDIC_BOX         ;
+    case ride::INDICATORSTYLE_ROUNDBOX   : return wxSTC_INDIC_ROUNDBOX    ;
+    case ride::INDICATORSTYLE_STRAIGHTBOX: return wxSTC_INDIC_STRAIGHTBOX ;
+    case ride::INDICATORSTYLE_DASH       : return wxSTC_INDIC_DASH        ;
+    case ride::INDICATORSTYLE_DOTS       : return wxSTC_INDIC_DOTS        ;
+    case ride::INDICATORSTYLE_SQUIGGLELOW: return wxSTC_INDIC_SQUIGGLELOW ;
+    case ride::INDICATORSTYLE_DOTBOX     : return wxSTC_INDIC_DOTBOX      ;
+  default:
+    assert(0 && "Unknown indicator style!");
+    return wxSTC_INDIC_HIDDEN;
+  }
+}
+
+void SetIndicator(wxStyledTextCtrl* text, int index, const ride::Indicator& indicator) {
+  text->IndicatorSetUnder(index, indicator.under());
+  text->IndicatorSetAlpha(index, indicator.alpha());
+  text->IndicatorSetOutlineAlpha(index, indicator.outline_alpha());
+  text->IndicatorSetForeground(index, C(indicator.foreground()));
+  text->IndicatorSetStyle(index, C(indicator.style()));
+}
+
 wxString b2s01(bool b) {
   if (b) return _("1");
   else return _("0");
@@ -371,6 +409,11 @@ void FileEdit::UpdateTextControl() {
   text->SetAdditionalSelectionTyping(true);
   text->SetAdditionalCaretsBlink(true);
   text->SetAdditionalCaretsVisible(true);
+
+  SetIndicator(text, ID_INDICATOR_ERROR, set.indicator_error());
+  SetIndicator(text, ID_INDICATOR_WARNING, set.indicator_warning());
+  SetIndicator(text, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
+  SetIndicator(text, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
 
   // setup style colors and font
   SetStyle(text, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
