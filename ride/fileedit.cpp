@@ -427,6 +427,10 @@ void FileEdit::UpdateTextControl() {
   SetStyle(text, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
   SetStyle(text, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
 
+
+  // settings for this
+  text->SetEndAtLastLine(false);
+
   // todo: expose this
   text->SetCaretLineVisible(true);
 }
