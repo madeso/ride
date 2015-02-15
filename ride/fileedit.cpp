@@ -183,18 +183,34 @@ const wxString& FileEdit::getFileName() const {
   return filename;
 }
 
-void FileEdit::setSelection(int start_line, int start_index, int end_line, int end_index) {
+void FromLineColToTextOffset(wxStyledTextCtrl* text, int start_line, int start_index, int end_line, int end_index, int* ofrom, int* oto) {
   if (start_line == -1) return;
-  int from = text->PositionFromLine(start_line-1);
+  int from = text->PositionFromLine(start_line - 1);
   if (start_index > 0) {
-    from += start_index-1;
+    from += start_index - 1;
   }
 
   if (end_line != -1) {
-    int to = text->PositionFromLine(end_line-1);
+    int to = text->PositionFromLine(end_line - 1);
     if (end_index > 0) {
-      to += end_index-1;
+      to += end_index - 1;
     }
+    *ofrom = from;
+    *oto = to;
+  }
+  else {
+    *ofrom = from;
+    *oto = -1;
+  }
+}
+
+void FileEdit::setSelection(int start_line, int start_index, int end_line, int end_index) {
+  int from = 0;
+  int to = 0;
+
+  FromLineColToTextOffset(text, start_line, start_index, end_line, end_index, &from, &to);
+
+  if (to != -1) {
     text->SetSelection(from, to);
   }
   else {
@@ -209,6 +225,11 @@ void FileEdit::Focus() {
 
 void FileEdit::ClearCompilerMessages() {
   text->AnnotationClearAll();
+  text->SetIndicatorCurrent(ID_INDICATOR_WARNING);
+  text->IndicatorFillRange(0, text->GetLength());
+
+  text->SetIndicatorCurrent(ID_INDICATOR_ERROR);
+  text->IndicatorFillRange(0, text->GetLength());
 }
 
 void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
@@ -221,6 +242,18 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
     const int line = mess.start_line() -1;
     text->AnnotationSetText(line, mess.message());
     text->AnnotationSetStyle(line, style);
+
+    // only color on a single row, or it might get ugly
+    if (mess.start_line() != mess.end_line()) {
+      int from = -1;
+      int to = -1;
+      FromLineColToTextOffset(text, mess.start_line(), mess.start_index(), mess.end_line(), mess.end_index(), &from, &to);
+
+      const int ind = isError ? ID_INDICATOR_ERROR : ID_INDICATOR_WARNING;
+
+      text->SetIndicatorCurrent(ind);
+      text->IndicatorFillRange(from, to - from);
+    }
   }
 }
 

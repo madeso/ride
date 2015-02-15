@@ -59,7 +59,7 @@ enum Annotation {
 }
 
 message Indicator {
-	optional IndicatorStyle style = 1 [default=INDICATORSTYLE_HIDDEN];
+	optional IndicatorStyle style = 1 [default=INDICATORSTYLE_SQUIGGLE];
 	optional Color foreground = 2;
 	optional bool under = 3 [default=true];
 	optional int32 alpha = 4 [default=255];
