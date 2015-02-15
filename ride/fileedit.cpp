@@ -372,6 +372,16 @@ int C(const ride::IndicatorStyle style) {
   }
 }
 
+int C(const ride::VirtualSpace space) {
+  switch (space) {
+  case ride::VIRTUALSPACE_NONE: return wxSTC_SCVS_NONE;
+  case ride::VIRTUALSPACE_RECTANGULARSELECTION: return wxSTC_SCVS_RECTANGULARSELECTION;
+  case ride::VIRTUALSPACE_USERACCESSIBLE: return wxSTC_SCVS_USERACCESSIBLE;
+  default:
+    return wxSTC_SCVS_NONE;
+  }
+}
+
 void SetIndicator(wxStyledTextCtrl* text, int index, const ride::Indicator& indicator) {
   text->IndicatorSetUnder(index, indicator.under());
   text->IndicatorSetAlpha(index, indicator.alpha());
@@ -474,6 +484,7 @@ void FileEdit::UpdateTextControl() {
 
   // settings for this
   text->SetEndAtLastLine(false);
+  text->SetVirtualSpaceOptions(C(ride::VIRTUALSPACE_NONE));
 
   // todo: expose this
   text->SetCaretLineVisible(true);

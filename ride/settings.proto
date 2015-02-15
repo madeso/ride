@@ -34,6 +34,12 @@ enum IndicatorStyle {
   INDICATORSTYLE_DOTBOX = 12;
 }
 
+enum VirtualSpace {
+	VIRTUALSPACE_NONE = 0;
+	VIRTUALSPACE_RECTANGULARSELECTION = 1;
+	VIRTUALSPACE_USERACCESSIBLE = 2;
+}
+
 message Indicator {
 	optional IndicatorStyle style = 1 [default=INDICATORSTYLE_HIDDEN];
 	optional Color foreground = 2;
@@ -238,6 +244,7 @@ message Settings {
   optional bool backspaceUnindents = 13 [default=true];
 
   optional FoldFlags foldflags = 14;
+  optional VirtualSpace virtual_space = 15;
 
   // indicators
   optional Indicator indicator_error = 100;
