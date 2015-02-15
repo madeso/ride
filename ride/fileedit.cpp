@@ -595,6 +595,8 @@ void FileEdit::OnTextChanged(wxStyledTextEvent& event)
   {
     const int current_line = text->GetCurrentLine();
 
+    // todo: use autoindent from settings
+
     const int line_start = text->PositionFromLine(text->GetCurrentLine()-1);
     const int line_end = text->PositionFromLine(text->GetCurrentLine());
     const wxString previous_line_content = text->GetTextRange(line_start, line_end);
@@ -617,7 +619,7 @@ void FileEdit::OnTextChanged(wxStyledTextEvent& event)
     // adjust to remove weird spaces from indentation settings
     const int indentation_in_spaces_ajdusted = indentation_in_tabs * main->getSettings().tabwidth();
 
-    if (indentation_in_spaces_ajdusted != 0)   // NOT in the beginning
+    if (indentation_in_spaces_ajdusted != 0)
     {
       text->SetLineIndentation(current_line, indentation_in_spaces_ajdusted);
       

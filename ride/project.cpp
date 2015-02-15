@@ -20,6 +20,8 @@ void Project::Build(bool clean_output) {
   if (clean_output) {
     CleanOutput();
   }
+
+  // todo: expand commandline with argumets
   RunCmd("cargo build");
 }
 
@@ -27,6 +29,8 @@ void Project::Clean(bool clean_output) {
   if (clean_output) {
     CleanOutput();
   }
+
+  // todo: expand commandline with argumets
   RunCmd("cargo clean");
 }
 
@@ -42,6 +46,8 @@ void Project::Doc(bool clean_output) {
   if (clean_output) {
     CleanOutput();
   }
+
+  // todo: expand commandline with argumets
   RunCmd("cargo doc");
 }
 
@@ -49,13 +55,17 @@ void Project::Run(bool clean_output) {
   if (clean_output) {
     CleanOutput();
   }
+
   Build(false);
+  //todo: run the application
 }
 
 void Project::Test(bool clean_output) {
   if (clean_output) {
     CleanOutput();
   }
+
+  // todo: expand commandline with argumets
   RunCmd("cargo test");
 }
 
@@ -63,6 +73,8 @@ void Project::Bench(bool clean_output) {
   if (clean_output) {
     CleanOutput();
   }
+
+  // todo: expand commandline with argumets
   RunCmd("cargo bench");
 }
 
@@ -70,6 +82,8 @@ void Project::Update(bool clean_output) {
   if (clean_output) {
     CleanOutput();
   }
+
+  // todo: expand commandline with argumets
   RunCmd("cargo update");
 }
 
