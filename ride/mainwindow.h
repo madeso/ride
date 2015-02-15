@@ -10,6 +10,7 @@
 
 class FileEdit;
 class SettingsDlg;
+class CompilerMessage;
 
 class MainWindow: public wxFrame
 {
@@ -22,6 +23,9 @@ public:
 
   void Clear();
   void Append(const wxString& str);
+
+  void OpenCompilerMessage(const CompilerMessage& message);
+
 private:
 	void OnFileOpen(wxCommandEvent& event);
   void OnFileSave(wxCommandEvent& event);
@@ -73,6 +77,7 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 private:
+  void openFile(const wxString& file);
   void updateTitle();
   void updateAllEdits();
   void createNotebook();

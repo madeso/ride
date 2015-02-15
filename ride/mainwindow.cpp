@@ -7,6 +7,7 @@
 #include "ride/fileedit.h"
 
 #include "ride/settingsdlg.h"
+#include "ride/compilermessage.h"
 
 enum
 {
@@ -87,6 +88,8 @@ wxEND_EVENT_TABLE()
 
 class OutputControl : public wxTextCtrl {
 public:
+  OutputControl(MainWindow* main) : main_(main) {
+  }
   void OnDoubleClick(wxMouseEvent& event) {
     long line = 0;
     long col = 0;
@@ -97,9 +100,14 @@ public:
     long line_number = line;
     if (line_number == -1) return;
     wxString line_content = GetLineText(line_number);
-    wxMessageBox(line_content);
+
+    CompilerMessage message;
+    if (CompilerMessage::Parse(line_content, &message)) {
+      main_->OpenCompilerMessage(message);
+    }
   }
 
+  MainWindow* main_;
   wxDECLARE_EVENT_TABLE();
 };
 
@@ -110,7 +118,7 @@ wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, title, pos, size)
-, output_window(new OutputControl())
+, output_window(new OutputControl(this))
 , project(this, wxEmptyString)
 , title_(title)
 {
@@ -203,6 +211,10 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   updateTitle();
 }
 
+void MainWindow::OpenCompilerMessage(const CompilerMessage& message) {
+  openFile(message.file());
+}
+
 void MainWindow::createNotebook() {
   wxSize client_size = GetClientSize();
   wxAuiNotebook* ctrl = new wxAuiNotebook(this, wxID_ANY,
@@ -254,10 +266,14 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
   wxArrayString paths;
   openFileDialog.GetPaths(paths);
   for (wxArrayString::iterator path = paths.begin(); path != paths.end(); ++path) {
-    wxFileName w(*path);
-    w.Normalize();
-    new FileEdit(notebook, this, "", w.GetFullPath());
+    openFile(*path);
   }
+}
+
+void MainWindow::openFile(const wxString& file) {
+  wxFileName w(file);
+  w.Normalize();
+  new FileEdit(notebook, this, "", w.GetFullPath());
 }
 
 FileEdit* MainWindow::getSelectedEditorNull() {
