@@ -180,14 +180,80 @@ public:
       "retval sa section see showinitializer since skip skipline struct "
       "subsection test throw todo typedef union until var verbatim "
       "verbinclude version warning weakgroup $ @ \"\" & < > # { }";
-    SetKeys(text, 0, CppWordlist1);
-    SetKeys(text, 1, CppWordlist2);
-    SetKeys(text, 2, CppWordlist3);
+    SetKeys(text, 0, CppWordlist1); // primary
+    SetKeys(text, 1, CppWordlist2); // secondary
+    SetKeys(text, 2, CppWordlist3); // documentation
 
     SetKeys(text, 3, ""); // global classes and typedefs
     SetKeys(text, 4, ""); // preprocessor defines
   }
 } g_language_cpp;
+
+class RustLanguage : public Language {
+public:
+  RustLanguage() : Language(_("Rust"), wxSTC_LEX_CPP){
+    (*this)
+      (".rs")
+      ;
+  }
+  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().c_default());
+    SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().c_comment());
+    SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().c_commentline());
+    SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors().c_commentdoc());
+    SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().c_number());
+    SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().c_word());
+    SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().c_string());
+    SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors().c_character());
+    SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().c_uuid());
+    SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors().c_preprocessor());
+    SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors().c_operator());
+    SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors().c_identifier());
+    SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors().c_stringeol());
+    SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors().c_verbatim());
+    SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().c_regex());
+    SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors().c_commentlinedoc());
+    SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors().c_word2());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors().c_commentdockeyword());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors().c_commentdockeyworderror());
+    SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors().c_globalclass());
+    SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors().c_stringraw());
+    SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors().c_tripleverbatim());
+    SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors().c_hashquotedstring());
+    SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors().c_preprocessorcomment());
+
+    SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
+    SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
+    SetProp(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
+    SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
+    SetProp(text, wxT("styling.within.preprocessor"), b2s01(settings.styling_within_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.allow.dollars"), b2s01(settings.lexer_cpp_allow_dollars()));
+    SetProp(text, wxT("lexer.cpp.track.preprocessor"), b2s01(settings.lexer_cpp_track_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.update.preprocessor"), b2s01(settings.lexer_cpp_update_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.triplequoted.strings"), b2s01(settings.lexer_cpp_triplequoted_strings()));
+    SetProp(text, wxT("lexer.cpp.hashquoted.strings"), b2s01(settings.lexer_cpp_hashquoted_strings()));
+    SetProp(text, wxT("fold.cpp.syntax.based"), b2s01(settings.fold_cpp_syntax_based()));
+    SetProp(text, wxT("fold.cpp.comment.multiline"), b2s01(settings.fold_cpp_comment_multiline()));
+    SetProp(text, wxT("fold.cpp.comment.explicit"), b2s01(settings.fold_cpp_comment_explicit()));
+    SetProp(text, wxT("fold.cpp.explicit.anywhere"), b2s01(settings.fold_cpp_explicit_anywhere()));
+    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
+    SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
+    SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
+
+    const wxString CppWordlist1 =
+      "pub mod fn struct static impl let for in crate extern if else as";
+    const wxString CppWordlist2 =
+      "self new u32 i32 usize f32";
+    const wxString CppWordlist3 =
+      "";
+    SetKeys(text, 0, CppWordlist1); // primary
+    SetKeys(text, 1, CppWordlist2); // secondary
+    SetKeys(text, 2, CppWordlist3); // documentation
+
+    SetKeys(text, 3, ""); // global classes and typedefs
+    SetKeys(text, 4, ""); // preprocessor defines
+  }
+} g_language_rust;
 
 class NullLanguage : public Language {
 public:
@@ -411,6 +477,7 @@ public:
 std::vector<Language*> BuildLanguageList() {
   std::vector<Language*> ret;
   ret.push_back(&g_language_cpp);
+  ret.push_back(&g_language_rust);
   ret.push_back(&g_language_markdown);
   ret.push_back(&g_language_properties);
   ret.push_back(&g_language_xml);
