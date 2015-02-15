@@ -473,7 +473,7 @@ void FileEdit::UpdateTextControl() {
   SetIndicator(text, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
   SetIndicator(text, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
 
-  // setup style colors and font
+  // todo: setup style colors and font
   SetStyle(text, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
   SetStyle(text, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
   SetStyle(text, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
