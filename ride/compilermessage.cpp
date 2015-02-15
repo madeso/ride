@@ -38,15 +38,9 @@ namespace regex {
   const wxString COMPLEX_REGEX_OUTPUT = FILE + "\\:" + INT + WS + "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + ID + WS + "\\:" + WS + TEXT;
 }
 
-bool CompileComplexRegexOutput(wxRegEx& ret) {
-  bool result = ret.Compile(regex::COMPLEX_REGEX_OUTPUT, wxRE_ADVANCED);
-  return result;
-}
-
 const wxRegEx& ComplexRegexOutput() {
-  static wxRegEx ret;
-  static bool compiled = CompileComplexRegexOutput(ret);
-  assert(compiled);
+  static wxRegEx ret(regex::COMPLEX_REGEX_OUTPUT, wxRE_ADVANCED);
+  assert(ret.IsValid() && "Complex output regex failed to compile");
   return ret;
 }
 
@@ -57,14 +51,16 @@ CompilerMessage::Type ParseCMT(const wxString& str) {
 }
 
 bool CompilerMessage::Parse(const wxString& text, CompilerMessage* output) {
-  if (ComplexRegexOutput().Matches(text)) {
-    const wxString              file         =          ComplexRegexOutput().GetMatch(text, 1);
-    const int                   start_line   =   wxAtoi(ComplexRegexOutput().GetMatch(text, 2));
-    const int                   start_index  =   wxAtoi(ComplexRegexOutput().GetMatch(text, 3));
-    const int                   end_line     =   wxAtoi(ComplexRegexOutput().GetMatch(text, 4));
-    const int                   end_index    =   wxAtoi(ComplexRegexOutput().GetMatch(text, 5));
-    const CompilerMessage::Type type         = ParseCMT(ComplexRegexOutput().GetMatch(text, 6));
-    const wxString              message      =          ComplexRegexOutput().GetMatch(text, 7);
+  const wxRegEx& complex = ComplexRegexOutput();
+
+  if (complex.Matches(text)) {
+    const wxString              file         =          complex.GetMatch(text, 1);
+    const int                   start_line   =   wxAtoi(complex.GetMatch(text, 2));
+    const int                   start_index  =   wxAtoi(complex.GetMatch(text, 3));
+    const int                   end_line     =   wxAtoi(complex.GetMatch(text, 4));
+    const int                   end_index    =   wxAtoi(complex.GetMatch(text, 5));
+    const CompilerMessage::Type type         = ParseCMT(complex.GetMatch(text, 6));
+    const wxString              message      =          complex.GetMatch(text, 7);
 
     *output = CompilerMessage(file, start_line, start_index, end_line, end_index, type, message);
     return true;
