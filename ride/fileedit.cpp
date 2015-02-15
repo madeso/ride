@@ -606,7 +606,7 @@ FileEdit::~FileEdit() {
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
 EVT_STC_MARGINCLICK(wxID_ANY, FileEdit::OnMarginClick)
 EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnCharAdded)
-// EVT_STC_MODIFIED(wxID_ANY, FileEdit::OnTextModified) // this was not a good idea for makeDiry calls, OnPaint seems to generate modified messages
+EVT_STC_UPDATEUI(wxID_ANY, FileEdit::OnUpdateUi)
 wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
@@ -683,3 +683,17 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
   }
 }
 
+void FileEdit::OnUpdateUi(wxStyledTextEvent& event)
+{
+  const int type = event.GetUpdated();
+  if (type & wxSTC_UPDATE_SELECTION) {
+    const int pos = text->GetCurrentPos();
+    int otherBrace = text->BraceMatch(pos);
+    if (otherBrace != -1) {
+      text->BraceHighlight(pos, otherBrace);
+    }
+    else {
+      text->BraceHighlight(-1, -1);
+    }
+  }
+}

@@ -44,7 +44,8 @@ public:
 
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
-  void OnTextChanged(wxStyledTextEvent& event);
+  void OnCharAdded(wxStyledTextEvent& event);
+  void OnUpdateUi(wxStyledTextEvent& event);
 
   void UpdateTextControl();
 

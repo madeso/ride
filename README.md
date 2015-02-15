@@ -11,7 +11,6 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Detect changes outside ride and ask to reload file
 * Comment / uncomment selection
 * Automatically insert/complete () and {}
-* highlight matching brace
 * Expose all aui settings in gui + settings
 * Scintilla text commands (edit->select all, etc)
 * Sort selected lines
