@@ -88,6 +88,7 @@ public:
   virtual void OnTerminate(int pid, int status) {
     m_parent->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
       pid, m_cmd.c_str(), status));
+    m_parent->Append("");
     m_parent->OnAsyncTermination(this);
   }
 
@@ -124,8 +125,7 @@ public:
       wxTextInputStream tis(*GetInputStream());
 
       // this assumes that the output is always line buffered
-      wxString msg;
-      msg << m_cmd << wxT(" (stdout): ") << tis.ReadLine();
+      wxString msg = tis.ReadLine();
 
       m_parent->Append(msg);
 
@@ -137,8 +137,7 @@ public:
       wxTextInputStream tis(*GetErrorStream());
 
       // this assumes that the output is always line buffered
-      wxString msg;
-      msg << m_cmd << wxT(" (stderr): ") << tis.ReadLine();
+      wxString msg = tis.ReadLine();
 
       m_parent->Append(msg);
 
@@ -159,12 +158,13 @@ void Project::Append(const wxString str) {
 }
 
 void Project::RunCmd(const wxString& cmd) {
-  MyPipedProcess* process = new MyPipedProcess(this, cmd);
-
   if (root_folder_.IsEmpty()) {
     wxMessageBox("No project open, you need to open a cargo project first!", "No project open!", wxICON_INFORMATION);
     return;
   }
+
+  MyPipedProcess* process = new MyPipedProcess(this, cmd);
+  Append("> " + cmd);
 
   wxExecuteEnv env;
   env.cwd = root_folder_;
