@@ -648,12 +648,15 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
   // loosley based on http://www.scintilla.org/ScintillaUsage.html and https://groups.google.com/forum/#!topic/scintilla-interest/vTwXwIBswSM
   int chr = event.GetKey(); // the key seems to be the char that was added
   if (chr == '{') {
+    // todo: setting for this
     text->InsertText(text->GetCurrentPos(), "}");
   }
   else if (chr == '(') {
+    // todo: setting for this
     text->InsertText(text->GetCurrentPos(), ")");
   }
   else if (chr == '[') {
+    // todo: setting for this
     text->InsertText(text->GetCurrentPos(), "]");
   }
   else if (chr == '\n' || chr == '\r')
