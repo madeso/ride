@@ -162,6 +162,7 @@ void Project::Append(const wxString str) {
   CompilerMessage mess;
   if (CompilerMessage::Parse(str, &mess)) {
     OutputDebugStringA(mess.message());
+    OutputDebugStringA("\n");
   }
 #endif
 }
