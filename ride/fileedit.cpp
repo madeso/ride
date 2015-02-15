@@ -183,32 +183,23 @@ const wxString& FileEdit::getFileName() const {
   return filename;
 }
 
-void FromLineColToTextOffset(wxStyledTextCtrl* text, int start_line, int start_index, int end_line, int end_index, int* ofrom, int* oto) {
-  if (start_line == -1) return;
-  int from = text->PositionFromLine(start_line - 1);
-  if (start_index > 0) {
-    from += start_index - 1;
+int FromLineColToTextOffset(wxStyledTextCtrl* text, int line, int col) {
+  if (line == -1) {
+    return -1;
   }
 
-  if (end_line != -1) {
-    int to = text->PositionFromLine(end_line - 1);
-    if (end_index > 0) {
-      to += end_index - 1;
-    }
-    *ofrom = from;
-    *oto = to;
+  int from = text->PositionFromLine(line - 1);
+  if (col > 0) {
+    from += col - 1;
   }
-  else {
-    *ofrom = from;
-    *oto = -1;
-  }
+  return from;
 }
 
 void FileEdit::setSelection(int start_line, int start_index, int end_line, int end_index) {
-  int from = 0;
-  int to = 0;
+  int from = FromLineColToTextOffset(text, start_line, start_index);
+  int to = FromLineColToTextOffset(text, end_line, end_index);
 
-  FromLineColToTextOffset(text, start_line, start_index, end_line, end_index, &from, &to);
+  if (from == -1) return;
 
   if (to != -1) {
     text->SetSelection(from, to);
@@ -244,15 +235,17 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
     text->AnnotationSetStyle(line, style);
 
     // only color on a single row, or it might get ugly
-    if (mess.start_line() != mess.end_line()) {
-      int from = -1;
-      int to = -1;
-      FromLineColToTextOffset(text, mess.start_line(), mess.start_index(), mess.end_line(), mess.end_index(), &from, &to);
+    // todo: make this a option
+    if (mess.start_line() == mess.end_line()) {
+      int from = FromLineColToTextOffset(text, mess.start_line(), mess.start_index());
+      int to = FromLineColToTextOffset(text, mess.end_line(), mess.end_index());
 
       const int ind = isError ? ID_INDICATOR_ERROR : ID_INDICATOR_WARNING;
 
-      text->SetIndicatorCurrent(ind);
-      text->IndicatorFillRange(from, to - from);
+      if (from >= 0 && to >= 0) {
+        text->SetIndicatorCurrent(ind);
+        text->IndicatorFillRange(from, to - from);
+      }
     }
   }
 }
