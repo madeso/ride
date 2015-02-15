@@ -52,6 +52,12 @@ enum WrapIndentMode {
 	WRAPINDENT_INDENT 	= 2; // Wrapped sublines are aligned to first subline indent plus one more level of indentation
 }
 
+enum Annotation {
+	ANNOTATION_HIDDEN =	0; // 	Annotations are not displayed.
+	ANNOTATION_STANDARD = 1; // 	Annotations are drawn left justified with no adornment.
+	ANNOTATION_BOXED =	2; // 	Annotations are indented to match the text and are surrounded by a box.
+}
+
 message Indicator {
 	optional IndicatorStyle style = 1 [default=INDICATORSTYLE_HIDDEN];
 	optional Color foreground = 2;
@@ -271,6 +277,7 @@ message Settings {
   optional WrapVisualFlagsLocation wrap_visual_flags_location = 20;
   optional WrapIndentMode wrap_indent_mode = 21;
   optional int32 wrap_start_indent = 22;
+  optional Annotation annotations = 23 [default = ANNOTATION_BOXED];
 
   // indicators
   optional Indicator indicator_error = 100;

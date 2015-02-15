@@ -85,6 +85,7 @@ private:
 private:
   void openFile(const wxString& file, int start_line, int start_index, int end_line, int end_index);
   FoundEdit getEditFromFileName(const wxString& file);
+  void AddCompilerMessage(const CompilerMessage& mess);
 
   void updateTitle();
   void updateAllEdits();
@@ -98,6 +99,7 @@ private:
   ride::Settings settings;
   Project project;
   wxString title_;
+  std::vector<CompilerMessage> compiler_messages_;
 };
 
 #endif  // RIDE_MAINWINDOW_H

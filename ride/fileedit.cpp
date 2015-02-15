@@ -3,6 +3,7 @@
 #include <wx/aui/aui.h>
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
+#include "ride/compilermessage.h"
 
 #include <vector>
 #include <cassert>
@@ -198,6 +199,20 @@ void FileEdit::setSelection(int start_line, int start_index, int end_line, int e
 void FileEdit::Focus() {
   SetFocus();
   text->SetFocus();
+}
+
+void FileEdit::ClearCompilerMessages() {
+  text->AnnotationClearAll();
+}
+
+void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
+  assert(filename == mess.file());
+  const bool isError = mess.type() == CompilerMessage::TYPE_ERROR;
+  const bool isWarning = mess.type() == CompilerMessage::TYPE_WARNING;
+
+  if (isError || isWarning) {
+    text->AnnotationSetText(mess.start_line() - 1, mess.message());
+  }
 }
 
 int C(ride::EdgeStyle e) {
@@ -419,6 +434,17 @@ int C(ride::WrapVisualFlags flags) {
   return ret;
 };
 
+int C(ride::Annotation ann) {
+  switch (ann) {
+    case ride::ANNOTATION_HIDDEN      : return wxSTC_ANNOTATION_HIDDEN  ;
+    case ride::ANNOTATION_STANDARD    : return wxSTC_ANNOTATION_STANDARD;
+    case ride::ANNOTATION_BOXED       : return wxSTC_ANNOTATION_STANDARD   ;
+    default:
+      assert(0 && "Unknwon annotation style");
+      return wxSTC_ANNOTATION_STANDARD;
+  }
+}
+
 void SetIndicator(wxStyledTextCtrl* text, int index, const ride::Indicator& indicator) {
   text->IndicatorSetUnder(index, indicator.under());
   text->IndicatorSetAlpha(index, indicator.alpha());
@@ -528,6 +554,8 @@ void FileEdit::UpdateTextControl() {
   text->SetWrapVisualFlagsLocation(C(set.wrap_visual_flags_location()));
   text->SetWrapIndentMode(C(set.wrap_indent_mode()));
   text->SetWrapStartIndent(set.wrap_start_indent());
+
+  text->AnnotationSetVisible(C(set.annotations()));
 
 
   // todo: expose this

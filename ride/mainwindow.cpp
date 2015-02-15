@@ -251,11 +251,29 @@ MainWindow::~MainWindow() {
 
 void MainWindow::Clear() {
   output_window->Clear();
+  compiler_messages_.resize(0);
 }
 
 void MainWindow::Append(const wxString& str) {
   output_window->AppendText(str);
   output_window->AppendText("\n");
+
+  CompilerMessage mess;
+  if (CompilerMessage::Parse(str, &mess)) {
+    AddCompilerMessage(mess);
+  }
+}
+
+void MainWindow::AddCompilerMessage(const CompilerMessage& mess) {
+  compiler_messages_.push_back(mess);
+  for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
+    if (edit) {
+      if (edit->getFileName() == mess.file()) {
+        edit->AddCompilerMessage(mess);
+      }
+    }
+  }
 }
 
 void MainWindow::OnFileExit(wxCommandEvent& event)
@@ -292,6 +310,16 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
   }
 }
 
+FileEdit* AddCompilerMessages(const std::vector<CompilerMessage>& messages, FileEdit* fe) {
+  for (size_t i = 0; i < messages.size(); ++i) {
+    const CompilerMessage mess = messages[i];
+    if (mess.file() == fe->getFileName()) {
+      fe->AddCompilerMessage(mess);
+    }
+  }
+  return fe;
+}
+
 void MainWindow::openFile(const wxString& file, int start_line, int start_index, int end_line, int end_index) {
   wxFileName w(file);
   w.Normalize();
@@ -303,7 +331,7 @@ void MainWindow::openFile(const wxString& file, int start_line, int start_index,
   };
   FileEdit* edit = res.edit != NULL
     ? res.edit
-    : new FileEdit(notebook, this, "", path)
+    : AddCompilerMessages(compiler_messages_, new FileEdit(notebook, this, "", path))
     ;
   edit->setSelection(start_line, start_index, end_line, end_index);
   edit->Focus();
