@@ -173,6 +173,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 
   // output
   output_window->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
+  output_window->SetFont(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
   aui.AddPane(output_window, wxAuiPaneInfo().Name("output").Caption("Output").Bottom().CloseButton(false));
 
   aui.Update();
