@@ -234,6 +234,7 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
   const bool isWarning = mess.type() == CompilerMessage::TYPE_WARNING;
 
   if (isError || isWarning) {
+    // todo: make this a option
     const int style = isError ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
     const int line = mess.start_line() -1;
     const wxString type = isError ? "Error: " : "Warning: ";

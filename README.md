@@ -23,7 +23,6 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Project/solution explorer
 * Create project with cargo and add a README.md file
 * Error list
-* Optionally place (compile) error inline in source
 * Start page
 * Option to force charset, lineending and ending with newline when saving
 * Visual studio like debug settings
