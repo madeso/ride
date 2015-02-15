@@ -155,6 +155,7 @@ void Project::CleanOutput() {
 
 void Project::Append(const wxString str) {
   output_->AppendText(str);
+  output_->AppendText("\n");
 }
 
 void Project::RunCmd(const wxString& cmd) {
