@@ -605,7 +605,7 @@ FileEdit::~FileEdit() {
 
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
 EVT_STC_MARGINCLICK(wxID_ANY, FileEdit::OnMarginClick)
-EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnTextChanged)
+EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnCharAdded)
 // EVT_STC_MODIFIED(wxID_ANY, FileEdit::OnTextModified) // this was not a good idea for makeDiry calls, OnPaint seems to generate modified messages
 wxEND_EVENT_TABLE()
 
@@ -638,7 +638,7 @@ int GetIndentationChange(const wxString& str) {
   return change;
 }
 
-void FileEdit::OnTextChanged(wxStyledTextEvent& event)
+void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 {
   updateTitle();
 
