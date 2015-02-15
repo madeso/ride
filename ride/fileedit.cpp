@@ -378,9 +378,46 @@ int C(const ride::VirtualSpace space) {
   case ride::VIRTUALSPACE_RECTANGULARSELECTION: return wxSTC_SCVS_RECTANGULARSELECTION;
   case ride::VIRTUALSPACE_USERACCESSIBLE: return wxSTC_SCVS_USERACCESSIBLE;
   default:
+    assert(0 && "Unknown virtual space");
     return wxSTC_SCVS_NONE;
   }
 }
+
+int C(ride::WrapVisualFlagsLocation loc) {
+  switch (loc) {
+    case ride::WRAPVISUALFLAGLOC_DEFAULT        : return wxSTC_WRAPVISUALFLAGLOC_DEFAULT      ;
+    case ride::WRAPVISUALFLAGLOC_END_BY_TEXT    : return wxSTC_WRAPVISUALFLAGLOC_END_BY_TEXT  ;
+    case ride::WRAPVISUALFLAGLOC_START_BY_TEXT  : return wxSTC_WRAPVISUALFLAGLOC_START_BY_TEXT;
+    default:
+      assert(0 && "Unknown visual flag location");
+      return wxSTC_WRAPVISUALFLAGLOC_DEFAULT;
+  }
+}
+
+int C(ride::WrapIndentMode mode) {
+  switch (mode) {
+   case ride::WRAPINDENT_FIXED : return wxSTC_WRAPINDENT_FIXED ;
+   case ride::WRAPINDENT_SAME  : return wxSTC_WRAPINDENT_SAME  ;
+   case ride::WRAPINDENT_INDENT: return wxSTC_WRAPINDENT_INDENT;
+   default:
+     assert(0 && "Unknown wrap indent mode");
+     return wxSTC_WRAPINDENT_FIXED;
+  }
+}
+
+int C(ride::WrapVisualFlags flags) {
+  int ret = wxSTC_WRAPVISUALFLAG_NONE;
+  if (flags.end()) {
+    ret |= wxSTC_WRAPVISUALFLAG_END;
+  }
+  if (flags.start()) {
+    ret |= wxSTC_WRAPVISUALFLAG_START;
+  }
+  if (flags.margin()) {
+    ret |= wxSTC_WRAPVISUALFLAG_MARGIN;
+  }
+  return ret;
+};
 
 void SetIndicator(wxStyledTextCtrl* text, int index, const ride::Indicator& indicator) {
   text->IndicatorSetUnder(index, indicator.under());
@@ -486,6 +523,12 @@ void FileEdit::UpdateTextControl() {
   text->SetVirtualSpaceOptions(C(set.virtual_space()));
   text->SetUseVerticalScrollBar(set.vertical_scrollbar());
   text->SetUseHorizontalScrollBar(set.horizontal_scrollbar());
+  
+  text->SetWrapVisualFlags(C(set.wrap_visual_flags()));
+  text->SetWrapVisualFlagsLocation(C(set.wrap_visual_flags_location()));
+  text->SetWrapIndentMode(C(set.wrap_indent_mode()));
+  text->SetWrapStartIndent(set.wrap_start_indent());
+
 
   // todo: expose this
   text->SetCaretLineVisible(true);
