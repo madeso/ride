@@ -23,8 +23,7 @@ CompilerMessage::CompilerMessage(wxString file, int start_line, int start_index,
 {
 }
 
-bool CompileComplexRegexOutput(wxRegEx& ret) {
-  // C:\Users\gustav\WorkingFolder\librust\src\rng.rs:16 : 1 : 21 : 2 warning : type could implement `Copy`; consider adding `impl Copy`, #[warn(missing_copy_implementations)] on by default
+namespace regex {
   const wxString WS = "[ \\t]*";
   const wxString SEP = "[/\\\\]";
   const wxString DRIVE = "(?:[a-zA-Z]\\:)?";
@@ -34,9 +33,13 @@ bool CompileComplexRegexOutput(wxRegEx& ret) {
   const wxString INT = "([0-9]+)";
   const wxString ID = "([a-zA-Z]+)";
   const wxString TEXT = "(.+)";
-  const wxString COMPLEX_REGEX_OUTPUT = FILE + "\\:" + INT + WS+ "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + ID + WS + "\\:" + WS + TEXT;
-  
-  bool result = ret.Compile(COMPLEX_REGEX_OUTPUT, wxRE_ADVANCED);
+
+  // C:\Users\gustav\WorkingFolder\librust\src\rng.rs:16 : 1 : 21 : 2 warning : type could implement `Copy`; consider adding `impl Copy`, #[warn(missing_copy_implementations)] on by default
+  const wxString COMPLEX_REGEX_OUTPUT = FILE + "\\:" + INT + WS + "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + ID + WS + "\\:" + WS + TEXT;
+}
+
+bool CompileComplexRegexOutput(wxRegEx& ret) {
+  bool result = ret.Compile(regex::COMPLEX_REGEX_OUTPUT, wxRE_ADVANCED);
   return result;
 }
 
