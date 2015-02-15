@@ -244,7 +244,7 @@ message Settings {
   optional bool backspaceUnindents = 13 [default=true];
 
   optional FoldFlags foldflags = 14;
-  optional VirtualSpace virtual_space = 15;
+  optional VirtualSpace virtual_space = 15 [default=VIRTUALSPACE_NONE];
 
   // indicators
   optional Indicator indicator_error = 100;

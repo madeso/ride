@@ -484,7 +484,7 @@ void FileEdit::UpdateTextControl() {
 
   // settings for this
   text->SetEndAtLastLine(false);
-  text->SetVirtualSpaceOptions(C(ride::VIRTUALSPACE_NONE));
+  text->SetVirtualSpaceOptions(C(set.virtual_space()));
 
   // todo: expose this
   text->SetCaretLineVisible(true);
