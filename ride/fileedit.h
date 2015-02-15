@@ -34,6 +34,7 @@ public:
   void ToLower();
   void MoveLinesUp();
   void MoveLinesDown();
+  void ShowProperties();
 
 public:
   bool canClose(bool canAbort);

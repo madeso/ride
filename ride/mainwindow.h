@@ -44,6 +44,7 @@ private:
   void OnEditToLower(wxCommandEvent& event);
   void OnEditMoveLinesUp(wxCommandEvent& event);
   void OnEditMoveLinesDown(wxCommandEvent& event);
+  void OnEditShowProperties(wxCommandEvent& event);
 
   void OnProjectNew     (wxCommandEvent& event);
   void OnProjectOpen    (wxCommandEvent& event);

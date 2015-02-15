@@ -21,6 +21,7 @@ enum
   ID_EDIT_TOLOWER,
   ID_EDIT_MOVELINESUP,
   ID_EDIT_MOVELINESDOWN,
+  ID_EDIT_SHOW_PROPERTIES,
 
   ID_PROJECT_NEW,
   ID_PROJECT_OPEN,
@@ -62,6 +63,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_EDIT_TOLOWER        , MainWindow::OnEditToLower)
   EVT_MENU(ID_EDIT_MOVELINESUP    , MainWindow::OnEditMoveLinesUp)
   EVT_MENU(ID_EDIT_MOVELINESDOWN  , MainWindow::OnEditMoveLinesDown)
+  EVT_MENU(ID_EDIT_SHOW_PROPERTIES, MainWindow::OnEditShowProperties)
   
   EVT_MENU(ID_PROJECT_NEW         , MainWindow::OnProjectNew     )
   EVT_MENU(ID_PROJECT_OPEN        , MainWindow::OnProjectOpen    )
@@ -132,6 +134,8 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   menuEdit->AppendSeparator();
   menuEdit->Append(ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
   menuEdit->Append(ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
+  menuEdit->AppendSeparator();
+  menuEdit->Append(ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "");
 
   //////////////////////////////////////////////////////////////////////////
 
@@ -162,6 +166,7 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
   SetMenuBar(menuBar);
   CreateStatusBar();
   SetStatusText("");
+
   createNotebook();
 
   aui.Update();
@@ -322,6 +327,7 @@ MEM_FUN(ToUpper)
 MEM_FUN(ToLower)
 MEM_FUN(MoveLinesUp)
 MEM_FUN(MoveLinesDown)
+MEM_FUN(ShowProperties)
 #undef MEM_FUN
 //////////////////////////////////////////////////////////////////////////
 

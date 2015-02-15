@@ -166,6 +166,10 @@ void FileEdit::MoveLinesDown() {
   updateTitle();
 }
 
+void FileEdit::ShowProperties() {
+  // todo: implement me
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 int C(ride::EdgeStyle e) {
