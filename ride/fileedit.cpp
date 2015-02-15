@@ -172,6 +172,10 @@ void FileEdit::ShowProperties() {
 
 //////////////////////////////////////////////////////////////////////////
 
+const wxString& FileEdit::getFileName() const {
+  return filename;
+}
+
 int C(ride::EdgeStyle e) {
   switch (e) {
   case ride::EDGESTYLE_BACKGROUND:

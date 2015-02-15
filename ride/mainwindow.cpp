@@ -9,6 +9,17 @@
 #include "ride/settingsdlg.h"
 #include "ride/compilermessage.h"
 
+template<typename T>
+T* NotebookFromIndexOrNull(wxAuiNotebook* notebook, int index) {
+  wxWindow* window = notebook->GetPage(index);
+  if (window->IsKindOf(CLASSINFO(T))) {
+    return reinterpret_cast<T*>(window);
+  }
+  else {
+    return NULL;
+  }
+}
+
 enum
 {
   ID_FIRST = wxID_HIGHEST,
@@ -273,7 +284,15 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
 void MainWindow::openFile(const wxString& file) {
   wxFileName w(file);
   w.Normalize();
-  new FileEdit(notebook, this, "", w.GetFullPath());
+  const wxString path = w.GetFullPath();
+
+  FoundEdit res = getEditFromFileName(path);
+  if (res.edit != NULL) {
+    notebook->SetSelection(res.index);
+  }
+  else {
+    new FileEdit(notebook, this, "", path);
+  }
 }
 
 FileEdit* MainWindow::getSelectedEditorNull() {
@@ -281,31 +300,35 @@ FileEdit* MainWindow::getSelectedEditorNull() {
   if (selected == -1) {
     return NULL;
   }
-  wxWindow* window = notebook->GetPage(selected);
-  if (window->IsKindOf(CLASSINFO(FileEdit))) {
-    FileEdit* edit = reinterpret_cast<FileEdit*>(window);
-    return edit;
-  }
-  else {
-    return NULL;
-  }
+  return NotebookFromIndexOrNull<FileEdit>(notebook, selected);
 }
 
 void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
-  wxWindow* window = notebook->GetPage(evt.GetSelection());
-  if (window->IsKindOf(CLASSINFO(FileEdit))) {
-    FileEdit* edit = reinterpret_cast<FileEdit*>(window);
+  FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, evt.GetSelection());
+  if (edit) {
     if (edit->canClose(true) == false) {
       evt.Veto();
     }
   }
 }
 
+FoundEdit MainWindow::getEditFromFileName(const wxString& file) {
+  for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
+    if (edit) {
+      if (edit->getFileName() == file) {
+        return FoundEdit(i, edit);
+      }
+    }
+  }
+
+  return FoundEdit(0, NULL);
+}
+
 void MainWindow::OnClose(wxCloseEvent& evt) {
   for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
-    wxWindow* window = notebook->GetPage(i);
-    if (window->IsKindOf(CLASSINFO(FileEdit))) {
-      FileEdit* edit = reinterpret_cast<FileEdit*>(window);
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
+    if (edit) {
       const bool canAbort = evt.CanVeto();
       if (edit->canClose(canAbort) == false) {
         evt.Veto();
@@ -330,9 +353,8 @@ void MainWindow::OnNotebookPageClosed(wxAuiNotebookEvent& evt) {
 
 void MainWindow::updateAllEdits() {
   for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
-    wxWindow* window = notebook->GetPage(i);
-    if (window->IsKindOf(CLASSINFO(FileEdit))) {
-      FileEdit* edit = reinterpret_cast<FileEdit*>(window);
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
+    if (edit) {
       edit->UpdateTextControl();
     }
   }

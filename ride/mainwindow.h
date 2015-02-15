@@ -12,6 +12,12 @@ class FileEdit;
 class SettingsDlg;
 class CompilerMessage;
 
+struct FoundEdit {
+  FoundEdit(size_t i, FileEdit* e) : index(i), edit(e) { }
+  size_t index;
+  FileEdit* edit;
+};
+
 class MainWindow: public wxFrame
 {
 public:
@@ -78,6 +84,8 @@ private:
 
 private:
   void openFile(const wxString& file);
+  FoundEdit getEditFromFileName(const wxString& file);
+
   void updateTitle();
   void updateAllEdits();
   void createNotebook();

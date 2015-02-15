@@ -10,6 +10,7 @@ class MainWindow;
 class FileEdit : public wxControl {
 public:
   FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file);
+  const wxString& getFileName() const;
 
 public:
   bool Save();
