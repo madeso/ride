@@ -249,7 +249,6 @@ message Settings {
   optional bool foldComment = 200 [default=true];
   optional bool foldCompact = 201 [default=true];
   optional bool foldPreproc = 202 [default=true];
-
   optional bool     styling_within_preprocessor = 203 [default=false];     //  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
   optional bool     lexer_cpp_allow_dollars = 204 [default=false];         // Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
   optional bool     lexer_cpp_track_preprocessor = 205 [default=false];    //  Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
