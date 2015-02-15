@@ -190,7 +190,7 @@ void MainWindow::createNotebook() {
   ctrl->Thaw();
   notebook = ctrl;
 
-  aui.AddPane(notebook, wxAuiPaneInfo().Name(wxT("notebook_content")).PaneBorder(false).CloseButton(false).Movable(false) );
+  aui.AddPane(notebook, wxAuiPaneInfo().Name(wxT("notebook_content")).PaneBorder(false).CloseButton(false).Movable(false).CenterPane() );
 }
 
 const ride::Settings& MainWindow::getSettings() const {
