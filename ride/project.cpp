@@ -3,9 +3,10 @@
 #include <wx/process.h>
 #include <wx/txtstrm.h>
 
+#include "ride/mainwindow.h"
 #include "ride/compilermessage.h"
 
-Project::Project(wxTextCtrl* output, const wxString& root_folder) : output_(output), root_folder_(root_folder) {
+Project::Project(MainWindow* output, const wxString& root_folder) : output_(output), root_folder_(root_folder) {
 }
 
 const wxString& Project::root_folder() const {
@@ -155,8 +156,7 @@ void Project::CleanOutput() {
 }
 
 void Project::Append(const wxString str) {
-  output_->AppendText(str);
-  output_->AppendText("\n");
+  output_->Append(str);
 
 #ifdef WIN32
   CompilerMessage mess;

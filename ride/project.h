@@ -10,9 +10,11 @@ WX_DEFINE_ARRAY_PTR(MyPipedProcess *, MyPipedProcessesArray);
 class MyProcess;
 WX_DEFINE_ARRAY_PTR(MyProcess *, MyProcessesArray);
 
+class MainWindow;
+
 class Project {
 public:
-  Project(wxTextCtrl* output, const wxString& root_folder);
+  Project(MainWindow* output, const wxString& root_folder);
   const wxString& root_folder() const;
 
   void Settings();
@@ -41,7 +43,7 @@ private:
   MyProcessesArray m_allAsync;
 
 private:
-  wxTextCtrl* output_;
+  MainWindow* output_;
   wxString root_folder_;
 };
 

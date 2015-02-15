@@ -88,7 +88,7 @@ wxEND_EVENT_TABLE()
 MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, title, pos, size)
 , output_window(new wxTextCtrl())
-, project(output_window, wxEmptyString)
+, project(this, wxEmptyString)
 , title_(title)
 {
   aui.SetManagedWindow(this);
@@ -199,6 +199,15 @@ const ride::Settings& MainWindow::getSettings() const {
 
 MainWindow::~MainWindow() {
   aui.UnInit();
+}
+
+void MainWindow::Clear() {
+  output_window->Clear();
+}
+
+void MainWindow::Append(const wxString& str) {
+  output_window->AppendText(str);
+  output_window->AppendText("\n");
 }
 
 void MainWindow::OnFileExit(wxCommandEvent& event)
@@ -360,7 +369,7 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
     return;
   wxFileName file(openFileDialog.GetPath());
   file.Normalize();
-  project = Project(output_window, file.GetPathWithSep());
+  project = Project(this, file.GetPathWithSep());
   updateTitle();
 }
 

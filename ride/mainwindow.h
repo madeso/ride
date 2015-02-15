@@ -19,6 +19,9 @@ public:
 
   const ride::Settings& getSettings() const;
   void setSettings(const ride::Settings& settings);
+
+  void Clear();
+  void Append(const wxString& str);
 private:
 	void OnFileOpen(wxCommandEvent& event);
   void OnFileSave(wxCommandEvent& event);
