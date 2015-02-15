@@ -4,7 +4,6 @@
 #include <wx/txtstrm.h>
 
 #include "ride/mainwindow.h"
-#include "ride/compilermessage.h"
 
 Project::Project(MainWindow* output, const wxString& root_folder) : output_(output), root_folder_(root_folder) {
 }
@@ -157,14 +156,6 @@ void Project::CleanOutput() {
 
 void Project::Append(const wxString str) {
   output_->Append(str);
-
-#ifdef WIN32
-  CompilerMessage mess;
-  if (CompilerMessage::Parse(str, &mess)) {
-    OutputDebugStringA(mess.message());
-    OutputDebugStringA("\n");
-  }
-#endif
 }
 
 void Project::RunCmd(const wxString& cmd) {
