@@ -632,7 +632,8 @@ int GetIndentationChange(const wxString& str) {
       change += 1;
     }
     else if (c == '}') {
-      change += 1;
+      // todo: fix this bug
+      // change -= 1;
     }
   }
   return change;
@@ -646,7 +647,16 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
   // todo: add settings for this...
   // loosley based on http://www.scintilla.org/ScintillaUsage.html and https://groups.google.com/forum/#!topic/scintilla-interest/vTwXwIBswSM
   int chr = event.GetKey(); // the key seems to be the char that was added
-  if (chr == '\n' || chr == '\r')
+  if (chr == '{') {
+    text->InsertText(text->GetCurrentPos(), "}");
+  }
+  else if (chr == '(') {
+    text->InsertText(text->GetCurrentPos(), ")");
+  }
+  else if (chr == '[') {
+    text->InsertText(text->GetCurrentPos(), "]");
+  }
+  else if (chr == '\n' || chr == '\r')
   {
     const int current_line = text->GetCurrentLine();
 
