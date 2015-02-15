@@ -3,7 +3,7 @@
 #include <wx/process.h>
 #include <wx/txtstrm.h>
 
-Project::Project(const wxString& root_folder) : root_folder_(root_folder) {
+Project::Project(wxTextCtrl* output, const wxString& root_folder) : output_(output), root_folder_(root_folder) {
 }
 
 const wxString& Project::root_folder() const {
@@ -14,35 +14,60 @@ void Project::Settings() {
   // todo: implement me
 }
 
-void Project::Build() {
+void Project::Build(bool clean_output) {
+  if (clean_output) {
+    CleanOutput();
+  }
   RunCmd("cargo build");
 }
 
-void Project::Clean() {
+void Project::Clean(bool clean_output) {
+  if (clean_output) {
+    CleanOutput();
+  }
   RunCmd("cargo clean");
 }
 
-void Project::Rebuild() {
-  Clean();
-  Build();
+void Project::Rebuild(bool clean_output) {
+  if (clean_output) {
+    CleanOutput();
+  }
+  Clean(false);
+  Build(false);
 }
 
-void Project::Doc() {
+void Project::Doc(bool clean_output) {
+  if (clean_output) {
+    CleanOutput();
+  }
   RunCmd("cargo doc");
 }
 
-void Project::Run() {
+void Project::Run(bool clean_output) {
+  if (clean_output) {
+    CleanOutput();
+  }
+  Build(false);
 }
 
-void Project::Test() {
+void Project::Test(bool clean_output) {
+  if (clean_output) {
+    CleanOutput();
+  }
   RunCmd("cargo test");
 }
 
-void Project::Bench() {
+void Project::Bench(bool clean_output) {
+  if (clean_output) {
+    CleanOutput();
+  }
   RunCmd("cargo bench");
 }
 
-void Project::Update() {
+void Project::Update(bool clean_output) {
+  if (clean_output) {
+    CleanOutput();
+  }
   RunCmd("cargo update");
 }
 
@@ -124,11 +149,12 @@ public:
   }
 };
 
+void Project::CleanOutput() {
+  output_->Clear();
+}
+
 void Project::Append(const wxString str) {
-#ifdef WIN32
-  // todo: move to gui console window
-  OutputDebugStringA(str.c_str());
-#endif
+  output_->AppendText(str);
 }
 
 void Project::RunCmd(const wxString& cmd) {

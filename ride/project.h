@@ -12,24 +12,25 @@ WX_DEFINE_ARRAY_PTR(MyProcess *, MyProcessesArray);
 
 class Project {
 public:
-  Project(const wxString& root_folder);
+  Project(wxTextCtrl* output, const wxString& root_folder);
   const wxString& root_folder() const;
 
   void Settings();
-  void Build   ();
-  void Clean   ();
-  void Rebuild ();
-  void Doc     ();
-  void Run     ();
-  void Test    ();
-  void Bench   ();
-  void Update  ();
+  void Build   (bool clean_output=true);
+  void Clean   (bool clean_output=true);
+  void Rebuild (bool clean_output=true);
+  void Doc     (bool clean_output=true);
+  void Run     (bool clean_output=true);
+  void Test    (bool clean_output=true);
+  void Bench   (bool clean_output=true);
+  void Update  (bool clean_output=true);
 
 public:
   void OnProcessTerminated(MyPipedProcess *process);
   void OnAsyncTermination(MyProcess *process);
   void Append(const wxString str);
 private:
+  void CleanOutput();
   void RunCmd(const wxString& cmd);
   void AddPipedProcess(MyPipedProcess *process);
 
@@ -40,6 +41,7 @@ private:
   MyProcessesArray m_allAsync;
 
 private:
+  wxTextCtrl* output_;
   wxString root_folder_;
 };
 

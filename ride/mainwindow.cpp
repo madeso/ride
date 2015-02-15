@@ -87,7 +87,9 @@ wxEND_EVENT_TABLE()
 
 MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, title, pos, size)
-, project(wxEmptyString)
+, output_window(new wxTextCtrl())
+, project(output_window, wxEmptyString)
+, title_(title)
 {
   aui.SetManagedWindow(this);
 
@@ -169,7 +171,12 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 
   createNotebook();
 
+  // output
+  output_window->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
+  aui.AddPane(output_window, wxAuiPaneInfo().Name("output").Caption("Output").Bottom().CloseButton(false));
+
   aui.Update();
+  updateTitle();
 }
 
 void MainWindow::createNotebook() {
@@ -331,8 +338,17 @@ MEM_FUN(ShowProperties)
 #undef MEM_FUN
 //////////////////////////////////////////////////////////////////////////
 
+void MainWindow::updateTitle() {
+  const wxString new_title = project.root_folder().IsEmpty()
+    ? title_
+    // todo: only display project folder name instead of the whole path?
+    : wxString::Format("%s - %s", project.root_folder(), title_);
+  this->SetTitle(new_title);
+}
+
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // todo: implement me
+  updateTitle();
 }
 
 void MainWindow::OnProjectOpen(wxCommandEvent& event) {
@@ -343,7 +359,8 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
     return;
   wxFileName file(openFileDialog.GetPath());
   file.Normalize();
-  project = Project(file.GetPathWithSep());
+  project = Project(output_window, file.GetPathWithSep());
+  updateTitle();
 }
 
 #define MEM_FUN(X) \

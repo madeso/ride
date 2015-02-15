@@ -70,15 +70,18 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 private:
+  void updateTitle();
   void updateAllEdits();
   void createNotebook();
   FileEdit* getSelectedEditorNull();
 
   wxAuiManager aui;
   wxAuiNotebook* notebook;
+  wxTextCtrl* output_window;
 
   ride::Settings settings;
   Project project;
+  wxString title_;
 };
 
 #endif  // RIDE_MAINWINDOW_H
