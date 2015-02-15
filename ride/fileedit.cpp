@@ -231,7 +231,11 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
   if (isError || isWarning) {
     const int style = isError ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
     const int line = mess.start_line() -1;
-    text->AnnotationSetText(line, mess.message());
+    const wxString type = isError ? "ERR: " : "WARN: ";
+    const wxString value = type + mess.message();
+    const wxString old_text = text->AnnotationGetText(line);
+    const wxString ann = old_text.IsEmpty() ? value : old_text + "\n" + value;
+    text->AnnotationSetText(line, ann);
     text->AnnotationSetStyle(line, style);
 
     // only color on a single row, or it might get ugly
