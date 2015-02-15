@@ -178,15 +178,15 @@ const wxString& FileEdit::getFileName() const {
 
 void FileEdit::setSelection(int start_line, int start_index, int end_line, int end_index) {
   if (start_line == -1) return;
-  int from = text->PositionFromLine(start_line);
+  int from = text->PositionFromLine(start_line-1);
   if (start_index > 0) {
-    from += start_index;
+    from += start_index-1;
   }
 
   if (end_line != -1) {
-    int to = text->PositionFromLine(end_line);
+    int to = text->PositionFromLine(end_line-1);
     if (end_index > 0) {
-      to += end_index;
+      to += end_index-1;
     }
     text->SetSelection(from, to);
   }

@@ -14,9 +14,17 @@ public:
   static bool Parse(const wxString& text, CompilerMessage* output);
 
   const wxString& file() const;
+
+  // 1 based
   int start_line() const;
+
+  // 1 based
   int start_index() const;
+
+  // 1 based
   int end_line() const;
+
+  // 1 based
   int end_index() const;
   Type type() const;
   const wxString& message() const;
