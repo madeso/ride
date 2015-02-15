@@ -34,9 +34,9 @@ bool CompileComplexRegexOutput(wxRegEx& ret) {
   const wxString INT = "([0-9]+)";
   const wxString ID = "([a-zA-Z]+)";
   const wxString TEXT = "(.+)";
-  const wxString regex = FILE + "\\:" + INT + WS+ "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + ID + WS + "\\:" + WS + TEXT;
+  const wxString COMPLEX_REGEX_OUTPUT = FILE + "\\:" + INT + WS+ "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + "\\:" + WS + INT + WS + ID + WS + "\\:" + WS + TEXT;
   
-  bool result = ret.Compile(regex, wxRE_ADVANCED);
+  bool result = ret.Compile(COMPLEX_REGEX_OUTPUT, wxRE_ADVANCED);
   return result;
 }
 
