@@ -16,6 +16,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Align/remove space left/right
 * Trim left/right/both selected lines
 * Format file/selection
+* Color member variables, local variables and member variables different.
 * Find in files, find in solution, incremental search, other searches
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
