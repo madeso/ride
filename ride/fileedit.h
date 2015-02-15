@@ -11,6 +11,8 @@ class FileEdit : public wxControl {
 public:
   FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file);
   const wxString& getFileName() const;
+  void setSelection(int start_line, int start_index, int end_line, int end_index);
+  void Focus();
 
 public:
   bool Save();

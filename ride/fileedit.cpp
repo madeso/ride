@@ -176,6 +176,30 @@ const wxString& FileEdit::getFileName() const {
   return filename;
 }
 
+void FileEdit::setSelection(int start_line, int start_index, int end_line, int end_index) {
+  if (start_line == -1) return;
+  int from = text->PositionFromLine(start_line);
+  if (start_index > 0) {
+    from += start_index;
+  }
+
+  if (end_line != -1) {
+    int to = text->PositionFromLine(end_line);
+    if (end_index > 0) {
+      to += end_index;
+    }
+    text->SetSelection(from, to);
+  }
+  else {
+    text->SetSelection(from, from);
+  }
+}
+
+void FileEdit::Focus() {
+  SetFocus();
+  text->SetFocus();
+}
+
 int C(ride::EdgeStyle e) {
   switch (e) {
   case ride::EDGESTYLE_BACKGROUND:

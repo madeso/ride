@@ -83,7 +83,7 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 private:
-  void openFile(const wxString& file);
+  void openFile(const wxString& file, int start_line, int start_index, int end_line, int end_index);
   FoundEdit getEditFromFileName(const wxString& file);
 
   void updateTitle();

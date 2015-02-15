@@ -223,7 +223,8 @@ MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& 
 }
 
 void MainWindow::OpenCompilerMessage(const CompilerMessage& message) {
-  openFile(message.file());
+  openFile(message.file(), message.start_line(), message.start_index(),
+    message.end_line(), message.end_index());
 }
 
 void MainWindow::createNotebook() {
@@ -277,11 +278,11 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
   wxArrayString paths;
   openFileDialog.GetPaths(paths);
   for (wxArrayString::iterator path = paths.begin(); path != paths.end(); ++path) {
-    openFile(*path);
+    openFile(*path, -1, -1, -1, -1);
   }
 }
 
-void MainWindow::openFile(const wxString& file) {
+void MainWindow::openFile(const wxString& file, int start_line, int start_index, int end_line, int end_index) {
   wxFileName w(file);
   w.Normalize();
   const wxString path = w.GetFullPath();
@@ -289,10 +290,13 @@ void MainWindow::openFile(const wxString& file) {
   FoundEdit res = getEditFromFileName(path);
   if (res.edit != NULL) {
     notebook->SetSelection(res.index);
-  }
-  else {
-    new FileEdit(notebook, this, "", path);
-  }
+  };
+  FileEdit* edit = res.edit != NULL
+    ? res.edit
+    : new FileEdit(notebook, this, "", path)
+    ;
+  edit->setSelection(start_line, start_index, end_line, end_index);
+  edit->Focus();
 }
 
 FileEdit* MainWindow::getSelectedEditorNull() {
