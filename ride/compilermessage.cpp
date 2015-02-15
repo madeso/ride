@@ -23,7 +23,7 @@ CompilerMessage::CompilerMessage(wxString file, int start_line, int start_index,
 {
 }
 
-bool CompileRegexOutput(wxRegEx& ret) {
+bool CompileComplexRegexOutput(wxRegEx& ret) {
   // C:\Users\gustav\WorkingFolder\librust\src\rng.rs:16 : 1 : 21 : 2 warning : type could implement `Copy`; consider adding `impl Copy`, #[warn(missing_copy_implementations)] on by default
   const wxString WS = "[ \\t]*";
   const wxString SEP = "[/\\\\]";
@@ -40,9 +40,9 @@ bool CompileRegexOutput(wxRegEx& ret) {
   return result;
 }
 
-const wxRegEx& RegexOutput() {
+const wxRegEx& ComplexRegexOutput() {
   static wxRegEx ret;
-  static bool compiled = CompileRegexOutput(ret);
+  static bool compiled = CompileComplexRegexOutput(ret);
   assert(compiled);
   return ret;
 }
@@ -54,14 +54,14 @@ CompilerMessage::Type ParseCMT(const wxString& str) {
 }
 
 bool CompilerMessage::Parse(const wxString& text, CompilerMessage* output) {
-  if (RegexOutput().Matches(text)) {
-    const wxString              file         =          RegexOutput().GetMatch(text, 1);
-    const int                   start_line   =   wxAtoi(RegexOutput().GetMatch(text, 2));
-    const int                   start_index  =   wxAtoi(RegexOutput().GetMatch(text, 3));
-    const int                   end_line     =   wxAtoi(RegexOutput().GetMatch(text, 4));
-    const int                   end_index    =   wxAtoi(RegexOutput().GetMatch(text, 5));
-    const CompilerMessage::Type type         = ParseCMT(RegexOutput().GetMatch(text, 6));
-    const wxString              message      =          RegexOutput().GetMatch(text, 7);
+  if (ComplexRegexOutput().Matches(text)) {
+    const wxString              file         =          ComplexRegexOutput().GetMatch(text, 1);
+    const int                   start_line   =   wxAtoi(ComplexRegexOutput().GetMatch(text, 2));
+    const int                   start_index  =   wxAtoi(ComplexRegexOutput().GetMatch(text, 3));
+    const int                   end_line     =   wxAtoi(ComplexRegexOutput().GetMatch(text, 4));
+    const int                   end_index    =   wxAtoi(ComplexRegexOutput().GetMatch(text, 5));
+    const CompilerMessage::Type type         = ParseCMT(ComplexRegexOutput().GetMatch(text, 6));
+    const wxString              message      =          ComplexRegexOutput().GetMatch(text, 7);
 
     *output = CompilerMessage(file, start_line, start_index, end_line, end_index, type, message);
     return true;
