@@ -207,6 +207,11 @@ void FileEdit::setSelection(int start_line, int start_index, int end_line, int e
   else {
     text->SetSelection(from, from);
   }
+
+  text->ScrollToLine(start_line - 1);
+  if (start_index >= 0) {
+    text->ScrollToColumn(start_index - 1);
+  }
 }
 
 void FileEdit::Focus() {
@@ -231,7 +236,7 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
   if (isError || isWarning) {
     const int style = isError ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
     const int line = mess.start_line() -1;
-    const wxString type = isError ? "ERR: " : "WARN: ";
+    const wxString type = isError ? "Error: " : "Warning: ";
     const wxString value = type + mess.message();
     const wxString old_text = text->AnnotationGetText(line);
     const wxString ann = old_text.IsEmpty() ? value : old_text + "\n" + value;
