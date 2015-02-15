@@ -246,6 +246,8 @@ message Settings {
   optional FoldFlags foldflags = 14;
   optional VirtualSpace virtual_space = 15 [default=VIRTUALSPACE_NONE];
   optional bool end_at_last_line = 16 [default=false];
+  optional bool vertical_scrollbar = 17 [default=true] ;
+  optional bool horizontal_scrollbar = 18 [default=true];
 
   // indicators
   optional Indicator indicator_error = 100;

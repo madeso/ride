@@ -484,6 +484,8 @@ void FileEdit::UpdateTextControl() {
 
   text->SetEndAtLastLine(set.end_at_last_line());
   text->SetVirtualSpaceOptions(C(set.virtual_space()));
+  text->SetUseVerticalScrollBar(set.vertical_scrollbar());
+  text->SetUseHorizontalScrollBar(set.horizontal_scrollbar());
 
   // todo: expose this
   text->SetCaretLineVisible(true);
