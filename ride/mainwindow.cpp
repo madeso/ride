@@ -85,9 +85,32 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainWindow::OnNotebookPageClosed)
 wxEND_EVENT_TABLE()
 
+class OutputControl : public wxTextCtrl {
+public:
+  void OnDoubleClick(wxMouseEvent& event) {
+    long line = 0;
+    long col = 0;
+    long index = this->GetInsertionPoint();
+     this->PositionToXY(index, &col, &line); 
+    // wxPoint p = this->PositionToCoords(index);
+    // line = p.y;
+    long line_number = line;
+    if (line_number == -1) return;
+    wxString line_content = GetLineText(line_number);
+    wxMessageBox(line_content);
+  }
+
+  wxDECLARE_EVENT_TABLE();
+};
+
+wxBEGIN_EVENT_TABLE(OutputControl, wxTextCtrl)
+  EVT_LEFT_DCLICK(OutputControl::OnDoubleClick)
+wxEND_EVENT_TABLE()
+
+
 MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, title, pos, size)
-, output_window(new wxTextCtrl())
+, output_window(new OutputControl())
 , project(this, wxEmptyString)
 , title_(title)
 {
