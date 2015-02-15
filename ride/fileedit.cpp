@@ -482,8 +482,7 @@ void FileEdit::UpdateTextControl() {
   SetStyle(text, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
 
 
-  // settings for this
-  text->SetEndAtLastLine(false);
+  text->SetEndAtLastLine(set.end_at_last_line());
   text->SetVirtualSpaceOptions(C(set.virtual_space()));
 
   // todo: expose this
