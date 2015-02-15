@@ -16,14 +16,12 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Sort selected lines
 * Align/remove space left/right
 * Trim left/right/both selected lines
-* Indenting feature: None, block, smart
 * Format file/selection
 * Find in files, find in solution, incremental search, other searches
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
 * Project/solution explorer
 * Create project with cargo and add a README.md file
-* Build output
 * Error list
 * Optionally place (compile) error inline in source
 * Start page
