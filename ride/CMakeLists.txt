@@ -4,7 +4,7 @@ if(${MSVC})
 	message(STATUS "Adding _SCL_SECURE_NO_WARNINGS and _CRT_SECURE_NO_WARNINGS")
 endif()
 
-find_package(wxWidgets COMPONENTS core aui base stc REQUIRED)
+find_package(wxWidgets COMPONENTS core aui base stc adv REQUIRED)
 include( "${wxWidgets_USE_FILE}" )
 message(status "wxWidgets use file: ${wxWidgets_USE_FILE}")
 

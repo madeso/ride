@@ -2,6 +2,7 @@
 #include <wx/stc/stc.h>
 #include <wx/aui/aui.h>
 #include <wx/filename.h>
+#include <wx/aboutdlg.h>
 
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
@@ -262,9 +263,18 @@ void MainWindow::OnFileExit(wxCommandEvent& event)
   Close(true);
 }
 
+#define XSTR(x) #x
+#define STR(x) XSTR(x)
+
 void MainWindow::OnAbout(wxCommandEvent& event)
 {
-  wxMessageBox("Ride is a Rust IDE. It's named after concatenating R from rust and IDE.\nFor more information: https://github.com/madeso/ride", "About Ride", wxOK | wxICON_INFORMATION);
+  wxAboutDialogInfo aboutInfo;
+  aboutInfo.SetName("RIDE");
+  // aboutInfo.SetVersion(MY_APP_VERSION_STRING);
+  aboutInfo.SetDescription(_("Ride is a Rust IDE. It's named after concatenating R from rust and IDE."));
+  // aboutInfo.SetCopyright("(C) 1992-2010");
+  aboutInfo.SetWebSite("https://github.com/madeso/ride");
+  wxAboutBox(aboutInfo, this);
 }
 
 void MainWindow::OnFileOpen(wxCommandEvent& event)
