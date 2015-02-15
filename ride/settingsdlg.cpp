@@ -131,6 +131,9 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("Control char", controlchar_style);
   DEF_STYLE("Indent guide", indentguide_style);
   DEF_STYLE("Calltip stype", calltip_style);
+  
+  DEF_STYLE("Annotation error", annotation_error_style);
+  DEF_STYLE("Annotation warning", annotation_warning_style);
 
   DEF_STYLE("C/C++ Default", c_default);
   DEF_STYLE("C/C++ Comment", c_comment);

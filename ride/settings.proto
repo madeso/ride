@@ -106,6 +106,8 @@ message Style {
 // the idea of moving out all fonts and colors is that likely theese are
 // what people want share: obsidian/zenburn/monokai and https://studiostyl.es/
 message FontsAndColors {
+  optional Color edgeColor = 8;
+
   optional Style default_style = 29;
   optional Style bracelight_style = 30;
   optional Style bracebad_style = 31;
@@ -113,7 +115,8 @@ message FontsAndColors {
   optional Style indentguide_style = 33;
   optional Style calltip_style = 34;
 
-  optional Color edgeColor = 8;
+  optional Style annotation_warning_style = 35;
+  optional Style annotation_error_style = 36;
 
   optional Style c_default = 100;
   optional Style c_comment = 101;

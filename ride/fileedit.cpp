@@ -29,6 +29,12 @@ enum
   ID_INDICATOR_SELECT_HIGHLIGHT
 };
 
+enum {
+  STYLE_LASTPREDEF = wxSTC_STYLE_LASTPREDEFINED,
+  STYLE_ANNOTATION_WARNING,
+  STYLE_ANNOTATION_ERROR
+};
+
 //////////////////////////////////////////////////////////////////////////
 
 void FileEdit::Undo() {
@@ -211,7 +217,10 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
   const bool isWarning = mess.type() == CompilerMessage::TYPE_WARNING;
 
   if (isError || isWarning) {
-    text->AnnotationSetText(mess.start_line() - 1, mess.message());
+    const int style = isError ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
+    const int line = mess.start_line() -1;
+    text->AnnotationSetText(line, mess.message());
+    text->AnnotationSetStyle(line, style);
   }
 }
 
@@ -438,7 +447,7 @@ int C(ride::Annotation ann) {
   switch (ann) {
     case ride::ANNOTATION_HIDDEN      : return wxSTC_ANNOTATION_HIDDEN  ;
     case ride::ANNOTATION_STANDARD    : return wxSTC_ANNOTATION_STANDARD;
-    case ride::ANNOTATION_BOXED       : return wxSTC_ANNOTATION_STANDARD   ;
+    case ride::ANNOTATION_BOXED       : return wxSTC_ANNOTATION_BOXED   ;
     default:
       assert(0 && "Unknwon annotation style");
       return wxSTC_ANNOTATION_STANDARD;
@@ -543,6 +552,9 @@ void FileEdit::UpdateTextControl() {
   SetStyle(text, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
   SetStyle(text, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
   SetStyle(text, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
+
+  SetStyle(text, STYLE_ANNOTATION_ERROR, set.fonts_and_colors().annotation_error_style());
+  SetStyle(text, STYLE_ANNOTATION_WARNING, set.fonts_and_colors().annotation_warning_style());
 
 
   text->SetEndAtLastLine(set.end_at_last_line());
