@@ -777,6 +777,40 @@ void FileEdit::OnUpdateUi(wxStyledTextEvent& event)
   const int type = event.GetUpdated();
   if (type & wxSTC_UPDATE_SELECTION) {
     const int pos = text->GetCurrentPos();
+
+    // highlight current word
+    const bool only_word_characters = true;
+    const int start_position = text->WordStartPosition(pos, only_word_characters);
+    const int end_position = text->WordEndPosition(pos, only_word_characters);
+    // todo: make these members
+    static int last_start_position = -1;
+    static int last_end_position = -1;
+    if (start_position != last_start_position || end_position != last_end_position) {
+      text->SetIndicatorCurrent(ID_INDICATOR_SELECT_HIGHLIGHT);
+      if (last_start_position != -1 && last_end_position != -1 && last_start_position != last_end_position) {
+        text->IndicatorClearRange(0, text->GetLength());
+      }
+      if (start_position != -1 && end_position != -1 && start_position != end_position) {
+        const int length = end_position - start_position;
+        assert(length > 0);
+
+        const wxString hover = text->GetRange(start_position, end_position);
+        
+        int search_point = 0;
+        while (true) {
+          int match_index = text->FindText(search_point, text->GetLength(), hover, wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE);
+          if (match_index == -1) {
+            break;
+          }
+          text->IndicatorFillRange(match_index, length);
+          search_point = match_index + length;
+        }
+      }
+      last_start_position = start_position;
+      last_end_position = end_position;
+    }
+
+    // brace highlighting
     int otherBrace = text->BraceMatch(pos);
     if (otherBrace != -1) {
       text->BraceHighlight(pos, otherBrace);
