@@ -241,9 +241,19 @@ public:
     SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 
     const wxString CppWordlist1 =
-      "pub mod fn struct static impl let for in crate extern if else as";
+      "abstract alignof as become box "
+      "break const continue crate do "
+      "else enum extern false final "
+      "fn for if impl in "
+      "let loop macro match mod "
+      "move mut offsetof override priv "
+      "pub pure ref return sizeof "
+      "static self struct super true "
+      "trait type typeof unsafe unsized "
+      "use virtual where while yield"
+      ;
     const wxString CppWordlist2 =
-      "self new u32 i32 usize f32";
+      "bool char f32 f64 i16 i32 i64 i8 isize slice str tuple u16 u32 u64 u8 usize";
     const wxString CppWordlist3 =
       "";
     SetKeys(text, 0, CppWordlist1); // primary
