@@ -3,6 +3,8 @@ Ride is a Rust IDE. It's named after concatenating R from rust and IDE. It's cur
 
 The project aim is to implement as much of it in C++ and then port it to rust when it stabilizes.
 
+![screenshot](screenshots/1.png)
+
 # Unsorted Roadmap
 
 * Create filter list from known languages
