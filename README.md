@@ -26,6 +26,8 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Create project with cargo and add a README.md file
 * Error list
 * Start page
+* Startup options (open homepage, load last loaded project, show open project dialog box, show new project dialog box, show empty enviroment, show start page)
+* Project file so we can open project with File->Open
 * Option to force charset, lineending and ending with newline when saving
 * Visual studio like debug settings
 * Context menu support
