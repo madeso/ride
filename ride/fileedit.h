@@ -59,6 +59,7 @@ private:
   bool saveTo(const wxString& target);
 
   bool shouldBeSaved();
+  void HighlightCurrentWord();
 
 private:
   MainWindow* main;
