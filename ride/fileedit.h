@@ -49,6 +49,7 @@ public:
   void OnMarginClick(wxStyledTextEvent& event);
   void OnCharAdded(wxStyledTextEvent& event);
   void OnUpdateUi(wxStyledTextEvent& event);
+  void OnChanged(wxStyledTextEvent& event);
 
   void UpdateTextControl();
 

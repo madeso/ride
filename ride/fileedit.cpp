@@ -683,6 +683,7 @@ wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
 EVT_STC_MARGINCLICK(wxID_ANY, FileEdit::OnMarginClick)
 EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnCharAdded)
 EVT_STC_UPDATEUI(wxID_ANY, FileEdit::OnUpdateUi)
+EVT_STC_CHANGE(wxID_ANY, FileEdit::OnChanged)
 wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
@@ -828,4 +829,8 @@ void FileEdit::OnUpdateUi(wxStyledTextEvent& event)
       text->BraceHighlight(-1, -1);
     }
   }
+}
+
+void FileEdit::OnChanged(wxStyledTextEvent& event) {
+  HighlightCurrentWord();
 }
