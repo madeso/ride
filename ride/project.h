@@ -3,12 +3,11 @@
 
 #include "ride/wx.h"
 
-// Define an array of process pointers used by MyFrame
-class MyPipedProcess;
-WX_DEFINE_ARRAY_PTR(MyPipedProcess *, MyPipedProcessesArray);
+class PipedProcess;
+class AsyncProcess;
 
-class MyProcess;
-WX_DEFINE_ARRAY_PTR(MyProcess *, MyProcessesArray);
+WX_DEFINE_ARRAY_PTR(PipedProcess*, PipedProcessesArray);
+WX_DEFINE_ARRAY_PTR(AsyncProcess*, AsyncProcessesArray);
 
 class MainWindow;
 
@@ -28,19 +27,16 @@ public:
   void Update  (bool clean_output=true);
 
 public:
-  void OnProcessTerminated(MyPipedProcess *process);
-  void OnAsyncTermination(MyProcess *process);
+  void OnPipedProcessTerminated(PipedProcess *process);
+  void OnAsyncProcessTerminated(AsyncProcess *process);
   void Append(const wxString str);
 private:
   void CleanOutput();
   void RunCmd(const wxString& cmd);
-  void AddPipedProcess(MyPipedProcess *process);
+  void AddPipedProcess(PipedProcess *process);
 
-  // array of running processes with redirected IO
-  MyPipedProcessesArray m_running;
-
-  // array of all asynchrously running processes
-  MyProcessesArray m_allAsync;
+  PipedProcessesArray piped_running_processes_;
+  AsyncProcessesArray async_running_processes_;
 
 private:
   MainWindow* output_;

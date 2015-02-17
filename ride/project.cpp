@@ -21,7 +21,7 @@ void Project::Build(bool clean_output) {
     CleanOutput();
   }
 
-  // todo: expand commandline with argumets
+  // todo: expand commandline with arguments
   RunCmd("cargo build");
 }
 
@@ -30,7 +30,7 @@ void Project::Clean(bool clean_output) {
     CleanOutput();
   }
 
-  // todo: expand commandline with argumets
+  // todo: expand commandline with arguments
   RunCmd("cargo clean");
 }
 
@@ -65,7 +65,7 @@ void Project::Test(bool clean_output) {
     CleanOutput();
   }
 
-  // todo: expand commandline with argumets
+  // todo: expand commandline with arguments
   RunCmd("cargo test");
 }
 
@@ -74,7 +74,7 @@ void Project::Bench(bool clean_output) {
     CleanOutput();
   }
 
-  // todo: expand commandline with argumets
+  // todo: expand commandline with arguments
   RunCmd("cargo bench");
 }
 
@@ -83,54 +83,47 @@ void Project::Update(bool clean_output) {
     CleanOutput();
   }
 
-  // todo: expand commandline with argumets
+  // todo: expand commandline with arguments
   RunCmd("cargo update");
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-class MyProcess : public wxProcess
+class AsyncProcess : public wxProcess
 {
 public:
-  MyProcess(Project* parent, const wxString& cmd)
-    : wxProcess(), m_cmd(cmd)
+  AsyncProcess(Project* project, const wxString& cmd)
+    : wxProcess(), cmd_(cmd)
   {
-    m_parent = parent;
+    project_ = project;
   }
 
-  // instead of overriding this virtual function we might as well process the
-  // event from it in the frame class - this might be more convenient in some
-  // cases
   virtual void OnTerminate(int pid, int status) {
-    m_parent->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
-      pid, m_cmd.c_str(), status));
-    m_parent->Append("");
-    m_parent->OnAsyncTermination(this);
+    project_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
+      pid, cmd_.c_str(), status));
+    project_->Append("");
+    project_->OnAsyncProcessTerminated(this);
   }
 
 protected:
-  Project *m_parent;
-  wxString m_cmd;
+  Project *project_;
+  wxString cmd_;
 };
 
-// A specialization of MyProcess for redirecting the output
-class MyPipedProcess : public MyProcess
+class PipedProcess : public AsyncProcess
 {
 public:
-  MyPipedProcess(Project *parent, const wxString& cmd)
-    : MyProcess(parent, cmd)
+  PipedProcess(Project *project, const wxString& cmd)
+    : AsyncProcess(project, cmd)
   {
     Redirect();
   }
 
   virtual void OnTerminate(int pid, int status) {
     // show the rest of the output
-    while (HasInput())
-      ;
-
-    m_parent->OnProcessTerminated(this);
-
-    MyProcess::OnTerminate(pid, status);
+    while (HasInput()) { }
+    project_->OnPipedProcessTerminated(this);
+    AsyncProcess::OnTerminate(pid, status);
   }
 
   virtual bool HasInput() {
@@ -139,24 +132,16 @@ public:
     if (IsInputAvailable())
     {
       wxTextInputStream tis(*GetInputStream());
-
-      // this assumes that the output is always line buffered
-      wxString msg = tis.ReadLine();
-
-      m_parent->Append(msg);
-
+      const wxString msg = tis.ReadLine(); // this assumes that the output is always line buffered
+      project_->Append(msg);
       hasInput = true;
     }
 
     if (IsErrorAvailable())
     {
       wxTextInputStream tis(*GetErrorStream());
-
-      // this assumes that the output is always line buffered
-      wxString msg = tis.ReadLine();
-
-      m_parent->Append(msg);
-
+      const wxString msg = tis.ReadLine(); // this assumes that the output is always line buffered
+      project_->Append(msg);
       hasInput = true;
     }
 
@@ -178,7 +163,7 @@ void Project::RunCmd(const wxString& cmd) {
     return;
   }
 
-  MyPipedProcess* process = new MyPipedProcess(this, cmd);
+  PipedProcess* process = new PipedProcess(this, cmd);
   Append("> " + cmd);
 
   wxExecuteEnv env;
@@ -193,20 +178,20 @@ void Project::RunCmd(const wxString& cmd) {
   }
 }
 
-void Project::AddPipedProcess(MyPipedProcess *process)
+void Project::AddPipedProcess(PipedProcess *process)
 {
-  m_running.Add(process);
-  m_allAsync.Add(process);
+  piped_running_processes_.Add(process);
+  async_running_processes_.Add(process);
 }
 
-void Project::OnProcessTerminated(MyPipedProcess *process)
+void Project::OnPipedProcessTerminated(PipedProcess *process)
 {
-  m_running.Remove(process);
+  piped_running_processes_.Remove(process);
 }
 
-void Project::OnAsyncTermination(MyProcess *process)
+void Project::OnAsyncProcessTerminated(AsyncProcess *process)
 {
-  m_allAsync.Remove(process);
+  async_running_processes_.Remove(process);
   delete process;
 }
 
