@@ -5,10 +5,12 @@
 #include <wx/stdpaths.h>
 #include <fstream>
 
+wxString GetConfigFolder() {
+  return wxStandardPaths::Get().GetUserDataDir();
+}
+
 wxFileName GetConfigFile() {
-  // wxStandardPaths::Get().UseAppInfo(wxStandardPaths::AppInfo_AppName | wxStandardPaths::AppInfo_VendorName);
-  wxFileName folder(wxStandardPaths::Get().GetUserDataDir(), "settings", "data");
-  return folder;
+  return wxFileName(GetConfigFolder(), "settings", "data");
 }
 
 void LoadSettings(::ride::Settings& settings) {
@@ -17,19 +19,22 @@ void LoadSettings(::ride::Settings& settings) {
   if (confPath.IsFileReadable()) {
     std::fstream input(path.c_str().AsChar(), std::ios::in | std::ios::binary);
     const bool parse_result = settings.ParseFromIstream(&input);
+    if (false == parse_result) {
+      wxMessageBox("Unable to parse settings file!", "Error", wxOK | wxICON_WARNING);
+    }
   }
 }
 
 bool SaveSettings(::ride::Settings& settings) {
-  const wxFileName confPath = GetConfigFile();
-  const bool create_result = confPath.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
-  if (confPath.FileExists() && confPath.IsFileWritable() == false) {
+  const wxFileName config_file = GetConfigFile();
+  const bool create_result = config_file.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  if (config_file.FileExists() && config_file.IsFileWritable() == false) {
     // abort if the file exist and isn't writable
     return false;
   }
-  const wxString path = confPath.GetFullPath();
-  std::fstream input(path.c_str().AsChar(), std::ios::out | std::ios::trunc | std::ios::binary);
-  return settings.SerializeToOstream(&input);
+  const wxString config_path = config_file.GetFullPath();
+  std::fstream config_stream(config_path.c_str().AsChar(), std::ios::out | std::ios::trunc | std::ios::binary);
+  return settings.SerializeToOstream(&config_stream);
 }
 
 wxColor C(const ride::Color& c) {
@@ -43,59 +48,3 @@ ride::Color C(const wxColor& c) {
   r.set_b(c.Blue());
   return r;
 }
-
-/*
-FoldFlags::FoldFlags()
-  : LINEBEFORE_EXPANDED(false)
-  , LINEBEFORE_CONTRACTED(false)
-  , LINEAFTER_EXPANDED(false)
-  , LINEAFTER_CONTRACTED(false)
-  , LEVELNUMBERS(false)
-{}
-
-Style::Style(const wxFont& font, const wxColor& foreground, const wxColor& background)
-  : font(font)
-  , foreground(foreground)
-  , background(background)
-{}
-
-
-Settings::Settings()
-  : lineNumberEnable(true)
-  , foldEnable(true)
-  , displayEOLEnable(false)
-  , indentGuideEnable(true)
-  , whitespace(ViewWhitespace::HIDDEN)
-  , wordWrap(WrapMode::NONE)
-  , edgeStyle(EdgeStyle::NONE)
-  , edgeColor(0,0,0)
-  , edgeColumn(80)
-  , tabWidth(4)
-  , useTabs(false)
-  , tabIndents(true)
-  , backspaceUnindents(true)
-  , foldComment(true)
-  , foldCompact(true)
-  , foldPreproc(true)
-  , styling_within_preprocessor(false)
-  , lexer_cpp_allow_dollars(false)
-  , lexer_cpp_track_preprocessor(false)
-  , lexer_cpp_update_preprocessor(false)
-  , lexer_cpp_triplequoted_strings(false)
-  , lexer_cpp_hashquoted_strings(false)
-  , fold_cpp_syntax_based(true)
-  , fold_cpp_comment_multiline(true)
-  , fold_cpp_comment_explicit(true)
-  , fold_cpp_explicit_anywhere(false)
-  , fold_at_else(true)
-
-{}
-
-
-void Settings::load() {
-}
-
-void Settings::save() {
-}
-
-*/
