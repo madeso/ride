@@ -9,6 +9,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 * Create filter list from known languages
 * Mark important "word" for highlighting
+* Highlight misspelled words/comments
 * Make output window use scintilla and styling
 * Function for selecting current word
 * Remember session data
