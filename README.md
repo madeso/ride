@@ -9,6 +9,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 * Create filter list from known languages
 * Mark important "word" for highlighting
+* Make output window use scintilla and styling
 * Remember session data
 * Expose all scintilla settings in gui + settings
 * Detect changes outside ride and ask to reload file
