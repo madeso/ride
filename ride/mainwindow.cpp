@@ -10,9 +10,11 @@
 #include "ride/settingsdlg.h"
 #include "ride/compilermessage.h"
 
+FoundEdit FoundEdit::NOT_FOUND(0, NULL);
+
 template<typename T>
-T* NotebookFromIndexOrNull(wxAuiNotebook* notebook, int index) {
-  wxWindow* window = notebook->GetPage(index);
+T* NotebookFromIndexOrNull(wxAuiNotebook* notebook, int tab_index) {
+  wxWindow* window = notebook->GetPage(tab_index);
   if (window->IsKindOf(CLASSINFO(T))) {
     return reinterpret_cast<T*>(window);
   }
@@ -95,21 +97,18 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_CLOSE(MainWindow::OnClose)
   
   EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
-  EVT_AUINOTEBOOK_PAGE_CLOSED(wxID_ANY, MainWindow::OnNotebookPageClosed)
 wxEND_EVENT_TABLE()
 
 class OutputControl : public wxTextCtrl {
 public:
   OutputControl(MainWindow* main) : main_(main) {
   }
+
   void OnDoubleClick(wxMouseEvent& event) {
-    long line = 0;
+    long line_number = 0;
     long col = 0;
     long index = this->GetInsertionPoint();
-     this->PositionToXY(index, &col, &line); 
-    // wxPoint p = this->PositionToCoords(index);
-    // line = p.y;
-    long line_number = line;
+    this->PositionToXY(index, &col, &line_number);
     if (line_number == -1) return;
     wxString line_content = GetLineText(line_number);
 
@@ -128,135 +127,135 @@ wxBEGIN_EVENT_TABLE(OutputControl, wxTextCtrl)
 wxEND_EVENT_TABLE()
 
 
-MainWindow::MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size)
-: wxFrame(NULL, wxID_ANY, title, pos, size)
-, output_window(new OutputControl(this))
-, project(this, wxEmptyString)
-, title_(title)
+MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
+: wxFrame(NULL, wxID_ANY, app_name, pos, size)
+, output_window_(new OutputControl(this))
+, project_(this, wxEmptyString)
+, app_name_(app_name)
 {
-  aui.SetManagedWindow(this);
+  aui_.SetManagedWindow(this);
 
-  LoadSettings(settings);
-
-  //////////////////////////////////////////////////////////////////////////
-  wxMenu *menuFile = new wxMenu;
-  menuFile->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
-  menuFile->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
-  menuFile->Append(wxID_SAVEAS, "Save &as...\tCtrl-Shift-S", "Save the file as a new file");
-  menuFile->AppendSeparator();
-  menuFile->Append(ID_FILE_RIDE_SETTINGS, "S&ettings...", "Change the settings of RIDE");
-  menuFile->AppendSeparator();
-  menuFile->Append(wxID_EXIT);
+  LoadSettings(settings_);
 
   //////////////////////////////////////////////////////////////////////////
-  wxMenu *menuEdit = new wxMenu;
-  menuEdit->Append(wxID_UNDO, "Undo\tCtrl-Z", "");
-  menuEdit->Append(wxID_REDO, "Redo\tCtrl-Shift-Z", "");
-  menuEdit->AppendSeparator();
-  menuEdit->Append(wxID_CUT, "Cut\tCtrl-X", "");
-  menuEdit->Append(wxID_COPY, "Copy\tCtrl-C", "");
-  menuEdit->Append(wxID_PASTE, "Paste\tCtrl-V", "");
-  menuEdit->Append(wxID_DUPLICATE, "Duplicate selection or line\tCtrl-D", "");
-  menuEdit->Append(wxID_DELETE, "Delete\tDel", "");
-  menuEdit->AppendSeparator();
-  menuEdit->Append(wxID_FIND, "Find\tCtrl-F", "");
-  // menuEdit->Append(wxID_OPEN, "Find next\tF3", "");
-  menuEdit->Append(wxID_REPLACE, "Replace\tCtrl-H", "");
-  // menuEdit->Append(wxID_OPEN, "Replace again\tShift-F4", "");
-  menuEdit->AppendSeparator();
-  menuEdit->Append(ID_EDIT_MATCH_BRACE, "Match brace\tCtrl-M", "");
-  menuEdit->Append(ID_EDIT_SELECT_BRACE, "Select to matching brace\tCtrl-Shift-M", "");
-  menuEdit->Append(ID_EDIT_GOTO_LINE, "Goto line\tCtrl-G", "");
-  menuEdit->AppendSeparator();
-  menuEdit->Append(wxID_INDENT, "Increase indent\tTab", "");
-  menuEdit->Append(wxID_UNINDENT, "Reduce indent\tShift-Tab", "");
-  menuEdit->AppendSeparator();
-  menuEdit->Append(wxID_SELECTALL, "Select all\tCtrl-A", "");
-  menuEdit->Append(ID_EDIT_SELECT_LINE, "Select line\tCtrl-L", "");
-  menuEdit->AppendSeparator();
-  menuEdit->Append(ID_EDIT_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "");
-  menuEdit->Append(ID_EDIT_TOLOWER, "Make lowercase\tCtrl-U", "");
-  menuEdit->AppendSeparator();
-  menuEdit->Append(ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
-  menuEdit->Append(ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
-  menuEdit->AppendSeparator();
-  menuEdit->Append(ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "");
+  wxMenu *menu_file = new wxMenu;
+  menu_file->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
+  menu_file->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
+  menu_file->Append(wxID_SAVEAS, "Save &as...\tCtrl-Shift-S", "Save the file as a new file");
+  menu_file->AppendSeparator();
+  menu_file->Append(ID_FILE_RIDE_SETTINGS, "S&ettings...", "Change the settings of RIDE");
+  menu_file->AppendSeparator();
+  menu_file->Append(wxID_EXIT);
+
+  //////////////////////////////////////////////////////////////////////////
+  wxMenu *menu_edit = new wxMenu;
+  menu_edit->Append(wxID_UNDO, "Undo\tCtrl-Z", "");
+  menu_edit->Append(wxID_REDO, "Redo\tCtrl-Shift-Z", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(wxID_CUT, "Cut\tCtrl-X", "");
+  menu_edit->Append(wxID_COPY, "Copy\tCtrl-C", "");
+  menu_edit->Append(wxID_PASTE, "Paste\tCtrl-V", "");
+  menu_edit->Append(wxID_DUPLICATE, "Duplicate selection or line\tCtrl-D", "");
+  menu_edit->Append(wxID_DELETE, "Delete\tDel", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(wxID_FIND, "Find\tCtrl-F", "");
+  // menu_edit->Append(wxID_OPEN, "Find next\tF3", "");
+  menu_edit->Append(wxID_REPLACE, "Replace\tCtrl-H", "");
+  // menu-edit->Append(wxID_OPEN, "Replace again\tShift-F4", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(ID_EDIT_MATCH_BRACE, "Match brace\tCtrl-M", "");
+  menu_edit->Append(ID_EDIT_SELECT_BRACE, "Select to matching brace\tCtrl-Shift-M", "");
+  menu_edit->Append(ID_EDIT_GOTO_LINE, "Goto line\tCtrl-G", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(wxID_INDENT, "Increase indent\tTab", "");
+  menu_edit->Append(wxID_UNINDENT, "Reduce indent\tShift-Tab", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(wxID_SELECTALL, "Select all\tCtrl-A", "");
+  menu_edit->Append(ID_EDIT_SELECT_LINE, "Select line\tCtrl-L", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(ID_EDIT_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "");
+  menu_edit->Append(ID_EDIT_TOLOWER, "Make lowercase\tCtrl-U", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
+  menu_edit->Append(ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "");
 
   //////////////////////////////////////////////////////////////////////////
 
-  wxMenu *menuProject = new wxMenu;
-  menuProject->Append(ID_PROJECT_NEW, "New project...", "Create a new cargo project");
-  menuProject->Append(ID_PROJECT_OPEN, "Open project...", "Open a existing cargo or ride project");
-  menuProject->Append(ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings");
-  menuProject->AppendSeparator();
-  menuProject->Append(ID_PROJECT_BUILD, "Build\tCtrl-B", "Compile the current project");
-  menuProject->Append(ID_PROJECT_CLEAN, "Clean", "Remove the target directory");
-  menuProject->Append(ID_PROJECT_REBUILD, "Rebuild\tCtrl-Shift-B", "Clean + Build");
-  menuProject->Append(ID_PROJECT_DOC, "Doc", "Build this project's and its dependencies' documentation");
-  menuProject->Append(ID_PROJECT_RUN, "Run\tF5", "Build and execute src/main.rs");
-  menuProject->Append(ID_PROJECT_TEST, "Test", "Run the tests");
-  menuProject->Append(ID_PROJECT_BENCH, "Bench", "Run the benchmarks");
-  menuProject->Append(ID_PROJECT_UPDATE, "Update", "Update dependencies listed in Cargo.lock");
+  wxMenu *menu_project = new wxMenu;
+  menu_project->Append(ID_PROJECT_NEW, "New project...", "Create a new cargo project");
+  menu_project->Append(ID_PROJECT_OPEN, "Open project...", "Open a existing cargo or ride project");
+  menu_project->Append(ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings");
+  menu_project->AppendSeparator();
+  menu_project->Append(ID_PROJECT_BUILD, "Build\tCtrl-B", "Compile the current project");
+  menu_project->Append(ID_PROJECT_CLEAN, "Clean", "Remove the target directory");
+  menu_project->Append(ID_PROJECT_REBUILD, "Rebuild\tCtrl-Shift-B", "Clean + Build");
+  menu_project->Append(ID_PROJECT_DOC, "Doc", "Build this project's and its dependencies' documentation");
+  menu_project->Append(ID_PROJECT_RUN, "Run\tF5", "Build and execute src/main.rs");
+  menu_project->Append(ID_PROJECT_TEST, "Test", "Run the tests");
+  menu_project->Append(ID_PROJECT_BENCH, "Bench", "Run the benchmarks");
+  menu_project->Append(ID_PROJECT_UPDATE, "Update", "Update dependencies listed in Cargo.lock");
 
   //////////////////////////////////////////////////////////////////////////
-  wxMenu *menuHelp = new wxMenu;
-  menuHelp->Append(wxID_ABOUT);
+  wxMenu *menu_help = new wxMenu;
+  menu_help->Append(wxID_ABOUT);
 
   //////////////////////////////////////////////////////////////////////////
-  wxMenuBar *menuBar = new wxMenuBar;
-  menuBar->Append(menuFile, "&File");
-  menuBar->Append(menuEdit, "&Edit");
-  menuBar->Append(menuProject, "&Project");
-  menuBar->Append(menuHelp, "&Help");
-  SetMenuBar(menuBar);
+  wxMenuBar *menu_bar = new wxMenuBar;
+  menu_bar->Append(menu_file, "&File");
+  menu_bar->Append(menu_edit, "&Edit");
+  menu_bar->Append(menu_project, "&Project");
+  menu_bar->Append(menu_help, "&Help");
+  SetMenuBar(menu_bar);
   CreateStatusBar();
   SetStatusText("");
 
-  createNotebook();
+  CreateNotebook();
 
   // output
-  output_window->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
-  output_window->SetFont(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
-  aui.AddPane(output_window, wxAuiPaneInfo().Name("output").Caption("Output").Bottom().CloseButton(false));
+  output_window_->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
+  output_window_->SetFont(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+  aui_.AddPane(output_window_, wxAuiPaneInfo().Name("output").Caption("Output").Bottom().CloseButton(false));
 
-  aui.Update();
-  updateTitle();
+  aui_.Update();
+  UpdateTitle();
 }
 
 void MainWindow::OpenCompilerMessage(const CompilerMessage& message) {
-  openFile(message.file(), message.start_line(), message.start_index(),
+  OpenFile(message.file(), message.start_line(), message.start_index(),
     message.end_line(), message.end_index());
 }
 
-void MainWindow::createNotebook() {
+void MainWindow::CreateNotebook() {
   wxSize client_size = GetClientSize();
-  wxAuiNotebook* ctrl = new wxAuiNotebook(this, wxID_ANY,
+  
+  notebook_ = new wxAuiNotebook(this, wxID_ANY,
     wxPoint(client_size.x, client_size.y),
     wxSize(430, 200),
     wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxNO_BORDER);
-  ctrl->Freeze();
-  ctrl->Thaw();
-  notebook = ctrl;
 
-  aui.AddPane(notebook, wxAuiPaneInfo().Name(wxT("notebook_content")).PaneBorder(false).CloseButton(false).Movable(false).CenterPane() );
+  aui_.AddPane(notebook_, wxAuiPaneInfo().Name(wxT("notebook_content")).PaneBorder(false).CloseButton(false).Movable(false).CenterPane() );
 }
 
-const ride::Settings& MainWindow::getSettings() const {
-  return settings;
+const ride::Settings& MainWindow::settings() const {
+  return settings_;
 }
 
 MainWindow::~MainWindow() {
-  aui.UnInit();
+  aui_.UnInit();
 }
 
 void MainWindow::Clear() {
-  output_window->Clear();
+  // todo: this probably needs to happen in the gui thread instead of here... or does it?
+  output_window_->Clear();
   compiler_messages_.resize(0);
 }
 
 void MainWindow::Append(const wxString& str) {
-  output_window->AppendText(str);
-  output_window->AppendText("\n");
+  // todo: this probably needs to happen in the gui thread instead of here... or does it?
+  output_window_->AppendText(str);
+  output_window_->AppendText("\n");
 
   CompilerMessage mess;
   if (CompilerMessage::Parse(str, &mess)) {
@@ -266,8 +265,8 @@ void MainWindow::Append(const wxString& str) {
 
 void MainWindow::AddCompilerMessage(const CompilerMessage& mess) {
   compiler_messages_.push_back(mess);
-  for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
+  for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
     if (edit) {
       if (edit->filename() == mess.file()) {
         edit->AddCompilerMessage(mess);
@@ -283,67 +282,68 @@ void MainWindow::OnFileExit(wxCommandEvent& event)
 
 void MainWindow::OnAbout(wxCommandEvent& event)
 {
-  wxAboutDialogInfo aboutInfo;
-  aboutInfo.SetName("RIDE");
-  // aboutInfo.SetVersion(MY_APP_VERSION_STRING);
-  aboutInfo.SetDescription(_("Ride is a Rust IDE. It's named after concatenating R from rust and IDE."));
+  wxAboutDialogInfo about_info;
+  about_info.SetName(app_name_);
+  // todo: set icon/logo
+  // aboutInfo.SetVersion(RIDE_VERSION_STRING);
+  about_info.SetDescription(_("Ride is a Rust IDE. It's named after concatenating R from rust and IDE."));
   // aboutInfo.SetCopyright("(C) 1992-2010");
-  aboutInfo.SetWebSite("https://github.com/madeso/ride");
-  wxAboutBox(aboutInfo, this);
+  about_info.SetWebSite("https://github.com/madeso/ride");
+  wxAboutBox(about_info, this);
+
+  // todo: this about box has too much collapsible items, use another advanced about box instead?
 }
 
 void MainWindow::OnFileOpen(wxCommandEvent& event)
 {
-  wxFileDialog
-    openFileDialog(this, _("Open file"), "", "",
-    FILE_PATTERN, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE );
-  if (openFileDialog.ShowModal() == wxID_CANCEL)
+  wxFileDialog open_file(this, _("Open file"), "", "", FILE_PATTERN, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE );
+  if (open_file.ShowModal() == wxID_CANCEL)
     return;
 
-  wxArrayString paths;
-  openFileDialog.GetPaths(paths);
-  for (wxArrayString::iterator path = paths.begin(); path != paths.end(); ++path) {
-    openFile(*path, -1, -1, -1, -1);
+  wxArrayString paths_to_open;
+  open_file.GetPaths(paths_to_open);
+  for (wxArrayString::iterator path = paths_to_open.begin(); path != paths_to_open.end(); ++path) {
+    OpenFile(*path, -1, -1, -1, -1);
   }
 }
 
-FileEdit* AddCompilerMessages(const std::vector<CompilerMessage>& messages, FileEdit* fe) {
+FileEdit* AddCompilerMessages(const std::vector<CompilerMessage>& messages, FileEdit* file_edit) {
   for (size_t i = 0; i < messages.size(); ++i) {
-    const CompilerMessage mess = messages[i];
-    if (mess.file() == fe->filename()) {
-      fe->AddCompilerMessage(mess);
+    const CompilerMessage message = messages[i];
+    if (message.file() == file_edit->filename()) {
+      file_edit->AddCompilerMessage(message);
     }
   }
-  return fe;
+  return file_edit;
 }
 
-void MainWindow::openFile(const wxString& file, int start_line, int start_index, int end_line, int end_index) {
-  wxFileName w(file);
-  w.Normalize();
-  const wxString path = w.GetFullPath();
+void MainWindow::OpenFile(const wxString& file, int start_line, int start_index, int end_line, int end_index) {
+  wxFileName file_name(file);
+  file_name.Normalize();
+  const wxString full_path = file_name.GetFullPath();
 
-  FoundEdit res = getEditFromFileName(path);
-  if (res.edit != NULL) {
-    notebook->SetSelection(res.index);
+  FoundEdit found_edit = GetEditFromFileName(full_path);
+  if (found_edit) {
+    notebook_->SetSelection(found_edit.index);
   };
-  FileEdit* edit = res.edit != NULL
-    ? res.edit
-    : AddCompilerMessages(compiler_messages_, new FileEdit(notebook, this, "", path))
+  FileEdit* found_edit_or_new = found_edit.edit != NULL
+    ? found_edit.edit
+    : AddCompilerMessages(compiler_messages_, new FileEdit(notebook_, this, "", full_path))
     ;
-  edit->SetSelection(start_line, start_index, end_line, end_index);
-  edit->Focus();
+  found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
+  found_edit_or_new->Focus();
 }
 
-FileEdit* MainWindow::getSelectedEditorNull() {
-  const int selected = notebook->GetSelection();
-  if (selected == -1) {
+FileEdit* MainWindow::GetSelectedEditorNull() {
+  const int selected_tab_index = notebook_->GetSelection();
+  if (selected_tab_index == -1) {
     return NULL;
   }
-  return NotebookFromIndexOrNull<FileEdit>(notebook, selected);
+  return NotebookFromIndexOrNull<FileEdit>(notebook_, selected_tab_index);
 }
 
 void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
-  FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, evt.GetSelection());
+  FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, evt.GetSelection());
   if (edit) {
     if (edit->CanClose(true) == false) {
       evt.Veto();
@@ -351,22 +351,22 @@ void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
   }
 }
 
-FoundEdit MainWindow::getEditFromFileName(const wxString& file) {
-  for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
+FoundEdit MainWindow::GetEditFromFileName(const wxString& file) {
+  for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
     if (edit) {
       if (edit->filename() == file) {
-        return FoundEdit(i, edit);
+        return FoundEdit(tab_index, edit);
       }
     }
   }
 
-  return FoundEdit(0, NULL);
+  return FoundEdit::NOT_FOUND;
 }
 
 void MainWindow::OnClose(wxCloseEvent& evt) {
-  for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
+  for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
     if (edit) {
       const bool canAbort = evt.CanVeto();
       if (edit->CanClose(canAbort) == false) {
@@ -381,18 +381,15 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
   evt.Skip();
 }
 
-void MainWindow::setSettings(const ride::Settings& settings) {
+void MainWindow::set_settings(const ride::Settings& settings) {
   assert(this);
-  this->settings = settings;
-  updateAllEdits();
+  this->settings_ = settings;
+  UpdateAllEdits();
 }
 
-void MainWindow::OnNotebookPageClosed(wxAuiNotebookEvent& evt) {
-}
-
-void MainWindow::updateAllEdits() {
-  for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
+void MainWindow::UpdateAllEdits() {
+  for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
     if (edit) {
       edit->UpdateTextControl();
     }
@@ -400,28 +397,28 @@ void MainWindow::updateAllEdits() {
 }
 
 void MainWindow::OnFileShowSettings(wxCommandEvent& event) {
-  SettingsDlg settingsdlg(this, this);
-  settingsdlg.ShowModal();
+  SettingsDlg settings_dialog(this, this);
+  settings_dialog.ShowModal();
 }
 
 void MainWindow::OnFileSave(wxCommandEvent& event) {
-  FileEdit* selected = getSelectedEditorNull();
-  if (selected == NULL) return;
-  selected->Save();
+  FileEdit* selected_edit = GetSelectedEditorNull();
+  if (selected_edit == NULL) return;
+  selected_edit->Save();
 }
 
 void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
-  FileEdit* selected = getSelectedEditorNull();
-  if (selected == NULL) return;
-  selected->SaveAs();
+  FileEdit* selected_edit = GetSelectedEditorNull();
+  if (selected_edit == NULL) return;
+  selected_edit->SaveAs();
 }
 
 //////////////////////////////////////////////////////////////////////////
 #define MEM_FUN(X) \
   void MainWindow::OnEdit ## X(wxCommandEvent& event) {\
-    FileEdit* selected = getSelectedEditorNull();\
-    if (selected == NULL) return;\
-    selected->X();\
+    FileEdit* selected_edit = GetSelectedEditorNull();\
+    if (selected_edit == NULL) return;\
+    selected_edit->X();\
   }
 
 MEM_FUN(Undo)
@@ -448,34 +445,36 @@ MEM_FUN(ShowProperties)
 #undef MEM_FUN
 //////////////////////////////////////////////////////////////////////////
 
-void MainWindow::updateTitle() {
-  const wxString new_title = project.root_folder().IsEmpty()
-    ? title_
+void MainWindow::UpdateTitle() {
+  const wxString new_title = project_.root_folder().IsEmpty()
+    ? app_name_
     // todo: only display project folder name instead of the whole path?
-    : wxString::Format("%s - %s", project.root_folder(), title_);
+    : wxString::Format("%s - %s", project_.root_folder(), app_name_);
   this->SetTitle(new_title);
 }
 
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // todo: implement me
-  updateTitle();
+  UpdateTitle();
 }
 
 void MainWindow::OnProjectOpen(wxCommandEvent& event) {
-  wxFileDialog
-    openFileDialog(this, _("Open project"), "", "",
-    "Cargo files|Cargo.toml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
-  if (openFileDialog.ShowModal() == wxID_CANCEL)
+  wxFileDialog open_project_dialog(this, _("Open project"), "", "", "Cargo files|Cargo.toml", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+  if (open_project_dialog.ShowModal() == wxID_CANCEL)
     return;
-  wxFileName file(openFileDialog.GetPath());
-  file.Normalize();
-  project = Project(this, file.GetPathWithSep());
-  updateTitle();
+  wxFileName cargo_file(open_project_dialog.GetPath());
+  cargo_file.Normalize();
+
+  // todo: verify the name of the selected cargo file
+
+  // don't load the cargo file, load the whole folder instead as cargo files should be named in a specific way!
+  project_ = Project(this, cargo_file.GetPathWithSep());
+  UpdateTitle();
 }
 
 #define MEM_FUN(X) \
   void MainWindow::OnProject ## X(wxCommandEvent& event) {\
-    project. ## X ();\
+    project_. ## X ();\
   }
 
 MEM_FUN(Settings)

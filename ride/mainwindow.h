@@ -14,6 +14,12 @@ class CompilerMessage;
 
 struct FoundEdit {
   FoundEdit(size_t i, FileEdit* e) : index(i), edit(e) { }
+
+  // has a edit been found?
+  operator bool() const { return edit != NULL; }
+
+  static FoundEdit NOT_FOUND;
+
   size_t index;
   FileEdit* edit;
 };
@@ -24,8 +30,8 @@ public:
 	MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
   ~MainWindow();
 
-  const ride::Settings& getSettings() const;
-  void setSettings(const ride::Settings& settings);
+  const ride::Settings& settings() const;
+  void set_settings(const ride::Settings& settings);
 
   void Clear();
   void Append(const wxString& str);
@@ -78,27 +84,26 @@ private:
   void OnClose(wxCloseEvent& event);
 
   void OnNotebookPageClose(wxAuiNotebookEvent& evt);
-  void OnNotebookPageClosed(wxAuiNotebookEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 
 private:
-  void openFile(const wxString& file, int start_line, int start_index, int end_line, int end_index);
-  FoundEdit getEditFromFileName(const wxString& file);
+  void OpenFile(const wxString& file, int start_line, int start_index, int end_line, int end_index);
+  FoundEdit GetEditFromFileName(const wxString& file);
   void AddCompilerMessage(const CompilerMessage& mess);
 
-  void updateTitle();
-  void updateAllEdits();
-  void createNotebook();
-  FileEdit* getSelectedEditorNull();
+  void UpdateTitle();
+  void UpdateAllEdits();
+  void CreateNotebook();
+  FileEdit* GetSelectedEditorNull();
 
-  wxAuiManager aui;
-  wxAuiNotebook* notebook;
-  wxTextCtrl* output_window;
+  wxAuiManager aui_;
+  wxAuiNotebook* notebook_;
+  wxTextCtrl* output_window_;
 
-  ride::Settings settings;
-  Project project;
-  wxString title_;
+  ride::Settings settings_;
+  Project project_;
+  wxString app_name_;
   std::vector<CompilerMessage> compiler_messages_;
 };
 

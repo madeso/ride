@@ -512,7 +512,7 @@ void FileEdit::UpdateTextControl() {
   const wxColor white(255, 255, 255);
   const wxColor darkgray = wxColour(20, 20, 20);
 
-  const ride::Settings& set = main_->getSettings();
+  const ride::Settings& set = main_->settings();
 
   // setup language color
   assert(current_language_);
@@ -749,7 +749,7 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
     const int line_end = text_->PositionFromLine(text_->GetCurrentLine());
     const wxString previous_line_content = text_->GetTextRange(line_start, line_end);
     const int indent_change = CalculateIndentationChange(previous_line_content);
-    const int indent_change_in_spaces = indent_change * main_->getSettings().tabwidth();
+    const int indent_change_in_spaces = indent_change * main_->settings().tabwidth();
 
     const int smart_indent = indent_change_in_spaces;
 
@@ -757,15 +757,15 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
       ? std::max(0, text_->GetLineIndentation(current_line - 1) + smart_indent)
       : smart_indent;
 
-    const int indentation_in_tabs = indentation_in_spaces / main_->getSettings().tabwidth();
+    const int indentation_in_tabs = indentation_in_spaces / main_->settings().tabwidth();
 
     // if we use tabs, divide the number of character by the char width to get the actual width
-    const int indentation_in_chars = main_->getSettings().usetabs()
+    const int indentation_in_chars = main_->settings().usetabs()
       ? indentation_in_tabs
       : indentation_in_spaces;
 
     // adjust to remove weird spaces from indentation settings
-    const int indentation_in_spaces_ajdusted = indentation_in_tabs * main_->getSettings().tabwidth();
+    const int indentation_in_spaces_ajdusted = indentation_in_tabs * main_->settings().tabwidth();
 
     if (indentation_in_spaces_ajdusted != 0)
     {

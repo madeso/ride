@@ -326,8 +326,8 @@ void SettingsDlg::OnStyleColorChanged(wxColourPickerEvent& event) {
 void SettingsDlg::styleChanged() {
   if (allowStyleChange == false) return;
   styleToGui(false);
-  main->setSettings(edit);
-  main->setSettings(edit); // update seems to lag behind one setSettings, this seems to fix that, weird... I should investigate this...
+  main->set_settings(edit);
+  main->set_settings(edit); // update seems to lag behind one setSettings, this seems to fix that, weird... I should investigate this...
 }
 
 void UpdateCheckEnabled(wxCheckBox* check, wxWindow* slave)
@@ -395,7 +395,7 @@ int gFontStyleIndex = 0;
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
 ::ui::Settings(parent, wxID_ANY), main(mainwindow), allowApply(false), allowStyleChange(false)
 {
-  global = main->getSettings();
+  global = main->settings();
   edit = global;
   editToGui(true);
   allowApply = true;
@@ -429,7 +429,7 @@ void SettingsDlg::OnApply( wxCommandEvent& event )
 
 void SettingsDlg::OnCancel( wxCommandEvent& event )
 {
-  main->setSettings(global);
+  main->set_settings(global);
   saveSelectedIndex();
   EndModal(wxCANCEL);
 }
@@ -438,7 +438,7 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
 {
   saveSelectedIndex();
   editToGui(false);
-  main->setSettings(edit);
+  main->set_settings(edit);
   if (false == SaveSettings(edit)) {
     wxMessageBox("Failed to save settings", "Failed!", wxOK | wxICON_ERROR);
   }
@@ -473,7 +473,7 @@ void SettingsDlg::apply()
 {
   if (allowApply == false) { return; }
   editToGui(false);
-  main->setSettings(edit);
+  main->set_settings(edit);
 }
 
 //////////////////////////////////////////////////////////////////////////
