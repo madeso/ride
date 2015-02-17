@@ -10,42 +10,49 @@ class SettingsDlg : public ui::Settings
 {
 public:
   SettingsDlg(wxWindow* parent, MainWindow* mainwindow);
+
 protected:
   void OnApply(wxCommandEvent& event);
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
 
-  void OnCheckboxChanged(wxCommandEvent& event);
-  void OnComboboxChanged(wxCommandEvent& event);
-  void OnColorChanged(wxColourPickerEvent& event);
-  void OnEditChanged(wxCommandEvent& event);
-
+  //////////////////////////////////////////////////////////////////////////
+  // Style tab
   void OnOnlyFixedSysChanged(wxCommandEvent& event);
-
   void OnSelectedStyleChanged(wxCommandEvent& event);
   void OnStyleFontChanged(wxCommandEvent& event);
   void OnStyleCheckChanged(wxCommandEvent& event);
   void OnStyleTextChanged(wxCommandEvent& event);
   void OnStyleColorChanged(wxColourPickerEvent& event);
 
+  //////////////////////////////////////////////////////////////////////////
+  // Edit tab
+  void OnCheckboxChanged(wxCommandEvent& event);
+  void OnComboboxChanged(wxCommandEvent& event);
+  void OnColorChanged(wxColourPickerEvent& event);
+  void OnEditChanged(wxCommandEvent& event);
   void OnlyAllowNumberChars(wxKeyEvent& event);
 
 private:
-  void updateStyleEnable();
-  bool allowStyleChange;
-  void styleChanged();
-  void styleToGui(bool togui);
-  bool allowApply;
-  void updateFonts();
-  void updateFontDisplay();
+  MainWindow* main_window_;
+  ride::Settings global_settings_;
+  ride::Settings current_settings_;
 
-  void saveSelectedIndex();
+  //////////////////////////////////////////////////////////////////////////
+  // Style tab
+  bool allow_send_style_to_main_;
+  void UpdateStyleEnable();
+  void SendStyleToMain();
+  void StyleToGui(bool togui);
+  void UpdateStyleFonts();
+  void StyleUpdateFontDisplay();
+  void StyleSaveSelectedIndex();
 
-  void apply();
-  void editToGui(bool togui);
-  MainWindow* main;
-  ride::Settings global;
-  ride::Settings edit;
+  //////////////////////////////////////////////////////////////////////////
+  // Edit tab
+  bool allow_send_edit_to_main_;
+  void SendEditToMain();
+  void EditToGui(bool togui);
 };
 
 #endif // SETTINGS_DLG_H

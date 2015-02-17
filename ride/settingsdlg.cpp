@@ -116,11 +116,12 @@ private:
 
 std::vector<StyleLink*> BuildStyleLinks() {
   std::vector<StyleLink*> ret;
+
 #define DEF_STYLE(NAME, STYLE) \
   struct StyleLink##STYLE : public StyleLink { \
-  StyleLink##STYLE() : StyleLink(NAME) {} \
-  const ride::Style get(const ride::FontsAndColors& co){return co.has_ ## STYLE() ? co.STYLE() : ride::Style();}\
-  void set(ride::FontsAndColors& co, const ride::Style& style){co.set_allocated_ ## STYLE(Allocate(style));} \
+    StyleLink##STYLE() : StyleLink(NAME) {} \
+    const ride::Style get(const ride::FontsAndColors& co){return co.has_ ## STYLE() ? co.STYLE() : ride::Style();}\
+    void set(ride::FontsAndColors& co, const ride::Style& style){co.set_allocated_ ## STYLE(Allocate(style));} \
   };\
   static StyleLink##STYLE styleLink##STYLE;\
   ret.push_back(&styleLink##STYLE)
@@ -283,51 +284,58 @@ public:
 };
 
 void SettingsDlg::OnOnlyFixedSysChanged(wxCommandEvent& event) {
-  updateFonts();
+  UpdateStyleFonts();
 }
 
-void SettingsDlg::updateFonts() {
-  FontLister allfonts;
+void SettingsDlg::UpdateStyleFonts() {
+  FontLister all_fonts;
 
-  const bool fixedSize = uiStyleOnlyFixedSize->GetValue();
+  const bool show_only_fixed_size = uiStyleOnlyFixedSize->GetValue();
 
-  allfonts.EnumerateFacenames(wxFONTENCODING_SYSTEM, fixedSize);
+  all_fonts.EnumerateFacenames(wxFONTENCODING_SYSTEM, show_only_fixed_size);
   uiStyleTypeface->Clear();
-  for (auto name : allfonts.fonts) {
+  for (auto name : all_fonts.fonts) {
     uiStyleTypeface->AppendString(name);
   }
 }
 
 void SettingsDlg::OnSelectedStyleChanged(wxCommandEvent& event) {
-  allowStyleChange = false;
-  styleToGui(true);
-  updateStyleEnable();
-  allowStyleChange = true;
+  allow_send_style_to_main_ = false;
+  StyleToGui(true);
+  UpdateStyleEnable();
+  allow_send_style_to_main_ = true;
 }
 
 void SettingsDlg::OnStyleFontChanged(wxCommandEvent& event) {
-  updateFontDisplay();
-  styleChanged();
+  StyleUpdateFontDisplay();
+  SendStyleToMain();
 }
 
 void SettingsDlg::OnStyleCheckChanged(wxCommandEvent& event) {
-  updateStyleEnable();
-  styleChanged();
+  UpdateStyleEnable();
+  SendStyleToMain();
 }
 
 void SettingsDlg::OnStyleTextChanged(wxCommandEvent& event) {
-  styleChanged();
+  SendStyleToMain();
 }
 
 void SettingsDlg::OnStyleColorChanged(wxColourPickerEvent& event) {
-  styleChanged();
+  SendStyleToMain();
 }
 
-void SettingsDlg::styleChanged() {
-  if (allowStyleChange == false) return;
-  styleToGui(false);
-  main->set_settings(edit);
-  main->set_settings(edit); // update seems to lag behind one setSettings, this seems to fix that, weird... I should investigate this...
+void SettingsDlg::SendStyleToMain() {
+  if (allow_send_style_to_main_ == false) return;
+  StyleToGui(false);
+  main_window_->set_settings(current_settings_);
+  main_window_->set_settings(current_settings_); // update seems to lag behind one setSettings, this seems to fix that, weird... I should investigate this...
+}
+
+void SettingsDlg::SendEditToMain()
+{
+  if (allow_send_edit_to_main_ == false) { return; }
+  EditToGui(false);
+  main_window_->set_settings(current_settings_);
 }
 
 void UpdateCheckEnabled(wxCheckBox* check, wxWindow* slave)
@@ -335,7 +343,7 @@ void UpdateCheckEnabled(wxCheckBox* check, wxWindow* slave)
   slave->Enable( check->IsChecked() );
 }
 
-void SettingsDlg::updateStyleEnable() {
+void SettingsDlg::UpdateStyleEnable() {
   UpdateCheckEnabled(uiStyleUseBold, uiStyleBold);
   UpdateCheckEnabled(uiStyleUseUnderline, uiStyleUnderline);
   UpdateCheckEnabled(uiStyleUseItalic, uiStyleItalic);
@@ -346,14 +354,14 @@ void SettingsDlg::updateStyleEnable() {
   UpdateCheckEnabled(uiStyleUseTypeface, uiStyleUseTypeface);
 }
 
-void SettingsDlg::styleToGui(bool togui) {
+void SettingsDlg::StyleToGui(bool togui) {
   const int selection = uiFontStyles->GetSelection();
   if (selection == wxNOT_FOUND) return;
   StyleLink* link = reinterpret_cast<StyleLink*>(uiFontStyles->GetClientData(selection));
   assert(link);
   if (link == NULL) return;
 
-  ride::Style style = link->get( edit.fonts_and_colors() );
+  ride::Style style = link->get( current_settings_.fonts_and_colors() );
 
   DIALOG_DATA(style, use_bold, uiStyleUseBold, );
   DIALOG_DATA(style, bold, uiStyleBold,);
@@ -374,72 +382,73 @@ void SettingsDlg::styleToGui(bool togui) {
   DIALOG_DATAX(style, background, uiStyleBackground);
 
   if (togui == false) {
-    ride::FontsAndColors color = edit.fonts_and_colors();
+    ride::FontsAndColors color = current_settings_.fonts_and_colors();
     link->set(color, style);
 
-    edit.set_allocated_fonts_and_colors(Allocate(color));
+    current_settings_.set_allocated_fonts_and_colors(Allocate(color));
   }
 }
 
-void SettingsDlg::updateFontDisplay() {
-  int selectedId = uiStyleTypeface->GetSelection();
-  wxString faceName = selectedId > 0 ? uiStyleTypeface->GetString(selectedId) : "";
-  wxFont font( wxFontInfo(12).FaceName(faceName) );
+void SettingsDlg::StyleUpdateFontDisplay() {
+  int selected_typeface = uiStyleTypeface->GetSelection();
+  wxString selected_facename = selected_typeface > 0 ? uiStyleTypeface->GetString(selected_typeface) : "";
+  wxFont font( wxFontInfo(12).FaceName(selected_facename) );
   uiStyleExample->SetFont(font);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-int gFontStyleIndex = 0;
+int g_last_selected_font = 0;
 
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
-::ui::Settings(parent, wxID_ANY), main(mainwindow), allowApply(false), allowStyleChange(false)
+::ui::Settings(parent, wxID_ANY), main_window_(mainwindow), allow_send_edit_to_main_(false), allow_send_style_to_main_(false)
 {
-  global = main->settings();
-  edit = global;
-  editToGui(true);
-  allowApply = true;
+  global_settings_ = main_window_->settings();
+  current_settings_ = global_settings_;
+  EditToGui(true);
+  allow_send_edit_to_main_ = true;
 
   for (auto link: StyleLinks()) {
     uiFontStyles->Append(link->name(), link);
   }
-  updateFonts();
-  allowStyleChange = true;
+  UpdateStyleFonts();
+  allow_send_style_to_main_ = true;
   
-  uiFontStyles->SetSelection(gFontStyleIndex);
-  uiFontStyles->EnsureVisible(gFontStyleIndex);
+  uiFontStyles->SetSelection(g_last_selected_font);
+  uiFontStyles->EnsureVisible(g_last_selected_font);
 
-  allowStyleChange = false;
-  styleToGui(true);
-  updateStyleEnable();
+  allow_send_style_to_main_ = false;
+  StyleToGui(true);
+  UpdateStyleEnable();
 }
 
-void SettingsDlg::saveSelectedIndex() {
-  gFontStyleIndex = uiFontStyles->GetSelection();
-  if (gFontStyleIndex == -1) {
-    gFontStyleIndex = 0;
+void SettingsDlg::StyleSaveSelectedIndex() {
+  g_last_selected_font = uiFontStyles->GetSelection();
+  if (g_last_selected_font == -1) {
+    g_last_selected_font = 0;
   }
 }
 
 void SettingsDlg::OnApply( wxCommandEvent& event )
 {
-  saveSelectedIndex();
-  apply();
+  StyleSaveSelectedIndex();
+  SendEditToMain();
 }
 
 void SettingsDlg::OnCancel( wxCommandEvent& event )
 {
-  main->set_settings(global);
-  saveSelectedIndex();
+  main_window_->set_settings(global_settings_);
+  StyleSaveSelectedIndex();
   EndModal(wxCANCEL);
 }
 
 void SettingsDlg::OnOk( wxCommandEvent& event )
 {
-  saveSelectedIndex();
-  editToGui(false);
-  main->set_settings(edit);
-  if (false == SaveSettings(edit)) {
+  StyleSaveSelectedIndex();
+  EditToGui(false);
+  // todo: Call StyleToGui(false) ???
+  main_window_->set_settings(current_settings_);
+  if (false == SaveSettings(current_settings_)) {
     wxMessageBox("Failed to save settings", "Failed!", wxOK | wxICON_ERROR);
   }
   EndModal(wxOK);
@@ -448,56 +457,49 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
 void SettingsDlg::OnCheckboxChanged(wxCommandEvent& event)
 {
   assert(this);
-  apply();
+  SendEditToMain();
 }
 
 void SettingsDlg::OnComboboxChanged(wxCommandEvent& event)
 {
   assert(this);
-  apply();
+  SendEditToMain();
 }
 
 void SettingsDlg::OnColorChanged(wxColourPickerEvent& event)
 {
   assert(this);
-  apply();
+  SendEditToMain();
 }
 
 void SettingsDlg::OnEditChanged(wxCommandEvent& event)
 {
   assert(this);
-  apply();
-}
-
-void SettingsDlg::apply()
-{
-  if (allowApply == false) { return; }
-  editToGui(false);
-  main->set_settings(edit);
+  SendEditToMain();
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-void SettingsDlg::editToGui(bool togui) {
-  ride::FontsAndColors fonts_and_colors = edit.fonts_and_colors();
-  ride::FoldFlags foldflags = edit.foldflags();
+void SettingsDlg::EditToGui(bool togui) {
+  ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors();
+  ride::FoldFlags foldflags = current_settings_.foldflags();
 
-  DIALOG_DATA(edit, displayeolenable, uiDisplayEOL,);
-  DIALOG_DATA(edit, linenumberenable, uiShowLineNumbers,);
-  DIALOG_DATA(edit, indentguideenable, uiIndentGuide,);
+  DIALOG_DATA(current_settings_, displayeolenable, uiDisplayEOL,);
+  DIALOG_DATA(current_settings_, linenumberenable, uiShowLineNumbers,);
+  DIALOG_DATA(current_settings_, indentguideenable, uiIndentGuide,);
 
-  DIALOG_DATA(edit, tabwidth, uiTabWidth, );
-  DIALOG_DATA(edit, edgecolumn, uiEdgeColumn, );
+  DIALOG_DATA(current_settings_, tabwidth, uiTabWidth, );
+  DIALOG_DATA(current_settings_, edgecolumn, uiEdgeColumn, );
 
-  DIALOG_DATA(edit, whitespace, uiViewWhitespace, _VW);
-  DIALOG_DATA(edit, wordwrap, uiWordwrap, _WM);
-  DIALOG_DATA(edit, edgestyle, uiEdgeStyle, _ES);
+  DIALOG_DATA(current_settings_, whitespace, uiViewWhitespace, _VW);
+  DIALOG_DATA(current_settings_, wordwrap, uiWordwrap, _WM);
+  DIALOG_DATA(current_settings_, edgestyle, uiEdgeStyle, _ES);
 
-  DIALOG_DATA(edit, tabindents, uiTabIndents, );
-  DIALOG_DATA(edit, usetabs, uiUseTabs, );
-  DIALOG_DATA(edit, backspaceunindents, uiBackspaceUnindents, );
+  DIALOG_DATA(current_settings_, tabindents, uiTabIndents, );
+  DIALOG_DATA(current_settings_, usetabs, uiUseTabs, );
+  DIALOG_DATA(current_settings_, backspaceunindents, uiBackspaceUnindents, );
 
-  DIALOG_DATA(edit, foldenable, uiAllowFolding, );
+  DIALOG_DATA(current_settings_, foldenable, uiAllowFolding, );
   
   DIALOG_DATA(foldflags, levelnumbers, uiFoldLevelNumbers, );
   DIALOG_DATA(foldflags, linebefore_expanded, uiFoldLineBeforeExpanded, );
@@ -508,19 +510,19 @@ void SettingsDlg::editToGui(bool togui) {
   DIALOG_DATAX(fonts_and_colors, edgecolor, uiEdgeColor);
 
   if (togui == false) {
-    edit.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
-    edit.set_allocated_foldflags(Allocate(foldflags));
+    current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
+    current_settings_.set_allocated_foldflags(Allocate(foldflags));
   }
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 void SettingsDlg::OnlyAllowNumberChars(wxKeyEvent& event) {
-  const wxString Numbers = "0123456789";
+  const wxString NUMBERS = "0123456789";
   if (event.m_uniChar == 0) {
     event.Skip();
   }
-  int index = Numbers.Index(event.m_uniChar);
+  int index = NUMBERS.Index(event.m_uniChar);
   if (index < 0) {
     // event.Skip();
   }
