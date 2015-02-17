@@ -38,49 +38,49 @@ enum {
 //////////////////////////////////////////////////////////////////////////
 
 void FileEdit::Undo() {
-  if (!text->CanUndo()) return;
-  text->Undo();
-  updateTitle();
+  if (!text_->CanUndo()) return;
+  text_->Undo();
+  UpdateTitle();
 }
 
 
 void FileEdit::Redo() {
-  if (!text->CanRedo()) return;
-  text->Redo();
-  updateTitle();
+  if (!text_->CanRedo()) return;
+  text_->Redo();
+  UpdateTitle();
 }
 
 
 void FileEdit::Cut() {
-  if (text->GetReadOnly() || (text->GetSelectionEnd() - text->GetSelectionStart() <= 0)) return;
-  text->Cut();
-  updateTitle();
+  if (text_->GetReadOnly() || (text_->GetSelectionEnd() - text_->GetSelectionStart() <= 0)) return;
+  text_->Cut();
+  UpdateTitle();
 }
 
 
 void FileEdit::Copy() {
-  if (text->GetSelectionEnd() - text->GetSelectionStart() <= 0) return;
-  text->Copy();
+  if (text_->GetSelectionEnd() - text_->GetSelectionStart() <= 0) return;
+  text_->Copy();
 }
 
 
 void FileEdit::Paste() {
-  if (!text->CanPaste()) return;
-  text->Paste();
-  updateTitle();
+  if (!text_->CanPaste()) return;
+  text_->Paste();
+  UpdateTitle();
 }
 
 
 void FileEdit::Duplicate() {
-  text->SelectionDuplicate();
-  updateTitle();
+  text_->SelectionDuplicate();
+  UpdateTitle();
 }
 
 
 void FileEdit::Delete() {
-  if (text->GetReadOnly()) return;
-  text->Clear();
-  updateTitle();
+  if (text_->GetReadOnly()) return;
+  text_->Clear();
+  UpdateTitle();
 }
 
 
@@ -95,17 +95,17 @@ void FileEdit::Replace() {
 
 
 void FileEdit::MatchBrace() {
-  int start_brace = text->GetCurrentPos();
-  int other_brace = text->BraceMatch(start_brace);
+  int start_brace = text_->GetCurrentPos();
+  int other_brace = text_->BraceMatch(start_brace);
   if (other_brace == -1) return;
 
-  text->SetSelection(other_brace, other_brace);
+  text_->SetSelection(other_brace, other_brace);
 }
 
 
 void FileEdit::SelectBrace() {
-  int start_brace = text->GetCurrentPos();
-  int other_brace = text->BraceMatch(start_brace);
+  int start_brace = text_->GetCurrentPos();
+  int other_brace = text_->BraceMatch(start_brace);
   if (other_brace == -1) return;
 
   if (other_brace < start_brace) {
@@ -113,64 +113,64 @@ void FileEdit::SelectBrace() {
   }
 
   assert(start_brace < other_brace);
-  text->SetSelection(start_brace, other_brace + 1);
+  text_->SetSelection(start_brace, other_brace + 1);
 }
 
 
 void FileEdit::GotoLine() {
-  const int total_plus_one = text->GetLineCount()+1;
+  const int total_plus_one = text_->GetLineCount()+1;
   const wxString message = wxString::Format("Enter line number(1-%d)", total_plus_one);
-  const long new_line_one_based = wxGetNumberFromUser(message, wxEmptyString, "Goto line", text->GetCurrentLine()+1, 1, total_plus_one);
+  const long new_line_one_based = wxGetNumberFromUser(message, wxEmptyString, "Goto line", text_->GetCurrentLine()+1, 1, total_plus_one);
   if (new_line_one_based == -1) return;
-  const int pos = text->PositionFromLine(new_line_one_based-1);
-  text->SetSelection(pos, pos);
-  text->ScrollToLine(new_line_one_based - 1);
+  const int pos = text_->PositionFromLine(new_line_one_based-1);
+  text_->SetSelection(pos, pos);
+  text_->ScrollToLine(new_line_one_based - 1);
 }
 
 
 void FileEdit::Indent() {
   // todo: fix issue with replacing selection
-  text->CmdKeyExecute(wxSTC_CMD_TAB);
-  updateTitle();
+  text_->CmdKeyExecute(wxSTC_CMD_TAB);
+  UpdateTitle();
 }
 
 
 void FileEdit::UnIndent() {
   // todo: fix issue with replacing selection
-  text->CmdKeyExecute(wxSTC_CMD_DELETEBACK);
-  updateTitle();
+  text_->CmdKeyExecute(wxSTC_CMD_DELETEBACK);
+  UpdateTitle();
 }
 
 
 void FileEdit::SelectAll() {
-  text->SetSelection(0, text->GetTextLength());
+  text_->SetSelection(0, text_->GetTextLength());
 }
 
 
 void FileEdit::SelectLine() {
-  int lineStart = text->PositionFromLine(text->GetCurrentLine());
-  int lineEnd = text->PositionFromLine(text->GetCurrentLine() + 1);
-  text->SetSelection(lineStart, lineEnd);
+  int line_start = text_->PositionFromLine(text_->GetCurrentLine());
+  int line_end = text_->PositionFromLine(text_->GetCurrentLine() + 1);
+  text_->SetSelection(line_start, line_end);
 }
 
 void FileEdit::ToUpper() {
-  text->UpperCase();
-  updateTitle();
+  text_->UpperCase();
+  UpdateTitle();
 }
 
 void FileEdit::ToLower() {
-  text->LowerCase();
-  updateTitle();
+  text_->LowerCase();
+  UpdateTitle();
 }
 
 void FileEdit::MoveLinesUp() {
-  text->MoveSelectedLinesUp();
-  updateTitle();
+  text_->MoveSelectedLinesUp();
+  UpdateTitle();
 }
 
 void FileEdit::MoveLinesDown() {
-  text->MoveSelectedLinesDown();
-  updateTitle();
+  text_->MoveSelectedLinesDown();
+  UpdateTitle();
 }
 
 void FileEdit::ShowProperties() {
@@ -179,8 +179,8 @@ void FileEdit::ShowProperties() {
 
 //////////////////////////////////////////////////////////////////////////
 
-const wxString& FileEdit::getFileName() const {
-  return filename;
+const wxString& FileEdit::filename() const {
+  return filename_;
 }
 
 int FromLineColToTextOffset(wxStyledTextCtrl* text, int line, int col) {
@@ -195,66 +195,66 @@ int FromLineColToTextOffset(wxStyledTextCtrl* text, int line, int col) {
   return from;
 }
 
-void FileEdit::setSelection(int start_line, int start_index, int end_line, int end_index) {
-  int from = FromLineColToTextOffset(text, start_line, start_index);
-  int to = FromLineColToTextOffset(text, end_line, end_index);
+void FileEdit::SetSelection(int start_line, int start_index, int end_line, int end_index) {
+  int from = FromLineColToTextOffset(text_, start_line, start_index);
+  int to = FromLineColToTextOffset(text_, end_line, end_index);
 
   if (from == -1) return;
 
   if (to != -1) {
-    text->SetSelection(from, to);
+    text_->SetSelection(from, to);
   }
   else {
-    text->SetSelection(from, from);
+    text_->SetSelection(from, from);
   }
 
-  text->ScrollToLine(start_line - 1);
+  text_->ScrollToLine(start_line - 1);
   if (start_index >= 0) {
-    text->ScrollToColumn(start_index - 1);
+    text_->ScrollToColumn(start_index - 1);
   }
 }
 
 void FileEdit::Focus() {
   SetFocus();
-  text->SetFocus();
+  text_->SetFocus();
 }
 
 void FileEdit::ClearCompilerMessages() {
-  text->AnnotationClearAll();
-  text->SetIndicatorCurrent(ID_INDICATOR_WARNING);
-  text->IndicatorFillRange(0, text->GetLength());
+  text_->AnnotationClearAll();
+  text_->SetIndicatorCurrent(ID_INDICATOR_WARNING);
+  text_->IndicatorFillRange(0, text_->GetLength());
 
-  text->SetIndicatorCurrent(ID_INDICATOR_ERROR);
-  text->IndicatorFillRange(0, text->GetLength());
+  text_->SetIndicatorCurrent(ID_INDICATOR_ERROR);
+  text_->IndicatorFillRange(0, text_->GetLength());
 }
 
 void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
-  assert(filename == mess.file());
-  const bool isError = mess.type() == CompilerMessage::TYPE_ERROR;
-  const bool isWarning = mess.type() == CompilerMessage::TYPE_WARNING;
+  assert(filename_ == mess.file());
+  const bool is_error = mess.type() == CompilerMessage::TYPE_ERROR;
+  const bool is_warning = mess.type() == CompilerMessage::TYPE_WARNING;
 
-  if (isError || isWarning) {
+  if (is_error || is_warning) {
     // todo: make this a option
-    const int style = isError ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
+    const int style = is_error ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
     const int line = mess.start_line() -1;
-    const wxString type = isError ? "Error: " : "Warning: ";
+    const wxString type = is_error ? "Error: " : "Warning: ";
     const wxString value = type + mess.message();
-    const wxString old_text = text->AnnotationGetText(line);
+    const wxString old_text = text_->AnnotationGetText(line); // todo: setup multicoloring/styling
     const wxString ann = old_text.IsEmpty() ? value : old_text + "\n" + value;
-    text->AnnotationSetText(line, ann);
-    text->AnnotationSetStyle(line, style);
+    text_->AnnotationSetText(line, ann);
+    text_->AnnotationSetStyle(line, style);
 
     // only color on a single row, or it might get ugly
     // todo: make this a option
     if (mess.start_line() == mess.end_line()) {
-      int from = FromLineColToTextOffset(text, mess.start_line(), mess.start_index());
-      int to = FromLineColToTextOffset(text, mess.end_line(), mess.end_index());
+      int from = FromLineColToTextOffset(text_, mess.start_line(), mess.start_index());
+      int to = FromLineColToTextOffset(text_, mess.end_line(), mess.end_index());
 
-      const int ind = isError ? ID_INDICATOR_ERROR : ID_INDICATOR_WARNING;
+      const int ind = is_error ? ID_INDICATOR_ERROR : ID_INDICATOR_WARNING;
 
       if (from >= 0 && to >= 0) {
-        text->SetIndicatorCurrent(ind);
-        text->IndicatorFillRange(from, to - from);
+        text_->SetIndicatorCurrent(ind);
+        text_->IndicatorFillRange(from, to - from);
       }
     }
   }
@@ -324,37 +324,38 @@ int C(ride::FoldFlags f) {
   return ret;
 }
 
-FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main(parent), notebook(anotebook), currentLanguage(NULL) {
-  text = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
+FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main_(parent), notebook_(anotebook), current_language_(NULL) {
+  text_ = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__
     wxSUNKEN_BORDER |
 #endif
     wxVSCROLL);
 
-  filename = file;
+  filename_ = file;
 
-  if (filename.IsEmpty()) {
-    text->SetText(source);
+  if (filename_.IsEmpty()) {
+    text_->SetText(source);
   }
   else {
-    text->LoadFile(filename);
+    text_->LoadFile(filename_);
   }
 
-  m_LineNrMargin = text->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_999999"));
+  // calculate the maximum number a the line margin could contain
+  line_margin_width_ = text_->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_999999"));
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(text, 1, wxEXPAND);
+  sizer->Add(text_, 1, wxEXPAND);
   SetSizer(sizer);
 
-  notebook->AddPage(this, wxT(""), true);
-  updateFilename();
-  updateTitle();
+  notebook_->AddPage(this, wxT(""), true);
+  UpdateFilename();
+  UpdateTitle();
 }
 
 bool FileEdit::Save() {
-  if (shouldBeSaved() == false) return true;
-  if (filename.IsEmpty()) return SaveAs();
-  else return saveTo(filename);
+  if (ShouldBeSaved() == false) return true;
+  if (filename_.IsEmpty()) return SaveAs();
+  else return SaveTo(filename_);
 }
 
 bool FileEdit::SaveAs() {
@@ -362,20 +363,18 @@ bool FileEdit::SaveAs() {
     FILE_PATTERN, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   if (saveFileDialog.ShowModal() == wxID_CANCEL)
     return false;
-  return saveTo(saveFileDialog.GetPath());
+  return SaveTo(saveFileDialog.GetPath());
 }
 
-bool FileEdit::saveTo(const wxString& target) {
-  if (false == text->SaveFile(target)) {
+bool FileEdit::SaveTo(const wxString& target) {
+  if (false == text_->SaveFile(target)) {
     return false;
   }
-  filename = target;
-  updateFilename();
-  updateTitle();
+  filename_ = target;
+  UpdateFilename();
+  UpdateTitle();
   return true;
 }
-
-unsigned int UntitledCount = 0;
 
 void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style) {
   if (style.use_typeface()) {
@@ -485,7 +484,7 @@ int C(ride::Annotation ann) {
     case ride::ANNOTATION_STANDARD    : return wxSTC_ANNOTATION_STANDARD;
     case ride::ANNOTATION_BOXED       : return wxSTC_ANNOTATION_BOXED   ;
     default:
-      assert(0 && "Unknwon annotation style");
+      assert(0 && "Unknown annotation style");
       return wxSTC_ANNOTATION_STANDARD;
   }
 }
@@ -505,145 +504,148 @@ wxString b2s01(bool b) {
 
 void FileEdit::UpdateTextControl() {
   // initialize styles
-  text->StyleClearAll();
+  text_->StyleClearAll();
+
+  // todo: remove these variables
   wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
   const wxColor grey(100, 100, 100);
   const wxColor white(255, 255, 255);
   const wxColor darkgray = wxColour(20, 20, 20);
 
-  const ride::Settings& set = main->getSettings();
+  const ride::Settings& set = main_->getSettings();
 
   // setup language color
-  assert(currentLanguage);
-  currentLanguage->style(text, set);
+  assert(current_language_);
+  current_language_->style(text_, set);
 
   //////////////////////////////////////////////////////////////////////////
 
   // set margin for line numbers
-  text->SetMarginType(ID_MARGIN_LINENUMBER, wxSTC_MARGIN_NUMBER);
-  text->SetMarginWidth(ID_MARGIN_LINENUMBER, set.linenumberenable() ? m_LineNrMargin : 0);
+  text_->SetMarginType(ID_MARGIN_LINENUMBER, wxSTC_MARGIN_NUMBER);
+  text_->SetMarginWidth(ID_MARGIN_LINENUMBER, set.linenumberenable() ? line_margin_width_ : 0);
 
   // set margin as unused
-  text->SetMarginType(ID_MARGIN_DIVIDER, wxSTC_MARGIN_SYMBOL);
-  text->SetMarginWidth(ID_MARGIN_DIVIDER, 15);
-  text->SetMarginSensitive(ID_MARGIN_DIVIDER, false);
+  text_->SetMarginType(ID_MARGIN_DIVIDER, wxSTC_MARGIN_SYMBOL);
+  text_->SetMarginWidth(ID_MARGIN_DIVIDER, 15);
+  text_->SetMarginSensitive(ID_MARGIN_DIVIDER, false);
 
   // folding settings
   // todo: move to settings
-  text->SetMarginType(ID_MARGIN_FOLDING, wxSTC_MARGIN_SYMBOL);
-  text->SetMarginMask(ID_MARGIN_FOLDING, wxSTC_MASK_FOLDERS);
+  text_->SetMarginType(ID_MARGIN_FOLDING, wxSTC_MARGIN_SYMBOL);
+  text_->SetMarginMask(ID_MARGIN_FOLDING, wxSTC_MASK_FOLDERS);
   // text->StyleSetBackground(m_FoldingID, wxColor(200, 200, 200));
-  text->SetMarginWidth(ID_MARGIN_FOLDING, 15);
-  text->SetMarginSensitive(ID_MARGIN_FOLDING, true);
-  text->SetFoldMarginColour(true, wxColor(200, 200, 200));
-  text->SetFoldMarginHiColour(true, wxColor(200, 200, 200));
-  text->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
-  text->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
-  text->SetFoldFlags(C(set.foldflags()));
-  // todo: expose theese
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
-  text->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
+  text_->SetMarginWidth(ID_MARGIN_FOLDING, 15);
+  text_->SetMarginSensitive(ID_MARGIN_FOLDING, true);
+  text_->SetFoldMarginColour(true, wxColor(200, 200, 200));
+  text_->SetFoldMarginHiColour(true, wxColor(200, 200, 200));
+  text_->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
+  text_->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
+  text_->SetFoldFlags(C(set.foldflags()));
+  // todo: expose these
+  text_->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
+  text_->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
+  text_->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
+  text_->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
+  text_->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
+  text_->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
+  text_->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
   // set spaces and indention
-  text->SetTabWidth(set.tabwidth());
-  text->SetUseTabs(set.usetabs());
-  text->SetTabIndents(set.tabindents());
-  text->SetBackSpaceUnIndents(set.backspaceunindents());
-  text->SetIndent(set.tabwidth());
+  text_->SetTabWidth(set.tabwidth());
+  text_->SetUseTabs(set.usetabs());
+  text_->SetTabIndents(set.tabindents());
+  text_->SetBackSpaceUnIndents(set.backspaceunindents());
+  text_->SetIndent(set.tabwidth());
 
-  text->SetViewEOL(set.displayeolenable());
-  text->SetIndentationGuides(set.indentguideenable());
-  text->SetEdgeMode(C(set.edgestyle()));
-  text->SetEdgeColour(C(set.fonts_and_colors().edgecolor()));
-  text->SetEdgeColumn(set.edgecolumn());
-  text->SetViewWhiteSpace(C(set.whitespace()));
-  text->SetOvertype(false);
-  text->SetReadOnly(false);
-  text->SetWrapMode(C(set.wordwrap()));
+  text_->SetViewEOL(set.displayeolenable());
+  text_->SetIndentationGuides(set.indentguideenable());
+  text_->SetEdgeMode(C(set.edgestyle()));
+  text_->SetEdgeColour(C(set.fonts_and_colors().edgecolor()));
+  text_->SetEdgeColumn(set.edgecolumn());
+  text_->SetViewWhiteSpace(C(set.whitespace()));
+  text_->SetOvertype(false);
+  text_->SetReadOnly(false);
+  text_->SetWrapMode(C(set.wordwrap()));
 
   // set visibility
   // todo: investigate this
-  text->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
-  text->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
-  text->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+  text_->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
+  text_->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+  text_->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
 
-  text->SetAdditionalSelectionTyping(true);
-  text->SetAdditionalCaretsBlink(true);
-  text->SetAdditionalCaretsVisible(true);
+  text_->SetAdditionalSelectionTyping(true);
+  text_->SetAdditionalCaretsBlink(true);
+  text_->SetAdditionalCaretsVisible(true);
 
-  SetIndicator(text, ID_INDICATOR_ERROR, set.indicator_error());
-  SetIndicator(text, ID_INDICATOR_WARNING, set.indicator_warning());
-  SetIndicator(text, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
-  SetIndicator(text, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
+  SetIndicator(text_, ID_INDICATOR_ERROR, set.indicator_error());
+  SetIndicator(text_, ID_INDICATOR_WARNING, set.indicator_warning());
+  SetIndicator(text_, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
+  SetIndicator(text_, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
 
   // todo: setup style colors and font
-  SetStyle(text, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
-  SetStyle(text, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
-  SetStyle(text, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
-  SetStyle(text, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
-  SetStyle(text, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
-  SetStyle(text, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
+  SetStyle(text_, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
+  SetStyle(text_, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
+  SetStyle(text_, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
+  SetStyle(text_, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
+  SetStyle(text_, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
+  SetStyle(text_, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
 
-  SetStyle(text, STYLE_ANNOTATION_ERROR, set.fonts_and_colors().annotation_error_style());
-  SetStyle(text, STYLE_ANNOTATION_WARNING, set.fonts_and_colors().annotation_warning_style());
+  SetStyle(text_, STYLE_ANNOTATION_ERROR, set.fonts_and_colors().annotation_error_style());
+  SetStyle(text_, STYLE_ANNOTATION_WARNING, set.fonts_and_colors().annotation_warning_style());
 
 
-  text->SetEndAtLastLine(set.end_at_last_line());
-  text->SetVirtualSpaceOptions(C(set.virtual_space()));
-  text->SetUseVerticalScrollBar(set.vertical_scrollbar());
-  text->SetUseHorizontalScrollBar(set.horizontal_scrollbar());
+  text_->SetEndAtLastLine(set.end_at_last_line());
+  text_->SetVirtualSpaceOptions(C(set.virtual_space()));
+  text_->SetUseVerticalScrollBar(set.vertical_scrollbar());
+  text_->SetUseHorizontalScrollBar(set.horizontal_scrollbar());
   
-  text->SetWrapVisualFlags(C(set.wrap_visual_flags()));
-  text->SetWrapVisualFlagsLocation(C(set.wrap_visual_flags_location()));
-  text->SetWrapIndentMode(C(set.wrap_indent_mode()));
-  text->SetWrapStartIndent(set.wrap_start_indent());
+  text_->SetWrapVisualFlags(C(set.wrap_visual_flags()));
+  text_->SetWrapVisualFlagsLocation(C(set.wrap_visual_flags_location()));
+  text_->SetWrapIndentMode(C(set.wrap_indent_mode()));
+  text_->SetWrapStartIndent(set.wrap_start_indent());
 
-  text->AnnotationSetVisible(C(set.annotations()));
+  text_->AnnotationSetVisible(C(set.annotations()));
 
 
   // todo: expose this
-  text->SetCaretLineVisible(true);
+  text_->SetCaretLineVisible(true);
 }
 
-void FileEdit::updateFilename() {
-  if (filename.IsEmpty()) {
-    docname = wxString::Format("Untitled %d", ++UntitledCount);
+void FileEdit::UpdateFilename() {
+  if (filename_.IsEmpty()) {
+    docname_ = "Untitled";
   }
   else {
-    wxFileName fn(filename);
-    docname = fn.GetFullName();
+    wxFileName fn(filename_);
+    docname_ = fn.GetFullName();
   }
 
-  if (filename.IsEmpty() == false) {
-    size_t index = notebook->GetPageIndex(this);
-    notebook->SetPageToolTip(index, filename);
+  if (filename_.IsEmpty() == false) {
+    size_t index = notebook_->GetPageIndex(this);
+    notebook_->SetPageToolTip(index, filename_);
 
-    wxFileName fname(filename);
-    currentLanguage = DetermineLanguage(fname.GetFullName());
+    wxFileName fname(filename_);
+    current_language_ = DetermineLanguage(fname.GetFullName());
     UpdateTextControl();
     UpdateTextControl(); // update colors again, doing it twice seems to be needed to apply the colors
   }
 }
 
-void FileEdit::updateTitle() {
-  size_t index = notebook->GetPageIndex(this);
-  const wxString changestar = text->IsModified() ? "*" : "";
-  notebook->SetPageText(index, docname + changestar);
+void FileEdit::UpdateTitle() {
+  size_t index = notebook_->GetPageIndex(this);
+  const wxString modified_star = text_->IsModified() ? "*" : "";
+  notebook_->SetPageText(index, docname_ + modified_star);
 }
 
-bool FileEdit::shouldBeSaved() {
-  return text->IsModified() || filename.IsEmpty();
+bool FileEdit::ShouldBeSaved() {
+  return text_->IsModified() || filename_.IsEmpty();
 }
 
-bool FileEdit::canClose(bool canAbort) {
-  if (shouldBeSaved()) {
-    const int yesNoFlags = canAbort ? (wxYES_NO | wxCANCEL) : wxYES_NO;
-    wxMessageDialog dlg(this, _(""), _("Save file?"), yesNoFlags | wxICON_QUESTION);
+bool FileEdit::CanClose(bool canAbort) {
+  if (ShouldBeSaved()) {
+    // todo: refactor this into usable functions
+    const int yew_no_flags = canAbort ? (wxYES_NO | wxCANCEL) : wxYES_NO;
+    wxMessageDialog dlg(this, _(""), _("Save file?"), yew_no_flags | wxICON_QUESTION);
 
     const wxMessageDialogBase::ButtonLabel yesButton = _("&Save it");
     const wxMessageDialogBase::ButtonLabel noButton = _("&Discard changes");
@@ -655,10 +657,10 @@ bool FileEdit::canClose(bool canAbort) {
       ;
 
     if (labelChangeOk) {
-      dlg.SetMessage("\"" + docname + "\" has changed since last time...");
+      dlg.SetMessage("\"" + docname_ + "\" has changed since last time...");
     }
     else {
-      dlg.SetMessage("\"" + docname + "\" has changed since last time, save it?");
+      dlg.SetMessage("\"" + docname_ + "\" has changed since last time, save it?");
     }
 
     const int answer = dlg.ShowModal();
@@ -676,31 +678,31 @@ bool FileEdit::canClose(bool canAbort) {
 }
 
 FileEdit::~FileEdit() {
-  text->SetClientData(NULL);
+  text_->SetClientData(NULL);
 }
 
 wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
-EVT_STC_MARGINCLICK(wxID_ANY, FileEdit::OnMarginClick)
-EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnCharAdded)
-EVT_STC_UPDATEUI(wxID_ANY, FileEdit::OnUpdateUi)
-EVT_STC_CHANGE(wxID_ANY, FileEdit::OnChanged)
+  EVT_STC_MARGINCLICK(wxID_ANY, FileEdit::OnMarginClick)
+  EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnCharAdded)
+  EVT_STC_UPDATEUI(wxID_ANY, FileEdit::OnUpdateUi)
+  EVT_STC_CHANGE(wxID_ANY, FileEdit::OnChanged)
 wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 {
   if (event.GetMargin() == ID_MARGIN_FOLDING)
   {
-    int lineClick = text->LineFromPosition(event.GetPosition());
-    int levelClick = text->GetFoldLevel(lineClick);
+    int clicked_line = text_->LineFromPosition(event.GetPosition());
+    int fold_level = text_->GetFoldLevel(clicked_line);
 
-    if ((levelClick & wxSTC_FOLDLEVELHEADERFLAG) > 0)
+    if ((fold_level & wxSTC_FOLDLEVELHEADERFLAG) > 0)
     {
-      text->ToggleFold(lineClick);
+      text_->ToggleFold(clicked_line);
     }
   }
 }
 
-int GetIndentationChange(const wxString& str) {
+int CalculateIndentationChange(const wxString& str) {
   // todo: move to language...
   int change = 0;
   for (size_t i = 0; i < str.Length(); ++i) {
@@ -718,91 +720,94 @@ int GetIndentationChange(const wxString& str) {
 
 void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 {
-  updateTitle();
+  UpdateTitle();
 
-  // auto-indenting
-  // todo: add settings for this...
-  // loosley based on http://www.scintilla.org/ScintillaUsage.html and https://groups.google.com/forum/#!topic/scintilla-interest/vTwXwIBswSM
-  int chr = event.GetKey(); // the key seems to be the char that was added
-  if (chr == '{') {
+  int entered_character = event.GetKey(); // the key seems to be the char that was added
+
+
+  if (entered_character == '{') {
     // todo: setting for this
-    text->InsertText(text->GetCurrentPos(), "}");
+    text_->InsertText(text_->GetCurrentPos(), "}");
   }
-  else if (chr == '(') {
+  else if (entered_character == '(') {
     // todo: setting for this
-    text->InsertText(text->GetCurrentPos(), ")");
+    // todo: make this smarter
+    text_->InsertText(text_->GetCurrentPos(), ")");
   }
-  else if (chr == '[') {
+  else if (entered_character == '[') {
     // todo: setting for this
-    text->InsertText(text->GetCurrentPos(), "]");
+    // todo: make this smarter
+    text_->InsertText(text_->GetCurrentPos(), "]");
   }
-  else if (chr == '\n' || chr == '\r')
+  else if (entered_character == '\n' || entered_character == '\r')
   {
-    const int current_line = text->GetCurrentLine();
-
-    // todo: use autoindent from settings
-
-    const int line_start = text->PositionFromLine(text->GetCurrentLine()-1);
-    const int line_end = text->PositionFromLine(text->GetCurrentLine());
-    const wxString previous_line_content = text->GetTextRange(line_start, line_end);
-    const int indent_change = GetIndentationChange(previous_line_content);
-    const int indent_change_in_spaces = indent_change * main->getSettings().tabwidth();
+    // auto-indenting
+    // todo: add settings for this...
+    // loosely based on http://www.scintilla.org/ScintillaUsage.html and https://groups.google.com/forum/#!topic/scintilla-interest/vTwXwIBswSM
+    const int current_line = text_->GetCurrentLine();
+    const int line_start = text_->PositionFromLine(text_->GetCurrentLine()-1);
+    const int line_end = text_->PositionFromLine(text_->GetCurrentLine());
+    const wxString previous_line_content = text_->GetTextRange(line_start, line_end);
+    const int indent_change = CalculateIndentationChange(previous_line_content);
+    const int indent_change_in_spaces = indent_change * main_->getSettings().tabwidth();
 
     const int smart_indent = indent_change_in_spaces;
 
     const int indentation_in_spaces = current_line > 0
-      ?  std::max(0, text->GetLineIndentation(current_line - 1) + smart_indent)
+      ? std::max(0, text_->GetLineIndentation(current_line - 1) + smart_indent)
       : smart_indent;
 
-    const int indentation_in_tabs = indentation_in_spaces / main->getSettings().tabwidth();
+    const int indentation_in_tabs = indentation_in_spaces / main_->getSettings().tabwidth();
 
     // if we use tabs, divide the number of character by the char width to get the actual width
-    const int indentation_in_chars = main->getSettings().usetabs()
+    const int indentation_in_chars = main_->getSettings().usetabs()
       ? indentation_in_tabs
       : indentation_in_spaces;
 
     // adjust to remove weird spaces from indentation settings
-    const int indentation_in_spaces_ajdusted = indentation_in_tabs * main->getSettings().tabwidth();
+    const int indentation_in_spaces_ajdusted = indentation_in_tabs * main_->getSettings().tabwidth();
 
     if (indentation_in_spaces_ajdusted != 0)
     {
-      text->SetLineIndentation(current_line, indentation_in_spaces_ajdusted);
+      text_->SetLineIndentation(current_line, indentation_in_spaces_ajdusted);
       
-      text->GotoPos(text->PositionFromLine(current_line) + indentation_in_chars);
+      text_->GotoPos(text_->PositionFromLine(current_line) + indentation_in_chars);
     }
   }
 }
 
 void FileEdit::HighlightCurrentWord() {
-  const int pos = text->GetCurrentPos();
+  const int pos = text_->GetCurrentPos();
 
   // highlight current word
   const bool only_word_characters = true;
-  const int start_position = text->WordStartPosition(pos, only_word_characters);
-  const int end_position = text->WordEndPosition(pos, only_word_characters);
+  const int start_position = text_->WordStartPosition(pos, only_word_characters);
+  const int end_position = text_->WordEndPosition(pos, only_word_characters);
+
+  // todo: don't highlight keywords?
   
   // todo: make these members
   static int last_start_position = -1;
   static int last_end_position = -1;
   if (start_position != last_start_position || end_position != last_end_position) {
-    text->SetIndicatorCurrent(ID_INDICATOR_SELECT_HIGHLIGHT);
+    text_->SetIndicatorCurrent(ID_INDICATOR_SELECT_HIGHLIGHT);
     if (last_start_position != -1 && last_end_position != -1 && last_start_position != last_end_position) {
-      text->IndicatorClearRange(0, text->GetLength());
+      text_->IndicatorClearRange(0, text_->GetLength());
     }
 
     if (start_position != -1 && end_position != -1 && start_position != end_position) {
       const int length = end_position - start_position;
       assert(length > 0);
 
-      const wxString hover = text->GetRange(start_position, end_position);
+      const wxString hover = text_->GetRange(start_position, end_position);
 
       int search_point = 0;
       while (true) {
-        int match_index = text->FindText(search_point, text->GetLength(), hover, wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE);
+        int match_index = text_->FindText(search_point, text_->GetLength(), hover, wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE);
         if (match_index == -1) {
           break;
         }
-        text->IndicatorFillRange(match_index, length);
+        text_->IndicatorFillRange(match_index, length);
         search_point = match_index + length;
       }
     }
@@ -816,17 +821,17 @@ void FileEdit::OnUpdateUi(wxStyledTextEvent& event)
   const int type = event.GetUpdated();
 
   if (type & wxSTC_UPDATE_SELECTION) {
-    const int pos = text->GetCurrentPos();
+    const int pos = text_->GetCurrentPos();
 
     HighlightCurrentWord();
 
     // brace highlighting
-    int otherBrace = text->BraceMatch(pos);
+    int otherBrace = text_->BraceMatch(pos);
     if (otherBrace != -1) {
-      text->BraceHighlight(pos, otherBrace);
+      text_->BraceHighlight(pos, otherBrace);
     }
     else {
-      text->BraceHighlight(-1, -1);
+      text_->BraceHighlight(-1, -1);
     }
   }
 }

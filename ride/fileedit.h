@@ -11,8 +11,8 @@ class CompilerMessage;
 class FileEdit : public wxControl {
 public:
   FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file);
-  const wxString& getFileName() const;
-  void setSelection(int start_line, int start_index, int end_line, int end_index);
+  const wxString& filename() const;
+  void SetSelection(int start_line, int start_index, int end_line, int end_index);
   void AddCompilerMessage(const CompilerMessage& mess);
   void ClearCompilerMessages();
   void Focus();
@@ -43,7 +43,7 @@ public:
   void ShowProperties();
 
 public:
-  bool canClose(bool canAbort);
+  bool CanClose(bool canAbort);
 
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
@@ -55,22 +55,23 @@ public:
 
   ~FileEdit();
 private:
-  void updateFilename();
-  void updateTitle();
-  bool saveTo(const wxString& target);
+  void UpdateFilename();
+  void UpdateTitle();
+  bool SaveTo(const wxString& target);
 
-  bool shouldBeSaved();
+  bool ShouldBeSaved();
   void HighlightCurrentWord();
 
 private:
-  MainWindow* main;
-  wxStyledTextCtrl* text;
-  wxAuiNotebook* notebook;
-  wxString filename;
-  wxString docname;
-  int m_LineNrMargin;
+  int line_margin_width_;
 
-  Language* currentLanguage;
+  MainWindow* main_;
+  wxStyledTextCtrl* text_;
+  wxAuiNotebook* notebook_;
+  wxString filename_;
+  wxString docname_; // filename_ or Untitled if file is missing, todo: make into a function
+
+  Language* current_language_;
 
 private:
   wxDECLARE_EVENT_TABLE();

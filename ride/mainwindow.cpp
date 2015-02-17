@@ -269,7 +269,7 @@ void MainWindow::AddCompilerMessage(const CompilerMessage& mess) {
   for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
     if (edit) {
-      if (edit->getFileName() == mess.file()) {
+      if (edit->filename() == mess.file()) {
         edit->AddCompilerMessage(mess);
       }
     }
@@ -280,9 +280,6 @@ void MainWindow::OnFileExit(wxCommandEvent& event)
 {
   Close(true);
 }
-
-#define XSTR(x) #x
-#define STR(x) XSTR(x)
 
 void MainWindow::OnAbout(wxCommandEvent& event)
 {
@@ -313,7 +310,7 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
 FileEdit* AddCompilerMessages(const std::vector<CompilerMessage>& messages, FileEdit* fe) {
   for (size_t i = 0; i < messages.size(); ++i) {
     const CompilerMessage mess = messages[i];
-    if (mess.file() == fe->getFileName()) {
+    if (mess.file() == fe->filename()) {
       fe->AddCompilerMessage(mess);
     }
   }
@@ -333,7 +330,7 @@ void MainWindow::openFile(const wxString& file, int start_line, int start_index,
     ? res.edit
     : AddCompilerMessages(compiler_messages_, new FileEdit(notebook, this, "", path))
     ;
-  edit->setSelection(start_line, start_index, end_line, end_index);
+  edit->SetSelection(start_line, start_index, end_line, end_index);
   edit->Focus();
 }
 
@@ -348,7 +345,7 @@ FileEdit* MainWindow::getSelectedEditorNull() {
 void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
   FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, evt.GetSelection());
   if (edit) {
-    if (edit->canClose(true) == false) {
+    if (edit->CanClose(true) == false) {
       evt.Veto();
     }
   }
@@ -358,7 +355,7 @@ FoundEdit MainWindow::getEditFromFileName(const wxString& file) {
   for (unsigned int i = 0; i < notebook->GetPageCount(); ++i) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
     if (edit) {
-      if (edit->getFileName() == file) {
+      if (edit->filename() == file) {
         return FoundEdit(i, edit);
       }
     }
@@ -372,7 +369,7 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook, i);
     if (edit) {
       const bool canAbort = evt.CanVeto();
-      if (edit->canClose(canAbort) == false) {
+      if (edit->CanClose(canAbort) == false) {
         evt.Veto();
         return;
       }
