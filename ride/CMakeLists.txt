@@ -31,3 +31,35 @@ target_link_libraries(
 	${wxWidgets_LIBRARIES}
 	${PROTOBUF_LIBRARIES}
 )
+
+if(BUILD_USE_CLANG_FORMAT)
+	add_custom_command(TARGET ${PROJECT_NAME}
+				   PRE_BUILD
+				   COMMAND ./call-clang-format.py ${CMAKE_CURRENT_SOURCE_DIR}/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+				   COMMENT "Running clang format" VERBATIM)
+endif(BUILD_USE_CLANG_FORMAT)
+
+if(BUILD_USE_CPPLINT)
+	add_custom_command(TARGET ${PROJECT_NAME}
+					   PRE_BUILD
+					   COMMAND ./cpplint.py ARGS --output=vs7 ${CMAKE_CURRENT_SOURCE_DIR}/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/*.h  ${mainsrc}
+					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+					   COMMENT "Running CppLint" VERBATIM)
+endif(BUILD_USE_CPPLINT)
+
+if(BUILD_USE_CPPCHECK)
+	add_custom_command(TARGET ${PROJECT_NAME}
+					   PRE_BUILD
+					   COMMAND cppcheck --enable=all --suppress=unusedFunction --quiet --template=vs ${CMAKE_SOURCE_DIR}/ride
+					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+					   COMMENT "Running cppcheck" VERBATIM)
+endif(BUILD_USE_CPPCHECK)
+
+if(BUILD_USE_DOXYGEN)
+	add_custom_command(TARGET ${PROJECT_NAME}
+					   PRE_LINK
+					   COMMAND ${DOXYGEN_EXECUTABLE} ARGS ${CMAKE_CURRENT_BINARY_DIR}/../Doxyfile
+					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+					   COMMENT "Running Doxygen" VERBATIM)
+endif(BUILD_USE_DOXYGEN)
