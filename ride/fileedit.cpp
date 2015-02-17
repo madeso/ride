@@ -516,7 +516,7 @@ void FileEdit::UpdateTextControl() {
 
   // setup language color
   assert(current_language_);
-  current_language_->style(text_, set);
+  current_language_->StyleDocument(text_, set);
 
   //////////////////////////////////////////////////////////////////////////
 

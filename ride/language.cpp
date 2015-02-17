@@ -22,7 +22,7 @@ std::vector<wxString> Split(const wxString& str, char c) {
 
 //////////////////////////////////////////////////////////////////////////
 
-Language::Language(const wxString& name, int style) : language_name(name), lexstyle(style) {
+Language::Language(const wxString& name, int style) : language_name_(name), lexer_style_(style) {
 }
 
 wxString PropTypeToString(int type) {
@@ -35,34 +35,35 @@ wxString PropTypeToString(int type) {
   case wxSTC_TYPE_STRING:
     return _("wxString");
   default:
+    assert(0 && "Unknown property type");
     return _("XXXXXXXX");
   }
 }
 
-void Language::style(wxStyledTextCtrl* text, const ride::Settings& settings) {
+void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
 #ifdef _DEBUG
-  props.clear();
-  used_keywords.clear();
+  used_properties_.clear();
+  used_keywords_.clear();
 #endif
-  text->SetLexer(lexstyle);
-  dostyle(text, settings);
+  text->SetLexer(lexer_style_);
+  DoStyleDocument(text, settings);
 #ifdef _DEBUG
   const std::vector<wxString> available_props = Split(text->PropertyNames(), '\n');
   const std::vector<wxString> available_keywords = Split(text->DescribeKeyWordSets(), '\n');
 
   for (std::vector<wxString>::const_iterator p = available_props.begin(); p != available_props.end(); ++p) {
     const wxString prop_name = *p;
-    if (props.find(prop_name) == props.end()) {
+    if (used_properties_.find(prop_name) == used_properties_.end()) {
       const wxString desc = text->DescribeProperty(prop_name);
       const wxString value = text->GetProperty(prop_name);
       const wxString type = PropTypeToString(text->PropertyType(prop_name));
-      wxLogWarning(_("Property for %s was not set: %s %s; // %s %s"), language_name, type, prop_name, value, desc);
+      wxLogWarning(_("Property for %s was not set: %s %s; // %s %s"), language_name_, type, prop_name, value, desc);
     }
   }
 
   for (unsigned int i = 0; i < available_keywords.size(); ++i) {
-    if (used_keywords.find(i) == used_keywords.end()) {
-      wxLogWarning(_("Keyword %d for %s was not set: %s"), i, language_name, available_keywords[i]);
+    if (used_keywords_.find(i) == used_keywords_.end()) {
+      wxLogWarning(_("Keyword %d for %s was not set: %s"), i, language_name_, available_keywords[i]);
     }
   }
 #endif
@@ -71,26 +72,26 @@ void Language::style(wxStyledTextCtrl* text, const ride::Settings& settings) {
 void Language::SetProp(wxStyledTextCtrl* text, const wxString& name, const wxString& value) {
   text->SetProperty(name, value);
 #ifdef _DEBUG
-  assert(props.find(name) == props.end());
-  props.insert(name);
+  assert(used_properties_.find(name) == used_properties_.end());
+  used_properties_.insert(name);
 #endif
 }
 
 void Language::SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords) {
   text->SetKeyWords(id, keywords);
 #ifdef _DEBUG
-  assert(used_keywords.find(id) == used_keywords.end());
-  used_keywords.insert(id);
+  assert(used_keywords_.find(id) == used_keywords_.end());
+  used_keywords_.insert(id);
 #endif
 }
 
 Language& Language::operator()(const wxString& ext) {
-  patterns.push_back(ext);
+  file_patterns_.push_back(ext);
   return *this;
 }
 
-bool Language::matchPattern(const wxString& file) const {
-  for (std::vector<wxString>::const_iterator p = patterns.begin(); p != patterns.end(); ++p) {
+bool Language::MatchPattern(const wxString& file) const {
+  for (std::vector<wxString>::const_iterator p = file_patterns_.begin(); p != file_patterns_.end(); ++p) {
     if (file.EndsWith(*p)) {
       return true;
     }
@@ -114,7 +115,7 @@ public:
       (".hxx")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().c_default());
     SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().c_comment());
     SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().c_commentline());
@@ -196,7 +197,7 @@ public:
       (".rs")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().c_default());
     SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().c_comment());
     SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().c_commentline());
@@ -269,7 +270,7 @@ class NullLanguage : public Language {
 public:
   NullLanguage() : Language(_("NULL"), wxSTC_LEX_NULL) {
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
   }
 } g_language_null;
 
@@ -280,7 +281,7 @@ public:
       (".md")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     SetStyle(text, wxSTC_MARKDOWN_DEFAULT, settings.fonts_and_colors().markdown_default());
     SetStyle(text, wxSTC_MARKDOWN_LINE_BEGIN, settings.fonts_and_colors().markdown_line_begin());
     SetStyle(text, wxSTC_MARKDOWN_STRONG1, settings.fonts_and_colors().markdown_strong1());
@@ -315,7 +316,7 @@ public:
       (".toml") // properties are kinda like toml
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_PROPS_DEFAULT, settings.fonts_and_colors().props_default());
@@ -334,7 +335,7 @@ public:
       (".xml")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_H_DEFAULT, settings.fonts_and_colors().h_default());
@@ -376,7 +377,7 @@ public:
       ("CMakeLists.txt")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_CMAKE_DEFAULT, settings.fonts_and_colors().cmake_default());
@@ -418,7 +419,7 @@ public:
       (".lua")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
     
     SetStyle(text, wxSTC_LUA_DEFAULT, settings.fonts_and_colors().lua_default());
@@ -466,7 +467,7 @@ public:
       (".yaml")
       ;
   }
-  void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_YAML_DEFAULT, settings.fonts_and_colors().yaml_default());
@@ -502,7 +503,7 @@ const std::vector<Language*> LanguageList = BuildLanguageList();
 Language* DetermineLanguage(const wxString& filepath) {
   for (std::vector<Language*>::const_iterator l = LanguageList.begin(); l != LanguageList.end(); ++l) {
     Language* lang = *l;
-    if (lang->matchPattern(filepath)) {
+    if (lang->MatchPattern(filepath)) {
       return lang;
     }
   }

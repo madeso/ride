@@ -12,24 +12,26 @@ class wxStyledTextCtrl;
 class Language {
 public:
   // internal
-  bool matchPattern(const wxString& file) const;
+  // todo: move to protected/private
+  bool MatchPattern(const wxString& file) const;
 
   // internal
+  // todo: move to protected/private
   Language& operator()(const wxString& ext);
 
-  void style(wxStyledTextCtrl* text, const ride::Settings& settings);
+  void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
 protected:
   Language(const wxString& name, int style);
-  virtual void dostyle(wxStyledTextCtrl* text, const ride::Settings& settings) = 0;
+  virtual void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) = 0;
   void SetProp(wxStyledTextCtrl* text, const wxString& name, const wxString& value);
   void SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords);
 private:
-  wxString language_name;
-  int lexstyle;
-  std::vector<wxString> patterns;
+  wxString language_name_;
+  int lexer_style_;
+  std::vector<wxString> file_patterns_;
 #ifdef _DEBUG
-  std::set<wxString> props;
-  std::set<unsigned int> used_keywords;
+  std::set<wxString> used_properties_;
+  std::set<unsigned int> used_keywords_;
 #endif
 };
 
