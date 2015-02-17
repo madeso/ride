@@ -11,7 +11,7 @@ message(status "wxWidgets use file: ${wxWidgets_USE_FILE}")
 find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
-FILE(GLOB src_glob *.cpp;*.h)
+FILE(GLOB src_glob *.cc;*.h)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 PROTOBUF_GENERATE_CPP(SETTINGS_PROTO_SRCS SETTINGS_PROTO_HDRS settings.proto)
