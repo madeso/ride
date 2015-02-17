@@ -8,6 +8,7 @@ option(BUILD_USE_DOXYGEN "Add doxygen to the build" ON)
 option(BUILD_USE_CPPCHECK "run cppcheck on all source" ON)
 
 find_package(Doxygen REQUIRED)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.ini ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 add_custom_target(doxygen ALL
 	${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
 	WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
