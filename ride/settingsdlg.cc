@@ -446,7 +446,7 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
 {
   StyleSaveSelectedIndex();
   EditToGui(false);
-  // todo: Call StyleToGui(false) ???
+  StyleToGui(false);
   main_window_->set_settings(current_settings_);
   if (false == SaveSettings(current_settings_)) {
     wxMessageBox("Failed to save settings", "Failed!", wxOK | wxICON_ERROR);
