@@ -1,7 +1,7 @@
 #ifndef SETTINGS_DLG_H
 #define SETTINGS_DLG_H
 
-#include "ride/ui.h"
+#include "ride/generated/ui.h"
 #include "ride/settings.h"
 
 class MainWindow;

@@ -17,13 +17,14 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 PROTOBUF_GENERATE_CPP(SETTINGS_PROTO_SRCS SETTINGS_PROTO_HDRS settings.proto)
 
 set(src settings.proto ${src_glob} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
+set(generated_src generated/ui.cpp generated/ui.h)
 
 source_group("" FILES ${src})
-source_group("generated" FILES ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
+source_group("generated" FILES ${generated_src} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
 
 add_executable(
 	${PROJECT_NAME} WIN32 
-	${src}
+	${src} ${generated_src}
 )
 
 target_link_libraries(
