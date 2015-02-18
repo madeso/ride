@@ -87,10 +87,10 @@ namespace ui
 			wxCheckBox* uiFoldLineBeforeContracted;
 			wxCheckBox* uiFoldLineAfterExpanded;
 			wxCheckBox* uiFoldLineAfterContracted;
-			wxTextCtrl* uiEditCurrentLineAlpha;
-			wxCheckBox* uiCurrentLineVisible;
-			wxColourPickerCtrl* uiEditCurrentLineColor;
 			wxCheckBox* uiEditCurrentLineOverdraw;
+			wxColourPickerCtrl* uiEditCurrentLineColor;
+			wxCheckBox* uiCurrentLineVisible;
+			wxTextCtrl* uiEditCurrentLineAlpha;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;
