@@ -13,10 +13,12 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Make output window use scintilla and styling
 * Function for selecting current word
 * Remember session data
+* Goto definition & goto definition of type
 * Expose all scintilla settings in gui + settings
 * Detect changes outside ride and ask to reload file
 * Comment / uncomment selection
 * Expose all aui settings in gui + settings
+* Switch tabs by scrolling with cursor over tab-bar
 * Scintilla text commands (edit->select all, etc)
 * Sort selected lines
 * Align/remove space left/right
@@ -44,6 +46,7 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 * Custom styles (like zenburn, obsidian, ...)
 * Import styles from other editors (like visualstudio / https://studiostyl.es/ )
 * Code snippets
+* View documents inline instead of in a new tab
 * File templates
 * Numbered bookmarks
 * Implement ctrl+tab like visual studio to switch between open documents
