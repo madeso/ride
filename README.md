@@ -1,5 +1,5 @@
 # Ride
-Ride is a Rust IDE. It's named after concatenating R from rust and IDE. It's currently not in a usable state.
+Ride is a [Rust](http://www.rust-lang.org/) [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment). It's named after concatenating R from rust and IDE. It's currently not in a usable state.
 
 The project aim is to implement as much of it in C++ and then port it to rust when it stabilizes.
 
