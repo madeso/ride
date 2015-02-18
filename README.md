@@ -7,7 +7,6 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 
 # Unsorted Roadmap
 
-* Create filter list from known languages
 * Mark important "word" for highlighting
 * Highlight misspelled words/comments
 * Make output window use scintilla and styling

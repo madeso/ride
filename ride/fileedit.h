@@ -77,6 +77,4 @@ private:
   wxDECLARE_EVENT_TABLE();
 };
 
-#define FILE_PATTERN "All files (*.*)|*.*"
-
 #endif  // RIDE_FILEEDIT_H

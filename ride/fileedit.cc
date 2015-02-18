@@ -360,7 +360,7 @@ bool FileEdit::Save() {
 
 bool FileEdit::SaveAs() {
   wxFileDialog saveFileDialog(this, _("Save file"), "", "",
-    FILE_PATTERN, wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    GetFilePattern(), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   if (saveFileDialog.ShowModal() == wxID_CANCEL)
     return false;
   return SaveTo(saveFileDialog.GetPath());

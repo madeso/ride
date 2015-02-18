@@ -20,6 +20,7 @@ public:
   Language& operator()(const wxString& ext);
 
   void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
+  wxString GetFilePattern() const;
 protected:
   Language(const wxString& name, int style);
   virtual void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) = 0;
@@ -36,5 +37,6 @@ private:
 };
 
 Language* DetermineLanguage(const wxString& filepath);
+wxString GetFilePattern();
 
 #endif  // RIDE_LANGUAGE_H

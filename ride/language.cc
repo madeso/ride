@@ -99,6 +99,29 @@ bool Language::MatchPattern(const wxString& file) const {
   return false;
 }
 
+wxString Language::GetFilePattern() const {
+  wxString patterns;
+
+  for (std::vector<wxString>::const_iterator p = file_patterns_.begin(); p != file_patterns_.end(); ++p) {
+
+    // if the pattern starts with a dot, assume it's a extension and we 
+   // need a star, if not we need to match the whole file
+    const wxString patt = p->StartsWith(".")
+      ? "*" + *p
+      : *p;
+
+    // build a *.txt;*.pdf list
+    if (patterns.IsEmpty()) {
+      patterns = patt;
+    }
+    else {
+      patterns += ";" + patt;
+    }
+  }
+
+  return language_name_ + " files (" + patterns +")|" + patterns;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 class CppLanguage : public Language {
@@ -314,6 +337,7 @@ public:
     (*this)
       (".props")
       (".toml") // properties are kinda like toml
+      // todo: implement a proper toml lexer/language
       ;
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
@@ -487,10 +511,10 @@ public:
 
 std::vector<Language*> BuildLanguageList() {
   std::vector<Language*> ret;
-  ret.push_back(&g_language_cpp);
   ret.push_back(&g_language_rust);
-  ret.push_back(&g_language_markdown);
   ret.push_back(&g_language_properties);
+  ret.push_back(&g_language_cpp);
+  ret.push_back(&g_language_markdown);
   ret.push_back(&g_language_xml);
   ret.push_back(&g_language_cmake);
   ret.push_back(&g_language_lua);
@@ -499,6 +523,18 @@ std::vector<Language*> BuildLanguageList() {
 }
 
 const std::vector<Language*> LanguageList = BuildLanguageList();
+
+wxString GetFilePattern() {
+  wxString ret = "All files (*.*)|*.*";
+
+  // need to loop from back to front to get the LanguageList in order for display
+  // since we are adding 'back to front'
+  for (std::vector<Language*>::const_reverse_iterator l = LanguageList.rbegin(); l != LanguageList.rend(); ++l) {
+    Language* lang = *l;
+    ret = lang->GetFilePattern() +"|"+ ret;
+  }
+  return ret;
+}
 
 Language* DetermineLanguage(const wxString& filepath) {
   for (std::vector<Language*>::const_iterator l = LanguageList.begin(); l != LanguageList.end(); ++l) {

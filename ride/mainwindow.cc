@@ -296,7 +296,7 @@ void MainWindow::OnAbout(wxCommandEvent& event)
 
 void MainWindow::OnFileOpen(wxCommandEvent& event)
 {
-  wxFileDialog open_file(this, _("Open file"), "", "", FILE_PATTERN, wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE );
+  wxFileDialog open_file(this, _("Open file"), "", "", GetFilePattern(), wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE );
   if (open_file.ShowModal() == wxID_CANCEL)
     return;
 
