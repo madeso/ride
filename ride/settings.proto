@@ -107,6 +107,8 @@ message Style {
 // what people want share: obsidian/zenburn/monokai and https://studiostyl.es/
 message FontsAndColors {
   optional Color selected_line = 1;
+  optional Color fold_margin_hi = 2;
+  optional Color fold_margin_low = 3;
   optional Color edgeColor = 8;
 
   optional Style line_number_style = 28;

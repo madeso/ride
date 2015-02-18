@@ -533,8 +533,10 @@ void FileEdit::UpdateTextControl() {
   text_->SetMarginMask(ID_MARGIN_FOLDING, wxSTC_MASK_FOLDERS);
   text_->SetMarginWidth(ID_MARGIN_FOLDING, 15);
   text_->SetMarginSensitive(ID_MARGIN_FOLDING, true);
-  text_->SetFoldMarginColour(true, wxColor(200, 200, 200));
-  text_->SetFoldMarginHiColour(true, wxColor(200, 200, 200));
+
+  text_->SetFoldMarginColour(true, C(set.fonts_and_colors().fold_margin_low()));
+  text_->SetFoldMarginHiColour(true, C(set.fonts_and_colors().fold_margin_hi()));
+
   text_->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
   text_->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
   text_->SetFoldFlags(C(set.foldflags()));

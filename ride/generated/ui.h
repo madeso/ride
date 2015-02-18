@@ -91,6 +91,8 @@ namespace ui
 			wxColourPickerCtrl* uiEditCurrentLineColor;
 			wxCheckBox* uiCurrentLineVisible;
 			wxTextCtrl* uiEditCurrentLineAlpha;
+			wxColourPickerCtrl* uiEditFoldHi;
+			wxColourPickerCtrl* uiEditFoldLow;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;
@@ -117,7 +119,7 @@ namespace ui
 		
 		public:
 			
-			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,500 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 502,587 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~Settings();
 		
 	};

@@ -515,6 +515,9 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATA(current_settings_, current_line_overdraw, uiEditCurrentLineOverdraw, );
   DIALOG_DATAX(fonts_and_colors, selected_line, uiEditCurrentLineColor);
 
+  DIALOG_DATAX(fonts_and_colors, fold_margin_hi, uiEditFoldHi);
+  DIALOG_DATAX(fonts_and_colors, fold_margin_low, uiEditFoldLow);
+
   if (togui == false) {
     current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
     current_settings_.set_allocated_foldflags(Allocate(foldflags));
