@@ -508,6 +508,11 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATA(foldflags, lineafter_contracted, uiFoldLineAfterContracted, );
 
   DIALOG_DATAX(fonts_and_colors, edgecolor, uiEdgeColor);
+  
+  DIALOG_DATA(current_settings_, current_line_visible, uiCurrentLineVisible, );
+  DIALOG_DATA(current_settings_, current_line_alpha, uiEditCurrentLineAlpha, );
+  DIALOG_DATA(current_settings_, current_line_overdraw, uiEditCurrentLineOverdraw, );
+  DIALOG_DATAX(fonts_and_colors, selected_line, uiEditCurrentLineColor);
 
   if (togui == false) {
     current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));

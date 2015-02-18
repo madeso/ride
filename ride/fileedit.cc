@@ -605,8 +605,15 @@ void FileEdit::UpdateTextControl() {
   text_->AnnotationSetVisible(C(set.annotations()));
 
 
-  // todo: expose this
-  text_->SetCaretLineVisible(true);
+  text_->SetCaretLineBackground(C(set.fonts_and_colors().selected_line()));
+  if (set.current_line_overdraw()) {
+    text_->SetCaretLineBackAlpha(set.current_line_alpha());
+  }
+  else {
+    text_->SetCaretLineBackAlpha(wxSTC_ALPHA_NOALPHA);
+  }
+  text_->SetCaretLineVisible(set.current_line_visible());
+  // todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier to change settings
 }
 
 void FileEdit::UpdateFilename() {

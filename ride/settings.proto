@@ -106,6 +106,7 @@ message Style {
 // the idea of moving out all fonts and colors is that likely theese are
 // what people want share: obsidian/zenburn/monokai and https://studiostyl.es/
 message FontsAndColors {
+  optional Color selected_line = 1;
   optional Color edgeColor = 8;
 
   optional Style default_style = 29;
@@ -114,7 +115,6 @@ message FontsAndColors {
   optional Style controlchar_style = 32;
   optional Style indentguide_style = 33;
   optional Style calltip_style = 34;
-
   optional Style annotation_warning_style = 35;
   optional Style annotation_error_style = 36;
 
@@ -281,6 +281,10 @@ message Settings {
   optional WrapIndentMode wrap_indent_mode = 21;
   optional int32 wrap_start_indent = 22;
   optional Annotation annotations = 23 [default = ANNOTATION_BOXED];
+
+  optional bool current_line_visible = 24 [default=false];
+  optional int32 current_line_alpha = 25 [default=10];
+  optional bool current_line_overdraw = 26 [default=false];
 
   // indicators
   optional Indicator indicator_error = 100;
