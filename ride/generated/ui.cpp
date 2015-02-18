@@ -16,12 +16,8 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 {
 	this->SetSizeHints( wxSize( 500,500 ), wxDefaultSize );
 	
-	wxFlexGridSizer* fgSizer1;
-	fgSizer1 = new wxFlexGridSizer( 0, 1, 0, 0 );
-	fgSizer1->AddGrowableCol( 0 );
-	fgSizer1->AddGrowableRow( 0 );
-	fgSizer1->SetFlexibleDirection( wxBOTH );
-	fgSizer1->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
 	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
 	m_fonts = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
@@ -126,7 +122,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_fonts->SetSizer( fgSizer6 );
 	m_fonts->Layout();
 	fgSizer6->Fit( m_fonts );
-	m_notebook1->AddPage( m_fonts, wxT("Fonts && Colors"), false );
+	m_notebook1->AddPage( m_fonts, wxT("Fonts && Colors"), true );
 	m_editor = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -242,11 +238,11 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_editor->SetSizer( bSizer2 );
 	m_editor->Layout();
 	bSizer2->Fit( m_editor );
-	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), true );
+	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), false );
 	m_window = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook1->AddPage( m_window, wxT("Window behaviour"), false );
 	
-	fgSizer1->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
+	bSizer3->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 	
 	m_sdbSizer1 = new wxStdDialogButtonSizer();
 	m_sdbSizer1OK = new wxButton( this, wxID_OK );
@@ -258,10 +254,10 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_sdbSizer1->Realize();
 	m_sdbSizer1->SetMinSize( wxSize( -1,50 ) ); 
 	
-	fgSizer1->Add( m_sdbSizer1, 1, wxEXPAND, 5 );
+	bSizer3->Add( m_sdbSizer1, 0, wxEXPAND|wxFIXED_MINSIZE, 5 );
 	
 	
-	this->SetSizer( fgSizer1 );
+	this->SetSizer( bSizer3 );
 	this->Layout();
 	
 	this->Centre( wxBOTH );
