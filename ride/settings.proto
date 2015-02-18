@@ -109,6 +109,7 @@ message FontsAndColors {
   optional Color selected_line = 1;
   optional Color edgeColor = 8;
 
+  optional Style line_number_style = 28;
   optional Style default_style = 29;
   optional Style bracelight_style = 30;
   optional Style bracebad_style = 31;

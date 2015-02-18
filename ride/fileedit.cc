@@ -531,7 +531,6 @@ void FileEdit::UpdateTextControl() {
   // todo: move to settings
   text_->SetMarginType(ID_MARGIN_FOLDING, wxSTC_MARGIN_SYMBOL);
   text_->SetMarginMask(ID_MARGIN_FOLDING, wxSTC_MASK_FOLDERS);
-  // text->StyleSetBackground(m_FoldingID, wxColor(200, 200, 200));
   text_->SetMarginWidth(ID_MARGIN_FOLDING, 15);
   text_->SetMarginSensitive(ID_MARGIN_FOLDING, true);
   text_->SetFoldMarginColour(true, wxColor(200, 200, 200));
@@ -582,6 +581,7 @@ void FileEdit::UpdateTextControl() {
 
   // todo: setup style colors and font
   SetStyle(text_, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
+  SetStyle(text_, wxSTC_STYLE_LINENUMBER, set.fonts_and_colors().line_number_style());
   SetStyle(text_, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
   SetStyle(text_, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
   SetStyle(text_, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());

@@ -127,6 +127,7 @@ std::vector<StyleLink*> BuildStyleLinks() {
   ret.push_back(&styleLink##STYLE)
 
   DEF_STYLE("Default", default_style);
+  DEF_STYLE("Line number", line_number_style);
   DEF_STYLE("Brace light", bracelight_style);
   DEF_STYLE("Brace bad", bracebad_style);
   DEF_STYLE("Control char", controlchar_style);
