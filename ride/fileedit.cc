@@ -129,15 +129,13 @@ void FileEdit::GotoLine() {
 
 
 void FileEdit::Indent() {
-  // todo: fix issue with replacing selection
   text_->CmdKeyExecute(wxSTC_CMD_TAB);
   UpdateTitle();
 }
 
 
 void FileEdit::UnIndent() {
-  // todo: fix issue with replacing selection
-  text_->CmdKeyExecute(wxSTC_CMD_DELETEBACK);
+  text_->CmdKeyExecute(wxSTC_CMD_BACKTAB);
   UpdateTitle();
 }
 
