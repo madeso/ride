@@ -37,6 +37,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Align/remove space left/right
 * Trim left/right/both selected lines
 * Mark important "word" for highlighting
+* Change the color dialog button/control to a more photshop looking color dialog that sends the color directly to all the edits for instant feedback
 * Highlight misspelled words/comments
 * Function for selecting current word
 * Goto definition & goto definition of type
