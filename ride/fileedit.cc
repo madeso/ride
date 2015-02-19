@@ -327,8 +327,8 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
   , main_(parent)
   , notebook_(anotebook)
   , current_language_(NULL) 
-  , highligh_current_word_last_start_position_(-1)
-  , highligh_current_word_last_end_position_(-1)
+  , highlight_current_word_last_start_position_(-1)
+  , highlight_current_word_last_end_position_(-1)
 {
   text_ = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__
@@ -796,11 +796,11 @@ void FileEdit::HighlightCurrentWord() {
   const int start_position = text_->WordStartPosition(pos, only_word_characters);
   const int end_position = text_->WordEndPosition(pos, only_word_characters);
 
-  // todo: don't highlight keywords?
-  
-  if (start_position != highligh_current_word_last_start_position_ || end_position != highligh_current_word_last_end_position_) {
+  if (start_position != highlight_current_word_last_start_position_ || end_position != highlight_current_word_last_end_position_) {
     text_->SetIndicatorCurrent(ID_INDICATOR_SELECT_HIGHLIGHT);
-    if (highligh_current_word_last_start_position_ != -1 && highligh_current_word_last_end_position_ != -1 && highligh_current_word_last_start_position_ != highligh_current_word_last_end_position_) {
+
+    // clear old highlight
+    if (highlight_current_word_last_start_position_ != -1 && highlight_current_word_last_end_position_ != -1 && highlight_current_word_last_start_position_ != highlight_current_word_last_end_position_) {
       text_->IndicatorClearRange(0, text_->GetLength());
     }
 
@@ -808,20 +808,26 @@ void FileEdit::HighlightCurrentWord() {
       const int length = end_position - start_position;
       assert(length > 0);
 
-      const wxString hover = text_->GetRange(start_position, end_position);
+      const wxString current_text = text_->GetRange(start_position, end_position);
 
-      int search_point = 0;
-      while (true) {
-        int match_index = text_->FindText(search_point, text_->GetLength(), hover, wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE);
-        if (match_index == -1) {
-          break;
+      // todo: add option for also highlightning the keywords
+      const bool is_keyword = current_language_ ? current_language_->IsKeyword(current_text) : false;
+
+      if (is_keyword == false) {
+        // search through the entire document for this text and highlight it
+        int search_point = 0;
+        while (true) {
+          int match_index = text_->FindText(search_point, text_->GetLength(), current_text, wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE);
+          if (match_index == -1) {
+            break;
+          }
+          text_->IndicatorFillRange(match_index, length);
+          search_point = match_index + length;
         }
-        text_->IndicatorFillRange(match_index, length);
-        search_point = match_index + length;
       }
     }
-    highligh_current_word_last_start_position_ = start_position;
-    highligh_current_word_last_end_position_ = end_position;
+    highlight_current_word_last_start_position_ = start_position;
+    highlight_current_word_last_end_position_ = end_position;
   }
 }
 

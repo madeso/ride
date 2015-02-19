@@ -19,6 +19,8 @@ public:
   // todo: move to protected/private
   Language& operator()(const wxString& ext);
 
+  bool IsKeyword(const wxString word) const;
+
   void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
   wxString GetFilePattern() const;
 protected:
@@ -26,6 +28,8 @@ protected:
   virtual void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) = 0;
   void SetProp(wxStyledTextCtrl* text, const wxString& name, const wxString& value);
   void SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords);
+
+  std::vector<wxString> keywords_;
 private:
   wxString language_name_;
   int lexer_style_;

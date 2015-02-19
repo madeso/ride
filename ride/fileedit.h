@@ -73,8 +73,8 @@ private:
 
   Language* current_language_;
 
-  int highligh_current_word_last_start_position_;
-  int highligh_current_word_last_end_position_;
+  int highlight_current_word_last_start_position_;
+  int highlight_current_word_last_end_position_;
 
 private:
   wxDECLARE_EVENT_TABLE();

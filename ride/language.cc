@@ -40,6 +40,40 @@ wxString PropTypeToString(int type) {
   }
 }
 
+bool Language::IsKeyword(const wxString word) const {
+  for (std::vector<wxString>::const_iterator keyword = keywords_.begin(); keyword != keywords_.end(); ++keyword) {
+    if (*keyword == word) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+class KeywordBuilder {
+public:
+  KeywordBuilder& operator<<(const wxString keyword) {
+    keywords_.push_back(keyword);
+    return *this;
+  }
+
+  const std::vector<wxString>& ToVector() const {
+    return keywords_;
+  }
+  wxString ToString() const {
+    wxString ret;
+    bool first = true;
+    for (std::vector<wxString>::const_iterator keyword = keywords_.begin(); keyword != keywords_.end(); ++keyword) {
+      if (first) ret = *keyword;
+      else ret += " " + *keyword;
+      first = false;
+    }
+    return ret;
+  }
+private:
+  std::vector<wxString> keywords_;
+};
+
 void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
 #ifdef _DEBUG
   used_properties_.clear();
@@ -137,7 +171,18 @@ public:
       (".hpp")
       (".hxx")
       ;
+    const KeywordBuilder temp = KeywordBuilder()
+      <<"asm"<<"auto"<<"bool"<<"break"<<"case"<<"catch"<<"char"<<"class"<<"const"<<"const_cast"
+      <<"continue"<<"default"<<"delete"<<"do"<<"double"<<"dynamic_cast"<<"else"<<"enum"<<"explicit"
+      <<"export"<<"extern"<<"false"<<"float"<<"for"<<"friend"<<"goto"<<"if"<<"inline"<<"int"<<"long"
+      <<"mutable"<<"namespace"<<"new"<<"operator"<<"private"<<"protected"<<"public"<<"register"
+      <<"reinterpret_cast"<<"return"<<"short"<<"signed"<<"sizeof"<<"static"<<"static_cast"
+      <<"struct"<<"switch"<<"template"<<"this"<<"throw"<<"true"<<"try"<<"typedef"<<"typeid"
+      <<"typename"<<"union"<<"unsigned"<<"using"<<"virtual"<<"void"<<"volatile"<<"wchar_t"<<"while";
+    keywords_ = temp.ToVector();
+    primary_keywords_ = temp.ToString();
   }
+  wxString primary_keywords_;
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().c_default());
     SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().c_comment());
@@ -182,15 +227,6 @@ public:
     SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
     SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 
-    const wxString CppWordlist1 =
-      "asm auto bool break case catch char class const const_cast "
-      "continue default delete do double dynamic_cast else enum explicit "
-      "export extern false float for friend goto if inline int long "
-      "mutable namespace new operator private protected public register "
-      "reinterpret_cast return short signed sizeof static static_cast "
-      "struct switch template this throw true try typedef typeid "
-      "typename union unsigned using virtual void volatile wchar_t "
-      "while";
     const wxString CppWordlist2 =
       "file";
     const wxString CppWordlist3 =
@@ -204,7 +240,7 @@ public:
       "retval sa section see showinitializer since skip skipline struct "
       "subsection test throw todo typedef union until var verbatim "
       "verbinclude version warning weakgroup $ @ \"\" & < > # { }";
-    SetKeys(text, 0, CppWordlist1); // primary
+    SetKeys(text, 0, primary_keywords_); // primary
     SetKeys(text, 1, CppWordlist2); // secondary
     SetKeys(text, 2, CppWordlist3); // documentation
 
@@ -219,7 +255,22 @@ public:
     (*this)
       (".rs")
       ;
+    const KeywordBuilder temp = KeywordBuilder()
+      << "abstract" << "alignof" << "as" << "become" << "box"
+      << "break" << "const" << "continue" << "crate" << "do"
+      << "else" << "enum" << "extern" << "false" << "final"
+      << "fn" << "for" << "if" << "impl" << "in"
+      << "let" << "loop" << "macro" << "match" << "mod"
+      << "move" << "mut" << "offsetof" << "override" << "priv"
+      << "pub" << "pure" << "ref" << "return" << "sizeof"
+      << "static" << "self" << "struct" << "super" << "true"
+      << "trait" << "type" << "typeof" << "unsafe" << "unsized"
+      << "use" << "virtual" << "where" << "while" << "yield";
+    keywords_ = temp.ToVector();
+    primary_keywords_ = temp.ToString();
   }
+  wxString primary_keywords_;
+
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().c_default());
     SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().c_comment());
@@ -264,23 +315,11 @@ public:
     SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
     SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 
-    const wxString CppWordlist1 =
-      "abstract alignof as become box "
-      "break const continue crate do "
-      "else enum extern false final "
-      "fn for if impl in "
-      "let loop macro match mod "
-      "move mut offsetof override priv "
-      "pub pure ref return sizeof "
-      "static self struct super true "
-      "trait type typeof unsafe unsized "
-      "use virtual where while yield"
-      ;
     const wxString CppWordlist2 =
       "bool char f32 f64 i16 i32 i64 i8 isize slice str tuple u16 u32 u64 u8 usize";
     const wxString CppWordlist3 =
       "";
-    SetKeys(text, 0, CppWordlist1); // primary
+    SetKeys(text, 0, primary_keywords_); // primary
     SetKeys(text, 1, CppWordlist2); // secondary
     SetKeys(text, 2, CppWordlist3); // documentation
 
