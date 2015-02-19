@@ -106,6 +106,8 @@ public:
 
   void UpdateStyle() {
     this->SetReadOnly(true);
+
+    // todo: don't use full scrintilla settings
     SetupScintilla(this, main_->settings(), NullLanguage());
   }
 
