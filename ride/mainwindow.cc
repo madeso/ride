@@ -285,7 +285,7 @@ void MainWindow::OnAbout(wxCommandEvent& event)
 {
   wxAboutDialogInfo about_info;
   about_info.SetName(app_name_);
-  // todo: set icon/logo
+
   // aboutInfo.SetVersion(RIDE_VERSION_STRING);
   about_info.SetDescription(_("Ride is a Rust IDE. It's named after concatenating R from rust and IDE."));
   // aboutInfo.SetCopyright("(C) 1992-2010");
