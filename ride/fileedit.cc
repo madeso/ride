@@ -504,6 +504,16 @@ wxString b2s01(bool b) {
   else return _("0");
 }
 
+wxString FileEdit::CalculateDocumentName() const {
+  if (filename_.IsEmpty()) {
+    return "Untitled";
+  }
+  else {
+    wxFileName fn(filename_);
+    return fn.GetFullName();
+  }
+}
+
 void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language) {
   // initialize styles
   text_ctrl->StyleClearAll();
@@ -628,14 +638,6 @@ void FileEdit::UpdateTextControl() {
 }
 
 void FileEdit::UpdateFilename() {
-  if (filename_.IsEmpty()) {
-    docname_ = "Untitled";
-  }
-  else {
-    wxFileName fn(filename_);
-    docname_ = fn.GetFullName();
-  }
-
   if (filename_.IsEmpty() == false) {
     size_t index = notebook_->GetPageIndex(this);
     notebook_->SetPageToolTip(index, filename_);
@@ -650,7 +652,7 @@ void FileEdit::UpdateFilename() {
 void FileEdit::UpdateTitle() {
   size_t index = notebook_->GetPageIndex(this);
   const wxString modified_star = text_->IsModified() ? "*" : "";
-  notebook_->SetPageText(index, docname_ + modified_star);
+  notebook_->SetPageText(index, CalculateDocumentName() + modified_star);
 }
 
 bool FileEdit::ShouldBeSaved() {
@@ -673,10 +675,10 @@ bool FileEdit::CanClose(bool canAbort) {
       ;
 
     if (labelChangeOk) {
-      dlg.SetMessage("\"" + docname_ + "\" has changed since last time...");
+      dlg.SetMessage("\"" + CalculateDocumentName() + "\" has changed since last time...");
     }
     else {
-      dlg.SetMessage("\"" + docname_ + "\" has changed since last time, save it?");
+      dlg.SetMessage("\"" + CalculateDocumentName() + "\" has changed since last time, save it?");
     }
 
     const int answer = dlg.ShowModal();

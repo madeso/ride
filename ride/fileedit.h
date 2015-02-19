@@ -62,12 +62,13 @@ private:
   bool ShouldBeSaved();
   void HighlightCurrentWord();
 
+  wxString CalculateDocumentName() const;
+
 private:
   MainWindow* main_;
   wxStyledTextCtrl* text_;
   wxAuiNotebook* notebook_;
   wxString filename_;
-  wxString docname_; // filename_ or Untitled if file is missing, todo: make into a function
 
   Language* current_language_;
 
