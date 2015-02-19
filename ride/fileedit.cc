@@ -85,12 +85,12 @@ void FileEdit::Delete() {
 
 
 void FileEdit::Find() {
-  // todo: implement me
+  // todo: implement file find
 }
 
 
 void FileEdit::Replace() {
-  // todo: implement me
+  // todo: implement file replace
 }
 
 
@@ -172,7 +172,7 @@ void FileEdit::MoveLinesDown() {
 }
 
 void FileEdit::ShowProperties() {
-  // todo: implement me
+  // todo: implement file properties
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -232,7 +232,7 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
   const bool is_warning = mess.type() == CompilerMessage::TYPE_WARNING;
 
   if (is_error || is_warning) {
-    // todo: make this a option
+    // todo: make embedded warning and error annoatations a option
     const int style = is_error ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
     const int line = mess.start_line() -1;
     const wxString type = is_error ? "Error: " : "Warning: ";
@@ -243,7 +243,7 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
     text_->AnnotationSetStyle(line, style);
 
     // only color on a single row, or it might get ugly
-    // todo: make this a option
+    // todo: add option to indicate warning/errors on multiple rows or not
     if (mess.start_line() == mess.end_line()) {
       int from = FromLineColToTextOffset(text_, mess.start_line(), mess.start_index());
       int to = FromLineColToTextOffset(text_, mess.end_line(), mess.end_index());
@@ -504,7 +504,7 @@ void FileEdit::UpdateTextControl() {
   // initialize styles
   text_->StyleClearAll();
 
-  // todo: remove these variables
+  // todo: remove these variables when all options are read from settings
   wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
   const wxColor grey(100, 100, 100);
   const wxColor white(255, 255, 255);
@@ -528,7 +528,6 @@ void FileEdit::UpdateTextControl() {
   text_->SetMarginSensitive(ID_MARGIN_DIVIDER, false);
 
   // folding settings
-  // todo: move to settings
   text_->SetMarginType(ID_MARGIN_FOLDING, wxSTC_MARGIN_SYMBOL);
   text_->SetMarginMask(ID_MARGIN_FOLDING, wxSTC_MASK_FOLDERS);
   text_->SetMarginWidth(ID_MARGIN_FOLDING, 15);
@@ -540,7 +539,7 @@ void FileEdit::UpdateTextControl() {
   text_->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
   text_->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
   text_->SetFoldFlags(C(set.foldflags()));
-  // todo: expose these
+  // todo: move folding symbol options to settings
   text_->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
   text_->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
   text_->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
@@ -581,7 +580,6 @@ void FileEdit::UpdateTextControl() {
   SetIndicator(text_, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
   SetIndicator(text_, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
 
-  // todo: setup style colors and font
   SetStyle(text_, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
   SetStyle(text_, wxSTC_STYLE_LINENUMBER, set.fonts_and_colors().line_number_style());
   SetStyle(text_, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
@@ -710,7 +708,7 @@ void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 }
 
 int CalculateIndentationChange(const wxString& str) {
-  // todo: move to language...
+  // todo: move indent calculation to language...
   int change = 0;
   for (size_t i = 0; i < str.Length(); ++i) {
     const wxUniChar c = str.at(i);
@@ -718,7 +716,7 @@ int CalculateIndentationChange(const wxString& str) {
       change += 1;
     }
     else if (c == '}') {
-      // todo: fix this bug
+      // todo: fix decrease indentation bug
       // change -= 1;
     }
   }
@@ -733,23 +731,23 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 
 
   if (entered_character == '{') {
-    // todo: setting for this
+    // todo: add setting for completing {}
     text_->InsertText(text_->GetCurrentPos(), "}");
   }
   else if (entered_character == '(') {
-    // todo: setting for this
-    // todo: make this smarter
+    // todo: setting for completing ()
+    // todo: make completion of () smarter
     text_->InsertText(text_->GetCurrentPos(), ")");
   }
   else if (entered_character == '[') {
-    // todo: setting for this
-    // todo: make this smarter
+    // todo: setting for this completing []
+    // todo: make completion of [] smarter
     text_->InsertText(text_->GetCurrentPos(), "]");
   }
   else if (entered_character == '\n' || entered_character == '\r')
   {
     // auto-indenting
-    // todo: add settings for this...
+    // todo: add settings for autoindenting(none, keep, smart) ...
     // loosely based on http://www.scintilla.org/ScintillaUsage.html and https://groups.google.com/forum/#!topic/scintilla-interest/vTwXwIBswSM
     const int current_line = text_->GetCurrentLine();
     const int line_start = text_->PositionFromLine(text_->GetCurrentLine()-1);

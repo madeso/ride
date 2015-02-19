@@ -455,7 +455,7 @@ void MainWindow::UpdateTitle() {
 }
 
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
-  // todo: implement me
+  // todo: implement creation of new project
   UpdateTitle();
 }
 
