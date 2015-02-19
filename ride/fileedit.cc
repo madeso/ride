@@ -322,7 +322,14 @@ int C(ride::FoldFlags f) {
   return ret;
 }
 
-FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file) : wxControl(parent, wxID_ANY), main_(parent), notebook_(anotebook), current_language_(NULL) {
+FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file)
+  : wxControl(parent, wxID_ANY)
+  , main_(parent)
+  , notebook_(anotebook)
+  , current_language_(NULL) 
+  , highligh_current_word_last_start_position_(-1)
+  , highligh_current_word_last_end_position_(-1)
+{
   text_ = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__
     wxSUNKEN_BORDER |
@@ -791,12 +798,9 @@ void FileEdit::HighlightCurrentWord() {
 
   // todo: don't highlight keywords?
   
-  // todo: make these members
-  static int last_start_position = -1;
-  static int last_end_position = -1;
-  if (start_position != last_start_position || end_position != last_end_position) {
+  if (start_position != highligh_current_word_last_start_position_ || end_position != highligh_current_word_last_end_position_) {
     text_->SetIndicatorCurrent(ID_INDICATOR_SELECT_HIGHLIGHT);
-    if (last_start_position != -1 && last_end_position != -1 && last_start_position != last_end_position) {
+    if (highligh_current_word_last_start_position_ != -1 && highligh_current_word_last_end_position_ != -1 && highligh_current_word_last_start_position_ != highligh_current_word_last_end_position_) {
       text_->IndicatorClearRange(0, text_->GetLength());
     }
 
@@ -816,8 +820,8 @@ void FileEdit::HighlightCurrentWord() {
         search_point = match_index + length;
       }
     }
-    last_start_position = start_position;
-    last_end_position = end_position;
+    highligh_current_word_last_start_position_ = start_position;
+    highligh_current_word_last_end_position_ = end_position;
   }
 }
 
