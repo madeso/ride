@@ -3,6 +3,8 @@ Ride is a [Rust](http://www.rust-lang.org/) [IDE](https://en.wikipedia.org/wiki/
 
 The project aim is to implement as much of it in C++ and then port it to rust when rust is released.
 
+The current features are a pretty ok editor (scintilla based) and shortcuts for running various cargo commands, listing its output and doubleclicking on warnings/errors to go to them.
+
 ![screenshot](screenshots/1.png)
 
 # Somewhat sorted roadmap
