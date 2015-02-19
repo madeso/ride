@@ -133,6 +133,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 , project_(this, wxEmptyString)
 , app_name_(app_name)
 {
+  SetIcon(wxICON(aaaaa_logo));
   aui_.SetManagedWindow(this);
 
   LoadSettings(settings_);

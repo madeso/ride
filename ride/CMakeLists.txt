@@ -16,7 +16,7 @@ FILE(GLOB src_glob *.cc;*.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 PROTOBUF_GENERATE_CPP(SETTINGS_PROTO_SRCS SETTINGS_PROTO_HDRS settings.proto)
 
-set(src settings.proto ${src_glob} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
+set(src settings.proto resources.rc ${src_glob} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
 set(generated_src generated/ui.cpp generated/ui.h)
 
 source_group("" FILES ${src})
