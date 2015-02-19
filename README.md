@@ -48,7 +48,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Visual studio like debug settings
 * Context menu support
 * Simple/basic git commit shortcut with specifying the commit message
-* Investigate debugging support (gdb?)
+* Investigate debugging support (gdb? https://bjbell.wordpress.com/2015/02/17/emacs-rust-debugging/ )
 * Custom styles (like zenburn, obsidian, ...)
 * Import styles from other editors (like visualstudio / https://studiostyl.es/ )
 * View documents inline instead of in a new tab
