@@ -105,10 +105,13 @@ public:
   }
 
   void UpdateStyle() {
+    this->StyleClearAll();
     this->SetReadOnly(true);
 
-    // todo: don't use full scrintilla settings
-    SetupScintilla(this, main_->settings(), NullLanguage());
+    const ride::Settings& set = main_->settings();
+    SetupScintillaCurrentLine(this, set);
+    SetupScintillaDefaultStyles(this, set);
+    this->SetEndAtLastLine(set.end_at_last_line());
   }
 
   void OnDoubleClick(wxMouseEvent& event) {
@@ -225,6 +228,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   output_window_ = new OutputControl(this);
   output_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   output_window_->UpdateStyle();
+  output_window_->UpdateStyle();
   aui_.AddPane(output_window_, wxAuiPaneInfo().Name("output").Caption("Output").Bottom().CloseButton(false));
 
   aui_.Update();
@@ -257,14 +261,18 @@ MainWindow::~MainWindow() {
 
 void MainWindow::Clear() {
   // todo: this probably needs to happen in the gui thread instead of here... or does it?
-  output_window_->Clear();
+  output_window_->SetReadOnly(false);
+  output_window_->SetText(wxEmptyString);
+  output_window_->SetReadOnly(true);
   compiler_messages_.resize(0);
 }
 
 void MainWindow::Append(const wxString& str) {
   // todo: this probably needs to happen in the gui thread instead of here... or does it?
+  output_window_->SetReadOnly(false);
   output_window_->AppendText(str);
   output_window_->AppendText("\n");
+  output_window_->SetReadOnly(true);
 
   CompilerMessage mess;
   if (CompilerMessage::Parse(str, &mess)) {

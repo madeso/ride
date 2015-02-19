@@ -514,6 +514,31 @@ wxString FileEdit::CalculateDocumentName() const {
   }
 }
 
+void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set) {
+  text_ctrl->SetCaretLineBackground(C(set.fonts_and_colors().selected_line()));
+  if (set.current_line_overdraw()) {
+    text_ctrl->SetCaretLineBackAlpha(set.current_line_alpha());
+  }
+  else {
+    text_ctrl->SetCaretLineBackAlpha(wxSTC_ALPHA_NOALPHA);
+  }
+  text_ctrl->SetCaretLineVisible(set.current_line_visible());
+  // todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier to change settings
+}
+
+void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::Settings& set) {
+  SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER, set.fonts_and_colors().line_number_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
+
+  SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR, set.fonts_and_colors().annotation_error_style());
+  SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.fonts_and_colors().annotation_warning_style());
+}
+
 void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language) {
   // initialize styles
   text_ctrl->StyleClearAll();
@@ -596,16 +621,8 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
   SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
   SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
 
-  SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER, set.fonts_and_colors().line_number_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
+  SetupScintillaDefaultStyles(text_ctrl, set);
 
-  SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR, set.fonts_and_colors().annotation_error_style());
-  SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.fonts_and_colors().annotation_warning_style());
 
 
   text_ctrl->SetEndAtLastLine(set.end_at_last_line());
@@ -621,15 +638,8 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
   text_ctrl->AnnotationSetVisible(C(set.annotations()));
 
 
-  text_ctrl->SetCaretLineBackground(C(set.fonts_and_colors().selected_line()));
-  if (set.current_line_overdraw()) {
-    text_ctrl->SetCaretLineBackAlpha(set.current_line_alpha());
-  }
-  else {
-    text_ctrl->SetCaretLineBackAlpha(wxSTC_ALPHA_NOALPHA);
-  }
-  text_ctrl->SetCaretLineVisible(set.current_line_visible());
-  // todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier to change settings
+  SetupScintillaCurrentLine(text_ctrl, set);
+
 }
 
 void FileEdit::UpdateTextControl() {
