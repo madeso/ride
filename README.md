@@ -15,7 +15,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Make output window use scintilla and styling
 * Open type in online documentation command/do a search...
 * Search google for this compiler error
-* Expose all scintilla settings in gui + settings
 * Expose all aui settings in gui + settings
 * Remember session data
 * Comment / uncomment selection
