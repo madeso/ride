@@ -11,6 +11,7 @@
 class FileEdit;
 class SettingsDlg;
 class CompilerMessage;
+class OutputControl;
 
 struct FoundEdit {
   FoundEdit(size_t i, FileEdit* e) : index(i), edit(e) { }
@@ -99,7 +100,7 @@ private:
 
   wxAuiManager aui_;
   wxAuiNotebook* notebook_;
-  wxTextCtrl* output_window_;
+  OutputControl* output_window_;
 
   ride::Settings settings_;
   Project project_;

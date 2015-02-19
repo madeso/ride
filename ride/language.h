@@ -40,6 +40,7 @@ private:
 #endif
 };
 
+Language* NullLanguage();
 Language* DetermineLanguage(const wxString& filepath);
 wxString GetFilePattern();
 

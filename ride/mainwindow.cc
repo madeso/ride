@@ -99,9 +99,14 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
 wxEND_EVENT_TABLE()
 
-class OutputControl : public wxTextCtrl {
+class OutputControl : public wxStyledTextCtrl {
 public:
   OutputControl(MainWindow* main) : main_(main) {
+  }
+
+  void UpdateStyle() {
+    this->SetReadOnly(true);
+    SetupScintilla(this, main_->settings(), NullLanguage());
   }
 
   void OnDoubleClick(wxMouseEvent& event) {
@@ -122,14 +127,14 @@ public:
   wxDECLARE_EVENT_TABLE();
 };
 
-wxBEGIN_EVENT_TABLE(OutputControl, wxTextCtrl)
+wxBEGIN_EVENT_TABLE(OutputControl, wxStyledTextCtrl)
   EVT_LEFT_DCLICK(OutputControl::OnDoubleClick)
 wxEND_EVENT_TABLE()
 
 
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
-, output_window_(new OutputControl(this))
+, output_window_(NULL)
 , project_(this, wxEmptyString)
 , app_name_(app_name)
 {
@@ -215,8 +220,9 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   CreateNotebook();
 
   // output
-  output_window_->Create(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
-  output_window_->SetFont(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
+  output_window_ = new OutputControl(this);
+  output_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
+  output_window_->UpdateStyle();
   aui_.AddPane(output_window_, wxAuiPaneInfo().Name("output").Caption("Output").Bottom().CloseButton(false));
 
   aui_.Update();
@@ -395,6 +401,7 @@ void MainWindow::UpdateAllEdits() {
       edit->UpdateTextControl();
     }
   }
+  output_window_->UpdateStyle();
 }
 
 void MainWindow::OnFileShowSettings(wxCommandEvent& event) {

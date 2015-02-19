@@ -78,4 +78,6 @@ private:
   wxDECLARE_EVENT_TABLE();
 };
 
+void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language);
+
 #endif  // RIDE_FILEEDIT_H

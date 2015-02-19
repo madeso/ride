@@ -584,3 +584,7 @@ Language* DetermineLanguage(const wxString& filepath) {
   }
   return &g_language_null;
 }
+
+Language* NullLanguage() {
+  return &g_language_null;
+}
