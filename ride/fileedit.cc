@@ -345,9 +345,6 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
     text_->LoadFile(filename_);
   }
 
-  // calculate the maximum number a the line margin could contain
-  line_margin_width_ = text_->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_999999"));
-
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(text_, 1, wxEXPAND);
   SetSizer(sizer);
@@ -507,9 +504,9 @@ wxString b2s01(bool b) {
   else return _("0");
 }
 
-void FileEdit::UpdateTextControl() {
+void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language) {
   // initialize styles
-  text_->StyleClearAll();
+  text_ctrl->StyleClearAll();
 
   // todo: remove these variables when all options are read from settings
   wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
@@ -517,110 +514,117 @@ void FileEdit::UpdateTextControl() {
   const wxColor white(255, 255, 255);
   const wxColor darkgray = wxColour(20, 20, 20);
 
-  const ride::Settings& set = main_->settings();
+  // calculate the maximum number a the line margin could contain
+  // todo: use numbe of lines in the document instead and update when adding newlines
+  int line_margin_width_ = text_ctrl->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_999999"));
 
   // setup language color
-  assert(current_language_);
-  current_language_->StyleDocument(text_, set);
+  assert(language);
+  language->StyleDocument(text_ctrl, set);
 
   //////////////////////////////////////////////////////////////////////////
 
   // set margin for line numbers
-  text_->SetMarginType(ID_MARGIN_LINENUMBER, wxSTC_MARGIN_NUMBER);
-  text_->SetMarginWidth(ID_MARGIN_LINENUMBER, set.linenumberenable() ? line_margin_width_ : 0);
+  text_ctrl->SetMarginType(ID_MARGIN_LINENUMBER, wxSTC_MARGIN_NUMBER);
+  text_ctrl->SetMarginWidth(ID_MARGIN_LINENUMBER, set.linenumberenable() ? line_margin_width_ : 0);
 
   // set margin as unused
-  text_->SetMarginType(ID_MARGIN_DIVIDER, wxSTC_MARGIN_SYMBOL);
-  text_->SetMarginWidth(ID_MARGIN_DIVIDER, 15);
-  text_->SetMarginSensitive(ID_MARGIN_DIVIDER, false);
+  text_ctrl->SetMarginType(ID_MARGIN_DIVIDER, wxSTC_MARGIN_SYMBOL);
+  text_ctrl->SetMarginWidth(ID_MARGIN_DIVIDER, 15);
+  text_ctrl->SetMarginSensitive(ID_MARGIN_DIVIDER, false);
 
   // folding settings
-  text_->SetMarginType(ID_MARGIN_FOLDING, wxSTC_MARGIN_SYMBOL);
-  text_->SetMarginMask(ID_MARGIN_FOLDING, wxSTC_MASK_FOLDERS);
-  text_->SetMarginWidth(ID_MARGIN_FOLDING, 15);
-  text_->SetMarginSensitive(ID_MARGIN_FOLDING, true);
+  text_ctrl->SetMarginType(ID_MARGIN_FOLDING, wxSTC_MARGIN_SYMBOL);
+  text_ctrl->SetMarginMask(ID_MARGIN_FOLDING, wxSTC_MASK_FOLDERS);
+  text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING, 15);
+  text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, true);
 
-  text_->SetFoldMarginColour(true, C(set.fonts_and_colors().fold_margin_low()));
-  text_->SetFoldMarginHiColour(true, C(set.fonts_and_colors().fold_margin_hi()));
+  text_ctrl->SetFoldMarginColour(true, C(set.fonts_and_colors().fold_margin_low()));
+  text_ctrl->SetFoldMarginHiColour(true, C(set.fonts_and_colors().fold_margin_hi()));
 
-  text_->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
-  text_->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
-  text_->SetFoldFlags(C(set.foldflags()));
+  text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
+  text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
+  text_ctrl->SetFoldFlags(C(set.foldflags()));
   // todo: move folding symbol options to settings
-  text_->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
-  text_->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
-  text_->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
-  text_->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
-  text_->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
-  text_->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
-  text_->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
+  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
+  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
+  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
+  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
+  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
+  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
+  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
   // set spaces and indention
-  text_->SetTabWidth(set.tabwidth());
-  text_->SetUseTabs(set.usetabs());
-  text_->SetTabIndents(set.tabindents());
-  text_->SetBackSpaceUnIndents(set.backspaceunindents());
-  text_->SetIndent(set.tabwidth());
+  text_ctrl->SetTabWidth(set.tabwidth());
+  text_ctrl->SetUseTabs(set.usetabs());
+  text_ctrl->SetTabIndents(set.tabindents());
+  text_ctrl->SetBackSpaceUnIndents(set.backspaceunindents());
+  text_ctrl->SetIndent(set.tabwidth());
 
-  text_->SetViewEOL(set.displayeolenable());
-  text_->SetIndentationGuides(set.indentguideenable());
-  text_->SetEdgeMode(C(set.edgestyle()));
-  text_->SetEdgeColour(C(set.fonts_and_colors().edgecolor()));
-  text_->SetEdgeColumn(set.edgecolumn());
-  text_->SetViewWhiteSpace(C(set.whitespace()));
-  text_->SetOvertype(false);
-  text_->SetReadOnly(false);
-  text_->SetWrapMode(C(set.wordwrap()));
+  text_ctrl->SetViewEOL(set.displayeolenable());
+  text_ctrl->SetIndentationGuides(set.indentguideenable());
+  text_ctrl->SetEdgeMode(C(set.edgestyle()));
+  text_ctrl->SetEdgeColour(C(set.fonts_and_colors().edgecolor()));
+  text_ctrl->SetEdgeColumn(set.edgecolumn());
+  text_ctrl->SetViewWhiteSpace(C(set.whitespace()));
+  text_ctrl->SetOvertype(false);
+  text_ctrl->SetReadOnly(false);
+  text_ctrl->SetWrapMode(C(set.wordwrap()));
 
   // set visibility
   // todo: investigate this
-  text_->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
-  text_->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
-  text_->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+  text_ctrl->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
+  text_ctrl->SetXCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+  text_ctrl->SetYCaretPolicy(wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
 
-  text_->SetAdditionalSelectionTyping(true);
-  text_->SetAdditionalCaretsBlink(true);
-  text_->SetAdditionalCaretsVisible(true);
+  text_ctrl->SetAdditionalSelectionTyping(true);
+  text_ctrl->SetAdditionalCaretsBlink(true);
+  text_ctrl->SetAdditionalCaretsVisible(true);
 
-  SetIndicator(text_, ID_INDICATOR_ERROR, set.indicator_error());
-  SetIndicator(text_, ID_INDICATOR_WARNING, set.indicator_warning());
-  SetIndicator(text_, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
-  SetIndicator(text_, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
+  SetIndicator(text_ctrl, ID_INDICATOR_ERROR, set.indicator_error());
+  SetIndicator(text_ctrl, ID_INDICATOR_WARNING, set.indicator_warning());
+  SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
+  SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
 
-  SetStyle(text_, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
-  SetStyle(text_, wxSTC_STYLE_LINENUMBER, set.fonts_and_colors().line_number_style());
-  SetStyle(text_, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
-  SetStyle(text_, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
-  SetStyle(text_, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
-  SetStyle(text_, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
-  SetStyle(text_, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT, set.fonts_and_colors().default_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER, set.fonts_and_colors().line_number_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors().bracelight_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors().bracebad_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors().controlchar_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors().indentguide_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP, set.fonts_and_colors().calltip_style());
 
-  SetStyle(text_, STYLE_ANNOTATION_ERROR, set.fonts_and_colors().annotation_error_style());
-  SetStyle(text_, STYLE_ANNOTATION_WARNING, set.fonts_and_colors().annotation_warning_style());
+  SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR, set.fonts_and_colors().annotation_error_style());
+  SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.fonts_and_colors().annotation_warning_style());
 
 
-  text_->SetEndAtLastLine(set.end_at_last_line());
-  text_->SetVirtualSpaceOptions(C(set.virtual_space()));
-  text_->SetUseVerticalScrollBar(set.vertical_scrollbar());
-  text_->SetUseHorizontalScrollBar(set.horizontal_scrollbar());
+  text_ctrl->SetEndAtLastLine(set.end_at_last_line());
+  text_ctrl->SetVirtualSpaceOptions(C(set.virtual_space()));
+  text_ctrl->SetUseVerticalScrollBar(set.vertical_scrollbar());
+  text_ctrl->SetUseHorizontalScrollBar(set.horizontal_scrollbar());
   
-  text_->SetWrapVisualFlags(C(set.wrap_visual_flags()));
-  text_->SetWrapVisualFlagsLocation(C(set.wrap_visual_flags_location()));
-  text_->SetWrapIndentMode(C(set.wrap_indent_mode()));
-  text_->SetWrapStartIndent(set.wrap_start_indent());
+  text_ctrl->SetWrapVisualFlags(C(set.wrap_visual_flags()));
+  text_ctrl->SetWrapVisualFlagsLocation(C(set.wrap_visual_flags_location()));
+  text_ctrl->SetWrapIndentMode(C(set.wrap_indent_mode()));
+  text_ctrl->SetWrapStartIndent(set.wrap_start_indent());
 
-  text_->AnnotationSetVisible(C(set.annotations()));
+  text_ctrl->AnnotationSetVisible(C(set.annotations()));
 
 
-  text_->SetCaretLineBackground(C(set.fonts_and_colors().selected_line()));
+  text_ctrl->SetCaretLineBackground(C(set.fonts_and_colors().selected_line()));
   if (set.current_line_overdraw()) {
-    text_->SetCaretLineBackAlpha(set.current_line_alpha());
+    text_ctrl->SetCaretLineBackAlpha(set.current_line_alpha());
   }
   else {
-    text_->SetCaretLineBackAlpha(wxSTC_ALPHA_NOALPHA);
+    text_ctrl->SetCaretLineBackAlpha(wxSTC_ALPHA_NOALPHA);
   }
-  text_->SetCaretLineVisible(set.current_line_visible());
+  text_ctrl->SetCaretLineVisible(set.current_line_visible());
   // todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier to change settings
+}
+
+void FileEdit::UpdateTextControl() {
+  const ride::Settings& set = main_->settings();
+  SetupScintilla(text_, set, current_language_);
 }
 
 void FileEdit::UpdateFilename() {

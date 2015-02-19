@@ -63,8 +63,6 @@ private:
   void HighlightCurrentWord();
 
 private:
-  int line_margin_width_;
-
   MainWindow* main_;
   wxStyledTextCtrl* text_;
   wxAuiNotebook* notebook_;
