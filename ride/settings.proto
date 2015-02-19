@@ -289,6 +289,8 @@ message Settings {
   optional int32 current_line_alpha = 25 [default=10];
   optional bool current_line_overdraw = 26 [default=false];
 
+  optional bool highlight_word_also_highlight_keywords = 27 [default=false];
+
   // indicators
   optional Indicator indicator_error = 100;
   optional Indicator indicator_warning = 101;

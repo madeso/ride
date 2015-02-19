@@ -518,6 +518,8 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATAX(fonts_and_colors, fold_margin_hi, uiEditFoldHi);
   DIALOG_DATAX(fonts_and_colors, fold_margin_low, uiEditFoldLow);
 
+  DIALOG_DATA(current_settings_, highlight_word_also_highlight_keywords, uiEditHighlightKeyword, );
+
   if (togui == false) {
     current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
     current_settings_.set_allocated_foldflags(Allocate(foldflags));

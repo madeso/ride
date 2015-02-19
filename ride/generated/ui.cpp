@@ -242,6 +242,9 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	fgSizer4->Add( sbSizer5, 1, wxEXPAND, 5 );
 	
+	uiEditHighlightKeyword = new wxCheckBox( m_panel10, wxID_ANY, wxT("Auto highlight keywords"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( uiEditHighlightKeyword, 0, wxALL, 5 );
+	
 	
 	m_panel10->SetSizer( fgSizer4 );
 	m_panel10->Layout();
@@ -325,6 +328,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiEditCurrentLineAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnEditChanged ), NULL, this );
 	uiEditFoldHi->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
 	uiEditFoldLow->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
+	uiEditHighlightKeyword->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
 	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
 	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
@@ -377,6 +381,7 @@ Settings::~Settings()
 	uiEditCurrentLineAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnEditChanged ), NULL, this );
 	uiEditFoldHi->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
 	uiEditFoldLow->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
+	uiEditHighlightKeyword->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	m_sdbSizer1Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
 	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
 	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );

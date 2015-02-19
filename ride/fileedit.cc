@@ -810,8 +810,9 @@ void FileEdit::HighlightCurrentWord() {
 
       const wxString current_text = text_->GetRange(start_position, end_position);
 
-      // todo: add option for also highlightning the keywords
-      const bool is_keyword = current_language_ ? current_language_->IsKeyword(current_text) : false;
+      const bool highlight_keyword = main_->settings().highlight_word_also_highlight_keywords();
+      const bool is_keyword = highlight_keyword ? false
+        : (current_language_ ? current_language_->IsKeyword(current_text) : false);
 
       if (is_keyword == false) {
         // search through the entire document for this text and highlight it
