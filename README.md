@@ -5,7 +5,7 @@ The current features are a pretty ok editor (scintilla based) and shortcuts for 
 
 The project aim is to implement as much of it in C++ and then port it to rust when rust is released.
 
-Most of the development is streamed [on twtich](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
+Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
 
 ![screenshot](screenshots/1.png)
 
