@@ -4,6 +4,7 @@
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
 #include "ride/compilermessage.h"
+#include "ride/filepropertiesdlg.h"
 
 #include <vector>
 #include <cassert>
@@ -173,6 +174,8 @@ void FileEdit::MoveLinesDown() {
 
 void FileEdit::ShowProperties() {
   // todo: implement file properties
+  FilePropertiesDlg dlg(this, text_);
+  dlg.ShowModal();
 }
 
 //////////////////////////////////////////////////////////////////////////

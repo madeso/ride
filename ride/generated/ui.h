@@ -32,6 +32,7 @@
 #include <wx/notebook.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
+#include <wx/stattext.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -122,6 +123,37 @@ namespace ui
 			
 			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 502,587 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~Settings();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class FileProperties
+	///////////////////////////////////////////////////////////////////////////////
+	class FileProperties : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxStaticText* m_staticText1;
+			wxStaticText* m_staticText2;
+			wxStaticText* m_staticText3;
+			wxStaticText* m_staticText4;
+			wxButton* m_button1;
+			wxStaticText* uiLineEndings;
+			wxButton* m_button2;
+			wxStaticText* uiEncoding;
+			wxStdDialogButtonSizer* m_sdbSizer3;
+			wxButton* m_sdbSizer3OK;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnChangeLineEnding( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnChangeEncoding( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			FileProperties( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("File properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 455,197 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			~FileProperties();
 		
 	};
 	

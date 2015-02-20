@@ -387,3 +387,89 @@ Settings::~Settings()
 	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
 	
 }
+
+FileProperties::FileProperties( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer4;
+	bSizer4 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer4;
+	fgSizer4 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer4->AddGrowableCol( 1 );
+	fgSizer4->SetFlexibleDirection( wxBOTH );
+	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText1 = new wxStaticText( this, wxID_ANY, wxT("Filename:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText1->Wrap( -1 );
+	fgSizer4->Add( m_staticText1, 0, wxALIGN_RIGHT|wxALL, 5 );
+	
+	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("<C:\\Some\\Long\\Folder\\path\\to\\file.cpp>"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2->Wrap( -1 );
+	fgSizer4->Add( m_staticText2, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Language:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText3->Wrap( -1 );
+	fgSizer4->Add( m_staticText3, 0, wxALIGN_RIGHT|wxALL, 5 );
+	
+	m_staticText4 = new wxStaticText( this, wxID_ANY, wxT("<C++>"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText4->Wrap( -1 );
+	fgSizer4->Add( m_staticText4, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button1 = new wxButton( this, wxID_ANY, wxT("Line ending..."), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_button1, 0, wxALL, 5 );
+	
+	uiLineEndings = new wxStaticText( this, wxID_ANY, wxT("CLRF (Windows)"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiLineEndings->Wrap( -1 );
+	fgSizer4->Add( uiLineEndings, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button2 = new wxButton( this, wxID_ANY, wxT("Endoding..."), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( m_button2, 0, wxALL, 5 );
+	
+	uiEncoding = new wxStaticText( this, wxID_ANY, wxT("UTF-8"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiEncoding->Wrap( -1 );
+	fgSizer4->Add( uiEncoding, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer5->Add( fgSizer4, 1, wxEXPAND, 5 );
+	
+	wxGridBagSizer* gbSizer2;
+	gbSizer2 = new wxGridBagSizer( 0, 0 );
+	gbSizer2->SetFlexibleDirection( wxBOTH );
+	gbSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	bSizer5->Add( gbSizer2, 1, wxEXPAND, 5 );
+	
+	
+	bSizer4->Add( bSizer5, 1, wxEXPAND, 5 );
+	
+	m_sdbSizer3 = new wxStdDialogButtonSizer();
+	m_sdbSizer3OK = new wxButton( this, wxID_OK );
+	m_sdbSizer3->AddButton( m_sdbSizer3OK );
+	m_sdbSizer3->Realize();
+	
+	bSizer4->Add( m_sdbSizer3, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer4 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	m_button1->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FileProperties::OnChangeLineEnding ), NULL, this );
+	m_button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FileProperties::OnChangeEncoding ), NULL, this );
+}
+
+FileProperties::~FileProperties()
+{
+	// Disconnect Events
+	m_button1->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FileProperties::OnChangeLineEnding ), NULL, this );
+	m_button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FileProperties::OnChangeEncoding ), NULL, this );
+	
+}
