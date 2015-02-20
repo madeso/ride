@@ -15,6 +15,8 @@ public:
   // todo: move to protected/private
   bool MatchPattern(const wxString& file) const;
 
+  const wxString& language_name() const;
+
   // internal
   // todo: move to protected/private
   Language& operator()(const wxString& ext);

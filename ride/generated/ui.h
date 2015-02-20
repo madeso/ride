@@ -135,9 +135,9 @@ namespace ui
 		
 		protected:
 			wxStaticText* m_staticText1;
-			wxStaticText* m_staticText2;
+			wxStaticText* uiFileName;
 			wxStaticText* m_staticText3;
-			wxStaticText* m_staticText4;
+			wxStaticText* uiLanguage;
 			wxButton* m_button1;
 			wxStaticText* uiLineEndings;
 			wxButton* m_button2;

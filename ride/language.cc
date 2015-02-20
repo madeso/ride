@@ -25,6 +25,10 @@ std::vector<wxString> Split(const wxString& str, char c) {
 Language::Language(const wxString& name, int style) : language_name_(name), lexer_style_(style) {
 }
 
+const wxString& Language::language_name() const {
+  return language_name_;
+}
+
 wxString PropTypeToString(int type) {
   switch (type)
   {

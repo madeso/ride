@@ -44,6 +44,10 @@ void FileEdit::Undo() {
   UpdateTitle();
 }
 
+wxString FileEdit::GetLanguageName() {
+  if (current_language_) return current_language_->language_name();
+  else return "<none>";
+}
 
 void FileEdit::Redo() {
   if (!text_->CanRedo()) return;

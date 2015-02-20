@@ -7,6 +7,11 @@
 class wxAuiNotebook;
 class MainWindow;
 class CompilerMessage;
+class Language;
+
+namespace ride {
+  class Settings;
+}
 
 class FileEdit : public wxControl {
 public:
@@ -16,6 +21,7 @@ public:
   void AddCompilerMessage(const CompilerMessage& mess);
   void ClearCompilerMessages();
   void Focus();
+  wxString GetLanguageName();
 
 public:
   bool Save();

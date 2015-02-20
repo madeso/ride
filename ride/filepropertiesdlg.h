@@ -4,11 +4,12 @@
 #include "ride/generated/ui.h"
 
 class wxStyledTextCtrl;
+class FileEdit;
 
 class FilePropertiesDlg : public ui::FileProperties
 {
 public:
-  FilePropertiesDlg(wxWindow* parent, wxStyledTextCtrl* ctrl);
+  FilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl);
 
 protected:
   

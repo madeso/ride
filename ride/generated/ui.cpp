@@ -408,17 +408,17 @@ FileProperties::FileProperties( wxWindow* parent, wxWindowID id, const wxString&
 	m_staticText1->Wrap( -1 );
 	fgSizer4->Add( m_staticText1, 0, wxALIGN_RIGHT|wxALL, 5 );
 	
-	m_staticText2 = new wxStaticText( this, wxID_ANY, wxT("<C:\\Some\\Long\\Folder\\path\\to\\file.cpp>"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText2->Wrap( -1 );
-	fgSizer4->Add( m_staticText2, 0, wxALL|wxEXPAND, 5 );
+	uiFileName = new wxStaticText( this, wxID_ANY, wxT("<C:\\Some\\Long\\Folder\\path\\to\\file.cpp>"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiFileName->Wrap( -1 );
+	fgSizer4->Add( uiFileName, 0, wxALL|wxEXPAND, 5 );
 	
 	m_staticText3 = new wxStaticText( this, wxID_ANY, wxT("Language:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText3->Wrap( -1 );
 	fgSizer4->Add( m_staticText3, 0, wxALIGN_RIGHT|wxALL, 5 );
 	
-	m_staticText4 = new wxStaticText( this, wxID_ANY, wxT("<C++>"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText4->Wrap( -1 );
-	fgSizer4->Add( m_staticText4, 0, wxALL|wxEXPAND, 5 );
+	uiLanguage = new wxStaticText( this, wxID_ANY, wxT("<C++>"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiLanguage->Wrap( -1 );
+	fgSizer4->Add( uiLanguage, 0, wxALL|wxEXPAND, 5 );
 	
 	m_button1 = new wxButton( this, wxID_ANY, wxT("Line ending..."), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( m_button1, 0, wxALL, 5 );
