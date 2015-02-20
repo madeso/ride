@@ -55,6 +55,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * File templates
 * Numbered bookmarks
 * Built in syntax highlight for shading languges like glsl like http://nshader.codeplex.com/
+* Algorithm [debug/developing design](https://vimeo.com/36579366) by bret victor
 
 # Debug ideas
 
