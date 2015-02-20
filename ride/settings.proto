@@ -18,6 +18,12 @@ enum WrapMode {
   WRAPMODE_WORD = 2;
 }
 
+enum AutoIndentation {
+	AUTOINDENTATION_NONE = 0;
+	AUTOINDENTATION_KEEP = 1;
+	AUTOINDENTATION_SMART = 2;
+}
+
 enum IndicatorStyle {
   INDICATORSTYLE_PLAIN = 0;
   INDICATORSTYLE_SQUIGGLE = 1;
@@ -290,6 +296,8 @@ message Settings {
   optional bool current_line_overdraw = 26 [default=false];
 
   optional bool highlight_word_also_highlight_keywords = 27 [default=false];
+
+  optional AutoIndentation auto_indentation = 28 [default=AUTOINDENTATION_SMART] ;
 
   // indicators
   optional Indicator indicator_error = 100;

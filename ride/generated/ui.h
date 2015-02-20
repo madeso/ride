@@ -95,6 +95,7 @@ namespace ui
 			wxColourPickerCtrl* uiEditFoldHi;
 			wxColourPickerCtrl* uiEditFoldLow;
 			wxCheckBox* uiEditHighlightKeyword;
+			wxComboBox* uiEditIndentation;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;

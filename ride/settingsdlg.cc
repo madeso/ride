@@ -51,6 +51,13 @@ ride::EdgeStyle ToData_ES(wxComboBox* gui)  {
   RETURN_COMBOBOX_VALUE(EdgeStyle, gui->GetSelection());
 }
 
+void ToGui(ride::AutoIndentation data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::AutoIndentation ToData_AI(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(AutoIndentation, gui->GetSelection());
+}
+
 void ToGui(google::protobuf::int32 data, wxTextCtrl* gui)  {
   wxString value = wxString::FromDouble(data, 0);
   gui->SetValue(value);
@@ -495,6 +502,7 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATA(current_settings_, whitespace, uiViewWhitespace, _VW);
   DIALOG_DATA(current_settings_, wordwrap, uiWordwrap, _WM);
   DIALOG_DATA(current_settings_, edgestyle, uiEdgeStyle, _ES);
+  DIALOG_DATA(current_settings_, auto_indentation, uiEditIndentation, _AI);
 
   DIALOG_DATA(current_settings_, tabindents, uiTabIndents, );
   DIALOG_DATA(current_settings_, usetabs, uiUseTabs, );

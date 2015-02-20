@@ -777,13 +777,13 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
   else if (entered_character == '\n' || entered_character == '\r')
   {
     // auto-indenting
-    // todo: add settings for autoindenting(none, keep, smart) ...
     // loosely based on http://www.scintilla.org/ScintillaUsage.html and https://groups.google.com/forum/#!topic/scintilla-interest/vTwXwIBswSM
     const int current_line = text_->GetCurrentLine();
     const int line_start = text_->PositionFromLine(text_->GetCurrentLine()-1);
     const int line_end = text_->PositionFromLine(text_->GetCurrentLine());
     const wxString previous_line_content = text_->GetTextRange(line_start, line_end);
-    const int indent_change = CalculateIndentationChange(previous_line_content);
+    const int indent_change = main_->settings().auto_indentation() == ride::AUTOINDENTATION_SMART ?
+      CalculateIndentationChange(previous_line_content) : 0;
     const int indent_change_in_spaces = indent_change * main_->settings().tabwidth();
 
     const int smart_indent = indent_change_in_spaces;
@@ -802,11 +802,11 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
     // adjust to remove weird spaces from indentation settings
     const int indentation_in_spaces_ajdusted = indentation_in_tabs * main_->settings().tabwidth();
 
-    if (indentation_in_spaces_ajdusted != 0)
-    {
-      text_->SetLineIndentation(current_line, indentation_in_spaces_ajdusted);
-      
-      text_->GotoPos(text_->PositionFromLine(current_line) + indentation_in_chars);
+    if (main_->settings().auto_indentation() != ride::AUTOINDENTATION_NONE) {
+      if (indentation_in_spaces_ajdusted != 0) {
+        text_->SetLineIndentation(current_line, indentation_in_spaces_ajdusted);
+        text_->GotoPos(text_->PositionFromLine(current_line) + indentation_in_chars);
+      }
     }
   }
 }
