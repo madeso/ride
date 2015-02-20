@@ -177,7 +177,6 @@ void FileEdit::MoveLinesDown() {
 }
 
 void FileEdit::ShowProperties() {
-  // todo: implement file properties
   FilePropertiesDlg dlg(this, text_);
   dlg.ShowModal();
 }
