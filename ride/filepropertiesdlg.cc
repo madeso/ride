@@ -2,48 +2,117 @@
 #include "ride/filepropertiesdlg.h"
 #include "ride/fileedit.h"
 
-wxString GetEndingString(wxStyledTextCtrl* edit) {
-  switch (edit->GetEOLMode()) {
-  case wxSTC_EOL_CR: return wxT("CR (Unix)");
-  case wxSTC_EOL_CRLF: return wxT("CRLF (Windows)");
-  case wxSTC_EOL_LF: return wxT("CR (Macintosh)");
-    default:
-      return wxT("Unknown");
+#include <map>
+#include <vector>
+
+class StringIntConverter {
+private:
+  typedef std::vector<int> Ints;
+  typedef std::map<int, wxString> IntsToStrings;
+public:
+  StringIntConverter& operator()(int i, const wxString& str) {
+    strings_.Add(str);
+    ints_.push_back(i);
+    intstostrings_.insert(IntsToStrings::value_type(i, str));
+    return *this;
   }
+
+  const wxArrayString& strings() const {
+    return strings_;
+  }
+
+  int GetInt(int index) const {
+    return ints_[index];
+  }
+
+  int GetIndex(int i) const {
+    for (int index = 0; index < ints_.size(); ++index) {
+      if (ints_[index] == i) return index;
+    }
+    return 0;
+  }
+
+  wxString ToString(int i) const {
+    IntsToStrings::const_iterator ret = intstostrings_.find(i);
+    if (ret == intstostrings_.end()) return "Unknown";
+    else return ret->second;
+  }
+
+private:
+  wxArrayString strings_;
+  Ints ints_;
+  IntsToStrings intstostrings_;
+};
+
+const StringIntConverter& EOLString() {
+  static StringIntConverter sic = StringIntConverter()
+    (wxSTC_EOL_CR, wxT("CR (Unix)"))
+    (wxSTC_EOL_CRLF, wxT("CRLF (Windows)"))
+    (wxSTC_EOL_LF, wxT("CR (Macintosh)"));
+  return sic;
 }
 
-wxString GetEncodingString(wxStyledTextCtrl* edit) {
-  switch (edit->GetCodePage()) {
-  case wxSTC_CP_UTF8                : return "UTF-8       ";
-  case wxSTC_CHARSET_ANSI           : return "Ansi        ";
-  case wxSTC_CHARSET_DEFAULT        : return "Default     ";
-  case wxSTC_CHARSET_BALTIC         : return "Baltic      ";
-  case wxSTC_CHARSET_CHINESEBIG5    : return "Chinesebig5 ";
-  case wxSTC_CHARSET_EASTEUROPE     : return "Easteurope  ";
-  case wxSTC_CHARSET_GB2312         : return "Gb2312      ";
-  case wxSTC_CHARSET_GREEK          : return "Greek       ";
-  case wxSTC_CHARSET_HANGUL         : return "Hangul      ";
-  case wxSTC_CHARSET_MAC            : return "Mac         ";
-  case wxSTC_CHARSET_OEM            : return "Oem         ";
-  case wxSTC_CHARSET_RUSSIAN        : return "Russian     ";
-  case wxSTC_CHARSET_CYRILLIC       : return "Cyrillic    ";
-  case wxSTC_CHARSET_SHIFTJIS       : return "Shiftjis    ";
-  case wxSTC_CHARSET_SYMBOL         : return "Symbol      ";
-  case wxSTC_CHARSET_TURKISH        : return "Turkish     ";
-  case wxSTC_CHARSET_JOHAB          : return "Johab       ";
-  case wxSTC_CHARSET_HEBREW         : return "Hebrew      ";
-  case wxSTC_CHARSET_ARABIC         : return "Arabic      ";
-  case wxSTC_CHARSET_VIETNAMESE     : return "Vietnamese  ";
-  case wxSTC_CHARSET_THAI           : return "Thai        ";
-  case wxSTC_CHARSET_8859_15        : return "8859_15     ";
-  default:
-    return wxT("Unknown");
-  }
+const StringIntConverter& CodePageString() {
+  static StringIntConverter sic = StringIntConverter()
+    (wxSTC_CP_UTF8, "UTF-8")
+    (wxSTC_CHARSET_ANSI, "Ansi")
+    (wxSTC_CHARSET_DEFAULT, "Default")
+    (wxSTC_CHARSET_BALTIC, "Baltic")
+    (wxSTC_CHARSET_CHINESEBIG5, "Chinesebig5")
+    (wxSTC_CHARSET_EASTEUROPE, "Easteurope")
+    (wxSTC_CHARSET_GB2312, "Gb2312")
+    (wxSTC_CHARSET_GREEK, "Greek")
+    (wxSTC_CHARSET_HANGUL, "Hangul")
+    (wxSTC_CHARSET_MAC, "Mac")
+    (wxSTC_CHARSET_OEM, "Oem")
+    (wxSTC_CHARSET_RUSSIAN, "Russian")
+    (wxSTC_CHARSET_CYRILLIC, "Cyrillic")
+    (wxSTC_CHARSET_SHIFTJIS, "Shiftjis")
+    (wxSTC_CHARSET_SYMBOL, "Symbol")
+    (wxSTC_CHARSET_TURKISH, "Turkish")
+    (wxSTC_CHARSET_JOHAB, "Johab")
+    (wxSTC_CHARSET_HEBREW, "Hebrew")
+    (wxSTC_CHARSET_ARABIC, "Arabic")
+    (wxSTC_CHARSET_VIETNAMESE, "Vietnamese")
+    (wxSTC_CHARSET_THAI, "Thai")
+    (wxSTC_CHARSET_8859_15, "8859_15");
+  return sic;
 }
 
 FilePropertiesDlg::FilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl) : ::ui::FileProperties(parent, wxID_ANY), ctrl_(ctrl) {
   uiFileName->SetLabel(parent->filename());
   uiLanguage->SetLabelText(parent->GetLanguageName());
-  uiEncoding->SetLabelText(GetEncodingString(ctrl_).Trim());
-  uiLineEndings->SetLabelText(GetEndingString(ctrl_));
+  UpdateGui();
+}
+
+void FilePropertiesDlg::UpdateGui() {
+  uiEncoding->SetLabelText(CodePageString().ToString(ctrl_->GetCodePage()));
+  uiLineEndings->SetLabelText(EOLString().ToString(ctrl_->GetEOLMode()));
+}
+
+// remove the encoding part?
+void FilePropertiesDlg::OnChangeEncoding(wxCommandEvent& event) {
+#ifdef wxUSE_UNICODE
+  wxMessageBox("Unable to change encoding in unicode build", "Unicode only", wxICON_INFORMATION);
+#else
+  wxSingleChoiceDialog dlg(this, "Select new text encoding", "Text encoding", CodePageString().strings());
+  if (dlg.ShowModal() != wxID_OK) return;
+  const int selected = dlg.GetSelection();
+  const int new_encoding = CodePageString().GetInt(selected);
+  
+  ctrl_->SetCodePage(new_encoding);
+  UpdateGui();
+#endif
+}
+
+void FilePropertiesDlg::OnChangeLineEnding(wxCommandEvent& event) {
+  wxSingleChoiceDialog dlg(this, "Select new line ending", "Line ending?", EOLString().strings());
+  dlg.SetSelection(EOLString().GetIndex(ctrl_->GetEOLMode()));
+  if (dlg.ShowModal() != wxID_OK) return;
+  const int selected = dlg.GetSelection();
+  const int new_ending = EOLString().GetInt(selected);
+
+  ctrl_->SetEOLMode(new_ending);
+  ctrl_->ConvertEOLs(new_ending);
+  UpdateGui();
 }

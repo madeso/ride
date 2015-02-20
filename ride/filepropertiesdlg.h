@@ -12,7 +12,11 @@ public:
   FilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl);
 
 protected:
-  
+  void OnChangeEncoding(wxCommandEvent& event);
+  void OnChangeLineEnding(wxCommandEvent& event);
+
+private:
+  void UpdateGui();
 
 private:
   wxStyledTextCtrl* ctrl_;
