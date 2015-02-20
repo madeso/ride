@@ -745,10 +745,8 @@ int CalculateIndentationChange(const wxString& str) {
     if (c == '{') {
       change += 1;
     }
-    else if (c == '}') {
-      // todo: fix decrease indentation bug
-      // change -= 1;
-    }
+
+    // decrease is below...
   }
   return change;
 }
@@ -781,7 +779,10 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
     const int current_line = text_->GetCurrentLine();
     const int line_start = text_->PositionFromLine(text_->GetCurrentLine()-1);
     const int line_end = text_->PositionFromLine(text_->GetCurrentLine());
+    const int next_end = text_->PositionFromLine(text_->GetCurrentLine()+1);
     const wxString previous_line_content = text_->GetTextRange(line_start, line_end);
+    const wxString current_line_content = text_->GetTextRange(line_end, next_end);
+
     const int indent_change = main_->settings().auto_indentation() == ride::AUTOINDENTATION_SMART ?
       CalculateIndentationChange(previous_line_content) : 0;
     const int indent_change_in_spaces = indent_change * main_->settings().tabwidth();
@@ -806,6 +807,15 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
       if (indentation_in_spaces_ajdusted != 0) {
         text_->SetLineIndentation(current_line, indentation_in_spaces_ajdusted);
         text_->GotoPos(text_->PositionFromLine(current_line) + indentation_in_chars);
+      }
+
+      if (current_line_content.StartsWith("}")) {
+        // handle case like { USER_ENTER_NEWLINE_HERE }
+        // add a newline after this and...
+        text_->InsertText(text_->GetCurrentPos(), "\n");
+
+        // ...set that newline - 1 indentation of the current row
+        text_->SetLineIndentation(current_line+1, indentation_in_spaces_ajdusted-main_->settings().tabwidth());
       }
     }
   }
