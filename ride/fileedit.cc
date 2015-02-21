@@ -555,7 +555,7 @@ int C(ride::MarkerSymbol sym) {
       case ride::MARKERSYMBOL_EMPTY     : return wxSTC_MARK_EMPTY     ;
       case ride::MARKERSYMBOL_ARROWDOWN : return wxSTC_MARK_ARROWDOWN ;
       case ride::MARKERSYMBOL_MINUS     : return wxSTC_MARK_MINUS     ;
-      case ride::MARKERSYMBOL_PLUS     : return wxSTC_MARK_PLUS       ;
+      case ride::MARKERSYMBOL_PLUS      : return wxSTC_MARK_PLUS      ;
       default:
         assert(false && "Invalid marker symbol");
         return wxSTC_MARK_EMPTY;

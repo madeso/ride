@@ -459,13 +459,17 @@ std::vector<MarkerLink*> BuildMarkerLinks() {
   };\
   static MarkerLink##ID marker_link_##ID;\
   ret.push_back(&marker_link_##ID)
-  DEF_MARKER_LINK("Folder end", folderend);
+
+  DEF_MARKER_LINK("Folder", folder);
+  DEF_MARKER_LINK("Folder open", folderopen);
   DEF_MARKER_LINK("Folder open mid", folderopenmid);
+
+  DEF_MARKER_LINK("Folder end", folderend);
   DEF_MARKER_LINK("Folder mid tail", foldermidtail);
   DEF_MARKER_LINK("Folder tail", foldertail);
   DEF_MARKER_LINK("Folder sub", foldersub);
-  DEF_MARKER_LINK("Folder", folder);
-  DEF_MARKER_LINK("Folder open", folderopen);
+  
+  
 #undef DEF_MARKER_LINK
   return ret;
 }
@@ -477,10 +481,7 @@ const std::vector<MarkerLink*>& GetMarkerLinks() {
 
 void SettingsDlg::OnMarkerListChanged(wxCommandEvent& event) {
   allow_send_marker_to_main_ = false;
-
-  // todo
   MarkerToGui(true);
-
   allow_send_marker_to_main_ = true;
 }
 
