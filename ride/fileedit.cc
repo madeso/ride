@@ -570,14 +570,8 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
   // initialize styles
   text_ctrl->StyleClearAll();
 
-  // todo: remove these variables when all options are read from settings
-  wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
-  const wxColor grey(100, 100, 100);
-  const wxColor white(255, 255, 255);
-  const wxColor darkgray = wxColour(20, 20, 20);
-
   // calculate the maximum number a the line margin could contain
-  // todo: use numbe of lines in the document instead and update when adding newlines
+  // todo: use number of lines in the document instead and update when adding newlines
   int line_margin_width_ = text_ctrl->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_999999"));
 
   // setup language color
@@ -607,15 +601,6 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
   text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
   text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
   text_ctrl->SetFoldFlags(C(set.foldflags()));
-
-  // todo: move folding symbol options to settings
-  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
-  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
-  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY, grey, grey);
-  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_ARROW, grey, white);
-  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
-  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
-  text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
 
 #define FRONT_AND_BACK(x) x##_foreground(), x##_background()
   SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEREND,     set.folderend    () , FRONT_AND_BACK(set.fonts_and_colors().folderend    )      );
