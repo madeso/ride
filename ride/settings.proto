@@ -86,6 +86,18 @@ message Color {
 	optional int32 b = 3;
 }
 
+enum MarkerSymbol {
+	MARKERSYMBOL_CIRCLE = 0;
+	MARKERSYMBOL_ROUNDRECT = 1;
+	MARKERSYMBOL_ARROW = 2;
+	MARKERSYMBOL_SMALLRECT = 3;
+	MARKERSYMBOL_SHORTARROW = 4;
+	MARKERSYMBOL_EMPTY = 5;
+	MARKERSYMBOL_ARROWDOWN = 6;
+	MARKERSYMBOL_MINUS = 7;
+	MARKERSYMBOL_PLUS = 8;
+}
+
 message Style {
   optional bool use_typeface = 1;
   optional string typeface = 2;
@@ -126,6 +138,22 @@ message FontsAndColors {
   optional Style calltip_style = 34;
   optional Style annotation_warning_style = 35;
   optional Style annotation_error_style = 36;
+
+  optional Color folderend_foreground = 37;
+  optional Color folderopenmid_foreground = 38;
+  optional Color foldermidtail_foreground = 39;
+  optional Color foldertail_foreground = 40;
+  optional Color foldersub_foreground = 41;
+  optional Color folder_foreground = 42;
+  optional Color folderopen_foreground = 43;
+
+  optional Color folderend_background = 44;
+  optional Color folderopenmid_background = 45;
+  optional Color foldermidtail_background = 46;
+  optional Color foldertail_background = 47;
+  optional Color foldersub_background = 48;
+  optional Color folder_background = 49;
+  optional Color folderopen_background = 50;
 
   optional Style c_default = 100;
   optional Style c_comment = 101;
@@ -298,6 +326,14 @@ message Settings {
   optional bool highlight_word_also_highlight_keywords = 27 [default=false];
 
   optional AutoIndentation auto_indentation = 28 [default=AUTOINDENTATION_SMART] ;
+
+  optional MarkerSymbol folderend = 29 [default=MARKERSYMBOL_EMPTY];
+  optional MarkerSymbol folderopenmid = 30 [default=MARKERSYMBOL_EMPTY];
+  optional MarkerSymbol foldermidtail = 31 [default=MARKERSYMBOL_EMPTY];
+  optional MarkerSymbol foldertail = 32 [default=MARKERSYMBOL_EMPTY];
+  optional MarkerSymbol foldersub = 33 [default=MARKERSYMBOL_EMPTY];
+  optional MarkerSymbol folder = 34 [default=MARKERSYMBOL_EMPTY];
+  optional MarkerSymbol folderopen = 35 [default=MARKERSYMBOL_EMPTY];
 
   // indicators
   optional Indicator indicator_error = 100;

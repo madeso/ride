@@ -27,12 +27,12 @@
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
+#include <wx/stattext.h>
 #include <wx/combobox.h>
 #include <wx/valgen.h>
 #include <wx/notebook.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
-#include <wx/stattext.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -67,6 +67,14 @@ namespace ui
 			wxColourPickerCtrl* uiStyleBackground;
 			wxCheckBox* uiStyleUseBackground;
 			wxTextCtrl* uiStyleExample;
+			wxPanel* m_markers;
+			wxListBox* uiMarkerList;
+			wxStaticText* m_staticText7;
+			wxComboBox* uiMarkerSymbol;
+			wxStaticText* m_staticText9;
+			wxColourPickerCtrl* uiMarkerForegroundColor;
+			wxStaticText* m_staticText8;
+			wxColourPickerCtrl* uiMarkerBackgroundColor;
 			wxPanel* m_editor;
 			wxNotebook* m_notebook2;
 			wxPanel* m_panel10;
@@ -111,6 +119,10 @@ namespace ui
 			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
 			virtual void OnStyleTextChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStyleColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnMarkerListChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnMarkerComboChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnMarkerColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnMarkerComboChanged( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }

@@ -58,6 +58,15 @@ ride::AutoIndentation ToData_AI(wxComboBox* gui)  {
   RETURN_COMBOBOX_VALUE(AutoIndentation, gui->GetSelection());
 }
 
+void ToGui(ride::MarkerSymbol data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::MarkerSymbol ToData_MS(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(MarkerSymbol, gui->GetSelection());
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 void ToGui(google::protobuf::int32 data, wxTextCtrl* gui)  {
   wxString value = wxString::FromDouble(data, 0);
   gui->SetValue(value);
@@ -406,6 +415,100 @@ void SettingsDlg::StyleUpdateFontDisplay() {
 
 //////////////////////////////////////////////////////////////////////////
 
+void SettingsDlg::OnMarkerComboChanged(wxCommandEvent& event) {
+  SendMarkerToMain();
+}
+
+void SettingsDlg::OnMarkerColorChanged(wxColourPickerEvent& event) {
+  SendMarkerToMain();
+}
+
+void SettingsDlg::OnMarkerComboChanged(wxColourPickerEvent& event) {
+  SendMarkerToMain();
+}
+
+class MarkerLink {
+public:
+  MarkerLink(const wxString& name) : name_(name) {
+  }
+
+  const wxString& name() const {
+    assert(this);
+    return name_;
+  }
+
+  virtual void MarkerToGui(bool togui, ride::FontsAndColors& ref, ride::Settings& set, wxComboBox* sym, wxColourPickerCtrl* fore, wxColourPickerCtrl* back) = 0;
+  
+private:
+  wxString name_;
+};
+
+std::vector<MarkerLink*> BuildMarkerLinks() {
+  std::vector<MarkerLink*> ret;
+#define DEF_MARKER_LINK(NAME, ID) \
+  class MarkerLink##ID : public MarkerLink {\
+  public:\
+    MarkerLink##ID() : MarkerLink(NAME) {}\
+    void MarkerToGui(bool togui, ride::FontsAndColors& col, ride::Settings& set, wxComboBox* sym, wxColourPickerCtrl* fore, wxColourPickerCtrl* back) {\
+      DIALOG_DATA(set, ID, sym, _MS);\
+      DIALOG_DATAX(col, ID ##_foreground, fore);\
+      DIALOG_DATAX(col, ID ##_background, back);\
+      \
+      \
+    }\
+  };\
+  static MarkerLink##ID marker_link_##ID;\
+  ret.push_back(&marker_link_##ID)
+  DEF_MARKER_LINK("Folder end", folderend);
+  DEF_MARKER_LINK("Folder open mid", folderopenmid);
+  DEF_MARKER_LINK("Folder mid tail", foldermidtail);
+  DEF_MARKER_LINK("Folder tail", foldertail);
+  DEF_MARKER_LINK("Folder sub", foldersub);
+  DEF_MARKER_LINK("Folder", folder);
+  DEF_MARKER_LINK("Folder open", folderopen);
+#undef DEF_MARKER_LINK
+  return ret;
+}
+
+const std::vector<MarkerLink*>& GetMarkerLinks() {
+  static std::vector<MarkerLink*> marker_links = BuildMarkerLinks();
+  return marker_links;
+}
+
+void SettingsDlg::OnMarkerListChanged(wxCommandEvent& event) {
+  allow_send_marker_to_main_ = false;
+
+  // todo
+  MarkerToGui(true);
+
+  allow_send_marker_to_main_ = true;
+}
+
+void SettingsDlg::SendMarkerToMain() {
+  if (allow_send_marker_to_main_ == false) { return; }
+  MarkerToGui(false);
+  main_window_->set_settings(current_settings_);
+}
+
+void SettingsDlg::MarkerToGui(bool togui) {
+  ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors();
+
+  int selected_item = uiMarkerList->GetSelection();
+  if (selected_item == -1) return;
+
+  MarkerLink* link = reinterpret_cast<MarkerLink*>(uiMarkerList->GetClientData(selected_item));
+  assert(link);
+  if (link == NULL) return;
+  link->MarkerToGui(togui, fonts_and_colors, current_settings_, uiMarkerSymbol, uiMarkerForegroundColor, uiMarkerBackgroundColor);
+
+  if (togui == false) {
+    current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
 int g_last_selected_font = 0;
 
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
@@ -415,18 +518,28 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   current_settings_ = global_settings_;
   EditToGui(true);
   allow_send_edit_to_main_ = true;
+  allow_send_marker_to_main_ = true;
 
   for (auto link: StyleLinks()) {
     uiFontStyles->Append(link->name(), link);
   }
   UpdateStyleFonts();
   allow_send_style_to_main_ = true;
-  
+
+  for (auto link : GetMarkerLinks()) {
+    uiMarkerList->Append(link->name(), link);
+  }
+
   uiFontStyles->SetSelection(g_last_selected_font);
   uiFontStyles->EnsureVisible(g_last_selected_font);
 
+  uiMarkerList->SetSelection(0);
+
   allow_send_style_to_main_ = false;
+  allow_send_marker_to_main_ = false;
+
   StyleToGui(true);
+  MarkerToGui(true);
   UpdateStyleEnable();
 }
 
@@ -455,6 +568,7 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
   StyleSaveSelectedIndex();
   EditToGui(false);
   StyleToGui(false);
+  MarkerToGui(false);
   main_window_->set_settings(current_settings_);
   if (false == SaveSettings(current_settings_)) {
     wxMessageBox("Failed to save settings", "Failed!", wxOK | wxICON_ERROR);

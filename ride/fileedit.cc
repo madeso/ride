@@ -545,6 +545,27 @@ void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::Settin
   SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.fonts_and_colors().annotation_warning_style());
 }
 
+int C(ride::MarkerSymbol sym) {
+  switch (sym) {
+      case ride::MARKERSYMBOL_CIRCLE    : return wxSTC_MARK_CIRCLE    ;
+      case ride::MARKERSYMBOL_ROUNDRECT : return wxSTC_MARK_ROUNDRECT ;
+      case ride::MARKERSYMBOL_ARROW     : return wxSTC_MARK_ARROW     ;
+      case ride::MARKERSYMBOL_SMALLRECT : return wxSTC_MARK_SMALLRECT ;
+      case ride::MARKERSYMBOL_SHORTARROW: return wxSTC_MARK_SHORTARROW; 
+      case ride::MARKERSYMBOL_EMPTY     : return wxSTC_MARK_EMPTY     ;
+      case ride::MARKERSYMBOL_ARROWDOWN : return wxSTC_MARK_ARROWDOWN ;
+      case ride::MARKERSYMBOL_MINUS     : return wxSTC_MARK_MINUS     ;
+      case ride::MARKERSYMBOL_PLUS     : return wxSTC_MARK_PLUS       ;
+      default:
+        assert(false && "Invalid marker symbol");
+        return wxSTC_MARK_EMPTY;
+  }
+}
+
+void SetMarker(wxStyledTextCtrl* text_ctrl, int number, ride::MarkerSymbol mark_symbol, ride::Color foreground, ride::Color background ) {
+  text_ctrl->MarkerDefine(number, C(mark_symbol), C(foreground), C(background));
+}
+
 void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language) {
   // initialize styles
   text_ctrl->StyleClearAll();
@@ -586,6 +607,7 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
   text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING, set.foldenable() ? FOLDING_WIDTH : 0);
   text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
   text_ctrl->SetFoldFlags(C(set.foldflags()));
+
   // todo: move folding symbol options to settings
   text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDER, wxSTC_MARK_ARROW, grey, grey);
   text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_ARROWDOWN, grey, grey);
@@ -594,6 +616,16 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
   text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_ARROWDOWN, grey, white);
   text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY, grey, grey);
   text_ctrl->MarkerDefine(wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY, grey, grey);
+
+#define FRONT_AND_BACK(x) x##_foreground(), x##_background()
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEREND,     set.folderend    () , FRONT_AND_BACK(set.fonts_and_colors().folderend    )      );
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPENMID, set.folderopenmid() , FRONT_AND_BACK(set.fonts_and_colors().folderopenmid)      );
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERMIDTAIL, set.foldermidtail() , FRONT_AND_BACK(set.fonts_and_colors().foldermidtail)      );
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERTAIL,    set.foldertail   () , FRONT_AND_BACK(set.fonts_and_colors().foldertail   )      );
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERSUB,     set.foldersub    () , FRONT_AND_BACK(set.fonts_and_colors().foldersub    )      );
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDER,        set.folder       () , FRONT_AND_BACK(set.fonts_and_colors().folder       )      );
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPEN,    set.folderopen   () , FRONT_AND_BACK(set.fonts_and_colors().folderopen   )      );
+#undef FRONT_AND_BACK
 
   // set spaces and indention
   text_ctrl->SetTabWidth(set.tabwidth());

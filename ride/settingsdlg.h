@@ -26,6 +26,13 @@ protected:
   void OnStyleColorChanged(wxColourPickerEvent& event);
 
   //////////////////////////////////////////////////////////////////////////
+  // Marker tab
+  void OnMarkerListChanged(wxCommandEvent& event);
+  void OnMarkerComboChanged(wxCommandEvent& event);
+  void OnMarkerColorChanged(wxColourPickerEvent& event);
+  void OnMarkerComboChanged(wxColourPickerEvent& event);
+
+  //////////////////////////////////////////////////////////////////////////
   // Edit tab
   void OnCheckboxChanged(wxCommandEvent& event);
   void OnComboboxChanged(wxCommandEvent& event);
@@ -47,6 +54,12 @@ private:
   void UpdateStyleFonts();
   void StyleUpdateFontDisplay();
   void StyleSaveSelectedIndex();
+
+  //////////////////////////////////////////////////////////////////////////
+  // Marker tab
+  bool allow_send_marker_to_main_;
+  void SendMarkerToMain();
+  void MarkerToGui(bool togui);
 
   //////////////////////////////////////////////////////////////////////////
   // Edit tab
