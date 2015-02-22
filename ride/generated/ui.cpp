@@ -184,7 +184,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_markers->SetSizer( fgSizer51 );
 	m_markers->Layout();
 	fgSizer51->Fit( m_markers );
-	m_notebook1->AddPage( m_markers, wxT("Markers"), true );
+	m_notebook1->AddPage( m_markers, wxT("Markers"), false );
 	m_editor = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
@@ -313,6 +313,21 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiEditIndentation->Append( wxT("Smart") );
 	fgSizer4->Add( uiEditIndentation, 0, wxALL, 5 );
 	
+	wxStaticBoxSizer* sbSizer9;
+	sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Auto completion") ), wxVERTICAL );
+	
+	uiEditAutocompleteCurlyBraces = new wxCheckBox( m_panel10, wxID_ANY, wxT("Curly braces"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer9->Add( uiEditAutocompleteCurlyBraces, 0, wxALL, 5 );
+	
+	uiEditAutocompleteParentheses = new wxCheckBox( m_panel10, wxID_ANY, wxT("Parentheses"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer9->Add( uiEditAutocompleteParentheses, 0, wxALL, 5 );
+	
+	uiEditAutocompleteBrackets = new wxCheckBox( m_panel10, wxID_ANY, wxT("Brackets"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer9->Add( uiEditAutocompleteBrackets, 0, wxALL, 5 );
+	
+	
+	fgSizer4->Add( sbSizer9, 1, wxEXPAND, 5 );
+	
 	
 	m_panel10->SetSizer( fgSizer4 );
 	m_panel10->Layout();
@@ -327,7 +342,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_editor->SetSizer( bSizer2 );
 	m_editor->Layout();
 	bSizer2->Fit( m_editor );
-	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), false );
+	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), true );
 	m_window = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook1->AddPage( m_window, wxT("Window behaviour"), false );
 	

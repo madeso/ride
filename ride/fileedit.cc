@@ -773,20 +773,22 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 
   int entered_character = event.GetKey(); // the key seems to be the char that was added
 
-
   if (entered_character == '{') {
-    // todo: add setting for completing {}
-    text_->InsertText(text_->GetCurrentPos(), "}");
+    if (main_->settings().autocomplete_curly_braces()) {
+      text_->InsertText(text_->GetCurrentPos(), "}");
+    }
   }
   else if (entered_character == '(') {
-    // todo: setting for completing ()
     // todo: make completion of () smarter
-    text_->InsertText(text_->GetCurrentPos(), ")");
+    if (main_->settings().autocomplete_parentheses()) {
+      text_->InsertText(text_->GetCurrentPos(), ")");
+    }
   }
   else if (entered_character == '[') {
-    // todo: setting for this completing []
     // todo: make completion of [] smarter
-    text_->InsertText(text_->GetCurrentPos(), "]");
+    if (main_->settings().autocomplete_brackets()) {
+      text_->InsertText(text_->GetCurrentPos(), "]");
+    }
   }
   else if (entered_character == '\n' || entered_character == '\r')
   {

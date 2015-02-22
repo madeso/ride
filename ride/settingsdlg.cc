@@ -642,6 +642,10 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATAX(fonts_and_colors, fold_margin_low, uiEditFoldLow);
 
   DIALOG_DATA(current_settings_, highlight_word_also_highlight_keywords, uiEditHighlightKeyword, );
+    
+  DIALOG_DATA(current_settings_, autocomplete_curly_braces, uiEditAutocompleteCurlyBraces, );
+  DIALOG_DATA(current_settings_, autocomplete_parentheses, uiEditAutocompleteParentheses, );
+  DIALOG_DATA(current_settings_, autocomplete_brackets, uiEditAutocompleteBrackets, );
 
   if (togui == false) {
     current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));

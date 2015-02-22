@@ -104,6 +104,9 @@ namespace ui
 			wxColourPickerCtrl* uiEditFoldLow;
 			wxCheckBox* uiEditHighlightKeyword;
 			wxComboBox* uiEditIndentation;
+			wxCheckBox* uiEditAutocompleteCurlyBraces;
+			wxCheckBox* uiEditAutocompleteParentheses;
+			wxCheckBox* uiEditAutocompleteBrackets;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;
@@ -134,7 +137,7 @@ namespace ui
 		
 		public:
 			
-			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 502,587 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 565,643 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~Settings();
 		
 	};

@@ -335,6 +335,10 @@ message Settings {
   optional MarkerSymbol folder = 34 [default=MARKERSYMBOL_EMPTY];
   optional MarkerSymbol folderopen = 35 [default=MARKERSYMBOL_EMPTY];
 
+  optional bool autocomplete_curly_braces = 36 [default=true];
+  optional bool autocomplete_parentheses = 37 [default=false];
+  optional bool autocomplete_brackets = 38 [default=false];
+
   // indicators
   optional Indicator indicator_error = 100;
   optional Indicator indicator_warning = 101;
