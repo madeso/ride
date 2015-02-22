@@ -566,13 +566,20 @@ void SetMarker(wxStyledTextCtrl* text_ctrl, int number, ride::MarkerSymbol mark_
   text_ctrl->MarkerDefine(number, C(mark_symbol), C(foreground), C(background));
 }
 
+void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set) {
+  // calculate the maximum number a the line margin could contain
+  const int number_of_lines = text_ctrl->GetNumberOfLines();
+
+  const size_t length = wxString::Format("%d", number_of_lines).Length();
+  const wxString maximum_line_numbers = wxString(length, '9');
+
+  int line_margin_width_ = text_ctrl->TextWidth(wxSTC_STYLE_LINENUMBER, wxString::Format("_%s", maximum_line_numbers));
+  text_ctrl->SetMarginWidth(ID_MARGIN_LINENUMBER, set.linenumberenable() ? line_margin_width_ : 0);
+}
+
 void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language) {
   // initialize styles
   text_ctrl->StyleClearAll();
-
-  // calculate the maximum number a the line margin could contain
-  // todo: use number of lines in the document instead and update when adding newlines
-  int line_margin_width_ = text_ctrl->TextWidth(wxSTC_STYLE_LINENUMBER, wxT("_999999"));
 
   // setup language color
   assert(language);
@@ -582,7 +589,7 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
 
   // set margin for line numbers
   text_ctrl->SetMarginType(ID_MARGIN_LINENUMBER, wxSTC_MARGIN_NUMBER);
-  text_ctrl->SetMarginWidth(ID_MARGIN_LINENUMBER, set.linenumberenable() ? line_margin_width_ : 0);
+  SetupLineMargin(text_ctrl, set);
 
   // set margin as unused
   text_ctrl->SetMarginType(ID_MARGIN_DIVIDER, wxSTC_MARGIN_SYMBOL);
@@ -806,6 +813,10 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
   }
   else if (entered_character == '\n' || entered_character == '\r')
   {
+    // fixing the line margin width since we may need to expand it 
+    // going from line 99 to 100
+    SetupLineMargin(text_, main_->settings());
+
     // auto-indenting
     // loosely based on http://www.scintilla.org/ScintillaUsage.html and https://groups.google.com/forum/#!topic/scintilla-interest/vTwXwIBswSM
     const int current_line = text_->GetCurrentLine();
