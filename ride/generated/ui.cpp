@@ -328,6 +328,9 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	fgSizer4->Add( sbSizer9, 1, wxEXPAND, 5 );
 	
+	uiEditShowMultilineIndicators = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show multiline warning/errors"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer4->Add( uiEditShowMultilineIndicators, 0, wxALL, 5 );
+	
 	
 	m_panel10->SetSizer( fgSizer4 );
 	m_panel10->Layout();

@@ -339,6 +339,8 @@ message Settings {
   optional bool autocomplete_parentheses = 37 [default=false];
   optional bool autocomplete_brackets = 38 [default=false];
 
+  optional bool show_multiline_indicators = 39 [default=false];
+
   // indicators
   optional Indicator indicator_error = 100;
   optional Indicator indicator_warning = 101;

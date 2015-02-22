@@ -107,6 +107,7 @@ namespace ui
 			wxCheckBox* uiEditAutocompleteCurlyBraces;
 			wxCheckBox* uiEditAutocompleteParentheses;
 			wxCheckBox* uiEditAutocompleteBrackets;
+			wxCheckBox* uiEditShowMultilineIndicators;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;
@@ -137,7 +138,7 @@ namespace ui
 		
 		public:
 			
-			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 565,643 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 595,693 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~Settings();
 		
 	};

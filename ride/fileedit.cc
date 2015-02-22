@@ -238,7 +238,7 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
   const bool is_warning = mess.type() == CompilerMessage::TYPE_WARNING;
 
   if (is_error || is_warning) {
-    // todo: make embedded warning and error annoatations a option
+    // todo: make embedded warning and error annotations a option
     const int style = is_error ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
     const int line = mess.start_line() -1;
     const wxString type = is_error ? "Error: " : "Warning: ";
@@ -248,9 +248,8 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
     text_->AnnotationSetText(line, ann);
     text_->AnnotationSetStyle(line, style);
 
-    // only color on a single row, or it might get ugly
-    // todo: add option to indicate warning/errors on multiple rows or not
-    if (mess.start_line() == mess.end_line()) {
+    const bool on_single_line = mess.start_line() == mess.end_line();
+    if (main_->settings().show_multiline_indicators() || on_single_line) {
       int from = FromLineColToTextOffset(text_, mess.start_line(), mess.start_index());
       int to = FromLineColToTextOffset(text_, mess.end_line(), mess.end_index());
 
