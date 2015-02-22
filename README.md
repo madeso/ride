@@ -18,7 +18,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Remember session data
 * Comment / uncomment selection
 * Go to next error shortcut
-* Scintilla functions: encoding, line ending
 * Find in files, find in solution, incremental search, other searches
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
