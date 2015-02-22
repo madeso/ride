@@ -4,5 +4,10 @@ pub struct MyStruct {
 } // last struct line
 
 // before impl MyStruct
-impl MyStruct {} // newline here
+impl MyStruct {} // newline between { and }
+// some line
+
+
+// before impl MyStruct
+impl MyStruct {} // newline after }
 // some line
