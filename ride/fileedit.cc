@@ -692,29 +692,43 @@ bool FileEdit::ShouldBeSaved() {
   return text_->IsModified() || filename_.IsEmpty();
 }
 
-bool FileEdit::CanClose(bool canAbort) {
+int ShowYesNo(wxWindow* self, const wxString& caption,
+  const wxMessageDialogBase::ButtonLabel& yes_button,
+  const wxMessageDialogBase::ButtonLabel& no_button,
+  const wxString& title_ok, const wxString title_error) {
+
+  wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxICON_QUESTION);
+  const bool label_change_ok = dlg.SetYesNoLabels(yes_button, no_button);
+  dlg.SetMessage(label_change_ok? title_ok : title_error);
+  return dlg.ShowModal();
+}
+
+int ShowYesNoCancel(wxWindow* self, const wxString& caption,
+  const wxMessageDialogBase::ButtonLabel& yes_button,
+  const wxMessageDialogBase::ButtonLabel& no_button,
+  const wxMessageDialogBase::ButtonLabel& cancel_button,
+  const wxString& title_ok, const wxString title_error) {
+
+  wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxCANCEL | wxICON_QUESTION);
+  const bool label_change_ok = dlg.SetYesNoCancelLabels(yes_button, no_button, cancel_button);
+  dlg.SetMessage(label_change_ok ? title_ok : title_error);
+  return dlg.ShowModal();
+}
+
+bool FileEdit::CanClose(bool can_abort) {
   if (ShouldBeSaved()) {
-    // todo: refactor this into usable functions
-    const int yew_no_flags = canAbort ? (wxYES_NO | wxCANCEL) : wxYES_NO;
-    wxMessageDialog dlg(this, _(""), _("Save file?"), yew_no_flags | wxICON_QUESTION);
+    const wxString caption = "Save file?";
+    const wxMessageDialogBase::ButtonLabel yes_button = _("&Save it");
+    const wxMessageDialogBase::ButtonLabel no_button = _("&Discard changes");
+    const wxMessageDialogBase::ButtonLabel cancel_button = _("&Abort");
+    const wxString title_ok = "\"" + CalculateDocumentName() + "\" has changed since last time...";
+    const wxString title_error = "\"" + CalculateDocumentName() + "\" has changed since last time, save it?";
 
-    const wxMessageDialogBase::ButtonLabel yesButton = _("&Save it");
-    const wxMessageDialogBase::ButtonLabel noButton = _("&Discard changes");
-    const wxMessageDialogBase::ButtonLabel cancelButton = _("&Abort");
+    const int answer = can_abort
+      ? ShowYesNoCancel(this, caption, yes_button, no_button, cancel_button, title_ok, title_error)
+      : ShowYesNo(this, caption, yes_button, no_button, title_ok, title_error);
 
-    const bool labelChangeOk = canAbort
-      ? dlg.SetYesNoCancelLabels(yesButton, noButton, cancelButton)
-      : dlg.SetYesNoLabels(yesButton, noButton)
-      ;
-
-    if (labelChangeOk) {
-      dlg.SetMessage("\"" + CalculateDocumentName() + "\" has changed since last time...");
-    }
-    else {
-      dlg.SetMessage("\"" + CalculateDocumentName() + "\" has changed since last time, save it?");
-    }
-
-    const int answer = dlg.ShowModal();
+    
     if (answer == wxID_YES) {
       return Save();
     }
