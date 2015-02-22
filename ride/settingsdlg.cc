@@ -648,6 +648,7 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATA(current_settings_, autocomplete_brackets, uiEditAutocompleteBrackets, );
 
   DIALOG_DATA(current_settings_, show_multiline_indicators, uiEditShowMultilineIndicators, );
+  DIALOG_DATA(current_settings_, show_compiler_messages_as_annotations, uiEditShowCompilerAnnotations, );
 
   if (togui == false) {
     current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));

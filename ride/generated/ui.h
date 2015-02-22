@@ -108,6 +108,7 @@ namespace ui
 			wxCheckBox* uiEditAutocompleteParentheses;
 			wxCheckBox* uiEditAutocompleteBrackets;
 			wxCheckBox* uiEditShowMultilineIndicators;
+			wxCheckBox* uiEditShowCompilerAnnotations;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;
