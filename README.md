@@ -14,21 +14,21 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Detect changes outside ride and ask to reload file
 * Open type in online documentation command/do a search...
 * Search google for this compiler error
-* Expose all aui settings in gui + settings
+* Project/solution explorer
+* Quick open file from solution/project
 * Remember session data
 * Comment / uncomment selection
+* Error list
 * Go to next error shortcut
 * Find in files, find in solution, incremental search, other searches
+* Expose all aui settings in gui + settings
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
-* Quick open file from solution/project
-* Project/solution explorer
 * Create project with cargo and add a README.md file
 * Cpack support (=installer for ride)
 * Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
 * Code snippets
 * Implement ctrl+tab like visual studio to switch between open documents
-* Error list
 * Start page
 * Option to force charset, lineending and ending with newline when saving
 * Sort selected lines
