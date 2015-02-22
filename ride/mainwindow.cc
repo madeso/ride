@@ -483,7 +483,13 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
   wxFileName cargo_file(open_project_dialog.GetPath());
   cargo_file.Normalize();
 
-  // todo: verify the name of the selected cargo file
+  const wxString full_path = cargo_file.GetFullPath();
+
+  const bool is_really_a_cargo_file = full_path.Lower().EndsWith("cargo.toml");
+  if (is_really_a_cargo_file == false) {
+    wxMessageBox("You didn't select a proper cargo file", "No cargo file", wxICON_ERROR | wxOK);
+    return;
+  }
 
   // don't load the cargo file, load the whole folder instead as cargo files should be named in a specific way!
   project_ = Project(this, cargo_file.GetPathWithSep());
