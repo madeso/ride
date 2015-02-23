@@ -781,6 +781,13 @@ int CalculateIndentationChange(const wxString& str) {
     if (c == '{') {
       change += 1;
     }
+    if (c == '}') {
+      // handles cases like {} <newline here>
+      // but not } <newline here>
+      if (change > 0) {
+        change -= 1;
+      }
+    }
 
     // decrease is below...
   }
