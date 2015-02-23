@@ -11,6 +11,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Somewhat sorted roadmap
 
+* Build and rebuild doesn't clean annotation errors for open files!
 * Detect changes outside ride and ask to reload file
 * Open type in online documentation command/do a search...
 * Search google for this compiler error
