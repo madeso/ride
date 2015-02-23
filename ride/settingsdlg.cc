@@ -65,6 +65,13 @@ ride::MarkerSymbol ToData_MS(wxComboBox* gui)  {
   RETURN_COMBOBOX_VALUE(MarkerSymbol, gui->GetSelection());
 }
 
+void ToGui(ride::IndicatorStyle data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::IndicatorStyle ToData_IS(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(IndicatorStyle, gui->GetSelection());
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 void ToGui(google::protobuf::int32 data, wxTextCtrl* gui)  {
@@ -415,6 +422,107 @@ void SettingsDlg::StyleUpdateFontDisplay() {
 
 //////////////////////////////////////////////////////////////////////////
 
+void SettingsDlg::OnIndicatorListChanged(wxCommandEvent& event) {
+  allow_send_indicator_to_main_ = false;
+  IndicatorToGui(true);
+  allow_send_indicator_to_main_ = true;
+}
+
+void SettingsDlg::OnIndicatorCombobox(wxCommandEvent& event) {
+  SendIndicatorToMain();
+}
+
+void SettingsDlg::OnIndicatorColor(wxColourPickerEvent& event) {
+  SendIndicatorToMain();
+}
+
+void SettingsDlg::OnIndicatorCheckbox(wxCommandEvent& event) {
+  SendIndicatorToMain();
+}
+
+void SettingsDlg::OnIndicatorText(wxCommandEvent& event) {
+  SendIndicatorToMain();
+}
+
+void SettingsDlg::SendIndicatorToMain() {
+  if (allow_send_indicator_to_main_ == false) { return; }
+  IndicatorToGui(false);
+  main_window_->set_settings(current_settings_);
+}
+
+class IndicatorLink {
+public:
+  IndicatorLink(const wxString& name) : name_(name) {
+  }
+
+  const wxString& name() const {
+    assert(this);
+    return name_;
+  }
+
+  virtual void IndicatorToGui(bool togui, ride::FontsAndColors& fonts_and_colors, ride::Settings& current_settings_, wxComboBox* uiIndicatorStyle, wxColourPickerCtrl* uiIndicatorColor, wxCheckBox* uiIndicatorUnder, wxTextCtrl* uiIndicatorAlpha, wxTextCtrl* uiIndicatorOutlineAlpha) = 0;
+
+private:
+  wxString name_;
+};
+
+std::vector<IndicatorLink*> BuildIndicatorLinks() {
+  std::vector<IndicatorLink*> ret;
+#define DEF_INDICATOR_LINK(NAME, ID) \
+  class IndicatorLink##ID : public IndicatorLink {\
+  public:\
+    IndicatorLink##ID() : IndicatorLink(NAME) {}\
+    void IndicatorToGui(bool togui, ride::FontsAndColors& col, ride::Settings& set, wxComboBox* uiIndicatorStyle, wxColourPickerCtrl* uiIndicatorColor, wxCheckBox* uiIndicatorUnder, wxTextCtrl* uiIndicatorAlpha, wxTextCtrl* uiIndicatorOutlineAlpha) {\
+      DIALOG_DATA(set, ID, uiIndicatorStyle, _IS);\
+      ride::Indicator ind = col.ID();\
+      \
+      DIALOG_DATAX(ind, foreground, uiIndicatorColor);\
+      DIALOG_DATA(ind, under, uiIndicatorUnder,);\
+      DIALOG_DATA(ind, alpha, uiIndicatorAlpha,);\
+      DIALOG_DATA(ind, outline_alpha, uiIndicatorOutlineAlpha,);\
+      \
+      if( togui == false){\
+        col.set_allocated_##ID(Allocate(ind));\
+      }\
+    }\
+  };\
+  static IndicatorLink##ID indicator_link_##ID;\
+  ret.push_back(&indicator_link_##ID)
+
+  DEF_INDICATOR_LINK("Error", indicator_error);
+  DEF_INDICATOR_LINK("Warning", indicator_warning);
+  DEF_INDICATOR_LINK("Search highlight", indicator_search_highlight);
+  DEF_INDICATOR_LINK("Select highlight", indicator_select_highlight);
+
+
+#undef DEF_INDICATOR_LINK
+  return ret;
+}
+
+const std::vector<IndicatorLink*>& GetIndicatorLinks() {
+  static std::vector<IndicatorLink*> indicator_links = BuildIndicatorLinks();
+  return indicator_links;
+}
+
+void SettingsDlg::IndicatorToGui(bool togui) {
+  ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors();
+
+  int selected_item = uiIndicatorList->GetSelection();
+  if (selected_item == -1) return;
+
+  IndicatorLink* link = reinterpret_cast<IndicatorLink*>(uiIndicatorList->GetClientData(selected_item));
+  assert(link);
+  if (link == NULL) return;
+  link->IndicatorToGui(togui, fonts_and_colors, current_settings_, uiIndicatorStyle, uiIndicatorColor, uiIndicatorUnder, uiIndicatorAlpha, uiIndicatorOutlineAlpha);
+
+  if (togui == false) {
+    current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
+  }
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
 void SettingsDlg::OnMarkerComboChanged(wxCommandEvent& event) {
   SendMarkerToMain();
 }
@@ -520,6 +628,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   EditToGui(true);
   allow_send_edit_to_main_ = true;
   allow_send_marker_to_main_ = true;
+  allow_send_indicator_to_main_ = true;
 
   for (auto link: StyleLinks()) {
     uiFontStyles->Append(link->name(), link);
@@ -531,6 +640,10 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
     uiMarkerList->Append(link->name(), link);
   }
 
+  for (auto link : GetIndicatorLinks()) {
+    uiIndicatorList->Append(link->name(), link);
+  }
+
   uiFontStyles->SetSelection(g_last_selected_font);
   uiFontStyles->EnsureVisible(g_last_selected_font);
 
@@ -538,6 +651,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
 
   allow_send_style_to_main_ = false;
   allow_send_marker_to_main_ = false;
+  allow_send_indicator_to_main_ = false;
 
   StyleToGui(true);
   MarkerToGui(true);

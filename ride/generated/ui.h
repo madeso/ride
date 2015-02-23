@@ -67,6 +67,17 @@ namespace ui
 			wxColourPickerCtrl* uiStyleBackground;
 			wxCheckBox* uiStyleUseBackground;
 			wxTextCtrl* uiStyleExample;
+			wxPanel* m_indicators;
+			wxListBox* uiIndicatorList;
+			wxStaticText* uiIndicatorStyleLabel;
+			wxComboBox* uiIndicatorStyle;
+			wxStaticText* m_staticText11;
+			wxColourPickerCtrl* uiIndicatorColor;
+			wxCheckBox* uiIndicatorUnder;
+			wxStaticText* m_staticText12;
+			wxTextCtrl* uiIndicatorAlpha;
+			wxStaticText* m_staticText13;
+			wxTextCtrl* uiIndicatorOutlineAlpha;
 			wxPanel* m_markers;
 			wxListBox* uiMarkerList;
 			wxStaticText* m_staticText7;
@@ -124,6 +135,11 @@ namespace ui
 			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
 			virtual void OnStyleTextChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnStyleColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorListChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorCombobox( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorColor( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorCheckbox( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorText( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnMarkerListChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnMarkerComboChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnMarkerColorChanged( wxColourPickerEvent& event ) { event.Skip(); }

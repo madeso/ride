@@ -123,6 +123,88 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_fonts->Layout();
 	fgSizer6->Fit( m_fonts );
 	m_notebook1->AddPage( m_fonts, wxT("Fonts && Colors"), false );
+	m_indicators = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer7;
+	fgSizer7 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer7->AddGrowableCol( 0 );
+	fgSizer7->AddGrowableRow( 0 );
+	fgSizer7->SetFlexibleDirection( wxBOTH );
+	fgSizer7->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxVERTICAL );
+	
+	uiIndicatorList = new wxListBox( m_indicators, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer6->Add( uiIndicatorList, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer7->Add( bSizer6, 1, wxEXPAND, 5 );
+	
+	wxFlexGridSizer* fgSizer8;
+	fgSizer8 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer8->SetFlexibleDirection( wxBOTH );
+	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiIndicatorStyleLabel = new wxStaticText( m_indicators, wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiIndicatorStyleLabel->Wrap( -1 );
+	fgSizer8->Add( uiIndicatorStyleLabel, 0, wxALL, 5 );
+	
+	uiIndicatorStyle = new wxComboBox( m_indicators, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiIndicatorStyle->Append( wxT("Plain") );
+	uiIndicatorStyle->Append( wxT("Squiggle") );
+	uiIndicatorStyle->Append( wxT("TT") );
+	uiIndicatorStyle->Append( wxT("Diagonal") );
+	uiIndicatorStyle->Append( wxT("Strike") );
+	uiIndicatorStyle->Append( wxT("Hidden") );
+	uiIndicatorStyle->Append( wxT("Box") );
+	uiIndicatorStyle->Append( wxT("Roundbox") );
+	uiIndicatorStyle->Append( wxT("Straight box") );
+	uiIndicatorStyle->Append( wxT("Dash") );
+	uiIndicatorStyle->Append( wxT("Dots") );
+	uiIndicatorStyle->Append( wxT("Squiggle low") );
+	uiIndicatorStyle->Append( wxT("Dotbox") );
+	uiIndicatorStyle->Append( wxEmptyString );
+	uiIndicatorStyle->Append( wxEmptyString );
+	uiIndicatorStyle->Append( wxEmptyString );
+	uiIndicatorStyle->Append( wxEmptyString );
+	uiIndicatorStyle->Append( wxEmptyString );
+	fgSizer8->Add( uiIndicatorStyle, 0, wxALL, 5 );
+	
+	m_staticText11 = new wxStaticText( m_indicators, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText11->Wrap( -1 );
+	fgSizer8->Add( m_staticText11, 0, wxALL, 5 );
+	
+	uiIndicatorColor = new wxColourPickerCtrl( m_indicators, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer8->Add( uiIndicatorColor, 0, wxALL, 5 );
+	
+	
+	fgSizer8->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiIndicatorUnder = new wxCheckBox( m_indicators, wxID_ANY, wxT("Under?"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer8->Add( uiIndicatorUnder, 0, wxALL, 5 );
+	
+	m_staticText12 = new wxStaticText( m_indicators, wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText12->Wrap( -1 );
+	fgSizer8->Add( m_staticText12, 0, wxALL, 5 );
+	
+	uiIndicatorAlpha = new wxTextCtrl( m_indicators, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer8->Add( uiIndicatorAlpha, 0, wxALL, 5 );
+	
+	m_staticText13 = new wxStaticText( m_indicators, wxID_ANY, wxT("Outline alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText13->Wrap( -1 );
+	fgSizer8->Add( m_staticText13, 0, wxALL, 5 );
+	
+	uiIndicatorOutlineAlpha = new wxTextCtrl( m_indicators, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer8->Add( uiIndicatorOutlineAlpha, 0, wxALL, 5 );
+	
+	
+	fgSizer7->Add( fgSizer8, 1, wxEXPAND, 5 );
+	
+	
+	m_indicators->SetSizer( fgSizer7 );
+	m_indicators->Layout();
+	fgSizer7->Fit( m_indicators );
+	m_notebook1->AddPage( m_indicators, wxT("Indicators"), true );
 	m_markers = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer51;
 	fgSizer51 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -348,7 +430,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_editor->SetSizer( bSizer2 );
 	m_editor->Layout();
 	bSizer2->Fit( m_editor );
-	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), true );
+	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), false );
 	m_window = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook1->AddPage( m_window, wxT("Window behaviour"), false );
 	
@@ -390,6 +472,14 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiStyleUseForeground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
 	uiStyleBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnStyleColorChanged ), NULL, this );
 	uiStyleUseBackground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
+	uiIndicatorList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnIndicatorListChanged ), NULL, this );
+	uiIndicatorStyle->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnIndicatorCombobox ), NULL, this );
+	uiIndicatorColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnIndicatorColor ), NULL, this );
+	uiIndicatorUnder->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnIndicatorCheckbox ), NULL, this );
+	uiIndicatorAlpha->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
+	uiIndicatorAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnIndicatorText ), NULL, this );
+	uiIndicatorOutlineAlpha->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
+	uiIndicatorOutlineAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnIndicatorText ), NULL, this );
 	uiMarkerList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnMarkerListChanged ), NULL, this );
 	uiMarkerSymbol->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnMarkerComboChanged ), NULL, this );
 	uiMarkerForegroundColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnMarkerColorChanged ), NULL, this );
@@ -448,6 +538,14 @@ Settings::~Settings()
 	uiStyleUseForeground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
 	uiStyleBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnStyleColorChanged ), NULL, this );
 	uiStyleUseBackground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
+	uiIndicatorList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnIndicatorListChanged ), NULL, this );
+	uiIndicatorStyle->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnIndicatorCombobox ), NULL, this );
+	uiIndicatorColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnIndicatorColor ), NULL, this );
+	uiIndicatorUnder->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnIndicatorCheckbox ), NULL, this );
+	uiIndicatorAlpha->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
+	uiIndicatorAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnIndicatorText ), NULL, this );
+	uiIndicatorOutlineAlpha->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
+	uiIndicatorOutlineAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnIndicatorText ), NULL, this );
 	uiMarkerList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnMarkerListChanged ), NULL, this );
 	uiMarkerSymbol->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnMarkerComboChanged ), NULL, this );
 	uiMarkerForegroundColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnMarkerColorChanged ), NULL, this );
