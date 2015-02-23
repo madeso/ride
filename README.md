@@ -11,6 +11,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Somewhat sorted roadmap
 
+* Gui for indicators
 * Detect changes outside ride and ask to reload file
 * Open type in online documentation command/do a search...
 * Search google for this compiler error
