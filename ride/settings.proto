@@ -65,7 +65,6 @@ enum Annotation {
 }
 
 message Indicator {
-	optional IndicatorStyle style = 1 [default=INDICATORSTYLE_SQUIGGLE];
 	optional Color foreground = 2;
 	optional bool under = 3 [default=true];
 	optional int32 alpha = 4 [default=255];
@@ -128,6 +127,12 @@ message FontsAndColors {
   optional Color fold_margin_hi = 2;
   optional Color fold_margin_low = 3;
   optional Color edgeColor = 8;
+
+  // indicators
+  optional Indicator indicator_error = 10;
+  optional Indicator indicator_warning = 11;
+  optional Indicator indicator_search_highlight = 12;
+  optional Indicator indicator_select_highlight = 13;
 
   optional Style line_number_style = 28;
   optional Style default_style = 29;
@@ -344,10 +349,10 @@ message Settings {
   optional bool show_compiler_messages_as_annotations = 40 [default=true];
 
   // indicators
-  optional Indicator indicator_error = 100;
-  optional Indicator indicator_warning = 101;
-  optional Indicator indicator_search_highlight = 102;
-  optional Indicator indicator_select_highlight = 103;
+  optional IndicatorStyle indicator_error = 100 [default=INDICATORSTYLE_SQUIGGLE];
+  optional IndicatorStyle indicator_warning = 101 [default=INDICATORSTYLE_SQUIGGLE];
+  optional IndicatorStyle indicator_search_highlight = 102 [default=INDICATORSTYLE_SQUIGGLE];
+  optional IndicatorStyle indicator_select_highlight = 103 [default=INDICATORSTYLE_SQUIGGLE];
 
   // settings for c++
   optional bool foldComment = 200 [default=true];

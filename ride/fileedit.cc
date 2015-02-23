@@ -496,12 +496,12 @@ int C(ride::Annotation ann) {
   }
 }
 
-void SetIndicator(wxStyledTextCtrl* text, int index, const ride::Indicator& indicator) {
+void SetIndicator(wxStyledTextCtrl* text, int index, const ride::Indicator& indicator, const ride::IndicatorStyle indicator_style) {
   text->IndicatorSetUnder(index, indicator.under());
   text->IndicatorSetAlpha(index, indicator.alpha());
   text->IndicatorSetOutlineAlpha(index, indicator.outline_alpha());
   text->IndicatorSetForeground(index, C(indicator.foreground()));
-  text->IndicatorSetStyle(index, C(indicator.style()));
+  text->IndicatorSetStyle(index, C(indicator_style));
 }
 
 wxString b2s01(bool b) {
@@ -645,10 +645,10 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
   text_ctrl->SetAdditionalCaretsBlink(true);
   text_ctrl->SetAdditionalCaretsVisible(true);
 
-  SetIndicator(text_ctrl, ID_INDICATOR_ERROR, set.indicator_error());
-  SetIndicator(text_ctrl, ID_INDICATOR_WARNING, set.indicator_warning());
-  SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT, set.indicator_search_highlight());
-  SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT, set.indicator_select_highlight());
+  SetIndicator(text_ctrl, ID_INDICATOR_ERROR,            set.fonts_and_colors().indicator_error()           , set.indicator_error());
+  SetIndicator(text_ctrl, ID_INDICATOR_WARNING,          set.fonts_and_colors().indicator_warning()         , set.indicator_warning());
+  SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT, set.fonts_and_colors().indicator_search_highlight(), set.indicator_search_highlight());
+  SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT, set.fonts_and_colors().indicator_select_highlight(), set.indicator_select_highlight());
 
   SetupScintillaDefaultStyles(text_ctrl, set);
 
