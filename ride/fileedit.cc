@@ -796,8 +796,6 @@ int CalculateIndentationChange(const wxString& str) {
 
 void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 {
-  UpdateTitle();
-
   int entered_character = event.GetKey(); // the key seems to be the char that was added
 
   if (entered_character == '{') {
@@ -935,5 +933,6 @@ void FileEdit::OnUpdateUi(wxStyledTextEvent& event)
 }
 
 void FileEdit::OnChanged(wxStyledTextEvent& event) {
+  UpdateTitle();
   HighlightCurrentWord();
 }
