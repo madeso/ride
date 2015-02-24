@@ -126,6 +126,12 @@ message FontsAndColors {
   optional Color selected_line = 1;
   optional Color fold_margin_hi = 2;
   optional Color fold_margin_low = 3;
+
+  optional bool use_selection_foreground = 4;
+  optional Color selection_foreground = 5;
+  optional bool use_selection_background = 6;
+  optional Color selection_background = 7;
+
   optional Color edgeColor = 8;
 
   // indicators

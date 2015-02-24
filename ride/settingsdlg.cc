@@ -746,6 +746,11 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATA(foldflags, lineafter_contracted, uiFoldLineAfterContracted, );
 
   DIALOG_DATAX(fonts_and_colors, edgecolor, uiEdgeColor);
+
+  DIALOG_DATA(fonts_and_colors, use_selection_foreground, uiEditUseSelectionForeground,);
+  DIALOG_DATAX(fonts_and_colors, selection_foreground, uiEditSelectionForeground);
+  DIALOG_DATA(fonts_and_colors, use_selection_background, uiEditUseSelectionBackground,);
+  DIALOG_DATAX(fonts_and_colors, selection_background, uiEditSelectionBackground);
   
   DIALOG_DATA(current_settings_, current_line_visible, uiCurrentLineVisible, );
   DIALOG_DATA(current_settings_, current_line_alpha, uiEditCurrentLineAlpha, );

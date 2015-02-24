@@ -655,6 +655,7 @@ void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set) {
 }
 
 void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language) {
+  const ride::FontsAndColors& cols = set.fonts_and_colors();
   // initialize styles
   text_ctrl->StyleClearAll();
 
@@ -744,6 +745,13 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
 
   text_ctrl->AnnotationSetVisible(C(set.annotations()));
 
+  if (cols.use_selection_foreground()) {
+    text_ctrl->SetSelForeground(true, C(cols.selection_foreground()));
+  }
+
+  if (cols.use_selection_background()) {
+    text_ctrl->SetSelBackground(true, C(cols.selection_background()));
+  }
 
   SetupScintillaCurrentLine(text_ctrl, set);
 

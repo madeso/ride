@@ -204,7 +204,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_indicators->SetSizer( fgSizer7 );
 	m_indicators->Layout();
 	fgSizer7->Fit( m_indicators );
-	m_notebook1->AddPage( m_indicators, wxT("Indicators"), true );
+	m_notebook1->AddPage( m_indicators, wxT("Indicators"), false );
 	m_markers = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer51;
 	fgSizer51 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -416,6 +416,32 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiEditShowCompilerAnnotations = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show warning/errors as annotations"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer4->Add( uiEditShowCompilerAnnotations, 0, wxALL, 5 );
 	
+	wxStaticBoxSizer* sbSizer81;
+	sbSizer81 = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Selection") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer9;
+	fgSizer9 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer9->SetFlexibleDirection( wxBOTH );
+	fgSizer9->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiEditUseSelectionForeground = new wxCheckBox( m_panel10, wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer9->Add( uiEditUseSelectionForeground, 0, wxALL, 5 );
+	
+	uiEditSelectionForeground = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer9->Add( uiEditSelectionForeground, 0, wxALL, 5 );
+	
+	uiEditUseSelectionBackground = new wxCheckBox( m_panel10, wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer9->Add( uiEditUseSelectionBackground, 0, wxALL, 5 );
+	
+	uiEditSelectionBackground = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer9->Add( uiEditSelectionBackground, 0, wxALL, 5 );
+	
+	
+	sbSizer81->Add( fgSizer9, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizer81, 1, wxEXPAND, 5 );
+	
 	
 	m_panel10->SetSizer( fgSizer4 );
 	m_panel10->Layout();
@@ -430,7 +456,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_editor->SetSizer( bSizer2 );
 	m_editor->Layout();
 	bSizer2->Fit( m_editor );
-	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), false );
+	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), true );
 	m_window = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook1->AddPage( m_window, wxT("Window behaviour"), false );
 	
@@ -513,6 +539,10 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiEditFoldLow->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
 	uiEditHighlightKeyword->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiEditIndentation->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
+	uiEditUseSelectionForeground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
+	uiEditSelectionForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
+	uiEditUseSelectionBackground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
+	uiEditSelectionBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
 	m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
 	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
 	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
@@ -579,6 +609,10 @@ Settings::~Settings()
 	uiEditFoldLow->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
 	uiEditHighlightKeyword->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiEditIndentation->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
+	uiEditUseSelectionForeground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
+	uiEditSelectionForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
+	uiEditUseSelectionBackground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
+	uiEditSelectionBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
 	m_sdbSizer1Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
 	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
 	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
