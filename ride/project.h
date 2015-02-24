@@ -16,21 +16,24 @@ public:
   Project(MainWindow* output, const wxString& root_folder);
   const wxString& root_folder() const;
 
+  bool IsPartOfProject(const wxString& filename);
+
   void Settings();
-  void Build   (bool clean_output=true);
-  void Clean   (bool clean_output=true);
-  void Rebuild (bool clean_output=true);
-  void Doc     (bool clean_output=true);
-  void Run     (bool clean_output=true);
-  void Test    (bool clean_output=true);
-  void Bench   (bool clean_output=true);
-  void Update  (bool clean_output=true);
+  void Build   (bool origin_main=true);
+  void Clean   (bool origin_main=true);
+  void Rebuild (bool origin_main=true);
+  void Doc     (bool origin_main=true);
+  void Run     (bool origin_main=true);
+  void Test    (bool origin_main=true);
+  void Bench   (bool origin_main=true);
+  void Update  (bool origin_main=true);
 
 public:
   void OnPipedProcessTerminated(PipedProcess *process);
   void OnAsyncProcessTerminated(AsyncProcess *process);
   void Append(const wxString str);
 private:
+  void SaveAllFiles();
   void CleanOutput();
   void RunCmd(const wxString& cmd);
   void AddPipedProcess(PipedProcess *process);
@@ -39,7 +42,7 @@ private:
   AsyncProcessesArray async_running_processes_;
 
 private:
-  MainWindow* output_;
+  MainWindow* main_;
   wxString root_folder_;
 };
 

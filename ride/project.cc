@@ -5,82 +5,99 @@
 
 #include "ride/mainwindow.h"
 
-Project::Project(MainWindow* output, const wxString& root_folder) : output_(output), root_folder_(root_folder) {
+Project::Project(MainWindow* output, const wxString& root_folder) : main_(output), root_folder_(root_folder) {
 }
 
 const wxString& Project::root_folder() const {
   return root_folder_;
 }
 
+bool Project::IsPartOfProject(const wxString& filename) {
+  // todo: implement a better logic for checking if the file is part of the project
+  return true;
+}
+
 void Project::Settings() {
   // todo: implement me
 }
 
-void Project::Build(bool clean_output) {
-  if (clean_output) {
+void Project::SaveAllFiles() {
+  main_->SaveAllChangedProjectFiles();
+}
+
+void Project::Build(bool origin_main) {
+  if (origin_main) {
     CleanOutput();
+    SaveAllFiles();
   }
 
   // todo: expand commandline with arguments
   RunCmd("cargo build");
 }
 
-void Project::Clean(bool clean_output) {
-  if (clean_output) {
+void Project::Clean(bool origin_main) {
+  if (origin_main) {
     CleanOutput();
+    SaveAllFiles();
   }
 
   // todo: expand commandline with arguments
   RunCmd("cargo clean");
 }
 
-void Project::Rebuild(bool clean_output) {
-  if (clean_output) {
+void Project::Rebuild(bool origin_main) {
+  if (origin_main) {
     CleanOutput();
+    SaveAllFiles();
   }
   Clean(false);
   Build(false);
 }
 
-void Project::Doc(bool clean_output) {
-  if (clean_output) {
+void Project::Doc(bool origin_main) {
+  if (origin_main) {
     CleanOutput();
+    SaveAllFiles();
   }
 
-  // todo: expand commandline with argumets
+  // todo: expand commandline with arguments
   RunCmd("cargo doc");
 }
 
-void Project::Run(bool clean_output) {
-  if (clean_output) {
+void Project::Run(bool origin_main) {
+  if (origin_main) {
     CleanOutput();
+    SaveAllFiles();
   }
 
   Build(false);
   //todo: run the application
 }
 
-void Project::Test(bool clean_output) {
-  if (clean_output) {
+void Project::Test(bool origin_main) {
+  if (origin_main) {
     CleanOutput();
+    SaveAllFiles();
   }
 
   // todo: expand commandline with arguments
   RunCmd("cargo test");
 }
 
-void Project::Bench(bool clean_output) {
-  if (clean_output) {
+void Project::Bench(bool origin_main) {
+  if (origin_main) {
     CleanOutput();
+    SaveAllFiles();
   }
 
   // todo: expand commandline with arguments
   RunCmd("cargo bench");
 }
 
-void Project::Update(bool clean_output) {
-  if (clean_output) {
+void Project::Update(bool origin_main) {
+  if (origin_main) {
     CleanOutput();
+    SaveAllFiles();
   }
 
   // todo: expand commandline with arguments
@@ -150,11 +167,11 @@ public:
 };
 
 void Project::CleanOutput() {
-  output_->Clear();
+  main_->Clear();
 }
 
 void Project::Append(const wxString str) {
-  output_->Append(str);
+  main_->Append(str);
 }
 
 void Project::RunCmd(const wxString& cmd) {

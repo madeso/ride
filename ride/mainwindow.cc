@@ -503,6 +503,17 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
   UpdateTitle();
 }
 
+void MainWindow::SaveAllChangedProjectFiles() {
+  for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
+    if (edit) {
+      if (project_.IsPartOfProject(edit->filename())) {
+        edit->Save();
+      }
+    }
+  }
+}
+
 #define MEM_FUN(X) \
   void MainWindow::OnProject ## X(wxCommandEvent& event) {\
     project_. ## X ();\

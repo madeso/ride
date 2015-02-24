@@ -39,6 +39,8 @@ public:
 
   void OpenCompilerMessage(const CompilerMessage& message);
 
+  void SaveAllChangedProjectFiles();
+
 private:
 	void OnFileOpen(wxCommandEvent& event);
   void OnFileSave(wxCommandEvent& event);
