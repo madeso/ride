@@ -11,6 +11,8 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Somewhat sorted roadmap
 
+* Detect change when removing characters on backspace
+* Save before build
 * Detect changes outside ride and ask to reload file
 * Open type in online documentation command/do a search...
 * Search google for this compiler error
