@@ -26,6 +26,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
 * Create project with cargo and add a README.md file
+* Add configurable shortcuts
 * Cpack support (=installer for ride)
 * Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
 * Goto definition & goto definition of type
