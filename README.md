@@ -29,6 +29,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Create project with cargo and add a README.md file
 * Cpack support (=installer for ride)
 * Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
+* Goto definition & goto definition of type
 * Code snippets
 * Implement ctrl+tab like visual studio to switch between open documents
 * Start page
@@ -40,7 +41,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Change the color dialog button/control to a more photshop looking color dialog that sends the color directly to all the edits for instant feedback
 * Highlight misspelled words/comments
 * Function for selecting current word
-* Goto definition & goto definition of type
 * "a<press enter here>b" should be replaced by concat!("a", <new line here>"<cursor here>b")
 * Switch tabs by scrolling with cursor over tab-bar
 * Format file/selection
