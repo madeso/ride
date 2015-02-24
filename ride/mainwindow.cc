@@ -265,6 +265,13 @@ void MainWindow::Clear() {
   output_window_->SetText(wxEmptyString);
   output_window_->SetReadOnly(true);
   compiler_messages_.resize(0);
+
+  for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
+    if (edit) {
+      edit->ClearCompilerMessages();
+    }
+  }
 }
 
 void MainWindow::Append(const wxString& str) {

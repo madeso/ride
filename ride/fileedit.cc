@@ -226,10 +226,10 @@ void FileEdit::Focus() {
 void FileEdit::ClearCompilerMessages() {
   text_->AnnotationClearAll();
   text_->SetIndicatorCurrent(ID_INDICATOR_WARNING);
-  text_->IndicatorFillRange(0, text_->GetLength());
+  text_->IndicatorClearRange(0, text_->GetLength());
 
   text_->SetIndicatorCurrent(ID_INDICATOR_ERROR);
-  text_->IndicatorFillRange(0, text_->GetLength());
+  text_->IndicatorClearRange(0, text_->GetLength());
 }
 
 void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
