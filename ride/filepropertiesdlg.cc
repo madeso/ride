@@ -25,8 +25,8 @@ public:
     return ints_[index];
   }
 
-  int GetIndex(int i) const {
-    for (int index = 0; index < ints_.size(); ++index) {
+  size_t GetIndex(size_t i) const {
+    for (size_t index = 0; index < ints_.size(); ++index) {
       if (ints_[index] == i) return index;
     }
     return 0;
