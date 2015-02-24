@@ -41,6 +41,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Highlight misspelled words/comments
 * Function for selecting current word
 * Goto definition & goto definition of type
+* "a<press enter here>b" should be replaced by concat!("a", <new line here>"<cursor here>b")
 * Switch tabs by scrolling with cursor over tab-bar
 * Format file/selection
 * Color member variables, local variables and member variables different.
