@@ -13,6 +13,33 @@
 #include "ride/fileedit.h"
 #include <wx/numdlg.h> 
 
+//////////////////////////////////////////////////////////////////////////
+
+int ShowYesNo(wxWindow* self, const wxString& caption,
+  const wxMessageDialogBase::ButtonLabel& yes_button,
+  const wxMessageDialogBase::ButtonLabel& no_button,
+  const wxString& title_ok, const wxString title_error) {
+
+  wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxICON_QUESTION);
+  const bool label_change_ok = dlg.SetYesNoLabels(yes_button, no_button);
+  dlg.SetMessage(label_change_ok ? title_ok : title_error);
+  return dlg.ShowModal();
+}
+
+int ShowYesNoCancel(wxWindow* self, const wxString& caption,
+  const wxMessageDialogBase::ButtonLabel& yes_button,
+  const wxMessageDialogBase::ButtonLabel& no_button,
+  const wxMessageDialogBase::ButtonLabel& cancel_button,
+  const wxString& title_ok, const wxString title_error) {
+
+  wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxCANCEL | wxICON_QUESTION);
+  const bool label_change_ok = dlg.SetYesNoCancelLabels(yes_button, no_button, cancel_button);
+  dlg.SetMessage(label_change_ok ? title_ok : title_error);
+  return dlg.ShowModal();
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 enum
 {
   ID_MARGIN_LINENUMBER = 0,
@@ -327,7 +354,12 @@ int C(ride::FoldFlags f) {
   return ret;
 }
 
-FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file)
+wxDateTime GetFileDetectionTime(const wxString file) {
+  wxFileName file_name(file);
+  return file_name.GetModificationTime();
+}
+
+FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file)
   : wxControl(parent, wxID_ANY)
   , main_(parent)
   , notebook_(anotebook)
@@ -335,6 +367,7 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
   , highlight_current_word_last_start_position_(-1)
   , highlight_current_word_last_end_position_(-1)
 {
+  assert(false == file.IsEmpty());
   text_ = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__
     wxSUNKEN_BORDER |
@@ -342,13 +375,7 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
     wxVSCROLL);
 
   filename_ = file;
-
-  if (filename_.IsEmpty()) {
-    text_->SetText(source);
-  }
-  else {
-    text_->LoadFile(filename_);
-  }
+  LoadFile();
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(text_, 1, wxEXPAND);
@@ -357,6 +384,40 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
   notebook_->AddPage(this, wxT(""), true);
   UpdateFilename();
   UpdateTitle();
+}
+
+void FileEdit::LoadFile() {
+  text_->LoadFile(filename_);
+  UpdateFileTime();
+}
+
+void FileEdit::UpdateFileTime() {
+  last_modification_time_ = GetFileDetectionTime(filename_);
+}
+
+void FileEdit::ReloadFileIfNeeded() {
+  // basic check for infinite activation->question loop
+  static bool inside = false;
+  if (inside) return;
+  inside = true;
+
+  wxDateTime latest_file_time = GetFileDetectionTime(filename_);
+  if (last_modification_time_ != latest_file_time) {
+    // ask to reload or not?
+    if (ShowYesNo(this, "File modified!", "Reload the file", "Keep my changes",
+      wxString::Format("%s\nThis file has been modified by another program.", filename_),
+      wxString::Format("%s\nThis file has been modified by another program.\nDo you want to reload it?", filename_)
+      ) == wxID_YES) {
+      LoadFile();
+    }
+    else {
+      // if the user said "keep changes", we will remember that modification and
+      // not ask again for this "change" by remembering the modification time.
+      UpdateFileTime();
+    }
+  }
+
+  inside = false;
 }
 
 bool FileEdit::Save() {
@@ -380,6 +441,7 @@ bool FileEdit::SaveTo(const wxString& target) {
   filename_ = target;
   UpdateFilename();
   UpdateTitle();
+  UpdateFileTime();
   return true;
 }
 
@@ -696,29 +758,6 @@ void FileEdit::UpdateTitle() {
 
 bool FileEdit::ShouldBeSaved() {
   return text_->IsModified() || filename_.IsEmpty();
-}
-
-int ShowYesNo(wxWindow* self, const wxString& caption,
-  const wxMessageDialogBase::ButtonLabel& yes_button,
-  const wxMessageDialogBase::ButtonLabel& no_button,
-  const wxString& title_ok, const wxString title_error) {
-
-  wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxICON_QUESTION);
-  const bool label_change_ok = dlg.SetYesNoLabels(yes_button, no_button);
-  dlg.SetMessage(label_change_ok? title_ok : title_error);
-  return dlg.ShowModal();
-}
-
-int ShowYesNoCancel(wxWindow* self, const wxString& caption,
-  const wxMessageDialogBase::ButtonLabel& yes_button,
-  const wxMessageDialogBase::ButtonLabel& no_button,
-  const wxMessageDialogBase::ButtonLabel& cancel_button,
-  const wxString& title_ok, const wxString title_error) {
-
-  wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxCANCEL | wxICON_QUESTION);
-  const bool label_change_ok = dlg.SetYesNoCancelLabels(yes_button, no_button, cancel_button);
-  dlg.SetMessage(label_change_ok ? title_ok : title_error);
-  return dlg.ShowModal();
 }
 
 bool FileEdit::CanClose(bool can_abort) {

@@ -15,7 +15,7 @@ namespace ride {
 
 class FileEdit : public wxControl {
 public:
-  FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& source, const wxString& file);
+  FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file);
   const wxString& filename() const;
   void SetSelection(int start_line, int start_index, int end_line, int end_index);
   void AddCompilerMessage(const CompilerMessage& mess);
@@ -23,6 +23,9 @@ public:
   void Focus();
   wxString GetLanguageName();
 
+  bool CanClose(bool canAbort);
+  void UpdateTextControl();
+  void ReloadFileIfNeeded();
 public:
   bool Save();
   bool SaveAs();
@@ -49,15 +52,11 @@ public:
   void ShowProperties();
 
 public:
-  bool CanClose(bool canAbort);
-
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
   void OnCharAdded(wxStyledTextEvent& event);
   void OnUpdateUi(wxStyledTextEvent& event);
   void OnChanged(wxStyledTextEvent& event);
-
-  void UpdateTextControl();
 
   ~FileEdit();
 private:
@@ -69,6 +68,8 @@ private:
   void HighlightCurrentWord();
 
   wxString CalculateDocumentName() const;
+  void LoadFile();
+  void UpdateFileTime();
 
 private:
   MainWindow* main_;
@@ -80,6 +81,7 @@ private:
 
   int highlight_current_word_last_start_position_;
   int highlight_current_word_last_end_position_;
+  wxDateTime last_modification_time_;
 
 private:
   wxDECLARE_EVENT_TABLE();

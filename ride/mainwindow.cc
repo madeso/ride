@@ -95,9 +95,16 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(wxID_ABOUT             , MainWindow::OnAbout)
   
   EVT_CLOSE(MainWindow::OnClose)
+  EVT_ACTIVATE(MainWindow::OnActivated)
   
   EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
 wxEND_EVENT_TABLE()
+
+void MainWindow::OnActivated(wxActivateEvent& event) {
+  if (event.GetActive()) {
+    ReloadFilesIfNeeded();
+  }
+}
 
 class OutputControl : public wxStyledTextCtrl {
 public:
@@ -299,6 +306,15 @@ void MainWindow::AddCompilerMessage(const CompilerMessage& mess) {
   }
 }
 
+void MainWindow::ReloadFilesIfNeeded() {
+  for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
+    if (edit) {
+      edit->ReloadFileIfNeeded();
+    }
+  }
+}
+
 void MainWindow::OnFileExit(wxCommandEvent& event)
 {
   Close(true);
@@ -352,7 +368,7 @@ void MainWindow::OpenFile(const wxString& file, int start_line, int start_index,
   };
   FileEdit* found_edit_or_new = found_edit.edit != NULL
     ? found_edit.edit
-    : AddCompilerMessages(compiler_messages_, new FileEdit(notebook_, this, "", full_path))
+    : AddCompilerMessages(compiler_messages_, new FileEdit(notebook_, this, full_path))
     ;
   found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
   found_edit_or_new->Focus();

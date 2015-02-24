@@ -40,8 +40,11 @@ public:
   void OpenCompilerMessage(const CompilerMessage& message);
 
   void SaveAllChangedProjectFiles();
+  void ReloadFilesIfNeeded();
 
 private:
+  void OnActivated(wxActivateEvent& event);
+
 	void OnFileOpen(wxCommandEvent& event);
   void OnFileSave(wxCommandEvent& event);
   void OnFileSaveAs(wxCommandEvent& event);
