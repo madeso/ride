@@ -13,6 +13,8 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 * Open type in online documentation command/do a search...
 * Search google for this compiler error
+* Modify the selection color
+* Add a option to not highlight the current word
 * Project/solution explorer
 * Quick open file from solution/project
 * Remember session data
