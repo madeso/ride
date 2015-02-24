@@ -203,6 +203,22 @@ void FileEdit::MoveLinesDown() {
   UpdateTitle();
 }
 
+void FileEdit::OpenInOnlineDocumentation() {
+  const bool only_word_characters = true;
+
+  const wxString selected_text = text_->GetSelectedText();
+
+  const int pos = text_->GetCurrentPos();
+  const int start_position = text_->WordStartPosition(pos, only_word_characters);
+  const int end_position = text_->WordEndPosition(pos, only_word_characters);
+  const wxString current_word = text_->GetRange(start_position, end_position);
+
+  const wxString current_selection_or_word = selected_text.Length() == 0 ? current_word : selected_text;
+  // todo: html encode the current_selection_or_word since if it's &dog it should be probably be encoded as &amp;dog
+  const wxString url_to_open = wxString::Format("http://doc.rust-lang.org/std/?search=%s", current_selection_or_word);
+  wxLaunchDefaultBrowser(url_to_open);
+}
+
 void FileEdit::ShowProperties() {
   FilePropertiesDlg dlg(this, text_);
   dlg.ShowModal();

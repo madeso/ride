@@ -37,6 +37,7 @@ enum
   ID_EDIT_MOVELINESUP,
   ID_EDIT_MOVELINESDOWN,
   ID_EDIT_SHOW_PROPERTIES,
+  ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION,
 
   ID_PROJECT_NEW,
   ID_PROJECT_OPEN,
@@ -78,6 +79,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_EDIT_TOLOWER        , MainWindow::OnEditToLower)
   EVT_MENU(ID_EDIT_MOVELINESUP    , MainWindow::OnEditMoveLinesUp)
   EVT_MENU(ID_EDIT_MOVELINESDOWN  , MainWindow::OnEditMoveLinesDown)
+  EVT_MENU(ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, MainWindow::OnEditOpenInOnlineDocumentation)
   EVT_MENU(ID_EDIT_SHOW_PROPERTIES, MainWindow::OnEditShowProperties)
   
   EVT_MENU(ID_PROJECT_NEW         , MainWindow::OnProjectNew     )
@@ -196,6 +198,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   menu_edit->AppendSeparator();
   menu_edit->Append(ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
   menu_edit->Append(ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
+  menu_edit->AppendSeparator();
+  menu_edit->Append(ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, "Open type in online documentation\tCtrl-B", ""); // todo: get a better shortcut
   menu_edit->AppendSeparator();
   menu_edit->Append(ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "");
 
@@ -482,6 +486,7 @@ MEM_FUN(ToUpper)
 MEM_FUN(ToLower)
 MEM_FUN(MoveLinesUp)
 MEM_FUN(MoveLinesDown)
+MEM_FUN(OpenInOnlineDocumentation)
 MEM_FUN(ShowProperties)
 #undef MEM_FUN
 //////////////////////////////////////////////////////////////////////////

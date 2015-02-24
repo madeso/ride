@@ -49,6 +49,7 @@ public:
   void ToLower();
   void MoveLinesUp();
   void MoveLinesDown();
+  void OpenInOnlineDocumentation();
   void ShowProperties();
 
 public:
