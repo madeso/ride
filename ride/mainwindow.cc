@@ -4,6 +4,7 @@
 #include <wx/filename.h>
 #include <wx/aboutdlg.h>
 #include <wx/uri.h>
+#include <wx/clipbrd.h>
 
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
@@ -52,7 +53,9 @@ enum
   ID_PROJECT_BENCH,
   ID_PROJECT_UPDATE,
 
-  ID_SEARCH_FOR_THIS_COMPILER_MESSAGE
+  ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
+  ID_COPY_THIS_COMPILER_MESSAGE,
+  ID_CLEAR_COMPILER_OUTPUT
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -147,17 +150,60 @@ public:
 
     context_positon = this->PositionFromPoint(client_point);
     menu.Append(ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, "Search for this compiler message online...");
-    // todo: add copy and select all commands...
+    menu.Append(ID_COPY_THIS_COMPILER_MESSAGE, "Copy this compiler message");
+    menu.Append(ID_CLEAR_COMPILER_OUTPUT, "Clear output");
+    menu.Append(wxID_SELECTALL);
+    menu.Append(wxID_COPY);
+
+
     PopupMenu(&menu);
   }
 
-  void OnSearchForThisCompilerMessage(wxCommandEvent& event) {
+  void OnCopyThisCompilerMessage(wxCommandEvent& event) {
+    const wxString line_content = GetContextLineContent();
+
+    CompilerMessage message;
+    if (CompilerMessage::Parse(line_content, &message)) {
+      if (wxTheClipboard->Open()) {
+        wxTheClipboard->SetData(new wxTextDataObject(message.message()));
+        wxTheClipboard->Close();
+      }
+    }
+    else {
+      wxMessageBox("Unable to get compiler message data", "No compiler message data", wxICON_WARNING, this);
+    }
+  }
+
+  void OnClearCompilerOuput(wxCommandEvent& event) {
+    ClearOutput();
+  }
+
+  void ClearOutput() {
+    this->SetReadOnly(false);
+    this->SetText(wxEmptyString);
+    this->SetReadOnly(true);
+  }
+
+  void OnSelectAll(wxCommandEvent& event) {
+    this->SelectAll();
+  }
+
+  void OnCopy(wxCommandEvent& event) {
+    this->Copy();
+  }
+
+  const wxString GetContextLineContent() {
     long line_number = 0;
     long col = 0;
     const long index = context_positon;
     this->PositionToXY(index, &col, &line_number);
-    if (line_number == -1) return;
+    if (line_number == -1) return wxEmptyString;
     const wxString line_content = GetLineText(line_number);
+    return line_content;
+  }
+
+  void OnSearchForThisCompilerMessage(wxCommandEvent& event) {
+    const wxString line_content = GetContextLineContent();
 
     CompilerMessage message;
     if (CompilerMessage::Parse(line_content, &message)) {
@@ -194,6 +240,11 @@ wxBEGIN_EVENT_TABLE(OutputControl, wxStyledTextCtrl)
   EVT_LEFT_DCLICK(OutputControl::OnDoubleClick)
   EVT_CONTEXT_MENU(OutputControl::OnContextMenu)
   EVT_MENU(ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, OutputControl::OnSearchForThisCompilerMessage)
+
+  EVT_MENU(ID_COPY_THIS_COMPILER_MESSAGE, OutputControl::OnCopyThisCompilerMessage)
+  EVT_MENU(ID_CLEAR_COMPILER_OUTPUT, OutputControl::OnClearCompilerOuput)
+  EVT_MENU(wxID_SELECTALL, OutputControl::OnSelectAll)
+  EVT_MENU(wxID_COPY, OutputControl::OnCopy)
 wxEND_EVENT_TABLE()
 
 
@@ -323,9 +374,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::Clear() {
   // todo: this probably needs to happen in the gui thread instead of here... or does it?
-  output_window_->SetReadOnly(false);
-  output_window_->SetText(wxEmptyString);
-  output_window_->SetReadOnly(true);
+  output_window_->ClearOutput();
   compiler_messages_.resize(0);
 
   for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
