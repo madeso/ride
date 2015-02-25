@@ -149,11 +149,14 @@ public:
     const wxPoint client_point = ScreenToClient(mouse_point);
 
     context_positon = this->PositionFromPoint(client_point);
+    menu.Append(wxID_COPY, "Copy");
+    menu.Append(wxID_SELECTALL, "Select all");
+    menu.AppendSeparator();
     menu.Append(ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, "Search for this compiler message online...");
     menu.Append(ID_COPY_THIS_COMPILER_MESSAGE, "Copy this compiler message");
+    menu.AppendSeparator();
     menu.Append(ID_CLEAR_COMPILER_OUTPUT, "Clear output");
-    menu.Append(wxID_SELECTALL);
-    menu.Append(wxID_COPY);
+    
 
 
     PopupMenu(&menu);
