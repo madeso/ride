@@ -3,6 +3,7 @@
 #include <wx/aui/aui.h>
 #include <wx/filename.h>
 #include <wx/aboutdlg.h>
+#include <wx/uri.h>
 
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
@@ -49,7 +50,9 @@ enum
   ID_PROJECT_RUN,
   ID_PROJECT_TEST,
   ID_PROJECT_BENCH,
-  ID_PROJECT_UPDATE
+  ID_PROJECT_UPDATE,
+
+  ID_SEARCH_FOR_THIS_COMPILER_MESSAGE
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -108,6 +111,17 @@ void MainWindow::OnActivated(wxActivateEvent& event) {
   }
 }
 
+wxPoint GetContextEventPosition(const wxContextMenuEvent& event) {
+  wxPoint ret = event.GetPosition();
+  // according to the documentation: http://docs.wxwidgets.org/trunk/classwx_context_menu_event.html#a291e3437b4bf913128ea14e511d161cb
+  if (ret == wxDefaultPosition) {
+    return wxGetMousePosition();
+  }
+  else {
+    return ret;
+  }
+}
+
 class OutputControl : public wxStyledTextCtrl {
 public:
   OutputControl(MainWindow* main) : main_(main) {
@@ -121,6 +135,41 @@ public:
     SetupScintillaCurrentLine(this, set);
     SetupScintillaDefaultStyles(this, set);
     this->SetEndAtLastLine(set.end_at_last_line());
+  }
+
+  int context_positon;
+
+  void OnContextMenu(wxContextMenuEvent& event) {
+    wxMenu menu;
+
+    const wxPoint mouse_point = GetContextEventPosition(event);
+    const wxPoint client_point = ScreenToClient(mouse_point);
+
+    context_positon = this->PositionFromPoint(client_point);
+    menu.Append(ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, "Search for this compiler message online...");
+    // todo: add copy and select all commands...
+    PopupMenu(&menu);
+  }
+
+  void OnSearchForThisCompilerMessage(wxCommandEvent& event) {
+    long line_number = 0;
+    long col = 0;
+    const long index = context_positon;
+    this->PositionToXY(index, &col, &line_number);
+    if (line_number == -1) return;
+    const wxString line_content = GetLineText(line_number);
+
+    CompilerMessage message;
+    if (CompilerMessage::Parse(line_content, &message)) {
+      wxString mess = message.message();
+      mess.Replace("#", "%23");
+      const wxString escaped_message = wxURI(mess).BuildURI();
+      const wxString url_to_open = wxString::Format("http://www.google.com/search?q=%s", escaped_message);
+      wxLaunchDefaultBrowser(url_to_open);
+    }
+    else {
+      wxMessageBox("Unable to get compiler message data", "No compiler message data", wxICON_WARNING, this);
+    }
   }
 
   void OnDoubleClick(wxMouseEvent& event) {
@@ -143,6 +192,8 @@ public:
 
 wxBEGIN_EVENT_TABLE(OutputControl, wxStyledTextCtrl)
   EVT_LEFT_DCLICK(OutputControl::OnDoubleClick)
+  EVT_CONTEXT_MENU(OutputControl::OnContextMenu)
+  EVT_MENU(ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, OutputControl::OnSearchForThisCompilerMessage)
 wxEND_EVENT_TABLE()
 
 
