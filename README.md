@@ -18,7 +18,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Somewhat sorted roadmap
 
-* Search google for this compiler error
 * Add a option to not highlight the current word
 * Project/solution explorer
 * Quick open file from solution/project
