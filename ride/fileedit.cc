@@ -3,15 +3,16 @@
 #include <wx/aui/aui.h>
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
-#include "ride/compilermessage.h"
-#include "ride/filepropertiesdlg.h"
+#include <wx/uri.h>
+#include <wx/numdlg.h> 
 
 #include <vector>
 #include <cassert>
 
+#include "ride/compilermessage.h"
+#include "ride/filepropertiesdlg.h"
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
-#include <wx/numdlg.h> 
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -216,7 +217,7 @@ void FileEdit::OpenInOnlineDocumentation() {
   const wxString current_selection_or_word = selected_text.Length() == 0 ? current_word : selected_text;
   // todo: html encode the current_selection_or_word since if it's &dog it should be probably be encoded as &amp;dog
   const wxString url_to_open = wxString::Format("http://doc.rust-lang.org/std/?search=%s", current_selection_or_word);
-  wxLaunchDefaultBrowser(url_to_open);
+  wxLaunchDefaultBrowser(wxURI(url_to_open).BuildURI());
 }
 
 void FileEdit::ShowProperties() {
