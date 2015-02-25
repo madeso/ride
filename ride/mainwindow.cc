@@ -125,6 +125,21 @@ wxPoint GetContextEventPosition(const wxContextMenuEvent& event) {
   }
 }
 
+wxString ToShortString(const wxString& str, int max_length) {
+  const wxString dots = "...";
+  if (str.length() > max_length + dots.length()) {
+    return str.Left(max_length) + dots;
+  }
+  else {
+    return str;
+  }
+}
+
+void AppendEnabled(wxMenu& menu, int id, const wxString text, bool enabled) {
+  menu.Append(id, text);
+  menu.Enable(id, enabled);
+}
+
 class OutputControl : public wxStyledTextCtrl {
 public:
   OutputControl(MainWindow* main) : main_(main) {
@@ -143,19 +158,24 @@ public:
   int context_positon;
 
   void OnContextMenu(wxContextMenuEvent& event) {
-    wxMenu menu;
-
     const wxPoint mouse_point = GetContextEventPosition(event);
     const wxPoint client_point = ScreenToClient(mouse_point);
-
     context_positon = this->PositionFromPoint(client_point);
-    menu.Append(wxID_COPY, "Copy");
-    menu.Append(wxID_SELECTALL, "Select all");
+
+    const bool has_selected = this->GetSelectedText().IsEmpty() == false;
+    const wxString line_content = GetContextLineContent();
+    CompilerMessage compiler_message;
+    const bool has_compiler_message = CompilerMessage::Parse(line_content, &compiler_message);
+    const wxString message = has_compiler_message ? ToShortString(compiler_message.message(), 45) : "<none>";
+
+    wxMenu menu;
+    AppendEnabled(menu, wxID_COPY, "Copy", has_selected);
+    AppendEnabled(menu, wxID_SELECTALL, "Select all", true);
     menu.AppendSeparator();
-    menu.Append(ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, "Search for this compiler message online...");
-    menu.Append(ID_COPY_THIS_COMPILER_MESSAGE, "Copy this compiler message");
+    AppendEnabled(menu, ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, wxString::Format("Search for \"%s\" online", message), has_compiler_message);
+    AppendEnabled(menu, ID_COPY_THIS_COMPILER_MESSAGE, wxString::Format("Copy \"%s\" to clipboard", message), has_compiler_message);
     menu.AppendSeparator();
-    menu.Append(ID_CLEAR_COMPILER_OUTPUT, "Clear output");
+    AppendEnabled(menu, ID_CLEAR_COMPILER_OUTPUT, "Clear output", true);
     
 
 
