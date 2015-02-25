@@ -1,5 +1,6 @@
 ![screenshot](logo/256text.png)
 Ride is a [Rust](http://www.rust-lang.org/) [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment). It's named after concatenating R from rust and IDE. It's currently not in a usable state.
+If you're looking for something more complete, perhaps [RustDT](http://rustdt.github.io/) for Eclipse is your thing.
 
 The current features are a pretty ok editor (scintilla based) and shortcuts for running various cargo commands, listing its output and double clicking on warnings/errors to go to them.
 
