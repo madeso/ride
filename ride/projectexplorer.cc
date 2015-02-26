@@ -6,7 +6,12 @@
 #include <wx/filename.h>
 
 ProjectExplorer::ProjectExplorer(wxWindow* parent)
-  : wxTreeCtrl(parent, wxID_ANY) {
+  : wxTreeCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+  wxTR_HAS_BUTTONS
+  | wxTR_TWIST_BUTTONS
+  | wxTR_MULTIPLE
+  | wxTR_LINES_AT_ROOT
+  ) {
 }
 
 void ProjectExplorer::SetFolder(const wxString& folder) {
@@ -29,6 +34,8 @@ void ProjectExplorer::UpdateFolderStructure() {
   const wxString filespec = "";
 
   SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags);
+
+  this->ExpandAll();
 }
 
 
