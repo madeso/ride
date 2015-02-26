@@ -11,6 +11,7 @@
 
 #include "ride/settingsdlg.h"
 #include "ride/compilermessage.h"
+#include "ride/projectexplorer.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -366,6 +367,10 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   output_window_->UpdateStyle();
   output_window_->UpdateStyle();
   aui_.AddPane(output_window_, wxAuiPaneInfo().Name("output").Caption("Output").Bottom().CloseButton(false));
+
+  // project explorer
+  project_explorer_ = new ProjectExplorer(this);
+  aui_.AddPane(project_explorer_, wxAuiPaneInfo().Name("project").Caption("Project").Left().CloseButton(false));
 
   aui_.Update();
   UpdateTitle();
