@@ -5,10 +5,13 @@
 #include <wx/treectrl.h>
 
 class wxFileName;
+class MainWindow;
 
 class ProjectExplorer : public wxTreeCtrl {
 public:
-  explicit ProjectExplorer(wxWindow* parent);
+  explicit ProjectExplorer(MainWindow* main);
+
+  void UpdateColors();
 
   void SetFolder(const wxString& folder);
 private:
@@ -17,6 +20,7 @@ private:
   void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags);
 
 private:
+  MainWindow* main_;
   wxString folder_;
 };
 

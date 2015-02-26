@@ -557,6 +557,7 @@ void MainWindow::set_settings(const ride::Settings& settings) {
   assert(this);
   this->settings_ = settings;
   UpdateAllEdits();
+  project_explorer_->UpdateColors();
 }
 
 void MainWindow::UpdateAllEdits() {

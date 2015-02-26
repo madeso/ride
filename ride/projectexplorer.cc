@@ -5,13 +5,22 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 
-ProjectExplorer::ProjectExplorer(wxWindow* parent)
-  : wxTreeCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+#include "ride/mainwindow.h"
+
+ProjectExplorer::ProjectExplorer(MainWindow* main)
+  : wxTreeCtrl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
   wxTR_HAS_BUTTONS
   | wxTR_TWIST_BUTTONS
   | wxTR_MULTIPLE
   | wxTR_LINES_AT_ROOT
-  ) {
+  ), main_(main) {
+  UpdateColors();
+}
+
+void ProjectExplorer::UpdateColors() {
+  const ride::Style& style = main_->settings().fonts_and_colors().default_style();
+  this->SetBackgroundColour(C(style.background()));
+  this->SetForegroundColour(C(style.foreground()));
 }
 
 void ProjectExplorer::SetFolder(const wxString& folder) {
