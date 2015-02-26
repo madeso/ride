@@ -933,14 +933,14 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 }
 
 void FileEdit::HighlightCurrentWord() {
-  const int pos = text_->GetCurrentPos();
+  const int current_position = text_->GetCurrentPos();
 
   // highlight current word
   const bool only_word_characters = true;
-  const int start_position = text_->WordStartPosition(pos, only_word_characters);
-  const int end_position = text_->WordEndPosition(pos, only_word_characters);
+  const int current_start_position = text_->WordStartPosition(current_position, only_word_characters);
+  const int current_end_position = text_->WordEndPosition(current_position, only_word_characters);
 
-  if (start_position != highlight_current_word_last_start_position_ || end_position != highlight_current_word_last_end_position_) {
+  if (current_start_position != highlight_current_word_last_start_position_ || current_end_position != highlight_current_word_last_end_position_) {
     text_->SetIndicatorCurrent(ID_INDICATOR_SELECT_HIGHLIGHT);
 
     // clear old highlight
@@ -948,11 +948,11 @@ void FileEdit::HighlightCurrentWord() {
       text_->IndicatorClearRange(0, text_->GetLength());
     }
 
-    if (start_position != -1 && end_position != -1 && start_position != end_position) {
-      const int length = end_position - start_position;
+    if (current_start_position != -1 && current_end_position != -1 && current_start_position != current_end_position) {
+      const int length = current_end_position - current_start_position;
       assert(length > 0);
 
-      const wxString current_text = text_->GetRange(start_position, end_position);
+      const wxString current_text = text_->GetRange(current_start_position, current_end_position);
 
       const bool highlight_keyword = main_->settings().highlight_word_also_highlight_keywords();
       const bool is_keyword = highlight_keyword ? false
@@ -962,17 +962,27 @@ void FileEdit::HighlightCurrentWord() {
         // search through the entire document for this text and highlight it
         int search_point = 0;
         while (true) {
-          int match_index = text_->FindText(search_point, text_->GetLength(), current_text, wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE);
-          if (match_index == -1) {
+          int match_position = text_->FindText(search_point, text_->GetLength(), current_text, wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE);
+          if (match_position == -1) {
             break;
           }
-          text_->IndicatorFillRange(match_index, length);
-          search_point = match_index + length;
+          bool highlight_match = false;
+          if (match_position == current_start_position) {
+            // todo: set highlight_this to true depending on the the setting to highlight the current word or not...
+          }
+          else {
+            highlight_match = true;
+          }
+
+          if (highlight_match) {
+            text_->IndicatorFillRange(match_position, length);
+          }
+          search_point = match_position + length;
         }
       }
     }
-    highlight_current_word_last_start_position_ = start_position;
-    highlight_current_word_last_end_position_ = end_position;
+    highlight_current_word_last_start_position_ = current_start_position;
+    highlight_current_word_last_end_position_ = current_end_position;
   }
 }
 

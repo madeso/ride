@@ -18,7 +18,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Somewhat sorted roadmap
 
-* Add a option to not highlight the current word
 * Project/solution explorer
 * Quick open file from solution/project
 * Remember session data
