@@ -648,7 +648,9 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
   }
 
   // don't load the cargo file, load the whole folder instead as cargo files should be named in a specific way!
-  project_ = Project(this, cargo_file.GetPathWithSep());
+  const wxString project_folder = cargo_file.GetPathWithSep();
+  project_ = Project(this, project_folder);
+  project_explorer_->SetFolder(project_folder);
   UpdateTitle();
 }
 
