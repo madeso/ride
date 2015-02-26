@@ -45,7 +45,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Change the color dialog button/control to a more photshop looking color dialog that sends the color directly to all the edits for instant feedback
 * Highlight misspelled words/comments
 * Function for selecting current word
-* "a<press enter here>b" should be replaced by concat!("a", <new line here>"<cursor here>b")
+* "aPRESS_ENTER_HEREb" should be replaced by concat!("a", NEW_LINE_HERE"<cursor here>b")
 * Switch tabs by scrolling with cursor over tab-bar
 * Format file/selection
 * Color member variables, local variables and member variables different.
