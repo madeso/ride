@@ -53,25 +53,29 @@ bool IsDirectory(const wxFileName& root, const wxString directory) {
 }
 
 void ProjectExplorer::UpdateFolderStructure() {
-  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL);
-
   const int flags = wxDIR_FILES | wxDIR_DIRS; // walk files and folders
   const wxString filespec = "";
-
+  
+  this->Freeze();
+  this->DeleteAllItems();
+  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL);
   SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags, 0);
+  this->Thaw();
 
   this->ExpandAll();
 }
 
 
 std::vector<wxString> TraverseFilesAndFolders(const wxFileName& root, const wxString filespec, const int flags) {
-  std::vector<wxString> ret;
   const wxString root_full_path = root.GetFullPath();
+
+  if (root_full_path.IsEmpty()) return std::vector<wxString>();
 
   wxDir directory(root_full_path);
 
   directory.Open(root_full_path);
 
+  std::vector<wxString> ret;
   wxString file_or_directory_name;
   bool cont = directory.GetFirst(&file_or_directory_name, filespec, flags);
   while (cont)

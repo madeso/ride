@@ -14,9 +14,9 @@ public:
   void UpdateColors();
 
   void SetFolder(const wxString& folder);
-private:
   void UpdateFolderStructure();
 
+private:
   void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, int index);
 
 private:
