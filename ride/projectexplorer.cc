@@ -19,7 +19,7 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
   | wxTR_TWIST_BUTTONS
   | wxTR_MULTIPLE
   | wxTR_LINES_AT_ROOT
-  ), images_(16, 16), main_(main) {
+  ), images_(16, 16), main_(main), last_highlighted_item_(NULL) {
   UpdateColors();
 
   this->SetImageList(&images_);
@@ -39,6 +39,18 @@ void ProjectExplorer::SetFolder(const wxString& folder) {
   UpdateFolderStructure();
 }
 
+void ProjectExplorer::HighlightOpenFile(const wxString& file_path) {
+  auto res = folder_to_item_.find(file_path);
+  if (res != folder_to_item_.end()) {
+    wxTreeItemId id = res->second;
+    this->SetItemBold(id, true);
+    if (last_highlighted_item_.IsOk()) {
+      this->SetItemBold(last_highlighted_item_, false);
+    }
+    last_highlighted_item_ = id;
+  }
+}
+
 wxFileName SubFolder(const wxFileName& root, const wxString& sub_folder) {
   wxFileName folder(root);
   folder.AppendDir(sub_folder);
@@ -56,6 +68,8 @@ void ProjectExplorer::UpdateFolderStructure() {
   const int flags = wxDIR_FILES | wxDIR_DIRS; // walk files and folders
   const wxString filespec = "";
   
+  last_highlighted_item_.Unset();
+  folder_to_item_.clear();
   this->Freeze();
   this->DeleteAllItems();
   this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL);
@@ -118,8 +132,10 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
     const bool is_dir = IsDirectory(root, file_or_directory_name);
     const int image = is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL;
 
-    wxTreeItemData* data = new FileEntry(is_dir, JoinPath(root, file_or_directory_name) );
+    const wxString path = JoinPath(root, file_or_directory_name);
+    wxTreeItemData* data = new FileEntry(is_dir, path);
     wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, image, image, data);
+    folder_to_item_[path] = child;
     if (is_dir) {
       const wxFileName folder_name = SubFolder(root, file_or_directory_name);
       SubUpdateFolderStructure(folder_name, child, filespec, flags, index+1);

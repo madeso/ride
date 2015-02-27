@@ -94,6 +94,7 @@ private:
   void OnClose(wxCloseEvent& event);
 
   void OnNotebookPageClose(wxAuiNotebookEvent& evt);
+  void OnNotebookPageChanged(wxAuiNotebookEvent& evt);
 
 	wxDECLARE_EVENT_TABLE();
 

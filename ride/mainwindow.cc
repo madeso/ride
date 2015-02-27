@@ -109,7 +109,19 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_ACTIVATE(MainWindow::OnActivated)
   
   EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
+  EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainWindow::OnNotebookPageChanged)
 wxEND_EVENT_TABLE()
+
+void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& evt) {
+  wxString file_name = wxEmptyString;
+
+  FileEdit* selected_file = GetSelectedEditorNull();
+  if (selected_file) {
+    file_name = selected_file->filename();
+  }
+
+  project_explorer_->HighlightOpenFile(file_name);
+}
 
 void MainWindow::OnActivated(wxActivateEvent& event) {
   if (event.GetActive()) {
