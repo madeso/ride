@@ -58,7 +58,7 @@ void ProjectExplorer::UpdateFolderStructure() {
   const int flags = wxDIR_FILES | wxDIR_DIRS; // walk files and folders
   const wxString filespec = "";
 
-  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags);
+  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags, 0);
 
   this->ExpandAll();
 }
@@ -84,17 +84,19 @@ std::vector<wxString> TraverseFilesAndFolders(const wxFileName& root, const wxSt
   return ret;
 }
 
-void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags)
+void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, int index)
 {
   const wxString root_full_path = root.GetFullPath();
   const std::vector<wxString> files_and_folders = TraverseFilesAndFolders(root, filespec, flags);
   for (const wxString file_or_directory_name : files_and_folders)
   {
+    if( file_or_directory_name == "target" && index == 0 ) continue;
+
     const bool is_dir = IsDirectory(root, file_or_directory_name);
     wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL);
     if (is_dir) {
       const wxFileName child_name = SubFolder(root, file_or_directory_name);
-      SubUpdateFolderStructure(child_name, child, filespec, flags);
+      SubUpdateFolderStructure(child_name, child, filespec, flags, index+1);
     }
   }
 }

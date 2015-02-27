@@ -17,7 +17,7 @@ public:
 private:
   void UpdateFolderStructure();
 
-  void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags);
+  void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, int index);
 
 private:
   wxImageList images_;
