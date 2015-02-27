@@ -492,7 +492,7 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
   wxArrayString paths_to_open;
   open_file.GetPaths(paths_to_open);
   for (wxArrayString::iterator path = paths_to_open.begin(); path != paths_to_open.end(); ++path) {
-    OpenFile(*path, -1, -1, -1, -1);
+    OpenFile(*path);
   }
 }
 

@@ -19,6 +19,10 @@ public:
 private:
   void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, int index);
 
+  void OnDoubleClick(wxMouseEvent& event);
+
+  wxDECLARE_EVENT_TABLE();
+
 private:
   wxImageList images_;
   MainWindow* main_;

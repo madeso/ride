@@ -43,6 +43,8 @@ public:
   void SaveAllChangedProjectFiles();
   void ReloadFilesIfNeeded();
 
+  void OpenFile(const wxString& file, int start_line = -1, int start_index = -1, int end_line = -1, int end_index = -1);
+
 private:
   void OnActivated(wxActivateEvent& event);
 
@@ -96,7 +98,6 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 private:
-  void OpenFile(const wxString& file, int start_line, int start_index, int end_line, int end_index);
   FoundEdit GetEditFromFileName(const wxString& file);
   void AddCompilerMessage(const CompilerMessage& mess);
 

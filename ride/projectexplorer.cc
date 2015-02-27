@@ -88,6 +88,25 @@ std::vector<wxString> TraverseFilesAndFolders(const wxFileName& root, const wxSt
   return ret;
 }
 
+class FileEntry : public wxTreeItemData {
+public:
+  FileEntry(bool is_directory, const wxString& path) : is_directory_(is_directory), path_(path) {}
+  const wxString& path() const {
+    return path_;
+  }
+  bool is_directory() const {
+    return is_directory_;
+  }
+private:
+  bool is_directory_;
+  wxString path_;
+};
+
+wxString JoinPath(const wxFileName& root, const wxString& file_or_folder) {
+  // todo: is this really the correct way to do things?
+  return root.GetFullPath() + file_or_folder;
+}
+
 void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, int index)
 {
   const wxString root_full_path = root.GetFullPath();
@@ -97,10 +116,30 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
     if( file_or_directory_name == "target" && index == 0 ) continue;
 
     const bool is_dir = IsDirectory(root, file_or_directory_name);
-    wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL);
+    const int image = is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL;
+
+    wxTreeItemData* data = new FileEntry(is_dir, JoinPath(root, file_or_directory_name) );
+    wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, image, image, data);
     if (is_dir) {
-      const wxFileName child_name = SubFolder(root, file_or_directory_name);
-      SubUpdateFolderStructure(child_name, child, filespec, flags, index+1);
+      const wxFileName folder_name = SubFolder(root, file_or_directory_name);
+      SubUpdateFolderStructure(folder_name, child, filespec, flags, index+1);
     }
   }
 }
+
+void ProjectExplorer::OnDoubleClick(wxMouseEvent& event) {
+  wxTreeItemId selected = this->GetFocusedItem();
+  if (selected.IsOk() == false) return;
+  this->Toggle(selected);
+  wxTreeItemData* data = this->GetItemData(selected);
+  if (data) {
+    FileEntry* entry = reinterpret_cast<FileEntry*>(data);
+    if (false == entry->is_directory()) {
+      main_->OpenFile(entry->path());
+    }
+  }
+}
+
+wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
+EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
+wxEND_EVENT_TABLE()
