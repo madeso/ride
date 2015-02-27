@@ -303,9 +303,9 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_file, wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
   AddMenuItem(menu_file, wxID_SAVEAS, "Save &as...\tCtrl-Shift-S", "Save the file as a new file");
   menu_file->AppendSeparator();
-  AddMenuItem(menu_file, ID_FILE_RIDE_SETTINGS, "S&ettings...", "Change the settings of RIDE");
+  AddMenuItem(menu_file, ID_FILE_RIDE_SETTINGS, "S&ettings...", "Change the settings of RIDE", file_settings_xpm);
   menu_file->AppendSeparator();
-  AddMenuItem(menu_file, wxID_EXIT);
+  AddMenuItem(menu_file, wxID_EXIT, "", "", file_quit_xpm);
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_edit = new wxMenu;
@@ -341,14 +341,14 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   menu_edit->AppendSeparator();
   AddMenuItem(menu_edit, ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, "Open type in online documentation\tCtrl-B", ""); // todo: get a better shortcut
   menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "");
+  AddMenuItem(menu_edit, ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "", edit_file_properties_xpm);
 
   //////////////////////////////////////////////////////////////////////////
 
   wxMenu *menu_project = new wxMenu;
   AddMenuItem(menu_project, ID_PROJECT_NEW, "New project...", "Create a new cargo project");
   AddMenuItem(menu_project, ID_PROJECT_OPEN, "Open project...", "Open a existing cargo or ride project");
-  AddMenuItem(menu_project, ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings");
+  AddMenuItem(menu_project, ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings", project_settings_xpm);
   menu_project->AppendSeparator();
   AddMenuItem(menu_project, ID_PROJECT_BUILD, "Build\tCtrl-B", "Compile the current project", project_build_xpm);
   AddMenuItem(menu_project, ID_PROJECT_CLEAN, "Clean", "Remove the target directory", project_clean_xpm);

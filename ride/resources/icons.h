@@ -26,4 +26,9 @@
 #include "icons/project_test.xpm"
 #include "icons/project_update.xpm"
 
+#include "icons/edit_file_properties.xpm"
+#include "icons/file_settings.xpm"
+#include "icons/file_quit.xpm"
+#include "icons/project_settings.xpm"
+
 #endif  // RIDE_RIDE_RESOURCES_ICON_H
