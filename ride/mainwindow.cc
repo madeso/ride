@@ -115,6 +115,7 @@ void MainWindow::OnActivated(wxActivateEvent& event) {
   if (event.GetActive()) {
     ReloadFilesIfNeeded();
   }
+  project_explorer_->UpdateFolderStructure();
 }
 
 wxPoint GetContextEventPosition(const wxContextMenuEvent& event) {
