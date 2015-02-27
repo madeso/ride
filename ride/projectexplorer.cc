@@ -28,9 +28,14 @@ void ProjectExplorer::SetFolder(const wxString& folder) {
   UpdateFolderStructure();
 }
 
+wxFileName SubFolder(const wxFileName& root, const wxString& sub_folder) {
+  wxFileName folder(root);
+  folder.AppendDir(sub_folder);
+  return folder;
+}
+
 bool IsDiretory(const wxFileName& root, const wxString directory) {
-  wxFileName temp = root;
-  temp.AppendDir(directory);
+  const wxFileName temp = SubFolder(root, directory);
   const wxString full_path = temp.GetFullPath();
   const bool ret = wxDir::Exists(full_path);
   return ret;
@@ -76,8 +81,7 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
   {
     wxTreeItemId child = this->AppendItem(parent, file_or_directory_name);
     if (IsDiretory(root, file_or_directory_name)) {
-      wxFileName child_name(root);
-      child_name.AppendDir(file_or_directory_name);
+      const wxFileName child_name = SubFolder(root, file_or_directory_name);
       SubUpdateFolderStructure(child_name, child, filespec, flags);
     }
   }
