@@ -13,6 +13,8 @@
 #include "ride/compilermessage.h"
 #include "ride/projectexplorer.h"
 
+#include "ride/resources/icons.h"
+
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
 template<typename T>
@@ -272,6 +274,18 @@ wxBEGIN_EVENT_TABLE(OutputControl, wxStyledTextCtrl)
 wxEND_EVENT_TABLE()
 
 
+
+void AddMenuItem(wxMenu* menu, int id, const wxString& title=wxEmptyString, const wxString& help=wxEmptyString, char** xpm=NULL) {
+  wxMenuItem* item = new wxMenuItem(NULL, id, title, help);
+  if (xpm) {
+    // it's important to set the icon before adding the item
+    // otherwise it will silently fail on some wxWidgets versions
+    wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
+    item->SetBitmap(bitmap);
+  }
+  menu->Append(item);
+}
+
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
 , output_window_(NULL)
@@ -285,65 +299,65 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_file = new wxMenu;
-  menu_file->Append(wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
-  menu_file->Append(wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
-  menu_file->Append(wxID_SAVEAS, "Save &as...\tCtrl-Shift-S", "Save the file as a new file");
+  AddMenuItem(menu_file, wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
+  AddMenuItem(menu_file, wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
+  AddMenuItem(menu_file, wxID_SAVEAS, "Save &as...\tCtrl-Shift-S", "Save the file as a new file");
   menu_file->AppendSeparator();
-  menu_file->Append(ID_FILE_RIDE_SETTINGS, "S&ettings...", "Change the settings of RIDE");
+  AddMenuItem(menu_file, ID_FILE_RIDE_SETTINGS, "S&ettings...", "Change the settings of RIDE");
   menu_file->AppendSeparator();
-  menu_file->Append(wxID_EXIT);
+  AddMenuItem(menu_file, wxID_EXIT);
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_edit = new wxMenu;
-  menu_edit->Append(wxID_UNDO, "Undo\tCtrl-Z", "");
-  menu_edit->Append(wxID_REDO, "Redo\tCtrl-Shift-Z", "");
+  AddMenuItem(menu_edit, wxID_UNDO, "Undo\tCtrl-Z", "", edit_undo_xpm);
+  AddMenuItem(menu_edit, wxID_REDO, "Redo\tCtrl-Shift-Z", "", edit_redo_xpm);
   menu_edit->AppendSeparator();
-  menu_edit->Append(wxID_CUT, "Cut\tCtrl-X", "");
-  menu_edit->Append(wxID_COPY, "Copy\tCtrl-C", "");
-  menu_edit->Append(wxID_PASTE, "Paste\tCtrl-V", "");
-  menu_edit->Append(wxID_DUPLICATE, "Duplicate selection or line\tCtrl-D", "");
-  menu_edit->Append(wxID_DELETE, "Delete\tDel", "");
+  AddMenuItem(menu_edit, wxID_CUT, "Cut\tCtrl-X", "", edit_cut_xpm);
+  AddMenuItem(menu_edit, wxID_COPY, "Copy\tCtrl-C", "", edit_copy_xpm);
+  AddMenuItem(menu_edit, wxID_PASTE, "Paste\tCtrl-V", "", edit_paste_xpm);
+  AddMenuItem(menu_edit, wxID_DUPLICATE, "Duplicate selection or line\tCtrl-D", "");
+  AddMenuItem(menu_edit, wxID_DELETE, "Delete\tDel", "");
   menu_edit->AppendSeparator();
-  menu_edit->Append(wxID_FIND, "Find\tCtrl-F", "");
-  // menu_edit->Append(wxID_OPEN, "Find next\tF3", "");
-  menu_edit->Append(wxID_REPLACE, "Replace\tCtrl-H", "");
-  // menu-edit->Append(wxID_OPEN, "Replace again\tShift-F4", "");
+  AddMenuItem(menu_edit, wxID_FIND, "Find\tCtrl-F", "");
+  // menu_edit, wxID_OPEN, "Find next\tF3", "");
+  AddMenuItem(menu_edit, wxID_REPLACE, "Replace\tCtrl-H", "");
+  // menu-edit, wxID_OPEN, "Replace again\tShift-F4", "");
   menu_edit->AppendSeparator();
-  menu_edit->Append(ID_EDIT_MATCH_BRACE, "Match brace\tCtrl-M", "");
-  menu_edit->Append(ID_EDIT_SELECT_BRACE, "Select to matching brace\tCtrl-Shift-M", "");
-  menu_edit->Append(ID_EDIT_GOTO_LINE, "Goto line\tCtrl-G", "");
+  AddMenuItem(menu_edit, ID_EDIT_MATCH_BRACE, "Match brace\tCtrl-M", "");
+  AddMenuItem(menu_edit, ID_EDIT_SELECT_BRACE, "Select to matching brace\tCtrl-Shift-M", "");
+  AddMenuItem(menu_edit, ID_EDIT_GOTO_LINE, "Goto line\tCtrl-G", "");
   menu_edit->AppendSeparator();
-  menu_edit->Append(wxID_INDENT, "Increase indent\tTab", "");
-  menu_edit->Append(wxID_UNINDENT, "Reduce indent\tShift-Tab", "");
+  AddMenuItem(menu_edit, wxID_INDENT, "Increase indent\tTab", "", edit_tab_add_xpm);
+  AddMenuItem(menu_edit, wxID_UNINDENT, "Reduce indent\tShift-Tab", "", edit_tab_remove_xpm);
   menu_edit->AppendSeparator();
-  menu_edit->Append(wxID_SELECTALL, "Select all\tCtrl-A", "");
-  menu_edit->Append(ID_EDIT_SELECT_LINE, "Select line\tCtrl-L", "");
+  AddMenuItem(menu_edit, wxID_SELECTALL, "Select all\tCtrl-A", "");
+  AddMenuItem(menu_edit, ID_EDIT_SELECT_LINE, "Select line\tCtrl-L", "");
   menu_edit->AppendSeparator();
-  menu_edit->Append(ID_EDIT_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "");
-  menu_edit->Append(ID_EDIT_TOLOWER, "Make lowercase\tCtrl-U", "");
+  AddMenuItem(menu_edit, ID_EDIT_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "", edit_make_uppercase_xpm);
+  AddMenuItem(menu_edit, ID_EDIT_TOLOWER, "Make lowercase\tCtrl-U", "", edit_make_lowercase_xpm);
   menu_edit->AppendSeparator();
-  menu_edit->Append(ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
-  menu_edit->Append(ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
+  AddMenuItem(menu_edit, ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
+  AddMenuItem(menu_edit, ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
   menu_edit->AppendSeparator();
-  menu_edit->Append(ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, "Open type in online documentation\tCtrl-B", ""); // todo: get a better shortcut
+  AddMenuItem(menu_edit, ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, "Open type in online documentation\tCtrl-B", ""); // todo: get a better shortcut
   menu_edit->AppendSeparator();
-  menu_edit->Append(ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "");
+  AddMenuItem(menu_edit, ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "");
 
   //////////////////////////////////////////////////////////////////////////
 
   wxMenu *menu_project = new wxMenu;
-  menu_project->Append(ID_PROJECT_NEW, "New project...", "Create a new cargo project");
-  menu_project->Append(ID_PROJECT_OPEN, "Open project...", "Open a existing cargo or ride project");
-  menu_project->Append(ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings");
+  AddMenuItem(menu_project, ID_PROJECT_NEW, "New project...", "Create a new cargo project");
+  AddMenuItem(menu_project, ID_PROJECT_OPEN, "Open project...", "Open a existing cargo or ride project");
+  AddMenuItem(menu_project, ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings");
   menu_project->AppendSeparator();
-  menu_project->Append(ID_PROJECT_BUILD, "Build\tCtrl-B", "Compile the current project");
-  menu_project->Append(ID_PROJECT_CLEAN, "Clean", "Remove the target directory");
-  menu_project->Append(ID_PROJECT_REBUILD, "Rebuild\tCtrl-Shift-B", "Clean + Build");
-  menu_project->Append(ID_PROJECT_DOC, "Doc", "Build this project's and its dependencies' documentation");
-  menu_project->Append(ID_PROJECT_RUN, "Run\tF5", "Build and execute src/main.rs");
-  menu_project->Append(ID_PROJECT_TEST, "Test", "Run the tests");
-  menu_project->Append(ID_PROJECT_BENCH, "Bench", "Run the benchmarks");
-  menu_project->Append(ID_PROJECT_UPDATE, "Update", "Update dependencies listed in Cargo.lock");
+  AddMenuItem(menu_project, ID_PROJECT_BUILD, "Build\tCtrl-B", "Compile the current project", project_build_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_CLEAN, "Clean", "Remove the target directory", project_clean_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_REBUILD, "Rebuild\tCtrl-Shift-B", "Clean + Build", project_rebuild_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_DOC, "Doc", "Build this project's and its dependencies' documentation", project_doc_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_RUN, "Run\tF5", "Build and execute src/main.rs", project_run_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_TEST, "Test", "Run the tests", project_test_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_BENCH, "Bench", "Run the benchmarks", project_bench_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_UPDATE, "Update", "Update dependencies listed in Cargo.lock", project_update_xpm);
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
@@ -356,6 +370,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   menu_bar->Append(menu_project, "&Project");
   menu_bar->Append(menu_help, "&Help");
   SetMenuBar(menu_bar);
+  
+
   CreateStatusBar();
   SetStatusText("");
 
