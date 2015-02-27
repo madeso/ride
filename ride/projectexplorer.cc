@@ -53,7 +53,7 @@ bool IsDirectory(const wxFileName& root, const wxString directory) {
 }
 
 void ProjectExplorer::UpdateFolderStructure() {
-  this->AppendItem(this->GetRootItem(), "Project");
+  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL);
 
   const int flags = wxDIR_FILES | wxDIR_DIRS; // walk files and folders
   const wxString filespec = "";
