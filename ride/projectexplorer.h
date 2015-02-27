@@ -20,6 +20,7 @@ private:
   void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags);
 
 private:
+  wxImageList images_;
   MainWindow* main_;
   wxString folder_;
 };

@@ -6,6 +6,12 @@
 #include <wx/filename.h>
 
 #include "ride/mainwindow.h"
+#include "ride/resources/icons.h"
+
+enum {
+  ICON_FILE_NORMAL,
+  ICON_FOLDER_NORMAL
+};
 
 ProjectExplorer::ProjectExplorer(MainWindow* main)
   : wxTreeCtrl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
@@ -13,8 +19,13 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
   | wxTR_TWIST_BUTTONS
   | wxTR_MULTIPLE
   | wxTR_LINES_AT_ROOT
-  ), main_(main) {
+  ), images_(16, 16), main_(main) {
   UpdateColors();
+
+  this->SetImageList(&images_);
+
+  images_.Add(wxIcon(file_normal_xpm));
+  images_.Add(wxIcon(folder_normal_xpm));
 }
 
 void ProjectExplorer::UpdateColors() {
@@ -34,7 +45,7 @@ wxFileName SubFolder(const wxFileName& root, const wxString& sub_folder) {
   return folder;
 }
 
-bool IsDiretory(const wxFileName& root, const wxString directory) {
+bool IsDirectory(const wxFileName& root, const wxString directory) {
   const wxFileName temp = SubFolder(root, directory);
   const wxString full_path = temp.GetFullPath();
   const bool ret = wxDir::Exists(full_path);
@@ -79,8 +90,9 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
   const std::vector<wxString> files_and_folders = TraverseFilesAndFolders(root, filespec, flags);
   for (const wxString file_or_directory_name : files_and_folders)
   {
-    wxTreeItemId child = this->AppendItem(parent, file_or_directory_name);
-    if (IsDiretory(root, file_or_directory_name)) {
+    const bool is_dir = IsDirectory(root, file_or_directory_name);
+    wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL);
+    if (is_dir) {
       const wxFileName child_name = SubFolder(root, file_or_directory_name);
       SubUpdateFolderStructure(child_name, child, filespec, flags);
     }
