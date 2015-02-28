@@ -11,6 +11,8 @@ public:
   const wxString project_folder() const;
   const wxString project_name() const;
 
+  wxString GenerateCargoCommandline() const;
+
 protected:
   virtual void OnProjectNameChanged(wxCommandEvent& event);
   virtual void OnProjectFolderChanged(wxCommandEvent& event);
@@ -19,6 +21,7 @@ protected:
   virtual void OnOk(wxCommandEvent& event);
 private:
   wxString GetTarget() const;
+  wxString GetVcsName() const;
   void UpdateTarget();
 };
 

@@ -649,6 +649,8 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
   if (wxID_OK != dlg.ShowModal()) {
     return;
   }
+  // run cargo new
+  wxMessageBox(dlg.GenerateCargoCommandline());
   UpdateTitle();
 }
 

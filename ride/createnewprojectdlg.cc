@@ -46,10 +46,29 @@ const wxString CreateNewProjectDlg::project_folder() const { return uiProjectfol
 const wxString CreateNewProjectDlg::project_name() const { return uiProjectName->GetValue(); }
 
 void CreateNewProjectDlg::OnOk(wxCommandEvent& event) {
-  if (project_folder().IsEmpty() == false || project_name().IsEmpty() == false) {
-    wxMessageBox("Please enter name and folder for the project", "Missing name and/or folder for project", wxICON_ERROR, this);
-  }
-  else {
+  if (project_folder().IsEmpty() == false && project_name().IsEmpty() == false) {
     EndModal(wxID_OK);
   }
+  else {
+    wxMessageBox("Please enter name and folder for the project", "Missing name and/or folder for project", wxICON_ERROR, this);
+  }
+}
+
+wxString CreateNewProjectDlg::GetVcsName() const {
+  const int selected_item = uiVcs->GetSelection();
+  switch (selected_item) {
+  case 0: return "none";
+  case 1: return "git";
+  case 2: return "hg";
+  default:
+    assert(0 && "Unknown selected VCS item");
+    return "none";
+  }
+}
+
+wxString CreateNewProjectDlg::GenerateCargoCommandline() const {
+  const wxString template_cmd = uiTemplate->GetSelection()==0 ? "--bin " : "";
+  const wxString travis_cmd = uiTravis->GetValue() ? "--travis " : "";
+  const wxString vcs_name = GetVcsName();
+  return wxString::Format("cargo new --vcs %s %s%s%s", vcs_name, template_cmd, travis_cmd, project_name());
 }
