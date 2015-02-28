@@ -18,13 +18,15 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Somewhat sorted roadmap
 
+* Create project
 * Project/solution explorer
+* Create new files with (basic) templates.
 * Quick open file from solution/project
 * Remember session data
+* Find in files, find in solution, incremental search, other searches
 * Comment / uncomment selection
 * Error list
 * Go to next error shortcut
-* Find in files, find in solution, incremental search, other searches
 * Expose all aui settings in gui + settings
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
