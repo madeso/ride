@@ -16,14 +16,18 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 ![screenshot](screenshots/3.png)
 
-# Somewhat sorted roadmap
+# Features needed for a useful state
 
 * Create project
-* Project/solution explorer
+* Project/solution explorer, with rename + delete functionality
 * Create new files with (basic) templates.
 * Quick open file from solution/project
 * Remember session data
 * Find in files, find in solution, incremental search, other searches
+* Implement all missing event handlers.
+
+# Somewhat sorted roadmap
+
 * Comment / uncomment selection
 * Error list
 * Go to next error shortcut
