@@ -33,6 +33,7 @@
 #include <wx/notebook.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
+#include <wx/radiobox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -192,6 +193,44 @@ namespace ui
 			
 			FileProperties( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("File properties"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 455,197 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~FileProperties();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class CreateNewProject
+	///////////////////////////////////////////////////////////////////////////////
+	class CreateNewProject : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxStaticText* lblProjectName;
+			wxTextCtrl* uiProjectName;
+			wxStaticText* lblProjectFolder;
+			wxTextCtrl* uiProjectfolder;
+			wxRadioBox* uiTemplate;
+			wxCheckBox* uiTravis;
+			wxStaticText* lblVersionControl;
+			wxComboBox* uiVcs;
+			wxStaticText* uiTargetFolder;
+			wxButton* uiBrowseProjectFolder;
+			wxStaticText* lblTargetFolder;
+			wxStdDialogButtonSizer* uiButtons;
+			wxButton* uiButtonsOK;
+			wxButton* uiButtonsCancel;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnProjectNameChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnProjectFolderChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBrowseProjectFolder( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			CreateNewProject( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Create new project"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 460,324 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			~CreateNewProject();
 		
 	};
 	

@@ -12,6 +12,7 @@
 #include "ride/settingsdlg.h"
 #include "ride/compilermessage.h"
 #include "ride/projectexplorer.h"
+#include "ride/createnewprojectdlg.h"
 
 #include "ride/resources/icons.h"
 #include "ride/wxutils.h"
@@ -644,6 +645,10 @@ void MainWindow::UpdateTitle() {
 
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // todo: implement creation of new project
+  CreateNewProjectDlg dlg(this);
+  if (wxID_OK != dlg.ShowModal()) {
+    return;
+  }
   UpdateTitle();
 }
 
