@@ -20,7 +20,8 @@ public:
 
 private:
   void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, int index);
-void OnDoubleClick(wxMouseEvent& event);
+  void OnDoubleClick(wxMouseEvent& event);
+  void OnContextMenu(wxContextMenuEvent& event);
 
   wxDECLARE_EVENT_TABLE();
 

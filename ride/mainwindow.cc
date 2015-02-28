@@ -14,6 +14,7 @@
 #include "ride/projectexplorer.h"
 
 #include "ride/resources/icons.h"
+#include "ride/wxutils.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -130,17 +131,6 @@ void MainWindow::OnActivated(wxActivateEvent& event) {
   project_explorer_->UpdateFolderStructure();
 }
 
-wxPoint GetContextEventPosition(const wxContextMenuEvent& event) {
-  wxPoint ret = event.GetPosition();
-  // according to the documentation: http://docs.wxwidgets.org/trunk/classwx_context_menu_event.html#a291e3437b4bf913128ea14e511d161cb
-  if (ret == wxDefaultPosition) {
-    return wxGetMousePosition();
-  }
-  else {
-    return ret;
-  }
-}
-
 wxString ToShortString(const wxString& str, int max_length) {
   const wxString dots = "...";
   if (str.length() > max_length + dots.length()) {
@@ -149,11 +139,6 @@ wxString ToShortString(const wxString& str, int max_length) {
   else {
     return str;
   }
-}
-
-void AppendEnabled(wxMenu& menu, int id, const wxString text, bool enabled) {
-  menu.Append(id, text);
-  menu.Enable(id, enabled);
 }
 
 class OutputControl : public wxStyledTextCtrl {
@@ -171,12 +156,12 @@ public:
     this->SetEndAtLastLine(set.end_at_last_line());
   }
 
-  int context_positon;
+  int context_positon_;
 
   void OnContextMenu(wxContextMenuEvent& event) {
     const wxPoint mouse_point = GetContextEventPosition(event);
     const wxPoint client_point = ScreenToClient(mouse_point);
-    context_positon = this->PositionFromPoint(client_point);
+    context_positon_ = this->PositionFromPoint(client_point);
 
     const bool has_selected = this->GetSelectedText().IsEmpty() == false;
     const wxString line_content = GetContextLineContent();
@@ -234,7 +219,7 @@ public:
   const wxString GetContextLineContent() {
     long line_number = 0;
     long col = 0;
-    const long index = context_positon;
+    const long index = context_positon_;
     this->PositionToXY(index, &col, &line_number);
     if (line_number == -1) return wxEmptyString;
     const wxString line_content = GetLineText(line_number);

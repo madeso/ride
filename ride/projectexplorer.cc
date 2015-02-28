@@ -7,6 +7,7 @@
 
 #include "ride/mainwindow.h"
 #include "ride/resources/icons.h"
+#include "ride/wxutils.h"
 
 enum {
   ICON_FILE_NORMAL,
@@ -64,6 +65,20 @@ bool IsDirectory(const wxFileName& root, const wxString directory) {
   return ret;
 }
 
+class FileEntry : public wxTreeItemData {
+public:
+  FileEntry(bool is_directory, const wxString& path) : is_directory_(is_directory), path_(path) {}
+  const wxString& path() const {
+    return path_;
+  }
+  bool is_directory() const {
+    return is_directory_;
+  }
+private:
+  bool is_directory_;
+  wxString path_;
+};
+
 void ProjectExplorer::UpdateFolderStructure() {
   const int flags = wxDIR_FILES | wxDIR_DIRS; // walk files and folders
   const wxString filespec = "";
@@ -72,7 +87,7 @@ void ProjectExplorer::UpdateFolderStructure() {
   folder_to_item_.clear();
   this->Freeze();
   this->DeleteAllItems();
-  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL);
+  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL, ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
   SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags, 0);
   this->Thaw();
 
@@ -102,20 +117,6 @@ std::vector<wxString> TraverseFilesAndFolders(const wxFileName& root, const wxSt
   return ret;
 }
 
-class FileEntry : public wxTreeItemData {
-public:
-  FileEntry(bool is_directory, const wxString& path) : is_directory_(is_directory), path_(path) {}
-  const wxString& path() const {
-    return path_;
-  }
-  bool is_directory() const {
-    return is_directory_;
-  }
-private:
-  bool is_directory_;
-  wxString path_;
-};
-
 wxString JoinPath(const wxFileName& root, const wxString& file_or_folder) {
   // todo: is this really the correct way to do things?
   return root.GetFullPath() + file_or_folder;
@@ -143,19 +144,70 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
   }
 }
 
-void ProjectExplorer::OnDoubleClick(wxMouseEvent& event) {
-  wxTreeItemId selected = this->GetFocusedItem();
-  if (selected.IsOk() == false) return;
-  this->Toggle(selected);
-  wxTreeItemData* data = this->GetItemData(selected);
+typedef std::pair<wxTreeItemId, FileEntry*> TreeItemFileEntry;
+
+TreeItemFileEntry GetFocused(ProjectExplorer* pe) {
+  wxTreeItemId selected = pe->GetFocusedItem();
+  if (selected.IsOk() == false) return TreeItemFileEntry(NULL, NULL);
+  wxTreeItemData* data = pe->GetItemData(selected);
   if (data) {
     FileEntry* entry = reinterpret_cast<FileEntry*>(data);
-    if (false == entry->is_directory()) {
-      main_->OpenFile(entry->path());
+    return TreeItemFileEntry(selected, entry);
+  }
+  else {
+    return TreeItemFileEntry(selected, NULL);
+  }
+}
+
+void ProjectExplorer::OnDoubleClick(wxMouseEvent& event) {
+  const auto focused = GetFocused(this);
+  if (focused.first.IsOk() == false) return;
+  this->Toggle(focused.first);
+  if (focused.second) {
+    if (false == focused.second->is_directory()) {
+      main_->OpenFile(focused.second->path());
     }
   }
 }
 
+enum {
+  ID_FOLDER_COLLAPSE = wxID_HIGHEST
+  , ID_FOLDER_EXPAND
+
+  , ID_FOLDER_COLLAPSE_ALL_CHILDREN
+  , ID_FOLDER_EXPAND_ALL_CHILDREN
+
+  , ID_COLLAPSE_ALL
+  , ID_EXPAND_ALL
+
+  , ID_OPEN_FILE
+};
+
+void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
+  const wxPoint mouse_point = GetContextEventPosition(event);
+  const wxPoint client_point = ScreenToClient(mouse_point);
+
+  const auto selected = GetFocused(this);
+
+  const bool is_folder = selected.second ? selected.second->is_directory() == true  : false;
+  const bool is_file   = selected.second ? selected.second->is_directory() == false : false;
+  
+  wxMenu menu;
+  AppendEnabled(menu, ID_FOLDER_COLLAPSE, "Collapse", is_folder);
+  AppendEnabled(menu, ID_FOLDER_EXPAND, "Expand", is_folder);
+  menu.AppendSeparator();
+  AppendEnabled(menu, ID_FOLDER_COLLAPSE_ALL_CHILDREN, "Collapse children", is_folder);
+  AppendEnabled(menu, ID_FOLDER_EXPAND_ALL_CHILDREN, "Expand children", is_folder);
+  menu.AppendSeparator();
+  AppendEnabled(menu, ID_COLLAPSE_ALL, "Collapse all", is_folder);
+  AppendEnabled(menu, ID_EXPAND_ALL, "Expand all", is_folder);
+  menu.AppendSeparator();
+  AppendEnabled(menu, ID_OPEN_FILE, "Open file", is_file);
+
+  PopupMenu(&menu);
+}
+
 wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
 EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
+EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
 wxEND_EVENT_TABLE()
