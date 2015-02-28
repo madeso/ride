@@ -23,6 +23,14 @@ private:
   void OnDoubleClick(wxMouseEvent& event);
   void OnContextMenu(wxContextMenuEvent& event);
 
+  void OnFolderCollapse           (wxCommandEvent& event);
+  void OnFolderExpand             (wxCommandEvent& event);
+  void OnFolderCollapseAllChildren(wxCommandEvent& event);
+  void OnFolderExpandAllChildren  (wxCommandEvent& event);
+  void OnCollapseAll              (wxCommandEvent& event);
+  void OnExpandAll                (wxCommandEvent& event);
+  void OnOpenFile                 (wxCommandEvent& event);
+
   wxDECLARE_EVENT_TABLE();
 
 private:

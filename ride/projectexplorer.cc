@@ -159,15 +159,17 @@ TreeItemFileEntry GetFocused(ProjectExplorer* pe) {
   }
 }
 
+void OpenFile(TreeItemFileEntry tife, MainWindow* main) {
+  if (tife.second && false == tife.second->is_directory()) {
+    main->OpenFile(tife.second->path());
+  }
+}
+
 void ProjectExplorer::OnDoubleClick(wxMouseEvent& event) {
   const auto focused = GetFocused(this);
   if (focused.first.IsOk() == false) return;
   this->Toggle(focused.first);
-  if (focused.second) {
-    if (false == focused.second->is_directory()) {
-      main_->OpenFile(focused.second->path());
-    }
-  }
+  OpenFile(focused, main_);
 }
 
 enum {
@@ -199,15 +201,61 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   AppendEnabled(menu, ID_FOLDER_COLLAPSE_ALL_CHILDREN, "Collapse children", is_folder);
   AppendEnabled(menu, ID_FOLDER_EXPAND_ALL_CHILDREN, "Expand children", is_folder);
   menu.AppendSeparator();
-  AppendEnabled(menu, ID_COLLAPSE_ALL, "Collapse all", is_folder);
-  AppendEnabled(menu, ID_EXPAND_ALL, "Expand all", is_folder);
+  AppendEnabled(menu, ID_COLLAPSE_ALL, "Collapse all", true);
+  AppendEnabled(menu, ID_EXPAND_ALL, "Expand all", true);
   menu.AppendSeparator();
   AppendEnabled(menu, ID_OPEN_FILE, "Open file", is_file);
 
   PopupMenu(&menu);
 }
 
+void ProjectExplorer::OnFolderCollapse(wxCommandEvent& event){
+  const auto selected = GetFocused(this);
+  if (selected.first.IsOk() == false) return;
+  this->Collapse(selected.first);
+}
+
+void ProjectExplorer::OnFolderExpand(wxCommandEvent& event){
+  const auto selected = GetFocused(this);
+  if (selected.first.IsOk() == false) return;
+  this->Expand(selected.first);
+}
+
+void ProjectExplorer::OnFolderCollapseAllChildren(wxCommandEvent& event){
+  const auto selected = GetFocused(this);
+  if (selected.first.IsOk() == false) return;
+  this->CollapseAllChildren(selected.first);
+}
+
+void ProjectExplorer::OnFolderExpandAllChildren(wxCommandEvent& event){
+  const auto selected = GetFocused(this);
+  if (selected.first.IsOk() == false) return;
+  this->ExpandAllChildren(selected.first);
+}
+
+void ProjectExplorer::OnCollapseAll(wxCommandEvent& event){
+  this->CollapseAll();
+}
+
+void ProjectExplorer::OnExpandAll(wxCommandEvent& event){
+  this->ExpandAll();
+}
+
+void ProjectExplorer::OnOpenFile(wxCommandEvent& event){
+  const auto selected = GetFocused(this);
+  OpenFile(selected, main_);
+}
+
 wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
 EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
 EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
+
+EVT_MENU(ID_FOLDER_COLLAPSE             , ProjectExplorer::OnFolderCollapse           )
+EVT_MENU(ID_FOLDER_EXPAND               , ProjectExplorer::OnFolderExpand             )
+EVT_MENU(ID_FOLDER_COLLAPSE_ALL_CHILDREN, ProjectExplorer::OnFolderCollapseAllChildren)
+EVT_MENU(ID_FOLDER_EXPAND_ALL_CHILDREN  , ProjectExplorer::OnFolderExpandAllChildren  )
+EVT_MENU(ID_COLLAPSE_ALL                , ProjectExplorer::OnCollapseAll              )
+EVT_MENU(ID_EXPAND_ALL                  , ProjectExplorer::OnExpandAll                )
+EVT_MENU(ID_OPEN_FILE                   , ProjectExplorer::OnOpenFile                 )
+
 wxEND_EVENT_TABLE()
