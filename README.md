@@ -28,6 +28,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 # Somewhat sorted roadmap
 
 * Comment / uncomment selection
+* Quick fix for compiler error: "error: unresolved name `hellos`. Did you mean `hello`?"
 * Error list
 * Go to next error shortcut
 * Expose all aui settings in gui + settings
