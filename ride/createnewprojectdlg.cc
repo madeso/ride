@@ -2,6 +2,7 @@
 #include "ride/createnewprojectdlg.h"
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include <wx/dir.h>
 #include "ride/resources/icons.h"
 
 enum ProjectTemplateType {
@@ -9,6 +10,13 @@ enum ProjectTemplateType {
   PTT_BINARY,
   PTT_LIBRARY
 };
+
+wxString GetValidDirectory(const wxString& dir) {
+  if (dir.IsEmpty()) return "";
+  wxDir filename(dir);
+  const wxString full_path = filename.GetNameWithSep();
+  return full_path;
+}
 
 ProjectTemplateType GetPtt(wxListCtrl* list) {
   const long selection = list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
@@ -66,7 +74,7 @@ void CreateNewProjectDlg::OnBrowseProjectFolder(wxCommandEvent& event) {
 }
 
 wxString CreateNewProjectDlg::GetTarget() const {
-  if (project_folder().IsEmpty()) return "No valid folder";
+  if (project_folder().IsEmpty()) return "Empty project folder";
   wxFileName target_cargo_file(project_folder());
 
   if (project_name().IsEmpty()) return "No valid project";
@@ -77,7 +85,6 @@ wxString CreateNewProjectDlg::GetTarget() const {
 }
 
 void CreateNewProjectDlg::UpdateTarget() {
-
   uiTargetFolder->SetLabel(GetTarget());
 }
 
@@ -85,15 +92,20 @@ void CreateNewProjectDlg::OnCancel(wxCommandEvent& event) {
   EndModal(wxID_CANCEL);
 }
 
-const wxString CreateNewProjectDlg::project_folder() const { return uiProjectfolder->GetValue(); }
-const wxString CreateNewProjectDlg::project_name() const { return uiProjectName->GetValue(); }
+const wxString CreateNewProjectDlg::project_folder() const {
+  return GetValidDirectory(uiProjectfolder->GetValue());
+}
+
+const wxString CreateNewProjectDlg::project_name() const {
+  return uiProjectName->GetValue();
+}
 
 void CreateNewProjectDlg::OnOk(wxCommandEvent& event) {
-  if (project_folder().IsEmpty() == false && project_name().IsEmpty() == false && GetPtt(uiTemplates)!= PTT_UNKNOWN) {
+  if (project_folder().IsEmpty() == false && project_name().IsEmpty() == false && GetPtt(uiTemplates)!= PTT_UNKNOWN ) {
     EndModal(wxID_OK);
   }
   else {
-    wxMessageBox("Please enter name and folder for the project", "Missing name and/or folder for project", wxICON_ERROR, this);
+    wxMessageBox("Please enter valid name and folder for the project", "Missing name and/or folder for project", wxICON_ERROR, this);
   }
 }
 

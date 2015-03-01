@@ -651,6 +651,12 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
   }
   // run cargo new
   wxMessageBox(dlg.GenerateCargoCommandline());
+
+  // open project
+  if (false == OpenProject(dlg.GetTarget()) ) {
+    wxMessageBox("Unable to open cargo project", "Unable to open", wxICON_ERROR | wxOK);
+  }
+
   UpdateTitle();
 }
 
@@ -663,17 +669,27 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
 
   const wxString full_path = cargo_file.GetFullPath();
 
+  if (false == OpenProject(full_path)) {
+    wxMessageBox("You didn't select a proper cargo file", "No cargo file", wxICON_ERROR | wxOK);
+  }
+}
+
+bool MainWindow::OpenProject(const wxString full_path) {
   const bool is_really_a_cargo_file = full_path.Lower().EndsWith("cargo.toml");
   if (is_really_a_cargo_file == false) {
-    wxMessageBox("You didn't select a proper cargo file", "No cargo file", wxICON_ERROR | wxOK);
-    return;
+    return false;
   }
+
+  wxFileName cargo_file(full_path);
+
+  if (false == cargo_file.Exists()) return false;
 
   // don't load the cargo file, load the whole folder instead as cargo files should be named in a specific way!
   const wxString project_folder = cargo_file.GetPathWithSep();
   project_ = Project(this, project_folder);
   project_explorer_->SetFolder(project_folder);
   UpdateTitle();
+  return true;
 }
 
 void MainWindow::SaveAllChangedProjectFiles() {
