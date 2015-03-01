@@ -18,7 +18,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Features needed for a useful state
 
-* Create project
 * Create new files with (basic) templates.
 * Project/solution explorer, with rename + delete functionality, create folder
 * Quick open file from solution/project
