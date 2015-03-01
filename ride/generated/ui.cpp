@@ -712,59 +712,70 @@ CreateNewProject::CreateNewProject( wxWindow* parent, wxWindowID id, const wxStr
 	wxBoxSizer* bSizer7;
 	bSizer7 = new wxBoxSizer( wxVERTICAL );
 	
-	wxGridBagSizer* gbSizer3;
-	gbSizer3 = new wxGridBagSizer( 0, 0 );
-	gbSizer3->SetFlexibleDirection( wxBOTH );
-	gbSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
+	wxFlexGridSizer* fgSizer11;
+	fgSizer11 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer11->AddGrowableCol( 1 );
+	fgSizer11->AddGrowableRow( 0 );
+	fgSizer11->SetFlexibleDirection( wxBOTH );
+	fgSizer11->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiTemplates = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( -1,-1 ), wxLC_NO_HEADER|wxLC_REPORT|wxLC_SINGLE_SEL );
+	fgSizer11->Add( uiTemplates, 1, wxALL|wxEXPAND|wxFIXED_MINSIZE, 5 );
 	
 	lblProjectName = new wxStaticText( this, wxID_ANY, wxT("Project name:"), wxDefaultPosition, wxDefaultSize, 0 );
 	lblProjectName->Wrap( -1 );
-	gbSizer3->Add( lblProjectName, wxGBPosition( 3, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	fgSizer11->Add( lblProjectName, 0, wxALL, 5 );
 	
-	uiProjectName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer3->Add( uiProjectName, wxGBPosition( 3, 1 ), wxGBSpan( 1, 2 ), wxALL|wxEXPAND, 5 );
+	uiProjectName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	fgSizer11->Add( uiProjectName, 1, wxALL|wxEXPAND, 5 );
 	
 	lblProjectFolder = new wxStaticText( this, wxID_ANY, wxT("Project folder:"), wxDefaultPosition, wxDefaultSize, 0 );
 	lblProjectFolder->Wrap( -1 );
-	gbSizer3->Add( lblProjectFolder, wxGBPosition( 4, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	fgSizer11->Add( lblProjectFolder, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
 	uiProjectfolder = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer3->Add( uiProjectfolder, wxGBPosition( 4, 1 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND, 5 );
-	
-	wxString uiTemplateChoices[] = { wxT("Binary"), wxT("Library") };
-	int uiTemplateNChoices = sizeof( uiTemplateChoices ) / sizeof( wxString );
-	uiTemplate = new wxRadioBox( this, wxID_ANY, wxT("Template"), wxDefaultPosition, wxDefaultSize, uiTemplateNChoices, uiTemplateChoices, 1, wxRA_SPECIFY_COLS );
-	uiTemplate->SetSelection( 0 );
-	gbSizer3->Add( uiTemplate, wxGBPosition( 0, 1 ), wxGBSpan( 1, 2 ), wxALL|wxEXPAND, 5 );
-	
-	uiTravis = new wxCheckBox( this, wxID_ANY, wxT("Add travis.yml"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer3->Add( uiTravis, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
-	
-	lblVersionControl = new wxStaticText( this, wxID_ANY, wxT("Version control:"), wxDefaultPosition, wxDefaultSize, 0 );
-	lblVersionControl->Wrap( -1 );
-	gbSizer3->Add( lblVersionControl, wxGBPosition( 2, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
-	
-	uiVcs = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiVcs->Append( wxT("None") );
-	uiVcs->Append( wxT("Git") );
-	uiVcs->Append( wxT("Hg") );
-	gbSizer3->Add( uiVcs, wxGBPosition( 2, 1 ), wxGBSpan( 1, 2 ), wxALL|wxEXPAND, 5 );
-	
-	uiTargetFolder = new wxStaticText( this, wxID_ANY, wxT("C:/myfolder/myprojects/test/Cargo.toml"), wxDefaultPosition, wxDefaultSize, 0 );
-	uiTargetFolder->Wrap( -1 );
-	gbSizer3->Add( uiTargetFolder, wxGBPosition( 5, 1 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND, 5 );
+	bSizer9->Add( uiProjectfolder, 1, wxALL, 5 );
 	
 	uiBrowseProjectFolder = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	gbSizer3->Add( uiBrowseProjectFolder, wxGBPosition( 4, 2 ), wxGBSpan( 1, 1 ), wxALL, 5 );
+	bSizer9->Add( uiBrowseProjectFolder, 0, wxALL, 5 );
+	
+	
+	fgSizer11->Add( bSizer9, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer10;
+	bSizer10 = new wxBoxSizer( wxHORIZONTAL );
+	
+	uiVcs = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiVcs->Append( wxT("No VCS") );
+	uiVcs->Append( wxT("Git") );
+	uiVcs->Append( wxT("Hg") );
+	bSizer10->Add( uiVcs, 1, wxALL|wxEXPAND, 5 );
+	
+	uiTravis = new wxCheckBox( this, wxID_ANY, wxT("Add travis.yml"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer10->Add( uiTravis, 1, wxALL, 5 );
+	
+	
+	fgSizer11->Add( bSizer10, 1, wxEXPAND, 5 );
 	
 	lblTargetFolder = new wxStaticText( this, wxID_ANY, wxT("Will be created as:"), wxDefaultPosition, wxDefaultSize, 0 );
 	lblTargetFolder->Wrap( -1 );
-	gbSizer3->Add( lblTargetFolder, wxGBPosition( 5, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	fgSizer11->Add( lblTargetFolder, 0, wxALL, 5 );
+	
+	uiTargetFolder = new wxStaticText( this, wxID_ANY, wxT("C:/myfolder/myprojects/test/Cargo.toml"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiTargetFolder->Wrap( -1 );
+	fgSizer11->Add( uiTargetFolder, 0, wxALL, 5 );
 	
 	
-	gbSizer3->AddGrowableCol( 1 );
-	
-	bSizer7->Add( gbSizer3, 1, wxEXPAND, 5 );
+	bSizer7->Add( fgSizer11, 1, wxEXPAND, 5 );
 	
 	uiButtons = new wxStdDialogButtonSizer();
 	uiButtonsOK = new wxButton( this, wxID_OK );
@@ -783,6 +794,7 @@ CreateNewProject::CreateNewProject( wxWindow* parent, wxWindowID id, const wxStr
 	
 	// Connect Events
 	uiProjectName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CreateNewProject::OnProjectNameChanged ), NULL, this );
+	uiProjectName->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CreateNewProject::OnProjectNameEnter ), NULL, this );
 	uiProjectfolder->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CreateNewProject::OnProjectFolderChanged ), NULL, this );
 	uiBrowseProjectFolder->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewProject::OnBrowseProjectFolder ), NULL, this );
 	uiButtonsCancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewProject::OnCancel ), NULL, this );
@@ -793,6 +805,7 @@ CreateNewProject::~CreateNewProject()
 {
 	// Disconnect Events
 	uiProjectName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CreateNewProject::OnProjectNameChanged ), NULL, this );
+	uiProjectName->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CreateNewProject::OnProjectNameEnter ), NULL, this );
 	uiProjectfolder->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CreateNewProject::OnProjectFolderChanged ), NULL, this );
 	uiBrowseProjectFolder->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewProject::OnBrowseProjectFolder ), NULL, this );
 	uiButtonsCancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewProject::OnCancel ), NULL, this );

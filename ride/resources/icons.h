@@ -31,4 +31,7 @@
 #include "icons/file_quit.xpm"
 #include "icons/project_settings.xpm"
 
+#include "icons/create_app.xpm"
+#include "icons/create_library.xpm"
+
 #endif  // RIDE_RIDE_RESOURCES_ICON_H

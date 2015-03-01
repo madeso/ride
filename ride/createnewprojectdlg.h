@@ -14,6 +14,8 @@ public:
   wxString GenerateCargoCommandline() const;
 
 protected:
+  virtual void OnProjectNameEnter(wxCommandEvent& event);
+
   virtual void OnProjectNameChanged(wxCommandEvent& event);
   virtual void OnProjectFolderChanged(wxCommandEvent& event);
   virtual void OnBrowseProjectFolder(wxCommandEvent& event);

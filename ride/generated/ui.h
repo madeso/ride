@@ -33,7 +33,7 @@
 #include <wx/notebook.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
-#include <wx/radiobox.h>
+#include <wx/listctrl.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -204,23 +204,23 @@ namespace ui
 		private:
 		
 		protected:
+			wxListCtrl* uiTemplates;
 			wxStaticText* lblProjectName;
 			wxTextCtrl* uiProjectName;
 			wxStaticText* lblProjectFolder;
 			wxTextCtrl* uiProjectfolder;
-			wxRadioBox* uiTemplate;
-			wxCheckBox* uiTravis;
-			wxStaticText* lblVersionControl;
-			wxComboBox* uiVcs;
-			wxStaticText* uiTargetFolder;
 			wxButton* uiBrowseProjectFolder;
+			wxComboBox* uiVcs;
+			wxCheckBox* uiTravis;
 			wxStaticText* lblTargetFolder;
+			wxStaticText* uiTargetFolder;
 			wxStdDialogButtonSizer* uiButtons;
 			wxButton* uiButtonsOK;
 			wxButton* uiButtonsCancel;
 			
 			// Virtual event handlers, overide them in your derived class
 			virtual void OnProjectNameChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnProjectNameEnter( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnProjectFolderChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnBrowseProjectFolder( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
@@ -229,7 +229,7 @@ namespace ui
 		
 		public:
 			
-			CreateNewProject( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Create new project"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 460,324 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			CreateNewProject( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Create new project"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 540,349 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~CreateNewProject();
 		
 	};

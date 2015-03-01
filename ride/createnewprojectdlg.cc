@@ -2,10 +2,53 @@
 #include "ride/createnewprojectdlg.h"
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
+#include "ride/resources/icons.h"
+
+enum ProjectTemplateType {
+  PTT_UNKNOWN,
+  PTT_BINARY,
+  PTT_LIBRARY
+};
+
+ProjectTemplateType GetPtt(wxListCtrl* list) {
+  const long selection = list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+  if (selection == -1) return PTT_UNKNOWN;
+  wxUIntPtr data = list->GetItemData(selection);
+  if (data == PTT_LIBRARY) return PTT_LIBRARY;
+  else if (data == PTT_BINARY) return PTT_BINARY;
+  else return PTT_UNKNOWN;
+}
+
+void AddItem(wxListCtrl* list, const wxString& text, int image, ProjectTemplateType type)
+{
+  long i = list->InsertItem(0, "", image);
+  list->SetItemColumnImage(i, 0, image);
+  list->SetItem(i, 1, text);
+  list->SetItemData(i, type);
+}
 
 CreateNewProjectDlg::CreateNewProjectDlg(wxWindow* parent) : ui::CreateNewProject(parent) {
   uiVcs->SetSelection(0);
   uiProjectfolder->SetValue(wxStandardPaths::Get().GetDocumentsDir());
+
+  wxImageList* images = new wxImageList(16,16);
+  images->Add(wxIcon(create_app_xpm));
+  images->Add(wxIcon(create_library_xpm));
+  uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);
+  
+  uiTemplates->InsertColumn(0, "");
+  uiTemplates->SetColumnWidth(0, 20);
+  uiTemplates->InsertColumn(1, "Name", wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);
+
+  AddItem(uiTemplates, "Library", 1, PTT_LIBRARY);
+  AddItem(uiTemplates, "Binary", 0, PTT_BINARY);
+
+  uiTemplates->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+  uiProjectName->SetFocus();
+}
+
+void CreateNewProjectDlg::OnProjectNameEnter(wxCommandEvent& event) {
+  OnOk(event);
 }
 
 void CreateNewProjectDlg::OnProjectNameChanged(wxCommandEvent& event) {
@@ -46,7 +89,7 @@ const wxString CreateNewProjectDlg::project_folder() const { return uiProjectfol
 const wxString CreateNewProjectDlg::project_name() const { return uiProjectName->GetValue(); }
 
 void CreateNewProjectDlg::OnOk(wxCommandEvent& event) {
-  if (project_folder().IsEmpty() == false && project_name().IsEmpty() == false) {
+  if (project_folder().IsEmpty() == false && project_name().IsEmpty() == false && GetPtt(uiTemplates)!= PTT_UNKNOWN) {
     EndModal(wxID_OK);
   }
   else {
@@ -67,7 +110,7 @@ wxString CreateNewProjectDlg::GetVcsName() const {
 }
 
 wxString CreateNewProjectDlg::GenerateCargoCommandline() const {
-  const wxString template_cmd = uiTemplate->GetSelection()==0 ? "--bin " : "";
+  const wxString template_cmd = GetPtt(uiTemplates) == PTT_BINARY ? "--bin " : "";
   const wxString travis_cmd = uiTravis->GetValue() ? "--travis " : "";
   const wxString vcs_name = GetVcsName();
   return wxString::Format("cargo new --vcs %s %s%s%s", vcs_name, template_cmd, travis_cmd, project_name());
