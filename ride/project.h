@@ -2,16 +2,11 @@
 #define RIDE_PROJECT_H
 
 #include "ride/wx.h"
-
-class PipedProcess;
-class AsyncProcess;
-
-WX_DEFINE_ARRAY_PTR(PipedProcess*, PipedProcessesArray);
-WX_DEFINE_ARRAY_PTR(AsyncProcess*, AsyncProcessesArray);
+#include "ride/runner.h"
 
 class MainWindow;
 
-class Project {
+class Project : public Runner {
 public:
   Project(MainWindow* output, const wxString& root_folder);
   const wxString& root_folder() const;
@@ -29,17 +24,11 @@ public:
   void Update  (bool origin_main=true);
 
 public:
-  void OnPipedProcessTerminated(PipedProcess *process);
-  void OnAsyncProcessTerminated(AsyncProcess *process);
-  void Append(const wxString str);
+  void Append(const wxString& str);
 private:
   void SaveAllFiles();
   void CleanOutput();
   void RunCmd(const wxString& cmd);
-  void AddPipedProcess(PipedProcess *process);
-
-  PipedProcessesArray piped_running_processes_;
-  AsyncProcessesArray async_running_processes_;
 
 private:
   MainWindow* main_;

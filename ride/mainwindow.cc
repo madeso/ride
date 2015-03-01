@@ -16,6 +16,7 @@
 
 #include "ride/resources/icons.h"
 #include "ride/wxutils.h"
+#include "ride/runner.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -643,6 +644,27 @@ void MainWindow::UpdateTitle() {
   this->SetTitle(new_title);
 }
 
+class CmdRunner : public Runner {
+private:
+  CmdRunner() {
+  }
+
+  wxString output;
+
+  virtual void Append(const wxString& str) {
+    output += "\n" + str;
+  }
+
+public:
+  // returns error or empty string
+  static const wxString Run(const wxString& root, const wxString& cmd) {
+    CmdRunner runner;
+    const int result = runner.RunCmdWait(root, cmd);
+    if (result == 0) return wxEmptyString;
+    else return runner.output;
+  }
+};
+
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // todo: implement creation of new project
   CreateNewProjectDlg dlg(this);
@@ -650,7 +672,12 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
     return;
   }
   // run cargo new
-  wxMessageBox(dlg.GenerateCargoCommandline());
+
+  const wxString result = CmdRunner::Run(dlg.project_folder(), dlg.GenerateCargoCommandline());
+  if (result.IsEmpty() == false) {
+    wxMessageBox(result, "Unable to create project!", wxICON_ERROR | wxOK);
+    return;
+  }
 
   // open project
   if (false == OpenProject(dlg.GetTarget()) ) {
