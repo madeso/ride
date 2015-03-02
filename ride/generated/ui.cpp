@@ -856,10 +856,7 @@ CreateNewFile::CreateNewFile( wxWindow* parent, wxWindowID id, const wxString& t
 	wxBoxSizer* bSizer12;
 	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
 	
-	uiReplaceAction = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiReplaceAction->Append( wxT("Replace space with _") );
-	uiReplaceAction->Append( wxT("Replace space with -") );
-	uiReplaceAction->Append( wxT("Never replace spaces") );
+	uiReplaceAction = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
 	uiReplaceAction->SetSelection( 0 );
 	bSizer12->Add( uiReplaceAction, 1, wxALL|wxEXPAND, 5 );
 	
