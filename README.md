@@ -9,6 +9,7 @@ The current features are:
 * Listing its output and
 	- Double clicking on warnings/errors to go to them.
 	- Context clicking on warnings/errors to google them.
+* A basic project/cargo (file) explorer
 
 The project aim is to implement as much of it in C++ and then port it to rust when rust is released.
 
@@ -49,6 +50,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Change the color dialog button/control to a more photshop looking color dialog that sends the color directly to all the edits for instant feedback
 * Highlight misspelled words/comments
 * Function for selecting current word
+* Implement smarter file template with [handlebars-rust](https://github.com/sunng87/handlebars-rust/tree/master)
 * "aPRESS_ENTER_HEREb" should be replaced by concat!("a", NEW_LINE_HERE"<cursor here>b")
 * Switch tabs by scrolling with cursor over tab-bar
 * Format file/selection
