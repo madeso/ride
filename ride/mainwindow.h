@@ -86,6 +86,7 @@ private:
   void OnProjectTest    (wxCommandEvent& event);
   void OnProjectBench   (wxCommandEvent& event);
   void OnProjectUpdate  (wxCommandEvent& event);
+  void OnProjectFileNew (wxCommandEvent& event);
 
 	void OnFileExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);

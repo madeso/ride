@@ -234,6 +234,38 @@ namespace ui
 		
 	};
 	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class CreateNewFile
+	///////////////////////////////////////////////////////////////////////////////
+	class CreateNewFile : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxListCtrl* uiTemplates;
+			wxStaticText* m_staticText18;
+			wxTextCtrl* uiName;
+			wxStaticText* m_staticText19;
+			wxTextCtrl* uiPath;
+			wxComboBox* uiReplaceAction;
+			wxCheckBox* uiLowerCase;
+			wxStdDialogButtonSizer* m_sdbSizer4;
+			wxButton* m_sdbSizer4OK;
+			wxButton* m_sdbSizer4Cancel;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnNameEnter( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			CreateNewFile( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Create new file..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 507,334 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			~CreateNewFile();
+		
+	};
+	
 } // namespace ui
 
 #endif //__UI_H__

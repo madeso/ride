@@ -812,3 +812,93 @@ CreateNewProject::~CreateNewProject()
 	uiButtonsOK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewProject::OnOk ), NULL, this );
 	
 }
+
+CreateNewFile::CreateNewFile( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer10;
+	bSizer10 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer12;
+	fgSizer12 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer12->AddGrowableCol( 0 );
+	fgSizer12->AddGrowableRow( 0 );
+	fgSizer12->SetFlexibleDirection( wxBOTH );
+	fgSizer12->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiTemplates = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	fgSizer12->Add( uiTemplates, 1, wxALL|wxEXPAND, 5 );
+	
+	wxFlexGridSizer* fgSizer11;
+	fgSizer11 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer11->AddGrowableCol( 1 );
+	fgSizer11->SetFlexibleDirection( wxBOTH );
+	fgSizer11->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText18 = new wxStaticText( this, wxID_ANY, wxT("Name:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText18->Wrap( -1 );
+	fgSizer11->Add( m_staticText18, 0, wxALL, 5 );
+	
+	uiName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	fgSizer11->Add( uiName, 1, wxALL|wxEXPAND, 5 );
+	
+	m_staticText19 = new wxStaticText( this, wxID_ANY, wxT("Path:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText19->Wrap( -1 );
+	fgSizer11->Add( m_staticText19, 0, wxALL, 5 );
+	
+	uiPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer11->Add( uiPath, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer12->Add( fgSizer11, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer12;
+	bSizer12 = new wxBoxSizer( wxHORIZONTAL );
+	
+	uiReplaceAction = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiReplaceAction->Append( wxT("Replace space with _") );
+	uiReplaceAction->Append( wxT("Replace space with -") );
+	uiReplaceAction->Append( wxT("Never replace spaces") );
+	uiReplaceAction->SetSelection( 0 );
+	bSizer12->Add( uiReplaceAction, 1, wxALL|wxEXPAND, 5 );
+	
+	uiLowerCase = new wxCheckBox( this, wxID_ANY, wxT("Lower case filenames"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiLowerCase->SetValue(true); 
+	bSizer12->Add( uiLowerCase, 1, wxALL, 5 );
+	
+	
+	fgSizer12->Add( bSizer12, 1, wxEXPAND, 5 );
+	
+	
+	bSizer10->Add( fgSizer12, 1, wxEXPAND, 5 );
+	
+	m_sdbSizer4 = new wxStdDialogButtonSizer();
+	m_sdbSizer4OK = new wxButton( this, wxID_OK );
+	m_sdbSizer4->AddButton( m_sdbSizer4OK );
+	m_sdbSizer4Cancel = new wxButton( this, wxID_CANCEL );
+	m_sdbSizer4->AddButton( m_sdbSizer4Cancel );
+	m_sdbSizer4->Realize();
+	
+	bSizer10->Add( m_sdbSizer4, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer10 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	uiName->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CreateNewFile::OnNameEnter ), NULL, this );
+	m_sdbSizer4Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnCancel ), NULL, this );
+	m_sdbSizer4OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnOk ), NULL, this );
+}
+
+CreateNewFile::~CreateNewFile()
+{
+	// Disconnect Events
+	uiName->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CreateNewFile::OnNameEnter ), NULL, this );
+	m_sdbSizer4Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnCancel ), NULL, this );
+	m_sdbSizer4OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnOk ), NULL, this );
+	
+}

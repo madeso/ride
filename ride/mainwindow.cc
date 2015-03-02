@@ -13,6 +13,7 @@
 #include "ride/compilermessage.h"
 #include "ride/projectexplorer.h"
 #include "ride/createnewprojectdlg.h"
+#include "ride/createnewfiledlg.h"
 
 #include "ride/resources/icons.h"
 #include "ride/wxutils.h"
@@ -105,6 +106,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_PROJECT_TEST        , MainWindow::OnProjectTest    )
   EVT_MENU(ID_PROJECT_BENCH       , MainWindow::OnProjectBench   )
   EVT_MENU(ID_PROJECT_UPDATE      , MainWindow::OnProjectUpdate  )
+  EVT_MENU(wxID_NEW               , MainWindow::OnProjectFileNew )
   
   EVT_MENU(wxID_ABOUT             , MainWindow::OnAbout)
   
@@ -358,6 +360,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_project, ID_PROJECT_TEST, "Test", "Run the tests", project_test_xpm);
   AddMenuItem(menu_project, ID_PROJECT_BENCH, "Bench", "Run the benchmarks", project_bench_xpm);
   AddMenuItem(menu_project, ID_PROJECT_UPDATE, "Update", "Update dependencies listed in Cargo.lock", project_update_xpm);
+  menu_project->AppendSeparator();
+  AddMenuItem(menu_project, wxID_NEW, "", "", file_normal_xpm);
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
@@ -390,6 +394,11 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 
   aui_.Update();
   UpdateTitle();
+}
+
+void MainWindow::OnProjectFileNew(wxCommandEvent& event) {
+  CreateNewFileDlg dlg(this, "src/");
+  dlg.ShowModal();
 }
 
 void MainWindow::OpenCompilerMessage(const CompilerMessage& message) {
