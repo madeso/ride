@@ -339,7 +339,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_edit, ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up", "");
   AddMenuItem(menu_edit, ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
   menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, "Open type in online documentation\tCtrl-B", ""); // todo: get a better shortcut
+  AddMenuItem(menu_edit, ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, "Open type in online documentation\tCtrl-'", ""); // todo: get a better shortcut
   menu_edit->AppendSeparator();
   AddMenuItem(menu_edit, ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "", edit_file_properties_xpm);
 
