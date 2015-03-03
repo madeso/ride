@@ -81,11 +81,11 @@ void CreateNewFileDlg::OnNameEnter(wxCommandEvent& event) {
 }
 
 void CreateNewFileDlg::OnCancel(wxCommandEvent& event) {
-  EndModal(wxID_CANCEL);
+  EndModal(wxCANCEL);
 }
 
 void CreateNewFileDlg::OnOk(wxCommandEvent& event) {
-  EndModal(wxID_OK);
+  EndModal(wxOK);
 }
 
 const wxString CreateNewFileDlg::GetFilePath() const {
