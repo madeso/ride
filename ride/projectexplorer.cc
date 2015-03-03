@@ -67,17 +67,36 @@ bool IsDirectory(const wxFileName& root, const wxString directory) {
 
 class FileEntry : public wxTreeItemData {
 public:
-  FileEntry(bool is_directory, const wxString& path) : is_directory_(is_directory), path_(path) {}
+  FileEntry(bool is_directory, const wxString& path, const wxString& relative_path) : is_directory_(is_directory), path_(path), relative_path_(relative_path) {}
   const wxString& path() const {
     return path_;
   }
   bool is_directory() const {
     return is_directory_;
   }
+  const wxString& relative_path() const {
+    return relative_path_;
+  }
 private:
   bool is_directory_;
   wxString path_;
+  wxString relative_path_;
 };
+
+typedef std::pair<wxTreeItemId, FileEntry*> TreeItemFileEntry;
+
+TreeItemFileEntry GetFocused(const ProjectExplorer* pe) {
+  wxTreeItemId selected = pe->GetFocusedItem();
+  if (selected.IsOk() == false) return TreeItemFileEntry(NULL, NULL);
+  wxTreeItemData* data = pe->GetItemData(selected);
+  if (data) {
+    FileEntry* entry = reinterpret_cast<FileEntry*>(data);
+    return TreeItemFileEntry(selected, entry);
+  }
+  else {
+    return TreeItemFileEntry(selected, NULL);
+  }
+}
 
 void ProjectExplorer::UpdateFolderStructure() {
   const int flags = wxDIR_FILES | wxDIR_DIRS; // walk files and folders
@@ -87,11 +106,17 @@ void ProjectExplorer::UpdateFolderStructure() {
   folder_to_item_.clear();
   this->Freeze();
   this->DeleteAllItems();
-  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL, ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
-  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags, 0);
+  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL, ICON_FOLDER_NORMAL, new FileEntry(true, folder_, wxEmptyString));
+  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags, wxEmptyString, 0);
   this->Thaw();
 
   this->ExpandAll();
+}
+
+wxString ProjectExplorer::GetRelativePathOfSelected() const {
+  TreeItemFileEntry file = GetFocused(this);
+  if (file.second == NULL) return wxEmptyString;
+  return file.second->relative_path();
 }
 
 
@@ -122,7 +147,7 @@ wxString JoinPath(const wxFileName& root, const wxString& file_or_folder) {
   return root.GetFullPath() + file_or_folder;
 }
 
-void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, int index)
+void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, const wxString& relative_path, int index)
 {
   const wxString root_full_path = root.GetFullPath();
   const std::vector<wxString> files_and_folders = TraverseFilesAndFolders(root, filespec, flags);
@@ -133,29 +158,16 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
     const bool is_dir = IsDirectory(root, file_or_directory_name);
     const int image = is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL;
 
+    const wxString future_path = relative_path + file_or_directory_name + "/";
+
     const wxString path = JoinPath(root, file_or_directory_name);
-    wxTreeItemData* data = new FileEntry(is_dir, path);
+    wxTreeItemData* data = new FileEntry(is_dir, path, is_dir ? future_path : relative_path);
     wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, image, image, data);
     folder_to_item_[path] = child;
     if (is_dir) {
       const wxFileName folder_name = SubFolder(root, file_or_directory_name);
-      SubUpdateFolderStructure(folder_name, child, filespec, flags, index+1);
+      SubUpdateFolderStructure(folder_name, child, filespec, flags, future_path, index+1);
     }
-  }
-}
-
-typedef std::pair<wxTreeItemId, FileEntry*> TreeItemFileEntry;
-
-TreeItemFileEntry GetFocused(ProjectExplorer* pe) {
-  wxTreeItemId selected = pe->GetFocusedItem();
-  if (selected.IsOk() == false) return TreeItemFileEntry(NULL, NULL);
-  wxTreeItemData* data = pe->GetItemData(selected);
-  if (data) {
-    FileEntry* entry = reinterpret_cast<FileEntry*>(data);
-    return TreeItemFileEntry(selected, entry);
-  }
-  else {
-    return TreeItemFileEntry(selected, NULL);
   }
 }
 

@@ -401,7 +401,7 @@ void MainWindow::OnProjectFileNew(wxCommandEvent& event) {
     wxMessageBox("Unable to create file, no project open.", "Unable to create", wxICON_ERROR | wxOK);
     return;
   }
-  CreateNewFileDlg dlg(this, project_.root_folder(), "src/");
+  CreateNewFileDlg dlg(this, project_.root_folder(), project_explorer_->GetRelativePathOfSelected());
   if (wxOK != dlg.ShowModal()) {
     return;
   }
