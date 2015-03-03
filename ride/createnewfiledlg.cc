@@ -3,6 +3,7 @@
 #include <wx/filename.h>
 #include <wx/dir.h>
 #include "ride/resources/icons.h"
+#include "ride/wxutils.h"
 
 class FileTemplate {
 public:
@@ -45,7 +46,8 @@ enum {
   , REPLACE_SPACE_WITH_DASH
 };
 
-CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent, const wxString& fodler_hint) : ui::CreateNewFile(parent) {
+CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint)
+  : ui::CreateNewFile(parent), project_folder_(project_folder) {
   wxImageList* images = new wxImageList(16,16);
   images->Add(wxIcon(file_normal_xpm));
   uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);
@@ -66,9 +68,12 @@ CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent, const wxString& fodler_hint
   uiReplaceAction->AppendString("Remove spaces");
   uiReplaceAction->AppendString("Replaces spaces with a _ (underscore)");
   uiReplaceAction->AppendString("Replaces spaces with a - (dash)");
+  uiReplaceAction->Select(3);
 
   uiTemplates->SetItemState(0, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
   uiName->SetFocus();
+
+  UpdateTemplateSource();
 }
 
 void CreateNewFileDlg::OnNameEnter(wxCommandEvent& event) {
@@ -83,7 +88,7 @@ void CreateNewFileDlg::OnOk(wxCommandEvent& event) {
   EndModal(wxID_OK);
 }
 
-const wxString CreateNewFileDlg::GetFileName() const {
+const wxString CreateNewFileDlg::GetFilePath() const {
   wxString file_name = uiName->GetValue();
   if (uiLowerCase->IsChecked()) {
     file_name.MakeLower();
@@ -97,19 +102,35 @@ const wxString CreateNewFileDlg::GetFileName() const {
     break;
   case REPLACE_SPACE_WITH_NONE:
       file_name.Replace(" ", "");
+      break;
   case REPLACE_SPACE_WITH_UNDERSCORE:
-    file_name.Replace(" ", "_");
+      file_name.Replace(" ", "_");
+      break;
   case REPLACE_SPACE_WITH_DASH:
       file_name.Replace(" ", "-");
-      default:
+      break;
+  default:
         assert(false && "Invalid replace action!");
   }
 
-  return wxEmptyString;
-}
+  wxFileName fn(project_folder_);
+  const wxString path = uiPath->GetValue();
+  if (path != wxEmptyString) {
+    auto dirs = Split(path, '/');
+    for (auto d : dirs) {
+      if (d != wxEmptyString) {
+        fn.AppendDir(d);
+      }
+    }
+  }
+  if (file_name != wxEmptyString) {
+    fn.SetFullName(file_name);
+    if (fn.GetExt() == wxEmptyString) {
+      fn.SetExt("rs"); // todo: use the extension from the template instead..
+    }
+  }
 
-const wxString CreateNewFileDlg::GetRelativePath() const {
-  return uiPath->GetValue();
+  return fn.GetFullPath();
 }
 
 FileTemplate* GetFt(wxListCtrl* list) {
@@ -125,3 +146,12 @@ const wxString CreateNewFileDlg::GetTemplateSource() const {
   if (file_template == NULL) return wxEmptyString;
   else return file_template->GenerateContent(uiName->GetValue());
 }
+
+void CreateNewFileDlg::OnTextChanged(wxCommandEvent& event)  { UpdateTemplateSource(); }
+void CreateNewFileDlg::OnComboChanged(wxCommandEvent& event) { UpdateTemplateSource(); }
+void CreateNewFileDlg::OnCheckChanged(wxCommandEvent& event) { UpdateTemplateSource(); }
+
+void CreateNewFileDlg::UpdateTemplateSource() {
+  uiSuggestedFilePath->SetLabel(GetFilePath());
+}
+

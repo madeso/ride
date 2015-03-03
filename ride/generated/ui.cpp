@@ -867,6 +867,20 @@ CreateNewFile::CreateNewFile( wxWindow* parent, wxWindowID id, const wxString& t
 	
 	fgSizer12->Add( bSizer12, 1, wxEXPAND, 5 );
 	
+	wxBoxSizer* bSizer13;
+	bSizer13 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText21 = new wxStaticText( this, wxID_ANY, wxT("Will create file at:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText21->Wrap( -1 );
+	bSizer13->Add( m_staticText21, 0, wxALL, 5 );
+	
+	uiSuggestedFilePath = new wxStaticText( this, wxID_ANY, wxT("C:/path/to/my/myproject/src/hello-world.rs"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiSuggestedFilePath->Wrap( -1 );
+	bSizer13->Add( uiSuggestedFilePath, 1, wxALL, 5 );
+	
+	
+	fgSizer12->Add( bSizer13, 1, wxEXPAND, 5 );
+	
 	
 	bSizer10->Add( fgSizer12, 1, wxEXPAND, 5 );
 	
@@ -886,7 +900,11 @@ CreateNewFile::CreateNewFile( wxWindow* parent, wxWindowID id, const wxString& t
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	uiName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CreateNewFile::OnTextChanged ), NULL, this );
 	uiName->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CreateNewFile::OnNameEnter ), NULL, this );
+	uiPath->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CreateNewFile::OnTextChanged ), NULL, this );
+	uiReplaceAction->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( CreateNewFile::OnComboChanged ), NULL, this );
+	uiLowerCase->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CreateNewFile::OnCheckChanged ), NULL, this );
 	m_sdbSizer4Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnCancel ), NULL, this );
 	m_sdbSizer4OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnOk ), NULL, this );
 }
@@ -894,7 +912,11 @@ CreateNewFile::CreateNewFile( wxWindow* parent, wxWindowID id, const wxString& t
 CreateNewFile::~CreateNewFile()
 {
 	// Disconnect Events
+	uiName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CreateNewFile::OnTextChanged ), NULL, this );
 	uiName->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( CreateNewFile::OnNameEnter ), NULL, this );
+	uiPath->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CreateNewFile::OnTextChanged ), NULL, this );
+	uiReplaceAction->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( CreateNewFile::OnComboChanged ), NULL, this );
+	uiLowerCase->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CreateNewFile::OnCheckChanged ), NULL, this );
 	m_sdbSizer4Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnCancel ), NULL, this );
 	m_sdbSizer4OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnOk ), NULL, this );
 	

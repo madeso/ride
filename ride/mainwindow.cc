@@ -397,7 +397,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 }
 
 void MainWindow::OnProjectFileNew(wxCommandEvent& event) {
-  CreateNewFileDlg dlg(this, "src/");
+  CreateNewFileDlg dlg(this, project_.root_folder(), "src/");
   dlg.ShowModal();
 }
 

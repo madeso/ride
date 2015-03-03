@@ -16,3 +16,15 @@ void AppendEnabled(wxMenu& menu, int id, const wxString& text, bool enabled) {
   menu.Append(id, text);
   menu.Enable(id, enabled);
 }
+
+std::vector<wxString> Split(const wxString& str, char c) {
+  wxString temp = str;
+  std::vector <wxString> ret;
+  while (!temp.empty()) {
+    wxString cur = temp.BeforeFirst(c);
+    ret.push_back(cur);
+    temp = temp.AfterFirst(c);
+  }
+
+  return ret;
+}

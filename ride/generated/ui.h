@@ -249,19 +249,24 @@ namespace ui
 			wxTextCtrl* uiPath;
 			wxComboBox* uiReplaceAction;
 			wxCheckBox* uiLowerCase;
+			wxStaticText* m_staticText21;
+			wxStaticText* uiSuggestedFilePath;
 			wxStdDialogButtonSizer* m_sdbSizer4;
 			wxButton* m_sdbSizer4OK;
 			wxButton* m_sdbSizer4Cancel;
 			
 			// Virtual event handlers, overide them in your derived class
+			virtual void OnTextChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnNameEnter( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnComboChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCheckChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
 			
 		
 		public:
 			
-			CreateNewFile( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Create new file..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 507,334 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			CreateNewFile( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Create new file..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 548,351 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~CreateNewFile();
 		
 	};

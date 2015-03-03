@@ -3,22 +3,11 @@
 #include "ride/settings.h"
 #include <wx/stc/stc.h>
 #include <cassert>
+#include "ride/wxutils.h"
 
 void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style);
 
 wxString b2s01(bool b);
-
-std::vector<wxString> Split(const wxString& str, char c) {
-  wxString temp = str;
-  std::vector <wxString> ret;
-  while (!temp.empty()) {
-    wxString cur = temp.BeforeFirst(c);
-    ret.push_back(cur);
-    temp = temp.AfterFirst(c);
-  }
-
-  return ret;
-}
 
 //////////////////////////////////////////////////////////////////////////
 
