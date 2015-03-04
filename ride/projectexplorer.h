@@ -25,6 +25,7 @@ private:
   void OnDoubleClick(wxMouseEvent& event);
   void OnContextMenu(wxContextMenuEvent& event);
 
+  void OnCreateNewFile            (wxCommandEvent& event);
   void OnFolderCollapse           (wxCommandEvent& event);
   void OnFolderExpand             (wxCommandEvent& event);
   void OnFolderCollapseAllChildren(wxCommandEvent& event);

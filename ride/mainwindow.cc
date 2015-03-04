@@ -396,12 +396,12 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   UpdateTitle();
 }
 
-void MainWindow::OnProjectFileNew(wxCommandEvent& event) {
-  if (project_.root_folder() == wxEmptyString) {
+void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer) {
+  if (project_root == wxEmptyString) {
     wxMessageBox("Unable to create file, no project open.", "Unable to create", wxICON_ERROR | wxOK);
     return;
   }
-  CreateNewFileDlg dlg(this, project_.root_folder(), project_explorer_->GetRelativePathOfSelected());
+  CreateNewFileDlg dlg(main, project_root, project_explorer->GetRelativePathOfSelected());
   if (wxOK != dlg.ShowModal()) {
     return;
   }
@@ -411,8 +411,13 @@ void MainWindow::OnProjectFileNew(wxCommandEvent& event) {
     file.Write(dlg.GetTemplateSource());
     // file is written here
   }
-  project_explorer_->UpdateFolderStructure();
-  OpenFile(dlg.GetFilePath());
+  project_explorer->UpdateFolderStructure();
+  main->OpenFile(dlg.GetFilePath());
+}
+
+
+void MainWindow::OnProjectFileNew(wxCommandEvent& event) {
+  CreateNewFile(project_.root_folder(), this, project_explorer_);
 }
 
 void MainWindow::OpenCompilerMessage(const CompilerMessage& message) {

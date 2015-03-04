@@ -26,6 +26,8 @@ struct FoundEdit {
   FileEdit* edit;
 };
 
+void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer);
+
 class MainWindow: public wxFrame
 {
 public:

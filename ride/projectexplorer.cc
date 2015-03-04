@@ -195,6 +195,7 @@ enum {
   , ID_EXPAND_ALL
 
   , ID_OPEN_FILE
+  , ID_CREATE_NEW_FILE
 };
 
 void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
@@ -207,18 +208,23 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   const bool is_file   = selected.second ? selected.second->is_directory() == false : false;
   
   wxMenu menu;
+  AppendEnabled(menu, ID_CREATE_NEW_FILE, "Create new file...", is_folder);
+  menu.AppendSeparator();
   AppendEnabled(menu, ID_FOLDER_COLLAPSE, "Collapse", is_folder);
-  AppendEnabled(menu, ID_FOLDER_EXPAND, "Expand", is_folder);
-  menu.AppendSeparator();
   AppendEnabled(menu, ID_FOLDER_COLLAPSE_ALL_CHILDREN, "Collapse children", is_folder);
-  AppendEnabled(menu, ID_FOLDER_EXPAND_ALL_CHILDREN, "Expand children", is_folder);
+  AppendEnabled(menu, ID_COLLAPSE_ALL, "Collapse all", true); 
   menu.AppendSeparator();
-  AppendEnabled(menu, ID_COLLAPSE_ALL, "Collapse all", true);
+  AppendEnabled(menu, ID_FOLDER_EXPAND, "Expand", is_folder);
+  AppendEnabled(menu, ID_FOLDER_EXPAND_ALL_CHILDREN, "Expand children", is_folder);
   AppendEnabled(menu, ID_EXPAND_ALL, "Expand all", true);
   menu.AppendSeparator();
   AppendEnabled(menu, ID_OPEN_FILE, "Open file", is_file);
 
   PopupMenu(&menu);
+}
+
+void ProjectExplorer::OnCreateNewFile(wxCommandEvent& event) {
+  CreateNewFile(folder_, main_, this);
 }
 
 void ProjectExplorer::OnFolderCollapse(wxCommandEvent& event){
@@ -262,6 +268,7 @@ wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
 EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
 EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
 
+EVT_MENU(ID_CREATE_NEW_FILE             , ProjectExplorer::OnCreateNewFile            )
 EVT_MENU(ID_FOLDER_COLLAPSE             , ProjectExplorer::OnFolderCollapse           )
 EVT_MENU(ID_FOLDER_EXPAND               , ProjectExplorer::OnFolderExpand             )
 EVT_MENU(ID_FOLDER_COLLAPSE_ALL_CHILDREN, ProjectExplorer::OnFolderCollapseAllChildren)
