@@ -4,6 +4,7 @@
 
 #include <wx/dir.h>
 #include <wx/filename.h>
+#include <wx/textdlg.h>
 
 #include "ride/mainwindow.h"
 #include "ride/resources/icons.h"
@@ -113,6 +114,12 @@ void ProjectExplorer::UpdateFolderStructure() {
   this->ExpandAll();
 }
 
+wxString ProjectExplorer::GetPathOfSelected() const {
+  TreeItemFileEntry file = GetFocused(this);
+  if (file.second == NULL) return wxEmptyString;
+  return file.second->path();
+}
+
 wxString ProjectExplorer::GetRelativePathOfSelected() const {
   TreeItemFileEntry file = GetFocused(this);
   if (file.second == NULL) return wxEmptyString;
@@ -158,15 +165,18 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
     const bool is_dir = IsDirectory(root, file_or_directory_name);
     const int image = is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL;
 
-    const wxString future_path = relative_path + file_or_directory_name + "/";
-
     const wxString path = JoinPath(root, file_or_directory_name);
-    wxTreeItemData* data = new FileEntry(is_dir, path, is_dir ? future_path : relative_path);
+    const wxString future_relative_path = relative_path + file_or_directory_name + "/";
+    const wxString dir_path = wxDir(path).GetNameWithSep();
+
+    wxTreeItemData* data = new FileEntry(is_dir
+      , is_dir ? dir_path : path
+      , is_dir ? future_relative_path : relative_path);
     wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, image, image, data);
     folder_to_item_[path] = child;
     if (is_dir) {
       const wxFileName folder_name = SubFolder(root, file_or_directory_name);
-      SubUpdateFolderStructure(folder_name, child, filespec, flags, future_path, index+1);
+      SubUpdateFolderStructure(folder_name, child, filespec, flags, future_relative_path, index+1);
     }
   }
 }
@@ -196,6 +206,7 @@ enum {
 
   , ID_OPEN_FILE
   , ID_CREATE_NEW_FILE
+  , ID_CREATE_NEW_FOLDER
 };
 
 void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
@@ -209,6 +220,7 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   
   wxMenu menu;
   AppendEnabled(menu, ID_CREATE_NEW_FILE, "Create new file...", is_folder);
+  AppendEnabled(menu, ID_CREATE_NEW_FOLDER, "Create new folder...", is_folder);
   menu.AppendSeparator();
   AppendEnabled(menu, ID_FOLDER_COLLAPSE, "Collapse", is_folder);
   AppendEnabled(menu, ID_FOLDER_COLLAPSE_ALL_CHILDREN, "Collapse children", is_folder);
@@ -221,6 +233,27 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   AppendEnabled(menu, ID_OPEN_FILE, "Open file", is_file);
 
   PopupMenu(&menu);
+}
+
+void ProjectExplorer::OnCreateNewFolder(wxCommandEvent& event) {
+  const wxString path_of_selected = GetPathOfSelected();
+  wxTextEntryDialog dlg(this, "Please enter folder name:", "Folder name");
+  if (dlg.ShowModal() != wxID_OK) return;
+  const wxString folder_name = dlg.GetValue();
+  wxFileName fn(path_of_selected); 
+  fn.AppendDir(folder_name);
+  const wxString dir = fn.GetPathWithSep();
+  const bool folder_exists = wxDir::Exists(dir);
+  if (folder_exists) {
+    wxMessageBox("Entered folder exist", "Unable to create", wxICON_WARNING, this);
+    return;
+  }
+  const bool created_folder = wxDir::Make(dir);
+  if (false == created_folder) {
+    wxMessageBox("Unable to create folder", "Unable to create", wxICON_ERROR, this);
+    return;
+  }
+  UpdateFolderStructure();
 }
 
 void ProjectExplorer::OnCreateNewFile(wxCommandEvent& event) {
@@ -269,6 +302,7 @@ EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
 EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
 
 EVT_MENU(ID_CREATE_NEW_FILE             , ProjectExplorer::OnCreateNewFile            )
+EVT_MENU(ID_CREATE_NEW_FOLDER           , ProjectExplorer::OnCreateNewFolder          )
 EVT_MENU(ID_FOLDER_COLLAPSE             , ProjectExplorer::OnFolderCollapse           )
 EVT_MENU(ID_FOLDER_EXPAND               , ProjectExplorer::OnFolderExpand             )
 EVT_MENU(ID_FOLDER_COLLAPSE_ALL_CHILDREN, ProjectExplorer::OnFolderCollapseAllChildren)

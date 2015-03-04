@@ -18,6 +18,7 @@ public:
   void UpdateFolderStructure();
   void HighlightOpenFile(const wxString& file_path);
 
+  wxString GetPathOfSelected() const;
   wxString GetRelativePathOfSelected() const;
 
 private:
@@ -25,6 +26,7 @@ private:
   void OnDoubleClick(wxMouseEvent& event);
   void OnContextMenu(wxContextMenuEvent& event);
 
+  void OnCreateNewFolder          (wxCommandEvent& event);
   void OnCreateNewFile            (wxCommandEvent& event);
   void OnFolderCollapse           (wxCommandEvent& event);
   void OnFolderExpand             (wxCommandEvent& event);
