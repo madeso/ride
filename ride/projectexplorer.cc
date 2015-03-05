@@ -9,6 +9,7 @@
 #include "ride/mainwindow.h"
 #include "ride/resources/icons.h"
 #include "ride/wxutils.h"
+#include "ride/deletefolderdlg.h"
 
 enum {
   ICON_FILE_NORMAL,
@@ -207,6 +208,7 @@ enum {
   , ID_OPEN_FILE
   , ID_CREATE_NEW_FILE
   , ID_CREATE_NEW_FOLDER
+  , ID_DELETE_FILE_OR_FOLDER
 };
 
 void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
@@ -219,6 +221,8 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   const bool is_file   = selected.second ? selected.second->is_directory() == false : false;
   
   wxMenu menu;
+  AppendEnabled(menu, ID_OPEN_FILE, "Open file", is_file);
+  menu.AppendSeparator();
   AppendEnabled(menu, ID_CREATE_NEW_FILE, "Create new file...", is_folder);
   AppendEnabled(menu, ID_CREATE_NEW_FOLDER, "Create new folder...", is_folder);
   menu.AppendSeparator();
@@ -230,7 +234,7 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   AppendEnabled(menu, ID_FOLDER_EXPAND_ALL_CHILDREN, "Expand children", is_folder);
   AppendEnabled(menu, ID_EXPAND_ALL, "Expand all", true);
   menu.AppendSeparator();
-  AppendEnabled(menu, ID_OPEN_FILE, "Open file", is_file);
+  AppendEnabled(menu, ID_DELETE_FILE_OR_FOLDER, "Delete", true);
 
   PopupMenu(&menu);
 }
@@ -297,6 +301,41 @@ void ProjectExplorer::OnOpenFile(wxCommandEvent& event){
   OpenFile(selected, main_);
 }
 
+void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
+  const auto selected = GetFocused(this);
+  const auto file = selected.second;
+  if (file == NULL)  return;
+  if (file->is_directory()) {
+    DeleteFolderDlg dlg(this, "Are you sure you want to delete " + file->path(), "Delete?");
+    if (wxID_YES != dlg.ShowModal()) return;
+    bool full = dlg.full();
+    bool recursive = dlg.recursive();
+    // todo: display confirmation dialog!
+    int flags = 0;
+    if (full) {
+      flags |= wxPATH_RMDIR_FULL;
+    }
+    if (recursive) {
+      flags |= wxPATH_RMDIR_RECURSIVE;
+    }
+    const bool removed = wxFileName::Rmdir(file->path(), flags);
+    if (false == removed) {
+      wxMessageBox("Unable to remove folder!", "Unable to remove", wxICON_ERROR, this);
+    }
+  }
+  else {
+    if (wxID_YES != ShowYesNo(this, "Remove?", "Remove file", "Keep file", file->path(), "Do you want to delete " + file->path())) {
+      return;
+    }
+    wxString file_to_be_removed = file->path();
+    const bool file_removed = wxRemoveFile(file_to_be_removed);
+    if (false == file_removed) {
+      wxMessageBox("Unable to remove file!", "Unable to remove", wxICON_ERROR, this);
+    }
+  }
+  UpdateFolderStructure();
+}
+
 wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
 EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
 EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
@@ -310,5 +349,7 @@ EVT_MENU(ID_FOLDER_EXPAND_ALL_CHILDREN  , ProjectExplorer::OnFolderExpandAllChil
 EVT_MENU(ID_COLLAPSE_ALL                , ProjectExplorer::OnCollapseAll              )
 EVT_MENU(ID_EXPAND_ALL                  , ProjectExplorer::OnExpandAll                )
 EVT_MENU(ID_OPEN_FILE                   , ProjectExplorer::OnOpenFile                 )
+EVT_MENU(ID_DELETE_FILE_OR_FOLDER       , ProjectExplorer::OnDeleteFileOrFolder       )
+
 
 wxEND_EVENT_TABLE()

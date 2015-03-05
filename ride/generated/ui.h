@@ -271,6 +271,33 @@ namespace ui
 		
 	};
 	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class DeleteFolder
+	///////////////////////////////////////////////////////////////////////////////
+	class DeleteFolder : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxStaticText* uiRemoveFileDescription;
+			wxCheckBox* uiFull;
+			wxCheckBox* uiRecursive;
+			wxStdDialogButtonSizer* m_sdbSizer5;
+			wxButton* m_sdbSizer5Yes;
+			wxButton* m_sdbSizer5No;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnNo( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnYes( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			DeleteFolder( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+			~DeleteFolder();
+		
+	};
+	
 } // namespace ui
 
 #endif //__UI_H__

@@ -35,6 +35,8 @@ private:
   void OnCollapseAll              (wxCommandEvent& event);
   void OnExpandAll                (wxCommandEvent& event);
   void OnOpenFile                 (wxCommandEvent& event);
+  void OnDeleteFileOrFolder       (wxCommandEvent& event);
+  
 
   wxDECLARE_EVENT_TABLE();
 

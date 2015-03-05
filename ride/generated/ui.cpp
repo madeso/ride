@@ -921,3 +921,49 @@ CreateNewFile::~CreateNewFile()
 	m_sdbSizer4OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CreateNewFile::OnOk ), NULL, this );
 	
 }
+
+DeleteFolder::DeleteFolder( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer14;
+	bSizer14 = new wxBoxSizer( wxVERTICAL );
+	
+	uiRemoveFileDescription = new wxStaticText( this, wxID_ANY, wxT("Do you want to remove the folder?"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiRemoveFileDescription->Wrap( -1 );
+	bSizer14->Add( uiRemoveFileDescription, 0, wxALL, 5 );
+	
+	uiFull = new wxCheckBox( this, wxID_ANY, wxT("Full"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer14->Add( uiFull, 0, wxALL, 5 );
+	
+	uiRecursive = new wxCheckBox( this, wxID_ANY, wxT("Recursive"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer14->Add( uiRecursive, 0, wxALL, 5 );
+	
+	m_sdbSizer5 = new wxStdDialogButtonSizer();
+	m_sdbSizer5Yes = new wxButton( this, wxID_YES );
+	m_sdbSizer5->AddButton( m_sdbSizer5Yes );
+	m_sdbSizer5No = new wxButton( this, wxID_NO );
+	m_sdbSizer5->AddButton( m_sdbSizer5No );
+	m_sdbSizer5->Realize();
+	
+	bSizer14->Add( m_sdbSizer5, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer14 );
+	this->Layout();
+	bSizer14->Fit( this );
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	m_sdbSizer5No->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeleteFolder::OnNo ), NULL, this );
+	m_sdbSizer5Yes->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeleteFolder::OnYes ), NULL, this );
+}
+
+DeleteFolder::~DeleteFolder()
+{
+	// Disconnect Events
+	m_sdbSizer5No->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeleteFolder::OnNo ), NULL, this );
+	m_sdbSizer5Yes->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeleteFolder::OnYes ), NULL, this );
+	
+}
