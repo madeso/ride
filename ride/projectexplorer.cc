@@ -303,10 +303,17 @@ void ProjectExplorer::OnOpenFile(wxCommandEvent& event){
 
 void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
   const auto selected = GetFocused(this);
-  const auto file = selected.second;
+  FileEntry* file = selected.second;
   if (file == NULL)  return;
-  if (file->is_directory()) {
-    DeleteFolderDlg dlg(this, "Are you sure you want to delete " + file->path(), "Delete?");
+  
+  // if a dialog is shown, the file pointer is invalidated, since we rebuild the whole tree structure and thus delete the entries
+  // lets "fix" this for now by storing copies and setting our reference to null
+  const wxString path = file->path();
+  const bool is_directory = file->is_directory();
+  file = NULL;
+
+  if (is_directory) {
+    DeleteFolderDlg dlg(this, "Are you sure you want to delete " + path, "Delete?");
     if (wxID_YES != dlg.ShowModal()) return;
     bool full = dlg.full();
     bool recursive = dlg.recursive();
@@ -318,17 +325,19 @@ void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
     if (recursive) {
       flags |= wxPATH_RMDIR_RECURSIVE;
     }
-    const bool removed = wxFileName::Rmdir(file->path(), flags);
+    const bool removed = wxFileName::Rmdir(path, flags);
     if (false == removed) {
       wxMessageBox("Unable to remove folder!", "Unable to remove", wxICON_ERROR, this);
     }
   }
   else {
-    if (wxID_YES != ShowYesNo(this, "Remove?", "Remove file", "Keep file", file->path(), "Do you want to delete " + file->path())) {
+    // ShowYesNo(this, "Remove?", "Remove file", "Keep file", path, "Do you want to delete " + path)
+    wxString mess = "Do you want to delete " + path;
+    int ret = wxMessageBox(mess, "Delete?", wxICON_QUESTION | wxYES_NO, NULL);
+    if (wxYES != ret) {
       return;
     }
-    wxString file_to_be_removed = file->path();
-    const bool file_removed = wxRemoveFile(file_to_be_removed);
+    const bool file_removed = wxRemoveFile(path);
     if (false == file_removed) {
       wxMessageBox("Unable to remove file!", "Unable to remove", wxICON_ERROR, this);
     }
