@@ -1,5 +1,23 @@
 #include "ride/deletefolderdlg.h"
 
+#include "ride/wx.h"
+#include "ride/generated/ui.h"
+
+class DeleteFolderDlg : public ui::DeleteFolder {
+public:
+  DeleteFolderDlg(wxWindow* parent, const wxString& message, const wxString& title);
+
+  bool full() const;
+  bool recursive() const;
+
+  void set_full(bool new_full) const;
+  void set_recursive(bool new_recursive) const;
+
+protected:
+  void OnNo(wxCommandEvent& event);
+  void OnYes(wxCommandEvent& event);
+};
+
 namespace {
   static bool DefaultFull = true;
   static bool DefaultRecursive = true;
@@ -37,4 +55,14 @@ void DeleteFolderDlg::OnYes(wxCommandEvent& event) {
   DefaultFull = full();
   DefaultRecursive = recursive();
   EndModal(wxID_YES);
+}
+
+bool ShowDeleteFolderDlg(wxWindow* parent, const wxString& folder, bool* full, bool* recursive) {
+  assert(full);
+  assert(recursive);
+  DeleteFolderDlg dlg(parent, "Are you sure you want to delete " + folder, "Delete?");
+  if (wxID_YES != dlg.ShowModal()) return false;;
+  *full = dlg.full();
+  *recursive = dlg.recursive();
+  return true;
 }

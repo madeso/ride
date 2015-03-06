@@ -313,11 +313,13 @@ void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
   file = NULL;
 
   if (is_directory) {
-    DeleteFolderDlg dlg(this, "Are you sure you want to delete " + path, "Delete?");
-    if (wxID_YES != dlg.ShowModal()) return;
-    bool full = dlg.full();
-    bool recursive = dlg.recursive();
-    // todo: display confirmation dialog!
+    // we don't care about the value of these really, since the dialog should set them
+    // however, let's set them to a safe value to be sure
+    bool full = false;
+    bool recursive = false;
+    if (false == ShowDeleteFolderDlg(this, path, &full, &recursive)) {
+      return;
+    }
     int flags = 0;
     if (full) {
       flags |= wxPATH_RMDIR_FULL;
