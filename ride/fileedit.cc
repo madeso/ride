@@ -400,7 +400,7 @@ void FileEdit::ReloadFileIfNeeded() {
     if (ShowYesNo(this, "File modified!", "Reload the file", "Keep my changes",
       wxString::Format("%s\nThis file has been modified by another program.", filename_),
       wxString::Format("%s\nThis file has been modified by another program.\nDo you want to reload it?", filename_)
-      ) == wxID_YES) {
+      ) == DialogResult::YES) {
       LoadFile();
     }
     else {
@@ -770,18 +770,19 @@ bool FileEdit::CanClose(bool can_abort) {
     const wxString title_ok = "\"" + CalculateDocumentName() + "\" has changed since last time...";
     const wxString title_error = "\"" + CalculateDocumentName() + "\" has changed since last time, save it?";
 
-    const int answer = can_abort
+    const DialogResult answer = can_abort
       ? ShowYesNoCancel(this, caption, yes_button, no_button, cancel_button, title_ok, title_error)
       : ShowYesNo(this, caption, yes_button, no_button, title_ok, title_error);
 
     
-    if (answer == wxID_YES) {
+    if (answer == DialogResult::YES) {
       return Save();
     }
-    else if (answer == wxID_NO) {
+    else if (answer == DialogResult::NO) {
       return true;
     }
     else {
+      assert(answer == DialogResult::CANCEL);
       return false;
     }
   }

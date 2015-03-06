@@ -29,7 +29,21 @@ std::vector<wxString> Split(const wxString& str, char c) {
   return ret;
 }
 
-int ShowYesNo(wxWindow* self, const wxString& caption,
+DialogResult CDL(int dl) {
+  switch (dl) {
+  case wxID_YES:
+    return DialogResult::YES;
+  case wxID_NO:
+    return DialogResult::NO;
+  case wxID_CANCEL:
+    return DialogResult::CANCEL;
+  default:
+    assert(0 && "Invalid dialog result");
+    return DialogResult::CANCEL;
+  }
+}
+
+DialogResult ShowYesNo(wxWindow* self, const wxString& caption,
   const wxMessageDialogBase::ButtonLabel& yes_button,
   const wxMessageDialogBase::ButtonLabel& no_button,
   const wxString& title_ok, const wxString title_error) {
@@ -37,10 +51,10 @@ int ShowYesNo(wxWindow* self, const wxString& caption,
   wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxICON_QUESTION);
   const bool label_change_ok = dlg.SetYesNoLabels(yes_button, no_button);
   dlg.SetMessage(label_change_ok ? title_ok : title_error);
-  return dlg.ShowModal();
+  return CDL(dlg.ShowModal());
 }
 
-int ShowYesNoCancel(wxWindow* self, const wxString& caption,
+DialogResult ShowYesNoCancel(wxWindow* self, const wxString& caption,
   const wxMessageDialogBase::ButtonLabel& yes_button,
   const wxMessageDialogBase::ButtonLabel& no_button,
   const wxMessageDialogBase::ButtonLabel& cancel_button,
@@ -49,6 +63,6 @@ int ShowYesNoCancel(wxWindow* self, const wxString& caption,
   wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxCANCEL | wxICON_QUESTION);
   const bool label_change_ok = dlg.SetYesNoCancelLabels(yes_button, no_button, cancel_button);
   dlg.SetMessage(label_change_ok ? title_ok : title_error);
-  return dlg.ShowModal();
+  return CDL(dlg.ShowModal());
 }
 

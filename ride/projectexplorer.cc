@@ -331,10 +331,10 @@ void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
     }
   }
   else {
-    // ShowYesNo(this, "Remove?", "Remove file", "Keep file", path, "Do you want to delete " + path)
     wxString mess = "Do you want to delete " + path;
-    int ret = wxMessageBox(mess, "Delete?", wxICON_QUESTION | wxYES_NO, NULL);
-    if (wxYES != ret) {
+    // wxMessageBox(mess, "Delete?", wxICON_QUESTION | wxYES_NO, NULL);
+    DialogResult ret = ShowYesNo(this, "Remove?", "Remove file", "Keep file", path, "Do you want to delete " + path);
+    if (DialogResult::YES != ret) {
       return;
     }
     const bool file_removed = wxRemoveFile(path);
