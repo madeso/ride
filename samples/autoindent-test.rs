@@ -13,3 +13,8 @@ namespace {
   impl MyStruct {} // newline after }
   // some line
 }
+
+fn main() {
+    let c = Circle { x: 0.0, y: 0.0, radius: 2.0 };
+    println!("{}", c.area());
+}
