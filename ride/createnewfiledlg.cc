@@ -34,7 +34,10 @@ public:
       "struct %s {" "\n"
       "}"           "\n"
       ""            "\n"
-      , name
+      "impl %s {"   "\n"
+      "}"           "\n"
+      ""            "\n"
+      , name, name
       );
   }
 } g_rust_class_file_template;
