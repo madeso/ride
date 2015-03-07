@@ -329,7 +329,8 @@ void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
     }
     const bool removed = wxFileName::Rmdir(path, flags);
     if (false == removed) {
-      wxMessageBox("Unable to remove folder!", "Unable to remove", wxICON_ERROR, this);
+      // wxMessageBox("Unable to remove folder!", "Unable to remove", wxICON_ERROR, this);
+      // wxWidgets seems to display a dialog here for us...
     }
   }
   else {
