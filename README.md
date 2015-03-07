@@ -19,7 +19,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Features needed for a useful state
 
-* Project/solution explorer, with rename + delete functionality
+* Project/solution explorer, with rename + open in explorer folder
 * Quick open file from solution/project
 * Remember session data
 * Find in files, find in solution, incremental search, other searches
