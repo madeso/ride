@@ -26,6 +26,7 @@ public:
   bool CanClose(bool canAbort);
   void UpdateTextControl();
   void ReloadFileIfNeeded();
+  void FileHasBeenRenamed(const wxString& new_path);
 public:
   bool Save();
   bool SaveAs();

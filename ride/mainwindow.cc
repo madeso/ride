@@ -533,6 +533,17 @@ FileEdit* AddCompilerMessages(const std::vector<CompilerMessage>& messages, File
   return file_edit;
 }
 
+void MainWindow::FileHasBeenRenamed(const wxString& old_path, const wxString& new_path) {
+  auto found_edit = GetEditFromFileName(old_path);
+  if (false == found_edit) {
+    return;
+  }
+  FileEdit* edit = found_edit.edit;
+  assert(edit);
+  edit->FileHasBeenRenamed(new_path);
+  // todo: update compiler errors to point to new file...
+}
+
 void MainWindow::OpenFile(const wxString& file, int start_line, int start_index, int end_line, int end_index) {
   wxFileName file_name(file);
   file_name.Normalize();

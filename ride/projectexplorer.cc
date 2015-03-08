@@ -5,6 +5,7 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/textdlg.h>
+#include <wx/filefn.h> 
 
 #include "ride/mainwindow.h"
 #include "ride/resources/icons.h"
@@ -22,6 +23,7 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
   | wxTR_TWIST_BUTTONS
   | wxTR_MULTIPLE
   | wxTR_LINES_AT_ROOT
+  | wxTR_EDIT_LABELS
   ), images_(16, 16), main_(main), last_highlighted_item_(NULL) {
   UpdateColors();
 
@@ -69,26 +71,37 @@ bool IsDirectory(const wxFileName& root, const wxString directory) {
 
 class FileEntry : public wxTreeItemData {
 public:
-  FileEntry(bool is_directory, const wxString& path, const wxString& relative_path) : is_directory_(is_directory), path_(path), relative_path_(relative_path) {}
+  FileEntry(bool is_directory, const wxString& path) : is_directory_(is_directory), path_(path) {
+    int i = 0;
+  }
   const wxString& path() const {
     return path_;
+  }
+  void set_path(const wxString& path) {
+    path_ = path;
   }
   bool is_directory() const {
     return is_directory_;
   }
-  const wxString& relative_path() const {
-    return relative_path_;
+  const wxString GetRelativeFolderPath(const wxString root) const {
+    wxFileName fn(path_);
+    fn.SetFullName(wxEmptyString);
+    const wxString native_path = fn.GetFullPath(wxPATH_NATIVE);
+    assert(native_path.StartsWith(root));
+    const wxString relative_native = native_path.Right(native_path.length() - root.length());
+    const wxString native_path_sep = wxString(1, wxFileName::GetPathSeparator());
+    wxString ret = relative_native;
+    ret.Replace(native_path_sep, "/");
+    return ret;
   }
 private:
   bool is_directory_;
   wxString path_;
-  wxString relative_path_;
 };
 
 typedef std::pair<wxTreeItemId, FileEntry*> TreeItemFileEntry;
 
-TreeItemFileEntry GetFocused(const ProjectExplorer* pe) {
-  wxTreeItemId selected = pe->GetFocusedItem();
+TreeItemFileEntry GetTreeItemData(const ProjectExplorer* pe, wxTreeItemId selected) {
   if (selected.IsOk() == false) return TreeItemFileEntry(NULL, NULL);
   wxTreeItemData* data = pe->GetItemData(selected);
   if (data) {
@@ -100,6 +113,11 @@ TreeItemFileEntry GetFocused(const ProjectExplorer* pe) {
   }
 }
 
+TreeItemFileEntry GetFocused(const ProjectExplorer* pe) {
+  wxTreeItemId selected = pe->GetFocusedItem();
+  return GetTreeItemData(pe, selected);
+}
+
 void ProjectExplorer::UpdateFolderStructure() {
   const int flags = wxDIR_FILES | wxDIR_DIRS; // walk files and folders
   const wxString filespec = "";
@@ -108,7 +126,7 @@ void ProjectExplorer::UpdateFolderStructure() {
   folder_to_item_.clear();
   this->Freeze();
   this->DeleteAllItems();
-  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL, ICON_FOLDER_NORMAL, new FileEntry(true, folder_, wxEmptyString));
+  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL, ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
   SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags, wxEmptyString, 0);
   this->Thaw();
 
@@ -124,7 +142,7 @@ wxString ProjectExplorer::GetPathOfSelected() const {
 wxString ProjectExplorer::GetRelativePathOfSelected() const {
   TreeItemFileEntry file = GetFocused(this);
   if (file.second == NULL) return wxEmptyString;
-  return file.second->relative_path();
+  return file.second->GetRelativeFolderPath(folder_);
 }
 
 
@@ -171,8 +189,7 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
     const wxString dir_path = wxDir(path).GetNameWithSep();
 
     wxTreeItemData* data = new FileEntry(is_dir
-      , is_dir ? dir_path : path
-      , is_dir ? future_relative_path : relative_path);
+      , is_dir ? dir_path : path);
     wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, image, image, data);
     folder_to_item_[path] = child;
     if (is_dir) {
@@ -348,6 +365,47 @@ void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
   UpdateFolderStructure();
 }
 
+void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
+  if (event.IsEditCancelled()) return;
+  auto data = GetTreeItemData(this, event.GetItem());
+  FileEntry* file = data.second;
+  if (file == NULL)  {
+    event.Veto();
+    return;
+  }
+  const wxString text = event.GetLabel();// this->GetItemText(data.first);
+  
+  const wxString old_path = file->path();
+  if (file->is_directory()) {
+    wxFileName new_name(old_path);
+    new_name.RemoveLastDir();
+    const bool appended = new_name.AppendDir(text);
+    if (appended == false) {
+      wxMessageBox("Unable to change directory path", "Unable to rename", wxICON_ERROR, this);
+      event.Veto();
+      return;
+    }
+    const wxString new_path = new_name.GetFullPath();
+    event.Veto();
+    return;
+  }
+  else {
+    wxFileName new_name(old_path);
+    new_name.SetFullName(text);
+    const wxString new_path = new_name.GetFullPath();
+    const bool renamed_file = wxRenameFile(old_path, new_path, false);
+    if (renamed_file == false) {
+      event.Veto();
+      wxMessageBox("Unable to change file name", "Unable to rename", wxICON_ERROR, this);
+      return;
+    }
+    main_->FileHasBeenRenamed(old_path, new_path);
+    file->set_path(new_path);
+    return;
+  }
+  event.Veto();
+}
+
 wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
 EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
 EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
@@ -363,5 +421,6 @@ EVT_MENU(ID_EXPAND_ALL                  , ProjectExplorer::OnExpandAll          
 EVT_MENU(ID_OPEN_FILE                   , ProjectExplorer::OnOpenFile                 )
 EVT_MENU(ID_DELETE_FILE_OR_FOLDER       , ProjectExplorer::OnDeleteFileOrFolder       )
 
+EVT_TREE_END_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelEnd)
 
 wxEND_EVENT_TABLE()

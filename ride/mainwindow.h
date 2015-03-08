@@ -41,6 +41,7 @@ public:
   void Append(const wxString& str);
 
   void OpenCompilerMessage(const CompilerMessage& message);
+  void FileHasBeenRenamed(const wxString& old_path, const wxString& new_path);
 
   void SaveAllChangedProjectFiles();
   void ReloadFilesIfNeeded();

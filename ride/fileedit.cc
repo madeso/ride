@@ -207,6 +207,12 @@ const wxString& FileEdit::filename() const {
   return filename_;
 }
 
+void FileEdit::FileHasBeenRenamed(const wxString& new_path) {
+  filename_ = new_path;
+  UpdateFilename();
+  UpdateTitle();
+}
+
 int FromLineColToTextOffset(wxStyledTextCtrl* text, int line, int col) {
   if (line == -1) {
     return -1;
