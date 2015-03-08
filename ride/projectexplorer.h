@@ -37,6 +37,7 @@ private:
   void OnOpenFile                 (wxCommandEvent& event);
   void OnDeleteFileOrFolder       (wxCommandEvent& event);
 
+  void OnEditLabelStart(wxTreeEvent& event);
   void OnEditLabelEnd(wxTreeEvent& event);
   
 

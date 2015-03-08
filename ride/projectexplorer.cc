@@ -365,6 +365,21 @@ void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
   UpdateFolderStructure();
 }
 
+void ProjectExplorer::OnEditLabelStart(wxTreeEvent& event) {
+  if (event.IsEditCancelled()) return;
+  auto data = GetTreeItemData(this, event.GetItem());
+  FileEntry* file = data.second;
+  if (file == NULL)  {
+    event.Veto();
+    return;
+  }
+  if (file->is_directory()) {
+    // directory edit isn't allowed
+    event.Veto();
+    return;
+  }
+}
+
 void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
   if (event.IsEditCancelled()) return;
   auto data = GetTreeItemData(this, event.GetItem());
@@ -386,6 +401,8 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
       return;
     }
     const wxString new_path = new_name.GetFullPath();
+
+    // todo: rename directory!
     event.Veto();
     return;
   }
@@ -421,6 +438,7 @@ EVT_MENU(ID_EXPAND_ALL                  , ProjectExplorer::OnExpandAll          
 EVT_MENU(ID_OPEN_FILE                   , ProjectExplorer::OnOpenFile                 )
 EVT_MENU(ID_DELETE_FILE_OR_FOLDER       , ProjectExplorer::OnDeleteFileOrFolder       )
 
+EVT_TREE_BEGIN_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelStart)
 EVT_TREE_END_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelEnd)
 
 wxEND_EVENT_TABLE()
