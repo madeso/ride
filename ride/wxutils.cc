@@ -66,3 +66,14 @@ DialogResult ShowYesNoCancel(wxWindow* self, const wxString& caption,
   return CDL(dlg.ShowModal());
 }
 
+void ShowInfo(wxWindow* self, const wxString& message, const wxString& title) {
+  wxMessageBox(message, title, wxICON_INFORMATION | wxOK | wxCENTRE, self);
+}
+
+void ShowWarning(wxWindow* self, const wxString& message, const wxString& title) {
+  wxMessageBox(message, title, wxICON_WARNING | wxOK | wxCENTRE, self);
+}
+
+void ShowError(wxWindow* self, const wxString& message, const wxString& title) {
+  wxMessageBox(message, title, wxICON_ERROR | wxOK | wxCENTRE, self);
+}

@@ -29,4 +29,8 @@ DialogResult ShowYesNoCancel(wxWindow* self, const wxString& caption,
   const wxMessageDialogBase::ButtonLabel& cancel_button,
   const wxString& title_ok, const wxString title_error);
 
+void ShowInfo(wxWindow* self, const wxString& message, const wxString& title);
+void ShowWarning(wxWindow* self, const wxString& message, const wxString& title);
+void ShowError(wxWindow* self, const wxString& message, const wxString& title);
+
 #endif  // RIDE_WXUTILS_H
