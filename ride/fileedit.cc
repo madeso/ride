@@ -394,11 +394,39 @@ void FileEdit::UpdateFileTime() {
   last_modification_time_ = GetFileDetectionTime(filename_);
 }
 
+class TrueFalse {
+public:
+  TrueFalse(bool* capture) : capture_(capture) {
+    assert(capture_);
+    assert(*capture_ == false); 
+    *capture_ = true;
+  }
+  ~TrueFalse() {
+    assert(capture_);
+    assert(*capture_ == true);
+    *capture_ = false;
+  }
+
+  bool* capture_;
+};
+
 void FileEdit::ReloadFileIfNeeded() {
   // basic check for infinite activation->question loop
   static bool inside = false;
   if (inside) return;
-  inside = true;
+  TrueFalse inside_capture(&inside);
+
+  const bool exist = wxFileName(filename_).FileExists();
+  if (exist == false) {
+    if (DialogResult::YES == ShowYesNo(this, "Close file", "Close file", "Keep open", filename_ + " has been removed", filename_ + " has been removed, close it?")) {
+      size_t index = notebook_->GetPageIndex(this);
+      const bool file_closed = notebook_->DeletePage(index);
+      if (false == file_closed) {
+        ShowError(this, "Unable to close file", "Error");
+      }
+    }
+    return;
+  }
 
   wxDateTime latest_file_time = GetFileDetectionTime(filename_);
   if (last_modification_time_ != latest_file_time) {
@@ -415,8 +443,6 @@ void FileEdit::ReloadFileIfNeeded() {
       UpdateFileTime();
     }
   }
-
-  inside = false;
 }
 
 bool FileEdit::Save() {
