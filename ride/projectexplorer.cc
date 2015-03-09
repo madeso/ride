@@ -227,6 +227,7 @@ enum {
   , ID_CREATE_NEW_FOLDER
   , ID_DELETE_FILE_OR_FOLDER
   , ID_RENAME
+  , ID_OPEN_EXPLORER
 };
 
 void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
@@ -244,6 +245,8 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   menu.AppendSeparator();
   AppendEnabled(menu, ID_CREATE_NEW_FILE, "Create new file...", is_folder);
   AppendEnabled(menu, ID_CREATE_NEW_FOLDER, "Create new folder...", is_folder);
+  AppendEnabled(menu, ID_OPEN_EXPLORER, "Open in explorer", is_folder);
+  // open in shell
   menu.AppendSeparator();
   AppendEnabled(menu, ID_FOLDER_COLLAPSE, "Collapse", is_folder);
   AppendEnabled(menu, ID_FOLDER_COLLAPSE_ALL_CHILDREN, "Collapse children", is_folder);
@@ -428,6 +431,11 @@ void ProjectExplorer::OnRename(wxCommandEvent& event) {
   this->EditLabel(data.first);
 }
 
+void ProjectExplorer::OnOpenExplorer(wxCommandEvent& event) {
+  const auto data = GetFocused(this);
+  wxLaunchDefaultApplication(data.second->path());
+}
+
 wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
 EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
 EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
@@ -443,6 +451,7 @@ EVT_MENU(ID_EXPAND_ALL                  , ProjectExplorer::OnExpandAll          
 EVT_MENU(ID_OPEN_FILE                   , ProjectExplorer::OnOpenFile                 )
 EVT_MENU(ID_DELETE_FILE_OR_FOLDER       , ProjectExplorer::OnDeleteFileOrFolder       )
 EVT_MENU(ID_RENAME                      , ProjectExplorer::OnRename                   )
+EVT_MENU(ID_OPEN_EXPLORER               , ProjectExplorer::OnOpenExplorer             )
 
 EVT_TREE_BEGIN_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelStart)
 EVT_TREE_END_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelEnd)
