@@ -226,6 +226,7 @@ enum {
   , ID_CREATE_NEW_FILE
   , ID_CREATE_NEW_FOLDER
   , ID_DELETE_FILE_OR_FOLDER
+  , ID_RENAME
 };
 
 void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
@@ -239,6 +240,7 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   
   wxMenu menu;
   AppendEnabled(menu, ID_OPEN_FILE, "Open file", is_file);
+  AppendEnabled(menu, ID_RENAME, "Rename", is_file);
   menu.AppendSeparator();
   AppendEnabled(menu, ID_CREATE_NEW_FILE, "Create new file...", is_folder);
   AppendEnabled(menu, ID_CREATE_NEW_FOLDER, "Create new folder...", is_folder);
@@ -421,6 +423,11 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
   event.Veto();
 }
 
+void ProjectExplorer::OnRename(wxCommandEvent& event) {
+  const auto data = GetFocused(this);
+  this->EditLabel(data.first);
+}
+
 wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
 EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
 EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
@@ -435,6 +442,7 @@ EVT_MENU(ID_COLLAPSE_ALL                , ProjectExplorer::OnCollapseAll        
 EVT_MENU(ID_EXPAND_ALL                  , ProjectExplorer::OnExpandAll                )
 EVT_MENU(ID_OPEN_FILE                   , ProjectExplorer::OnOpenFile                 )
 EVT_MENU(ID_DELETE_FILE_OR_FOLDER       , ProjectExplorer::OnDeleteFileOrFolder       )
+EVT_MENU(ID_RENAME                      , ProjectExplorer::OnRename                   )
 
 EVT_TREE_BEGIN_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelStart)
 EVT_TREE_END_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelEnd)
