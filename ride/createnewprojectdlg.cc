@@ -4,6 +4,7 @@
 #include <wx/filename.h>
 #include <wx/dir.h>
 #include "ride/resources/icons.h"
+#include "ride/wxutils.h"
 
 enum ProjectTemplateType {
   PTT_UNKNOWN,
@@ -105,7 +106,7 @@ void CreateNewProjectDlg::OnOk(wxCommandEvent& event) {
     EndModal(wxID_OK);
   }
   else {
-    wxMessageBox("Please enter valid name and folder for the project", "Missing name and/or folder for project", wxICON_ERROR, this);
+    ShowError(this, "Please enter valid name and folder for the project", "Missing name and/or folder for project");
   }
 }
 

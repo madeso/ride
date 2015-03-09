@@ -1,6 +1,7 @@
 #include "ride/wx.h"
 #include "ride/filepropertiesdlg.h"
 #include "ride/fileedit.h"
+#include "ride/wxutils.h"
 
 #include <map>
 #include <vector>
@@ -93,7 +94,7 @@ void FilePropertiesDlg::UpdateGui() {
 // remove the encoding part?
 void FilePropertiesDlg::OnChangeEncoding(wxCommandEvent& event) {
 #ifdef wxUSE_UNICODE
-  wxMessageBox("Unable to change encoding in unicode build", "Unicode only", wxICON_INFORMATION);
+  ShowInfo(this, "Unable to change encoding in unicode build", "Unicode only");
 #else
   wxSingleChoiceDialog dlg(this, "Select new text encoding", "Text encoding", CodePageString().strings());
   if (dlg.ShowModal() != wxID_OK) return;

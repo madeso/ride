@@ -266,12 +266,12 @@ void ProjectExplorer::OnCreateNewFolder(wxCommandEvent& event) {
   const wxString dir = fn.GetPathWithSep();
   const bool folder_exists = wxDir::Exists(dir);
   if (folder_exists) {
-    wxMessageBox("Entered folder exist", "Unable to create", wxICON_WARNING, this);
+    ShowWarning(this, "Entered folder exist", "Unable to create");
     return;
   }
   const bool created_folder = wxDir::Make(dir);
   if (false == created_folder) {
-    wxMessageBox("Unable to create folder", "Unable to create", wxICON_ERROR, this);
+    ShowError(this, "Unable to create folder", "Unable to create");
     return;
   }
   UpdateFolderStructure();
@@ -346,20 +346,18 @@ void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
     }
     const bool removed = wxFileName::Rmdir(path, flags);
     if (false == removed) {
-      // wxMessageBox("Unable to remove folder!", "Unable to remove", wxICON_ERROR, this);
       // wxWidgets seems to display a dialog here for us...
     }
   }
   else {
     wxString mess = "Do you want to delete " + path;
-    // wxMessageBox(mess, "Delete?", wxICON_QUESTION | wxYES_NO, NULL);
     DialogResult ret = ShowYesNo(this, "Remove?", "Remove file", "Keep file", path, "Do you want to delete " + path);
     if (DialogResult::YES != ret) {
       return;
     }
     const bool file_removed = wxRemoveFile(path);
     if (false == file_removed) {
-      wxMessageBox("Unable to remove file!", "Unable to remove", wxICON_ERROR, this);
+      ShowError(this, "Unable to remove file!", "Unable to remove");
     }
   }
   UpdateFolderStructure();
@@ -396,7 +394,7 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
     new_name.RemoveLastDir();
     const bool appended = new_name.AppendDir(text);
     if (appended == false) {
-      wxMessageBox("Unable to change directory path", "Unable to rename", wxICON_ERROR, this);
+      ShowError(this, "Unable to change directory path", "Unable to rename");
       event.Veto();
       return;
     }
@@ -413,7 +411,7 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
     const bool renamed_file = wxRenameFile(old_path, new_path, false);
     if (renamed_file == false) {
       event.Veto();
-      wxMessageBox("Unable to change file name", "Unable to rename", wxICON_ERROR, this);
+      ShowError(this, "Unable to change file name", "Unable to rename");
       return;
     }
     main_->FileHasBeenRenamed(old_path, new_path);

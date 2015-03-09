@@ -2,6 +2,7 @@
 #include "ride/settingsdlg.h"
 #include "ride/mainwindow.h"
 #include <wx/fontenum.h>
+#include "ride/wxutils.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -685,8 +686,8 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
   StyleToGui(false);
   MarkerToGui(false);
   main_window_->set_settings(current_settings_);
-  if (false == SaveSettings(current_settings_)) {
-    wxMessageBox("Failed to save settings", "Failed!", wxOK | wxICON_ERROR);
+  if (false == SaveSettings(this, current_settings_)) {
+    ShowError(this, "Failed to save settings", "Failed!");
   }
   EndModal(wxOK);
 }

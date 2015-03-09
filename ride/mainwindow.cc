@@ -198,7 +198,7 @@ public:
       }
     }
     else {
-      wxMessageBox("Unable to get compiler message data", "No compiler message data", wxICON_WARNING, this);
+      ShowWarning(this, "Unable to get compiler message data", "No compiler message data");
     }
   }
 
@@ -242,7 +242,7 @@ public:
       wxLaunchDefaultBrowser(url_to_open);
     }
     else {
-      wxMessageBox("Unable to get compiler message data", "No compiler message data", wxICON_WARNING, this);
+      ShowWarning(this, "Unable to get compiler message data", "No compiler message data");
     }
   }
 
@@ -297,7 +297,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   SetIcon(wxICON(aaaaa_logo));
   aui_.SetManagedWindow(this);
 
-  LoadSettings(settings_);
+  LoadSettings(this, settings_);
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_file = new wxMenu;
@@ -398,7 +398,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 
 void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer) {
   if (project_root == wxEmptyString) {
-    wxMessageBox("Unable to create file, no project open.", "Unable to create", wxICON_ERROR | wxOK);
+    ShowError(main, "Unable to create file, no project open.", "Unable to create");
     return;
   }
   CreateNewFileDlg dlg(main, project_root, project_explorer->GetRelativePathOfSelected());
@@ -714,13 +714,13 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
 
   const wxString result = CmdRunner::Run(dlg.project_folder(), dlg.GenerateCargoCommandline());
   if (result.IsEmpty() == false) {
-    wxMessageBox(result, "Unable to create project!", wxICON_ERROR | wxOK);
+    ShowError(this, result, "Unable to create project!");
     return;
   }
 
   // open project
   if (false == OpenProject(dlg.GetTarget()) ) {
-    wxMessageBox("Unable to open cargo project", "Unable to open", wxICON_ERROR | wxOK);
+    ShowError(this, "Unable to open cargo project", "Unable to open");
   }
 
   UpdateTitle();
@@ -736,7 +736,7 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event) {
   const wxString full_path = cargo_file.GetFullPath();
 
   if (false == OpenProject(full_path)) {
-    wxMessageBox("You didn't select a proper cargo file", "No cargo file", wxICON_ERROR | wxOK);
+    ShowError(this, "You didn't select a proper cargo file", "No cargo file");
   }
 }
 

@@ -2,6 +2,7 @@
 #include <wx/utils.h>
 #include <wx/process.h>
 #include <wx/txtstrm.h>
+#include "ride/wxutils.h"
 
 #include "ride/mainwindow.h"
 
@@ -116,7 +117,7 @@ void Project::Append(const wxString& str) {
 
 void Project::RunCmd(const wxString& cmd) {
   if (root_folder_.IsEmpty()) {
-    wxMessageBox("No project open, you need to open a cargo project first!", "No project open!", wxICON_INFORMATION);
+    ShowInfo(main_, "No project open, you need to open a cargo project first!", "No project open!");
     return;
   }
 
