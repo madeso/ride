@@ -19,7 +19,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Features needed for a useful state
 
-* Project/solution explorer
 * Quick open file from solution/project
 * Remember session data
 * Find in files, find in solution, incremental search, other searches
@@ -27,6 +26,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Somewhat sorted roadmap
 
+* Sync file structure instead of reloading in project explorer
 * Comment / uncomment selection
 * Quick fix for compiler error: "error: unresolved name `hellos`. Did you mean `hello`?"
 * Error list
