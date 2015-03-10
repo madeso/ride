@@ -48,13 +48,29 @@ QuickOpenDlg::QuickOpenDlg(wxWindow* parent)
   uiFileList->SetColumnWidth(file_index, 100);
   uiFileList->SetColumnWidth(path_index, 200);
 
-  files_.push_back("/project/dog/src/file.rs");
-  files_.push_back("/project/dog/src/dog.rs");
-  files_.push_back("/project/dog/src/cat.rs");
-  files_.push_back("/project/dog/umbrella.rs");
-  files_.push_back("/project/dog/keyboard.rs");
-  files_.push_back("/project/dog/inc/chair.rs");
-  files_.push_back("/project/dog/inc/bed.rs");
+  files_.push_back("/project/dog/src/BigCalendarCtrl.rs");
+  files_.push_back("/project/dog/src/BigCalendarTask.rs");
+  files_.push_back("/project/dog/src/CalendarButtonsDlg.rs");
+  files_.push_back("/project/dog/src/CalendarData.rs");
+  files_.push_back("/project/dog/src/CalendarDefines.rs");
+  files_.push_back("/project/dog/src/CalendarExt.rs");
+  files_.push_back("/project/dog/src/CalendarExt.rs");
+
+  /*files_.push_back("/project/dog/src/big-calendar-ctrl.rs");
+  files_.push_back("/project/dog/src/big-calendar-task.rs");
+  files_.push_back("/project/dog/src/calendar-buttons-dlg.rs");
+  files_.push_back("/project/dog/src/calendar-data.rs");
+  files_.push_back("/project/dog/src/calendar-defines.rs");
+  files_.push_back("/project/dog/src/calendar-ext.rs");
+  files_.push_back("/project/dog/src/calendar-ext.rs");
+
+  files_.push_back("/project/dog/src/big_calendar_ctrl.rs");
+  files_.push_back("/project/dog/src/big_calendar_task.rs");
+  files_.push_back("/project/dog/src/calendar_buttons_dlg.rs");
+  files_.push_back("/project/dog/src/calendar_data.rs");
+  files_.push_back("/project/dog/src/calendar_defines.rs");
+  files_.push_back("/project/dog/src/calendar_ext.rs");
+  files_.push_back("/project/dog/src/calendar_ext.rs");*/
 
   UpdateFilters();
 }
