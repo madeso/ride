@@ -18,6 +18,7 @@
 #include "ride/resources/icons.h"
 #include "ride/wxutils.h"
 #include "ride/runner.h"
+#include "ride/quickopendlg.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -62,7 +63,8 @@ enum
 
   ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
   ID_COPY_THIS_COMPILER_MESSAGE,
-  ID_CLEAR_COMPILER_OUTPUT
+  ID_CLEAR_COMPILER_OUTPUT,
+  ID_QUICK_OPEN
 };
 
 wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
@@ -95,18 +97,20 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, MainWindow::OnEditOpenInOnlineDocumentation)
   EVT_MENU(ID_EDIT_SHOW_PROPERTIES, MainWindow::OnEditShowProperties)
   
-  EVT_MENU(ID_PROJECT_NEW         , MainWindow::OnProjectNew     )
-  EVT_MENU(ID_PROJECT_OPEN        , MainWindow::OnProjectOpen    )
-  EVT_MENU(ID_PROJECT_SETTINGS    , MainWindow::OnProjectSettings)
-  EVT_MENU(ID_PROJECT_BUILD       , MainWindow::OnProjectBuild   )
-  EVT_MENU(ID_PROJECT_CLEAN       , MainWindow::OnProjectClean   )
-  EVT_MENU(ID_PROJECT_REBUILD     , MainWindow::OnProjectRebuild )
-  EVT_MENU(ID_PROJECT_DOC         , MainWindow::OnProjectDoc     )
-  EVT_MENU(ID_PROJECT_RUN         , MainWindow::OnProjectRun     )
-  EVT_MENU(ID_PROJECT_TEST        , MainWindow::OnProjectTest    )
-  EVT_MENU(ID_PROJECT_BENCH       , MainWindow::OnProjectBench   )
-  EVT_MENU(ID_PROJECT_UPDATE      , MainWindow::OnProjectUpdate  )
-  EVT_MENU(wxID_NEW               , MainWindow::OnProjectFileNew )
+  EVT_MENU(ID_PROJECT_NEW         , MainWindow::OnProjectNew      )
+  EVT_MENU(ID_PROJECT_OPEN        , MainWindow::OnProjectOpen     )
+  EVT_MENU(ID_PROJECT_SETTINGS    , MainWindow::OnProjectSettings )
+  EVT_MENU(ID_PROJECT_BUILD       , MainWindow::OnProjectBuild    )
+  EVT_MENU(ID_PROJECT_CLEAN       , MainWindow::OnProjectClean    )
+  EVT_MENU(ID_PROJECT_REBUILD     , MainWindow::OnProjectRebuild  )
+  EVT_MENU(ID_PROJECT_DOC         , MainWindow::OnProjectDoc      )
+  EVT_MENU(ID_PROJECT_RUN         , MainWindow::OnProjectRun      )
+  EVT_MENU(ID_PROJECT_TEST        , MainWindow::OnProjectTest     )
+  EVT_MENU(ID_PROJECT_BENCH       , MainWindow::OnProjectBench    )
+  EVT_MENU(ID_PROJECT_UPDATE      , MainWindow::OnProjectUpdate   )
+  EVT_MENU(wxID_NEW               , MainWindow::OnProjectFileNew  )
+  EVT_MENU(ID_QUICK_OPEN          , MainWindow::OnProjectQuickOpen)
+  
   
   EVT_MENU(wxID_ABOUT             , MainWindow::OnAbout)
   
@@ -362,6 +366,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_project, ID_PROJECT_UPDATE, "Update", "Update dependencies listed in Cargo.lock", project_update_xpm);
   menu_project->AppendSeparator();
   AddMenuItem(menu_project, wxID_NEW, "", "", file_normal_xpm);
+  AddMenuItem(menu_project, ID_QUICK_OPEN, "Open file in project...\tShift-Alt-O", "Quickly open a file from the project");
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
@@ -767,6 +772,10 @@ void MainWindow::SaveAllChangedProjectFiles() {
       }
     }
   }
+}
+
+void MainWindow::OnProjectQuickOpen(wxCommandEvent& event) {
+  ShowQuickOpenDlg(this);
 }
 
 #define MEM_FUN(X) \

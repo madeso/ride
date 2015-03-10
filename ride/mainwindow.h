@@ -78,18 +78,19 @@ private:
   void OnEditOpenInOnlineDocumentation(wxCommandEvent& event);
   void OnEditShowProperties(wxCommandEvent& event);
 
-  void OnProjectNew     (wxCommandEvent& event);
-  void OnProjectOpen    (wxCommandEvent& event);
-  void OnProjectSettings(wxCommandEvent& event);
-  void OnProjectBuild   (wxCommandEvent& event);
-  void OnProjectClean   (wxCommandEvent& event);
-  void OnProjectRebuild (wxCommandEvent& event);
-  void OnProjectDoc     (wxCommandEvent& event);
-  void OnProjectRun     (wxCommandEvent& event);
-  void OnProjectTest    (wxCommandEvent& event);
-  void OnProjectBench   (wxCommandEvent& event);
-  void OnProjectUpdate  (wxCommandEvent& event);
-  void OnProjectFileNew (wxCommandEvent& event);
+  void OnProjectNew      (wxCommandEvent& event);
+  void OnProjectOpen     (wxCommandEvent& event);
+  void OnProjectSettings (wxCommandEvent& event);
+  void OnProjectBuild    (wxCommandEvent& event);
+  void OnProjectClean    (wxCommandEvent& event);
+  void OnProjectRebuild  (wxCommandEvent& event);
+  void OnProjectDoc      (wxCommandEvent& event);
+  void OnProjectRun      (wxCommandEvent& event);
+  void OnProjectTest     (wxCommandEvent& event);
+  void OnProjectBench    (wxCommandEvent& event);
+  void OnProjectUpdate   (wxCommandEvent& event);
+  void OnProjectFileNew  (wxCommandEvent& event);
+  void OnProjectQuickOpen(wxCommandEvent& event);
 
 	void OnFileExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);

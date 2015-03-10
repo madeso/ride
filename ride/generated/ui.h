@@ -298,6 +298,33 @@ namespace ui
 		
 	};
 	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class QuickOpen
+	///////////////////////////////////////////////////////////////////////////////
+	class QuickOpen : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxListCtrl* uiFileList;
+			wxTextCtrl* uiFilterName;
+			wxStdDialogButtonSizer* m_sdbSizer6;
+			wxButton* m_sdbSizer6OK;
+			wxButton* m_sdbSizer6Cancel;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnFilterUpdated( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			QuickOpen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Open file in project..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 616,394 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+			~QuickOpen();
+		
+	};
+	
 } // namespace ui
 
 #endif //__UI_H__

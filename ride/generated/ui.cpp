@@ -967,3 +967,52 @@ DeleteFolder::~DeleteFolder()
 	m_sdbSizer5Yes->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( DeleteFolder::OnYes ), NULL, this );
 	
 }
+
+QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer16;
+	bSizer16 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer17;
+	bSizer17 = new wxBoxSizer( wxVERTICAL );
+	
+	uiFileList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
+	bSizer17->Add( uiFileList, 1, wxALL|wxEXPAND, 5 );
+	
+	uiFilterName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer17->Add( uiFilterName, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer16->Add( bSizer17, 1, wxEXPAND, 5 );
+	
+	m_sdbSizer6 = new wxStdDialogButtonSizer();
+	m_sdbSizer6OK = new wxButton( this, wxID_OK );
+	m_sdbSizer6->AddButton( m_sdbSizer6OK );
+	m_sdbSizer6Cancel = new wxButton( this, wxID_CANCEL );
+	m_sdbSizer6->AddButton( m_sdbSizer6Cancel );
+	m_sdbSizer6->Realize();
+	
+	bSizer16->Add( m_sdbSizer6, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer16 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	uiFilterName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( QuickOpen::OnFilterUpdated ), NULL, this );
+	m_sdbSizer6Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnCancel ), NULL, this );
+	m_sdbSizer6OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
+}
+
+QuickOpen::~QuickOpen()
+{
+	// Disconnect Events
+	uiFilterName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( QuickOpen::OnFilterUpdated ), NULL, this );
+	m_sdbSizer6Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnCancel ), NULL, this );
+	m_sdbSizer6OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
+	
+}
