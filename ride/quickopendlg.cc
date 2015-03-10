@@ -4,6 +4,8 @@
 #include "ride/generated/ui.h"
 #include <vector>
 
+// based on http://docs.wholetomato.com/default.asp?W193
+
 class QuickOpenDlg : public ui::QuickOpen {
 public:
   QuickOpenDlg(wxWindow* parent);
