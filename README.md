@@ -23,6 +23,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Remember session data
 * Find in files, find in solution, incremental search, other searches
 * Implement all missing event handlers.
+* Close project
 
 # Somewhat sorted roadmap
 
