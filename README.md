@@ -48,6 +48,8 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Align/remove space left/right
 * Trim left/right/both selected lines
 * Mark important "word" for highlighting
+* Switch between documentation and code for current file (auto generated, visible on command or if marked in the editor by a comment?)
+* Editors for different files such as gui, bitmaps, FSMs.
 * Change the color dialog button/control to a more photshop looking color dialog that sends the color directly to all the edits for instant feedback
 * Highlight misspelled words/comments
 * Function for selecting current word
