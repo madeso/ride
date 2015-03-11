@@ -29,6 +29,16 @@ std::vector<wxString> Split(const wxString& str, char c) {
   return ret;
 }
 
+std::vector<wxString> RemoveEmptyStrings(const std::vector<wxString>& v) {
+  std::vector<wxString> ret;
+  ret.reserve(v.size());
+  for (const wxString& s : v) {
+    if (s.IsEmpty()) continue;
+    else ret.push_back(s);
+  }
+  return ret;
+}
+
 DialogResult CDL(int dl) {
   switch (dl) {
   case wxID_YES:

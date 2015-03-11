@@ -45,7 +45,7 @@ std::vector<wxString> SmartSplit(const wxString str) {
 
 bool MatchFilter(const wxString& filter, const wxString file, int* count) {
   const wxFileName name(file); 
-  const auto filters = Split(filter, ' ');
+  const auto filters = RemoveEmptyStrings(Split(filter, ' '));
   const auto parts = SmartSplit(name.GetFullName());
   if (filters.empty()) return true;
   for (auto f : filters) {

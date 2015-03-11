@@ -13,6 +13,7 @@ class wxWindow;
 wxPoint GetContextEventPosition(const wxContextMenuEvent& event);
 void AppendEnabled(wxMenu& menu, int id, const wxString& text, bool enabled);
 std::vector<wxString> Split(const wxString& str, char c);
+std::vector<wxString> RemoveEmptyStrings(const std::vector<wxString>& v);
 
 enum class DialogResult {
   YES, NO, CANCEL
