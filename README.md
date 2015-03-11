@@ -54,7 +54,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Highlight misspelled words/comments
 * Function for selecting current word
 * Implement smarter file template with [handlebars-rust](https://github.com/sunng87/handlebars-rust/tree/master)
-* "aPRESS_ENTER_HEREb" should be replaced by concat!("a", NEW_LINE_HERE"<cursor here>b")
+* "aPRESS_ENTER_HEREb" should be replaced by concat!("a", NEW_LINE_HERE"CURSOR_HEREb")
 * Switch tabs by scrolling with cursor over tab-bar
 * Format file/selection
 * Color member variables, local variables and member variables different.
