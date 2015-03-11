@@ -4,6 +4,7 @@
 #include "ride/generated/ui.h"
 #include "ride/wxutils.h"
 #include <vector>
+#include <set>
 
 // based on http://docs.wholetomato.com/default.asp?W193
 
@@ -22,7 +23,7 @@ protected:
   std::vector<wxString> files_;
 };
 
-void add_if_more_than_one(std::vector<wxString>& ret, const std::vector<wxString>& space) {
+void AddIfMoreThanOne(std::vector<wxString>& ret, const std::vector<wxString>& space) {
   if (space.size() != 1) {
     ret.insert(ret.begin(), space.begin(), space.end());
   }
@@ -35,9 +36,9 @@ std::vector<wxString> SmartSplit(const wxString str) {
   std::vector<wxString> ret;
   ret.push_back(str);
 
-  add_if_more_than_one(ret, space);
-  add_if_more_than_one(ret, dash);
-  add_if_more_than_one(ret, under);
+  AddIfMoreThanOne(ret, space);
+  AddIfMoreThanOne(ret, dash);
+  AddIfMoreThanOne(ret, under);
 
   return ret;
 }
@@ -45,11 +46,11 @@ std::vector<wxString> SmartSplit(const wxString str) {
 bool MatchFilter(const wxString& filter, const wxString file, int* count) {
   const wxFileName name(file); 
   const auto filters = Split(filter, ' ');
-  const auto bn = SmartSplit(name.GetFullName());
+  const auto parts = SmartSplit(name.GetFullName());
   if (filters.empty()) return true;
   for (auto f : filters) {
-    for (auto b : bn) {
-      if (b.StartsWith(f)) {
+    for (auto part : parts) {
+      if (part.StartsWith(f)) {
         *count += 1;
       }
     }
@@ -57,19 +58,37 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count) {
   return *count > 0;
 }
 
+struct FilterMatch {
+  wxString path;
+  int count;
+
+  FilterMatch(const wxString& p, int c) : path(p), count(c) {}
+  bool operator<(const FilterMatch& rhs) const {
+    if (count == rhs.count) return path < rhs.path;
+    else return count < rhs.count;
+  }
+};
+
 void QuickOpenDlg::UpdateFilters() {
   const wxString filter = uiFilterName->GetValue();
 
-  uiFileList->Freeze();
-  uiFileList->DeleteAllItems();
+  std::set<FilterMatch> matches;
   for (const wxString& file : files_) {
     int count = 0;
     if (MatchFilter(filter, file, &count)) {
-      int i = uiFileList->InsertItem(0, "");
-      uiFileList->SetItem(i, 0, wxFileName(file).GetFullName());
-      uiFileList->SetItem(i, 1, file);
-      uiFileList->SetItem(i, 2, wxString::Format("%d", count));
+      FilterMatch m(file, count);
+      assert(matches.find(m) == matches.end());
+      matches.insert(m);
     }
+  }
+
+  uiFileList->Freeze();
+  uiFileList->DeleteAllItems();
+  for (const FilterMatch& match: matches) {
+    int i = uiFileList->InsertItem(0, "");
+    uiFileList->SetItem(i, 0, wxFileName(match.path).GetFullName());
+    uiFileList->SetItem(i, 1, match.path);
+    uiFileList->SetItem(i, 2, wxString::Format("%d", match.count));
   }
   uiFileList->Thaw();
 }
@@ -99,7 +118,9 @@ QuickOpenDlg::QuickOpenDlg(wxWindow* parent)
   files_.push_back("/project/dog/src/calendar-data.rs");
   files_.push_back("/project/dog/src/calendar-defines.rs");
   files_.push_back("/project/dog/src/calendar-ext.rs");
-  files_.push_back("/project/dog/src/calendar-ext.rs");
+  files_.push_back("/project/dog/assets/pixel-shader.glsl");
+  files_.push_back("/project/dog/assets/fragment-shader.glsl");
+  files_.push_back("/project/dog/assets/texture-enemy.png");
   /*
   files_.push_back("/project/dog/src/big_calendar_ctrl.rs");
   files_.push_back("/project/dog/src/big_calendar_task.rs");
