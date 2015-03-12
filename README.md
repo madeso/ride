@@ -22,6 +22,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Quick open file from solution/project
 * Remember session data
 * Find in files, find in solution, incremental search, other searches
+* Project file so we can open project with File->Open
 * Implement all missing event handlers.
 * Close project
 * Reformat code
@@ -59,7 +60,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Format file/selection
 * Color member variables, local variables and member variables different.
 * Startup options (open homepage, load last loaded project, show open project dialog box, show new project dialog box, show empty enviroment, show start page)
-* Project file so we can open project with File->Open
 * Visual studio like debug settings
 * Context menu support
 * Simple/basic git commit shortcut with specifying the commit message
