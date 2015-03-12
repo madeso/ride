@@ -23,6 +23,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Remember session data
 * Find in files, find in solution, incremental search, other searches
 * Project file so we can open project with File->Open
+* Have space/tab settings per project so the same settings are used by everyone on the project
 * Implement all missing event handlers.
 * Close project
 * Reformat code
