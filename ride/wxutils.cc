@@ -1,5 +1,6 @@
 #include "ride/wxutils.h"
 #include "ride/wx.h"
+#include <wx/listctrl.h>
 
 wxPoint GetContextEventPosition(const wxContextMenuEvent& event) {
   wxPoint ret = event.GetPosition();
@@ -37,6 +38,39 @@ std::vector<wxString> RemoveEmptyStrings(const std::vector<wxString>& v) {
     else ret.push_back(s);
   }
   return ret;
+}
+
+void SetSelection(wxListCtrl* list, long item, bool select){
+  if (select) {
+    list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+  }
+  else {
+    list->SetItemState(item, 0, wxLIST_STATE_SELECTED);
+  }
+}
+
+std::vector<long> GetSelection(wxListCtrl* listctrl) {
+  std::vector<long> ret;
+  long item = -1;
+  while (true)
+  {
+    item = listctrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (item == -1)
+      break;
+    ret.push_back(item);
+  }
+  return ret;
+}
+
+void ClearSelection(wxListCtrl* listctrl) {
+  long item = -1;
+  while (true)
+  {
+    item = listctrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (item == -1)
+      break;
+    SetSelection(listctrl, item, false);
+  }
 }
 
 DialogResult CDL(int dl) {

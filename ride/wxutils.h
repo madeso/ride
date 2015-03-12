@@ -9,11 +9,16 @@
 class wxContextMenuEvent;
 class wxMenu;
 class wxWindow;
+class wxListCtrl;
 
 wxPoint GetContextEventPosition(const wxContextMenuEvent& event);
 void AppendEnabled(wxMenu& menu, int id, const wxString& text, bool enabled);
 std::vector<wxString> Split(const wxString& str, char c);
 std::vector<wxString> RemoveEmptyStrings(const std::vector<wxString>& v);
+
+void SetSelection(wxListCtrl* list, long item, bool select);
+std::vector<long> GetSelection(wxListCtrl* listctrl);
+void ClearSelection(wxListCtrl* listctrl);
 
 enum class DialogResult {
   YES, NO, CANCEL

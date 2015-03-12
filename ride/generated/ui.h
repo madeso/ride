@@ -313,7 +313,10 @@ namespace ui
 			wxButton* m_sdbSizer6Cancel;
 			
 			// Virtual event handlers, overide them in your derived class
+			virtual void OnActivate( wxActivateEvent& event ) { event.Skip(); }
+			virtual void OnFilterKeyUp( wxKeyEvent& event ) { event.Skip(); }
 			virtual void OnFilterUpdated( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnFilterNameEnter( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
 			

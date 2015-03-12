@@ -10584,7 +10584,7 @@
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
             <property name="window_style"></property>
-            <event name="OnActivate"></event>
+            <event name="OnActivate">OnActivate</event>
             <event name="OnActivateApp"></event>
             <event name="OnAuiFindManager"></event>
             <event name="OnAuiPaneButton"></event>
@@ -10789,7 +10789,7 @@
                                 <property name="resize">Resizable</property>
                                 <property name="show">1</property>
                                 <property name="size"></property>
-                                <property name="style"></property>
+                                <property name="style">wxTE_PROCESS_ENTER</property>
                                 <property name="subclass"></property>
                                 <property name="toolbar_pane">0</property>
                                 <property name="tooltip"></property>
@@ -10805,7 +10805,7 @@
                                 <event name="OnEnterWindow"></event>
                                 <event name="OnEraseBackground"></event>
                                 <event name="OnKeyDown"></event>
-                                <event name="OnKeyUp"></event>
+                                <event name="OnKeyUp">OnFilterKeyUp</event>
                                 <event name="OnKillFocus"></event>
                                 <event name="OnLeaveWindow"></event>
                                 <event name="OnLeftDClick"></event>
@@ -10824,7 +10824,7 @@
                                 <event name="OnSetFocus"></event>
                                 <event name="OnSize"></event>
                                 <event name="OnText">OnFilterUpdated</event>
-                                <event name="OnTextEnter"></event>
+                                <event name="OnTextEnter">OnFilterNameEnter</event>
                                 <event name="OnTextMaxLen"></event>
                                 <event name="OnTextURL"></event>
                                 <event name="OnUpdateUI"></event>

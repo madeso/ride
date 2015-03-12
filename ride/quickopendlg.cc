@@ -18,7 +18,10 @@ private:
 protected:
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
+  void OnActivate(wxActivateEvent& event);
+  void OnFilterKeyUp(wxKeyEvent& event);
   void OnFilterUpdated(wxCommandEvent& event);
+  void OnFilterNameEnter(wxCommandEvent& event);
 
   std::vector<wxString> files_;
 };
@@ -90,6 +93,9 @@ void QuickOpenDlg::UpdateFilters() {
     uiFileList->SetItem(i, 1, match.path);
     uiFileList->SetItem(i, 2, wxString::Format("%d", match.count));
   }
+  if (matches.empty() == false) {
+    SetSelection(uiFileList, 0, true);
+  }
   uiFileList->Thaw();
 }
 
@@ -130,7 +136,46 @@ QuickOpenDlg::QuickOpenDlg(wxWindow* parent)
   files_.push_back("/project/dog/src/calendar_ext.rs");
   files_.push_back("/project/dog/src/calendar_ext.rs");*/
 
+  uiFileList->Bind(wxEVT_KEY_DOWN, &QuickOpenDlg::OnFilterKeyUp, this);
   UpdateFilters();
+}
+
+void QuickOpenDlg::OnActivate(wxActivateEvent& event) {
+  uiFilterName->SelectAll();
+  uiFilterName->SetFocus();
+  uiFilterName->SetFocusFromKbd();
+}
+
+void QuickOpenDlg::OnFilterKeyUp(wxKeyEvent& event) {
+  if (event.GetKeyCode() == wxUP) {
+    auto selected = GetSelection(uiFileList);
+    if (selected.empty()){
+      SetSelection(uiFileList, 0, true);
+    }
+    else {
+      long last = *selected.begin();
+      if (event.ShiftDown() == false) ClearSelection(uiFileList);
+      SetSelection(uiFileList, last - 1, true);
+    }
+  }
+  else if (event.GetKeyCode() == wxDOWN) {
+    auto selected = GetSelection(uiFileList);
+    if (selected.empty()){
+      SetSelection(uiFileList, 0, true);
+    }
+    else {
+      long last = *selected.rbegin();
+      if (event.ShiftDown() == false) ClearSelection(uiFileList);
+      SetSelection(uiFileList, last + 1, true);
+    }
+  }
+  else {
+    event.Skip();
+  }
+}
+
+void QuickOpenDlg::OnFilterNameEnter(wxCommandEvent& event) {
+  EndModal(wxID_OK);
 }
 
 void QuickOpenDlg::OnFilterUpdated(wxCommandEvent& event) {
@@ -138,11 +183,11 @@ void QuickOpenDlg::OnFilterUpdated(wxCommandEvent& event) {
 }
 
 void QuickOpenDlg::OnCancel(wxCommandEvent& event) {
-  EndModal(wxID_OK);
+  EndModal(wxID_CANCEL);
 }
 
 void QuickOpenDlg::OnOk(wxCommandEvent& event) {
-  EndModal(wxID_CANCEL);
+  EndModal(wxID_OK);
 }
 
 bool ShowQuickOpenDlg(wxWindow* parent) {

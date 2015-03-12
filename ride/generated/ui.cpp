@@ -981,7 +981,7 @@ QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	uiFileList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
 	bSizer17->Add( uiFileList, 1, wxALL|wxEXPAND, 5 );
 	
-	uiFilterName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiFilterName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer17->Add( uiFilterName, 0, wxALL|wxEXPAND, 5 );
 	
 	
@@ -1003,7 +1003,10 @@ QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler( QuickOpen::OnActivate ) );
+	uiFilterName->Connect( wxEVT_KEY_UP, wxKeyEventHandler( QuickOpen::OnFilterKeyUp ), NULL, this );
 	uiFilterName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( QuickOpen::OnFilterUpdated ), NULL, this );
+	uiFilterName->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( QuickOpen::OnFilterNameEnter ), NULL, this );
 	m_sdbSizer6Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnCancel ), NULL, this );
 	m_sdbSizer6OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
 }
@@ -1011,7 +1014,10 @@ QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, co
 QuickOpen::~QuickOpen()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( QuickOpen::OnActivate ) );
+	uiFilterName->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( QuickOpen::OnFilterKeyUp ), NULL, this );
 	uiFilterName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( QuickOpen::OnFilterUpdated ), NULL, this );
+	uiFilterName->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( QuickOpen::OnFilterNameEnter ), NULL, this );
 	m_sdbSizer6Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnCancel ), NULL, this );
 	m_sdbSizer6OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
 	
