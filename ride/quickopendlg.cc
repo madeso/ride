@@ -79,24 +79,32 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count) {
     const bool check_end_of_part = fl.EndsWith(".");
     const wxString f = check_end_of_part ? fl.Left(fl.Length() - 1) : fl;
     const bool partial_matching = f.Contains(".");
-    for (auto part : parts) {
-      int change_match_count_by = 0;
-      if (partial_matching) {
-        if (part.find(f) != wxString::npos) {
-          change_match_count_by = 1;
-        }
+    const bool folder_matching = f.StartsWith("/");
+    if (folder_matching) {
+      if (file.find(f) != wxString::npos) {
+        *count += f.length();
       }
-      else {
-        if (check_end_of_part) {
-          change_match_count_by = EndsWithCount(part, f);
+    }
+    else {
+      for (auto part : parts) {
+        int change_match_count_by = 0;
+        if (partial_matching) {
+          if (part.find(f) != wxString::npos) {
+            change_match_count_by = f.length();
+          }
         }
         else {
-          change_match_count_by = StartWithCount(part, f);
+          if (check_end_of_part) {
+            change_match_count_by = EndsWithCount(part, f);
+          }
+          else {
+            change_match_count_by = StartWithCount(part, f);
+          }
         }
-      }
-      if (change_match_count_by > 0) {
-        if (exclude) return false;
-        *count += change_match_count_by;
+        if (change_match_count_by > 0) {
+          if (exclude) return false;
+          *count += change_match_count_by;
+        }
       }
     }
   }
