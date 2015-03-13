@@ -32,12 +32,12 @@ void AddIfMoreThanOne(std::vector<wxString>& ret, const std::vector<wxString>& s
   }
 }
 
-std::vector<wxString> SmartSplit(const wxString str) {
+std::vector<wxString> SmartSplit(const wxString& str, const wxString& full) {
   const auto space = Split(str, ' ');
   const auto dash = Split(str, '-');
   const auto under = Split(str, '_');
   std::vector<wxString> ret;
-  ret.push_back(str);
+  ret.push_back(full);
 
   AddIfMoreThanOne(ret, space);
   AddIfMoreThanOne(ret, dash);
@@ -49,7 +49,7 @@ std::vector<wxString> SmartSplit(const wxString str) {
 bool MatchFilter(const wxString& filter, const wxString file, int* count) {
   const wxFileName name(file); 
   const auto filters = RemoveEmptyStrings(Split(filter, ' '));
-  const auto parts = SmartSplit(name.GetFullName());
+  const auto parts = SmartSplit(name.GetName(), name.GetFullName());
   if (filters.empty()) return true;
   for (auto fi : filters) {
     const bool exclude = fi.StartsWith("-");
