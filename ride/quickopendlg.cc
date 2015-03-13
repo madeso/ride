@@ -46,6 +46,17 @@ std::vector<wxString> SmartSplit(const wxString& str, const wxString& full) {
   return ret;
 }
 
+int StartWithCount(const wxString& base, const wxString& test) {
+  for (int i = 0; i < test.length(); ++i) {
+    // base is shorter than test string, abort
+    if (i >= base.length() ) return i;
+
+    // base string doesn't match, abort
+    if (base[i] != test[i]) return i;
+  }
+  return test.length();
+}
+
 bool MatchFilter(const wxString& filter, const wxString file, int* count) {
   const wxFileName name(file); 
   const auto filters = RemoveEmptyStrings(Split(filter, ' '));
@@ -71,9 +82,7 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count) {
           }
         }
         else {
-          if (part.StartsWith(f)) {
-            change_match_count_by = 1;
-          }
+          change_match_count_by = StartWithCount(part, f);
         }
       }
       if (change_match_count_by > 0) {
