@@ -53,11 +53,24 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count) {
   if (filters.empty()) return true;
   for (auto fi : filters) {
     const bool exclude = fi.StartsWith("-");
-    const wxString f = exclude ? fi.Mid(1) : fi;
+    const wxString fl = exclude ? fi.Mid(1) : fi;
+    const bool check_end_of_part = fl.EndsWith(".");
+    const wxString f = check_end_of_part ? fl.Left(fl.Length() - 1) : fl;
     for (auto part : parts) {
-      if (part.StartsWith(f)) {
+      int change_match_count_by = 0;
+      if (check_end_of_part) {
+        if (part.EndsWith(f)) {
+          change_match_count_by = 1;
+        }
+      }
+      else {
+        if (part.StartsWith(f)) {
+          change_match_count_by = 1;
+        }
+      }
+      if (change_match_count_by > 0) {
         if (exclude) return false;
-        *count += 1;
+        *count += change_match_count_by;
       }
     }
   }
@@ -130,6 +143,8 @@ QuickOpenDlg::QuickOpenDlg(wxWindow* parent)
   files_.push_back("/project/dog/assets/pixel-shader.glsl");
   files_.push_back("/project/dog/assets/fragment-shader.glsl");
   files_.push_back("/project/dog/assets/texture-enemy.png");
+
+  files_.push_back("/project/dog/assets/texture-enemy.template.png");
   /*
   files_.push_back("/project/dog/src/big_calendar_ctrl.rs");
   files_.push_back("/project/dog/src/big_calendar_task.rs");
