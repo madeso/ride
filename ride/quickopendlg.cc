@@ -56,16 +56,24 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count) {
     const wxString fl = exclude ? fi.Mid(1) : fi;
     const bool check_end_of_part = fl.EndsWith(".");
     const wxString f = check_end_of_part ? fl.Left(fl.Length() - 1) : fl;
+    const bool partial_matching = f.Contains(".");
     for (auto part : parts) {
       int change_match_count_by = 0;
-      if (check_end_of_part) {
-        if (part.EndsWith(f)) {
+      if (partial_matching) {
+        if (part.find(f) != wxString::npos) {
           change_match_count_by = 1;
         }
       }
       else {
-        if (part.StartsWith(f)) {
-          change_match_count_by = 1;
+        if (check_end_of_part) {
+          if (part.EndsWith(f)) {
+            change_match_count_by = 1;
+          }
+        }
+        else {
+          if (part.StartsWith(f)) {
+            change_match_count_by = 1;
+          }
         }
       }
       if (change_match_count_by > 0) {
