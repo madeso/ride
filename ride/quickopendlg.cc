@@ -51,9 +51,12 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count) {
   const auto filters = RemoveEmptyStrings(Split(filter, ' '));
   const auto parts = SmartSplit(name.GetFullName());
   if (filters.empty()) return true;
-  for (auto f : filters) {
+  for (auto fi : filters) {
+    const bool exclude = fi.StartsWith("-");
+    const wxString f = exclude ? fi.Mid(1) : fi;
     for (auto part : parts) {
       if (part.StartsWith(f)) {
+        if (exclude) return false;
         *count += 1;
       }
     }
