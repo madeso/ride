@@ -57,6 +57,17 @@ int StartWithCount(const wxString& base, const wxString& test) {
   return test.length();
 }
 
+int EndsWithCount(const wxString& base, const wxString& test) {
+  for (int i = 0; i < test.length(); ++i) {
+    // base is shorter than test string, abort
+    if (i >= base.length()) return i;
+
+    // base string doesn't match, abort
+    if (base[base.length()-(i+1)] != test[test.length() - (i+1)]) return i;
+  }
+  return test.length();
+}
+
 bool MatchFilter(const wxString& filter, const wxString file, int* count) {
   const wxFileName name(file); 
   const auto filters = RemoveEmptyStrings(Split(filter, ' '));
@@ -77,9 +88,7 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count) {
       }
       else {
         if (check_end_of_part) {
-          if (part.EndsWith(f)) {
-            change_match_count_by = 1;
-          }
+          change_match_count_by = EndsWithCount(part, f);
         }
         else {
           change_match_count_by = StartWithCount(part, f);
