@@ -19,7 +19,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Features needed for a useful state
 
-* Quick open file from solution/project
+* Quick open file from solution/project: case sensitive matching, open file, support arrow keys
 * Remember session data
 * Find in files, find in solution, incremental search, other searches
 * Project file so we can open project with File->Open
