@@ -17,6 +17,10 @@ enum {
   ICON_FOLDER_NORMAL
 };
 
+const std::vector<wxString>& ProjectExplorer::GetFiles() const {
+  return files_;
+}
+
 ProjectExplorer::ProjectExplorer(MainWindow* main)
   : wxTreeCtrl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
   wxTR_HAS_BUTTONS
@@ -83,6 +87,11 @@ public:
   bool is_directory() const {
     return is_directory_;
   }
+  const wxString GetRelativePath(const wxString root) const {
+    if (is_directory_) return GetRelativeFolderPath(root);
+    const wxString ret = GetRelativeFolderPath(root) + wxFileName(path_).GetFullName();
+    return ret;
+  }
   const wxString GetRelativeFolderPath(const wxString root) const {
     wxFileName fn(path_);
     fn.SetFullName(wxEmptyString);
@@ -126,6 +135,7 @@ void ProjectExplorer::UpdateFolderStructure() {
   folder_to_item_.clear();
   this->Freeze();
   this->DeleteAllItems();
+  files_.resize(0);
   this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL, ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
   SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags, wxEmptyString, 0);
   this->Thaw();
@@ -188,13 +198,17 @@ void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeIte
     const wxString future_relative_path = relative_path + file_or_directory_name + "/";
     const wxString dir_path = wxDir(path).GetNameWithSep();
 
-    wxTreeItemData* data = new FileEntry(is_dir
+    FileEntry* fileentry = new FileEntry(is_dir
       , is_dir ? dir_path : path);
+    wxTreeItemData* data = fileentry;
     wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, image, image, data);
     folder_to_item_[path] = child;
     if (is_dir) {
       const wxFileName folder_name = SubFolder(root, file_or_directory_name);
       SubUpdateFolderStructure(folder_name, child, filespec, flags, future_relative_path, index+1);
+    }
+    else {
+      files_.push_back(fileentry->GetRelativePath(folder_));
     }
   }
 }

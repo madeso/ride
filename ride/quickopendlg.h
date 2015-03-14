@@ -2,7 +2,8 @@
 #define RIDE_DELETEFOLDERDLG_H
 
 #include "ride/wx.h"
+#include <vector>
 
-bool ShowQuickOpenDlg(wxWindow* parent);
+bool ShowQuickOpenDlg(wxWindow* parent, const std::vector<wxString>& files);
 
 #endif  // RIDE_DELETEFOLDERDLG_H

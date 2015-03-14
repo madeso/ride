@@ -4,6 +4,7 @@
 #include "ride/wx.h"
 #include <wx/treectrl.h>
 #include <map>
+#include <vector>
 
 class wxFileName;
 class MainWindow;
@@ -20,6 +21,8 @@ public:
 
   wxString GetPathOfSelected() const;
   wxString GetRelativePathOfSelected() const;
+
+  const std::vector<wxString>& GetFiles() const;
 
 private:
   void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, const wxString& relative_path, int index);
@@ -51,6 +54,7 @@ private:
   wxString folder_;
   std::map<wxString, wxTreeItemId> folder_to_item_;
   wxTreeItemId last_highlighted_item_;
+  std::vector<wxString> files_;
 };
 
 #endif  // RIDE_PROJECTEXPLORER_H

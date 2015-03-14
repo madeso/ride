@@ -775,7 +775,7 @@ void MainWindow::SaveAllChangedProjectFiles() {
 }
 
 void MainWindow::OnProjectQuickOpen(wxCommandEvent& event) {
-  ShowQuickOpenDlg(this);
+  ShowQuickOpenDlg(this, project_explorer_->GetFiles());
 }
 
 #define MEM_FUN(X) \

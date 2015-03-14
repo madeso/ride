@@ -10,7 +10,7 @@
 
 class QuickOpenDlg : public ui::QuickOpen {
 public:
-  QuickOpenDlg(wxWindow* parent);
+  QuickOpenDlg(wxWindow* parent, const std::vector<wxString>& files);
 
 private:
   void UpdateFilters();
@@ -149,8 +149,8 @@ void QuickOpenDlg::UpdateFilters() {
   uiFileList->Thaw();
 }
 
-QuickOpenDlg::QuickOpenDlg(wxWindow* parent)
-  : ui::QuickOpen(parent, wxID_ANY)
+QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const std::vector<wxString>& files)
+  : ui::QuickOpen(parent, wxID_ANY), files_(files)
 {
   const long file_index = uiFileList->InsertColumn(0, "File");
   const long path_index = uiFileList->InsertColumn(1, "Path");
@@ -158,35 +158,6 @@ QuickOpenDlg::QuickOpenDlg(wxWindow* parent)
   uiFileList->SetColumnWidth(file_index, 150);
   uiFileList->SetColumnWidth(path_index, 300);
   uiFileList->SetColumnWidth(count_index, 50);
-
-  /*files_.push_back("/project/dog/src/BigCalendarCtrl.rs");
-  files_.push_back("/project/dog/src/BigCalendarTask.rs");
-  files_.push_back("/project/dog/src/CalendarButtonsDlg.rs");
-  files_.push_back("/project/dog/src/CalendarData.rs");
-  files_.push_back("/project/dog/src/CalendarDefines.rs");
-  files_.push_back("/project/dog/src/CalendarExt.rs");
-  files_.push_back("/project/dog/src/CalendarExt.rs");
-  */
-
-  files_.push_back("/project/dog/src/big-calendar-ctrl.rs");
-  files_.push_back("/project/dog/src/big-calendar-task.rs");
-  files_.push_back("/project/dog/src/calendar-buttons-dlg.rs");
-  files_.push_back("/project/dog/src/calendar-data.rs");
-  files_.push_back("/project/dog/src/calendar-defines.rs");
-  files_.push_back("/project/dog/src/calendar-ext.rs");
-  files_.push_back("/project/dog/assets/pixel-shader.glsl");
-  files_.push_back("/project/dog/assets/fragment-shader.glsl");
-  files_.push_back("/project/dog/assets/texture-enemy.png");
-
-  files_.push_back("/project/dog/assets/texture-enemy.template.png");
-  /*
-  files_.push_back("/project/dog/src/big_calendar_ctrl.rs");
-  files_.push_back("/project/dog/src/big_calendar_task.rs");
-  files_.push_back("/project/dog/src/calendar_buttons_dlg.rs");
-  files_.push_back("/project/dog/src/calendar_data.rs");
-  files_.push_back("/project/dog/src/calendar_defines.rs");
-  files_.push_back("/project/dog/src/calendar_ext.rs");
-  files_.push_back("/project/dog/src/calendar_ext.rs");*/
 
   uiFileList->Bind(wxEVT_KEY_DOWN, &QuickOpenDlg::OnFilterKeyUp, this);
   UpdateFilters();
@@ -242,8 +213,8 @@ void QuickOpenDlg::OnOk(wxCommandEvent& event) {
   EndModal(wxID_OK);
 }
 
-bool ShowQuickOpenDlg(wxWindow* parent) {
-  QuickOpenDlg dlg(parent);
+bool ShowQuickOpenDlg(wxWindow* parent, const std::vector<wxString>& files) {
+  QuickOpenDlg dlg(parent, files);
   if (wxID_OK != dlg.ShowModal()) return false;;
   // do something!
   return true;
