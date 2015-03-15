@@ -308,6 +308,7 @@ namespace ui
 		protected:
 			wxListCtrl* uiFileList;
 			wxTextCtrl* uiFilterName;
+			wxCheckBox* uiCaseSensitive;
 			wxStdDialogButtonSizer* m_sdbSizer6;
 			wxButton* m_sdbSizer6OK;
 			wxButton* m_sdbSizer6Cancel;
@@ -317,6 +318,7 @@ namespace ui
 			virtual void OnFilterKeyUp( wxKeyEvent& event ) { event.Skip(); }
 			virtual void OnFilterUpdated( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnFilterNameEnter( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnContextSensitive( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
 			

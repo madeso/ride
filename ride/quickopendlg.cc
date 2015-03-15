@@ -22,6 +22,7 @@ protected:
   void OnFilterKeyUp(wxKeyEvent& event);
   void OnFilterUpdated(wxCommandEvent& event);
   void OnFilterNameEnter(wxCommandEvent& event);
+  void OnContextSensitive(wxCommandEvent& event);
 
   std::vector<wxString> files_;
 };
@@ -68,9 +69,9 @@ int EndsWithCount(const wxString& base, const wxString& test) {
   return test.length();
 }
 
-bool MatchFilter(const wxString& filter, const wxString file, int* count) {
-  const wxFileName name(file); 
-  const auto filters = RemoveEmptyStrings(Split(filter, ' '));
+bool MatchFilter(const wxString& filter, const wxString file, int* count, bool lower) {
+  const wxFileName name(lower ? file.Lower() : file); 
+  const auto filters = RemoveEmptyStrings(Split(lower ? filter.Lower() : filter, ' '));
   const auto parts = SmartSplit(name.GetName(), name.GetFullName());
   if (filters.empty()) return true;
   for (auto fi : filters) {
@@ -124,11 +125,11 @@ struct FilterMatch {
 
 void QuickOpenDlg::UpdateFilters() {
   const wxString filter = uiFilterName->GetValue();
-
+  const bool case_insensitivity = false == uiCaseSensitive->GetValue();
   std::set<FilterMatch> matches;
   for (const wxString& file : files_) {
     int count = 0;
-    if (MatchFilter(filter, file, &count)) {
+    if (MatchFilter(filter, file, &count, case_insensitivity)) {
       FilterMatch m(file, count);
       assert(matches.find(m) == matches.end());
       matches.insert(m);
@@ -202,6 +203,10 @@ void QuickOpenDlg::OnFilterNameEnter(wxCommandEvent& event) {
 }
 
 void QuickOpenDlg::OnFilterUpdated(wxCommandEvent& event) {
+  UpdateFilters();
+}
+
+void QuickOpenDlg::OnContextSensitive(wxCommandEvent& event) {
   UpdateFilters();
 }
 

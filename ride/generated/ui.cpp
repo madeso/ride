@@ -984,6 +984,10 @@ QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	uiFilterName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer17->Add( uiFilterName, 0, wxALL|wxEXPAND, 5 );
 	
+	uiCaseSensitive = new wxCheckBox( this, wxID_ANY, wxT("Case sensitivity"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiCaseSensitive->SetValue(true); 
+	bSizer17->Add( uiCaseSensitive, 0, wxALL, 5 );
+	
 	
 	bSizer16->Add( bSizer17, 1, wxEXPAND, 5 );
 	
@@ -1007,6 +1011,7 @@ QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	uiFilterName->Connect( wxEVT_KEY_UP, wxKeyEventHandler( QuickOpen::OnFilterKeyUp ), NULL, this );
 	uiFilterName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( QuickOpen::OnFilterUpdated ), NULL, this );
 	uiFilterName->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( QuickOpen::OnFilterNameEnter ), NULL, this );
+	uiCaseSensitive->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( QuickOpen::OnContextSensitive ), NULL, this );
 	m_sdbSizer6Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnCancel ), NULL, this );
 	m_sdbSizer6OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
 }
@@ -1018,6 +1023,7 @@ QuickOpen::~QuickOpen()
 	uiFilterName->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( QuickOpen::OnFilterKeyUp ), NULL, this );
 	uiFilterName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( QuickOpen::OnFilterUpdated ), NULL, this );
 	uiFilterName->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( QuickOpen::OnFilterNameEnter ), NULL, this );
+	uiCaseSensitive->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( QuickOpen::OnContextSensitive ), NULL, this );
 	m_sdbSizer6Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnCancel ), NULL, this );
 	m_sdbSizer6OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
 	
