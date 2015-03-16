@@ -10,8 +10,8 @@
 
 class QuickOpenDlg : public ui::QuickOpen {
 public:
-  QuickOpenDlg(wxWindow* parent, const std::vector<wxString>& files);
-
+  QuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files);
+  std::vector<wxString> GetSelectedFiles();
 private:
   void UpdateFilters();
 
@@ -24,7 +24,9 @@ protected:
   void OnFilterNameEnter(wxCommandEvent& event);
   void OnContextSensitive(wxCommandEvent& event);
 
+  wxString root_;
   std::vector<wxString> files_;
+  std::vector<wxString> filtered_paths_;
 };
 
 void AddIfMoreThanOne(std::vector<wxString>& ret, const std::vector<wxString>& space) {
@@ -138,20 +140,26 @@ void QuickOpenDlg::UpdateFilters() {
 
   uiFileList->Freeze();
   uiFileList->DeleteAllItems();
+  std::vector<wxString> paths;
   for (const FilterMatch& match: matches) {
     int i = uiFileList->InsertItem(0, "");
     uiFileList->SetItem(i, 0, wxFileName(match.path).GetFullName());
     uiFileList->SetItem(i, 1, match.path);
     uiFileList->SetItem(i, 2, wxString::Format("%d", match.count));
+
+    paths.push_back(wxFileName(root_ + match.path).GetFullPath());
   }
+  // we added the elements in reverse, so let's reverse the vector
+  filtered_paths_ = std::vector<wxString>(paths.rbegin(), paths.rend());
   if (matches.empty() == false) {
     SetSelection(uiFileList, 0, true);
   }
   uiFileList->Thaw();
 }
 
-QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const std::vector<wxString>& files)
+QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files)
   : ui::QuickOpen(parent, wxID_ANY), files_(files)
+  , root_(root)
 {
   const long file_index = uiFileList->InsertColumn(0, "File");
   const long path_index = uiFileList->InsertColumn(1, "Path");
@@ -218,9 +226,20 @@ void QuickOpenDlg::OnOk(wxCommandEvent& event) {
   EndModal(wxID_OK);
 }
 
-bool ShowQuickOpenDlg(wxWindow* parent, const std::vector<wxString>& files) {
-  QuickOpenDlg dlg(parent, files);
+std::vector<wxString> QuickOpenDlg::GetSelectedFiles() {
+  const auto selection = GetSelection(uiFileList);
+  std::vector<wxString> ret;
+  for (auto sel : selection) {
+    ret.push_back(filtered_paths_[sel]);
+  }
+  return ret;
+}
+
+bool ShowQuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files, std::vector<wxString>* selected) {
+  assert(selected);
+  QuickOpenDlg dlg(parent, root, files);
   if (wxID_OK != dlg.ShowModal()) return false;;
   // do something!
+  *selected = dlg.GetSelectedFiles();
   return true;
 }
