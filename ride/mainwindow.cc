@@ -776,7 +776,12 @@ void MainWindow::SaveAllChangedProjectFiles() {
 
 void MainWindow::OnProjectQuickOpen(wxCommandEvent& event) {
   std::vector<wxString> selected;
-  ShowQuickOpenDlg(this, project_.root_folder(), project_explorer_->GetFiles(), &selected);
+  if (false == ShowQuickOpenDlg(this, project_.root_folder(), project_explorer_->GetFiles(), &selected)) {
+    return;
+  }
+  for (const auto& file : selected) {
+    OpenFile(file);
+  }
 }
 
 #define MEM_FUN(X) \
