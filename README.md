@@ -38,6 +38,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Expose all aui settings in gui + settings
 * Fix syntax scintilla syntax highlighting
 	- wxWidgets [doesn't support](http://trac.wxwidgets.org/ticket/16776)  rust yet, perhaps temporarily solve it with conditional compilation with a cpp lexer and rust keywords
+* Add println! format! argument highlighting
 * Add configurable shortcuts
 * Cpack support (=installer for ride)
 * Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
