@@ -24,6 +24,9 @@ protected:
   void OnTextEnter();
   void OnContextSensitive(wxCommandEvent& event);
 
+  virtual void OnFileDeselected(wxListEvent& event) { event.Skip(); }
+  virtual void OnFileSelected(wxListEvent& event) { event.Skip(); }
+
   wxString root_;
   std::vector<wxString> files_;
   std::vector<wxString> filtered_paths_;

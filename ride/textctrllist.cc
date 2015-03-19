@@ -5,7 +5,16 @@
 TextCtrlList::TextCtrlList(wxWindow* parent, wxListCtrl* list)
   : wxTextCtrl(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER)
   , list_(list)
-  , callback_(NULL) {
+  , callback_(NULL)
+  , last_selected_(0) {
+  list_->Connect(wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler(TextCtrlList::OnFileDeselected), NULL, this);
+  list_->Connect(wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler(TextCtrlList::OnFileSelected), NULL, this);
+}
+
+TextCtrlList::~TextCtrlList() {
+  // crash when we disconnect, the list might already be destroyed...
+  // list_->Disconnect(wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler(TextCtrlList::OnFileDeselected), NULL, this);
+  // list_->Disconnect(wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler(TextCtrlList::OnFileSelected), NULL, this);
 }
 
 void TextCtrlList::set_callback(TextCtrlCallback* callback) {
@@ -22,7 +31,7 @@ void TextCtrlList::OnKeyUp(wxKeyEvent& event)
       ::SetSelection(list_, 0, true);
     }
     else {
-      long last = *selected.begin();
+      long last = last_selected_; //  *selected.begin();
       if (event.ShiftDown() == false) ::ClearSelection(list_);
       ::SetSelection(list_, last - 1, true);
     }
@@ -33,7 +42,7 @@ void TextCtrlList::OnKeyUp(wxKeyEvent& event)
       ::SetSelection(list_, 0, true);
     }
     else {
-      long last = *selected.rbegin();
+      long last = last_selected_; // *selected.rbegin();
       if (event.ShiftDown() == false) ::ClearSelection(list_);
       ::SetSelection(list_, last + 1, true);
     }
@@ -53,6 +62,13 @@ void TextCtrlList::OnEnter(wxCommandEvent& event)
 {
   if (callback_ == NULL) return;
   callback_->OnTextEnter();
+}
+
+void TextCtrlList::OnFileDeselected(wxListEvent& event) {
+}
+
+void TextCtrlList::OnFileSelected(wxListEvent& event) {
+  last_selected_ = event.GetIndex();
 }
 
 wxBEGIN_EVENT_TABLE(TextCtrlList, wxTextCtrl)

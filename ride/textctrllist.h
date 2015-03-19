@@ -4,6 +4,7 @@
 #include "ride/wx.h"
 
 class wxListCtrl;
+class wxListEvent;
 
 class TextCtrlCallback {
 public:
@@ -14,6 +15,7 @@ public:
 class TextCtrlList : public wxTextCtrl {
 public:
   TextCtrlList(wxWindow* parent, wxListCtrl* list);
+  ~TextCtrlList();
 
   void set_callback(TextCtrlCallback* callback);
 
@@ -22,10 +24,14 @@ protected:
   void OnUpdated(wxCommandEvent& event);
   void OnEnter(wxCommandEvent& event);
 
+  void OnFileDeselected(wxListEvent& event);
+  void OnFileSelected(wxListEvent& event);
+
   wxDECLARE_EVENT_TABLE();
 private:
   wxListCtrl* list_;
   TextCtrlCallback* callback_;
+  int last_selected_;
 };
 
 #endif  // RIDE_TEXTCTRLLIST_H
