@@ -34,6 +34,7 @@
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
+#include "ride/textctrllist.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -307,7 +308,7 @@ namespace ui
 		
 		protected:
 			wxListCtrl* uiFileList;
-			wxTextCtrl* uiFilterName;
+			TextCtrlList* uiFilterName;
 			wxCheckBox* uiCaseSensitive;
 			wxStdDialogButtonSizer* m_sdbSizer6;
 			wxButton* m_sdbSizer6OK;
@@ -315,9 +316,6 @@ namespace ui
 			
 			// Virtual event handlers, overide them in your derived class
 			virtual void OnActivate( wxActivateEvent& event ) { event.Skip(); }
-			virtual void OnFilterKeyUp( wxKeyEvent& event ) { event.Skip(); }
-			virtual void OnFilterUpdated( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnFilterNameEnter( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnContextSensitive( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }

@@ -5,10 +5,11 @@
 #include "ride/wxutils.h"
 #include <vector>
 #include <set>
+#include "ride/textctrllist.h"
 
 // based on http://docs.wholetomato.com/default.asp?W193
 
-class QuickOpenDlg : public ui::QuickOpen {
+class QuickOpenDlg : public ui::QuickOpen, TextCtrlCallback {
 public:
   QuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files);
   std::vector<wxString> GetSelectedFiles();
@@ -19,9 +20,8 @@ protected:
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
   void OnActivate(wxActivateEvent& event);
-  void OnFilterKeyUp(wxKeyEvent& event);
-  void OnFilterUpdated(wxCommandEvent& event);
-  void OnFilterNameEnter(wxCommandEvent& event);
+  void OnTextUpdated();
+  void OnTextEnter();
   void OnContextSensitive(wxCommandEvent& event);
 
   wxString root_;
@@ -168,7 +168,8 @@ QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const wxString& root, const std::ve
   uiFileList->SetColumnWidth(path_index, 300);
   uiFileList->SetColumnWidth(count_index, 50);
 
-  uiFileList->Bind(wxEVT_KEY_DOWN, &QuickOpenDlg::OnFilterKeyUp, this);
+  uiFilterName->set_callback(this);
+  // uiFileList->Bind(wxEVT_KEY_DOWN, &QuickOpenDlg::OnFilterKeyUp, this);
   UpdateFilters();
 }
 
@@ -178,39 +179,11 @@ void QuickOpenDlg::OnActivate(wxActivateEvent& event) {
   uiFilterName->SetFocusFromKbd();
 }
 
-void QuickOpenDlg::OnFilterKeyUp(wxKeyEvent& event) {
-  if (event.GetKeyCode() == wxUP) {
-    auto selected = GetSelection(uiFileList);
-    if (selected.empty()){
-      SetSelection(uiFileList, 0, true);
-    }
-    else {
-      long last = *selected.begin();
-      if (event.ShiftDown() == false) ClearSelection(uiFileList);
-      SetSelection(uiFileList, last - 1, true);
-    }
-  }
-  else if (event.GetKeyCode() == wxDOWN) {
-    auto selected = GetSelection(uiFileList);
-    if (selected.empty()){
-      SetSelection(uiFileList, 0, true);
-    }
-    else {
-      long last = *selected.rbegin();
-      if (event.ShiftDown() == false) ClearSelection(uiFileList);
-      SetSelection(uiFileList, last + 1, true);
-    }
-  }
-  else {
-    event.Skip();
-  }
-}
-
-void QuickOpenDlg::OnFilterNameEnter(wxCommandEvent& event) {
+void QuickOpenDlg::OnTextEnter() {
   EndModal(wxID_OK);
 }
 
-void QuickOpenDlg::OnFilterUpdated(wxCommandEvent& event) {
+void QuickOpenDlg::OnTextUpdated() {
   UpdateFilters();
 }
 

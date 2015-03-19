@@ -981,7 +981,7 @@ QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	uiFileList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
 	bSizer17->Add( uiFileList, 1, wxALL|wxEXPAND, 5 );
 	
-	uiFilterName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	uiFilterName = new TextCtrlList( this, uiFileList );
 	bSizer17->Add( uiFilterName, 0, wxALL|wxEXPAND, 5 );
 	
 	uiCaseSensitive = new wxCheckBox( this, wxID_ANY, wxT("Case sensitivity"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1008,9 +1008,6 @@ QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	
 	// Connect Events
 	this->Connect( wxEVT_ACTIVATE, wxActivateEventHandler( QuickOpen::OnActivate ) );
-	uiFilterName->Connect( wxEVT_KEY_UP, wxKeyEventHandler( QuickOpen::OnFilterKeyUp ), NULL, this );
-	uiFilterName->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( QuickOpen::OnFilterUpdated ), NULL, this );
-	uiFilterName->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( QuickOpen::OnFilterNameEnter ), NULL, this );
 	uiCaseSensitive->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( QuickOpen::OnContextSensitive ), NULL, this );
 	m_sdbSizer6Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnCancel ), NULL, this );
 	m_sdbSizer6OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
@@ -1020,9 +1017,6 @@ QuickOpen::~QuickOpen()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_ACTIVATE, wxActivateEventHandler( QuickOpen::OnActivate ) );
-	uiFilterName->Disconnect( wxEVT_KEY_UP, wxKeyEventHandler( QuickOpen::OnFilterKeyUp ), NULL, this );
-	uiFilterName->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( QuickOpen::OnFilterUpdated ), NULL, this );
-	uiFilterName->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( QuickOpen::OnFilterNameEnter ), NULL, this );
 	uiCaseSensitive->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( QuickOpen::OnContextSensitive ), NULL, this );
 	m_sdbSizer6Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnCancel ), NULL, this );
 	m_sdbSizer6OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
