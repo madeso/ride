@@ -33,7 +33,12 @@ void TextCtrlList::OnKeyUp(wxKeyEvent& event)
     else {
       long last = last_selected_; //  *selected.begin();
       if (event.ShiftDown() == false) ::ClearSelection(list_);
-      ::SetSelection(list_, last - 1, true);
+      long next = last - 1;
+      ::SetSelection(list_, next, true);
+      if (last_selected_ == last) {
+        last_selected_ = next;
+        ::SetSelection(list_, last, false);
+      }
     }
   }
   else if (event.GetKeyCode() == WXK_DOWN) {
@@ -44,7 +49,12 @@ void TextCtrlList::OnKeyUp(wxKeyEvent& event)
     else {
       long last = last_selected_; // *selected.rbegin();
       if (event.ShiftDown() == false) ::ClearSelection(list_);
-      ::SetSelection(list_, last + 1, true);
+      long next = last + 1;
+      ::SetSelection(list_, next, true);
+      if (last_selected_ == last) {
+        last_selected_ = next;
+        ::SetSelection(list_, last, false);
+      }
     }
   }
   else {
