@@ -353,7 +353,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 
   wxMenu *menu_project = new wxMenu;
   AddMenuItem(menu_project, ID_PROJECT_NEW, "New project...", "Create a new cargo project");
-  AddMenuItem(menu_project, ID_PROJECT_OPEN, "Open project...", "Open a existing cargo or ride project");
+  AddMenuItem(menu_project, ID_PROJECT_OPEN, "Open project...\tCtrl-Shift-O", "Open a existing cargo or ride project");
   AddMenuItem(menu_project, ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings", project_settings_xpm);
   menu_project->AppendSeparator();
   AddMenuItem(menu_project, ID_PROJECT_BUILD, "Build\tCtrl-B", "Compile the current project", project_build_xpm);
