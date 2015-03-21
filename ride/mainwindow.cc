@@ -399,6 +399,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 
   aui_.Update();
   UpdateTitle();
+
+  RestoreSession();
 }
 
 void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer) {
@@ -608,6 +610,8 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
     }
   }
 
+  SaveSession();
+
   // shutdown protobuf now, to avoid spewing out memory leaks...
   google::protobuf::ShutdownProtobufLibrary();
   evt.Skip();
@@ -799,3 +803,23 @@ MEM_FUN(Test    )
 MEM_FUN(Bench   )
 MEM_FUN(Update  )
 #undef MEM_FUN
+
+void MainWindow::SaveSession() {
+  ride::Session session;
+  wxPoint pos = GetPosition();
+  wxSize size = GetSize();
+  session.set_window_x(pos.x);
+  session.set_window_y(pos.y);
+  session.set_window_width(size.x);
+  session.set_window_height(size.y);
+  ::SaveSession(this, session);
+}
+
+void MainWindow::RestoreSession() {
+  ride::Session session;
+  ::LoadSession(this, session);
+  if (session.has_window_x()) {
+    // if we have set the window x, we assume we have set them all
+    SetSize(session.window_x(), session.window_y(), session.window_width(), session.window_height());
+  }
+}

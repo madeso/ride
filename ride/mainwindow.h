@@ -104,6 +104,8 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 private:
+  void SaveSession();
+  void RestoreSession();
   FoundEdit GetEditFromFileName(const wxString& file);
   void AddCompilerMessage(const CompilerMessage& mess);
   bool OpenProject(const wxString project_file);

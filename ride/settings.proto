@@ -376,3 +376,10 @@ message Settings {
   optional bool     fold_cpp_explicit_anywhere = 212 [default=false];      //  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
   optional bool     fold_at_else = 213 [default=true];                    //  This option enables C++ folding on a "} else {" line of an if statement.
 }
+
+message Session {
+  optional int32 window_x = 1;
+  optional int32 window_y = 2;
+  optional int32 window_width = 3;
+  optional int32 window_height = 4;
+}
