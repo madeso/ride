@@ -10577,7 +10577,7 @@
             <property name="name">QuickOpen</property>
             <property name="pos"></property>
             <property name="size">616,394</property>
-            <property name="style">wxDEFAULT_DIALOG_STYLE</property>
+            <property name="style">wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Open file in project...</property>
             <property name="tooltip"></property>

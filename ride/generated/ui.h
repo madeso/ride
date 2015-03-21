@@ -323,7 +323,7 @@ namespace ui
 		
 		public:
 			
-			QuickOpen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Open file in project..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 616,394 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+			QuickOpen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Open file in project..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 616,394 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~QuickOpen();
 		
 	};
