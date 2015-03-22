@@ -11,6 +11,8 @@ public:
   Project(MainWindow* output, const wxString& root_folder);
   const wxString& root_folder() const;
 
+  const wxString GetCargoFile() const;
+
   bool IsPartOfProject(const wxString& filename);
 
   void Settings();

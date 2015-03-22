@@ -400,4 +400,5 @@ message Session {
   optional WindowState state = 5 [default=WINDOWSTATE_NORMAL];
 
   repeated OpenFile files = 6;
+  optional string project = 7;
 }

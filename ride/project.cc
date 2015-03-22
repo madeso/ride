@@ -2,6 +2,7 @@
 #include <wx/utils.h>
 #include <wx/process.h>
 #include <wx/txtstrm.h>
+#include <wx/filename.h>
 #include "ride/wxutils.h"
 
 #include "ride/mainwindow.h"
@@ -11,6 +12,12 @@ Project::Project(MainWindow* output, const wxString& root_folder) : main_(output
 
 const wxString& Project::root_folder() const {
   return root_folder_;
+}
+
+const wxString Project::GetCargoFile() const {
+  if (root_folder_.IsEmpty()) return "";
+  wxFileName cargo(root_folder_, "cargo.toml");
+  return cargo.GetFullPath();
 }
 
 bool Project::IsPartOfProject(const wxString& filename) {

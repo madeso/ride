@@ -823,6 +823,7 @@ void MainWindow::SaveSession() {
   session.set_window_width(size.x);
   session.set_window_height(size.y);
   session.set_state(state);
+  session.set_project(project_.GetCargoFile());
 
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
@@ -858,6 +859,11 @@ void MainWindow::RestoreSession() {
   // or to the normal state...?
   else if (session.state() == ride::WINDOWSTATE_ICONIZED) Iconize();
 
+  wxString cargo_file = session.project();
+  if (cargo_file.IsEmpty() == false) {
+    OpenProject(cargo_file);
+  }
+  
   for (auto f : session.files()) {
     OpenFile(f.path(), f.start_line(), f.start_index(), f.end_line(), f.end_index());
   }
