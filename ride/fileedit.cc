@@ -225,6 +225,30 @@ int FromLineColToTextOffset(wxStyledTextCtrl* text, int line, int col) {
   return from;
 }
 
+void FromTextOffsetToLineCol(wxStyledTextCtrl* text, int index, int* line, int* col) {
+  if (index == -1) {
+    *line = -1;
+    *col = -1;
+  }
+  else {
+    *line = text->LineFromPosition(index); 
+    int start = text->PositionFromLine(*line - 1);
+    *col = index - start+1;
+  }
+}
+
+void FileEdit::GetSelection(int* start_line, int* start_index, int* end_line, int* end_index) {
+  assert(start_line);
+  assert(start_index);
+  assert(end_line);
+  assert(end_index);
+  long from = 0;
+  long to = 0;
+  text_->GetSelection(&from, &to);
+  FromTextOffsetToLineCol(text_, from, start_line, start_index);
+  FromTextOffsetToLineCol(text_, to, end_line, end_index);
+}
+
 void FileEdit::SetSelection(int start_line, int start_index, int end_line, int end_index) {
   int from = FromLineColToTextOffset(text_, start_line, start_index);
   int to = FromLineColToTextOffset(text_, end_line, end_index);

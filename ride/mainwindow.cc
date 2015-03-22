@@ -816,8 +816,17 @@ void MainWindow::SaveSession() {
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
     if (edit) {
+      int start_line = 0;
+      int start_index = 0; 
+      int end_line = 0; 
+      int end_index = 0;
+      edit->GetSelection(&start_line, &start_index, &end_line, &end_index);
       auto* f = session.mutable_files()->Add();
       f->set_path(edit->filename());
+      f->set_start_line ( start_line );
+      f->set_start_index( start_index);
+      f->set_end_line   ( end_line   );
+      f->set_end_index  ( end_index  );
     }
   }
 
