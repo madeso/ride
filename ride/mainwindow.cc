@@ -816,14 +816,18 @@ void MainWindow::SaveSession() {
   if (state != ride::WINDOWSTATE_NORMAL) {
     Restore();
   }
-  wxPoint pos = GetPosition();
-  wxSize size = GetSize();
+  const wxPoint pos = GetPosition();
+  const wxSize size = GetSize();
+  const wxString perspective = aui_.SavePerspective();
+
   session.set_window_x(pos.x);
   session.set_window_y(pos.y);
   session.set_window_width(size.x);
   session.set_window_height(size.y);
   session.set_state(state);
   session.set_project(project_.GetCargoFile());
+
+  session.set_aui_perspective(perspective);
 
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
@@ -866,5 +870,9 @@ void MainWindow::RestoreSession() {
   
   for (auto f : session.files()) {
     OpenFile(f.path(), f.start_line(), f.start_index(), f.end_line(), f.end_index());
+  }
+
+  if (session.has_aui_perspective()) {
+    aui_.LoadPerspective(session.aui_perspective());
   }
 }

@@ -401,4 +401,5 @@ message Session {
 
   repeated OpenFile files = 6;
   optional string project = 7;
+  optional string aui_perspective = 8;
 }
