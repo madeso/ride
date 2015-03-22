@@ -386,11 +386,18 @@ message OpenFile {
   optional int32 end_index = 5 [default=-1];
 }
 
+enum WindowState {
+  WINDOWSTATE_NORMAL = 0;
+  WINDOWSTATE_ICONIZED = 1;
+  WINDOWSTATE_MAXIMIZED = 2;
+}
+
 message Session {
   optional int32 window_x = 1;
   optional int32 window_y = 2;
   optional int32 window_width = 3;
   optional int32 window_height = 4;
+  optional WindowState state = 5 [default=WINDOWSTATE_NORMAL];
 
   repeated OpenFile files = 6;
 }

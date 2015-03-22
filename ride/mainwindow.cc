@@ -804,14 +804,25 @@ MEM_FUN(Bench   )
 MEM_FUN(Update  )
 #undef MEM_FUN
 
+ride::WindowState GetState(wxFrame* main) {
+  if (main->IsMaximized()) return ride::WINDOWSTATE_MAXIMIZED;
+  else if (main->IsIconized()) return ride::WINDOWSTATE_ICONIZED;
+  else return ride::WINDOWSTATE_NORMAL;
+}
+
 void MainWindow::SaveSession() {
   ride::Session session;
+  const ride::WindowState state = GetState(this);
+  if (state != ride::WINDOWSTATE_NORMAL) {
+    Restore();
+  }
   wxPoint pos = GetPosition();
   wxSize size = GetSize();
   session.set_window_x(pos.x);
   session.set_window_y(pos.y);
   session.set_window_width(size.x);
   session.set_window_height(size.y);
+  session.set_state(state);
 
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
@@ -840,6 +851,12 @@ void MainWindow::RestoreSession() {
     // if we have set the window x, we assume we have set them all
     SetSize(session.window_x(), session.window_y(), session.window_width(), session.window_height());
   }
+
+  if (session.state() == ride::WINDOWSTATE_MAXIMIZED) Maximize();
+
+  // if we quit in a iconized/minimized state... should we restore to the same state
+  // or to the normal state...?
+  else if (session.state() == ride::WINDOWSTATE_ICONIZED) Iconize();
 
   for (auto f : session.files()) {
     OpenFile(f.path(), f.start_line(), f.start_index(), f.end_line(), f.end_index());
