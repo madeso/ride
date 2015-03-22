@@ -812,6 +812,15 @@ void MainWindow::SaveSession() {
   session.set_window_y(pos.y);
   session.set_window_width(size.x);
   session.set_window_height(size.y);
+
+  for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
+    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
+    if (edit) {
+      auto* f = session.mutable_files()->Add();
+      f->set_path(edit->filename());
+    }
+  }
+
   ::SaveSession(this, session);
 }
 
@@ -821,5 +830,9 @@ void MainWindow::RestoreSession() {
   if (session.has_window_x()) {
     // if we have set the window x, we assume we have set them all
     SetSize(session.window_x(), session.window_y(), session.window_width(), session.window_height());
+  }
+
+  for (auto f : session.files()) {
+    OpenFile(f.path(), f.start_line(), f.start_index(), f.end_line(), f.end_index());
   }
 }
