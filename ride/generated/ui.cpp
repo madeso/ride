@@ -1022,3 +1022,127 @@ QuickOpen::~QuickOpen()
 	m_sdbSizer6OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( QuickOpen::OnOk ), NULL, this );
 	
 }
+
+Find::Find( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer16;
+	bSizer16 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText23 = new wxStaticText( this, wxID_ANY, wxT("Find what:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText23->Wrap( -1 );
+	bSizer16->Add( m_staticText23, 0, wxALL, 5 );
+	
+	uiFindText = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer16->Add( uiFindText, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText24 = new wxStaticText( this, wxID_ANY, wxT("Look in:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText24->Wrap( -1 );
+	bSizer16->Add( m_staticText24, 0, wxALL, 5 );
+	
+	uiLookIn = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiLookIn->SetSelection( 0 );
+	bSizer16->Add( uiLookIn, 0, wxALL|wxEXPAND, 5 );
+	
+	uiIncludeSubFolders = new wxCheckBox( this, wxID_ANY, wxT("Include sub-folders"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer16->Add( uiIncludeSubFolders, 0, wxALL, 5 );
+	
+	wxStaticBoxSizer* sbSizer9;
+	sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Find options") ), wxVERTICAL );
+	
+	wxBoxSizer* bSizer17;
+	bSizer17 = new wxBoxSizer( wxVERTICAL );
+	
+	uiMatchCase = new wxCheckBox( this, wxID_ANY, wxT("Match case"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer17->Add( uiMatchCase, 0, wxALL, 5 );
+	
+	uiMatchWholeWord = new wxCheckBox( this, wxID_ANY, wxT("Match whole word"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer17->Add( uiMatchWholeWord, 0, wxALL, 5 );
+	
+	uiFindWordStart = new wxCheckBox( this, wxID_ANY, wxT("Must be start of the word"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer17->Add( uiFindWordStart, 0, wxALL, 5 );
+	
+	uiFindTarget = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiFindTarget->SetSelection( 0 );
+	bSizer17->Add( uiFindTarget, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText25 = new wxStaticText( this, wxID_ANY, wxT("Look at theese file types:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText25->Wrap( -1 );
+	bSizer17->Add( m_staticText25, 0, wxALL, 5 );
+	
+	uiFileTypes = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer17->Add( uiFileTypes, 0, wxALL|wxEXPAND, 5 );
+	
+	m_scintilla1 = new wxStyledTextCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 0,0 ), 0, wxEmptyString );
+	m_scintilla1->SetUseTabs( true );
+	m_scintilla1->SetTabWidth( 4 );
+	m_scintilla1->SetIndent( 4 );
+	m_scintilla1->SetTabIndents( true );
+	m_scintilla1->SetBackSpaceUnIndents( true );
+	m_scintilla1->SetViewEOL( false );
+	m_scintilla1->SetViewWhiteSpace( false );
+	m_scintilla1->SetMarginWidth( 2, 0 );
+	m_scintilla1->SetIndentationGuides( true );
+	m_scintilla1->SetMarginType( 1, wxSTC_MARGIN_SYMBOL );
+	m_scintilla1->SetMarginMask( 1, wxSTC_MASK_FOLDERS );
+	m_scintilla1->SetMarginWidth( 1, 16);
+	m_scintilla1->SetMarginSensitive( 1, true );
+	m_scintilla1->SetProperty( wxT("fold"), wxT("1") );
+	m_scintilla1->SetFoldFlags( wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED | wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED );
+	m_scintilla1->SetMarginType( 0, wxSTC_MARGIN_NUMBER );
+	m_scintilla1->SetMarginWidth( 0, m_scintilla1->TextWidth( wxSTC_STYLE_LINENUMBER, wxT("_99999") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS );
+	m_scintilla1->MarkerSetBackground( wxSTC_MARKNUM_FOLDER, wxColour( wxT("BLACK") ) );
+	m_scintilla1->MarkerSetForeground( wxSTC_MARKNUM_FOLDER, wxColour( wxT("WHITE") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS );
+	m_scintilla1->MarkerSetBackground( wxSTC_MARKNUM_FOLDEROPEN, wxColour( wxT("BLACK") ) );
+	m_scintilla1->MarkerSetForeground( wxSTC_MARKNUM_FOLDEROPEN, wxColour( wxT("WHITE") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_EMPTY );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUS );
+	m_scintilla1->MarkerSetBackground( wxSTC_MARKNUM_FOLDEREND, wxColour( wxT("BLACK") ) );
+	m_scintilla1->MarkerSetForeground( wxSTC_MARKNUM_FOLDEREND, wxColour( wxT("WHITE") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUS );
+	m_scintilla1->MarkerSetBackground( wxSTC_MARKNUM_FOLDEROPENMID, wxColour( wxT("BLACK") ) );
+	m_scintilla1->MarkerSetForeground( wxSTC_MARKNUM_FOLDEROPENMID, wxColour( wxT("WHITE") ) );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_EMPTY );
+	m_scintilla1->MarkerDefine( wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_EMPTY );
+	m_scintilla1->SetSelBackground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHT ) );
+	m_scintilla1->SetSelForeground( true, wxSystemSettings::GetColour( wxSYS_COLOUR_HIGHLIGHTTEXT ) );
+	m_scintilla1->SetMaxSize( wxSize( 0,0 ) );
+	
+	bSizer17->Add( m_scintilla1, 0, wxALL, 5 );
+	
+	
+	sbSizer9->Add( bSizer17, 1, wxEXPAND, 5 );
+	
+	
+	bSizer16->Add( sbSizer9, 1, wxEXPAND, 5 );
+	
+	m_sdbSizer7 = new wxStdDialogButtonSizer();
+	m_sdbSizer7OK = new wxButton( this, wxID_OK );
+	m_sdbSizer7->AddButton( m_sdbSizer7OK );
+	m_sdbSizer7Cancel = new wxButton( this, wxID_CANCEL );
+	m_sdbSizer7->AddButton( m_sdbSizer7Cancel );
+	m_sdbSizer7->Realize();
+	
+	bSizer16->Add( m_sdbSizer7, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer16 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	m_sdbSizer7Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnCancel ), NULL, this );
+	m_sdbSizer7OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnOk ), NULL, this );
+}
+
+Find::~Find()
+{
+	// Disconnect Events
+	m_sdbSizer7Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnCancel ), NULL, this );
+	m_sdbSizer7OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnOk ), NULL, this );
+	
+}

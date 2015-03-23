@@ -35,6 +35,7 @@
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
 #include "ride/textctrllist.h"
+#include <wx/stc/stc.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -325,6 +326,42 @@ namespace ui
 			
 			QuickOpen( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Open file in project..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 616,394 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~QuickOpen();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class Find
+	///////////////////////////////////////////////////////////////////////////////
+	class Find : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxStaticText* m_staticText23;
+			wxTextCtrl* uiFindText;
+			wxStaticText* m_staticText24;
+			wxComboBox* uiLookIn;
+			wxCheckBox* uiIncludeSubFolders;
+			wxCheckBox* uiMatchCase;
+			wxCheckBox* uiMatchWholeWord;
+			wxCheckBox* uiFindWordStart;
+			wxComboBox* uiFindTarget;
+			wxStaticText* m_staticText25;
+			wxTextCtrl* uiFileTypes;
+			wxStyledTextCtrl* m_scintilla1;
+			wxStdDialogButtonSizer* m_sdbSizer7;
+			wxButton* m_sdbSizer7OK;
+			wxButton* m_sdbSizer7Cancel;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			Find( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Find..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 412,431 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			~Find();
 		
 	};
 	

@@ -14,6 +14,7 @@
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
 #include "ride/wxutils.h"
+#include "ride/finddlg.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -95,6 +96,7 @@ void FileEdit::Delete() {
 
 void FileEdit::Find() {
   // todo: implement file find
+  ShowFindDlg(this, text_->GetSelectedText(), filename_, "");
 }
 
 
