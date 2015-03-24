@@ -109,7 +109,7 @@ void FindInFiles(wxStyledTextCtrl* dlg, const wxString& file, const wxString& te
     if (index == -1) return;
     const int line = dlg->LineFromPosition(index);
     const int line_start = dlg->PositionFromLine(line);
-    res->push_back(FindResult(file, dlg->GetLine(line), line, index-line_start));
+    res->push_back(FindResult(file, dlg->GetLine(line).Trim(true).Trim(false), line+1, index-line_start));
   }
 }
 
