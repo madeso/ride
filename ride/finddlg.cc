@@ -130,7 +130,8 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
   WriteLine(output, wxString::Format("Searching for %s in %s", dlg.GetText(), current_file));
   WriteLine(output, "");
   for (auto res : results) {
-    const wxString mess = wxString::Format("%s %d %d %s", res.file, res.line_number, res.column_number, res.content);
+    // try to format the same way rust related error looks like so we can reuse the parser code for both and get some synergy effects
+    const wxString mess = wxString::Format("%s:%d %d %s", res.file, res.line_number, res.column_number, res.content);
     WriteLine(output, mess);
   }
 
