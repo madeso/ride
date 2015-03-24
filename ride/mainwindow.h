@@ -97,6 +97,8 @@ private:
   void OnSaveWindowsLayout(wxCommandEvent& event);
   void OnLoadWindowsLayout(wxCommandEvent& event);
   void OnOpenFind1(wxCommandEvent& event);
+  void OnShowOutput(wxCommandEvent& event);
+  void OnShowProject(wxCommandEvent& event);
 
 	void OnFileExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);

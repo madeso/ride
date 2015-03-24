@@ -65,6 +65,8 @@ enum
   ID_WINDOW_SAVE_LAYOUT,
   ID_WINDOW_LOAD_LAYOUT,
   ID_WINDOW_OPEN_FIND1,
+  ID_VIEW_SHOW_PROJECT,
+  ID_VIEW_SHOW_OUTPUT,
 
   ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
   ID_COPY_THIS_COMPILER_MESSAGE,
@@ -120,6 +122,8 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_WINDOW_SAVE_LAYOUT,    MainWindow::OnSaveWindowsLayout )
   EVT_MENU(ID_WINDOW_LOAD_LAYOUT,    MainWindow::OnLoadWindowsLayout )
   EVT_MENU(ID_WINDOW_OPEN_FIND1,     MainWindow::OnOpenFind1 )
+  EVT_MENU(ID_VIEW_SHOW_OUTPUT , MainWindow::OnShowOutput)
+  EVT_MENU(ID_VIEW_SHOW_PROJECT , MainWindow::OnShowProject)
   
   EVT_MENU(wxID_ABOUT             , MainWindow::OnAbout)
   
@@ -507,6 +511,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_windows, ID_WINDOW_LOAD_LAYOUT, "Load layout", "");
   menu_project->AppendSeparator();
   AddMenuItem(menu_windows, ID_WINDOW_OPEN_FIND1, "Find 1", "");
+  AddMenuItem(menu_windows, ID_VIEW_SHOW_PROJECT, "Project", "");
+  AddMenuItem(menu_windows, ID_VIEW_SHOW_OUTPUT, "Output", "");
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
@@ -557,15 +563,31 @@ void MainWindow::OnRestoreWindows(wxCommandEvent& event){
 }
 
 void MainWindow::OnSaveWindowsLayout(wxCommandEvent& event){
+  // todo...
 }
 
 void MainWindow::OnLoadWindowsLayout(wxCommandEvent& event){
+  // todo...
+}
+
+void ShowHideAui(wxAuiManager* aui, const wxString& name) {
+  assert(aui);
+  aui->GetPane(name).Show();
+  aui->Update();
 }
 
 void MainWindow::OnOpenFind1(wxCommandEvent& event){
-  aui_.GetPane(PANE_FIND_1).Show();
-  aui_.Update();
+  ShowHideAui(&aui_, PANE_FIND_1);
 }
+
+void MainWindow::OnShowOutput(wxCommandEvent& event) {
+  ShowHideAui(&aui_, PANE_OUTPUT);
+}
+
+void MainWindow::OnShowProject(wxCommandEvent& event) {
+  ShowHideAui(&aui_, PANE_PROJECT);
+}
+
 
 void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer) {
   if (project_root == wxEmptyString) {
