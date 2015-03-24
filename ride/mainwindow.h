@@ -131,6 +131,8 @@ private:
   Project project_;
   wxString app_name_;
   std::vector<CompilerMessage> compiler_messages_;
+
+  wxString windows_locations_;
 };
 
 #endif  // RIDE_MAINWINDOW_H

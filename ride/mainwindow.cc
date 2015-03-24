@@ -547,10 +547,13 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   aui_.Update();
   UpdateTitle();
 
+  windows_locations_ = aui_.SavePerspective();
+
   RestoreSession();
 }
 
 void MainWindow::OnRestoreWindows(wxCommandEvent& event){
+  aui_.LoadPerspective(windows_locations_);
 }
 
 void MainWindow::OnSaveWindowsLayout(wxCommandEvent& event){
