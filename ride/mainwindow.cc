@@ -413,16 +413,28 @@ const wxString PANE_OUTPUT = "pane_output";
 const wxString PANE_PROJECT = "pane_project";
 
 
-void AddMenuItem(wxMenu* menu, int id, const wxString& title=wxEmptyString, const wxString& help=wxEmptyString, char** xpm=NULL) {
-  wxMenuItem* item = new wxMenuItem(NULL, id, title, help);
-  if (xpm) {
-    // it's important to set the icon before adding the item
-    // otherwise it will silently fail on some wxWidgets versions
-    wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
-    item->SetBitmap(bitmap);
+struct AddMenuItem {
+  wxMenuItem* item;
+  operator wxMenuItem*() {
+    return item;
   }
-  menu->Append(item);
-}
+
+  AddMenuItem(wxMenu* menu, int id, const wxString& title = wxEmptyString, const wxString& help = wxEmptyString, char** xpm = NULL) {
+    item = new wxMenuItem(NULL, id, title, help);
+    if (xpm) {
+      // it's important to set the icon before adding the item
+      // otherwise it will silently fail on some wxWidgets versions
+      wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
+      item->SetBitmap(bitmap);
+    }
+    menu->Append(item);
+  }
+
+  AddMenuItem& Checkable() {
+    item->SetCheckable(true);
+    return *this;
+  }
+};
 
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
@@ -510,9 +522,9 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_windows, ID_WINDOW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_windows, ID_WINDOW_LOAD_LAYOUT, "Load layout", "");
   menu_windows->AppendSeparator();
-  AddMenuItem(menu_windows, ID_WINDOW_OPEN_FIND1, "Find 1", "");
-  AddMenuItem(menu_windows, ID_VIEW_SHOW_PROJECT, "Project", "");
-  AddMenuItem(menu_windows, ID_VIEW_SHOW_OUTPUT, "Output", "");
+  menuItemViewFind_ = AddMenuItem(menu_windows, ID_WINDOW_OPEN_FIND1, "Find 1", "").Checkable();
+  menuItemViewProject_ = AddMenuItem(menu_windows, ID_VIEW_SHOW_PROJECT, "Project", "").Checkable();
+  menuItemViewOutput_ = AddMenuItem(menu_windows, ID_VIEW_SHOW_OUTPUT, "Output", "").Checkable();
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
@@ -556,6 +568,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   windows_locations_ = aui_.SavePerspective();
 
   RestoreSession();
+  UpdateMenuItemView();
 }
 
 void MainWindow::OnRestoreWindows(wxCommandEvent& event){
@@ -583,16 +596,32 @@ void ShowHideAui(wxAuiManager* aui, const wxString& name) {
   aui->Update();
 }
 
+void UpdateMenuItemBasedOnPane(wxAuiManager* aui, wxMenuItem* item, const wxString& name) {
+  assert(aui);
+  wxAuiPaneInfo& pane = aui->GetPane(name);
+  assert(pane.IsValid() && "This function should only take valid pane names!");
+  item->Check(pane.IsShown());
+}
+
+void MainWindow::UpdateMenuItemView() {
+  UpdateMenuItemBasedOnPane(&aui_, menuItemViewFind_, PANE_FIND_1);
+  UpdateMenuItemBasedOnPane(&aui_, menuItemViewProject_, PANE_PROJECT);
+  UpdateMenuItemBasedOnPane(&aui_, menuItemViewOutput_, PANE_OUTPUT);
+}
+
 void MainWindow::OnOpenFind1(wxCommandEvent& event){
   ShowHideAui(&aui_, PANE_FIND_1);
+  UpdateMenuItemView();
 }
 
 void MainWindow::OnShowOutput(wxCommandEvent& event) {
   ShowHideAui(&aui_, PANE_OUTPUT);
+  UpdateMenuItemView();
 }
 
 void MainWindow::OnShowProject(wxCommandEvent& event) {
   ShowHideAui(&aui_, PANE_PROJECT);
+  UpdateMenuItemView();
 }
 
 

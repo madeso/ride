@@ -135,6 +135,12 @@ private:
   std::vector<CompilerMessage> compiler_messages_;
 
   wxString windows_locations_;
+
+  wxMenuItem* menuItemViewFind_;
+  wxMenuItem* menuItemViewProject_;
+  wxMenuItem* menuItemViewOutput_;
+
+  void UpdateMenuItemView();
 };
 
 #endif  // RIDE_MAINWINDOW_H
