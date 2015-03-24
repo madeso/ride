@@ -77,3 +77,4 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 - Color tint IDE depending on current thread executing?
 - Add note to code (when debugging) to comeback to later
+- Add a data dsiplay output breakpoint, that instead of breaking printf the value, perhaps also to a csv...
