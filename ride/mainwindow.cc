@@ -509,7 +509,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_windows, ID_WINDOW_RESTORE_WINDOWS, "Restore window layout", "");
   AddMenuItem(menu_windows, ID_WINDOW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_windows, ID_WINDOW_LOAD_LAYOUT, "Load layout", "");
-  menu_project->AppendSeparator();
+  menu_windows->AppendSeparator();
   AddMenuItem(menu_windows, ID_WINDOW_OPEN_FIND1, "Find 1", "");
   AddMenuItem(menu_windows, ID_VIEW_SHOW_PROJECT, "Project", "");
   AddMenuItem(menu_windows, ID_VIEW_SHOW_OUTPUT, "Output", "");
