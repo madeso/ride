@@ -12,6 +12,7 @@ class FileEdit;
 class SettingsDlg;
 class CompilerMessage;
 class OutputControl;
+class FindControl;
 class ProjectExplorer;
 
 struct FoundEdit {
@@ -118,6 +119,7 @@ private:
   wxAuiManager aui_;
   wxAuiNotebook* notebook_;
   OutputControl* output_window_;
+  FindControl* findres_window_;
   ProjectExplorer* project_explorer_;
 
   ride::Settings settings_;
