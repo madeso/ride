@@ -86,30 +86,37 @@ const int FindDlg::GetFlags() {
 }
 
 struct FindResult {
-  FindResult(const wxString& f, const wxString& co, const int l, const int c)
+  FindResult(const wxString& f, const wxString& co, const int sl, const int sc, const int el, const int ec)
     : file(f)
     , content(co)
-    , line_number(l)
-    , column_number(c)
+    , start_line(sl)
+    , start_col(sc)
+    , end_line(el)
+    , end_col(ec)
   {
   }
 
   wxString file;
   wxString content;
-  int line_number;
-  int column_number;
+  int start_line;
+  int start_col;
+  int end_line;
+  int end_col;
 };
 
 void FindInFiles(wxStyledTextCtrl* dlg, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res) {
   assert(res);
   dlg->LoadFile(file);
-  int index = -1;
+  int start_index = -1;
   while (true) {
-    index = dlg->FindText(index+1, dlg->GetLength(), text, flags);
-    if (index == -1) return;
-    const int line = dlg->LineFromPosition(index);
-    const int line_start = dlg->PositionFromLine(line);
-    res->push_back(FindResult(file, dlg->GetLine(line).Trim(true).Trim(false), line+1, index-line_start));
+    int end_index = 0;
+    start_index = dlg->FindText(start_index+1, dlg->GetLength(), text, &end_index, flags);
+    if (start_index == -1) return;
+    const int start_line = dlg->LineFromPosition(start_index);
+    const int start_col = start_index - dlg->PositionFromLine(start_line);
+    const int end_line = dlg->LineFromPosition(end_index);
+    const int end_col = end_index - dlg->PositionFromLine(end_line);
+    res->push_back(FindResult(file, dlg->GetLine(start_line).Trim(true).Trim(false), start_line+1, start_col+1, end_line+1, end_col+1));
   }
 }
 
@@ -134,7 +141,7 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
   WriteLine(output, "");
   for (auto res : results) {
     // try to format the same way rust related error looks like so we can reuse the parser code for both and get some synergy effects
-    const wxString mess = wxString::Format("%s:%d %d %s", res.file, res.line_number, res.column_number, res.content);
+    const wxString mess = wxString::Format("%s:%d : %d : %d : %d found: %s", res.file, res.start_line, res.start_col, res.end_line, res.end_col, res.content);
     WriteLine(output, mess);
   }
 

@@ -77,3 +77,17 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 - Color tint IDE depending on current thread executing?
 - Add note to code (when debugging) to comeback to later
+
+# Current wxWidgets modifications:
+
+wxStyledTextCtrl::FindText modification:
+
+Added findEnd argument and removed default argument
+
+int FindText(int minPos, int maxPos, const wxString& text, int* findEnd, int flags);
+
+Storing the match end index in the output pointer:
+
+		int ret = SendMsg(2150, flags, (sptr_t)&ft);
+		if (ret > 0 && findEnd) *findEnd = ft.chrgText.cpMax;
+		return ret;
