@@ -61,6 +61,11 @@ enum
   ID_PROJECT_BENCH,
   ID_PROJECT_UPDATE,
 
+  ID_WINDOW_RESTORE_WINDOWS,
+  ID_WINDOW_SAVE_LAYOUT,
+  ID_WINDOW_LOAD_LAYOUT,
+  ID_WINDOW_OPEN_FIND1,
+
   ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
   ID_COPY_THIS_COMPILER_MESSAGE,
   ID_CLEAR_COMPILER_OUTPUT,
@@ -111,6 +116,10 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(wxID_NEW               , MainWindow::OnProjectFileNew  )
   EVT_MENU(ID_QUICK_OPEN          , MainWindow::OnProjectQuickOpen)
   
+  EVT_MENU(ID_WINDOW_RESTORE_WINDOWS,MainWindow::OnRestoreWindows )
+  EVT_MENU(ID_WINDOW_SAVE_LAYOUT,    MainWindow::OnSaveWindowsLayout )
+  EVT_MENU(ID_WINDOW_LOAD_LAYOUT,    MainWindow::OnLoadWindowsLayout )
+  EVT_MENU(ID_WINDOW_OPEN_FIND1,     MainWindow::OnOpenFind1 )
   
   EVT_MENU(wxID_ABOUT             , MainWindow::OnAbout)
   
@@ -395,6 +404,9 @@ wxEND_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////////
 
+const wxString PANE_FIND_1 = "pane_findres1";
+const wxString PANE_OUTPUT = "pane_output";
+const wxString PANE_PROJECT = "pane_project";
 
 
 void AddMenuItem(wxMenu* menu, int id, const wxString& title=wxEmptyString, const wxString& help=wxEmptyString, char** xpm=NULL) {
@@ -486,6 +498,17 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_project, ID_QUICK_OPEN, "Open file in project...\tShift-Alt-O", "Quickly open a file from the project");
 
   //////////////////////////////////////////////////////////////////////////
+
+  wxMenu *menu_windows = new wxMenu;
+  
+  
+  AddMenuItem(menu_windows, ID_WINDOW_RESTORE_WINDOWS, "Restore window layout", "");
+  AddMenuItem(menu_windows, ID_WINDOW_SAVE_LAYOUT, "Save layout", "");
+  AddMenuItem(menu_windows, ID_WINDOW_LOAD_LAYOUT, "Load layout", "");
+  menu_project->AppendSeparator();
+  AddMenuItem(menu_windows, ID_WINDOW_OPEN_FIND1, "Find 1", "");
+
+  //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
   menu_help->Append(wxID_ABOUT);
 
@@ -493,6 +516,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   wxMenuBar *menu_bar = new wxMenuBar;
   menu_bar->Append(menu_file, "&File");
   menu_bar->Append(menu_edit, "&Edit");
+  menu_bar->Append(menu_windows, "&View");
   menu_bar->Append(menu_project, "&Project");
   menu_bar->Append(menu_help, "&Help");
   SetMenuBar(menu_bar);
@@ -508,22 +532,36 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   output_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   output_window_->UpdateStyle();
   output_window_->UpdateStyle();
-  aui_.AddPane(output_window_, wxAuiPaneInfo().Name("output").Caption("Output").Bottom().CloseButton(false));
+  aui_.AddPane(output_window_, wxAuiPaneInfo().Name(PANE_OUTPUT).Caption("Output").Bottom().CloseButton(false));
 
   findres_window_ = new FindControl(this);
   findres_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   findres_window_->UpdateStyle();
   findres_window_->UpdateStyle();
-  aui_.AddPane(findres_window_, wxAuiPaneInfo().Name("findres1").Caption("Find result 1").Bottom().CloseButton(false));
+  aui_.AddPane(findres_window_, wxAuiPaneInfo().Name(PANE_FIND_1).Caption("Find result 1").Bottom().CloseButton(false));
 
   // project explorer
   project_explorer_ = new ProjectExplorer(this);
-  aui_.AddPane(project_explorer_, wxAuiPaneInfo().Name("project").Caption("Project").Left().CloseButton(false));
+  aui_.AddPane(project_explorer_, wxAuiPaneInfo().Name(PANE_PROJECT).Caption("Project").Left().CloseButton(false));
 
   aui_.Update();
   UpdateTitle();
 
   RestoreSession();
+}
+
+void MainWindow::OnRestoreWindows(wxCommandEvent& event){
+}
+
+void MainWindow::OnSaveWindowsLayout(wxCommandEvent& event){
+}
+
+void MainWindow::OnLoadWindowsLayout(wxCommandEvent& event){
+}
+
+void MainWindow::OnOpenFind1(wxCommandEvent& event){
+  aui_.GetPane(PANE_FIND_1).Show();
+  aui_.Update();
 }
 
 void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer) {
