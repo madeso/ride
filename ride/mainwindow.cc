@@ -61,10 +61,10 @@ enum
   ID_PROJECT_BENCH,
   ID_PROJECT_UPDATE,
 
-  ID_WINDOW_RESTORE_WINDOWS,
-  ID_WINDOW_SAVE_LAYOUT,
-  ID_WINDOW_LOAD_LAYOUT,
-  ID_WINDOW_OPEN_FIND1,
+  ID_VIEW_RESTORE_WINDOWS,
+  ID_VIEW_SAVE_LAYOUT,
+  ID_VIEW_LOAD_LAYOUT,
+  ID_VIEW_SHOW_FINDRESULT,
   ID_VIEW_SHOW_PROJECT,
   ID_VIEW_SHOW_OUTPUT,
 
@@ -118,12 +118,12 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(wxID_NEW               , MainWindow::OnProjectFileNew  )
   EVT_MENU(ID_QUICK_OPEN          , MainWindow::OnProjectQuickOpen)
   
-  EVT_MENU(ID_WINDOW_RESTORE_WINDOWS,MainWindow::OnRestoreWindows )
-  EVT_MENU(ID_WINDOW_SAVE_LAYOUT,    MainWindow::OnSaveWindowsLayout )
-  EVT_MENU(ID_WINDOW_LOAD_LAYOUT,    MainWindow::OnLoadWindowsLayout )
-  EVT_MENU(ID_WINDOW_OPEN_FIND1,     MainWindow::OnOpenFind1 )
-  EVT_MENU(ID_VIEW_SHOW_OUTPUT , MainWindow::OnShowOutput)
-  EVT_MENU(ID_VIEW_SHOW_PROJECT , MainWindow::OnShowProject)
+  EVT_MENU(ID_VIEW_RESTORE_WINDOWS,MainWindow::OnViewRestoreWindows )
+  EVT_MENU(ID_VIEW_SAVE_LAYOUT,    MainWindow::OnViewSaveLayout )
+  EVT_MENU(ID_VIEW_LOAD_LAYOUT,    MainWindow::OnViewLoadLayout )
+  EVT_MENU(ID_VIEW_SHOW_FINDRESULT,     MainWindow::OnViewShowFindResult )
+  EVT_MENU(ID_VIEW_SHOW_OUTPUT , MainWindow::OnViewShowOutput)
+  EVT_MENU(ID_VIEW_SHOW_PROJECT , MainWindow::OnViewShowProject)
   
   EVT_MENU(wxID_ABOUT             , MainWindow::OnAbout)
   
@@ -220,13 +220,7 @@ public:
   }
 
   void OnClearCompilerOuput(wxCommandEvent& event) {
-    ClearOutput();
-  }
-
-  void ClearOutput() {
-    this->SetReadOnly(false);
-    this->SetText(wxEmptyString);
-    this->SetReadOnly(true);
+    ClearOutput(this);
   }
 
   void OnSelectAll(wxCommandEvent& event) {
@@ -351,13 +345,7 @@ public:
   }
 
   void OnClearCompilerOuput(wxCommandEvent& event) {
-    ClearOutput();
-  }
-
-  void ClearOutput() {
-    this->SetReadOnly(false);
-    this->SetText(wxEmptyString);
-    this->SetReadOnly(true);
+    ClearOutput(this);
   }
 
   void OnSelectAll(wxCommandEvent& event) {
@@ -515,16 +503,16 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 
   //////////////////////////////////////////////////////////////////////////
 
-  wxMenu *menu_windows = new wxMenu;
+  wxMenu *menu_view = new wxMenu;
   
   
-  AddMenuItem(menu_windows, ID_WINDOW_RESTORE_WINDOWS, "Restore window layout", "");
-  AddMenuItem(menu_windows, ID_WINDOW_SAVE_LAYOUT, "Save layout", "");
-  AddMenuItem(menu_windows, ID_WINDOW_LOAD_LAYOUT, "Load layout", "");
-  menu_windows->AppendSeparator();
-  menuItemViewFind_ = AddMenuItem(menu_windows, ID_WINDOW_OPEN_FIND1, "Find result pane", "").Checkable();
-  menuItemViewProject_ = AddMenuItem(menu_windows, ID_VIEW_SHOW_PROJECT, "Project pane", "").Checkable();
-  menuItemViewOutput_ = AddMenuItem(menu_windows, ID_VIEW_SHOW_OUTPUT, "Output pane", "").Checkable();
+  AddMenuItem(menu_view, ID_VIEW_RESTORE_WINDOWS, "Restore window layout", "");
+  AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
+  AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
+  menu_view->AppendSeparator();
+  menuItemViewFind_ = AddMenuItem(menu_view, ID_VIEW_SHOW_FINDRESULT, "Find result pane", "").Checkable();
+  menuItemViewProject_ = AddMenuItem(menu_view, ID_VIEW_SHOW_PROJECT, "Project pane", "").Checkable();
+  menuItemViewOutput_ = AddMenuItem(menu_view, ID_VIEW_SHOW_OUTPUT, "Output pane", "").Checkable();
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
@@ -534,7 +522,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   wxMenuBar *menu_bar = new wxMenuBar;
   menu_bar->Append(menu_file, "&File");
   menu_bar->Append(menu_edit, "&Edit");
-  menu_bar->Append(menu_windows, "&View");
+  menu_bar->Append(menu_view, "&View");
   menu_bar->Append(menu_project, "&Project");
   menu_bar->Append(menu_help, "&Help");
   SetMenuBar(menu_bar);
@@ -571,15 +559,15 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   UpdateMenuItemView();
 }
 
-void MainWindow::OnRestoreWindows(wxCommandEvent& event){
+void MainWindow::OnViewRestoreWindows(wxCommandEvent& event){
   aui_.LoadPerspective(windows_locations_);
 }
 
-void MainWindow::OnSaveWindowsLayout(wxCommandEvent& event){
+void MainWindow::OnViewSaveLayout(wxCommandEvent& event){
   // todo...
 }
 
-void MainWindow::OnLoadWindowsLayout(wxCommandEvent& event){
+void MainWindow::OnViewLoadLayout(wxCommandEvent& event){
   // todo...
 }
 
@@ -609,17 +597,17 @@ void MainWindow::UpdateMenuItemView() {
   UpdateMenuItemBasedOnPane(&aui_, menuItemViewOutput_, PANE_OUTPUT);
 }
 
-void MainWindow::OnOpenFind1(wxCommandEvent& event){
+void MainWindow::OnViewShowFindResult(wxCommandEvent& event){
   ShowHideAui(&aui_, PANE_FIND_1);
   UpdateMenuItemView();
 }
 
-void MainWindow::OnShowOutput(wxCommandEvent& event) {
+void MainWindow::OnViewShowOutput(wxCommandEvent& event) {
   ShowHideAui(&aui_, PANE_OUTPUT);
   UpdateMenuItemView();
 }
 
-void MainWindow::OnShowProject(wxCommandEvent& event) {
+void MainWindow::OnViewShowProject(wxCommandEvent& event) {
   ShowHideAui(&aui_, PANE_PROJECT);
   UpdateMenuItemView();
 }
@@ -675,7 +663,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::Clear() {
   // todo: this probably needs to happen in the gui thread instead of here... or does it?
-  output_window_->ClearOutput();
+  ClearOutput(output_window_);
   compiler_messages_.resize(0);
 
   for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
@@ -688,10 +676,7 @@ void MainWindow::Clear() {
 
 void MainWindow::Append(const wxString& str) {
   // todo: this probably needs to happen in the gui thread instead of here... or does it?
-  output_window_->SetReadOnly(false);
-  output_window_->AppendText(str);
-  output_window_->AppendText("\n");
-  output_window_->SetReadOnly(true);
+  WriteLine(output_window_, str);
 
   CompilerMessage mess;
   if (CompilerMessage::Parse(str, &mess)) {
@@ -874,6 +859,12 @@ void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
   selected_edit->SaveAs();
 }
 
+void MainWindow::OnEditFind(wxCommandEvent& event) {
+  FileEdit* selected_edit = GetSelectedEditorNull(); 
+  if (selected_edit == NULL) return; 
+  selected_edit->Find(findres_window_);
+}
+
 //////////////////////////////////////////////////////////////////////////
 #define MEM_FUN(X) \
   void MainWindow::OnEdit ## X(wxCommandEvent& event) {\
@@ -889,7 +880,6 @@ MEM_FUN(Copy)
 MEM_FUN(Paste)
 MEM_FUN(Duplicate)
 MEM_FUN(Delete)
-MEM_FUN(Find)
 MEM_FUN(Replace)
 MEM_FUN(MatchBrace)
 MEM_FUN(SelectBrace)

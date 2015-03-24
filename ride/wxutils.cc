@@ -1,6 +1,20 @@
 #include "ride/wxutils.h"
 #include "ride/wx.h"
 #include <wx/listctrl.h>
+#include <wx/stc/stc.h>
+
+void WriteLine(wxStyledTextCtrl* stc, const wxString& str) {
+  stc->SetReadOnly(false);
+  stc->AppendText(str);
+  stc->AppendText("\n");
+  stc->SetReadOnly(true);
+}
+
+void ClearOutput(wxStyledTextCtrl* stc) {
+  stc->SetReadOnly(false);
+  stc->SetText(wxEmptyString);
+  stc->SetReadOnly(true);
+}
 
 wxPoint GetContextEventPosition(const wxContextMenuEvent& event) {
   wxPoint ret = event.GetPosition();

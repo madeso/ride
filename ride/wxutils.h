@@ -10,6 +10,10 @@ class wxContextMenuEvent;
 class wxMenu;
 class wxWindow;
 class wxListCtrl;
+class wxStyledTextCtrl;
+
+void WriteLine(wxStyledTextCtrl* stc, const wxString& str);
+void ClearOutput(wxStyledTextCtrl* stc);
 
 wxPoint GetContextEventPosition(const wxContextMenuEvent& event);
 void AppendEnabled(wxMenu& menu, int id, const wxString& text, bool enabled);

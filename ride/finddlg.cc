@@ -113,18 +113,26 @@ void FindInFiles(wxStyledTextCtrl* dlg, const wxString& file, const wxString& te
   }
 }
 
-bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxString& current_file, const wxString root_folder) {
+bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxString& current_file, const wxString root_folder, wxStyledTextCtrl* output) {
   FindDlg dlg(parent, current_selection);
   if (wxID_OK != dlg.ShowModal()) return false;
 
-  std::vector<FindResult> res;
+  std::vector<FindResult> results;
 
   // we can't create a styled ctrl so we cheat by having a 0x0 widget on the find dlg
   // and use that for searching...
 
   // todo: get the current stc from the main application so we can search in not saved files..
 
-  FindInFiles(dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &res);
+  FindInFiles(dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results);
+
+  ClearOutput(output);
+  WriteLine(output, wxString::Format("Searching for %s in %s", dlg.GetText(), current_file));
+  WriteLine(output, "");
+  for (auto res : results) {
+    const wxString mess = wxString::Format("%s %d %d %s", res.file, res.line_number, res.column_number, res.content);
+    WriteLine(output, mess);
+  }
 
   // todo: output search result on a search result output pane
 

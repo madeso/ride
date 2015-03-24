@@ -28,6 +28,7 @@ public:
   void UpdateTextControl();
   void ReloadFileIfNeeded();
   void FileHasBeenRenamed(const wxString& new_path);
+  void Find(wxStyledTextCtrl* output);
 public:
   bool Save();
   bool SaveAs();
@@ -38,7 +39,6 @@ public:
   void Paste();
   void Duplicate();
   void Delete();
-  void Find();
   void Replace();
   void MatchBrace();
   void SelectBrace();

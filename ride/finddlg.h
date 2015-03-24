@@ -3,6 +3,8 @@
 
 #include "ride/wx.h"
 
-bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxString& current_file, const wxString root_folder);
+class wxStyledTextCtrl;
+
+bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxString& current_file, const wxString root_folder, wxStyledTextCtrl* output);
 
 #endif  // RIDE_FINDDLG_H

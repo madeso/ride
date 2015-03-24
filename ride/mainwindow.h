@@ -93,12 +93,12 @@ private:
   void OnProjectFileNew  (wxCommandEvent& event);
   void OnProjectQuickOpen(wxCommandEvent& event);
 
-  void OnRestoreWindows(wxCommandEvent& event);
-  void OnSaveWindowsLayout(wxCommandEvent& event);
-  void OnLoadWindowsLayout(wxCommandEvent& event);
-  void OnOpenFind1(wxCommandEvent& event);
-  void OnShowOutput(wxCommandEvent& event);
-  void OnShowProject(wxCommandEvent& event);
+  void OnViewRestoreWindows(wxCommandEvent& event);
+  void OnViewSaveLayout(wxCommandEvent& event);
+  void OnViewLoadLayout(wxCommandEvent& event);
+  void OnViewShowFindResult(wxCommandEvent& event);
+  void OnViewShowOutput(wxCommandEvent& event);
+  void OnViewShowProject(wxCommandEvent& event);
 
 	void OnFileExit(wxCommandEvent& event);
 	void OnAbout(wxCommandEvent& event);
