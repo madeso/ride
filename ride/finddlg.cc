@@ -126,8 +126,11 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
 
   FindInFiles(dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results);
 
+  const auto count = results.size();
+
   ClearOutput(output);
   WriteLine(output, wxString::Format("Searching for %s in %s", dlg.GetText(), current_file));
+  WriteLine(output, wxString::Format("Found %d matches", count));
   WriteLine(output, "");
   for (auto res : results) {
     // try to format the same way rust related error looks like so we can reuse the parser code for both and get some synergy effects
@@ -135,7 +138,8 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
     WriteLine(output, mess);
   }
 
-  // todo: output search result on a search result output pane
+  WriteLine(output, "");
+  WriteLine(output, wxString::Format("Found %d matches", count));
 
   return true;
 }
