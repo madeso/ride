@@ -522,9 +522,9 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_windows, ID_WINDOW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_windows, ID_WINDOW_LOAD_LAYOUT, "Load layout", "");
   menu_windows->AppendSeparator();
-  menuItemViewFind_ = AddMenuItem(menu_windows, ID_WINDOW_OPEN_FIND1, "Find 1", "").Checkable();
-  menuItemViewProject_ = AddMenuItem(menu_windows, ID_VIEW_SHOW_PROJECT, "Project", "").Checkable();
-  menuItemViewOutput_ = AddMenuItem(menu_windows, ID_VIEW_SHOW_OUTPUT, "Output", "").Checkable();
+  menuItemViewFind_ = AddMenuItem(menu_windows, ID_WINDOW_OPEN_FIND1, "Find result pane", "").Checkable();
+  menuItemViewProject_ = AddMenuItem(menu_windows, ID_VIEW_SHOW_PROJECT, "Project pane", "").Checkable();
+  menuItemViewOutput_ = AddMenuItem(menu_windows, ID_VIEW_SHOW_OUTPUT, "Output pane", "").Checkable();
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
@@ -556,7 +556,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   findres_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   findres_window_->UpdateStyle();
   findres_window_->UpdateStyle();
-  aui_.AddPane(findres_window_, wxAuiPaneInfo().Name(PANE_FIND_1).Caption("Find result 1").Bottom().CloseButton(false));
+  aui_.AddPane(findres_window_, wxAuiPaneInfo().Name(PANE_FIND_1).Caption("Find result").Bottom().CloseButton(false));
 
   // project explorer
   project_explorer_ = new ProjectExplorer(this);
