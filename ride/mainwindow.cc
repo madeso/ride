@@ -572,7 +572,14 @@ void MainWindow::OnLoadWindowsLayout(wxCommandEvent& event){
 
 void ShowHideAui(wxAuiManager* aui, const wxString& name) {
   assert(aui);
-  aui->GetPane(name).Show();
+  wxAuiPaneInfo& pane = aui->GetPane(name);
+  assert(pane.IsValid() && "This function should only take valid pane names!");
+  if (pane.IsShown()) {
+    pane.Hide();
+  }
+  else {
+    pane.Show();
+  }
   aui->Update();
 }
 
