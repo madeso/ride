@@ -6,8 +6,6 @@
 
 #include "wx/stc/stc.h"
 
-// based on http://docs.wholetomato.com/default.asp?W193
-
 class FindDlg : public ui::Find {
 public:
   FindDlg(wxWindow* parent, const wxString& find);
