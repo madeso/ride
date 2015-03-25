@@ -1034,7 +1034,7 @@ Find::Find( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	m_staticText23->Wrap( -1 );
 	bSizer16->Add( m_staticText23, 0, wxALL, 5 );
 	
-	uiFindText = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiFindText = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer16->Add( uiFindText, 0, wxALL|wxEXPAND, 5 );
 	
 	m_staticText24 = new wxStaticText( this, wxID_ANY, wxT("Look in:"), wxDefaultPosition, wxDefaultSize, 0 );
@@ -1071,7 +1071,7 @@ Find::Find( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	m_staticText25->Wrap( -1 );
 	bSizer17->Add( m_staticText25, 0, wxALL, 5 );
 	
-	uiFileTypes = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiFileTypes = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer17->Add( uiFileTypes, 0, wxALL|wxEXPAND, 5 );
 	
 	m_scintilla1 = new wxStyledTextCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 0,0 ), 0, wxEmptyString );
@@ -1135,6 +1135,8 @@ Find::Find( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	uiFindText->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Find::OnEnter ), NULL, this );
+	uiFileTypes->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Find::OnEnter ), NULL, this );
 	m_sdbSizer7Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnCancel ), NULL, this );
 	m_sdbSizer7OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnOk ), NULL, this );
 }
@@ -1142,6 +1144,8 @@ Find::Find( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 Find::~Find()
 {
 	// Disconnect Events
+	uiFindText->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Find::OnEnter ), NULL, this );
+	uiFileTypes->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( Find::OnEnter ), NULL, this );
 	m_sdbSizer7Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnCancel ), NULL, this );
 	m_sdbSizer7OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnOk ), NULL, this );
 	

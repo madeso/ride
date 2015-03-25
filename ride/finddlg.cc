@@ -18,14 +18,16 @@ public:
 
   const int GetFlags();
 
-  wxStyledTextCtrl* GetStc()           {
+  wxStyledTextCtrl* GetStc() {
     return m_scintilla1;
   }
-
-
+  
 protected:
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
+  void OnEnter(wxCommandEvent& event) {
+    OnOk(event);
+  }
 };
 
 FindDlg::FindDlg(wxWindow* parent, const wxString& find)
