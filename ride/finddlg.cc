@@ -78,6 +78,10 @@ void FindDlg::OnCancel(wxCommandEvent& event) {
 }
 
 void FindDlg::OnOk(wxCommandEvent& event) {
+  if (uiFindText->GetValue().length() <= 0) {
+    ShowInfo(this, "Need to enter search text", "Missing Search Text");
+    return;
+  }
   EndModal(wxID_OK);
 }
 
