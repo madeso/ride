@@ -27,6 +27,10 @@ public:
   bool LookInCurrentFile() const {
     return uiLookIn->GetSelection() == 0;
   }
+
+  bool IsRecursive() const {
+    return uiIncludeSubFolders->GetValue();
+  }
   
 protected:
   void OnCancel(wxCommandEvent& event);
@@ -165,7 +169,8 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
   else {
     wxArrayString files;
     const wxString pattern = find_dlg_data.file_types();
-    const size_t count = wxDir::GetAllFiles(root_folder, &files, pattern, wxDIR_FILES);
+    const size_t count = wxDir::GetAllFiles(root_folder, &files, pattern,
+      dlg.IsRecursive() ? wxDIR_FILES | wxDIR_DIRS : wxDIR_FILES);
     file_info = wxString::Format("%d files in %s", count, root_folder);
     for (const auto file : files) {
       FindInFiles(dlg.GetStc(), file, dlg.GetText(), dlg.GetFlags(), &results);
