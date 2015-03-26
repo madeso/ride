@@ -94,9 +94,9 @@ void FileEdit::Delete() {
 }
 
 
-void FileEdit::Find(wxStyledTextCtrl* output) {
+void FileEdit::Find(wxStyledTextCtrl* output, const wxString& project) {
   // todo: implement file find
-  ShowFindDlg(this, text_->GetSelectedText(), filename_, "", output);
+  ShowFindDlg(this, text_->GetSelectedText(), filename_, project, output);
 }
 
 

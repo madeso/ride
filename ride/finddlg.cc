@@ -6,6 +6,7 @@
 
 #include "wx/stc/stc.h"
 #include "ride/settings.h"
+#include <wx/dir.h>
 
 class FindDlg : public ui::Find {
 public:
@@ -21,6 +22,10 @@ public:
 
   wxStyledTextCtrl* GetStc() {
     return m_scintilla1;
+  }
+
+  bool LookInCurrentFile() const {
+    return uiLookIn->GetSelection() == 0;
   }
   
 protected:
@@ -152,12 +157,26 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
 
   // todo: get the current stc from the main application so we can search in not saved files..
 
-  FindInFiles(dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results);
+  wxString file_info = current_file;
+
+  if (dlg.LookInCurrentFile()) {
+    FindInFiles(dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results);
+  }
+  else {
+    wxArrayString files;
+    const wxString pattern = find_dlg_data.file_types();
+    const size_t count = wxDir::GetAllFiles(root_folder, &files, pattern, wxDIR_FILES);
+    file_info = wxString::Format("%d files in %s", count, root_folder);
+    for (const auto file : files) {
+      FindInFiles(dlg.GetStc(), file, dlg.GetText(), dlg.GetFlags(), &results);
+    }
+  }
+  
 
   const auto count = results.size();
 
   ClearOutput(output);
-  WriteLine(output, wxString::Format("Searching for %s in %s", dlg.GetText(), current_file));
+  WriteLine(output, wxString::Format("Searching for %s in %s", dlg.GetText(), file_info));
   WriteLine(output, wxString::Format("Found %d matches", count));
   WriteLine(output, "");
   for (auto res : results) {

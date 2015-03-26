@@ -28,7 +28,7 @@ public:
   void UpdateTextControl();
   void ReloadFileIfNeeded();
   void FileHasBeenRenamed(const wxString& new_path);
-  void Find(wxStyledTextCtrl* output);
+  void Find(wxStyledTextCtrl* output, const wxString& project);
 public:
   bool Save();
   bool SaveAs();

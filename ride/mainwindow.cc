@@ -862,7 +862,7 @@ void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
 void MainWindow::OnEditFind(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull(); 
   if (selected_edit == NULL) return; 
-  selected_edit->Find(findres_window_);
+  selected_edit->Find(findres_window_, project_.root_folder());
 }
 
 //////////////////////////////////////////////////////////////////////////
