@@ -377,6 +377,8 @@ message Settings {
   optional bool     fold_at_else = 213 [default=true];                    //  This option enables C++ folding on a "} else {" line of an if statement.
 }
 
+/* ******************************************************************************************* */
+
 message OpenFile {
   optional string path = 1;
 
@@ -402,4 +404,25 @@ message Session {
   repeated OpenFile files = 6;
   optional string project = 7;
   optional string aui_perspective = 8;
+}
+
+/* ******************************************************************************************* */
+
+enum FindDlgTarget {
+	FDT_NORMAL_TEXT = 0;
+	FDT_NORMAL_REGEX = 1;
+	FDT_NORMAL_POSIX = 2;
+}
+
+message FindDlg {
+  optional bool sub_folders = 1 [default=false];
+  optional bool match_case = 2 [default=false];
+  optional bool match_whole_word = 3 [default=false];
+  optional bool match_start = 4 [default=false];
+  optional FindDlgTarget target = 5 [default=FDT_NORMAL_TEXT];
+  optional string file_types = 6 [default="*.rs;*.toml"];
+}
+
+message DialogData {
+	optional FindDlg find_dlg = 1;
 }

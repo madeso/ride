@@ -5,16 +5,19 @@
 #include "ride/wxutils.h"
 
 #include "wx/stc/stc.h"
+#include "ride/settings.h"
 
 class FindDlg : public ui::Find {
 public:
-  FindDlg(wxWindow* parent, const wxString& find);
+  FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data);
 
   const wxString GetText() const {
     return uiFindText->GetValue();
   }
 
   const int GetFlags();
+
+  void ToData(ride::FindDlg& data) const;
 
   wxStyledTextCtrl* GetStc() {
     return m_scintilla1;
@@ -28,7 +31,7 @@ protected:
   }
 };
 
-FindDlg::FindDlg(wxWindow* parent, const wxString& find)
+FindDlg::FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data)
   : ui::Find(parent, wxID_ANY)
 {
   uiFindText->SetValue(find);
@@ -42,7 +45,23 @@ FindDlg::FindDlg(wxWindow* parent, const wxString& find)
   uiFindTarget->Append("Normal text");
   uiFindTarget->Append("Regex");
   uiFindTarget->Append("Posix");
-  uiFindTarget->SetSelection(0);
+
+
+  uiIncludeSubFolders->SetValue(data.sub_folders());
+  uiMatchCase->SetValue(data.match_case());
+  uiMatchWholeWord->SetValue(data.match_whole_word());
+  uiFindWordStart->SetValue(data.match_start());
+  uiFileTypes->SetValue(data.file_types().c_str());
+  uiFindTarget->SetSelection(data.target());
+}
+
+void FindDlg::ToData(ride::FindDlg& data) const {
+  data.set_sub_folders(uiIncludeSubFolders->GetValue());
+  data.set_match_case(uiMatchCase->GetValue());
+  data.set_match_whole_word(uiMatchWholeWord->GetValue());
+  data.set_match_start(uiFindWordStart->GetValue());
+  data.set_file_types(uiFileTypes->GetValue());
+  data.set_target(static_cast<::ride::FindDlgTarget>(uiFindTarget->GetSelection()));
 }
 
 void FindDlg::OnCancel(wxCommandEvent& event) {
@@ -121,8 +140,10 @@ void FindInFiles(wxStyledTextCtrl* dlg, const wxString& file, const wxString& te
 }
 
 bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxString& current_file, const wxString root_folder, wxStyledTextCtrl* output) {
-  FindDlg dlg(parent, current_selection);
+  static ride::FindDlg find_dlg_data;
+  FindDlg dlg(parent, current_selection, find_dlg_data);
   if (wxID_OK != dlg.ShowModal()) return false;
+  dlg.ToData(find_dlg_data);
 
   std::vector<FindResult> results;
 
