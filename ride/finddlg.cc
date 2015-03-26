@@ -166,8 +166,5 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
     WriteLine(output, mess);
   }
 
-  WriteLine(output, "");
-  WriteLine(output, wxString::Format("Found %d matches", count));
-
   return true;
 }
