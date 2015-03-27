@@ -415,8 +415,8 @@ enum FindDlgTarget {
 }
 
 message FindDlg {
-  optional bool sub_folders = 1 [default=false];
-  optional bool match_case = 2 [default=false];
+  optional bool sub_folders = 1 [default=true];
+  optional bool match_case = 2 [default=true];
   optional bool match_whole_word = 3 [default=false];
   optional bool match_start = 4 [default=false];
   optional FindDlgTarget target = 5 [default=FDT_NORMAL_TEXT];
