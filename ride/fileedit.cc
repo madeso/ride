@@ -95,13 +95,12 @@ void FileEdit::Delete() {
 
 
 void FileEdit::Find(wxStyledTextCtrl* output, const wxString& project) {
-  // todo: implement file find
-  ShowFindDlg(this, text_->GetSelectedText(), filename_, project, output);
+  ShowFindDlg(this, text_->GetSelectedText(), filename_, project, output, true);
 }
 
 
-void FileEdit::Replace() {
-  // todo: implement file replace
+void FileEdit::Replace(wxStyledTextCtrl* output, const wxString& project) {
+  ShowFindDlg(this, text_->GetSelectedText(), filename_, project, output, false);
 }
 
 

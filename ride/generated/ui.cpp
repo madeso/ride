@@ -1037,6 +1037,13 @@ Find::Find( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	uiFindText = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer16->Add( uiFindText, 0, wxALL|wxEXPAND, 5 );
 	
+	uiReplaceStatic = new wxStaticText( this, wxID_ANY, wxT("Replace with:"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiReplaceStatic->Wrap( -1 );
+	bSizer16->Add( uiReplaceStatic, 0, wxALL, 5 );
+	
+	uiReplaceText = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer16->Add( uiReplaceText, 0, wxALL|wxEXPAND, 5 );
+	
 	m_staticText24 = new wxStaticText( this, wxID_ANY, wxT("Look in:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText24->Wrap( -1 );
 	bSizer16->Add( m_staticText24, 0, wxALL, 5 );

@@ -29,6 +29,7 @@ public:
   void ReloadFileIfNeeded();
   void FileHasBeenRenamed(const wxString& new_path);
   void Find(wxStyledTextCtrl* output, const wxString& project);
+  void Replace(wxStyledTextCtrl* output, const wxString& project);
 public:
   bool Save();
   bool SaveAs();
@@ -39,7 +40,6 @@ public:
   void Paste();
   void Duplicate();
   void Delete();
-  void Replace();
   void MatchBrace();
   void SelectBrace();
   void GotoLine();

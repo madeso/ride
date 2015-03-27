@@ -865,6 +865,12 @@ void MainWindow::OnEditFind(wxCommandEvent& event) {
   selected_edit->Find(findres_window_, project_.root_folder());
 }
 
+void MainWindow::OnEditReplace(wxCommandEvent& event) {
+  FileEdit* selected_edit = GetSelectedEditorNull();
+  if (selected_edit == NULL) return;
+  selected_edit->Replace(findres_window_, project_.root_folder());
+}
+
 //////////////////////////////////////////////////////////////////////////
 #define MEM_FUN(X) \
   void MainWindow::OnEdit ## X(wxCommandEvent& event) {\
@@ -880,7 +886,6 @@ MEM_FUN(Copy)
 MEM_FUN(Paste)
 MEM_FUN(Duplicate)
 MEM_FUN(Delete)
-MEM_FUN(Replace)
 MEM_FUN(MatchBrace)
 MEM_FUN(SelectBrace)
 MEM_FUN(GotoLine)

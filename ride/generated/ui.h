@@ -339,6 +339,8 @@ namespace ui
 		protected:
 			wxStaticText* m_staticText23;
 			wxTextCtrl* uiFindText;
+			wxStaticText* uiReplaceStatic;
+			wxTextCtrl* uiReplaceText;
 			wxStaticText* m_staticText24;
 			wxComboBox* uiLookIn;
 			wxCheckBox* uiIncludeSubFolders;
@@ -361,7 +363,7 @@ namespace ui
 		
 		public:
 			
-			Find( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Find..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 412,431 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			Find( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Find..."), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 317,464 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~Find();
 		
 	};
