@@ -138,19 +138,19 @@ struct FindResult {
   int end_col;
 };
 
-void FindInFiles(wxStyledTextCtrl* dlg, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res) {
+void FindInFiles(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res) {
   assert(res);
-  dlg->LoadFile(file);
+  stc->LoadFile(file);
   int start_index = -1;
   while (true) {
     int end_index = 0;
-    start_index = dlg->FindText(start_index+1, dlg->GetLength(), text, &end_index, flags);
+    start_index = stc->FindText(start_index+1, stc->GetLength(), text, &end_index, flags);
     if (start_index == -1) return;
-    const int start_line = dlg->LineFromPosition(start_index);
-    const int start_col = start_index - dlg->PositionFromLine(start_line);
-    const int end_line = dlg->LineFromPosition(end_index);
-    const int end_col = end_index - dlg->PositionFromLine(end_line);
-    res->push_back(FindResult(file, dlg->GetLine(start_line).Trim(true).Trim(false), start_line+1, start_col+1, end_line+1, end_col+1));
+    const int start_line = stc->LineFromPosition(start_index);
+    const int start_col = start_index - stc->PositionFromLine(start_line);
+    const int end_line = stc->LineFromPosition(end_index);
+    const int end_col = end_index - stc->PositionFromLine(end_line);
+    res->push_back(FindResult(file, stc->GetLine(start_line).Trim(true).Trim(false), start_line+1, start_col+1, end_line+1, end_col+1));
   }
 }
 
