@@ -32,6 +32,10 @@ public:
     return uiIncludeSubFolders->GetValue();
   }
   
+  const wxString getReplaceText() const {
+    return uiReplaceText->GetValue();
+  }
+
 protected:
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
@@ -138,19 +142,32 @@ struct FindResult {
   int end_col;
 };
 
-void FindInFiles(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res) {
+void FindInFiles(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText) {
   assert(res);
   stc->LoadFile(file);
-  int start_index = -1;
+  int start_index = 0;
   while (true) {
     int end_index = 0;
-    start_index = stc->FindText(start_index+1, stc->GetLength(), text, &end_index, flags);
+    start_index = stc->FindText(start_index, stc->GetLength(), text, &end_index, flags);
     if (start_index == -1) return;
+    assert(start_index != end_index);
     const int start_line = stc->LineFromPosition(start_index);
     const int start_col = start_index - stc->PositionFromLine(start_line);
     const int end_line = stc->LineFromPosition(end_index);
     const int end_col = end_index - stc->PositionFromLine(end_line);
     res->push_back(FindResult(file, stc->GetLine(start_line).Trim(true).Trim(false), start_line+1, start_col+1, end_line+1, end_col+1));
+
+    if (doReplace) {
+      const bool useRegex = flags & wxSTC_FIND_REGEXP || flags & wxSTC_FIND_POSIX;
+      const int change = useRegex
+        ? stc->ReplaceTargetRE(replaceText)
+       : stc->ReplaceTarget(replaceText);
+      assert(change > 0);
+      start_index = start_index + change;
+    }
+    else {
+      start_index = end_index;
+    }
   }
 }
 
@@ -171,7 +188,7 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
   wxString file_info = current_file;
 
   if (dlg.LookInCurrentFile()) {
-    FindInFiles(dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results);
+    FindInFiles(dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results, find==false, dlg.getReplaceText());
   }
   else {
     wxArrayString files;
@@ -180,7 +197,7 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
       dlg.IsRecursive() ? wxDIR_FILES | wxDIR_DIRS : wxDIR_FILES);
     file_info = wxString::Format("%d files in %s", count, root_folder);
     for (const auto file : files) {
-      FindInFiles(dlg.GetStc(), file, dlg.GetText(), dlg.GetFlags(), &results);
+      FindInFiles(dlg.GetStc(), file, dlg.GetText(), dlg.GetFlags(), &results, find == false, dlg.getReplaceText());
     }
   }
   
