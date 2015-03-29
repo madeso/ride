@@ -1055,6 +1055,9 @@ Find::Find( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	uiIncludeSubFolders = new wxCheckBox( this, wxID_ANY, wxT("Include sub-folders"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer16->Add( uiIncludeSubFolders, 0, wxALL, 5 );
 	
+	uiKeepFilesOpen = new wxCheckBox( this, wxID_ANY, wxT("Keep files open"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer16->Add( uiKeepFilesOpen, 0, wxALL, 5 );
+	
 	wxStaticBoxSizer* sbSizer9;
 	sbSizer9 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Find options") ), wxVERTICAL );
 	

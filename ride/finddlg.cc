@@ -38,6 +38,10 @@ public:
     return uiReplaceText->GetValue();
   }
 
+  bool KeepFilesOpen() const {
+    return uiKeepFilesOpen->GetValue();
+  }
+
 protected:
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
@@ -177,21 +181,30 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
   return count;
 }
 
-void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText) {
+void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText, bool keepFilesOpen) {
   FileEdit* edit = parent->GetFile(file);
   wxStyledTextCtrl* stc = NULL;
   if (edit) {
     stc = edit->GetStc();
   }
   else {
-    stc = fallback;
-    stc->LoadFile(file);
+    fallback->LoadFile(file);
+
+    if (doReplace && keepFilesOpen) {
+      int found = fallback->FindText(0, stc->GetLength(), text, NULL, flags);
+      if (found > 0) {
+        FileEdit* opened_edit = parent->OpenFile(file);
+        stc = opened_edit->GetStc();
+      }
+    }
+    if( stc == NULL ) {
+      stc = fallback;
+    }
   }
   assert(stc);
   int count = FindInStc(stc, file, text, flags, res, doReplace, replaceText);
 
-  if (doReplace && count > 0) {
-    // replaced something so save file..
+  if (doReplace && count > 0 && stc == fallback) {
     if (false == stc->SaveFile(file)) {
       ShowError(parent, "Failed to save after replace!", "Error saving!");
     }
@@ -206,14 +219,14 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wx
   dlg.ToData(find_dlg_data);
 
   std::vector<FindResult> results;
-
-  // we can't create a styled ctrl so we cheat by having a 0x0 widget on the find dlg
-  // and use that for searching...
-
   wxString file_info = current_file;
 
+  // we can't create a styled ctrl so we cheat by having a 0x0 widget on the find dlg
+  // and use that for searching/replacing...
+  wxStyledTextCtrl* fallback = dlg.GetStc();
+
   if (dlg.LookInCurrentFile()) {
-    FindInFiles(parent, dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results, find==false, dlg.getReplaceText());
+    FindInFiles(parent, fallback, current_file, dlg.GetText(), dlg.GetFlags(), &results, find==false, dlg.getReplaceText(), dlg.KeepFilesOpen());
   }
   else {
     wxArrayString files;
@@ -222,7 +235,7 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wx
       dlg.IsRecursive() ? wxDIR_FILES | wxDIR_DIRS : wxDIR_FILES);
     file_info = wxString::Format("%d files in %s", count, root_folder);
     for (const auto file : files) {
-      FindInFiles(parent, dlg.GetStc(), file, dlg.GetText(), dlg.GetFlags(), &results, find == false, dlg.getReplaceText());
+      FindInFiles(parent, fallback, file, dlg.GetText(), dlg.GetFlags(), &results, find == false, dlg.getReplaceText(), dlg.KeepFilesOpen());
     }
   }
   

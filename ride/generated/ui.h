@@ -344,6 +344,7 @@ namespace ui
 			wxStaticText* m_staticText24;
 			wxComboBox* uiLookIn;
 			wxCheckBox* uiIncludeSubFolders;
+			wxCheckBox* uiKeepFilesOpen;
 			wxCheckBox* uiMatchCase;
 			wxCheckBox* uiMatchWholeWord;
 			wxCheckBox* uiFindWordStart;
