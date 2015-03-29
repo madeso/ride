@@ -758,7 +758,7 @@ void MainWindow::FileHasBeenRenamed(const wxString& old_path, const wxString& ne
   // todo: update compiler errors to point to new file...
 }
 
-void MainWindow::OpenFile(const wxString& file, int start_line, int start_index, int end_line, int end_index) {
+FileEdit* MainWindow::OpenFile(const wxString& file, int start_line, int start_index, int end_line, int end_index) {
   wxFileName file_name(file);
   file_name.Normalize();
   const wxString full_path = file_name.GetFullPath();
@@ -773,6 +773,17 @@ void MainWindow::OpenFile(const wxString& file, int start_line, int start_index,
     ;
   found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
   found_edit_or_new->Focus();
+
+  return found_edit_or_new;
+}
+
+FileEdit* MainWindow::GetFile(const wxString& file) {
+  wxFileName file_name(file);
+  file_name.Normalize();
+  const wxString full_path = file_name.GetFullPath();
+
+  FoundEdit found_edit = GetEditFromFileName(full_path);
+  return found_edit.edit;
 }
 
 FileEdit* MainWindow::GetSelectedEditorNull() {

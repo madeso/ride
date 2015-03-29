@@ -7,6 +7,8 @@
 #include "wx/stc/stc.h"
 #include "ride/settings.h"
 #include <wx/dir.h>
+#include "ride/mainwindow.h"
+#include "ride/fileedit.h"
 
 class FindDlg : public ui::Find {
 public:
@@ -142,20 +144,22 @@ struct FindResult {
   int end_col;
 };
 
-void FindInFiles(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText) {
+int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText) {
   assert(res);
-  stc->LoadFile(file);
+  assert(stc);
   int start_index = 0;
+  int count = 0;
   while (true) {
     int end_index = 0;
     start_index = stc->FindText(start_index, stc->GetLength(), text, &end_index, flags);
-    if (start_index == -1) return;
+    if (start_index == -1) return count;
     assert(start_index != end_index);
     const int start_line = stc->LineFromPosition(start_index);
     const int start_col = start_index - stc->PositionFromLine(start_line);
     const int end_line = stc->LineFromPosition(end_index);
     const int end_col = end_index - stc->PositionFromLine(end_line);
     res->push_back(FindResult(file, stc->GetLine(start_line).Trim(true).Trim(false), start_line+1, start_col+1, end_line+1, end_col+1));
+    ++count;
 
     if (doReplace) {
       const bool useRegex = flags & wxSTC_FIND_REGEXP || flags & wxSTC_FIND_POSIX;
@@ -169,9 +173,32 @@ void FindInFiles(wxStyledTextCtrl* stc, const wxString& file, const wxString& te
       start_index = end_index;
     }
   }
+
+  return count;
 }
 
-bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxString& current_file, const wxString root_folder, wxStyledTextCtrl* output, bool find) {
+void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText) {
+  FileEdit* edit = parent->GetFile(file);
+  wxStyledTextCtrl* stc = NULL;
+  if (edit) {
+    stc = edit->GetStc();
+  }
+  else {
+    stc = fallback;
+    stc->LoadFile(file);
+  }
+  assert(stc);
+  int count = FindInStc(stc, file, text, flags, res, doReplace, replaceText);
+
+  if (doReplace && count > 0) {
+    // replaced something so save file..
+    if (false == stc->SaveFile(file)) {
+      ShowError(parent, "Failed to save after replace!", "Error saving!");
+    }
+  }
+}
+
+bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wxString& current_file, const wxString root_folder, wxStyledTextCtrl* output, bool find) {
   static ride::FindDlg find_dlg_data;
   FindDlg dlg(parent, current_selection, find_dlg_data, find);
 
@@ -183,12 +210,10 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
   // we can't create a styled ctrl so we cheat by having a 0x0 widget on the find dlg
   // and use that for searching...
 
-  // todo: get the current stc from the main application so we can search in not saved files..
-
   wxString file_info = current_file;
 
   if (dlg.LookInCurrentFile()) {
-    FindInFiles(dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results, find==false, dlg.getReplaceText());
+    FindInFiles(parent, dlg.GetStc(), current_file, dlg.GetText(), dlg.GetFlags(), &results, find==false, dlg.getReplaceText());
   }
   else {
     wxArrayString files;
@@ -197,7 +222,7 @@ bool ShowFindDlg(wxWindow* parent, const wxString& current_selection, const wxSt
       dlg.IsRecursive() ? wxDIR_FILES | wxDIR_DIRS : wxDIR_FILES);
     file_info = wxString::Format("%d files in %s", count, root_folder);
     for (const auto file : files) {
-      FindInFiles(dlg.GetStc(), file, dlg.GetText(), dlg.GetFlags(), &results, find == false, dlg.getReplaceText());
+      FindInFiles(parent, dlg.GetStc(), file, dlg.GetText(), dlg.GetFlags(), &results, find == false, dlg.getReplaceText());
     }
   }
   

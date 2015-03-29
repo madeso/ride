@@ -95,14 +95,17 @@ void FileEdit::Delete() {
 
 
 void FileEdit::Find(wxStyledTextCtrl* output, const wxString& project) {
-  ShowFindDlg(this, text_->GetSelectedText(), filename_, project, output, true);
+  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, true);
 }
 
 
 void FileEdit::Replace(wxStyledTextCtrl* output, const wxString& project) {
-  ShowFindDlg(this, text_->GetSelectedText(), filename_, project, output, false);
+  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, false);
 }
 
+wxStyledTextCtrl* FileEdit::GetStc(){
+  return text_;
+}
 
 void FileEdit::MatchBrace() {
   int start_brace = text_->GetCurrentPos();

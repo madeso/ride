@@ -30,6 +30,8 @@ public:
   void FileHasBeenRenamed(const wxString& new_path);
   void Find(wxStyledTextCtrl* output, const wxString& project);
   void Replace(wxStyledTextCtrl* output, const wxString& project);
+
+  wxStyledTextCtrl* GetStc();
 public:
   bool Save();
   bool SaveAs();
