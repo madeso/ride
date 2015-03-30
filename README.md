@@ -19,7 +19,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 # Features needed for a useful state
 
-* Find in files, find in solution, incremental search, other searches
+* Find in files, find in solution + replace
 * Project file so we can open project with File->Open
 * Have space/tab settings per project so the same settings are used by everyone on the project
 * Implement all missing event handlers.
@@ -29,6 +29,8 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 # Somewhat sorted roadmap
 
 * Paste selection to http://lightpaste.com/ or http://hastebin.com/
+* Find & replace in selection
+* Incremental search
 * Sync file structure instead of reloading in project explorer
 * Comment / uncomment selection
 * Quick fix for compiler error: "error: unresolved name `hellos`. Did you mean `hello`?"
