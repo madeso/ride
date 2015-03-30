@@ -159,13 +159,10 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
     if (start_index == -1) return count;
     assert(start_index != end_index);
 
-    const int start_line = stc->LineFromPosition(start_index);
-    const int start_col = start_index - stc->PositionFromLine(start_line);
-    const int end_line = stc->LineFromPosition(end_index);
-    const int end_col = end_index - stc->PositionFromLine(end_line);
-    res->push_back(FindResult(file, stc->GetLine(start_line).Trim(true).Trim(false), start_line+1, start_col+1, end_line+1, end_col+1));
-    ++count;
+    const int target_start_index = start_index;
+    int target_end_index = end_index;
 
+    // replace text
     if (doReplace) {
       const bool useRegex = flags & wxSTC_FIND_REGEXP || flags & wxSTC_FIND_POSIX;
       const int change = useRegex
@@ -173,10 +170,19 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
        : stc->ReplaceTarget(replaceText);
       assert(change > 0);
       next_index = start_index + change;
+      target_end_index = start_index + change;
     }
     else {
       next_index = end_index;
     }
+
+    // add item to the result list
+    const int start_line = stc->LineFromPosition(target_start_index);
+    const int start_col = target_start_index - stc->PositionFromLine(target_start_index);
+    const int end_line = stc->LineFromPosition(target_end_index);
+    const int end_col = target_end_index - stc->PositionFromLine(end_line);
+    res->push_back(FindResult(file, stc->GetLine(start_line).Trim(true).Trim(false), start_line + 1, start_col + 1, end_line + 1, end_col + 1));
+    ++count;
   }
 
   return count;
@@ -244,12 +250,16 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wx
   const auto count = results.size();
 
   ClearOutput(output);
-  WriteLine(output, wxString::Format("Searching for %s in %s", dlg.GetText(), file_info));
-  WriteLine(output, wxString::Format("Found %d matches", count));
+
+  const wxString find_text = find
+    ? wxString::Format("Searched for '%s'", dlg.GetText())
+    : wxString::Format("Replaced '%s' with '%s'", dlg.GetText(), dlg.getReplaceText());
+  WriteLine(output, wxString::Format("%s in %s", find_text, file_info));
+  WriteLine(output, wxString::Format("%s %d matches", find?"Found":"Replaced", count));
   WriteLine(output, "");
   for (auto res : results) {
     // try to format the same way rust related error looks like so we can reuse the parser code for both and get some synergy effects
-    const wxString mess = wxString::Format("%s:%d : %d : %d : %d found: %s", res.file, res.start_line, res.start_col, res.end_line, res.end_col, res.content);
+    const wxString mess = wxString::Format("%s:%d : %d : %d : %d %s: %s", res.file, res.start_line, res.start_col, res.end_line, res.end_col, find ? "found": "replaced", res.content);
     WriteLine(output, mess);
   }
 
