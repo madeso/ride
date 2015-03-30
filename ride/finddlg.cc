@@ -151,13 +151,14 @@ struct FindResult {
 int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText) {
   assert(res);
   assert(stc);
-  int start_index = 0;
+  int next_index = 0;
   int count = 0;
   while (true) {
     int end_index = 0;
-    start_index = stc->FindText(start_index, stc->GetLength(), text, &end_index, flags);
+    const int start_index = stc->FindText(next_index, stc->GetLength(), text, &end_index, flags);
     if (start_index == -1) return count;
     assert(start_index != end_index);
+
     const int start_line = stc->LineFromPosition(start_index);
     const int start_col = start_index - stc->PositionFromLine(start_line);
     const int end_line = stc->LineFromPosition(end_index);
@@ -171,10 +172,10 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
         ? stc->ReplaceTargetRE(replaceText)
        : stc->ReplaceTarget(replaceText);
       assert(change > 0);
-      start_index = start_index + change;
+      next_index = start_index + change;
     }
     else {
-      start_index = end_index;
+      next_index = end_index;
     }
   }
 
