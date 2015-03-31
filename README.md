@@ -25,6 +25,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Implement all missing event handlers.
 * Close project
 * Reformat code
+* Simplify coloring / replace detailed options with general options
 
 # Somewhat sorted roadmap
 
