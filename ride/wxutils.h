@@ -17,7 +17,7 @@ void ClearOutput(wxStyledTextCtrl* stc);
 
 wxPoint GetContextEventPosition(const wxContextMenuEvent& event);
 void AppendEnabled(wxMenu& menu, int id, const wxString& text, bool enabled);
-std::vector<wxString> Split(const wxString& str, char c);
+std::vector<wxString> Split(const wxString& str, const wxString& c);
 std::vector<wxString> RemoveEmptyStrings(const std::vector<wxString>& v);
 
 void SetSelection(wxListCtrl* list, long item, bool select);

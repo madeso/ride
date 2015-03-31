@@ -2,6 +2,7 @@
 #include "ride/wx.h"
 #include <wx/listctrl.h>
 #include <wx/stc/stc.h>
+#include <wx/tokenzr.h>
 
 void WriteLine(wxStyledTextCtrl* stc, const wxString& str) {
   stc->SetReadOnly(false);
@@ -32,15 +33,13 @@ void AppendEnabled(wxMenu& menu, int id, const wxString& text, bool enabled) {
   menu.Enable(id, enabled);
 }
 
-std::vector<wxString> Split(const wxString& str, char c) {
-  wxString temp = str;
-  std::vector <wxString> ret;
-  while (!temp.empty()) {
-    wxString cur = temp.BeforeFirst(c);
-    ret.push_back(cur);
-    temp = temp.AfterFirst(c);
+std::vector<wxString> Split(const wxString& str, const wxString& c) {
+  std::vector<wxString> ret;
+  wxStringTokenizer tokenizer(str, c);
+  while (tokenizer.HasMoreTokens()) {
+    wxString token = tokenizer.GetNextToken();
+    ret.push_back(token);
   }
-
   return ret;
 }
 
