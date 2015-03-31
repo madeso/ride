@@ -28,8 +28,11 @@ public:
   void UpdateTextControl();
   void ReloadFileIfNeeded();
   void FileHasBeenRenamed(const wxString& new_path);
+
   void Find(wxStyledTextCtrl* output, const wxString& project);
   void Replace(wxStyledTextCtrl* output, const wxString& project);
+  void FindInFiles(wxStyledTextCtrl* output, const wxString& project);
+  void ReplaceInFiles(wxStyledTextCtrl* output, const wxString& project);
 
   wxStyledTextCtrl* GetStc();
 public:

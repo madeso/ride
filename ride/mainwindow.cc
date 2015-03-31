@@ -61,6 +61,9 @@ enum
   ID_PROJECT_BENCH,
   ID_PROJECT_UPDATE,
 
+  ID_FIND_IN_FILES,
+  ID_REPLACE_IN_FILES,
+
   ID_VIEW_RESTORE_WINDOWS,
   ID_VIEW_SAVE_LAYOUT,
   ID_VIEW_LOAD_LAYOUT,
@@ -117,6 +120,8 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_PROJECT_UPDATE      , MainWindow::OnProjectUpdate   )
   EVT_MENU(wxID_NEW               , MainWindow::OnProjectFileNew  )
   EVT_MENU(ID_QUICK_OPEN          , MainWindow::OnProjectQuickOpen)
+  EVT_MENU(ID_FIND_IN_FILES       , MainWindow::OnProjectFindInFiles)
+  EVT_MENU(ID_REPLACE_IN_FILES    , MainWindow::OnProjectReplaceInFiles)
   
   EVT_MENU(ID_VIEW_RESTORE_WINDOWS,MainWindow::OnViewRestoreWindows )
   EVT_MENU(ID_VIEW_SAVE_LAYOUT,    MainWindow::OnViewSaveLayout )
@@ -500,6 +505,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   menu_project->AppendSeparator();
   AddMenuItem(menu_project, wxID_NEW, "", "", file_normal_xpm);
   AddMenuItem(menu_project, ID_QUICK_OPEN, "Open file in project...\tShift-Alt-O", "Quickly open a file from the project");
+  AddMenuItem(menu_project, ID_FIND_IN_FILES, "Find in files...\tCtrl-Shift-F", "Find in files");
+  AddMenuItem(menu_project, ID_REPLACE_IN_FILES, "Replace in files...\tCtrl-Shift-H", "Replace in files");
 
   //////////////////////////////////////////////////////////////////////////
 
@@ -880,6 +887,18 @@ void MainWindow::OnEditReplace(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
   if (selected_edit == NULL) return;
   selected_edit->Replace(findres_window_, project_.root_folder());
+}
+
+void MainWindow::OnProjectFindInFiles(wxCommandEvent& event) {
+  FileEdit* selected_edit = GetSelectedEditorNull();
+  if (selected_edit == NULL) return;
+  selected_edit->FindInFiles(findres_window_, project_.root_folder());
+}
+
+void MainWindow::OnProjectReplaceInFiles(wxCommandEvent& event) {
+  FileEdit* selected_edit = GetSelectedEditorNull();
+  if (selected_edit == NULL) return;
+  selected_edit->ReplaceInFiles(findres_window_, project_.root_folder());
 }
 
 //////////////////////////////////////////////////////////////////////////

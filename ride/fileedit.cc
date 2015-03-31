@@ -103,6 +103,15 @@ void FileEdit::Replace(wxStyledTextCtrl* output, const wxString& project) {
   ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, false);
 }
 
+void FileEdit::FindInFiles(wxStyledTextCtrl* output, const wxString& project) {
+  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, true);
+}
+
+
+void FileEdit::ReplaceInFiles(wxStyledTextCtrl* output, const wxString& project) {
+  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, false);
+}
+
 wxStyledTextCtrl* FileEdit::GetStc(){
   return text_;
 }

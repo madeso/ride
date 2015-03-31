@@ -93,6 +93,9 @@ private:
   void OnProjectUpdate   (wxCommandEvent& event);
   void OnProjectFileNew  (wxCommandEvent& event);
   void OnProjectQuickOpen(wxCommandEvent& event);
+  void OnProjectFindInFiles(wxCommandEvent& event);
+  void OnProjectReplaceInFiles(wxCommandEvent& event);
+
 
   void OnViewRestoreWindows(wxCommandEvent& event);
   void OnViewSaveLayout(wxCommandEvent& event);
