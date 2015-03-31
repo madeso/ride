@@ -237,9 +237,13 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wx
   }
   else {
     wxArrayString files;
-    const wxString pattern = find_dlg_data.file_types();
-    const size_t count = wxDir::GetAllFiles(root_folder, &files, pattern,
-      dlg.IsRecursive() ? wxDIR_FILES | wxDIR_DIRS : wxDIR_FILES);
+    const std::vector<wxString> patterns = Split(find_dlg_data.file_types(), ";");
+    size_t count = 0;
+    for (const auto pattern : patterns) {
+      count += wxDir::GetAllFiles(root_folder, &files, pattern,
+        dlg.IsRecursive() ? wxDIR_FILES | wxDIR_DIRS : wxDIR_FILES);
+    }
+
     file_info = wxString::Format("%d files in %s", count, root_folder);
     for (const auto file : files) {
       FindInFiles(parent, fallback, file, dlg.GetText(), dlg.GetFlags(), &results, find == false, dlg.getReplaceText(), dlg.KeepFilesOpen());
