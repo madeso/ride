@@ -95,21 +95,21 @@ void FileEdit::Delete() {
 
 
 void FileEdit::Find(wxStyledTextCtrl* output, const wxString& project) {
-  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, true);
+  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, FindAction::Find);
 }
 
 
 void FileEdit::Replace(wxStyledTextCtrl* output, const wxString& project) {
-  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, false);
+  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, FindAction::Replace);
 }
 
 void FileEdit::FindInFiles(wxStyledTextCtrl* output, const wxString& project) {
-  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, true);
+  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, FindAction::Find);
 }
 
 
 void FileEdit::ReplaceInFiles(wxStyledTextCtrl* output, const wxString& project) {
-  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, false);
+  ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output, FindAction::Replace);
 }
 
 wxStyledTextCtrl* FileEdit::GetStc(){

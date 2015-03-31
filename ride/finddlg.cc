@@ -12,7 +12,7 @@
 
 class FindDlg : public ui::Find {
 public:
-  FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, bool findd);
+  FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, FindAction find_action);
 
   const wxString GetText() const {
     return uiFindText->GetValue();
@@ -50,7 +50,7 @@ protected:
   }
 };
 
-FindDlg::FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, bool findd)
+FindDlg::FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, FindAction find_action)
   : ui::Find(parent, wxID_ANY)
 {
   uiFindText->SetValue(find);
@@ -72,8 +72,8 @@ FindDlg::FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& da
   uiFileTypes->SetValue(data.file_types().c_str());
   uiFindTarget->SetSelection(data.target());
 
-  uiReplaceStatic->Enable(findd==false);
-  uiReplaceText->Enable(findd == false);
+  uiReplaceStatic->Enable(find_action == FindAction::Replace);
+  uiReplaceText->Enable(find_action == FindAction::Replace);
 }
 
 void FindDlg::ToData(ride::FindDlg& data) const {
@@ -148,7 +148,8 @@ struct FindResult {
   int end_col;
 };
 
-int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText) {
+int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res,
+  FindAction find_action, const wxString& replaceText) {
   assert(res);
   assert(stc);
   int next_index = 0;
@@ -163,7 +164,7 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
     int target_end_index = end_index;
 
     // replace text
-    if (doReplace) {
+    if (find_action == FindAction::Replace) {
       const bool useRegex = flags & wxSTC_FIND_REGEXP || flags & wxSTC_FIND_POSIX;
       const int change = useRegex
         ? stc->ReplaceTargetRE(replaceText)
@@ -188,7 +189,8 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
   return count;
 }
 
-void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res, bool doReplace, const wxString& replaceText, bool keepFilesOpen) {
+void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString& file, const wxString& text, int flags,
+  std::vector<FindResult>* res, FindAction find_action, const wxString& replaceText, bool keepFilesOpen) {
   FileEdit* edit = parent->GetFile(file);
   wxStyledTextCtrl* stc = NULL;
   if (edit) {
@@ -197,7 +199,7 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString&
   else {
     fallback->LoadFile(file);
 
-    if (doReplace && keepFilesOpen) {
+    if (find_action == FindAction::Replace && keepFilesOpen) {
       int found = fallback->FindText(0, stc->GetLength(), text, NULL, flags);
       if (found > 0) {
         FileEdit* opened_edit = parent->OpenFile(file);
@@ -209,18 +211,19 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString&
     }
   }
   assert(stc);
-  int count = FindInStc(stc, file, text, flags, res, doReplace, replaceText);
+  int count = FindInStc(stc, file, text, flags, res, find_action, replaceText);
 
-  if (doReplace && count > 0 && stc == fallback) {
+  if (find_action == FindAction::Replace && count > 0 && stc == fallback) {
     if (false == stc->SaveFile(file)) {
       ShowError(parent, "Failed to save after replace!", "Error saving!");
     }
   }
 }
 
-bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wxString& current_file, const wxString root_folder, wxStyledTextCtrl* output, bool find) {
+bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wxString& current_file,
+  const wxString root_folder, wxStyledTextCtrl* output, FindAction find_action) {
   static ride::FindDlg find_dlg_data;
-  FindDlg dlg(parent, current_selection, find_dlg_data, find);
+  FindDlg dlg(parent, current_selection, find_dlg_data, find_action);
 
   if (wxID_OK != dlg.ShowModal()) return false;
   dlg.ToData(find_dlg_data);
@@ -233,7 +236,7 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wx
   wxStyledTextCtrl* fallback = dlg.GetStc();
 
   if (dlg.LookInCurrentFile()) {
-    FindInFiles(parent, fallback, current_file, dlg.GetText(), dlg.GetFlags(), &results, find==false, dlg.getReplaceText(), dlg.KeepFilesOpen());
+    FindInFiles(parent, fallback, current_file, dlg.GetText(), dlg.GetFlags(), &results, find_action, dlg.getReplaceText(), dlg.KeepFilesOpen());
   }
   else {
     wxArrayString files;
@@ -246,7 +249,7 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wx
 
     file_info = wxString::Format("%d files in %s", count, root_folder);
     for (const auto file : files) {
-      FindInFiles(parent, fallback, file, dlg.GetText(), dlg.GetFlags(), &results, find == false, dlg.getReplaceText(), dlg.KeepFilesOpen());
+      FindInFiles(parent, fallback, file, dlg.GetText(), dlg.GetFlags(), &results, find_action, dlg.getReplaceText(), dlg.KeepFilesOpen());
     }
   }
   
@@ -255,15 +258,15 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wx
 
   ClearOutput(output);
 
-  const wxString find_text = find
+  const wxString find_text = find_action == FindAction::Find
     ? wxString::Format("Searched for '%s'", dlg.GetText())
     : wxString::Format("Replaced '%s' with '%s'", dlg.GetText(), dlg.getReplaceText());
   WriteLine(output, wxString::Format("%s in %s", find_text, file_info));
-  WriteLine(output, wxString::Format("%s %d matches", find?"Found":"Replaced", count));
+  WriteLine(output, wxString::Format("%s %d matches", find_action == FindAction::Find ? "Found" : "Replaced", count));
   WriteLine(output, "");
   for (auto res : results) {
     // try to format the same way rust related error looks like so we can reuse the parser code for both and get some synergy effects
-    const wxString mess = wxString::Format("%s:%d : %d : %d : %d %s: %s", res.file, res.start_line, res.start_col, res.end_line, res.end_col, find ? "found": "replaced", res.content);
+    const wxString mess = wxString::Format("%s:%d : %d : %d : %d %s: %s", res.file, res.start_line, res.start_col, res.end_line, res.end_col, find_action == FindAction::Find ? "found" : "replaced", res.content);
     WriteLine(output, mess);
   }
 
