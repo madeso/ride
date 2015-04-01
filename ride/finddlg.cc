@@ -10,6 +10,8 @@
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
 
+#include <memory>
+
 class FindDlg : public ui::Find {
 public:
   FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, FindAction find_action, FindScope find_scope);
@@ -148,10 +150,29 @@ struct FindResult {
   int end_col;
 };
 
+class UndoRedo {
+public:
+  UndoRedo(wxStyledTextCtrl* s) : stc(s) {
+    assert(stc);
+    stc->BeginUndoAction();
+  }
+  ~UndoRedo(){
+    stc->EndUndoAction();
+  }
+
+  wxStyledTextCtrl* stc;
+};
+
 int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text, int flags, std::vector<FindResult>* res,
   FindAction find_action, const wxString& replaceText) {
   assert(res);
   assert(stc);
+  std::unique_ptr<UndoRedo> undoredo;
+
+  // there is only need to create a undo/redo object if we're replacing
+  if (find_action == FindAction::Replace){
+    undoredo.reset(new UndoRedo(stc));
+  }
   int next_index = 0;
   int count = 0;
   while (true) {
