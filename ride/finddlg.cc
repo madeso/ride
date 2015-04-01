@@ -12,7 +12,7 @@
 
 class FindDlg : public ui::Find {
 public:
-  FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, FindAction find_action);
+  FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, FindAction find_action, FindScope find_scope);
 
   const wxString GetText() const {
     return uiFindText->GetValue();
@@ -50,7 +50,7 @@ protected:
   }
 };
 
-FindDlg::FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, FindAction find_action)
+FindDlg::FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& data, FindAction find_action, FindScope find_scope)
   : ui::Find(parent, wxID_ANY)
 {
   uiFindText->SetValue(find);
@@ -59,7 +59,7 @@ FindDlg::FindDlg(wxWindow* parent, const wxString& find, const ride::FindDlg& da
 
   uiLookIn->Append("Current file");
   uiLookIn->Append("This project");
-  uiLookIn->SetSelection(0);
+  uiLookIn->SetSelection(static_cast<int>(find_scope)); // assume the enum is file -> project
 
   uiFindTarget->Append("Normal text");
   uiFindTarget->Append("Regex");
@@ -221,9 +221,9 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString&
 }
 
 bool ShowFindDlg(MainWindow* parent, const wxString& current_selection, const wxString& current_file,
-  const wxString root_folder, wxStyledTextCtrl* output, FindAction find_action) {
+  const wxString root_folder, wxStyledTextCtrl* output, FindAction find_action, FindScope find_scope) {
   static ride::FindDlg find_dlg_data;
-  FindDlg dlg(parent, current_selection, find_dlg_data, find_action);
+  FindDlg dlg(parent, current_selection, find_dlg_data, find_action, find_scope);
 
   if (wxID_OK != dlg.ShowModal()) return false;
   dlg.ToData(find_dlg_data);
