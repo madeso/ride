@@ -165,6 +165,8 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
 
     // replace text
     if (find_action == FindAction::Replace) {
+      stc->SetTargetStart(start_index);
+      stc->SetTargetEnd(end_index);
       const bool useRegex = flags & wxSTC_FIND_REGEXP || flags & wxSTC_FIND_POSIX;
       const int change = useRegex
         ? stc->ReplaceTargetRE(replaceText)
