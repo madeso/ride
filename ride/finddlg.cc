@@ -181,7 +181,7 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
 
     // add item to the result list
     const int start_line = stc->LineFromPosition(target_start_index);
-    const int start_col = target_start_index - stc->PositionFromLine(target_start_index);
+    const int start_col = target_start_index - stc->PositionFromLine(start_line);
     const int end_line = stc->LineFromPosition(target_end_index);
     const int end_col = target_end_index - stc->PositionFromLine(end_line);
     res->push_back(FindResult(file, stc->GetLine(start_line).Trim(true).Trim(false), start_line + 1, start_col + 1, end_line + 1, end_col + 1));
