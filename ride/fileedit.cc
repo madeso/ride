@@ -299,28 +299,33 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
   assert(filename_ == mess.file());
   const bool is_error = mess.type() == CompilerMessage::TYPE_ERROR;
   const bool is_warning = mess.type() == CompilerMessage::TYPE_WARNING;
+  const bool is_note = mess.type() == CompilerMessage::TYPE_NOTE;
 
   if (main_->settings().show_compiler_messages_as_annotations()
-    &&  (is_error || is_warning) ) {
+    &&  (is_error || is_warning || is_note) ) {
     const int style = is_error ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
+    // todo: setup note annotations!
     const int line = mess.start_line() -1;
-    const wxString type = is_error ? "Error: " : "Warning: ";
+    const wxString type = is_error ? "Error: " : (is_warning ? "Warning: " : "");
     const wxString value = type + mess.message();
     const wxString old_text = text_->AnnotationGetText(line); // todo: setup multicoloring/styling
     const wxString ann = old_text.IsEmpty() ? value : old_text + "\n" + value;
     text_->AnnotationSetText(line, ann);
     text_->AnnotationSetStyle(line, style);
 
-    const bool on_single_line = mess.start_line() == mess.end_line();
-    if (main_->settings().show_multiline_indicators() || on_single_line) {
-      int from = FromLineColToTextOffset(text_, mess.start_line(), mess.start_index());
-      int to = FromLineColToTextOffset(text_, mess.end_line(), mess.end_index());
+    if (is_warning || is_error) {
+      // only do indicators for errors and warnings, not for notes
+      const bool on_single_line = mess.start_line() == mess.end_line();
+      if (main_->settings().show_multiline_indicators() || on_single_line) {
+        int from = FromLineColToTextOffset(text_, mess.start_line(), mess.start_index());
+        int to = FromLineColToTextOffset(text_, mess.end_line(), mess.end_index());
 
-      const int ind = is_error ? ID_INDICATOR_ERROR : ID_INDICATOR_WARNING;
+        const int ind = is_error ? ID_INDICATOR_ERROR : ID_INDICATOR_WARNING;
 
-      if (from >= 0 && to >= 0) {
-        text_->SetIndicatorCurrent(ind);
-        text_->IndicatorFillRange(from, to - from);
+        if (from >= 0 && to >= 0) {
+          text_->SetIndicatorCurrent(ind);
+          text_->IndicatorFillRange(from, to - from);
+        }
       }
     }
   }

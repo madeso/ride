@@ -56,6 +56,7 @@ const wxRegEx& RegexOutputRelated() {
 CompilerMessage::Type ParseCMT(const wxString& str) {
   if (str == "warning") return CompilerMessage::TYPE_WARNING;
   else if (str == "error") return CompilerMessage::TYPE_ERROR;
+  else if (str == "note") return CompilerMessage::TYPE_NOTE;
   else return CompilerMessage::TYPE_UNKNOWN;
 }
 

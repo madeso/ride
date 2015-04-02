@@ -6,7 +6,7 @@
 class CompilerMessage {
 public:
   enum Type {
-    TYPE_UNKNOWN, TYPE_WARNING, TYPE_ERROR, TYPE_RELATED
+    TYPE_UNKNOWN, TYPE_NOTE, TYPE_WARNING, TYPE_ERROR, TYPE_RELATED
   };
 
   CompilerMessage();
