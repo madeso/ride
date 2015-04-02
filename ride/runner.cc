@@ -5,14 +5,32 @@
 
 #include "ride/mainwindow.h"
 
-Runner::Runner() {
+class PipedProcess;
+class AsyncProcess;
+
+WX_DEFINE_ARRAY_PTR(PipedProcess*, PipedProcessesArray);
+WX_DEFINE_ARRAY_PTR(AsyncProcess*, AsyncProcessesArray);
+
+struct Runner::Pimpl {
+  Pimpl();
+  void Append(const wxString&) {}
+  void AddPipedProcess(PipedProcess *process);
+  void OnPipedProcessTerminated(PipedProcess *process);
+  void OnAsyncProcessTerminated(AsyncProcess *process);
+
+  int RunCmd(const wxString& root, const wxString& cmd);
+
+  PipedProcessesArray piped_running_processes_;
+  AsyncProcessesArray async_running_processes_;
+};
+
+Runner::Pimpl::Pimpl() {
 }
-//////////////////////////////////////////////////////////////////////////
 
 class AsyncProcess : public wxProcess
 {
 public:
-  AsyncProcess(Runner* project, const wxString& cmd)
+  AsyncProcess(Runner::Pimpl* project, const wxString& cmd)
     : wxProcess(), cmd_(cmd)
   {
     project_ = project;
@@ -26,14 +44,14 @@ public:
   }
 
 protected:
-  Runner *project_;
+  Runner::Pimpl *project_;
   wxString cmd_;
 };
 
 class PipedProcess : public AsyncProcess
 {
 public:
-  PipedProcess(Runner *project, const wxString& cmd)
+  PipedProcess(Runner::Pimpl *project, const wxString& cmd)
     : AsyncProcess(project, cmd)
   {
     Redirect();
@@ -69,15 +87,9 @@ public:
   }
 };
 
-void Runner::RunCmd(const wxString& root, const wxString& cmd) {
-  DoCmd(root, cmd, true);
-}
+int Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
+  bool async = true;
 
-int Runner::RunCmdWait(const wxString& root, const wxString& cmd) {
-  return DoCmd(root, cmd, false);
-}
-
-int Runner::DoCmd(const wxString& root, const wxString& cmd, bool async) {
   PipedProcess* process = new PipedProcess(this, cmd);
   Append("> " + cmd);
 
@@ -85,8 +97,8 @@ int Runner::DoCmd(const wxString& root, const wxString& cmd, bool async) {
   env.cwd = root;
 
   const int flags = async
-    ? wxEXEC_ASYNC | wxEXEC_HIDE_CONSOLE
-    : wxEXEC_SYNC  | wxEXEC_HIDE_CONSOLE;
+    ? wxEXEC_ASYNC | wxEXEC_SHOW_CONSOLE
+    : wxEXEC_SYNC | wxEXEC_SHOW_CONSOLE;
 
   const int execute_result = wxExecute(cmd, flags, process, &env);
   
@@ -108,20 +120,37 @@ int Runner::DoCmd(const wxString& root, const wxString& cmd, bool async) {
   return execute_result;
 }
 
-void Runner::AddPipedProcess(PipedProcess *process)
+void Runner::Pimpl::AddPipedProcess(PipedProcess *process)
 {
   piped_running_processes_.Add(process);
   async_running_processes_.Add(process);
 }
 
-void Runner::OnPipedProcessTerminated(PipedProcess *process)
+void Runner::Pimpl::OnPipedProcessTerminated(PipedProcess *process)
 {
   piped_running_processes_.Remove(process);
 }
 
-void Runner::OnAsyncProcessTerminated(AsyncProcess *process)
+void Runner::Pimpl::OnAsyncProcessTerminated(AsyncProcess *process)
 {
   async_running_processes_.Remove(process);
   delete process;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+Runner::Runner() {
+}
+Runner::~Runner() {
+}
+
+bool Runner::RunCmd(const wxString& root, const wxString& cmd) {
+  return false;
+}
+bool Runner::IsRunning() const {
+  return true;
+}
+int Runner::GetExitCode() {
+  return -1;
 }
 

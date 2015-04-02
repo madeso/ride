@@ -434,7 +434,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
 , output_window_(NULL)
 , findres_window_(NULL)
-, project_(this, wxEmptyString)
+, project_( new Project(this, wxEmptyString) )
 , app_name_(app_name)
 {
   SetIcon(wxICON(aaaaa_logo));
@@ -642,7 +642,7 @@ void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplor
 
 
 void MainWindow::OnProjectFileNew(wxCommandEvent& event) {
-  CreateNewFile(project_.root_folder(), this, project_explorer_);
+  CreateNewFile(project_->root_folder(), this, project_explorer_);
 }
 
 void MainWindow::OpenCompilerMessage(const CompilerMessage& message) {
@@ -881,25 +881,25 @@ void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
 void MainWindow::OnEditFind(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull(); 
   if (selected_edit == NULL) return; 
-  selected_edit->Find(findres_window_, project_.root_folder());
+  selected_edit->Find(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnEditReplace(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
   if (selected_edit == NULL) return;
-  selected_edit->Replace(findres_window_, project_.root_folder());
+  selected_edit->Replace(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnProjectFindInFiles(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
   if (selected_edit == NULL) return;
-  selected_edit->FindInFiles(findres_window_, project_.root_folder());
+  selected_edit->FindInFiles(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnProjectReplaceInFiles(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
   if (selected_edit == NULL) return;
-  selected_edit->ReplaceInFiles(findres_window_, project_.root_folder());
+  selected_edit->ReplaceInFiles(findres_window_, project_->root_folder());
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -934,10 +934,10 @@ MEM_FUN(ShowProperties)
 //////////////////////////////////////////////////////////////////////////
 
 void MainWindow::UpdateTitle() {
-  const wxString new_title = project_.root_folder().IsEmpty()
+  const wxString new_title = project_->root_folder().IsEmpty()
     ? app_name_
     // todo: only display project folder name instead of the whole path?
-    : wxString::Format("%s - %s", project_.root_folder(), app_name_);
+    : wxString::Format("%s - %s", project_->root_folder(), app_name_);
   this->SetTitle(new_title);
 }
 
@@ -956,7 +956,13 @@ public:
   // returns error or empty string
   static const wxString Run(const wxString& root, const wxString& cmd) {
     CmdRunner runner;
-    const int result = runner.RunCmdWait(root, cmd);
+    if (false == runner.RunCmd(root, cmd)) {
+      return "Unable to start";
+    }
+    while (runner.IsRunning()) {
+      // wait...
+    }
+    const int result = runner.GetExitCode();
     if (result == 0) return wxEmptyString;
     else return runner.output;
   }
@@ -1010,7 +1016,7 @@ bool MainWindow::OpenProject(const wxString full_path) {
 
   // don't load the cargo file, load the whole folder instead as cargo files should be named in a specific way!
   const wxString project_folder = cargo_file.GetPathWithSep();
-  project_ = Project(this, project_folder);
+  project_.reset(new Project(this, project_folder));
   project_explorer_->SetFolder(project_folder);
   UpdateTitle();
   return true;
@@ -1020,7 +1026,7 @@ void MainWindow::SaveAllChangedProjectFiles() {
   for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
     if (edit) {
-      if (project_.IsPartOfProject(edit->filename())) {
+      if (project_->IsPartOfProject(edit->filename())) {
         edit->Save();
       }
     }
@@ -1029,7 +1035,7 @@ void MainWindow::SaveAllChangedProjectFiles() {
 
 void MainWindow::OnProjectQuickOpen(wxCommandEvent& event) {
   std::vector<wxString> selected;
-  if (false == ShowQuickOpenDlg(this, project_.root_folder(), project_explorer_->GetFiles(), &selected)) {
+  if (false == ShowQuickOpenDlg(this, project_->root_folder(), project_explorer_->GetFiles(), &selected)) {
     return;
   }
   for (const auto& file : selected) {
@@ -1039,7 +1045,7 @@ void MainWindow::OnProjectQuickOpen(wxCommandEvent& event) {
 
 #define MEM_FUN(X) \
   void MainWindow::OnProject ## X(wxCommandEvent& event) {\
-    project_. ## X ();\
+    project_-> ## X ();\
   }
 
 MEM_FUN(Settings)
@@ -1074,7 +1080,7 @@ void MainWindow::SaveSession() {
   session.set_window_width(size.x);
   session.set_window_height(size.y);
   session.set_state(state);
-  session.set_project(project_.GetCargoFile());
+  session.set_project(project_->GetCargoFile());
 
   session.set_aui_perspective(perspective);
 

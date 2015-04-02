@@ -134,7 +134,7 @@ private:
   ProjectExplorer* project_explorer_;
 
   ride::Settings settings_;
-  Project project_;
+  std::unique_ptr<Project> project_;
   wxString app_name_;
   std::vector<CompilerMessage> compiler_messages_;
 
