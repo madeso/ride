@@ -9,16 +9,18 @@ class PipedProcess;
 class Process;
 
 struct Runner::Pimpl {
-  Pimpl() : processes_(0), pid_(0), exit_code_(-1) {
+  Pimpl() : processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
   }
+  ~Pimpl();
 
   void Append(const wxString&) {}
 
-  void ProcessTerminated(Process *process);
+  void MarkForDeletion(Process *process);
 
   bool RunCmd(const wxString& root, const wxString& cmd);
 
   Process* processes_; // the current running process or NULL
+  Process* delete_processes_; // process to be deleted at the end
   long pid_; // the id of the current or previous running process
   int exit_code_;
 };
@@ -38,12 +40,11 @@ public:
 
     // show the rest of the output
     while (HasInput()) {}
-    runner_->ProcessTerminated(this);
+    runner_->MarkForDeletion(this);
 
     runner_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
       pid, cmd_.c_str(), status));
     runner_->Append("");
-    runner_->ProcessTerminated(this);
     runner_->exit_code_ = status;
   }
 
@@ -99,11 +100,15 @@ bool Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
   return true;
 }
 
-void Runner::Pimpl::ProcessTerminated(Process *process)
+void Runner::Pimpl::MarkForDeletion(Process *process)
 {
   assert(processes_ == process);
-  processes_ = process;
-  delete process;
+  processes_ = NULL;
+  delete_processes_ = process;
+}
+
+Runner::Pimpl:: ~Pimpl() {
+  delete delete_processes_;
 }
 
 //////////////////////////////////////////////////////////////////////////
