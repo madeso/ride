@@ -77,7 +77,7 @@ public:
   }
 
   virtual bool HasInput() {
-    // origianl source: http://sourceforge.net/p/fourpane/code/HEAD/tree/trunk/ExecuteInDialog.cpp
+    // original source: http://sourceforge.net/p/fourpane/code/HEAD/tree/trunk/ExecuteInDialog.cpp
     char c;
 
     bool hasInput = false;
