@@ -6,58 +6,40 @@
 #include "ride/mainwindow.h"
 
 class PipedProcess;
-class AsyncProcess;
+class Process;
 
 struct Runner::Pimpl {
-  Pimpl() : piped_running_processes_(0), async_running_processes_(0) {
+  Pimpl() : processes_(0) {
   }
 
   void Append(const wxString&) {}
-  void AddPipedProcess(PipedProcess *process);
-  void OnPipedProcessTerminated(PipedProcess *process);
-  void OnAsyncProcessTerminated(AsyncProcess *process);
+  void AddProcess(Process *process);
+  void ProcessTerminated(Process *process);
 
   int RunCmd(const wxString& root, const wxString& cmd);
 
-  PipedProcess* piped_running_processes_;
-  AsyncProcess* async_running_processes_;
+  Process* processes_;
 };
 
-class AsyncProcess : public wxProcess
+class Process : public wxProcess
 {
 public:
-  AsyncProcess(Runner::Pimpl* project, const wxString& cmd)
+  Process(Runner::Pimpl* project, const wxString& cmd)
     : wxProcess(), cmd_(cmd)
   {
     runner_ = project;
-  }
-
-  virtual void OnTerminate(int pid, int status) {
-    runner_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
-      pid, cmd_.c_str(), status));
-    runner_->Append("");
-    runner_->OnAsyncProcessTerminated(this);
-  }
-
-protected:
-  Runner::Pimpl *runner_;
-  wxString cmd_;
-};
-
-class PipedProcess : public AsyncProcess
-{
-public:
-  PipedProcess(Runner::Pimpl *project, const wxString& cmd)
-    : AsyncProcess(project, cmd)
-  {
     Redirect();
   }
 
   virtual void OnTerminate(int pid, int status) {
     // show the rest of the output
-    while (HasInput()) { }
-    runner_->OnPipedProcessTerminated(this);
-    AsyncProcess::OnTerminate(pid, status);
+    while (HasInput()) {}
+    runner_->ProcessTerminated(this);
+
+    runner_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
+      pid, cmd_.c_str(), status));
+    runner_->Append("");
+    runner_->ProcessTerminated(this);
   }
 
   virtual bool HasInput() {
@@ -81,12 +63,16 @@ public:
 
     return hasInput;
   }
+
+protected:
+  Runner::Pimpl *runner_;
+  wxString cmd_;
 };
 
 int Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
   bool async = true;
 
-  PipedProcess* process = new PipedProcess(this, cmd);
+  Process* process = new Process(this, cmd);
   Append("> " + cmd);
 
   wxExecuteEnv env;
@@ -105,7 +91,7 @@ int Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
       delete process;
     }
     else {
-      AddPipedProcess(process);
+      AddProcess(process);
     }
   }
   else {
@@ -116,24 +102,16 @@ int Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
   return execute_result;
 }
 
-void Runner::Pimpl::AddPipedProcess(PipedProcess *process)
+void Runner::Pimpl::AddProcess(Process *process)
 {
-  assert(piped_running_processes_ == NULL);
-  assert(async_running_processes_ == NULL);
-  piped_running_processes_ = process;
-  async_running_processes_ = process;
+  assert(processes_ == NULL);
+  processes_ = process;
 }
 
-void Runner::Pimpl::OnPipedProcessTerminated(PipedProcess *process)
+void Runner::Pimpl::ProcessTerminated(Process *process)
 {
-  assert(piped_running_processes_ == process);
-  piped_running_processes_ = NULL;
-}
-
-void Runner::Pimpl::OnAsyncProcessTerminated(AsyncProcess *process)
-{
-  assert(async_running_processes_ == process);
-  async_running_processes_ = process;
+  assert(processes_ == process);
+  processes_ = process;
   delete process;
 }
 
