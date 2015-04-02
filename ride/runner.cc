@@ -29,18 +29,18 @@ public:
   AsyncProcess(Runner::Pimpl* project, const wxString& cmd)
     : wxProcess(), cmd_(cmd)
   {
-    project_ = project;
+    runner_ = project;
   }
 
   virtual void OnTerminate(int pid, int status) {
-    project_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
+    runner_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
       pid, cmd_.c_str(), status));
-    project_->Append("");
-    project_->OnAsyncProcessTerminated(this);
+    runner_->Append("");
+    runner_->OnAsyncProcessTerminated(this);
   }
 
 protected:
-  Runner::Pimpl *project_;
+  Runner::Pimpl *runner_;
   wxString cmd_;
 };
 
@@ -56,7 +56,7 @@ public:
   virtual void OnTerminate(int pid, int status) {
     // show the rest of the output
     while (HasInput()) { }
-    project_->OnPipedProcessTerminated(this);
+    runner_->OnPipedProcessTerminated(this);
     AsyncProcess::OnTerminate(pid, status);
   }
 
@@ -67,7 +67,7 @@ public:
     {
       wxTextInputStream tis(*GetInputStream());
       const wxString msg = tis.ReadLine(); // this assumes that the output is always line buffered
-      project_->Append(msg);
+      runner_->Append(msg);
       hasInput = true;
     }
 
@@ -75,7 +75,7 @@ public:
     {
       wxTextInputStream tis(*GetErrorStream());
       const wxString msg = tis.ReadLine(); // this assumes that the output is always line buffered
-      project_->Append(msg);
+      runner_->Append(msg);
       hasInput = true;
     }
 
