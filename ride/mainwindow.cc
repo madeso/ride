@@ -941,7 +941,7 @@ void MainWindow::UpdateTitle() {
   this->SetTitle(new_title);
 }
 
-class CmdRunner : public Runner {
+class CmdRunner : public SingleRunner {
 private:
   CmdRunner() {
   }
@@ -956,7 +956,7 @@ public:
   // returns error or empty string
   static const wxString Run(const wxString& root, const wxString& cmd) {
     CmdRunner runner;
-    if (false == runner.RunCmd(root, cmd)) {
+    if (false == runner.RunCmd(Command(root, cmd))) {
       return "Unable to start";
     }
     while (runner.IsRunning()) {

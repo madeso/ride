@@ -1,9 +1,48 @@
 #ifndef RIDE_RUNNER_H
 #define RIDE_RUNNER_H
 
+#include <vector>
 #include <memory>
-class wxString;
 
+#include "ride/wx.h"
+
+class Runner;
+
+class Command {
+public:
+  Command(const wxString& root, const wxString& cmd);
+
+  wxString root;
+  wxString cmd;
+};
+
+// only run a single command
+class SingleRunner {
+public:
+  SingleRunner();
+  ~SingleRunner();
+
+  SingleRunner(const SingleRunner&) = delete;
+  bool operator=(const SingleRunner&) = delete;
+  
+  bool IsRunning() const;
+
+protected:
+  bool RunCmd(const Command& cmd);
+  virtual void Append(const wxString& str) = 0;
+  virtual void Completed();
+  int GetExitCode();
+
+public:
+  struct Pimpl;
+
+private:
+  friend struct Pimpl;
+  std::unique_ptr<Pimpl> pimpl;
+};
+
+class BasicRunner;
+// multiple runners, queue commands
 class Runner {
 public:
   Runner();
@@ -11,18 +50,16 @@ public:
 
   Runner(const Runner&) = delete;
   bool operator=(const Runner&) = delete;
-  
 protected:
-  bool RunCmd(const wxString& root, const wxString& cmd);
+  bool RunCmd(const Command& cmd);
   bool IsRunning() const;
   virtual void Append(const wxString& str) = 0;
-  int GetExitCode();
-
-public:
-  struct Pimpl;
 
 private:
-  std::unique_ptr<Pimpl> pimpl;
+  friend class BasicRunner;
+  bool RunNext(int last_exit_code);
+  std::unique_ptr<BasicRunner> runner_;
+  std::vector<Command> commands_;
 };
 
 

@@ -8,8 +8,15 @@
 class PipedProcess;
 class Process;
 
-struct Runner::Pimpl {
-  explicit Pimpl(Runner* p) : parent(p), processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
+//////////////////////////////////////////////////////////////////////////
+
+Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+struct SingleRunner::Pimpl {
+  explicit Pimpl(SingleRunner* p) : parent(p), processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
     assert(parent);
   }
   ~Pimpl();
@@ -20,9 +27,14 @@ struct Runner::Pimpl {
 
   void MarkForDeletion(Process *process);
 
-  bool RunCmd(const wxString& root, const wxString& cmd);
+  bool RunCmd(const Command& cmd);
 
-  Runner* parent;
+  void OnCompleted() {
+    assert(parent);
+    parent->Completed();
+  }
+
+  SingleRunner* parent;
   Process* processes_; // the current running process or NULL
   Process* delete_processes_; // process to be deleted at the end
   long pid_; // the id of the current or previous running process
@@ -32,7 +44,7 @@ struct Runner::Pimpl {
 class Process : public wxProcess
 {
 public:
-  Process(Runner::Pimpl* project, const wxString& cmd)
+  Process(SingleRunner::Pimpl* project, const wxString& cmd)
     : wxProcess(), cmd_(cmd)
   {
     runner_ = project;
@@ -50,6 +62,7 @@ public:
       pid, cmd_.c_str(), status));
     runner_->Append("");
     runner_->exit_code_ = status;
+    runner_->OnCompleted();
   }
 
   virtual bool HasInput() {
@@ -75,24 +88,24 @@ public:
   }
 
 protected:
-  Runner::Pimpl *runner_;
+  SingleRunner::Pimpl *runner_;
   wxString cmd_;
 };
 
-bool Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
-  Process* process = new Process(this, cmd);
-  Append("> " + cmd);
+bool SingleRunner::Pimpl::RunCmd(const Command& c) {
+  Process* process = new Process(this, c.cmd);
+  Append("> " + c.cmd);
 
   wxExecuteEnv env;
-  env.cwd = root;
+  env.cwd = c.root;
 
   const int flags = wxEXEC_ASYNC | wxEXEC_SHOW_CONSOLE;
 
-  const long process_id = wxExecute(cmd, flags, process, &env);
+  const long process_id = wxExecute(c.cmd, flags, process, &env);
   
   // async call
   if (!process_id) {
-    Append(wxString::Format(wxT("Execution of '%s' failed."), cmd.c_str()));
+    Append(wxT("Execution failed."));
     delete process;
     return false;
   }
@@ -104,38 +117,102 @@ bool Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
   return true;
 }
 
-void Runner::Pimpl::MarkForDeletion(Process *process)
+void SingleRunner::Pimpl::MarkForDeletion(Process *process)
 {
   assert(processes_ == process);
   processes_ = NULL;
   delete_processes_ = process;
 }
 
-Runner::Pimpl:: ~Pimpl() {
+SingleRunner::Pimpl:: ~Pimpl() {
   delete delete_processes_;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-Runner::Runner() : pimpl(new Pimpl(this)) {
+SingleRunner::SingleRunner() : pimpl(new Pimpl(this)) {
 }
 
-Runner::~Runner() {
+SingleRunner::~SingleRunner() {
 }
 
-bool Runner::RunCmd(const wxString& root, const wxString& cmd) {
+bool SingleRunner::RunCmd(const Command& cmd) {
   assert(pimpl);
   assert(this->IsRunning() == false);
-  return pimpl->RunCmd(root, cmd);
+  return pimpl->RunCmd(cmd);
 }
 
-bool Runner::IsRunning() const {
+bool SingleRunner::IsRunning() const {
   return pimpl->processes_ != NULL;
 }
 
-int Runner::GetExitCode() {
+void SingleRunner::Completed() {
+  // empty
+}
+
+int SingleRunner::GetExitCode() {
   assert(this->IsRunning() == false);
   assert(pimpl->pid_ != 0);
   return pimpl->exit_code_;
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+class BasicRunner : public SingleRunner {
+public:
+  BasicRunner(Runner* r) : runner_(r) {
+    assert(runner_);
+  }
+
+  virtual void Append(const wxString& str) {
+    assert(runner_);
+    runner_->Append(str);
+  }
+  virtual void Completed() {
+    assert(runner_);
+    runner_->RunNext(GetExitCode());
+  }
+  bool Run(const Command& cmd) {
+    return RunCmd(cmd);
+  }
+private:
+  Runner* runner_;
+};
+
+Runner::Runner(){
+}
+
+Runner::~Runner(){
+}
+
+bool Runner::RunCmd(const Command& cmd) {
+  commands_.push_back(cmd);
+  if (IsRunning() == true) return true;
+  return RunNext(0);
+}
+
+bool Runner::RunNext(int last_exit_code) {
+  assert(IsRunning() == false);
+  if (commands_.empty()) return false;
+
+  if (last_exit_code == 0) {
+    // run
+    runner_.reset(new BasicRunner(this));
+    const bool run_result = runner_->Run(*commands_.begin());
+    if (run_result) {
+      commands_.erase(commands_.begin());
+    }
+    return run_result;
+  }
+  else {
+    commands_.clear();
+    return false;
+  }
+}
+
+bool Runner::IsRunning() const {
+  if (runner_) {
+    return runner_->IsRunning();
+  }
+  return false;
+}
