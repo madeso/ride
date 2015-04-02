@@ -28,7 +28,7 @@ namespace regex {
   const wxString SEP = "[/\\\\]";
   const wxString DRIVE = "(?:[a-zA-Z]\\:)?";
   const wxString NAME = "[a-zA-Z\\.0-9\\-_]+";
-  const wxString FILE = "(" + DRIVE + "(?:" + SEP + NAME + ")+)";
+  const wxString FILE = "(" + DRIVE + SEP + "?(?:" + NAME + SEP + ")*" + NAME + "?)";
   // const wxString FILE = "(?:[\\w]\\:|\\\\)(\\\\[a-z_\\-\\s0-9\\.]+)+\\.[a-zA-Z]+";
   const wxString INT = "([0-9]+)";
   const wxString ID = "([a-zA-Z]+)";
@@ -39,6 +39,22 @@ namespace regex {
 
   // C:\Users\gustav\WorkingFolder\librust\src\crc32.rs:4 pub struct Crc32 {
   const wxString SIMPLE_REGEX_OUTPUT = "^" + FILE + "\\:" + INT + WS + TEXT + "$";
+}
+
+namespace {
+struct FileTest {
+  FileTest() {
+    wxRegEx file("^" + regex::FILE + "$", wxRE_ADVANCED);
+    assert(file.IsValid() && "File regex failed to compile");
+
+    assert(file.Matches("C:\\test.txt"));
+    assert(file.Matches("C:/test.txt"));
+    assert(file.Matches("C:/test/lala.txt"));
+    assert(file.Matches("/test/lala.txt"));
+    assert(file.Matches("test/lala.txt"));
+    assert(file.Matches("lala.txt"));
+  }
+} test;
 }
 
 const wxRegEx& ComplexRegexOutput() {
