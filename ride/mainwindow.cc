@@ -145,6 +145,7 @@ void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& evt) {
   FileEdit* selected_file = GetSelectedEditorNull();
   if (selected_file) {
     file_name = selected_file->filename();
+    selected_file->SetFocus();
   }
 
   project_explorer_->HighlightOpenFile(file_name);
@@ -779,7 +780,7 @@ FileEdit* MainWindow::OpenFile(const wxString& file, int start_line, int start_i
     : AddCompilerMessages(compiler_messages_, new FileEdit(notebook_, this, full_path))
     ;
   found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
-  found_edit_or_new->Focus();
+  found_edit_or_new->SetFocus();
 
   return found_edit_or_new;
 }

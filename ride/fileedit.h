@@ -21,7 +21,6 @@ public:
   void GetSelection(int* start_line, int* start_index, int* end_line, int* end_index);
   void AddCompilerMessage(const CompilerMessage& mess);
   void ClearCompilerMessages();
-  void Focus();
   wxString GetLanguageName();
 
   bool CanClose(bool canAbort);
@@ -33,6 +32,9 @@ public:
   void Replace(wxStyledTextCtrl* output, const wxString& project);
   void FindInFiles(wxStyledTextCtrl* output, const wxString& project);
   void ReplaceInFiles(wxStyledTextCtrl* output, const wxString& project);
+
+  void SetFocus();
+  void SetFocusFromKbd();
 
   wxStyledTextCtrl* GetStc();
 public:

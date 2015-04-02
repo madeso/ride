@@ -281,8 +281,10 @@ void FileEdit::SetSelection(int start_line, int start_index, int end_line, int e
   }
 }
 
-void FileEdit::Focus() {
-  SetFocus();
+void FileEdit::SetFocus() {
+  text_->SetFocus();
+}
+void FileEdit::SetFocusFromKbd() {
   text_->SetFocus();
 }
 
