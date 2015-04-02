@@ -78,26 +78,24 @@ public:
 
   virtual bool HasInput() {
     // original source: http://sourceforge.net/p/fourpane/code/HEAD/tree/trunk/ExecuteInDialog.cpp
-    char c;
 
-    bool hasInput = false;
     // The original used wxTextInputStream to read a line at a time.  Fine, except when there was no \n, whereupon the thing would hang
     // Instead, read the stream (which may occasionally contain non-ascii bytes e.g. from g++) into a memorybuffer, then to a wxString
-    while (IsInputAvailable())                                  // If there's std input
-    {
+
+    bool hasInput = false;
+
+    while (IsInputAvailable()) {
       wxMemoryBuffer buf;
-      do
-      {
-        c = GetInputStream()->GetC();                       // Get a char from the input
-        if (GetInputStream()->Eof()) break;                 // Check we've not just overrun
+      do {
+        const char c = GetInputStream()->GetC();
 
-        if (c == wxT('\n')) break;                            // If \n, break to print the line
+        if (GetInputStream()->Eof()) break;
+        if (c == wxT('\n')) break;
         buf.AppendByte(c);
-      } while (IsInputAvailable());                           // Unless \n, loop to get another char
+      } while (IsInputAvailable());
+
       wxString line((const char*)buf.GetData(), wxConvUTF8, buf.GetDataLen()); // Convert the line to utf8
-
-      runner_->Append(line);                               // Either there's a full line in 'line', or we've run out of input. Either way, print it
-
+      runner_->Append(line);
       hasInput = true;
     }
 
@@ -106,16 +104,15 @@ public:
       wxMemoryBuffer buf;
       do
       {
-        c = GetErrorStream()->GetC();
+        const char c = GetErrorStream()->GetC();
+        
         if (GetErrorStream()->Eof()) break;
-
         if (c == wxT('\n')) break;
         buf.AppendByte(c);
       } while (IsErrorAvailable());
+
       wxString line((const char*)buf.GetData(), wxConvUTF8, buf.GetDataLen());
-
       runner_->Append(line);
-
       hasInput = true;
     }
 
