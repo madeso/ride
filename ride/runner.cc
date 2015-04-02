@@ -8,11 +8,10 @@
 class PipedProcess;
 class AsyncProcess;
 
-WX_DEFINE_ARRAY_PTR(PipedProcess*, PipedProcessesArray);
-WX_DEFINE_ARRAY_PTR(AsyncProcess*, AsyncProcessesArray);
-
 struct Runner::Pimpl {
-  Pimpl();
+  Pimpl() : piped_running_processes_(0), async_running_processes_(0) {
+  }
+
   void Append(const wxString&) {}
   void AddPipedProcess(PipedProcess *process);
   void OnPipedProcessTerminated(PipedProcess *process);
@@ -20,12 +19,9 @@ struct Runner::Pimpl {
 
   int RunCmd(const wxString& root, const wxString& cmd);
 
-  PipedProcessesArray piped_running_processes_;
-  AsyncProcessesArray async_running_processes_;
+  PipedProcess* piped_running_processes_;
+  AsyncProcess* async_running_processes_;
 };
-
-Runner::Pimpl::Pimpl() {
-}
 
 class AsyncProcess : public wxProcess
 {
@@ -122,24 +118,28 @@ int Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
 
 void Runner::Pimpl::AddPipedProcess(PipedProcess *process)
 {
-  piped_running_processes_.Add(process);
-  async_running_processes_.Add(process);
+  assert(piped_running_processes_ == NULL);
+  assert(async_running_processes_ == NULL);
+  piped_running_processes_ = process;
+  async_running_processes_ = process;
 }
 
 void Runner::Pimpl::OnPipedProcessTerminated(PipedProcess *process)
 {
-  piped_running_processes_.Remove(process);
+  assert(piped_running_processes_ == process);
+  piped_running_processes_ = NULL;
 }
 
 void Runner::Pimpl::OnAsyncProcessTerminated(AsyncProcess *process)
 {
-  async_running_processes_.Remove(process);
+  assert(async_running_processes_ == process);
+  async_running_processes_ = process;
   delete process;
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-Runner::Runner() {
+Runner::Runner() : pimpl(new Pimpl()) {
 }
 Runner::~Runner() {
 }
