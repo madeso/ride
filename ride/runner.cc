@@ -15,11 +15,14 @@ Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {
 
 //////////////////////////////////////////////////////////////////////////
 
+// idle timer to keep the process updated since wx apperently doesn't do that
 class IdleTimer : public wxTimer {
 public:
-  void Notify() {
-    wxWakeUpIdle();
+  IdleTimer(SingleRunner::Pimpl* p) : pimpl_(p) {
   }
+  void Notify();
+
+  SingleRunner::Pimpl* pimpl_;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -27,6 +30,7 @@ public:
 struct SingleRunner::Pimpl {
   explicit Pimpl(SingleRunner* p) : parent_(p), processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
     assert(parent_);
+    idle_timer_.reset(new IdleTimer(this));
   }
   ~Pimpl();
 
@@ -38,10 +42,12 @@ struct SingleRunner::Pimpl {
 
   bool RunCmd(const Command& cmd);
 
+  void Notify();
+
   void OnCompleted() {
     assert(parent_);
     parent_->Completed();
-    idle_timer_.Stop();
+    idle_timer_->Stop();
   }
 
   SingleRunner* parent_;
@@ -49,14 +55,18 @@ struct SingleRunner::Pimpl {
   Process* delete_processes_; // process to be deleted at the end
   long pid_; // the id of the current or previous running process
   int exit_code_;
-  IdleTimer idle_timer_;
+  std::unique_ptr<IdleTimer> idle_timer_;
 };
+
+void IdleTimer::Notify() {
+  pimpl_->Notify();
+}
 
 class Process : public wxProcess
 {
 public:
   Process(SingleRunner::Pimpl* project, const wxString& cmd)
-    : wxProcess(), cmd_(cmd)
+    : wxProcess(wxPROCESS_DEFAULT), cmd_(cmd)
   {
     runner_ = project;
     Redirect();
@@ -124,6 +134,15 @@ protected:
   wxString cmd_;
 };
 
+void SingleRunner::Pimpl::Notify(){
+  if (processes_) {
+    // sometimes the output hangs until we close the window
+    // seems to be waiting for output or something
+    // getting the input in a callback seems to remove the waiting...
+    processes_->HasInput();
+  }
+}
+
 bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   Process* process = new Process(this, c.cmd);
   Append("> " + c.cmd);
@@ -147,7 +166,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   processes_ = process;
   pid_ = process_id;
 
-  idle_timer_.Start(100);
+  idle_timer_->Start(100);
   return true;
 }
 
