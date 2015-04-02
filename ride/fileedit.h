@@ -76,6 +76,7 @@ private:
 
   bool ShouldBeSaved();
   void HighlightCurrentWord();
+  void UpdateBraceMatching();
 
   wxString CalculateDocumentName() const;
   void LoadFile();

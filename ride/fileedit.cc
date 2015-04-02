@@ -1036,27 +1036,29 @@ void FileEdit::HighlightCurrentWord() {
   }
 }
 
+void FileEdit::UpdateBraceMatching() {
+  const int pos = text_->GetCurrentPos();
+  int otherBrace = text_->BraceMatch(pos);
+  if (otherBrace != -1) {
+    text_->BraceHighlight(pos, otherBrace);
+  }
+  else {
+    text_->BraceHighlight(-1, -1);
+  }
+}
+
 void FileEdit::OnUpdateUi(wxStyledTextEvent& event)
 {
   const int type = event.GetUpdated();
 
   if (type & wxSTC_UPDATE_SELECTION) {
-    const int pos = text_->GetCurrentPos();
-
     HighlightCurrentWord();
-
-    // brace highlighting
-    int otherBrace = text_->BraceMatch(pos);
-    if (otherBrace != -1) {
-      text_->BraceHighlight(pos, otherBrace);
-    }
-    else {
-      text_->BraceHighlight(-1, -1);
-    }
+    UpdateBraceMatching();
   }
 }
 
 void FileEdit::OnChanged(wxStyledTextEvent& event) {
   UpdateTitle();
   HighlightCurrentWord();
+  UpdateBraceMatching();
 }
