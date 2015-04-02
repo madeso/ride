@@ -9,16 +9,18 @@ class PipedProcess;
 class Process;
 
 struct Runner::Pimpl {
-  Pimpl() : processes_(0) {
+  Pimpl() : processes_(0), pid_(0), exit_code_(-1) {
   }
 
   void Append(const wxString&) {}
-  void AddProcess(Process *process);
+
   void ProcessTerminated(Process *process);
 
-  int RunCmd(const wxString& root, const wxString& cmd);
+  bool RunCmd(const wxString& root, const wxString& cmd);
 
-  Process* processes_;
+  Process* processes_; // the current running process or NULL
+  long pid_; // the id of the current or previous running process
+  int exit_code_;
 };
 
 class Process : public wxProcess
@@ -32,6 +34,8 @@ public:
   }
 
   virtual void OnTerminate(int pid, int status) {
+    assert(runner_->pid_ == pid);
+
     // show the rest of the output
     while (HasInput()) {}
     runner_->ProcessTerminated(this);
@@ -40,6 +44,7 @@ public:
       pid, cmd_.c_str(), status));
     runner_->Append("");
     runner_->ProcessTerminated(this);
+    runner_->exit_code_ = status;
   }
 
   virtual bool HasInput() {
@@ -69,43 +74,29 @@ protected:
   wxString cmd_;
 };
 
-int Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
-  bool async = true;
-
+bool Runner::Pimpl::RunCmd(const wxString& root, const wxString& cmd) {
   Process* process = new Process(this, cmd);
   Append("> " + cmd);
 
   wxExecuteEnv env;
   env.cwd = root;
 
-  const int flags = async
-    ? wxEXEC_ASYNC | wxEXEC_SHOW_CONSOLE
-    : wxEXEC_SYNC | wxEXEC_SHOW_CONSOLE;
+  const int flags = wxEXEC_ASYNC | wxEXEC_SHOW_CONSOLE;
 
-  const int execute_result = wxExecute(cmd, flags, process, &env);
+  const long process_id = wxExecute(cmd, flags, process, &env);
   
-  if (async) {
-    // async call
-    if (!execute_result) {
-      Append(wxString::Format(wxT("Execution of '%s' failed."), cmd.c_str()));
-      delete process;
-    }
-    else {
-      AddProcess(process);
-    }
-  }
-  else {
-    // sync call, remove process
+  // async call
+  if (!process_id) {
+    Append(wxString::Format(wxT("Execution of '%s' failed."), cmd.c_str()));
     delete process;
+    return false;
   }
 
-  return execute_result;
-}
-
-void Runner::Pimpl::AddProcess(Process *process)
-{
   assert(processes_ == NULL);
+  assert(pid_ == 0);
   processes_ = process;
+  pid_ = process_id;
+  return true;
 }
 
 void Runner::Pimpl::ProcessTerminated(Process *process)
@@ -119,16 +110,23 @@ void Runner::Pimpl::ProcessTerminated(Process *process)
 
 Runner::Runner() : pimpl(new Pimpl()) {
 }
+
 Runner::~Runner() {
 }
 
 bool Runner::RunCmd(const wxString& root, const wxString& cmd) {
-  return false;
+  assert(pimpl);
+  assert(this->IsRunning() == false);
+  return pimpl->RunCmd(root, cmd);
 }
+
 bool Runner::IsRunning() const {
-  return true;
+  return pimpl->processes_ != NULL;
 }
+
 int Runner::GetExitCode() {
-  return -1;
+  assert(this->IsRunning() == false);
+  assert(pimpl->pid_ != 0);
+  return pimpl->exit_code_;
 }
 
