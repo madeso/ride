@@ -9,16 +9,20 @@ class PipedProcess;
 class Process;
 
 struct Runner::Pimpl {
-  Pimpl() : processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
+  explicit Pimpl(Runner* p) : parent(p), processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
+    assert(parent);
   }
   ~Pimpl();
 
-  void Append(const wxString&) {}
+  void Append(const wxString& s) {
+    parent->Append(s);
+  }
 
   void MarkForDeletion(Process *process);
 
   bool RunCmd(const wxString& root, const wxString& cmd);
 
+  Runner* parent;
   Process* processes_; // the current running process or NULL
   Process* delete_processes_; // process to be deleted at the end
   long pid_; // the id of the current or previous running process
@@ -113,7 +117,7 @@ Runner::Pimpl:: ~Pimpl() {
 
 //////////////////////////////////////////////////////////////////////////
 
-Runner::Runner() : pimpl(new Pimpl()) {
+Runner::Runner() : pimpl(new Pimpl(this)) {
 }
 
 Runner::~Runner() {
