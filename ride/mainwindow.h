@@ -50,6 +50,8 @@ public:
   FileEdit* OpenFile(const wxString& file, int start_line = -1, int start_index = -1, int end_line = -1, int end_index = -1);
   FileEdit* GetFile(const wxString& file);
 
+  const wxString& root_folder() const;
+
 private:
   void OnActivated(wxActivateEvent& event);
 

@@ -1,25 +1,26 @@
 #include "ride/compilermessage.h"
 #include <wx/regex.h>
+#include <wx/filename.h>
 
 CompilerMessage::CompilerMessage()
-:file_       ("")
-,start_line_ (-1)
-,start_index_(-1)
-,end_line_   (-1)
-,end_index_  (-1)
-,type_       (CompilerMessage::TYPE_UNKNOWN)
-,message_    ("")
+  :file_       ("")
+  ,start_line_ (-1)
+  ,start_index_(-1)
+  ,end_line_   (-1)
+  ,end_index_  (-1)
+  ,type_       (CompilerMessage::TYPE_UNKNOWN)
+  ,message_    ("")
 {
 }
 
-CompilerMessage::CompilerMessage(wxString file, int start_line, int start_index, int end_line, int end_index, CompilerMessage::Type type, wxString message)
-:file_       (file       )
-,start_line_ (start_line )
-,start_index_(start_index)
-,end_line_   (end_line   )
-,end_index_  (end_index  )
-,type_       (type       )
-,message_    (message    )
+CompilerMessage::CompilerMessage(const wxString& file, int start_line, int start_index, int end_line, int end_index, CompilerMessage::Type type, wxString message)
+  :file_       (file       )
+  ,start_line_ (start_line )
+  ,start_index_(start_index)
+  ,end_line_   (end_line   )
+  ,end_index_  (end_index  )
+  ,type_       (type       )
+  ,message_    (message    )
 {
 }
 
@@ -76,7 +77,21 @@ CompilerMessage::Type ParseCMT(const wxString& str) {
   else return CompilerMessage::TYPE_UNKNOWN;
 }
 
-bool CompilerMessage::Parse(const wxString& text, CompilerMessage* output) {
+wxString CleanupFilePath(const wxString& root, const wxString& path) {
+  wxFileName file_name(path);
+  if (false == file_name.IsRelative()) return path;
+  // if a relative path, it might be relative to the project root folder, try that...
+  const wxString new_path = root + path;
+  wxFileName new_file(new_path);
+  if (new_file.Exists()) {
+    return new_path;
+  }
+  else {
+    return path;
+  }
+}
+
+bool CompilerMessage::Parse(const wxString& root, const wxString& text, CompilerMessage* output) {
   const wxRegEx& complex = ComplexRegexOutput();
   if (complex.Matches(text)) {
     const wxString              file         =          complex.GetMatch(text, 1);
@@ -87,7 +102,7 @@ bool CompilerMessage::Parse(const wxString& text, CompilerMessage* output) {
     const CompilerMessage::Type type         = ParseCMT(complex.GetMatch(text, 6));
     const wxString              message      =          complex.GetMatch(text, 7);
 
-    *output = CompilerMessage(file, start_line, start_index, end_line, end_index, type, message);
+    *output = CompilerMessage(CleanupFilePath(root, file), start_line, start_index, end_line, end_index, type, message);
     return true;
   }
 
@@ -97,7 +112,7 @@ bool CompilerMessage::Parse(const wxString& text, CompilerMessage* output) {
     const int                   start_line = wxAtoi(related.GetMatch(text, 2));
     const wxString              message = related.GetMatch(text, 3);
 
-    *output = CompilerMessage(file, start_line, -1, -1, -1, CompilerMessage::TYPE_RELATED, message);
+    *output = CompilerMessage(CleanupFilePath(root, file), start_line, -1, -1, -1, CompilerMessage::TYPE_RELATED, message);
     return true;
   }
 

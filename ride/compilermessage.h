@@ -10,8 +10,8 @@ public:
   };
 
   CompilerMessage();
-  CompilerMessage(wxString file, int start_line, int start_index, int end_line, int end_index, Type type, wxString message);
-  static bool Parse(const wxString& text, CompilerMessage* output);
+  CompilerMessage(const wxString& file, int start_line, int start_index, int end_line, int end_index, Type type, wxString message);
+  static bool Parse(const wxString& root, const wxString& text, CompilerMessage* output);
 
   const wxString& file() const;
 

@@ -151,6 +151,11 @@ void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& evt) {
   project_explorer_->HighlightOpenFile(file_name);
 }
 
+const wxString& MainWindow::root_folder() const {
+  assert(project_);
+  return project_->root_folder();
+}
+
 void MainWindow::OnActivated(wxActivateEvent& event) {
   if (event.GetActive()) {
     ReloadFilesIfNeeded();
@@ -193,7 +198,7 @@ public:
     const bool has_selected = this->GetSelectedText().IsEmpty() == false;
     const wxString line_content = GetContextLineContent();
     CompilerMessage compiler_message;
-    const bool has_compiler_message = CompilerMessage::Parse(line_content, &compiler_message);
+    const bool has_compiler_message = CompilerMessage::Parse(main_->root_folder(), line_content, &compiler_message);
     const wxString message = has_compiler_message ? ToShortString(compiler_message.message(), 45) : "<none>";
 
     wxMenu menu;
@@ -214,7 +219,7 @@ public:
     const wxString line_content = GetContextLineContent();
 
     CompilerMessage message;
-    if (CompilerMessage::Parse(line_content, &message)) {
+    if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
       if (wxTheClipboard->Open()) {
         wxTheClipboard->SetData(new wxTextDataObject(message.message()));
         wxTheClipboard->Close();
@@ -251,7 +256,7 @@ public:
     const wxString line_content = GetContextLineContent();
 
     CompilerMessage message;
-    if (CompilerMessage::Parse(line_content, &message)) {
+    if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
       wxString mess = message.message();
       mess.Replace("#", "%23");
       const wxString escaped_message = wxURI(mess).BuildURI();
@@ -272,7 +277,7 @@ public:
     wxString line_content = GetLineText(line_number);
 
     CompilerMessage message;
-    if (CompilerMessage::Parse(line_content, &message)) {
+    if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
       main_->OpenCompilerMessage(message);
     }
   }
@@ -319,7 +324,7 @@ public:
     const bool has_selected = this->GetSelectedText().IsEmpty() == false;
     const wxString line_content = GetContextLineContent();
     CompilerMessage compiler_message;
-    const bool has_compiler_message = CompilerMessage::Parse(line_content, &compiler_message);
+    const bool has_compiler_message = CompilerMessage::Parse(main_->root_folder(), line_content, &compiler_message);
     const wxString message = has_compiler_message ? ToShortString(compiler_message.message(), 45) : "<none>";
 
     wxMenu menu;
@@ -339,7 +344,7 @@ public:
     const wxString line_content = GetContextLineContent();
 
     CompilerMessage message;
-    if (CompilerMessage::Parse(line_content, &message)) {
+    if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
       if (wxTheClipboard->Open()) {
         wxTheClipboard->SetData(new wxTextDataObject(message.message()));
         wxTheClipboard->Close();
@@ -381,7 +386,7 @@ public:
     wxString line_content = GetLineText(line_number);
 
     CompilerMessage message;
-    if (CompilerMessage::Parse(line_content, &message)) {
+    if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
       main_->OpenCompilerMessage(message);
     }
   }
@@ -687,7 +692,7 @@ void MainWindow::Append(const wxString& str) {
   WriteLine(output_window_, str);
 
   CompilerMessage mess;
-  if (CompilerMessage::Parse(str, &mess)) {
+  if (CompilerMessage::Parse(root_folder(), str, &mess)) {
     AddCompilerMessage(mess);
   }
 }
@@ -768,8 +773,13 @@ void MainWindow::FileHasBeenRenamed(const wxString& old_path, const wxString& ne
 
 FileEdit* MainWindow::OpenFile(const wxString& file, int start_line, int start_index, int end_line, int end_index) {
   wxFileName file_name(file);
-  file_name.Normalize();
+
   const wxString full_path = file_name.GetFullPath();
+
+  if (false == file_name.Exists()) {
+    ShowError(this, wxString::Format("Unable to open '%s'", full_path), "Unable to open file!");
+    return NULL;
+  }
 
   FoundEdit found_edit = GetEditFromFileName(full_path);
   if (found_edit) {
