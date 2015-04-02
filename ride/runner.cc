@@ -158,9 +158,9 @@ int SingleRunner::GetExitCode() {
 
 //////////////////////////////////////////////////////////////////////////
 
-class BasicRunner : public SingleRunner {
+class MultiRunner::Runner : public SingleRunner {
 public:
-  BasicRunner(MultiRunner* r) : runner_(r) {
+  Runner(MultiRunner* r) : runner_(r) {
     assert(runner_);
   }
 
@@ -197,7 +197,7 @@ bool MultiRunner::RunNext(int last_exit_code) {
 
   if (last_exit_code == 0) {
     // run
-    runner_.reset(new BasicRunner(this));
+    runner_.reset(new Runner(this));
     const bool run_result = runner_->Run(*commands_.begin());
     if (run_result) {
       commands_.erase(commands_.begin());

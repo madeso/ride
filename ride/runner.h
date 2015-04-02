@@ -41,7 +41,6 @@ private:
   std::unique_ptr<Pimpl> pimpl;
 };
 
-class BasicRunner;
 // multiple runners, queue commands
 class MultiRunner {
 public:
@@ -56,9 +55,10 @@ protected:
   virtual void Append(const wxString& str) = 0;
 
 private:
-  friend class BasicRunner;
+  class Runner;
+  friend class Runner;
   bool RunNext(int last_exit_code);
-  std::unique_ptr<BasicRunner> runner_;
+  std::unique_ptr<Runner> runner_;
   std::vector<Command> commands_;
 };
 
