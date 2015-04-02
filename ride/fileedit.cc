@@ -275,10 +275,7 @@ void FileEdit::SetSelection(int start_line, int start_index, int end_line, int e
     text_->SetSelection(from, from);
   }
 
-  text_->ScrollToLine(start_line - 1);
-  if (start_index >= 0) {
-    text_->ScrollToColumn(start_index - 1);
-  }
+  text_->EnsureCaretVisible();
 }
 
 void FileEdit::SetFocus() {
