@@ -8,6 +8,9 @@
 class PipedProcess;
 class Process;
 
+const int RUNNER_CONSOLE_OPTION = wxEXEC_HIDE_CONSOLE;
+// const int RUNNER_CONSOLE_OPTION = wxEXEC_SHOW_CONSOLE;
+
 //////////////////////////////////////////////////////////////////////////
 
 Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {
@@ -150,7 +153,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   wxExecuteEnv env;
   env.cwd = c.root;
 
-  const int flags = wxEXEC_ASYNC | wxEXEC_SHOW_CONSOLE;
+  const int flags = wxEXEC_ASYNC | RUNNER_CONSOLE_OPTION;
 
   const long process_id = wxExecute(c.cmd, flags, process, &env);
   
