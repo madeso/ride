@@ -15,14 +15,23 @@ Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {
 
 //////////////////////////////////////////////////////////////////////////
 
+class IdleTimer : public wxTimer {
+public:
+  void Notify() {
+    wxWakeUpIdle();
+  }
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 struct SingleRunner::Pimpl {
-  explicit Pimpl(SingleRunner* p) : parent(p), processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
-    assert(parent);
+  explicit Pimpl(SingleRunner* p) : parent_(p), processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
+    assert(parent_);
   }
   ~Pimpl();
 
   void Append(const wxString& s) {
-    parent->Append(s);
+    parent_->Append(s);
   }
 
   void MarkForDeletion(Process *process);
@@ -30,15 +39,17 @@ struct SingleRunner::Pimpl {
   bool RunCmd(const Command& cmd);
 
   void OnCompleted() {
-    assert(parent);
-    parent->Completed();
+    assert(parent_);
+    parent_->Completed();
+    idle_timer_.Stop();
   }
 
-  SingleRunner* parent;
+  SingleRunner* parent_;
   Process* processes_; // the current running process or NULL
   Process* delete_processes_; // process to be deleted at the end
   long pid_; // the id of the current or previous running process
   int exit_code_;
+  IdleTimer idle_timer_;
 };
 
 class Process : public wxProcess
@@ -114,6 +125,8 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   assert(pid_ == 0);
   processes_ = process;
   pid_ = process_id;
+
+  idle_timer_.Start(100);
   return true;
 }
 
@@ -196,7 +209,7 @@ bool MultiRunner::RunNext(int last_exit_code) {
   if (commands_.empty()) return false;
 
   if (last_exit_code == 0) {
-    // run
+    last_runner_ = runner_;
     runner_.reset(new Runner(this));
     const bool run_result = runner_->Run(*commands_.begin());
     if (run_result) {

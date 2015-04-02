@@ -58,7 +58,8 @@ private:
   class Runner;
   friend class Runner;
   bool RunNext(int last_exit_code);
-  std::unique_ptr<Runner> runner_;
+  std::shared_ptr<Runner> runner_;
+  std::shared_ptr<Runner> last_runner_;
   std::vector<Command> commands_;
 };
 
