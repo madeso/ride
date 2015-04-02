@@ -160,7 +160,7 @@ int SingleRunner::GetExitCode() {
 
 class BasicRunner : public SingleRunner {
 public:
-  BasicRunner(Runner* r) : runner_(r) {
+  BasicRunner(MultiRunner* r) : runner_(r) {
     assert(runner_);
   }
 
@@ -176,22 +176,22 @@ public:
     return RunCmd(cmd);
   }
 private:
-  Runner* runner_;
+  MultiRunner* runner_;
 };
 
-Runner::Runner(){
+MultiRunner::MultiRunner(){
 }
 
-Runner::~Runner(){
+MultiRunner::~MultiRunner(){
 }
 
-bool Runner::RunCmd(const Command& cmd) {
+bool MultiRunner::RunCmd(const Command& cmd) {
   commands_.push_back(cmd);
   if (IsRunning() == true) return true;
   return RunNext(0);
 }
 
-bool Runner::RunNext(int last_exit_code) {
+bool MultiRunner::RunNext(int last_exit_code) {
   assert(IsRunning() == false);
   if (commands_.empty()) return false;
 
@@ -210,7 +210,7 @@ bool Runner::RunNext(int last_exit_code) {
   }
 }
 
-bool Runner::IsRunning() const {
+bool MultiRunner::IsRunning() const {
   if (runner_) {
     return runner_->IsRunning();
   }

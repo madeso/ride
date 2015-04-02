@@ -128,5 +128,5 @@ void Project::RunCmd(const wxString& cmd) {
     return;
   }
 
-  Runner::RunCmd(Command(root_folder_, cmd));
+  MultiRunner::RunCmd(Command(root_folder_, cmd));
 }

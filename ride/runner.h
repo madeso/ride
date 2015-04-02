@@ -6,7 +6,7 @@
 
 #include "ride/wx.h"
 
-class Runner;
+class MultiRunner;
 
 class Command {
 public:
@@ -43,13 +43,13 @@ private:
 
 class BasicRunner;
 // multiple runners, queue commands
-class Runner {
+class MultiRunner {
 public:
-  Runner();
-  ~Runner();
+  MultiRunner();
+  ~MultiRunner();
 
-  Runner(const Runner&) = delete;
-  bool operator=(const Runner&) = delete;
+  MultiRunner(const MultiRunner&) = delete;
+  bool operator=(const MultiRunner&) = delete;
 protected:
   bool RunCmd(const Command& cmd);
   bool IsRunning() const;

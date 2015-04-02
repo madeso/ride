@@ -6,7 +6,7 @@
 
 class MainWindow;
 
-class Project : public Runner {
+class Project : public MultiRunner {
 public:
   Project(MainWindow* output, const wxString& root_folder);
   const wxString& root_folder() const;
