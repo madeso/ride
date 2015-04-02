@@ -1004,6 +1004,10 @@ void FileEdit::HighlightCurrentWord() {
 
       const wxString current_text = text_->GetRange(current_start_position, current_end_position);
 
+      if (current_text == "") {
+        return;
+      }
+
       const bool highlight_keyword = main_->settings().highlight_word_also_highlight_keywords();
       const bool is_keyword = highlight_keyword ? false
         : (current_language_ ? current_language_->IsKeyword(current_text) : false);
