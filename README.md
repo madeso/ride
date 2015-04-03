@@ -26,6 +26,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Close project
 * Reformat code
 * Simplify coloring / replace detailed options with general options
+* fix alt-tab focus issue
 
 # Somewhat sorted roadmap
 
