@@ -27,6 +27,9 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Reformat code
 * Simplify coloring / replace detailed options with general options
 * fix alt-tab focus issue
+* Stop build
+* Build spinner indicator
+* View build list
 
 # Somewhat sorted roadmap
 
