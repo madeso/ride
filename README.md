@@ -29,6 +29,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Stop build
 * Build spinner indicator
 * View build list
+* Fix pdf paste issue
 
 # Somewhat sorted roadmap
 
