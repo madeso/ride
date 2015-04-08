@@ -120,6 +120,7 @@ private:
 	wxDECLARE_EVENT_TABLE();
 
 private:
+  void ShowFindWindow();
   void SaveSession();
   void RestoreSession();
   FoundEdit GetEditFromFileName(const wxString& file);

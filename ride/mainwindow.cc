@@ -608,10 +608,24 @@ void UpdateMenuItemBasedOnPane(wxAuiManager* aui, wxMenuItem* item, const wxStri
   item->Check(pane.IsShown());
 }
 
+void ShowPane(wxAuiManager* aui, const wxString& name) {
+  assert(aui);
+  wxAuiPaneInfo& pane = aui->GetPane(name);
+  assert(pane.IsValid() && "This function should only take valid pane names!");
+  if (false == pane.IsShown()) {
+    pane.Show();
+    aui->Update();
+  }
+}
+
 void MainWindow::UpdateMenuItemView() {
   UpdateMenuItemBasedOnPane(&aui_, menuItemViewFind_, PANE_FIND_1);
   UpdateMenuItemBasedOnPane(&aui_, menuItemViewProject_, PANE_PROJECT);
   UpdateMenuItemBasedOnPane(&aui_, menuItemViewOutput_, PANE_OUTPUT);
+}
+
+void MainWindow::ShowFindWindow() {
+  ShowPane(&aui_, PANE_FIND_1);
 }
 
 void MainWindow::OnViewShowFindResult(wxCommandEvent& event){
@@ -895,24 +909,28 @@ void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
 void MainWindow::OnEditFind(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull(); 
   if (selected_edit == NULL) return; 
+  ShowFindWindow();
   selected_edit->Find(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnEditReplace(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
   if (selected_edit == NULL) return;
+  ShowFindWindow();
   selected_edit->Replace(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnProjectFindInFiles(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
   if (selected_edit == NULL) return;
+  ShowFindWindow();
   selected_edit->FindInFiles(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnProjectReplaceInFiles(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
   if (selected_edit == NULL) return;
+  ShowFindWindow();
   selected_edit->ReplaceInFiles(findres_window_, project_->root_folder());
 }
 
