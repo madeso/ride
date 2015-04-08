@@ -115,6 +115,8 @@ private:
   void OnNotebookPageClose(wxAuiNotebookEvent& evt);
   void OnNotebookPageChanged(wxAuiNotebookEvent& evt);
 
+  void OnMenuOpen(wxMenuEvent& event);
+
 	wxDECLARE_EVENT_TABLE();
 
 private:

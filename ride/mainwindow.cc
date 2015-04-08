@@ -137,6 +137,8 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   
   EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
   EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainWindow::OnNotebookPageChanged)
+
+  EVT_MENU_OPEN(MainWindow::OnMenuOpen)
 wxEND_EVENT_TABLE()
 
 void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& evt) {
@@ -435,6 +437,10 @@ struct AddMenuItem {
   }
 };
 
+void MainWindow::OnMenuOpen(wxMenuEvent& event) {
+  UpdateMenuItemView();
+}
+
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
 , output_window_(NULL)
@@ -517,8 +523,6 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   //////////////////////////////////////////////////////////////////////////
 
   wxMenu *menu_view = new wxMenu;
-  
-  
   AddMenuItem(menu_view, ID_VIEW_RESTORE_WINDOWS, "Restore window layout", "");
   AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
@@ -551,17 +555,17 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   output_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   output_window_->UpdateStyle();
   output_window_->UpdateStyle();
-  aui_.AddPane(output_window_, wxAuiPaneInfo().Name(PANE_OUTPUT).Caption("Output").Bottom().CloseButton(false));
+  aui_.AddPane(output_window_, wxAuiPaneInfo().Name(PANE_OUTPUT).Caption("Output").Bottom().CloseButton(true));
 
   findres_window_ = new FindControl(this);
   findres_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   findres_window_->UpdateStyle();
   findres_window_->UpdateStyle();
-  aui_.AddPane(findres_window_, wxAuiPaneInfo().Name(PANE_FIND_1).Caption("Find result").Bottom().CloseButton(false));
+  aui_.AddPane(findres_window_, wxAuiPaneInfo().Name(PANE_FIND_1).Caption("Find result").Bottom().CloseButton(true));
 
   // project explorer
   project_explorer_ = new ProjectExplorer(this);
-  aui_.AddPane(project_explorer_, wxAuiPaneInfo().Name(PANE_PROJECT).Caption("Project").Left().CloseButton(false));
+  aui_.AddPane(project_explorer_, wxAuiPaneInfo().Name(PANE_PROJECT).Caption("Project").Left().CloseButton(true));
 
   aui_.Update();
   UpdateTitle();
