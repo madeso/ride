@@ -121,6 +121,7 @@ private:
 
 private:
   void ShowFindWindow();
+  void ShowBuildWindow();
   void SaveSession();
   void RestoreSession();
   FoundEdit GetEditFromFileName(const wxString& file);

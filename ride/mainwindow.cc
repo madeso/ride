@@ -628,6 +628,10 @@ void MainWindow::ShowFindWindow() {
   ShowPane(&aui_, PANE_FIND_1);
 }
 
+void MainWindow::ShowBuildWindow() {
+  ShowPane(&aui_, PANE_OUTPUT);
+}
+
 void MainWindow::OnViewShowFindResult(wxCommandEvent& event){
   ShowHideAui(&aui_, PANE_FIND_1);
   UpdateMenuItemView();
@@ -1077,6 +1081,7 @@ void MainWindow::OnProjectQuickOpen(wxCommandEvent& event) {
 
 #define MEM_FUN(X) \
   void MainWindow::OnProject ## X(wxCommandEvent& event) {\
+    ShowBuildWindow();\
     project_-> ## X ();\
   }
 
