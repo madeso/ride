@@ -527,9 +527,13 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
   menu_view->AppendSeparator();
-  menuItemViewFind_ = AddMenuItem(menu_view, ID_VIEW_SHOW_FINDRESULT, "Find result pane", "").Checkable();
-  menuItemViewProject_ = AddMenuItem(menu_view, ID_VIEW_SHOW_PROJECT, "Project pane", "").Checkable();
-  menuItemViewOutput_ = AddMenuItem(menu_view, ID_VIEW_SHOW_OUTPUT, "Output pane", "").Checkable();
+
+  // shortcuts stolen from qt creator: https://wiki.qt.io/Qt_Creator_Keyboard_Shortcuts
+  menuItemViewProject_ = AddMenuItem(menu_view, ID_VIEW_SHOW_PROJECT, "&Project pane\tAlt-0", "").Checkable();
+  // build issues
+  menuItemViewFind_ = AddMenuItem(menu_view, ID_VIEW_SHOW_FINDRESULT, "Find &result pane\tAlt-2", "").Checkable();
+  // app output
+  menuItemViewOutput_ = AddMenuItem(menu_view, ID_VIEW_SHOW_OUTPUT, "&Output pane\tAlt-4", "").Checkable();
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
