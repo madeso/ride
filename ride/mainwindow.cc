@@ -441,8 +441,22 @@ void MainWindow::OnMenuOpen(wxMenuEvent& event) {
   UpdateMenuItemView();
 }
 
+const int AUI_OPTIONS = 0
+| wxAUI_MGR_ALLOW_FLOATING // Allow a pane to be undocked to take the form of a wxMiniFrame. 
+| wxAUI_MGR_ALLOW_ACTIVE_PANE // Change the color of the title bar of the pane when it is activated. 
+| wxAUI_MGR_TRANSPARENT_DRAG // Make the pane transparent during its movement. 
+| wxAUI_MGR_TRANSPARENT_HINT // The possible location for docking is indicated by a translucent area. 
+// | wxAUI_MGR_VENETIAN_BLINDS_HINT // The possible location for docking is indicated by gradually appearing partially transparent hint. 
+// | wxAUI_MGR_RECTANGLE_HINT // The possible location for docking is indicated by a rectangular outline. 
+// | wxAUI_MGR_HINT_FADE // The translucent area where the pane could be docked appears gradually. 
+| wxAUI_MGR_NO_VENETIAN_BLINDS_FADE // Used in complement of wxAUI_MGR_VENETIAN_BLINDS_HINT to show the docking hint immediately. 
+| wxAUI_MGR_LIVE_RESIZE // When a docked pane is resized, its content is refreshed in live (instead of moving the border alone and refreshing the content at the end). 
+;
+
+
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
+, aui_(NULL, AUI_OPTIONS)
 , output_window_(NULL)
 , findres_window_(NULL)
 , project_( new Project(this, wxEmptyString) )
