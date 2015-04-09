@@ -10960,7 +10960,7 @@
             <property name="minimum_size"></property>
             <property name="name">Find</property>
             <property name="pos"></property>
-            <property name="size">317,464</property>
+            <property name="size">326,492</property>
             <property name="style">wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</property>
             <property name="subclass"></property>
             <property name="title">Find...</property>
