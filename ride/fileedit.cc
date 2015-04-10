@@ -125,20 +125,25 @@ void FileEdit::MatchBrace() {
   text_->SetSelection(other_brace, other_brace);
 }
 
-bool HasWord(const wxString& keyword, const wxString& wordlist, bool ignoreCase) {
+wxString HasWord(const wxString& keyword, const std::vector<wxString>& wordlist, bool ignoreCase) {
   const wxString word = ignoreCase ? wxString(keyword).MakeLower() : keyword;
 
-  wxStringTokenizer tokenizer(wordlist, wxT(" "));
-  while (tokenizer.HasMoreTokens())
+  wxString ret;
+
+  for(const wxString& tok : wordlist)
   {
-    const wxString tok = tokenizer.GetNextToken();
     const wxString token = ignoreCase ? wxString(tok).MakeLower() : tok;
     if (token.StartsWith(word)) {
-      return true;
+      if (ret.IsEmpty()) {
+        ret = tok;
+      }
+      else {
+        ret += " " + tok;
+      }
     }
   }
 
-  return false;
+  return ret;
 }
 
 void FileEdit::ShowAutocomplete() {
@@ -149,15 +154,26 @@ void FileEdit::ShowAutocomplete() {
   const int length = pos - start_position;
   assert(length >= 0);
 
-  const wxString wordlist = "awesome dog cat print println printif printdog printcat ///////////";
+  std::vector<wxString> wordlist;
+  wordlist.push_back("awesome");
+  wordlist.push_back("dog");
+  wordlist.push_back("cat");
+  wordlist.push_back("println");
+  wordlist.push_back("print");
+  wordlist.push_back("printdog");
+  wordlist.push_back("printif");
+  wordlist.push_back("printcat");
+  wordlist.push_back( wxString(80, '/') );
+  std::sort(wordlist.begin(), wordlist.end());
 
   if (text_->AutoCompActive() == false) {
     const wxString word = text_->GetRange(start_position, pos);
-    if (HasWord(word, wordlist, ignore_case)) {
+    const wxString wordliststr = HasWord(word, wordlist, ignore_case);
+    if (wordliststr.IsEmpty() == false) {
       // text_->AutoCompSetAutoHide(false);
       text_->AutoCompSetIgnoreCase(ignore_case);
       text_->AutoCompSetFillUps("()<>.:;{}[]");
-      text_->AutoCompShow(length, wordlist);
+      text_->AutoCompShow(length, wordliststr);
     }
   }
 }
