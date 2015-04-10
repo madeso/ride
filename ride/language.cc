@@ -153,6 +153,10 @@ wxString Language::GetFilePattern() const {
   return language_name_ + " files (" + patterns +")|" + patterns;
 }
 
+const std::vector<wxString>& Language::GetKeywords() const {
+  return keywords_;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 class CppLanguage : public Language {

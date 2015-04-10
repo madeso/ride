@@ -25,6 +25,9 @@ public:
 
   void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
   wxString GetFilePattern() const;
+
+  const std::vector<wxString>& GetKeywords() const;
+
 protected:
   Language(const wxString& name, int style);
   virtual void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) = 0;

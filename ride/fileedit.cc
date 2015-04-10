@@ -138,7 +138,7 @@ wxString HasWord(const wxString& keyword, const std::vector<wxString>& wordlist,
         ret = tok;
       }
       else {
-        ret += " " + tok;
+        ret += ";" + tok;
       }
     }
   }
@@ -155,15 +155,20 @@ void FileEdit::ShowAutocomplete() {
   assert(length >= 0);
 
   std::vector<wxString> wordlist;
-  wordlist.push_back("awesome");
-  wordlist.push_back("dog");
-  wordlist.push_back("cat");
-  wordlist.push_back("println");
-  wordlist.push_back("print");
-  wordlist.push_back("printdog");
-  wordlist.push_back("printif");
-  wordlist.push_back("printcat");
+  if (current_language_) {
+    wordlist = current_language_->GetKeywords();
+  }
   wordlist.push_back( wxString(80, '/') );
+  wordlist.push_back(
+    "/**\n"
+    " * \n"
+    " **/"
+    );
+  wordlist.push_back(
+    "/// \n"
+    "/// \n"
+    "/// "
+    );
   std::sort(wordlist.begin(), wordlist.end());
 
   if (text_->AutoCompActive() == false) {
@@ -173,6 +178,7 @@ void FileEdit::ShowAutocomplete() {
       // text_->AutoCompSetAutoHide(false);
       text_->AutoCompSetIgnoreCase(ignore_case);
       text_->AutoCompSetFillUps("()<>.:;{}[]");
+      text_->AutoCompSetSeparator(';');
       text_->AutoCompShow(length, wordliststr);
     }
   }
