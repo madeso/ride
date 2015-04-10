@@ -5,6 +5,7 @@
 #include <wx/msgdlg.h>
 #include <wx/uri.h>
 #include <wx/numdlg.h> 
+#include <wx/tokenzr.h>
 
 #include <vector>
 #include <cassert>
@@ -124,6 +125,42 @@ void FileEdit::MatchBrace() {
   text_->SetSelection(other_brace, other_brace);
 }
 
+bool HasWord(const wxString& keyword, const wxString& wordlist, bool ignoreCase) {
+  const wxString word = ignoreCase ? wxString(keyword).MakeLower() : keyword;
+
+  wxStringTokenizer tokenizer(wordlist, wxT(" "));
+  while (tokenizer.HasMoreTokens())
+  {
+    const wxString tok = tokenizer.GetNextToken();
+    const wxString token = ignoreCase ? wxString(tok).MakeLower() : tok;
+    if (token.StartsWith(word)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+void FileEdit::ShowAutocomplete() {
+  const bool ignore_case = true;
+
+  const int pos = text_->GetCurrentPos();
+  const int start_position = text_->WordStartPosition(pos, false);
+  const int length = pos - start_position;
+  assert(length >= 0);
+
+  const wxString wordlist = "awesome dog cat print println printif printdog printcat ///////////";
+
+  if (text_->AutoCompActive() == false) {
+    const wxString word = text_->GetRange(start_position, pos);
+    if (HasWord(word, wordlist, ignore_case)) {
+      // text_->AutoCompSetAutoHide(false);
+      text_->AutoCompSetIgnoreCase(ignore_case);
+      text_->AutoCompSetFillUps("()<>.:;{}[]");
+      text_->AutoCompShow(length, wordlist);
+    }
+  }
+}
 
 void FileEdit::SelectBrace() {
   int start_brace = text_->GetCurrentPos();
@@ -911,6 +948,8 @@ int CalculateIndentationChange(const wxString& str) {
 void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 {
   int entered_character = event.GetKey(); // the key seems to be the char that was added
+
+  ShowAutocomplete();
 
   if (entered_character == '{') {
     if (main_->settings().autocomplete_curly_braces()) {

@@ -48,6 +48,7 @@ enum
   ID_EDIT_MOVELINESDOWN,
   ID_EDIT_SHOW_PROPERTIES,
   ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION,
+  ID_EDIT_SHOW_AUTOCOMPLETE,
 
   ID_PROJECT_NEW,
   ID_PROJECT_OPEN,
@@ -106,6 +107,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_EDIT_MOVELINESDOWN  , MainWindow::OnEditMoveLinesDown)
   EVT_MENU(ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, MainWindow::OnEditOpenInOnlineDocumentation)
   EVT_MENU(ID_EDIT_SHOW_PROPERTIES, MainWindow::OnEditShowProperties)
+  EVT_MENU(ID_EDIT_SHOW_AUTOCOMPLETE, MainWindow::OnEditShowAutocomplete)
   
   EVT_MENU(ID_PROJECT_NEW         , MainWindow::OnProjectNew      )
   EVT_MENU(ID_PROJECT_OPEN        , MainWindow::OnProjectOpen     )
@@ -510,6 +512,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_edit, ID_EDIT_MOVELINESDOWN, "Move selected lines down\tAlt-Down", "");
   menu_edit->AppendSeparator();
   AddMenuItem(menu_edit, ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, "Open type in online documentation\tCtrl-'", ""); // todo: get a better shortcut
+  menu_edit->AppendSeparator();
+  AddMenuItem(menu_edit, ID_EDIT_SHOW_AUTOCOMPLETE, "Auto complete\tCtrl-Space", "");
   menu_edit->AppendSeparator();
   AddMenuItem(menu_edit, ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter", "", edit_file_properties_xpm);
 
@@ -984,6 +988,7 @@ MEM_FUN(MoveLinesUp)
 MEM_FUN(MoveLinesDown)
 MEM_FUN(OpenInOnlineDocumentation)
 MEM_FUN(ShowProperties)
+MEM_FUN(ShowAutocomplete)
 #undef MEM_FUN
 //////////////////////////////////////////////////////////////////////////
 

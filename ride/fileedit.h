@@ -60,6 +60,7 @@ public:
   void MoveLinesDown();
   void OpenInOnlineDocumentation();
   void ShowProperties();
+  void ShowAutocomplete();
 
 public:
   /** Event callback when a margin is clicked, used here for code folding */

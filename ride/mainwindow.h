@@ -81,6 +81,7 @@ private:
   void OnEditMoveLinesDown(wxCommandEvent& event);
   void OnEditOpenInOnlineDocumentation(wxCommandEvent& event);
   void OnEditShowProperties(wxCommandEvent& event);
+  void OnEditShowAutocomplete(wxCommandEvent& event);
 
   void OnProjectNew      (wxCommandEvent& event);
   void OnProjectOpen     (wxCommandEvent& event);
