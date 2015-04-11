@@ -146,6 +146,36 @@ wxString HasWord(const wxString& keyword, const std::vector<wxString>& wordlist,
   return ret;
 }
 
+void AddLocalVariables(std::vector<wxString>* wordlist, wxStyledTextCtrl* text) {
+  assert(wordlist);
+  assert(text);
+
+  int lines_left = 30;
+
+  // start on -1 since we don't want to autocomplete local variables
+  const int start_line = text->GetCurrentLine() - 1;
+
+  for (int current_line = start_line; current_line >= 0; current_line -= 1) {
+    lines_left -= 1;
+    if (lines_left < 0) return;
+    const wxString line = text->GetLine(current_line).Trim(false);
+    if (line.StartsWith("let ")) {
+      const int equal = line.First('=');
+      if (equal == -1) continue;
+      const wxString temp = line.SubString(0, equal-1).Trim();
+      const int space = temp.find_last_of(' ');
+      if (space == -1) continue;
+      const wxString varname = temp.Right(temp.length() - space -1);
+      wordlist->push_back(varname);
+      continue;
+    }
+    if (line.StartsWith("pub ")) return;
+    if (line.StartsWith("fn ")) return;
+    if (line.StartsWith("struct ")) return;
+    if (line.StartsWith("impl ")) return;
+  }
+}
+
 void FileEdit::ShowAutocomplete() {
   const bool ignore_case = true;
 
@@ -158,6 +188,7 @@ void FileEdit::ShowAutocomplete() {
   if (current_language_) {
     wordlist = current_language_->GetKeywords();
   }
+  AddLocalVariables(&wordlist, text_);
   wordlist.push_back( wxString(80, '/') );
   wordlist.push_back(
     "/**\n"
