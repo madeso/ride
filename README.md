@@ -88,16 +88,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 - Add note to code (when debugging) to comeback to later
 - Add a data dsiplay output breakpoint, that instead of breaking printf the value, perhaps also to a csv...
 
-# Current wxWidgets modifications:
+# Dependencies:
 
-wxStyledTextCtrl::FindText modification:
-
-Added findEnd argument and removed default argument
-
-int FindText(int minPos, int maxPos, const wxString& text, int* findEnd, int flags);
-
-Storing the match end index in the output pointer:
-
-		int ret = SendMsg(2150, flags, (sptr_t)&ft);
-		if (ret > 0 && findEnd) *findEnd = ft.chrgText.cpMax;
-		return ret;
+ - wxWidgets with modifications to expose a more complete find text inteface. Currently [forked here](https://github.com/madeso/wxWidgets) with a [pull request here](https://github.com/wxWidgets/wxWidgets/pull/23)
+ - google protobuf
