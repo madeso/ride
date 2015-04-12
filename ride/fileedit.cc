@@ -177,6 +177,17 @@ void AddLocalVariables(std::vector<wxString>* wordlist, wxStyledTextCtrl* text) 
   }
 }
 
+wxString GetIndentationAsString(wxStyledTextCtrl* text, int line) {
+  const int indent = text->GetLineIndentation(line);
+  if (indent == 0) return "";
+  if (text->GetUseTabs()) {
+    return wxString(indent, '\t');
+  }
+  else {
+    return wxString(indent, ' ');
+  }
+}
+
 void FileEdit::ShowAutocomplete(bool force) {
   const bool ignore_case = true;
   const int word_wait_chars = 3;
@@ -194,15 +205,16 @@ void FileEdit::ShowAutocomplete(bool force) {
     }
     AddLocalVariables(&wordlist, text_);
     wordlist.push_back( wxString(80, '/') );
+    const wxString indent = GetIndentationAsString(text_, text_->GetCurrentLine());
     wordlist.push_back(
       "/**\n"
-      " * \n"
-      " **/"
+      + indent + " * \n"
+      + indent + " **/"
       );
     wordlist.push_back(
       "/// \n"
-      "/// \n"
-      "/// "
+      + indent + "/// \n"
+      + indent + "/// "
       );
     std::sort(wordlist.begin(), wordlist.end());
   
