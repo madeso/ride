@@ -176,7 +176,7 @@ void AddLocalVariables(std::vector<wxString>* wordlist, wxStyledTextCtrl* text) 
   }
 }
 
-void FileEdit::ShowAutocomplete() {
+void FileEdit::ShowAutocomplete(bool force) {
   const bool ignore_case = true;
 
   const int pos = text_->GetCurrentPos();
@@ -1002,7 +1002,7 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 {
   int entered_character = event.GetKey(); // the key seems to be the char that was added
 
-  ShowAutocomplete();
+  ShowAutocomplete(false);
 
   if (entered_character == '{') {
     if (main_->settings().autocomplete_curly_braces()) {
