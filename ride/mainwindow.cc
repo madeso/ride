@@ -20,6 +20,8 @@
 #include "ride/runner.h"
 #include "ride/quickopendlg.h"
 
+#include "ride/cmdrunner.h"
+
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
 template<typename T>
@@ -999,34 +1001,6 @@ void MainWindow::UpdateTitle() {
     : wxString::Format("%s - %s", project_->root_folder(), app_name_);
   this->SetTitle(new_title);
 }
-
-class CmdRunner : public SingleRunner {
-private:
-  CmdRunner() {
-  }
-
-  wxString output;
-
-  virtual void Append(const wxString& str) {
-    output += "\n" + str;
-  }
-
-public:
-  static const bool Run(const wxString& root, const wxString& cmd, wxString* out) {
-    assert(out);
-    CmdRunner runner;
-    if (false == runner.RunCmd(Command(root, cmd))) {
-      *out = "Unable to start";
-      return false;
-    }
-    while (runner.IsRunning()) {
-      // wait...
-    }
-    const int result = runner.GetExitCode();
-    *out = runner.output;
-    return result == 0;
-  }
-};
 
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // todo: implement creation of new project
