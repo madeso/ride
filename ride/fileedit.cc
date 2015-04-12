@@ -126,29 +126,42 @@ void FileEdit::MatchBrace() {
   text_->SetSelection(other_brace, other_brace);
 }
 
-wxString HasWord(const wxString& entry, const std::vector<wxString>& wordlist, bool ignoreCase) {
-  const wxString word = ignoreCase ? wxString(entry).MakeLower() : entry;
-  const bool allow_all = word.IsEmpty();
+typedef wxString WordEntry;
 
+wxString ToWordListString(const std::vector<WordEntry>& wordlist) {
   wxString ret;
-
-  for(const wxString& tok : wordlist)
+  for (const WordEntry& tok : wordlist)
   {
-    const wxString autocomplete = ignoreCase ? wxString(tok).MakeLower() : tok;
-    if (allow_all || autocomplete.StartsWith(word)) {
-      if (ret.IsEmpty()) {
-        ret = tok;
-      }
-      else {
-        ret += ";" + tok;
-      }
+    if (ret.IsEmpty()) {
+      ret = tok;
+    }
+    else {
+      ret += ";" + tok;
     }
   }
 
   return ret;
 }
 
-void AddLocalVariables(std::vector<wxString>* wordlist, wxStyledTextCtrl* text) {
+void OnlyWordStarts(const wxString& entry, std::vector<WordEntry>& wordlist, bool ignoreCase) {
+  const wxString word = ignoreCase ? wxString(entry).MakeLower() : entry;
+  const bool allow_all = word.IsEmpty();
+
+  wordlist.erase(
+    std::remove_if(
+      wordlist.begin(),
+      wordlist.end(),
+      [allow_all, word, ignoreCase](const WordEntry& element) -> bool {
+        const wxString autocomplete = ignoreCase ? wxString(element).MakeLower() : element;
+        const bool keep = allow_all || autocomplete.StartsWith(word);
+        return keep == false;
+      }
+    ),
+    wordlist.end()
+  );
+}
+
+void AddLocalVariables(std::vector<WordEntry>* wordlist, wxStyledTextCtrl* text) {
   assert(wordlist);
   assert(text);
 
@@ -201,7 +214,7 @@ void FileEdit::ShowAutocomplete(bool force) {
   assert(length >= 0);
 
   if (force || (text_->AutoCompActive() == false && word.Length() >= word_wait_chars)) {
-    std::vector<wxString> wordlist;
+    std::vector<WordEntry> wordlist;
     if (current_language_) {
       wordlist = current_language_->GetKeywords();
     }
@@ -248,15 +261,14 @@ void FileEdit::ShowAutocomplete(bool force) {
       + indent + "/// \n"
       + indent + "/// "
       );
+    OnlyWordStarts(word, wordlist, ignore_case);
     std::sort(wordlist.begin(), wordlist.end());
-  
-    
-    const wxString wordliststr = HasWord(word, wordlist, ignore_case);
-    if (wordliststr.IsEmpty() == false) {
+    if (wordlist.empty() == false) {
       text_->AutoCompSetAutoHide(force);
       text_->AutoCompSetIgnoreCase(ignore_case);
       text_->AutoCompSetFillUps("()<>.:;{}[]");
       text_->AutoCompSetSeparator(';');
+      const wxString wordliststr = ToWordListString(wordlist);
       text_->AutoCompShow(length, wordliststr);
     }
   }
