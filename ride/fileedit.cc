@@ -126,17 +126,27 @@ void FileEdit::MatchBrace() {
   text_->SetSelection(other_brace, other_brace);
 }
 
-typedef wxString WordEntry;
+class WordEntry {
+public:
+  WordEntry(const wxString& aname) : name(aname) {
+  }
+
+  wxString name;
+};
+
+bool operator<(const WordEntry&  lhs, const WordEntry& rhs) {
+  return lhs.name < rhs.name;
+}
 
 wxString ToWordListString(const std::vector<WordEntry>& wordlist) {
   wxString ret;
   for (const WordEntry& tok : wordlist)
   {
     if (ret.IsEmpty()) {
-      ret = tok;
+      ret = tok.name;
     }
     else {
-      ret += ";" + tok;
+      ret += ";" + tok.name;
     }
   }
 
@@ -152,7 +162,7 @@ void OnlyWordStarts(const wxString& entry, std::vector<WordEntry>& wordlist, boo
       wordlist.begin(),
       wordlist.end(),
       [allow_all, word, ignoreCase](const WordEntry& element) -> bool {
-        const wxString autocomplete = ignoreCase ? wxString(element).MakeLower() : element;
+        const wxString autocomplete = ignoreCase ? wxString(element.name).MakeLower() : element.name;
         const bool keep = allow_all || autocomplete.StartsWith(word);
         return keep == false;
       }
@@ -216,7 +226,10 @@ void FileEdit::ShowAutocomplete(bool force) {
   if (force || (text_->AutoCompActive() == false && word.Length() >= word_wait_chars)) {
     std::vector<WordEntry> wordlist;
     if (current_language_) {
-      wordlist = current_language_->GetKeywords();
+      const auto kw = current_language_->GetKeywords();
+      for (const wxString& k : kw) {
+        wordlist.push_back(k);
+      }
     }
     if (racer) {
       // save temp file
