@@ -74,7 +74,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Simple/basic git commit shortcut with specifying the commit message
 * Investigate debugging support (gdb? https://bjbell.wordpress.com/2015/02/17/emacs-rust-debugging/ )
 * Custom styles (like zenburn, obsidian, ...)
-* Import styles from other editors (like visualstudio / https://studiostyl.es/ )
+* Import styles from other editors (like visualstudio / https://studiostyl.es/ ) and netbeans http://netbeansthemes.com/
 * View documents inline instead of in a new tab
 * File templates
 * Numbered bookmarks
