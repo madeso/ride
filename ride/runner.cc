@@ -69,24 +69,33 @@ class Process : public wxProcess
 {
 public:
   Process(SingleRunner::Pimpl* project, const wxString& cmd)
-    : wxProcess(wxPROCESS_DEFAULT), cmd_(cmd)
+    : wxProcess(wxPROCESS_DEFAULT), cmd_(cmd), null_members_called_(false)
   {
     runner_ = project;
     Redirect();
   }
 
   virtual void OnTerminate(int pid, int status) {
-    assert(runner_->pid_ == pid);
+    if (runner_) {
+      assert(runner_->pid_ == pid);
 
-    // show the rest of the output
-    while (HasInput()) {}
-    runner_->MarkForDeletion(this);
+      // show the rest of the output
+      while (HasInput()) {}
+      runner_->MarkForDeletion(this);
 
-    runner_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
-      pid, cmd_.c_str(), status));
-    runner_->Append("");
-    runner_->exit_code_ = status;
-    runner_->OnCompleted();
+      runner_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
+        pid, cmd_.c_str(), status));
+      runner_->Append("");
+      runner_->exit_code_ = status;
+      runner_->OnCompleted();
+    }
+    else {
+      // if we are here that should mean we have called have called NullMember()
+      // That should mean that we are done with the object and we
+      // can delete this here, *fingers crossed*
+      assert(null_members_called_);
+      delete this;
+    }
   }
 
   virtual bool HasInput() {
@@ -132,9 +141,15 @@ public:
     return hasInput;
   }
 
+  void NullMembers() {
+    runner_ = NULL;
+    null_members_called_ = true;
+  }
+
 protected:
   SingleRunner::Pimpl *runner_;
   wxString cmd_;
+  bool null_members_called_;
 };
 
 void SingleRunner::Pimpl::Notify(){
@@ -181,6 +196,8 @@ void SingleRunner::Pimpl::MarkForDeletion(Process *process)
 }
 
 SingleRunner::Pimpl:: ~Pimpl() {
+  if (processes_ ) processes_->NullMembers();
+  if (delete_processes_) delete_processes_->NullMembers();
   delete delete_processes_;
 }
 
@@ -199,7 +216,13 @@ bool SingleRunner::RunCmd(const Command& cmd) {
 }
 
 bool SingleRunner::IsRunning() const {
-  return pimpl->processes_ != NULL;
+  const bool has_process = pimpl->processes_ != NULL;
+  if (has_process) {
+    const bool exists = wxProcess::Exists(pimpl->processes_->GetPid());
+    pimpl->processes_->HasInput();
+    if (exists == false) return false;
+  }
+  return has_process;
 }
 
 void SingleRunner::Completed() {
