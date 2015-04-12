@@ -125,15 +125,16 @@ void FileEdit::MatchBrace() {
   text_->SetSelection(other_brace, other_brace);
 }
 
-wxString HasWord(const wxString& keyword, const std::vector<wxString>& wordlist, bool ignoreCase) {
-  const wxString word = ignoreCase ? wxString(keyword).MakeLower() : keyword;
+wxString HasWord(const wxString& entry, const std::vector<wxString>& wordlist, bool ignoreCase) {
+  const wxString word = ignoreCase ? wxString(entry).MakeLower() : entry;
+  const bool allow_all = word.IsEmpty();
 
   wxString ret;
 
   for(const wxString& tok : wordlist)
   {
-    const wxString token = ignoreCase ? wxString(tok).MakeLower() : tok;
-    if (token.StartsWith(word)) {
+    const wxString autocomplete = ignoreCase ? wxString(tok).MakeLower() : tok;
+    if (allow_all || autocomplete.StartsWith(word)) {
       if (ret.IsEmpty()) {
         ret = tok;
       }
@@ -178,13 +179,15 @@ void AddLocalVariables(std::vector<wxString>* wordlist, wxStyledTextCtrl* text) 
 
 void FileEdit::ShowAutocomplete(bool force) {
   const bool ignore_case = true;
+  const int word_wait_chars = 3;
 
   const int pos = text_->GetCurrentPos();
   const int start_position = text_->WordStartPosition(pos, false);
   const int length = pos - start_position;
+  const wxString word = text_->GetRange(start_position, pos).Trim(true).Trim(false);
   assert(length >= 0);
 
-  if (text_->AutoCompActive() == false) {
+  if (force || (text_->AutoCompActive() == false && word.Length() >= word_wait_chars)) {
     std::vector<wxString> wordlist;
     if (current_language_) {
       wordlist = current_language_->GetKeywords();
@@ -203,10 +206,10 @@ void FileEdit::ShowAutocomplete(bool force) {
       );
     std::sort(wordlist.begin(), wordlist.end());
   
-    const wxString word = text_->GetRange(start_position, pos);
+    
     const wxString wordliststr = HasWord(word, wordlist, ignore_case);
     if (wordliststr.IsEmpty() == false) {
-      // text_->AutoCompSetAutoHide(false);
+      text_->AutoCompSetAutoHide(force);
       text_->AutoCompSetIgnoreCase(ignore_case);
       text_->AutoCompSetFillUps("()<>.:;{}[]");
       text_->AutoCompSetSeparator(';');
