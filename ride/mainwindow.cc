@@ -1012,18 +1012,19 @@ private:
   }
 
 public:
-  // returns error or empty string
-  static const wxString Run(const wxString& root, const wxString& cmd) {
+  static const bool Run(const wxString& root, const wxString& cmd, wxString* out) {
+    assert(out);
     CmdRunner runner;
     if (false == runner.RunCmd(Command(root, cmd))) {
-      return "Unable to start";
+      *out = "Unable to start";
+      return false;
     }
     while (runner.IsRunning()) {
       // wait...
     }
     const int result = runner.GetExitCode();
-    if (result == 0) return wxEmptyString;
-    else return runner.output;
+    *out = runner.output;
+    return result == 0;
   }
 };
 
@@ -1035,9 +1036,9 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
   }
   // run cargo new
 
-  const wxString result = CmdRunner::Run(dlg.project_folder(), dlg.GenerateCargoCommandline());
-  if (result.IsEmpty() == false) {
-    ShowError(this, result, "Unable to create project!");
+  wxString output;
+  if (CmdRunner::Run(dlg.project_folder(), dlg.GenerateCargoCommandline(), &output) == false) {
+    ShowError(this, output, "Unable to create project!");
     return;
   }
 
