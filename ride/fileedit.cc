@@ -16,6 +16,7 @@
 #include "ride/fileedit.h"
 #include "ride/wxutils.h"
 #include "ride/finddlg.h"
+#include "ride/cmdrunner.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -191,6 +192,7 @@ wxString GetIndentationAsString(wxStyledTextCtrl* text, int line) {
 void FileEdit::ShowAutocomplete(bool force) {
   const bool ignore_case = true;
   const int word_wait_chars = 3;
+  const bool racer = true;
 
   const int pos = text_->GetCurrentPos();
   const int start_position = text_->WordStartPosition(pos, false);
@@ -203,7 +205,37 @@ void FileEdit::ShowAutocomplete(bool force) {
     if (current_language_) {
       wordlist = current_language_->GetKeywords();
     }
-    AddLocalVariables(&wordlist, text_);
+    if (racer) {
+      // save temp file
+      wxFileName target(filename_);
+      target.SetExt("racertmp");
+      const wxString path = target.GetFullPath();
+      {
+        wxFile f(path, wxFile::OpenMode::write);
+        f.Write(text_->GetText());
+      }
+      // run racer
+      wxString output;
+      const int linenum = text_->GetCurrentLine() + 1;
+      const int charnum = text_->GetCurrentPos() - text_->PositionFromLine(text_->GetCurrentLine());
+      const wxString cmd = wxString::Format("racer complete %d %d \"%s\"", linenum, charnum, path);
+      CmdRunner::Run(main_->root_folder(), cmd, &output);
+      // parse output
+      const std::vector<wxString> o = Split(output, "\n");
+      for (const wxString& l : o) {
+        const wxString MATCH = "MATCH ";
+        if (l.StartsWith(MATCH)) {
+          const std::vector<wxString> args = Split(l.substr(MATCH.length()), ",");
+          wordlist.push_back(args[0]);
+        }
+      }
+      // delete temp file
+      wxRemoveFile(path);
+    }
+    else {
+      AddLocalVariables(&wordlist, text_);
+    }
+
     wordlist.push_back( wxString(80, '/') );
     const wxString indent = GetIndentationAsString(text_, text_->GetCurrentLine());
     wordlist.push_back(

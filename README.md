@@ -49,8 +49,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Add println! format! argument highlighting
 * Add configurable shortcuts
 * Cpack support (=installer for ride)
-* Intellisense/autocomplete support via [racer](https://github.com/phildawes/racer)
-* Goto definition & goto definition of type
+* Goto definition & goto definition of type via [racer](https://github.com/phildawes/racer)
 * Code snippets
 * Implement ctrl+tab like visual studio to switch between open documents
 * Start page
