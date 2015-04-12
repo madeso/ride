@@ -18,6 +18,8 @@
 #include "ride/finddlg.h"
 #include "ride/cmdrunner.h"
 
+#include "ride/resources/icons.h"
+
 //////////////////////////////////////////////////////////////////////////
 
 enum
@@ -126,13 +128,67 @@ void FileEdit::MatchBrace() {
   text_->SetSelection(other_brace, other_brace);
 }
 
+enum AutoIcon {
+  AI_None = -1,
+  AI_Snippet = 0,
+  AI_Keyword
+};
+
 class WordEntry {
 public:
-  explicit WordEntry(const wxString& aname) : name(aname) {
+  explicit WordEntry(const wxString& aname, AutoIcon aicon = AI_None) : name(aname), icon(aicon) {
   }
 
   wxString name;
+  AutoIcon icon;
+
+  const wxString GetName() const {
+    if (icon == AI_None) {
+      return name;
+    }
+    else {
+      const wxString ret = wxString::Format("%s?%d", name, icon);
+      return ret;
+    }
+  }
 };
+
+void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, char** xpm) {
+  wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
+  wxImage img = bitmap.ConvertToImage();
+  // t->RegisterImage(icon, bitmap);
+  const int w = bitmap.GetWidth();
+  const int h = bitmap.GetHeight();
+  t->RGBAImageSetWidth(w);
+  t->RGBAImageSetHeight(h);
+  wxImage mask;
+  if (bitmap.GetMask()) {
+    mask = bitmap.GetMask()->GetBitmap().ConvertToImage();
+  }
+  std::unique_ptr<unsigned char[]> pixels(new unsigned char[w*h * 4]);
+  for (int y = 0; y < h; ++y) {
+    for (int x = 0; x < w; ++x) {
+      const int index = (y*h + x) * 4;
+      pixels[index + 0] = img.GetRed(x, y);
+      pixels[index + 1] = img.GetGreen(x, y);
+      pixels[index + 2] = img.GetBlue(x, y);
+      pixels[index + 3] = img.HasAlpha() ? img.GetAlpha(x, y) : (bitmap.GetMask()? mask.GetRed(x,y) : 255 );
+    }
+  }
+
+  // Register image kills wxWidgets, so we have to manually convert to rgba and use that instead
+  t->RegisterRGBAImage(icon, pixels.get());
+}
+
+void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* t) {
+  t->ClearRegisteredImages();
+  RegisterImage(t, AI_Snippet, project_doc_xpm);
+  RegisterImage(t, AI_Keyword, edit_redo_xpm);
+
+  // t->RegisterImage(AI_Snippet, wxArtProvider::GetBitmap(wxART_TIP, wxART_OTHER, wxSize(16, 16)));
+  // t->RegisterImage(AI_Keyword, wxArtProvider::GetBitmap(wxART_COPY, wxART_OTHER, wxSize(16, 16)));
+  // m_editor->RegisterImage(3, wxArtProvider::GetBitmap(wxART_NEW, wxART_OTHER, wxSize(16, 16)));
+}
 
 bool operator<(const WordEntry&  lhs, const WordEntry& rhs) {
   return lhs.name < rhs.name;
@@ -143,10 +199,10 @@ wxString ToWordListString(const std::vector<WordEntry>& wordlist) {
   for (const WordEntry& tok : wordlist)
   {
     if (ret.IsEmpty()) {
-      ret = tok.name;
+      ret = tok.GetName();
     }
     else {
-      ret += ";" + tok.name;
+      ret += ";" + tok.GetName();
     }
   }
 
@@ -228,7 +284,7 @@ void FileEdit::ShowAutocomplete(bool force) {
     if (current_language_) {
       const auto kw = current_language_->GetKeywords();
       for (const wxString& k : kw) {
-        wordlist.push_back(WordEntry(k));
+        wordlist.push_back(WordEntry(k, AI_Keyword));
       }
     }
     if (racer) {
@@ -262,17 +318,19 @@ void FileEdit::ShowAutocomplete(bool force) {
       AddLocalVariables(&wordlist, text_);
     }
 
-    wordlist.push_back(WordEntry( wxString(80, '/') ) );
+    wordlist.push_back(WordEntry(wxString(80, '/'), AI_Snippet));
     const wxString indent = GetIndentationAsString(text_, text_->GetCurrentLine());
     wordlist.push_back(WordEntry(
       "/**\n"
       + indent + " * \n"
       + indent + " **/"
+      , AI_Snippet
       ));
     wordlist.push_back(WordEntry(
       "/// \n"
       + indent + "/// \n"
       + indent + "/// "
+      , AI_Snippet
       ));
     OnlyWordStarts(word, wordlist, ignore_case);
     std::sort(wordlist.begin(), wordlist.end());
@@ -943,7 +1001,7 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
 
   SetupScintillaDefaultStyles(text_ctrl, set);
 
-
+  SetupScintillaAutoCompleteImages(text_ctrl);
 
   text_ctrl->SetEndAtLastLine(set.end_at_last_line());
   text_ctrl->SetVirtualSpaceOptions(C(set.virtual_space()));
