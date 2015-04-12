@@ -184,25 +184,25 @@ void FileEdit::ShowAutocomplete() {
   const int length = pos - start_position;
   assert(length >= 0);
 
-  std::vector<wxString> wordlist;
-  if (current_language_) {
-    wordlist = current_language_->GetKeywords();
-  }
-  AddLocalVariables(&wordlist, text_);
-  wordlist.push_back( wxString(80, '/') );
-  wordlist.push_back(
-    "/**\n"
-    " * \n"
-    " **/"
-    );
-  wordlist.push_back(
-    "/// \n"
-    "/// \n"
-    "/// "
-    );
-  std::sort(wordlist.begin(), wordlist.end());
-
   if (text_->AutoCompActive() == false) {
+    std::vector<wxString> wordlist;
+    if (current_language_) {
+      wordlist = current_language_->GetKeywords();
+    }
+    AddLocalVariables(&wordlist, text_);
+    wordlist.push_back( wxString(80, '/') );
+    wordlist.push_back(
+      "/**\n"
+      " * \n"
+      " **/"
+      );
+    wordlist.push_back(
+      "/// \n"
+      "/// \n"
+      "/// "
+      );
+    std::sort(wordlist.begin(), wordlist.end());
+  
     const wxString word = text_->GetRange(start_position, pos);
     const wxString wordliststr = HasWord(word, wordlist, ignore_case);
     if (wordliststr.IsEmpty() == false) {
