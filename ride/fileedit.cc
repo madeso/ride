@@ -128,7 +128,7 @@ void FileEdit::MatchBrace() {
 
 class WordEntry {
 public:
-  WordEntry(const wxString& aname) : name(aname) {
+  explicit WordEntry(const wxString& aname) : name(aname) {
   }
 
   wxString name;
@@ -191,7 +191,7 @@ void AddLocalVariables(std::vector<WordEntry>* wordlist, wxStyledTextCtrl* text)
       const int space = temp.find_last_of(' ');
       if (space == -1) continue;
       const wxString varname = temp.Right(temp.length() - space -1);
-      wordlist->push_back(varname);
+      wordlist->push_back(WordEntry(varname));
       continue;
     }
     if (line.StartsWith("pub ")) return;
@@ -228,7 +228,7 @@ void FileEdit::ShowAutocomplete(bool force) {
     if (current_language_) {
       const auto kw = current_language_->GetKeywords();
       for (const wxString& k : kw) {
-        wordlist.push_back(k);
+        wordlist.push_back(WordEntry(k));
       }
     }
     if (racer) {
@@ -252,7 +252,7 @@ void FileEdit::ShowAutocomplete(bool force) {
         const wxString MATCH = "MATCH ";
         if (l.StartsWith(MATCH)) {
           const std::vector<wxString> args = Split(l.substr(MATCH.length()), ",");
-          wordlist.push_back(args[0]);
+          wordlist.push_back(WordEntry(args[0]));
         }
       }
       // delete temp file
@@ -262,18 +262,18 @@ void FileEdit::ShowAutocomplete(bool force) {
       AddLocalVariables(&wordlist, text_);
     }
 
-    wordlist.push_back( wxString(80, '/') );
+    wordlist.push_back(WordEntry( wxString(80, '/') ) );
     const wxString indent = GetIndentationAsString(text_, text_->GetCurrentLine());
-    wordlist.push_back(
+    wordlist.push_back(WordEntry(
       "/**\n"
       + indent + " * \n"
       + indent + " **/"
-      );
-    wordlist.push_back(
+      ));
+    wordlist.push_back(WordEntry(
       "/// \n"
       + indent + "/// \n"
       + indent + "/// "
-      );
+      ));
     OnlyWordStarts(word, wordlist, ignore_case);
     std::sort(wordlist.begin(), wordlist.end());
     if (wordlist.empty() == false) {
