@@ -34,4 +34,6 @@
 #include "icons/create_app.xpm"
 #include "icons/create_library.xpm"
 
+#include "icons/icon_ac_function.xpm"
+
 #endif  // RIDE_RIDE_RESOURCES_ICON_H

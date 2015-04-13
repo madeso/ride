@@ -131,7 +131,8 @@ void FileEdit::MatchBrace() {
 enum AutoIcon {
   AI_None = -1,
   AI_Snippet = 0,
-  AI_Keyword
+  AI_Keyword,
+  AI_Function,
 };
 
 class WordEntry {
@@ -184,6 +185,7 @@ void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* t) {
   t->ClearRegisteredImages();
   RegisterImage(t, AI_Snippet, project_doc_xpm);
   RegisterImage(t, AI_Keyword, edit_redo_xpm);
+  RegisterImage(t, AI_Function, icon_ac_function_xpm);
 
   // t->RegisterImage(AI_Snippet, wxArtProvider::GetBitmap(wxART_TIP, wxART_OTHER, wxSize(16, 16)));
   // t->RegisterImage(AI_Keyword, wxArtProvider::GetBitmap(wxART_COPY, wxART_OTHER, wxSize(16, 16)));
@@ -268,6 +270,15 @@ wxString GetIndentationAsString(wxStyledTextCtrl* text, int line) {
   }
 }
 
+AutoIcon ParseRacerType(const wxString& aname) {
+  const wxString name = wxString(aname).MakeLower();
+  if (name == "function") {
+    return AI_Function;
+  }
+  
+  return AI_None;
+}
+
 void FileEdit::ShowAutocomplete(bool force) {
   const bool ignore_case = true;
   const int word_wait_chars = 3;
@@ -308,7 +319,7 @@ void FileEdit::ShowAutocomplete(bool force) {
         const wxString MATCH = "MATCH ";
         if (l.StartsWith(MATCH)) {
           const std::vector<wxString> args = Split(l.substr(MATCH.length()), ",");
-          wordlist.push_back(WordEntry(args[0]));
+          wordlist.push_back(WordEntry(args[0], ParseRacerType(args[4])));
         }
       }
       // delete temp file
