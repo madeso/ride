@@ -35,5 +35,9 @@
 #include "icons/create_library.xpm"
 
 #include "icons/icon_ac_function.xpm"
+#include "icons/icon_ac_crate.xpm"
+#include "icons/icon_ac_let.xpm"
+#include "icons/icon_ac_struct.xpm"
+#include "icons/icon_ac_structfield.xpm"
 
 #endif  // RIDE_RIDE_RESOURCES_ICON_H

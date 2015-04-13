@@ -133,6 +133,10 @@ enum AutoIcon {
   AI_Snippet = 0,
   AI_Keyword,
   AI_Function,
+  AI_Crate,
+  AI_Let,
+  AI_Struct,
+  AI_StructField
 };
 
 class WordEntry {
@@ -186,6 +190,11 @@ void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* t) {
   RegisterImage(t, AI_Snippet, project_doc_xpm);
   RegisterImage(t, AI_Keyword, edit_redo_xpm);
   RegisterImage(t, AI_Function, icon_ac_function_xpm);
+
+  RegisterImage(t, AI_Crate, icon_ac_crate_xpm);
+  RegisterImage(t, AI_Let, icon_ac_let_xpm);
+  RegisterImage(t, AI_Struct, icon_ac_struct_xpm);
+  RegisterImage(t, AI_StructField, icon_ac_structfield_xpm);
 
   // t->RegisterImage(AI_Snippet, wxArtProvider::GetBitmap(wxART_TIP, wxART_OTHER, wxSize(16, 16)));
   // t->RegisterImage(AI_Keyword, wxArtProvider::GetBitmap(wxART_COPY, wxART_OTHER, wxSize(16, 16)));
@@ -274,6 +283,18 @@ AutoIcon ParseRacerType(const wxString& aname) {
   const wxString name = wxString(aname).MakeLower();
   if (name == "function") {
     return AI_Function;
+  }
+  if (name == "crate") {
+    return AI_Crate;
+  }
+  if (name == "let") {
+    return AI_Let;
+  }
+  if (name == "struct") {
+    return AI_Struct;
+  }
+  if (name == "structfield") {
+    return AI_StructField;
   }
   
   return AI_None;
