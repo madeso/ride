@@ -41,5 +41,6 @@
 #include "icons/icon_ac_structfield.xpm"
 #include "icons/icon_ac_keyword.xpm"
 #include "icons/icon_ac_snippet.xpm"
+#include "icons/icon_ac_module.xpm"
 
 #endif  // RIDE_RIDE_RESOURCES_ICON_H

@@ -136,7 +136,8 @@ enum AutoIcon {
   AI_Crate,
   AI_Let,
   AI_Struct,
-  AI_StructField
+  AI_StructField,
+  AI_Module
 };
 
 class WordEntry {
@@ -195,10 +196,7 @@ void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* t) {
   RegisterImage(t, AI_Let, icon_ac_let_xpm);
   RegisterImage(t, AI_Struct, icon_ac_struct_xpm);
   RegisterImage(t, AI_StructField, icon_ac_structfield_xpm);
-
-  // t->RegisterImage(AI_Snippet, wxArtProvider::GetBitmap(wxART_TIP, wxART_OTHER, wxSize(16, 16)));
-  // t->RegisterImage(AI_Keyword, wxArtProvider::GetBitmap(wxART_COPY, wxART_OTHER, wxSize(16, 16)));
-  // m_editor->RegisterImage(3, wxArtProvider::GetBitmap(wxART_NEW, wxART_OTHER, wxSize(16, 16)));
+  RegisterImage(t, AI_Module, icon_ac_module_xpm);
 }
 
 bool operator<(const WordEntry&  lhs, const WordEntry& rhs) {
@@ -295,6 +293,9 @@ AutoIcon ParseRacerType(const wxString& aname) {
   }
   if (name == "structfield") {
     return AI_StructField;
+  }
+  if (name == "module") {
+    return AI_Module;
   }
   
   return AI_None;
