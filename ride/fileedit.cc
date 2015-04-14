@@ -158,6 +158,7 @@ public:
     }
   }
 };
+typedef std::vector<WordEntry> WordEntryList;
 
 void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, char** xpm) {
   wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
@@ -301,6 +302,34 @@ AutoIcon ParseRacerType(const wxString& aname) {
   return AI_None;
 }
 
+void RunRacer(WordEntryList& wordlist, const wxString& filename_, wxStyledTextCtrl* text_, const wxString& root_folder) {
+  // save temp file
+  wxFileName target(filename_);
+  target.SetExt("racertmp");
+  const wxString path = target.GetFullPath();
+  {
+    wxFile f(path, wxFile::OpenMode::write);
+    f.Write(text_->GetText());
+  }
+  // run racer
+  wxString output;
+  const int linenum = text_->GetCurrentLine() + 1;
+  const int charnum = text_->GetCurrentPos() - text_->PositionFromLine(text_->GetCurrentLine());
+  const wxString cmd = wxString::Format("racer complete %d %d \"%s\"", linenum, charnum, path);
+  CmdRunner::Run(root_folder, cmd, &output);
+  // parse output
+  const std::vector<wxString> o = Split(output, "\n");
+  for (const wxString& l : o) {
+    const wxString MATCH = "MATCH ";
+    if (l.StartsWith(MATCH)) {
+      const std::vector<wxString> args = Split(l.substr(MATCH.length()), ",");
+      wordlist.push_back(WordEntry(args[0], ParseRacerType(args[4])));
+    }
+  }
+  // delete temp file
+  wxRemoveFile(path);
+}
+
 void FileEdit::ShowAutocomplete(bool force) {
   const bool ignore_case = true;
   const int word_wait_chars = 3;
@@ -321,31 +350,7 @@ void FileEdit::ShowAutocomplete(bool force) {
       }
     }
     if (racer) {
-      // save temp file
-      wxFileName target(filename_);
-      target.SetExt("racertmp");
-      const wxString path = target.GetFullPath();
-      {
-        wxFile f(path, wxFile::OpenMode::write);
-        f.Write(text_->GetText());
-      }
-      // run racer
-      wxString output;
-      const int linenum = text_->GetCurrentLine() + 1;
-      const int charnum = text_->GetCurrentPos() - text_->PositionFromLine(text_->GetCurrentLine());
-      const wxString cmd = wxString::Format("racer complete %d %d \"%s\"", linenum, charnum, path);
-      CmdRunner::Run(main_->root_folder(), cmd, &output);
-      // parse output
-      const std::vector<wxString> o = Split(output, "\n");
-      for (const wxString& l : o) {
-        const wxString MATCH = "MATCH ";
-        if (l.StartsWith(MATCH)) {
-          const std::vector<wxString> args = Split(l.substr(MATCH.length()), ",");
-          wordlist.push_back(WordEntry(args[0], ParseRacerType(args[4])));
-        }
-      }
-      // delete temp file
-      wxRemoveFile(path);
+      RunRacer(wordlist, filename_, text_, main_->root_folder());
     }
     else {
       AddLocalVariables(&wordlist, text_);
