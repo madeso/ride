@@ -187,10 +187,10 @@ void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, char** xpm) {
 
 void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* t) {
   t->ClearRegisteredImages();
-  RegisterImage(t, AI_Snippet, project_doc_xpm);
-  RegisterImage(t, AI_Keyword, edit_redo_xpm);
-  RegisterImage(t, AI_Function, icon_ac_function_xpm);
+  RegisterImage(t, AI_Snippet, icon_ac_snippet_xpm);
+  RegisterImage(t, AI_Keyword, icon_ac_keyword_xpm);
 
+  RegisterImage(t, AI_Function, icon_ac_function_xpm);
   RegisterImage(t, AI_Crate, icon_ac_crate_xpm);
   RegisterImage(t, AI_Let, icon_ac_let_xpm);
   RegisterImage(t, AI_Struct, icon_ac_struct_xpm);
