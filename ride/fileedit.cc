@@ -308,11 +308,11 @@ void FileEdit::ShowAutocomplete(bool force) {
 
   const int pos = text_->GetCurrentPos();
   const int start_position = text_->WordStartPosition(pos, false);
-  const int length = pos - start_position;
   const wxString word = text_->GetRange(start_position, pos).Trim(true).Trim(false);
+  const int length = word.Length(); //  pos - start_position;
   assert(length >= 0);
 
-  if (force || (text_->AutoCompActive() == false && word.Length() >= word_wait_chars)) {
+  if (force || (text_->AutoCompActive() == false && length >= word_wait_chars)) {
     std::vector<WordEntry> wordlist;
     if (current_language_) {
       const auto kw = current_language_->GetKeywords();
