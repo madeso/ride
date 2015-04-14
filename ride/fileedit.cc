@@ -349,10 +349,8 @@ void FileEdit::ShowAutocomplete(bool force) {
         wordlist.push_back(WordEntry(k, AI_Keyword));
       }
     }
-    if (racer) {
-      RunRacer(wordlist, filename_, text_, main_->root_folder());
-    }
-    else {
+
+    if (racer == false) {
       AddLocalVariables(&wordlist, text_);
     }
 
@@ -371,6 +369,11 @@ void FileEdit::ShowAutocomplete(bool force) {
       , AI_Snippet
       ));
     OnlyWordStarts(word, wordlist, ignore_case);
+
+    if ( racer ) {
+      RunRacer(wordlist, filename_, text_, main_->root_folder());
+    }
+
     std::sort(wordlist.begin(), wordlist.end());
     if (wordlist.empty() == false) {
       text_->AutoCompSetAutoHide(force);
