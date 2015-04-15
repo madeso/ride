@@ -330,7 +330,7 @@ void RunRacer(WordEntryList& wordlist, const wxString& filename_, wxStyledTextCt
   wxRemoveFile(path);
 }
 
-void FileEdit::ShowAutocomplete(bool force) {
+void FileEdit::ShowAutocomplete(ShowAutoCompleteAction action) {
   const bool ignore_case = true;
   const int word_wait_chars = 3;
   const bool racer = true;
@@ -343,7 +343,7 @@ void FileEdit::ShowAutocomplete(bool force) {
 
   const bool is_space_before = text_->GetRange(start_position - 1, start_position).Trim(true).Trim(false).IsEmpty();
 
-  if (force || (text_->AutoCompActive() == false && length >= word_wait_chars)) {
+  if (action != ShowAutoCompleteAction::NO_FORCE || (text_->AutoCompActive() == false && length >= word_wait_chars)) {
     std::vector<WordEntry> wordlist;
 
     if (is_space_before) {
@@ -383,19 +383,22 @@ void FileEdit::ShowAutocomplete(bool force) {
       RunRacer(wordlist, filename_, text_, main_->root_folder());
     }
 
+    // setting it here instead of when spawning eats the entered '.' but displays the AC instead of autocompleteing directly
+    text_->AutoCompSetFillUps("()<>.:;{}[] ");
+    OutputDebugStringA("Setting fillups!\n");
     std::sort(wordlist.begin(), wordlist.end());
     if (wordlist.empty()) {
-      if (force) {
+      if (action == ShowAutoCompleteAction::FORCE_KEEP) {
         ShowInfo(this, "No autocomplete suggestions", "Empty");
       }
     }
     else {
-      text_->AutoCompSetAutoHide(force);
+      text_->AutoCompSetAutoHide(action != ShowAutoCompleteAction::FORCE_KEEP);
       text_->AutoCompSetIgnoreCase(ignore_case);
-      text_->AutoCompSetFillUps("()<>.:;{}[] ");
       text_->AutoCompSetSeparator(';');
       const wxString wordliststr = ToWordListString(wordlist);
       text_->AutoCompShow(length, wordliststr);
+      text_->AutoCompSetFillUps("");
     }
   }
 }
@@ -1187,7 +1190,13 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 {
   int entered_character = event.GetKey(); // the key seems to be the char that was added
 
-  ShowAutocomplete(false);
+  const wxString character_before_entered = text_->GetTextRange(text_->GetCurrentPos() - 2, text_->GetCurrentPos() - 1);
+
+  const bool force = 
+       (character_before_entered == ":" && entered_character == ':')
+    || (character_before_entered != "." && entered_character == '.');
+
+  ShowAutocomplete(force ? ShowAutoCompleteAction::FORCE_SIMPLE : ShowAutoCompleteAction::NO_FORCE);
 
   if (entered_character == '{') {
     if (main_->settings().autocomplete_curly_braces()) {

@@ -13,6 +13,12 @@ namespace ride {
   class Settings;
 }
 
+enum class ShowAutoCompleteAction {
+  NO_FORCE // no forcing at all
+  ,FORCE_SIMPLE // simple forcing
+  ,FORCE_KEEP // forcing with no auto-hide
+};
+
 class FileEdit : public wxControl {
 public:
   FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file);
@@ -60,7 +66,8 @@ public:
   void MoveLinesDown();
   void OpenInOnlineDocumentation();
   void ShowProperties();
-  void ShowAutocomplete(bool force=true);
+
+  void ShowAutocomplete(ShowAutoCompleteAction action = ShowAutoCompleteAction::FORCE_KEEP);
 
 public:
   /** Event callback when a margin is clicked, used here for code folding */
