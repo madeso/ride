@@ -378,7 +378,7 @@ void FileEdit::ShowAutocomplete(bool force) {
     if (wordlist.empty() == false) {
       text_->AutoCompSetAutoHide(force);
       text_->AutoCompSetIgnoreCase(ignore_case);
-      text_->AutoCompSetFillUps("()<>.:;{}[]");
+      text_->AutoCompSetFillUps("()<>.:;{}[] ");
       text_->AutoCompSetSeparator(';');
       const wxString wordliststr = ToWordListString(wordlist);
       text_->AutoCompShow(length, wordliststr);
