@@ -336,7 +336,7 @@ void FileEdit::ShowAutocomplete(bool force) {
   const bool racer = true;
 
   const int pos = text_->GetCurrentPos();
-  const int start_position = text_->WordStartPosition(pos, false);
+  const int start_position = text_->WordStartPosition(pos, true);
   const wxString word = text_->GetRange(start_position, pos).Trim(true).Trim(false);
   const int length = word.Length(); //  pos - start_position;
   assert(length >= 0);
