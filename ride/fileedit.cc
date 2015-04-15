@@ -341,33 +341,42 @@ void FileEdit::ShowAutocomplete(bool force) {
   const int length = word.Length(); //  pos - start_position;
   assert(length >= 0);
 
+  const bool is_space_before = text_->GetRange(start_position - 1, start_position).Trim(true).Trim(false).IsEmpty();
+
   if (force || (text_->AutoCompActive() == false && length >= word_wait_chars)) {
     std::vector<WordEntry> wordlist;
-    if (current_language_) {
-      const auto kw = current_language_->GetKeywords();
-      for (const wxString& k : kw) {
-        wordlist.push_back(WordEntry(k, AI_Keyword));
+
+    if (is_space_before) {
+      if (current_language_) {
+        const auto kw = current_language_->GetKeywords();
+        for (const wxString& k : kw) {
+          wordlist.push_back(WordEntry(k, AI_Keyword));
+        }
       }
     }
 
     if (racer == false) {
-      AddLocalVariables(&wordlist, text_);
+      if (is_space_before) {
+        AddLocalVariables(&wordlist, text_);
+      }
     }
 
-    wordlist.push_back(WordEntry(wxString(80, '/'), AI_Snippet));
-    const wxString indent = GetIndentationAsString(text_, text_->GetCurrentLine());
-    wordlist.push_back(WordEntry(
-      "/**\n"
-      + indent + " * \n"
-      + indent + " **/"
-      , AI_Snippet
-      ));
-    wordlist.push_back(WordEntry(
-      "/// \n"
-      + indent + "/// \n"
-      + indent + "/// "
-      , AI_Snippet
-      ));
+    if (is_space_before) {
+      wordlist.push_back(WordEntry(wxString(80, '/'), AI_Snippet));
+      const wxString indent = GetIndentationAsString(text_, text_->GetCurrentLine());
+      wordlist.push_back(WordEntry(
+        "/**\n"
+        + indent + " * \n"
+        + indent + " **/"
+        , AI_Snippet
+        ));
+      wordlist.push_back(WordEntry(
+        "/// \n"
+        + indent + "/// \n"
+        + indent + "/// "
+        , AI_Snippet
+        ));
+    }
     OnlyWordStarts(word, wordlist, ignore_case);
 
     if ( racer ) {
