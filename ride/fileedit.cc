@@ -384,7 +384,12 @@ void FileEdit::ShowAutocomplete(bool force) {
     }
 
     std::sort(wordlist.begin(), wordlist.end());
-    if (wordlist.empty() == false) {
+    if (wordlist.empty()) {
+      if (force) {
+        ShowInfo(this, "No autocomplete suggestions", "Empty");
+      }
+    }
+    else {
       text_->AutoCompSetAutoHide(force);
       text_->AutoCompSetIgnoreCase(ignore_case);
       text_->AutoCompSetFillUps("()<>.:;{}[] ");
