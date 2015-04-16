@@ -160,13 +160,31 @@ public:
 };
 class WordEntryList {
 public:
-  void push_back(const WordEntry& entry) {
-    list.push_back(entry);
+  const wxString start_string_;
+  const bool start_string_is_empty_;
+  const bool ignore_case_;
+  std::vector<WordEntry> list_;
+
+  WordEntryList(const wxString& start, bool ignore_case)
+    : start_string_( ignore_case ? wxString(start).MakeLower() : start )
+    , start_string_is_empty_( start.IsEmpty() )
+    , ignore_case_(ignore_case)
+  {
+  }
+
+  void Add(const WordEntry& entry) {
+    if (ShouldAdd(entry)) {
+      ForceAdd(entry);
+    }
+  }
+
+  void ForceAdd(const WordEntry& entry) {
+    list_.push_back(entry);
   }
 
   wxString ToString() const {
     wxString ret;
-    for (const WordEntry& tok : list)
+    for (const WordEntry& tok : list_)
     {
       if (ret.IsEmpty()) {
         ret = tok.GetName();
@@ -179,33 +197,22 @@ public:
     return ret;
   }
 
-  void OnlyWordStarts(const wxString& entry, bool ignoreCase) {
-    const wxString word = ignoreCase ? wxString(entry).MakeLower() : entry;
-    const bool allow_all = word.IsEmpty();
-
-    list.erase(
-      std::remove_if(
-      list.begin(),
-      list.end(),
-      [allow_all, word, ignoreCase](const WordEntry& element) -> bool {
-      const wxString autocomplete = ignoreCase ? wxString(element.name).MakeLower() : element.name;
-      const bool keep = allow_all || autocomplete.StartsWith(word);
-      return keep == false;
+  bool ShouldAdd(const WordEntry& element) const {
+    if (start_string_is_empty_) {
+      return true;
     }
-      ),
-      list.end()
-      );
+    const wxString element_name = ignore_case_ ? wxString(element.name).MakeLower() : element.name;
+    const bool add = element_name.StartsWith(start_string_);
+    return add;
   }
 
   void Sort() {
-    std::sort(list.begin(), list.end());
+    std::sort(list_.begin(), list_.end());
   }
 
   bool IsEmpty() const {
-    return list.empty();
+    return list_.empty();
   }
-
-  std::vector<WordEntry> list;
 };
 
 void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, char** xpm) {
@@ -272,7 +279,7 @@ void AddLocalVariables(WordEntryList* wordlist, wxStyledTextCtrl* text) {
       const int space = temp.find_last_of(' ');
       if (space == -1) continue;
       const wxString varname = temp.Right(temp.length() - space -1);
-      wordlist->push_back(WordEntry(varname));
+      wordlist->Add(WordEntry(varname));
       continue;
     }
     if (line.StartsWith("pub ")) return;
@@ -338,7 +345,7 @@ void RunRacer(WordEntryList& wordlist, const wxString& filename_, wxStyledTextCt
     const wxString MATCH = "MATCH ";
     if (l.StartsWith(MATCH)) {
       const std::vector<wxString> args = Split(l.substr(MATCH.length()), ",");
-      wordlist.push_back(WordEntry(args[0], ParseRacerType(args[4])));
+      wordlist.Add(WordEntry(args[0], ParseRacerType(args[4])));
     }
   }
   // delete temp file
@@ -359,13 +366,13 @@ void FileEdit::ShowAutocomplete(ShowAutoCompleteAction action) {
   const bool is_space_before = text_->GetRange(start_position - 1, start_position).Trim(true).Trim(false).IsEmpty();
 
   if (action != ShowAutoCompleteAction::NO_FORCE || (text_->AutoCompActive() == false && length >= word_wait_chars)) {
-    WordEntryList wordlist;
+    WordEntryList wordlist(word, ignore_case);
 
     if (is_space_before) {
       if (current_language_) {
         const auto kw = current_language_->GetKeywords();
         for (const wxString& k : kw) {
-          wordlist.push_back(WordEntry(k, AI_Keyword));
+          wordlist.Add(WordEntry(k, AI_Keyword));
         }
       }
     }
@@ -377,22 +384,21 @@ void FileEdit::ShowAutocomplete(ShowAutoCompleteAction action) {
     }
 
     if (is_space_before) {
-      wordlist.push_back(WordEntry(wxString(80, '/'), AI_Snippet));
+      wordlist.Add(WordEntry(wxString(80, '/'), AI_Snippet));
       const wxString indent = GetIndentationAsString(text_, text_->GetCurrentLine());
-      wordlist.push_back(WordEntry(
+      wordlist.Add(WordEntry(
         "/**\n"
         + indent + " * \n"
         + indent + " **/"
         , AI_Snippet
         ));
-      wordlist.push_back(WordEntry(
+      wordlist.Add(WordEntry(
         "/// \n"
         + indent + "/// \n"
         + indent + "/// "
         , AI_Snippet
         ));
     }
-    wordlist.OnlyWordStarts(word, ignore_case);
 
     if ( racer ) {
       RunRacer(wordlist, filename_, text_, main_->root_folder());
