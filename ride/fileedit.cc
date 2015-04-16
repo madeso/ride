@@ -159,6 +159,7 @@ public:
     }
   }
 };
+
 class WordEntryList {
 public:
   const wxString start_string_;
@@ -350,7 +351,7 @@ void RunRacer(WordEntryList& wordlist, const wxString& filename_, wxStyledTextCt
     const wxString MATCH = "MATCH ";
     if (l.StartsWith(MATCH)) {
       const std::vector<wxString> args = Split(l.substr(MATCH.length()), ",");
-      wordlist.Add(WordEntry(args[0], ParseRacerType(args[4])));
+      wordlist.ForceAdd(WordEntry(args[0], ParseRacerType(args[4])));
     }
   }
   // delete temp file
