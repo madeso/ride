@@ -8,6 +8,7 @@
 #include <wx/tokenzr.h>
 
 #include <vector>
+#include <set>
 #include <cassert>
 
 #include "ride/compilermessage.h"
@@ -159,13 +160,19 @@ public:
     }
   }
 };
+bool operator<(const WordEntry&  lhs, const WordEntry& rhs) {
+  if (lhs.name == rhs.name) {
+    return lhs.icon < rhs.icon;
+  }
+  return lhs.name < rhs.name;
+}
 
 class WordEntryList {
 public:
   const wxString start_string_;
   const bool start_string_is_empty_;
   const bool ignore_case_;
-  std::vector<WordEntry> list_;
+  std::set<WordEntry> list_;
 
   WordEntryList(const wxString& start, bool ignore_case)
     : start_string_( ignore_case ? wxString(start).MakeLower() : start )
@@ -181,7 +188,9 @@ public:
   }
 
   void ForceAdd(const WordEntry& entry) {
-    list_.push_back(entry);
+    if (list_.find(entry) == list_.end()) {
+      list_.insert(entry);
+    }
   }
 
   wxString ToString() const {
@@ -206,10 +215,6 @@ public:
     const wxString element_name = ignore_case_ ? wxString(element.name).MakeLower() : element.name;
     const bool add = element_name.StartsWith(start_string_);
     return add;
-  }
-
-  void Sort() {
-    std::sort(list_.begin(), list_.end());
   }
 
   bool IsEmpty() const {
@@ -256,10 +261,6 @@ void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* t) {
   RegisterImage(t, AI_StructField, icon_ac_structfield_xpm);
   RegisterImage(t, AI_Module, icon_ac_module_xpm);
   RegisterImage(t, AI_FnArg, icon_ac_fnarg_xpm);
-}
-
-bool operator<(const WordEntry&  lhs, const WordEntry& rhs) {
-  return lhs.name < rhs.name;
 }
 
 void AddLocalVariables(WordEntryList* wordlist, wxStyledTextCtrl* text) {
@@ -412,7 +413,6 @@ void FileEdit::ShowAutocomplete(ShowAutoCompleteAction action) {
 
     // setting it here instead of when spawning eats the entered '.' but displays the AC instead of autocompleteing directly
     text_->AutoCompSetFillUps("()<>.:;{}[] ");
-    wordlist.Sort();
     if (wordlist.IsEmpty()) {
       if (action == ShowAutoCompleteAction::FORCE_KEEP) {
         ShowInfo(this, "No autocomplete suggestions", "Empty");
