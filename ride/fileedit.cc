@@ -129,15 +129,16 @@ void FileEdit::MatchBrace() {
 }
 
 enum AutoIcon {
-  AI_None = -1,
-  AI_Snippet = 0,
-  AI_Keyword,
-  AI_Function,
-  AI_Crate,
-  AI_Let,
-  AI_Struct,
-  AI_StructField,
-  AI_Module
+    AI_None = -1
+  , AI_Snippet = 0
+  , AI_Keyword
+  , AI_Function
+  , AI_Crate
+  , AI_Let
+  , AI_Struct
+  , AI_StructField
+  , AI_Module
+  , AI_FnArg
 };
 
 class WordEntry {
@@ -253,6 +254,7 @@ void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* t) {
   RegisterImage(t, AI_Struct, icon_ac_struct_xpm);
   RegisterImage(t, AI_StructField, icon_ac_structfield_xpm);
   RegisterImage(t, AI_Module, icon_ac_module_xpm);
+  RegisterImage(t, AI_FnArg, icon_ac_fnarg_xpm);
 }
 
 bool operator<(const WordEntry&  lhs, const WordEntry& rhs) {
@@ -319,6 +321,9 @@ AutoIcon ParseRacerType(const wxString& aname) {
   }
   if (name == "module") {
     return AI_Module;
+  }
+  if (name == "fnarg") {
+    return AI_FnArg;
   }
   
   return AI_None;
