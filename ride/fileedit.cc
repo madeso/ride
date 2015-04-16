@@ -158,7 +158,55 @@ public:
     }
   }
 };
-typedef std::vector<WordEntry> WordEntryList;
+class WordEntryList {
+public:
+  void push_back(const WordEntry& entry) {
+    list.push_back(entry);
+  }
+
+  wxString ToString() const {
+    wxString ret;
+    for (const WordEntry& tok : list)
+    {
+      if (ret.IsEmpty()) {
+        ret = tok.GetName();
+      }
+      else {
+        ret += ";" + tok.GetName();
+      }
+    }
+
+    return ret;
+  }
+
+  void OnlyWordStarts(const wxString& entry, bool ignoreCase) {
+    const wxString word = ignoreCase ? wxString(entry).MakeLower() : entry;
+    const bool allow_all = word.IsEmpty();
+
+    list.erase(
+      std::remove_if(
+      list.begin(),
+      list.end(),
+      [allow_all, word, ignoreCase](const WordEntry& element) -> bool {
+      const wxString autocomplete = ignoreCase ? wxString(element.name).MakeLower() : element.name;
+      const bool keep = allow_all || autocomplete.StartsWith(word);
+      return keep == false;
+    }
+      ),
+      list.end()
+      );
+  }
+
+  void Sort() {
+    std::sort(list.begin(), list.end());
+  }
+
+  bool IsEmpty() const {
+    return list.empty();
+  }
+
+  std::vector<WordEntry> list;
+};
 
 void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, char** xpm) {
   wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
@@ -204,40 +252,7 @@ bool operator<(const WordEntry&  lhs, const WordEntry& rhs) {
   return lhs.name < rhs.name;
 }
 
-wxString ToWordListString(const std::vector<WordEntry>& wordlist) {
-  wxString ret;
-  for (const WordEntry& tok : wordlist)
-  {
-    if (ret.IsEmpty()) {
-      ret = tok.GetName();
-    }
-    else {
-      ret += ";" + tok.GetName();
-    }
-  }
-
-  return ret;
-}
-
-void OnlyWordStarts(const wxString& entry, std::vector<WordEntry>& wordlist, bool ignoreCase) {
-  const wxString word = ignoreCase ? wxString(entry).MakeLower() : entry;
-  const bool allow_all = word.IsEmpty();
-
-  wordlist.erase(
-    std::remove_if(
-      wordlist.begin(),
-      wordlist.end(),
-      [allow_all, word, ignoreCase](const WordEntry& element) -> bool {
-        const wxString autocomplete = ignoreCase ? wxString(element.name).MakeLower() : element.name;
-        const bool keep = allow_all || autocomplete.StartsWith(word);
-        return keep == false;
-      }
-    ),
-    wordlist.end()
-  );
-}
-
-void AddLocalVariables(std::vector<WordEntry>* wordlist, wxStyledTextCtrl* text) {
+void AddLocalVariables(WordEntryList* wordlist, wxStyledTextCtrl* text) {
   assert(wordlist);
   assert(text);
 
@@ -344,7 +359,7 @@ void FileEdit::ShowAutocomplete(ShowAutoCompleteAction action) {
   const bool is_space_before = text_->GetRange(start_position - 1, start_position).Trim(true).Trim(false).IsEmpty();
 
   if (action != ShowAutoCompleteAction::NO_FORCE || (text_->AutoCompActive() == false && length >= word_wait_chars)) {
-    std::vector<WordEntry> wordlist;
+    WordEntryList wordlist;
 
     if (is_space_before) {
       if (current_language_) {
@@ -377,7 +392,7 @@ void FileEdit::ShowAutocomplete(ShowAutoCompleteAction action) {
         , AI_Snippet
         ));
     }
-    OnlyWordStarts(word, wordlist, ignore_case);
+    wordlist.OnlyWordStarts(word, ignore_case);
 
     if ( racer ) {
       RunRacer(wordlist, filename_, text_, main_->root_folder());
@@ -385,9 +400,8 @@ void FileEdit::ShowAutocomplete(ShowAutoCompleteAction action) {
 
     // setting it here instead of when spawning eats the entered '.' but displays the AC instead of autocompleteing directly
     text_->AutoCompSetFillUps("()<>.:;{}[] ");
-    OutputDebugStringA("Setting fillups!\n");
-    std::sort(wordlist.begin(), wordlist.end());
-    if (wordlist.empty()) {
+    wordlist.Sort();
+    if (wordlist.IsEmpty()) {
       if (action == ShowAutoCompleteAction::FORCE_KEEP) {
         ShowInfo(this, "No autocomplete suggestions", "Empty");
       }
@@ -396,7 +410,7 @@ void FileEdit::ShowAutocomplete(ShowAutoCompleteAction action) {
       text_->AutoCompSetAutoHide(action != ShowAutoCompleteAction::FORCE_KEEP);
       text_->AutoCompSetIgnoreCase(ignore_case);
       text_->AutoCompSetSeparator(';');
-      const wxString wordliststr = ToWordListString(wordlist);
+      const wxString wordliststr = wordlist.ToString();
       text_->AutoCompShow(length, wordliststr);
       text_->AutoCompSetFillUps("");
     }
