@@ -24,7 +24,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Have space/tab settings per project so the same settings are used by everyone on the project
 * Implement all missing event handlers.
 * Close project
-* Simplify coloring / replace detailed options with general options
 * fix alt-tab focus issue
 * Stop build
 * Build spinner indicator

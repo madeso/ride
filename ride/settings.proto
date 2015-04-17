@@ -166,32 +166,31 @@ message FontsAndColors {
   optional Color folder_background = 49;
   optional Color folderopen_background = 50;
 
-  optional Style c_default = 100;
-  optional Style c_comment = 101;
-  optional Style c_commentline = 102;
-  optional Style c_commentdoc = 103;
-  optional Style c_number = 104;
-  optional Style c_word = 105;
-  optional Style c_string = 106;
-  optional Style c_character = 107;
-  optional Style c_uuid = 108;
-  optional Style c_preprocessor = 109;
-  optional Style c_operator = 110;
-  optional Style c_identifier = 111;
-  optional Style c_stringeol = 112;
-  optional Style c_verbatim = 113;
-  optional Style c_regex = 114;
-  optional Style c_commentlinedoc = 115;
-  optional Style c_word2 = 116;
-  optional Style c_commentdockeyword = 117;
-  optional Style c_commentdockeyworderror = 118;
-  optional Style c_globalclass = 119;
-  optional Style c_stringraw = 120;
-  optional Style c_tripleverbatim = 121;
-  optional Style c_hashquotedstring = 122;
-  optional Style c_preprocessorcomment = 123;
+  // common styles
+  optional Style style_comment = 101;
+  optional Style style_commentline = 102;
+  optional Style style_commentdoc = 103;
+  optional Style style_number = 104;
+  optional Style style_keyword = 105;
+  optional Style style_string = 106;
+  optional Style style_character = 107;
+  optional Style style_uuid = 108;
+  optional Style style_preprocessor = 109;
+  optional Style style_operator = 110;
+  optional Style style_identifier = 111;
+  optional Style style_string_eol = 112;
+  optional Style style_verbatim = 113;
+  optional Style style_regex = 114;
+  optional Style style_commentlinedoc = 115;
+  optional Style style_keyword_types = 116;
+  optional Style style_commentdockeyword = 117;
+  optional Style style_commentdockeyworderror = 118;
+  optional Style style_globalclass = 119;
+  optional Style style_stringraw = 120;
+  optional Style style_tripleverbatim = 121;
+  optional Style style_hashquotedstring = 122;
+  optional Style style_preprocessorcomment = 123;
 
-  optional Style markdown_default = 200;
   optional Style markdown_line_begin = 201;
   optional Style markdown_strong1 = 202;
   optional Style markdown_strong2 = 203;
@@ -214,14 +213,11 @@ message FontsAndColors {
   optional Style markdown_code2 = 220;
   optional Style markdown_codebk = 221;
   
-  optional Style props_default = 300;
-  optional Style props_comment = 301;
   optional Style props_section = 302;
   optional Style props_assignment = 303;
   optional Style props_defval = 304;
   optional Style props_key = 305;
   
-  optional Style h_default = 400;
   optional Style h_tag = 401;
   optional Style h_tagunknown = 402;
   optional Style h_attribute = 403;
@@ -230,7 +226,6 @@ message FontsAndColors {
   optional Style h_doublestring = 406;
   optional Style h_singlestring = 407;
   optional Style h_other = 408;
-  optional Style h_comment = 409;
   optional Style h_entity = 410;
   optional Style h_tagend = 411;
   optional Style h_xmlstart = 412;
@@ -243,8 +238,6 @@ message FontsAndColors {
   optional Style h_value = 419;
   optional Style h_xccomment = 420;
   
-  optional Style cmake_default = 500;
-  optional Style cmake_comment = 501;
   optional Style cmake_stringdq = 502;
   optional Style cmake_stringlq = 503;
   optional Style cmake_stringrq = 504;
@@ -258,39 +251,14 @@ message FontsAndColors {
   optional Style cmake_macrodef = 512;
   optional Style cmake_stringvar = 513;
   optional Style cmake_number = 514;
-  
-  optional Style lua_default = 600;
-  optional Style lua_comment = 601;
-  optional Style lua_commentline = 602;
-  optional Style lua_commentdoc = 603;
-  optional Style lua_number = 604;
-  optional Style lua_word = 605;
-  optional Style lua_string = 606;
-  optional Style lua_character = 607;
-  optional Style lua_literalstring = 608;
-  optional Style lua_preprocessor = 609;
-  optional Style lua_operator = 610;
-  optional Style lua_identifier = 611;
-  optional Style lua_stringeol = 612;
-  optional Style lua_word2 = 613;
-  optional Style lua_word3 = 614;
-  optional Style lua_word4 = 615;
-  optional Style lua_word5 = 616;
-  optional Style lua_word6 = 617;
-  optional Style lua_word7 = 618;
-  optional Style lua_word8 = 619;
+
   optional Style lua_label = 620;
   
-  optional Style yaml_default = 700;
-  optional Style yaml_comment = 701;
-  optional Style yaml_identifier = 702;
-  optional Style yaml_keyword = 703;
   optional Style yaml_number = 704;
   optional Style yaml_reference = 705;
   optional Style yaml_document = 706;
   optional Style yaml_text = 707;
   optional Style yaml_error = 708;
-  optional Style yaml_operator = 709;
 }
 
 message WrapVisualFlags {

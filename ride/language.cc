@@ -174,10 +174,10 @@ public:
       ;
     const KeywordBuilder temp = KeywordBuilder()
       <<"asm"<<"auto"<<"bool"<<"break"<<"case"<<"catch"<<"char"<<"class"<<"const"<<"const_cast"
-      <<"continue"<<"default"<<"delete"<<"do"<<"double"<<"dynamic_cast"<<"else"<<"enum"<<"explicit"
+      <<"continue"<<"default"<<"delete"<<"do"<<"double"<<"dynamistyle_cast"<<"else"<<"enum"<<"explicit"
       <<"export"<<"extern"<<"false"<<"float"<<"for"<<"friend"<<"goto"<<"if"<<"inline"<<"int"<<"long"
       <<"mutable"<<"namespace"<<"new"<<"operator"<<"private"<<"protected"<<"public"<<"register"
-      <<"reinterpret_cast"<<"return"<<"short"<<"signed"<<"sizeof"<<"static"<<"static_cast"
+      <<"reinterpret_cast"<<"return"<<"short"<<"signed"<<"sizeof"<<"static"<<"statistyle_cast"
       <<"struct"<<"switch"<<"template"<<"this"<<"throw"<<"true"<<"try"<<"typedef"<<"typeid"
       <<"typename"<<"union"<<"unsigned"<<"using"<<"virtual"<<"void"<<"volatile"<<"wchar_t"<<"while";
     keywords_ = temp.ToVector();
@@ -185,30 +185,30 @@ public:
   }
   wxString primary_keywords_;
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
-    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().c_default());
-    SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().c_comment());
-    SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().c_commentline());
-    SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors().c_commentdoc());
-    SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().c_number());
-    SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().c_word());
-    SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().c_string());
-    SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors().c_character());
-    SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().c_uuid());
-    SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors().c_preprocessor());
-    SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors().c_operator());
-    SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors().c_identifier());
-    SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors().c_stringeol());
-    SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors().c_verbatim());
-    SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().c_regex());
-    SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors().c_commentlinedoc());
-    SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors().c_word2());
-    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors().c_commentdockeyword());
-    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors().c_commentdockeyworderror());
-    SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors().c_globalclass());
-    SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors().c_stringraw());
-    SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors().c_tripleverbatim());
-    SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors().c_hashquotedstring());
-    SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors().c_preprocessorcomment());
+    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().style_comment());
+    SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().style_commentline());
+    SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors().style_commentdoc());
+    SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().style_number());
+    SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().style_keyword());
+    SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().style_string());
+    SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors().style_character());
+    SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().style_uuid());
+    SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors().style_preprocessor());
+    SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors().style_operator());
+    SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors().style_identifier());
+    SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors().style_string_eol());
+    SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors().style_verbatim());
+    SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().style_regex());
+    SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors().style_commentlinedoc());
+    SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors().style_keyword_types());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors().style_commentdockeyword());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors().style_commentdockeyworderror());
+    SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors().style_globalclass());
+    SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors().style_stringraw());
+    SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors().style_tripleverbatim());
+    SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors().style_hashquotedstring());
+    SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors().style_preprocessorcomment());
 
     SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
     SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
@@ -273,30 +273,30 @@ public:
   wxString primary_keywords_;
 
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
-    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().c_default());
-    SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().c_comment());
-    SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().c_commentline());
-    SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors().c_commentdoc());
-    SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().c_number());
-    SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().c_word());
-    SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().c_string());
-    SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors().c_character());
-    SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().c_uuid());
-    SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors().c_preprocessor());
-    SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors().c_operator());
-    SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors().c_identifier());
-    SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors().c_stringeol());
-    SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors().c_verbatim());
-    SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().c_regex());
-    SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors().c_commentlinedoc());
-    SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors().c_word2());
-    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors().c_commentdockeyword());
-    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors().c_commentdockeyworderror());
-    SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors().c_globalclass());
-    SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors().c_stringraw());
-    SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors().c_tripleverbatim());
-    SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors().c_hashquotedstring());
-    SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors().c_preprocessorcomment());
+    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().style_comment());
+    SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().style_commentline());
+    SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors().style_commentdoc());
+    SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().style_number());
+    SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().style_keyword());
+    SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().style_string());
+    SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors().style_character());
+    SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().style_uuid());
+    SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors().style_preprocessor());
+    SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors().style_operator());
+    SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors().style_identifier());
+    SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors().style_string_eol());
+    SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors().style_verbatim());
+    SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().style_regex());
+    SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors().style_commentlinedoc());
+    SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors().style_keyword_types());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors().style_commentdockeyword());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors().style_commentdockeyworderror());
+    SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors().style_globalclass());
+    SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors().style_stringraw());
+    SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors().style_tripleverbatim());
+    SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors().style_hashquotedstring());
+    SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors().style_preprocessorcomment());
 
     SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
     SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
@@ -338,30 +338,30 @@ public:
   }
 
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
-    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().c_default());
-    SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().c_comment());
-    SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().c_commentline());
-    SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors().c_commentdoc());
-    SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().c_number());
-    SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().c_word());
-    SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().c_string());
-    SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors().c_character());
-    SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().c_uuid());
-    SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors().c_preprocessor());
-    SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors().c_operator());
-    SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors().c_identifier());
-    SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors().c_stringeol());
-    SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors().c_verbatim());
-    SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().c_regex());
-    SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors().c_commentlinedoc());
-    SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors().c_word2());
-    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors().c_commentdockeyword());
-    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors().c_commentdockeyworderror());
-    SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors().c_globalclass());
-    SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors().c_stringraw());
-    SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors().c_tripleverbatim());
-    SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors().c_hashquotedstring());
-    SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors().c_preprocessorcomment());
+    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().style_comment());
+    SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().style_commentline());
+    SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors().style_commentdoc());
+    SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().style_number());
+    SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().style_keyword());
+    SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().style_string());
+    SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors().style_character());
+    SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().style_uuid());
+    SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors().style_preprocessor());
+    SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors().style_operator());
+    SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors().style_identifier());
+    SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors().style_string_eol());
+    SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors().style_verbatim());
+    SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().style_regex());
+    SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors().style_commentlinedoc());
+    SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors().style_keyword_types());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors().style_commentdockeyword());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors().style_commentdockeyworderror());
+    SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors().style_globalclass());
+    SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors().style_stringraw());
+    SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors().style_tripleverbatim());
+    SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors().style_hashquotedstring());
+    SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors().style_preprocessorcomment());
 
     SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
     SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
@@ -412,7 +412,7 @@ public:
       ;
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
-    SetStyle(text, wxSTC_MARKDOWN_DEFAULT, settings.fonts_and_colors().markdown_default());
+    SetStyle(text, wxSTC_MARKDOWN_DEFAULT, settings.fonts_and_colors().default_style());
     SetStyle(text, wxSTC_MARKDOWN_LINE_BEGIN, settings.fonts_and_colors().markdown_line_begin());
     SetStyle(text, wxSTC_MARKDOWN_STRONG1, settings.fonts_and_colors().markdown_strong1());
     SetStyle(text, wxSTC_MARKDOWN_STRONG2, settings.fonts_and_colors().markdown_strong2());
@@ -450,8 +450,8 @@ public:
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
-    SetStyle(text, wxSTC_PROPS_DEFAULT, settings.fonts_and_colors().props_default());
-    SetStyle(text, wxSTC_PROPS_COMMENT, settings.fonts_and_colors().props_comment());
+    SetStyle(text, wxSTC_PROPS_DEFAULT, settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_PROPS_COMMENT, settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_PROPS_SECTION, settings.fonts_and_colors().props_section());
     SetStyle(text, wxSTC_PROPS_ASSIGNMENT, settings.fonts_and_colors().props_assignment());
     SetStyle(text, wxSTC_PROPS_DEFVAL, settings.fonts_and_colors().props_defval());
@@ -469,7 +469,7 @@ public:
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
-    SetStyle(text, wxSTC_H_DEFAULT, settings.fonts_and_colors().h_default());
+    SetStyle(text, wxSTC_H_DEFAULT, settings.fonts_and_colors().default_style());
     SetStyle(text, wxSTC_H_TAG, settings.fonts_and_colors().h_tag());
     SetStyle(text, wxSTC_H_TAGUNKNOWN, settings.fonts_and_colors().h_tagunknown());
     SetStyle(text, wxSTC_H_ATTRIBUTE, settings.fonts_and_colors().h_attribute());
@@ -478,7 +478,7 @@ public:
     SetStyle(text, wxSTC_H_DOUBLESTRING, settings.fonts_and_colors().h_doublestring());
     SetStyle(text, wxSTC_H_SINGLESTRING, settings.fonts_and_colors().h_singlestring());
     SetStyle(text, wxSTC_H_OTHER, settings.fonts_and_colors().h_other());
-    SetStyle(text, wxSTC_H_COMMENT, settings.fonts_and_colors().h_comment());
+    SetStyle(text, wxSTC_H_COMMENT, settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_H_ENTITY, settings.fonts_and_colors().h_entity());
     SetStyle(text, wxSTC_H_TAGEND, settings.fonts_and_colors().h_tagend());
     SetStyle(text, wxSTC_H_XMLSTART, settings.fonts_and_colors().h_xmlstart());
@@ -511,8 +511,8 @@ public:
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
-    SetStyle(text, wxSTC_CMAKE_DEFAULT, settings.fonts_and_colors().cmake_default());
-    SetStyle(text, wxSTC_CMAKE_COMMENT, settings.fonts_and_colors().cmake_comment());
+    SetStyle(text, wxSTC_CMAKE_DEFAULT, settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_CMAKE_COMMENT, settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_CMAKE_STRINGDQ, settings.fonts_and_colors().cmake_stringdq());
     SetStyle(text, wxSTC_CMAKE_STRINGLQ, settings.fonts_and_colors().cmake_stringlq());
     SetStyle(text, wxSTC_CMAKE_STRINGRQ, settings.fonts_and_colors().cmake_stringrq());
@@ -553,26 +553,26 @@ public:
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
     
-    SetStyle(text, wxSTC_LUA_DEFAULT, settings.fonts_and_colors().lua_default());
-    SetStyle(text, wxSTC_LUA_COMMENT, settings.fonts_and_colors().lua_comment());
-    SetStyle(text, wxSTC_LUA_COMMENTLINE, settings.fonts_and_colors().lua_commentline());
-    SetStyle(text, wxSTC_LUA_COMMENTDOC, settings.fonts_and_colors().lua_commentdoc());
-    SetStyle(text, wxSTC_LUA_NUMBER, settings.fonts_and_colors().lua_number());
-    SetStyle(text, wxSTC_LUA_WORD, settings.fonts_and_colors().lua_word());
-    SetStyle(text, wxSTC_LUA_STRING, settings.fonts_and_colors().lua_string());
-    SetStyle(text, wxSTC_LUA_CHARACTER, settings.fonts_and_colors().lua_character());
-    SetStyle(text, wxSTC_LUA_LITERALSTRING, settings.fonts_and_colors().lua_literalstring());
-    SetStyle(text, wxSTC_LUA_PREPROCESSOR, settings.fonts_and_colors().lua_preprocessor());
-    SetStyle(text, wxSTC_LUA_OPERATOR, settings.fonts_and_colors().lua_operator());
-    SetStyle(text, wxSTC_LUA_IDENTIFIER, settings.fonts_and_colors().lua_identifier());
-    SetStyle(text, wxSTC_LUA_STRINGEOL, settings.fonts_and_colors().lua_stringeol());
-    SetStyle(text, wxSTC_LUA_WORD2, settings.fonts_and_colors().lua_word2());
-    SetStyle(text, wxSTC_LUA_WORD3, settings.fonts_and_colors().lua_word3());
-    SetStyle(text, wxSTC_LUA_WORD4, settings.fonts_and_colors().lua_word4());
-    SetStyle(text, wxSTC_LUA_WORD5, settings.fonts_and_colors().lua_word5());
-    SetStyle(text, wxSTC_LUA_WORD6, settings.fonts_and_colors().lua_word6());
-    SetStyle(text, wxSTC_LUA_WORD7, settings.fonts_and_colors().lua_word7());
-    SetStyle(text, wxSTC_LUA_WORD8, settings.fonts_and_colors().lua_word8());
+    SetStyle(text, wxSTC_LUA_DEFAULT, settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_LUA_COMMENT, settings.fonts_and_colors().style_comment());
+    SetStyle(text, wxSTC_LUA_COMMENTLINE, settings.fonts_and_colors().style_commentline());
+    SetStyle(text, wxSTC_LUA_COMMENTDOC, settings.fonts_and_colors().style_commentdoc());
+    SetStyle(text, wxSTC_LUA_NUMBER, settings.fonts_and_colors().style_number());
+    SetStyle(text, wxSTC_LUA_WORD, settings.fonts_and_colors().style_keyword());
+    SetStyle(text, wxSTC_LUA_STRING, settings.fonts_and_colors().style_string());
+    SetStyle(text, wxSTC_LUA_CHARACTER, settings.fonts_and_colors().style_character());
+    SetStyle(text, wxSTC_LUA_LITERALSTRING, settings.fonts_and_colors().style_verbatim());
+    SetStyle(text, wxSTC_LUA_PREPROCESSOR, settings.fonts_and_colors().style_preprocessor());
+    SetStyle(text, wxSTC_LUA_OPERATOR, settings.fonts_and_colors().style_operator());
+    SetStyle(text, wxSTC_LUA_IDENTIFIER, settings.fonts_and_colors().style_identifier());
+    SetStyle(text, wxSTC_LUA_STRINGEOL, settings.fonts_and_colors().style_string_eol());
+    // SetStyle(text, wxSTC_LUA_WORD2, settings.fonts_and_colors().lua_word2());
+    // SetStyle(text, wxSTC_LUA_WORD3, settings.fonts_and_colors().lua_word3());
+    // SetStyle(text, wxSTC_LUA_WORD4, settings.fonts_and_colors().lua_word4());
+    // SetStyle(text, wxSTC_LUA_WORD5, settings.fonts_and_colors().lua_word5());
+    // SetStyle(text, wxSTC_LUA_WORD6, settings.fonts_and_colors().lua_word6());
+    // SetStyle(text, wxSTC_LUA_WORD7, settings.fonts_and_colors().lua_word7());
+    // SetStyle(text, wxSTC_LUA_WORD8, settings.fonts_and_colors().lua_word8());
     SetStyle(text, wxSTC_LUA_LABEL, settings.fonts_and_colors().lua_label());
 
     SetKeys(text, 0,
@@ -601,16 +601,16 @@ public:
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
-    SetStyle(text, wxSTC_YAML_DEFAULT, settings.fonts_and_colors().yaml_default());
-    SetStyle(text, wxSTC_YAML_COMMENT, settings.fonts_and_colors().yaml_comment());
-    SetStyle(text, wxSTC_YAML_IDENTIFIER, settings.fonts_and_colors().yaml_identifier());
-    SetStyle(text, wxSTC_YAML_KEYWORD, settings.fonts_and_colors().yaml_keyword());
+    SetStyle(text, wxSTC_YAML_DEFAULT, settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_YAML_COMMENT, settings.fonts_and_colors().style_comment());
+    SetStyle(text, wxSTC_YAML_IDENTIFIER, settings.fonts_and_colors().style_identifier());
+    SetStyle(text, wxSTC_YAML_KEYWORD, settings.fonts_and_colors().style_keyword());
     SetStyle(text, wxSTC_YAML_NUMBER, settings.fonts_and_colors().yaml_number());
     SetStyle(text, wxSTC_YAML_REFERENCE, settings.fonts_and_colors().yaml_reference());
     SetStyle(text, wxSTC_YAML_DOCUMENT, settings.fonts_and_colors().yaml_document());
     SetStyle(text, wxSTC_YAML_TEXT, settings.fonts_and_colors().yaml_text());
     SetStyle(text, wxSTC_YAML_ERROR, settings.fonts_and_colors().yaml_error());
-    SetStyle(text, wxSTC_YAML_OPERATOR, settings.fonts_and_colors().yaml_operator());
+    SetStyle(text, wxSTC_YAML_OPERATOR, settings.fonts_and_colors().style_operator());
 
     SetKeys(text, 0, ""); // keywords
   }

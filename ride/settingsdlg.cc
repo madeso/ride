@@ -161,32 +161,30 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("Annotation error", annotation_error_style);
   DEF_STYLE("Annotation warning", annotation_warning_style);
 
-  DEF_STYLE("C/C++ Default", c_default);
-  DEF_STYLE("C/C++ Comment", c_comment);
-  DEF_STYLE("C/C++ Commentline", c_commentline);
-  DEF_STYLE("C/C++ Commentdoc", c_commentdoc);
-  DEF_STYLE("C/C++ Number", c_number);
-  DEF_STYLE("C/C++ Keyword", c_word);
-  DEF_STYLE("C/C++ String", c_string);
-  DEF_STYLE("C/C++ Character", c_character);
-  DEF_STYLE("C/C++ UUID", c_uuid);
-  DEF_STYLE("C/C++ Preprocessor", c_preprocessor);
-  DEF_STYLE("C/C++ Operator", c_operator);
-  DEF_STYLE("C/C++ Identifier", c_identifier);
-  DEF_STYLE("C/C++ String EOL", c_stringeol);
-  DEF_STYLE("C/C++ Verbatim", c_verbatim);
-  DEF_STYLE("C/C++ Regex", c_regex);
-  DEF_STYLE("C/C++ Commentline doc", c_commentlinedoc);
-  DEF_STYLE("C/C++ Keyword 2", c_word2);
-  DEF_STYLE("C/C++ Comment doc keyword", c_commentdockeyword);
-  DEF_STYLE("C/C++ Comment doc keyword error", c_commentdockeyworderror);
-  DEF_STYLE("C/C++ Global class", c_globalclass);
-  DEF_STYLE("C/C++ String raw", c_stringraw);
-  DEF_STYLE("C/C++ Triple verbatim", c_tripleverbatim);
-  DEF_STYLE("C/C++ Hash quoted string", c_hashquotedstring);
-  DEF_STYLE("C/C++ Preprocessor comment", c_preprocessorcomment);
+  DEF_STYLE("Comment", style_comment);
+  DEF_STYLE("Commentline", style_commentline);
+  DEF_STYLE("Commentdoc", style_commentdoc);
+  DEF_STYLE("Number", style_number);
+  DEF_STYLE("Keyword", style_keyword);
+  DEF_STYLE("String", style_string);
+  DEF_STYLE("Character", style_character);
+  DEF_STYLE("UUID", style_uuid);
+  DEF_STYLE("Preprocessor", style_preprocessor);
+  DEF_STYLE("Operator", style_operator);
+  DEF_STYLE("Identifier", style_identifier);
+  DEF_STYLE("String EOL", style_string_eol);
+  DEF_STYLE("Verbatim", style_verbatim);
+  DEF_STYLE("Regex", style_regex);
+  DEF_STYLE("Commentline doc", style_commentlinedoc);
+  DEF_STYLE("Types", style_keyword_types);
+  DEF_STYLE("Comment doc keyword", style_commentdockeyword);
+  DEF_STYLE("Comment doc keyword error", style_commentdockeyworderror);
+  DEF_STYLE("Global class", style_globalclass);
+  DEF_STYLE("String raw", style_stringraw);
+  DEF_STYLE("Triple verbatim", style_tripleverbatim);
+  DEF_STYLE("Hash quoted string", style_hashquotedstring);
+  DEF_STYLE("Preprocessor comment", style_preprocessorcomment);
 
-  DEF_STYLE("Markdown Default", markdown_default);
   DEF_STYLE("Markdown Line begin", markdown_line_begin);
   DEF_STYLE("Markdown Strong 1", markdown_strong1);
   DEF_STYLE("Markdown Strong 2", markdown_strong2);
@@ -209,14 +207,11 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("Markdown Code 2", markdown_code2);
   DEF_STYLE("Markdown Code bk", markdown_codebk);
 
-  DEF_STYLE("Props default", props_default);
-  DEF_STYLE("Props comment", props_comment);
   DEF_STYLE("Props section", props_section);
   DEF_STYLE("Props assignment", props_assignment);
   DEF_STYLE("Props defval", props_defval);
   DEF_STYLE("Props key", props_key);
 
-  DEF_STYLE("XML/HTML Default", h_default);
   DEF_STYLE("XML/HTML Tag", h_tag);
   DEF_STYLE("XML/HTML Tag unknown", h_tagunknown);
   DEF_STYLE("XML/HTML attribute", h_attribute);
@@ -225,7 +220,6 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("XML/HTML Double string", h_doublestring);
   DEF_STYLE("XML/HTML Single string", h_singlestring);
   DEF_STYLE("XML/HTML Other", h_other);
-  DEF_STYLE("XML/HTML Comment", h_comment);
   DEF_STYLE("XML/HTML Entity", h_entity);
   DEF_STYLE("XML/HTML Tagend", h_tagend);
   DEF_STYLE("XML/HTML XML start", h_xmlstart);
@@ -238,8 +232,6 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("XML/HTML Value", h_value);
   DEF_STYLE("XML/HTML XC Comment", h_xccomment);
 
-  DEF_STYLE("CMake Default", cmake_default);
-  DEF_STYLE("CMake Comment", cmake_comment);
   DEF_STYLE("CMake String DQ", cmake_stringdq);
   DEF_STYLE("CMake String LQ", cmake_stringlq);
   DEF_STYLE("CMake String RQ", cmake_stringrq);
@@ -254,38 +246,13 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("CMake Stringvar", cmake_stringvar);
   DEF_STYLE("CMake Number", cmake_number);
 
-  DEF_STYLE("Lua Default", lua_default);
-  DEF_STYLE("Lua Comment", lua_comment);
-  DEF_STYLE("Lua Comment line", lua_commentline);
-  DEF_STYLE("Lua Comment doc", lua_commentdoc);
-  DEF_STYLE("Lua Number", lua_number);
-  DEF_STYLE("Lua Keyword", lua_word);
-  DEF_STYLE("Lua String", lua_string);
-  DEF_STYLE("Lua Character", lua_character);
-  DEF_STYLE("Lua Literal string", lua_literalstring);
-  DEF_STYLE("Lua Preprocessor", lua_preprocessor);
-  DEF_STYLE("Lua Operator", lua_operator);
-  DEF_STYLE("Lua Identifier", lua_identifier);
-  DEF_STYLE("Lua String EOL ", lua_stringeol);
-  DEF_STYLE("Lua Keyword 2", lua_word2);
-  DEF_STYLE("Lua Keyword 3", lua_word3);
-  DEF_STYLE("Lua Keyword 4", lua_word4);
-  DEF_STYLE("Lua Keyword 5", lua_word5);
-  DEF_STYLE("Lua Keyword 6", lua_word6);
-  DEF_STYLE("Lua Keyword 7", lua_word7);
-  DEF_STYLE("Lua Keyword 8", lua_word8);
-  DEF_STYLE("Lua Keyword 9", lua_label);
+  DEF_STYLE("Lua Keyword Label", lua_label);
 
-  DEF_STYLE("YAML Default", yaml_default);
-  DEF_STYLE("YAML Comment", yaml_comment);
-  DEF_STYLE("YAML Identifier", yaml_identifier);
-  DEF_STYLE("YAML keyword", yaml_keyword);
   DEF_STYLE("YAML Number", yaml_number);
   DEF_STYLE("YAML Reference", yaml_reference);
   DEF_STYLE("YAML Document", yaml_document);
   DEF_STYLE("YAML Text", yaml_text);
   DEF_STYLE("YAML Error", yaml_error);
-  DEF_STYLE("YAML Operator", yaml_operator);
 #undef DEF_STYLE
   return ret;
 }
