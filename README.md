@@ -24,7 +24,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Have space/tab settings per project so the same settings are used by everyone on the project
 * Implement all missing event handlers.
 * Close project
-* Reformat code
 * Simplify coloring / replace detailed options with general options
 * fix alt-tab focus issue
 * Stop build
@@ -37,6 +36,8 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Paste selection to http://lightpaste.com/ or http://hastebin.com/
 * Support aui docking, http://trac.wxwidgets.org/ticket/9419 https://github.com/redtide/wxWidgets/tree/aui-dynamic-notebook, wxAui rewrite planned in 3.2 http://trac.wxwidgets.org/wiki/Roadmap
 * integrate taskbar status for build status https://github.com/zhchbin/wxWidgets/wiki/SOC2014_TASKBAR
+* add test for different indentation styles and make sure indentation works: http://en.wikipedia.org/wiki/Indent_style#Styles
+* Reformat code
 * Find & replace in selection
 * Incremental search
 * Sync file structure instead of reloading in project explorer
