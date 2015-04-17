@@ -259,6 +259,9 @@ message FontsAndColors {
   optional Style yaml_document = 706;
   optional Style yaml_text = 707;
   optional Style yaml_error = 708;
+
+  optional Style rust_lifetime = 800;
+  optional Style rust_lex_error = 801;
 }
 
 message WrapVisualFlags {

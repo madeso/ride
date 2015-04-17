@@ -185,6 +185,9 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("Hash quoted string", style_hashquotedstring);
   DEF_STYLE("Preprocessor comment", style_preprocessorcomment);
 
+  DEF_STYLE("Rust Lifetimg", rust_lifetime);
+  DEF_STYLE("Rust Lexical error", rust_lex_error);
+
   DEF_STYLE("Markdown Line begin", markdown_line_begin);
   DEF_STYLE("Markdown Strong 1", markdown_strong1);
   DEF_STYLE("Markdown Strong 2", markdown_strong2);
