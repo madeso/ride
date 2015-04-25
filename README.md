@@ -30,6 +30,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * View build list
 * Fix pdf paste issue
 * Fix create project issue
+* scroll to the last line if the last line was marked before adding
 
 # Somewhat sorted roadmap
 
