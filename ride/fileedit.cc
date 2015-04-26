@@ -23,8 +23,6 @@
 #include "ride/stcutils.h"
 #include "ride/autocomplete.h"
 
-//////////////////////////////////////////////////////////////////////////
-
 void FileEdit::Undo() {
   if (!text_->CanUndo()) return;
   text_->Undo();
