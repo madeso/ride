@@ -450,7 +450,7 @@ void FileEdit::GotoLine() {
   if (new_line_one_based == -1) return;
   const int pos = text_->PositionFromLine(new_line_one_based-1);
   text_->SetSelection(pos, pos);
-  text_->ScrollToLine(new_line_one_based - 1);
+  text_->EnsureCaretVisible();
 }
 
 

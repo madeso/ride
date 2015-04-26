@@ -5,10 +5,19 @@
 #include <wx/tokenzr.h>
 
 void WriteLine(wxStyledTextCtrl* stc, const wxString& str) {
+  const int current_pos = stc->GetCurrentPos();
+  const int current_line = stc->LineFromPosition(current_pos);
+  const int line_count = stc->GetLineCount();
   stc->SetReadOnly(false);
   stc->AppendText(str);
   stc->AppendText("\n");
   stc->SetReadOnly(true);
+  if (current_line >= line_count-1) {
+    const int new_line = stc->GetLineCount();
+    const int new_pos = stc->PositionFromLine(new_line);
+    stc->SetSelection(new_pos, new_pos);
+    stc->EnsureCaretVisible();
+  }
 }
 
 void ClearOutput(wxStyledTextCtrl* stc) {
