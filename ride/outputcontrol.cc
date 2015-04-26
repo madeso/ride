@@ -2,7 +2,7 @@
 
 #include "ride/mainwindow.h"
 #include "settings.pb.h"
-#include "ride/fileedit.h"
+#include "ride/stcutils.h"
 #include "ride/compilermessage.h"
 #include "ride/wxutils.h"
 #include <wx/uri.h>

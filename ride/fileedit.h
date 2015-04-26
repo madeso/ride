@@ -106,9 +106,4 @@ private:
   wxDECLARE_EVENT_TABLE();
 };
 
-void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language);
-
-void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
-void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
-
 #endif  // RIDE_FILEEDIT_H

@@ -1,7 +1,7 @@
 #include "ride/findcontrol.h"
 
 #include "ride/compilermessage.h"
-#include "ride/fileedit.h"
+#include "ride/stcutils.h"
 #include "ride/mainwindow.h"
 #include "ride/wxutils.h"
 #include <wx/clipbrd.h>
