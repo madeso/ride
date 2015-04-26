@@ -143,3 +143,13 @@ void ShowWarning(wxWindow* self, const wxString& message, const wxString& title)
 void ShowError(wxWindow* self, const wxString& message, const wxString& title) {
   wxMessageBox(message, title, wxICON_ERROR | wxOK | wxCENTRE, self);
 }
+
+wxString ToShortString(const wxString& str, int max_length) {
+  const wxString dots = "...";
+  if (str.length() > max_length + dots.length()) {
+    return str.Left(max_length) + dots;
+  }
+  else {
+    return str;
+  }
+}

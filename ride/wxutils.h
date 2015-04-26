@@ -43,4 +43,6 @@ void ShowInfo(wxWindow* self, const wxString& message, const wxString& title);
 void ShowWarning(wxWindow* self, const wxString& message, const wxString& title);
 void ShowError(wxWindow* self, const wxString& message, const wxString& title);
 
+wxString ToShortString(const wxString& str, int max_length);
+
 #endif  // RIDE_WXUTILS_H
