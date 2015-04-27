@@ -264,6 +264,13 @@ void FileEdit::SetFocusFromKbd() {
   text_->SetFocus();
 }
 
+bool FileEdit::AcceptsFocusRecursively() const {
+  return true;
+}
+
+bool FileEdit::AcceptsFocus() const             { return true; }
+bool FileEdit::AcceptsFocusFromKeyboard() const { return true; }
+
 void FileEdit::ClearCompilerMessages() {
   text_->AnnotationClearAll();
   text_->SetIndicatorCurrent(ID_INDICATOR_WARNING);

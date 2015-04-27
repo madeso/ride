@@ -35,6 +35,9 @@ public:
 
   void SetFocus();
   void SetFocusFromKbd();
+  bool AcceptsFocusRecursively() const;
+  bool AcceptsFocus() const;
+  bool AcceptsFocusFromKeyboard() const;
 
   wxStyledTextCtrl* GetStc();
 public:

@@ -165,6 +165,15 @@ const wxString& MainWindow::root_folder() const {
 void MainWindow::OnActivated(wxActivateEvent& event) {
   if (event.GetActive()) {
     ReloadFilesIfNeeded();
+
+    // last focus is here since alt-tab seems to really screw with the focusing
+    if (last_focus_) {
+      last_focus_->SetFocus();
+      last_focus_->SetFocusFromKbd();
+    }
+  }
+  else {
+    last_focus_ = FindFocus();
   }
   project_explorer_->UpdateFolderStructure();
 }
@@ -223,6 +232,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 , findres_window_(NULL)
 , project_( new Project(this, wxEmptyString) )
 , app_name_(app_name)
+, last_focus_(NULL)
 {
   SetIcon(wxICON(aaaaa_logo));
   aui_.SetManagedWindow(this);

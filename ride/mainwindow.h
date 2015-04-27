@@ -151,6 +151,8 @@ private:
   wxMenuItem* menuItemViewProject_;
   wxMenuItem* menuItemViewOutput_;
 
+  wxWindow* last_focus_;
+
   void UpdateMenuItemView();
 };
 
