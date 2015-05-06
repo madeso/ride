@@ -4,8 +4,8 @@ compiler:
   - gcc
 
 before_install:
-  - sudo apt-get update --quiet
-  - sudo apt-get install --quiet --assume-yes graphviz doxygen
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq --assume-yes graphviz doxygen libwxgtk2.8-dev
   
 before_script:
   - mkdir build
