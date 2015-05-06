@@ -6,7 +6,12 @@ compiler:
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq --assume-yes graphviz doxygen libwxgtk2.8-dev
-  
+
+install:
+  - wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz
+  - tar -xzvf protobuf-2.4.1.tar.gz
+  - cd protobuf-2.4.1 && ./configure --prefix=/usr && make && make install
+
 before_script:
   - mkdir build
   - cd build
