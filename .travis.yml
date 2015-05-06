@@ -2,6 +2,10 @@ language: cpp
 
 compiler: 
   - gcc
+
+before_install:
+  - sudo apt-get update --quiet
+  - sudo apt-get install --quiet --assume-yes graphviz doxygen
   
 before_script:
   - mkdir build
