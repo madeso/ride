@@ -10,7 +10,7 @@ void WriteLine(wxStyledTextCtrl* stc, const wxString& str) {
   const int line_count = stc->GetLineCount();
   stc->SetReadOnly(false);
   stc->AppendText(str);
-  stc->AppendText("\n");
+  stc->AppendText(wxT("\n"));
   stc->SetReadOnly(true);
   if (current_line >= line_count-1) {
     const int new_line = stc->GetLineCount();
@@ -145,7 +145,7 @@ void ShowError(wxWindow* self, const wxString& message, const wxString& title) {
 }
 
 wxString ToShortString(const wxString& str, int max_length) {
-  const wxString dots = "...";
+  const wxString dots = wxT("...");
   if (str.length() > max_length + dots.length()) {
     return str.Left(max_length) + dots;
   }
