@@ -4,8 +4,9 @@ compiler:
   - gcc
 
 before_install:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo add-apt-repository ppa:wxformbuilder/wxwidgets -y
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo add-apt-repository -y ppa:wxformbuilder/wxwidgets
+  - sudo add-apt-repository -y ppa:chris-lea/protobuf
   - sudo apt-get update -qq
   - sudo apt-get install -qq --assume-yes graphviz doxygen libwxgtk3.0-dev libprotobuf-dev protobuf-compiler
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
