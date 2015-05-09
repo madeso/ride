@@ -14,7 +14,6 @@ before_install:
 before_script:
   - mkdir build
   - cd build
-  - protoc --version
   - cmake -DBUILD_USE_CLANG_FORMAT=OFF -DBUILD_USE_CPPLINT=OFF -DBUILD_USE_DOXYGEN=OFF -DBUILD_USE_DOXYGEN_GLOBAL=OFF -DBUILD_USE_CPPCHECK=OFF ..
 
 script: make
