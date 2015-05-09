@@ -9,7 +9,7 @@ endif(${MSVC})
 
 find_package(wxWidgets COMPONENTS core aui base stc adv scintilla REQUIRED)
 include( "${wxWidgets_USE_FILE}" )
-message(status "wxWidgets use file: ${wxWidgets_USE_FILE}")
+message(STATUS "wxWidgets use file: ${wxWidgets_USE_FILE}")
 
 find_package(Protobuf REQUIRED)
 include_directories(${PROTOBUF_INCLUDE_DIRS})
