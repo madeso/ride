@@ -3,6 +3,7 @@
 
 #include "ride/wx.h"
 #include <wx/treectrl.h>
+#include <wx/imaglist.h>
 #include <map>
 #include <vector>
 
