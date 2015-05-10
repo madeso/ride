@@ -234,7 +234,11 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 , app_name_(app_name)
 , last_focus_(NULL)
 {
+#ifdef _WIN32
   SetIcon(wxICON(aaaaa_logo));
+#else
+  // todo: set icon
+#endif
   aui_.SetManagedWindow(this);
 
   LoadSettings(this, settings_);
