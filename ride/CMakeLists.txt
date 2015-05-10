@@ -4,7 +4,8 @@ if(${MSVC})
 	message(STATUS "Adding _SCL_SECURE_NO_WARNINGS and _CRT_SECURE_NO_WARNINGS")
 else(${MSVC})
 	#also add c++11 flags
-	SET(CMAKE_CXX_FLAGS "-Wwrite-strings -std=c++11 ${CMAKE_CXX_FLAGS}")
+	add_definitions("-Wwrite-strings")
+	SET(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 endif(${MSVC})
 
 find_package(wxWidgets COMPONENTS core aui base stc adv scintilla REQUIRED)
