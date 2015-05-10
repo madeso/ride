@@ -27,4 +27,4 @@ private:
   MainWindow* main_;
 };
 
-#endif RIDE_FINDCONTROL_H_
+#endif // RIDE_FINDCONTROL_H_
