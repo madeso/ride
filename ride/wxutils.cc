@@ -4,6 +4,8 @@
 #include <wx/stc/stc.h>
 #include <wx/tokenzr.h>
 
+#include "ride_compiler_settings.h"
+
 void WriteLine(wxStyledTextCtrl* stc, const wxString& str) {
   const int current_pos = stc->GetCurrentPos();
   const int current_line = stc->LineFromPosition(current_pos);
@@ -156,5 +158,13 @@ wxString ToShortString(const wxString& str, int max_length) {
 
 int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos, const wxString& text, int flags, int* findEnd) {
   assert(stc);
+#ifdef USE_WXWIDGETS_LEGACY_FINDTEXT
+  const int ret = stc->FindText(minPos, maxPos, text, flags);
+  if( findEnd ) {
+   *findEnd = ret;
+  }
+  return ret;
+#else
   return stc->FindText(minPos, maxPos, text, flags, findEnd);
+#endif
 }

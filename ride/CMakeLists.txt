@@ -19,6 +19,14 @@ FILE(GLOB src_glob *.cc;*.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 PROTOBUF_GENERATE_CPP(SETTINGS_PROTO_SRCS SETTINGS_PROTO_HDRS settings.proto)
 
+
+option(USE_WXWIDGETS_LEGACY_FINDTEXT "use the old wxwidgets findtext" OFF)
+
+configure_file (
+  "${CMAKE_CURRENT_SOURCE_DIR}/ride_compiler_settings.in.h"
+  "${CMAKE_CURRENT_BINARY_DIR}/ride_compiler_settings.h"
+)
+
 set(src settings.proto resources/resources.rc ${src_glob} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
 set(generated_src generated/ui.cpp generated/ui.h)
 
