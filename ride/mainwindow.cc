@@ -848,7 +848,7 @@ void MainWindow::OnProjectQuickOpen(wxCommandEvent& event) {
 #define MEM_FUN(X) \
   void MainWindow::OnProject ## X(wxCommandEvent& event) {\
     ShowBuildWindow();\
-    project_-> ## X ();\
+    project_-> X ();\
   }
 
 MEM_FUN(Settings)
