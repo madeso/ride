@@ -153,3 +153,8 @@ wxString ToShortString(const wxString& str, int max_length) {
     return str;
   }
 }
+
+int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos, const wxString& text, int flags, int* findEnd) {
+  assert(stc);
+  return stc->FindText(minPos, maxPos, text, flags, findEnd);
+}

@@ -673,7 +673,8 @@ void FileEdit::HighlightCurrentWord() {
         // search through the entire document for this text and highlight it
         int search_point = 0;
         while (true) {
-          int match_position = text_->FindText(search_point, text_->GetLength(), current_text, wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE, NULL);
+          const int flags = wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE;
+          int match_position = FindStcText(text_, search_point, text_->GetLength(), current_text, flags, NULL);
           if (match_position == -1) {
             break;
           }

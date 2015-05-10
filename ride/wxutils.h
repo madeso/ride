@@ -45,4 +45,6 @@ void ShowError(wxWindow* self, const wxString& message, const wxString& title);
 
 wxString ToShortString(const wxString& str, int max_length);
 
+int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos, const wxString& text, int flags, int* findEnd);
+
 #endif  // RIDE_WXUTILS_H

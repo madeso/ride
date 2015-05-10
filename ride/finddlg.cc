@@ -177,7 +177,7 @@ int FindInStc(wxStyledTextCtrl* stc, const wxString& file, const wxString& text,
   int count = 0;
   while (true) {
     int end_index = 0;
-    const int start_index = stc->FindText(next_index, stc->GetLength(), text, flags, &end_index);
+    const int start_index = FindStcText(stc, next_index, stc->GetLength(), text, flags, &end_index);
     if (start_index == -1) return count;
     assert(start_index != end_index);
 
@@ -223,7 +223,7 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback, const wxString&
     fallback->LoadFile(file);
 
     if (find_action == FindAction::Replace && keepFilesOpen) {
-      int found = fallback->FindText(0, stc->GetLength(), text, flags, NULL);
+      int found = FindStcText(fallback, 0, stc->GetLength(), text, flags, NULL);
       if (found > 0) {
         FileEdit* opened_edit = parent->OpenFile(file);
         stc = opened_edit->GetStc();
