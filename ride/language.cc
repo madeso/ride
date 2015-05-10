@@ -4,6 +4,7 @@
 #include <wx/stc/stc.h>
 #include <cassert>
 #include "ride/wxutils.h"
+#include "ride_compiler_settings.h"
 
 void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style);
 
@@ -250,6 +251,13 @@ public:
   }
 } g_language_cpp;
 
+#ifdef USE_CPP_AS_RUST
+  #ifdef wxSTC_LEX_RUST
+    #undef wxSTC_LEX_RUST
+  #endif
+  #define wxSTC_LEX_RUST wxSTC_LEX_CPP
+#endif
+
 class RustLanguage : public Language {
 public:
   RustLanguage() : Language(_("Rust"), wxSTC_LEX_RUST){
@@ -273,6 +281,7 @@ public:
   wxString primary_keywords_;
 
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
+#ifndef USE_CPP_AS_RUST
     SetStyle(text, wxSTC_RUST_DEFAULT, settings.fonts_and_colors().default_style());
     SetStyle(text, wxSTC_RUST_COMMENTBLOCK, settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_RUST_COMMENTLINE, settings.fonts_and_colors().style_commentline());
@@ -324,6 +333,51 @@ public:
     SetProp(text, wxT("fold.rust.explicit.start"), _T("//{"));
     SetProp(text, wxT("fold.rust.explicit.end"), _T("//}"));
     SetProp(text, wxT("lexer.rust.fold.at.else"), b2s01(settings.fold_at_else()));
+#else
+    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().style_comment());
+    SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors().style_commentline());
+    SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors().style_commentdoc());
+    SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().style_number());
+    SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().style_keyword());
+    SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().style_string());
+    SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors().style_character());
+    SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().style_uuid());
+    SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors().style_preprocessor());
+    SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors().style_operator());
+    SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors().style_identifier());
+    SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors().style_string_eol());
+    SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors().style_verbatim());
+    SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().style_regex());
+    SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors().style_commentlinedoc());
+    SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors().style_keyword_types());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors().style_commentdockeyword());
+    SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors().style_commentdockeyworderror());
+    SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors().style_globalclass());
+    SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors().style_stringraw());
+    SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors().style_tripleverbatim());
+    SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors().style_hashquotedstring());
+    SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors().style_preprocessorcomment());
+
+    SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
+    SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
+    SetProp(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
+    SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
+    SetProp(text, wxT("styling.within.preprocessor"), b2s01(settings.styling_within_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.allow.dollars"), b2s01(settings.lexer_cpp_allow_dollars()));
+    SetProp(text, wxT("lexer.cpp.track.preprocessor"), b2s01(settings.lexer_cpp_track_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.update.preprocessor"), b2s01(settings.lexer_cpp_update_preprocessor()));
+    SetProp(text, wxT("lexer.cpp.triplequoted.strings"), b2s01(settings.lexer_cpp_triplequoted_strings()));
+    SetProp(text, wxT("lexer.cpp.hashquoted.strings"), b2s01(settings.lexer_cpp_hashquoted_strings()));
+    SetProp(text, wxT("fold.cpp.syntax.based"), b2s01(settings.fold_cpp_syntax_based()));
+    SetProp(text, wxT("fold.cpp.comment.multiline"), b2s01(settings.fold_cpp_comment_multiline()));
+    SetProp(text, wxT("fold.cpp.comment.explicit"), b2s01(settings.fold_cpp_comment_explicit()));
+    SetProp(text, wxT("fold.cpp.explicit.anywhere"), b2s01(settings.fold_cpp_explicit_anywhere()));
+    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
+    SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
+    SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
+#endif
+    // end of setstyle/setprop fallback
 
     const wxString keyword_types =
       "bool char f32 f64 i16 i32 i64 i8 isize slice str tuple u16 u32 u64 u8 usize";
@@ -333,8 +387,11 @@ public:
     SetKeys(text, 2, ""); // Other keywords
     SetKeys(text, 3, "");
     SetKeys(text, 4, "");
+
+#ifndef USE_CPP_AS_RUST
     SetKeys(text, 5, "");
     SetKeys(text, 6, "");
+#endif
   }
 } g_language_rust;
 

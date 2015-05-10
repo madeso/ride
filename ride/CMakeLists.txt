@@ -21,6 +21,7 @@ PROTOBUF_GENERATE_CPP(SETTINGS_PROTO_SRCS SETTINGS_PROTO_HDRS settings.proto)
 
 
 option(USE_WXWIDGETS_LEGACY_FINDTEXT "use the old wxwidgets findtext" OFF)
+option(USE_CPP_AS_RUST "fallback to use c++ lexer instead of the rust lexer" OFF)
 
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/ride_compiler_settings.in.h"
