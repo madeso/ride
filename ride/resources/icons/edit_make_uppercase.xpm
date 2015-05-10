@@ -1,5 +1,5 @@
 /* XPM */
-static char * edit_make_uppercase_xpm[] = {
+static const char * edit_make_uppercase_xpm[] = {
 "16 16 106 2",
 "  	c None",
 ". 	c #4594E4",

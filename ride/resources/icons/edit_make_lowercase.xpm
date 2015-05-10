@@ -1,5 +1,5 @@
 /* XPM */
-static char * edit_make_lowercase_xpm[] = {
+static const char * edit_make_lowercase_xpm[] = {
 "16 16 103 2",
 "  	c None",
 ". 	c #73A7E0",

@@ -1,5 +1,5 @@
 /* XPM */
-static char * edit_undo_xpm[] = {
+static const char * edit_undo_xpm[] = {
 "16 16 111 2",
 "  	c None",
 ". 	c #72C466",

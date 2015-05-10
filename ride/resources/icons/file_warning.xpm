@@ -1,5 +1,5 @@
 /* XPM */
-static char * file_warning_xpm[] = {
+static const char * file_warning_xpm[] = {
 "16 16 95 2",
 "  	c None",
 ". 	c #F8F8F8",

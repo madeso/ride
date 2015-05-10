@@ -1,5 +1,5 @@
 /* XPM */
-static char * project_bench_xpm[] = {
+static const char * project_bench_xpm[] = {
 "16 16 158 2",
 "  	c None",
 ". 	c #F4B500",

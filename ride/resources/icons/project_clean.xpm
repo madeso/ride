@@ -1,5 +1,5 @@
 /* XPM */
-static char * project_clean_xpm[] = {
+static const char * project_clean_xpm[] = {
 "16 16 98 2",
 "  	g None",
 ". 	g #CCCCCC",

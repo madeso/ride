@@ -1,5 +1,5 @@
 /* XPM */
-static char * project_stop_xpm[] = {
+static const char * project_stop_xpm[] = {
 "16 16 104 2",
 "  	c None",
 ". 	c #FF0000",

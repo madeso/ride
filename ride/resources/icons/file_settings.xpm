@@ -1,5 +1,5 @@
 /* XPM */
-static char * file_settings_xpm[] = {
+static const char * file_settings_xpm[] = {
 "16 16 80 1",
 " 	g None",
 ".	g #C7C7C7",

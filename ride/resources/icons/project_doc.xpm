@@ -1,5 +1,5 @@
 /* XPM */
-static char * project_doc_xpm[] = {
+static const char * project_doc_xpm[] = {
 "16 16 161 2",
 "  	c None",
 ". 	c #5FACE2",

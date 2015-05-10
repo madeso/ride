@@ -1,5 +1,5 @@
 /* XPM */
-static char * edit_file_properties_xpm[] = {
+static const char * edit_file_properties_xpm[] = {
 "16 16 142 2",
 "  	c None",
 ". 	c #4C92D2",

@@ -1,5 +1,5 @@
 /* XPM */
-static char * edit_redo_xpm[] = {
+static const char * edit_redo_xpm[] = {
 "16 16 110 2",
 "  	c None",
 ". 	c #58A34F",
