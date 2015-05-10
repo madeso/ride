@@ -117,7 +117,7 @@ public:
   }
 };
 
-void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, char** xpm) {
+void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, const char** xpm) {
   wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
   wxImage img = bitmap.ConvertToImage();
   // t->RegisterImage(icon, bitmap);

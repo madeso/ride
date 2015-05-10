@@ -191,7 +191,7 @@ struct AddMenuItem {
     return item;
   }
 
-  AddMenuItem(wxMenu* menu, int id, const wxString& title = wxEmptyString, const wxString& help = wxEmptyString, char** xpm = NULL) {
+  AddMenuItem(wxMenu* menu, int id, const wxString& title = wxEmptyString, const wxString& help = wxEmptyString, const char** xpm = NULL) {
     item = new wxMenuItem(NULL, id, title, help);
     if (xpm) {
       // it's important to set the icon before adding the item
