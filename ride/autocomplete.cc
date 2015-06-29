@@ -226,7 +226,7 @@ AutoIcon ParseRacerType(const wxString& aname) {
   return AI_None;
 }
 
-void RunRacer(WordEntryList& wordlist, const wxString& filename_, wxStyledTextCtrl* text_, const wxString& root_folder) {
+wxString RunRacer(WordEntryList& wordlist, const wxString& filename_, wxStyledTextCtrl* text_, const wxString& root_folder) {
   // save temp file
   wxFileName target(filename_);
   target.SetExt("racertmp");
@@ -252,6 +252,8 @@ void RunRacer(WordEntryList& wordlist, const wxString& filename_, wxStyledTextCt
   }
   // delete temp file
   wxRemoveFile(path);
+
+  return output;
 }
 
 void Autocomplete(wxStyledTextCtrl* text, Language* current_language, const wxString& filename, const wxString& root_folder, wxWindow* self, ShowAutoCompleteAction action) {
@@ -302,15 +304,17 @@ void Autocomplete(wxStyledTextCtrl* text, Language* current_language, const wxSt
         ));
     }
 
+    wxString racer_output;
     if ( racer ) {
-      RunRacer(wordlist, filename, text, root_folder);
+      racer_output = RunRacer(wordlist, filename, text, root_folder);
     }
 
     // setting it here instead of when spawning eats the entered '.' but displays the AC instead of autocompleteing directly
     text->AutoCompSetFillUps("()<>.:;{}[] ");
     if (wordlist.IsEmpty()) {
       if (action == ShowAutoCompleteAction::FORCE_KEEP) {
-        ShowInfo(self, "No autocomplete suggestions", "Empty");
+        const wxString message = wxString::Format("No autocomplete suggestions found, racer output was:\n%s", racer_output);
+        ShowInfo(self, message, "No autocomplete suggestions found!");
       }
     }
     else {
