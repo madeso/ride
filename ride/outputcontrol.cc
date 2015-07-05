@@ -7,18 +7,43 @@
 #include "ride/wxutils.h"
 #include <wx/uri.h>
 #include <wx/clipbrd.h>
+#include <wx/regex.h>
+#include "ride/cmdrunner.h"
 
 enum
 {
   ID_FIRST = wxID_HIGHEST,
   
+  ID_RUN_THIS_COMPILER_MESSAGE,
   ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
   ID_COPY_THIS_COMPILER_MESSAGE,
   ID_CLEAR_COMPILER_OUTPUT,
   ID_QUICK_OPEN
 };
 
+namespace regex {
+  // src\main.rs:42:32: 42:58 help: run `rustc --explain E0243` to see a detailed explanation
+  const wxString GET_COMMAND_LINE = "run `(.*?)`";
+}
+
+const wxRegEx& GetCommandLineRegex() {
+  static wxRegEx ret(regex::GET_COMMAND_LINE, wxRE_ADVANCED);
+  assert(ret.IsValid() && "Complex output regex failed to compile");
+  return ret;
+}
+
 OutputControl::OutputControl(MainWindow* main) : main_(main) {
+}
+
+wxString GetCommandLine(const CompilerMessage& mess) {
+  if (GetCommandLineRegex().Matches(mess.message())) {
+    const size_t match_count = GetCommandLineRegex().GetMatchCount();
+    assert(match_count == 2);
+    const wxString cmd = GetCommandLineRegex().GetMatch(mess.message(), 1);
+    return cmd;
+  }
+
+  return "";
 }
 
 void OutputControl::UpdateStyle() {
@@ -41,11 +66,13 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
   CompilerMessage compiler_message;
   const bool has_compiler_message = CompilerMessage::Parse(main_->root_folder(), line_content, &compiler_message);
   const wxString message = has_compiler_message ? ToShortString(compiler_message.message(), 45) : "<none>";
+  const wxString commandline = has_compiler_message ? GetCommandLine(compiler_message) : "";
 
   wxMenu menu;
   AppendEnabled(menu, wxID_COPY, "Copy", has_selected);
   AppendEnabled(menu, wxID_SELECTALL, "Select all", true);
   menu.AppendSeparator();
+  AppendEnabled(menu, ID_RUN_THIS_COMPILER_MESSAGE, wxString::Format("Run '%s'", commandline.IsEmpty()? "<no command found>" : commandline), commandline.IsEmpty() == false);
   AppendEnabled(menu, ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, wxString::Format("Search for \"%s\" online", message), has_compiler_message);
   AppendEnabled(menu, ID_COPY_THIS_COMPILER_MESSAGE, wxString::Format("Copy \"%s\" to clipboard", message), has_compiler_message);
   menu.AppendSeparator();
@@ -54,6 +81,18 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
 
 
   PopupMenu(&menu);
+}
+
+void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event) {
+  const wxString line_content = GetContextLineContent();
+
+  CompilerMessage message;
+  if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
+    const wxString cmd = GetCommandLine(message);
+    wxString output;
+    CmdRunner::Run(main_->root_folder(), cmd, &output);
+    ShowInfo(this, output, "Command result");
+  }
 }
 
 void OutputControl::OnCopyThisCompilerMessage(wxCommandEvent& event) {
@@ -128,6 +167,7 @@ wxBEGIN_EVENT_TABLE(OutputControl, wxStyledTextCtrl)
   EVT_CONTEXT_MENU(OutputControl::OnContextMenu)
   EVT_MENU(ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, OutputControl::OnSearchForThisCompilerMessage)
 
+  EVT_MENU(ID_RUN_THIS_COMPILER_MESSAGE, OutputControl::OnRunThisCompilerMessage)
   EVT_MENU(ID_COPY_THIS_COMPILER_MESSAGE, OutputControl::OnCopyThisCompilerMessage)
   EVT_MENU(ID_CLEAR_COMPILER_OUTPUT, OutputControl::OnClearCompilerOuput)
   EVT_MENU(wxID_SELECTALL, OutputControl::OnSelectAll)

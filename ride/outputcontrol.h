@@ -15,6 +15,7 @@ public:
 
 protected:
   void OnContextMenu(wxContextMenuEvent& event);
+  void OnRunThisCompilerMessage(wxCommandEvent& event);
   void OnCopyThisCompilerMessage(wxCommandEvent& event);
   void OnClearCompilerOuput(wxCommandEvent& event);
   void OnSelectAll(wxCommandEvent& event);
