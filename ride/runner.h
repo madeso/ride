@@ -8,6 +8,7 @@
 
 class MultiRunner;
 
+/// a command to run
 class Command {
 public:
   Command(const wxString& root, const wxString& cmd);
@@ -16,7 +17,7 @@ public:
   wxString cmd;
 };
 
-// only run a single command
+/// only runs a single command
 class SingleRunner {
 public:
   SingleRunner();
@@ -41,7 +42,7 @@ private:
   std::unique_ptr<Pimpl> pimpl;
 };
 
-// multiple runners, queue commands
+/// Run multiple commands by queuing them
 class MultiRunner {
 public:
   MultiRunner();
