@@ -41,6 +41,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * integrate taskbar status for build status https://github.com/zhchbin/wxWidgets/wiki/SOC2014_TASKBAR
 * add test for different indentation styles and make sure indentation works: http://en.wikipedia.org/wiki/Indent_style#Styles
 * Reformat code
+* Add support for rust templates https://github.com/rust-lang/cargo/issues/396
 * Find & replace in selection
 * Incremental search
 * Sync file structure instead of reloading in project explorer
