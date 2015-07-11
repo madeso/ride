@@ -31,7 +31,7 @@ public:
 //////////////////////////////////////////////////////////////////////////
 
 struct SingleRunner::Pimpl {
-  explicit Pimpl(SingleRunner* p) : parent_(p), processes_(NULL), delete_processes_(NULL), pid_(0), exit_code_(-1) {
+  explicit Pimpl(SingleRunner* p) : parent_(p), processes_(NULL), delete_processes_(NULL), pid_(0), has_exit_code_(false), exit_code_(-1) {
     assert(parent_);
     idle_timer_.reset(new IdleTimer(this));
   }
@@ -57,8 +57,23 @@ struct SingleRunner::Pimpl {
   Process* processes_; // the current running process or NULL
   Process* delete_processes_; // process to be deleted at the end
   long pid_; // the id of the current or previous running process
-  int exit_code_;
   std::unique_ptr<IdleTimer> idle_timer_;
+
+  int exit_code() const {
+    assert(has_exit_code_);
+    return exit_code_;
+  }
+  bool has_exit_code() const {
+    return has_exit_code_;
+  }
+  void set_exit_code(int x) {
+    exit_code_ = x;
+    has_exit_code_ = true;
+  }
+
+private:
+  bool has_exit_code_;
+  int exit_code_;
 };
 
 void IdleTimer::Notify() {
@@ -86,7 +101,7 @@ public:
       runner_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
         pid, cmd_.c_str(), status));
       runner_->Append("");
-      runner_->exit_code_ = status;
+      runner_->set_exit_code(status);
       runner_->OnCompleted();
     }
     else {
@@ -217,12 +232,10 @@ bool SingleRunner::RunCmd(const Command& cmd) {
 
 bool SingleRunner::IsRunning() const {
   const bool has_process = pimpl->processes_ != NULL;
-  if (has_process) {
-    const bool exists = wxProcess::Exists(pimpl->processes_->GetPid());
-    pimpl->processes_->HasInput();
-    if (exists == false) return false;
-  }
-  return has_process;
+  if (has_process == false) return false;
+  const bool exists = wxProcess::Exists(pimpl->processes_->GetPid());
+  pimpl->processes_->HasInput();
+  return !pimpl->has_exit_code();
 }
 
 void SingleRunner::Completed() {
@@ -232,7 +245,7 @@ void SingleRunner::Completed() {
 int SingleRunner::GetExitCode() {
   assert(this->IsRunning() == false);
   assert(pimpl->pid_ != 0);
-  return pimpl->exit_code_;
+  return pimpl->exit_code();
 }
 
 //////////////////////////////////////////////////////////////////////////

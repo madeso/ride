@@ -16,6 +16,7 @@ const bool CmdRunner::Run(const wxString& root, const wxString& cmd, wxString* o
   }
   while (runner.IsRunning()) {
     // wait...
+    wxYield();
   }
   const int result = runner.GetExitCode();
   *out = runner.output;
