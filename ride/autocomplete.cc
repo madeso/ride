@@ -261,6 +261,11 @@ void Autocomplete(wxStyledTextCtrl* text, Language* current_language, const wxSt
   const int word_wait_chars = 3;
   const bool racer = true;
 
+  // only autocomplete rust files
+  if (filename.EndsWith(".rs") == false) {
+    return;
+  }
+
   const int pos = text->GetCurrentPos();
   const int start_position = text->WordStartPosition(pos, true);
   const wxString word = text->GetRange(start_position, pos).Trim(true).Trim(false);
