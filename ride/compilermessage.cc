@@ -40,6 +40,9 @@ namespace regex {
 
   // C:\Users\gustav\WorkingFolder\librust\src\crc32.rs:4 pub struct Crc32 {
   const wxString SIMPLE_REGEX_OUTPUT = "^" + FILE + "\\:" + INT + WS + TEXT + "$";
+
+  // settings.proto:5:9: Expected "]".
+  const wxString PROTOC_REGEX_OUTPUT = "^" + FILE + "\\:" + INT + ":" + INT + ":" + WS + TEXT + "$";
 }
 
 namespace {
@@ -67,6 +70,12 @@ const wxRegEx& ComplexRegexOutput() {
 const wxRegEx& RegexOutputRelated() {
   static wxRegEx ret(regex::SIMPLE_REGEX_OUTPUT, wxRE_ADVANCED);
   assert(ret.IsValid() && "Simple output regex failed to compile");
+  return ret;
+}
+
+const wxRegEx& ProtocRegexOutput() {
+  static wxRegEx ret(regex::PROTOC_REGEX_OUTPUT, wxRE_ADVANCED);
+  assert(ret.IsValid() && "Protoc regex failed to compile");
   return ret;
 }
 
@@ -117,11 +126,37 @@ bool CompilerMessage::Parse(Source source, const wxString& root, const wxString&
       return true;
     }
   }
+  else if (source == SOURCE_PROTOC) {
+    const wxRegEx& complex = ProtocRegexOutput();
+    if (complex.Matches(text)) {
+      const wxString              file = complex.GetMatch(text, 1);
+      const int                   start_line = wxAtoi(complex.GetMatch(text, 2));
+      const int                   start_index = wxAtoi(complex.GetMatch(text, 3));
+      const wxString              message = complex.GetMatch(text, 4);
+
+      *output = CompilerMessage(CleanupFilePath(root, file), start_line, start_index, start_line, start_index, CompilerMessage::TYPE_ERROR, message);
+      return true;
+    }
+  }
   else {
     assert(false && "Invalid source");
   }
 
   return false;
+}
+
+wxString CompilerMessage::ToStringRepresentation(const Source source) {
+  if (source == SOURCE_RUSTC) {
+    const wxString type = "error";
+
+    // like C:\Users\gustav\WorkingFolder\librust\src\rng.rs:16 : 1 : 21 : 2 warning : type could implement `Copy`; consider adding `impl Copy`, #[warn(missing_copy_implementations)] on by default
+    return wxString::Format("%s:%d : %d : %d : %d %s : %s",
+      file(), start_line(), start_index(), end_line(), end_index(), type, message());
+  }
+  else {
+    assert(false && "Invalid source");
+    return "";
+  }
 }
 
 //////////////////////////////////////////////////////////////////////////

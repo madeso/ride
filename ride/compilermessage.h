@@ -17,6 +17,8 @@ public:
   CompilerMessage(const wxString& file, int start_line, int start_index, int end_line, int end_index, Type type, wxString message);
   static bool Parse(const Source source, const wxString& root, const wxString& text, CompilerMessage* output);
 
+  wxString ToStringRepresentation(const Source source);
+
   const wxString& file() const;
 
   // 1 based

@@ -433,7 +433,14 @@ bool FileEdit::Save() {
       // TODO: change a different error output pane...
       main_->Clear();
       for (const wxString& line : lines) {
-        main_->Append(line);
+        CompilerMessage message;
+
+        wxString theline = line;
+        // if it looks like a protoc compiler message, transform it into a rustc message
+        if (CompilerMessage::Parse(CompilerMessage::SOURCE_PROTOC, folder, line, &message)) {
+          theline = message.ToStringRepresentation(CompilerMessage::SOURCE_RUSTC);
+        }
+        main_->Append(theline);
       }
       ShowError(main_, wxString::Format("%s failed to compile", filename), "Compilation failed!");
     }
