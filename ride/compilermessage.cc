@@ -91,7 +91,8 @@ wxString CleanupFilePath(const wxString& root, const wxString& path) {
   }
 }
 
-bool CompilerMessage::Parse(const wxString& root, const wxString& text, CompilerMessage* output) {
+bool CompilerMessage::Parse(Source source, const wxString& root, const wxString& text, CompilerMessage* output) {
+  if (source == SOURCE_RUSTC) {
   const wxRegEx& complex = ComplexRegexOutput();
   if (complex.Matches(text)) {
     const wxString              file         =          complex.GetMatch(text, 1);
@@ -114,6 +115,10 @@ bool CompilerMessage::Parse(const wxString& root, const wxString& text, Compiler
 
     *output = CompilerMessage(CleanupFilePath(root, file), start_line, -1, -1, -1, CompilerMessage::TYPE_RELATED, message);
     return true;
+  }
+  }
+  else {
+    assert(false && "Invalid source");
   }
 
   return false;

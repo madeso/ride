@@ -9,9 +9,13 @@ public:
     TYPE_UNKNOWN, TYPE_NOTE, TYPE_WARNING, TYPE_ERROR, TYPE_RELATED
   };
 
+  enum Source {
+    SOURCE_RUSTC, SOURCE_PROTOC
+  };
+
   CompilerMessage();
   CompilerMessage(const wxString& file, int start_line, int start_index, int end_line, int end_index, Type type, wxString message);
-  static bool Parse(const wxString& root, const wxString& text, CompilerMessage* output);
+  static bool Parse(const Source source, const wxString& root, const wxString& text, CompilerMessage* output);
 
   const wxString& file() const;
 

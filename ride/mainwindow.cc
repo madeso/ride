@@ -510,7 +510,7 @@ void MainWindow::Append(const wxString& str) {
   WriteLine(output_window_, str);
 
   CompilerMessage mess;
-  if (CompilerMessage::Parse(root_folder(), str, &mess)) {
+  if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, root_folder(), str, &mess)) {
     AddCompilerMessage(mess);
   }
 }

@@ -64,7 +64,7 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
   const bool has_selected = this->GetSelectedText().IsEmpty() == false;
   const wxString line_content = GetContextLineContent();
   CompilerMessage compiler_message;
-  const bool has_compiler_message = CompilerMessage::Parse(main_->root_folder(), line_content, &compiler_message);
+  const bool has_compiler_message = CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &compiler_message);
   const wxString message = has_compiler_message ? ToShortString(compiler_message.message(), 45) : "<none>";
   const wxString commandline = has_compiler_message ? GetCommandLine(compiler_message) : "";
 
@@ -87,7 +87,7 @@ void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event) {
   const wxString line_content = GetContextLineContent();
 
   CompilerMessage message;
-  if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
+  if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &message)) {
     const wxString cmd = GetCommandLine(message);
     wxString output;
     CmdRunner::Run(main_->root_folder(), cmd, &output);
@@ -99,7 +99,7 @@ void OutputControl::OnCopyThisCompilerMessage(wxCommandEvent& event) {
   const wxString line_content = GetContextLineContent();
 
   CompilerMessage message;
-  if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
+  if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &message)) {
     if (wxTheClipboard->Open()) {
       wxTheClipboard->SetData(new wxTextDataObject(message.message()));
       wxTheClipboard->Close();
@@ -136,7 +136,7 @@ void OutputControl::OnSearchForThisCompilerMessage(wxCommandEvent& event) {
   const wxString line_content = GetContextLineContent();
 
   CompilerMessage message;
-  if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
+  if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &message)) {
     wxString mess = message.message();
     mess.Replace("#", "%23");
     const wxString escaped_message = wxURI(mess).BuildURI();
@@ -157,7 +157,7 @@ void OutputControl::OnDoubleClick(wxMouseEvent& event) {
   wxString line_content = GetLineText(line_number);
 
   CompilerMessage message;
-  if (CompilerMessage::Parse(main_->root_folder(), line_content, &message)) {
+  if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &message)) {
     main_->OpenCompilerMessage(message);
   }
 }

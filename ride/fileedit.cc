@@ -414,6 +414,8 @@ bool FileEdit::Save() {
   const bool save_successful = filename_.IsEmpty()
     ? SaveAs()
     : SaveTo(filename_);
+
+  // compile proto file
   if (save_successful && filename_.EndsWith(".proto")) {
     // if we managed to successfully save a protobuf file, then
     // run the protobuf compiler automatically
@@ -427,13 +429,13 @@ bool FileEdit::Save() {
       ShowInfo(main_, wxString::Format("%s compiled without errors", filename), "Compilation successful!");
     }
     else {
-      ShowError(main_, wxString::Format("%s failed to compile", filename), "Compilation failed!");
       const std::vector<wxString> lines = Split(result, "\n");
+      // TODO: change a different error output pane...
       main_->Clear();
       for (const wxString& line : lines) {
         main_->Append(line);
       }
-      return false;
+      ShowError(main_, wxString::Format("%s failed to compile", filename), "Compilation failed!");
     }
   }
   return save_successful;
