@@ -93,29 +93,29 @@ wxString CleanupFilePath(const wxString& root, const wxString& path) {
 
 bool CompilerMessage::Parse(Source source, const wxString& root, const wxString& text, CompilerMessage* output) {
   if (source == SOURCE_RUSTC) {
-  const wxRegEx& complex = ComplexRegexOutput();
-  if (complex.Matches(text)) {
-    const wxString              file         =          complex.GetMatch(text, 1);
-    const int                   start_line   =   wxAtoi(complex.GetMatch(text, 2));
-    const int                   start_index  =   wxAtoi(complex.GetMatch(text, 3));
-    const int                   end_line     =   wxAtoi(complex.GetMatch(text, 4));
-    const int                   end_index    =   wxAtoi(complex.GetMatch(text, 5));
-    const CompilerMessage::Type type         = ParseCMT(complex.GetMatch(text, 6));
-    const wxString              message      =          complex.GetMatch(text, 7);
+    const wxRegEx& complex = ComplexRegexOutput();
+    if (complex.Matches(text)) {
+      const wxString              file         =          complex.GetMatch(text, 1);
+      const int                   start_line   =   wxAtoi(complex.GetMatch(text, 2));
+      const int                   start_index  =   wxAtoi(complex.GetMatch(text, 3));
+      const int                   end_line     =   wxAtoi(complex.GetMatch(text, 4));
+      const int                   end_index    =   wxAtoi(complex.GetMatch(text, 5));
+      const CompilerMessage::Type type         = ParseCMT(complex.GetMatch(text, 6));
+      const wxString              message      =          complex.GetMatch(text, 7);
 
-    *output = CompilerMessage(CleanupFilePath(root, file), start_line, start_index, end_line, end_index, type, message);
-    return true;
-  }
+      *output = CompilerMessage(CleanupFilePath(root, file), start_line, start_index, end_line, end_index, type, message);
+      return true;
+    }
 
-  const wxRegEx& related = RegexOutputRelated();
-  if (related.Matches(text)) {
-    const wxString              file = related.GetMatch(text, 1);
-    const int                   start_line = wxAtoi(related.GetMatch(text, 2));
-    const wxString              message = related.GetMatch(text, 3);
+    const wxRegEx& related = RegexOutputRelated();
+    if (related.Matches(text)) {
+      const wxString              file = related.GetMatch(text, 1);
+      const int                   start_line = wxAtoi(related.GetMatch(text, 2));
+      const wxString              message = related.GetMatch(text, 3);
 
-    *output = CompilerMessage(CleanupFilePath(root, file), start_line, -1, -1, -1, CompilerMessage::TYPE_RELATED, message);
-    return true;
-  }
+      *output = CompilerMessage(CleanupFilePath(root, file), start_line, -1, -1, -1, CompilerMessage::TYPE_RELATED, message);
+      return true;
+    }
   }
   else {
     assert(false && "Invalid source");
