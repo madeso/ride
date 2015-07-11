@@ -18,7 +18,8 @@ Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {
 
 //////////////////////////////////////////////////////////////////////////
 
-// idle timer to keep the process updated since wx apparently doesn't do that
+/// The idle timer let the runner be "notified" that there might be unread
+/// compiler messages instead of waiting to the end to read them all
 class IdleTimer : public wxTimer {
 public:
   IdleTimer(SingleRunner::Pimpl* p) : pimpl_(p) {
