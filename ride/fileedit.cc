@@ -411,8 +411,32 @@ void FileEdit::ReloadFileIfNeeded() {
 
 bool FileEdit::Save() {
   if (ShouldBeSaved() == false) return true;
-  if (filename_.IsEmpty()) return SaveAs();
-  else return SaveTo(filename_);
+  const bool save_successful = filename_.IsEmpty()
+    ? SaveAs()
+    : SaveTo(filename_);
+  if (save_successful && filename_.EndsWith(".proto")) {
+    // if we managed to successfully save a protobuf file, then
+    // run the protobuf compiler automatically
+    const size_t index = filename_.find_last_of(wxFileName::GetPathSeparators());
+    const wxString folder = filename_.SubString(0, index);
+    const wxString filename = filename_.substr(index+1);
+    const wxString cmd = wxString::Format("protoc --rust_out . %s", filename);
+    wxString result;
+    const bool proto_compile_successful = CmdRunner::Run(folder, cmd, &result);
+    if (proto_compile_successful) {
+      ShowInfo(main_, wxString::Format("%s compiled without errors", filename), "Compilation successful!");
+    }
+    else {
+      ShowError(main_, wxString::Format("%s failed to compile", filename), "Compilation failed!");
+      const std::vector<wxString> lines = Split(result, "\n");
+      main_->Clear();
+      for (const wxString& line : lines) {
+        main_->Append(line);
+      }
+      return false;
+    }
+  }
+  return save_successful;
 }
 
 bool FileEdit::SaveAs() {
