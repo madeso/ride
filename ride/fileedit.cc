@@ -418,6 +418,8 @@ bool FileEdit::Save() {
 
   // compile proto file
   if (save_successful) {
+    // if we managed to successfully save a protobuf file, then
+    // run the protobuf compiler automatically
     CompileProtoFile(filename_, main_);
   }
   return save_successful;
