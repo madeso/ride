@@ -51,6 +51,9 @@ public:
 
   FoundEdit GetEditFromFileName(const wxString& file);
 
+  OutputDirector& build_output();
+  OutputDirector& compiler_output();
+
 private:
   void OnActivated(wxActivateEvent& event);
 

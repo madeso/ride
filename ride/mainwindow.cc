@@ -423,14 +423,17 @@ void MainWindow::UpdateMenuItemView() {
 
 void MainWindow::ShowFindWindow() {
   ShowPane(&aui_, PANE_FIND_1);
+  aui_.Update();
 }
 
 void MainWindow::ShowBuildWindow() {
   ShowPane(&aui_, PANE_BUILD);
+  aui_.Update();
 }
 
 void MainWindow::ShowCompileWindow() {
   ShowPane(&aui_, PANE_COMPILE);
+  aui_.Update();
 }
 
 void MainWindow::OnViewShowFindResult(wxCommandEvent& event){
@@ -621,6 +624,16 @@ FoundEdit MainWindow::GetEditFromFileName(const wxString& file) {
   }
 
   return FoundEdit::NOT_FOUND;
+}
+
+OutputDirector& MainWindow::build_output() {
+  ShowBuildWindow();
+  return build_output_;
+}
+
+OutputDirector& MainWindow::compiler_output() {
+  ShowCompileWindow();
+  return compiler_output_;
 }
 
 void MainWindow::OnClose(wxCloseEvent& evt) {

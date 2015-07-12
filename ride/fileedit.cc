@@ -431,7 +431,7 @@ bool FileEdit::Save() {
     else {
       const std::vector<wxString> lines = Split(result, "\n");
       // TODO: change a different error output pane...
-      main_->Clear();
+      main_->compiler_output().Clear();
       for (const wxString& line : lines) {
         CompilerMessage message;
 
@@ -440,7 +440,7 @@ bool FileEdit::Save() {
         if (CompilerMessage::Parse(CompilerMessage::SOURCE_PROTOC, folder, line, &message)) {
           theline = message.ToStringRepresentation(CompilerMessage::SOURCE_RUSTC);
         }
-        main_->Append(theline);
+        main_->compiler_output().Append(theline);
       }
       ShowError(main_, wxString::Format("%s failed to compile", filename), "Compilation failed!");
     }

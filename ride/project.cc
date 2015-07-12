@@ -115,11 +115,11 @@ void Project::Update(bool origin_main) {
 //////////////////////////////////////////////////////////////////////////
 
 void Project::CleanOutput() {
-  main_->Clear();
+  main_->build_output().Clear();
 }
 
 void Project::Append(const wxString& str) {
-  main_->Append(str);
+  main_->build_output().Append(str);
 }
 
 void Project::RunCmd(const wxString& cmd) {
