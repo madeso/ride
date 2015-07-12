@@ -22,6 +22,7 @@
 #include "ride/resources/icons.h"
 #include "ride/stcutils.h"
 #include "ride/autocomplete.h"
+#include "ride/compileutils.h"
 
 void FileEdit::Undo() {
   if (!text_->CanUndo()) return;
@@ -416,34 +417,8 @@ bool FileEdit::Save() {
     : SaveTo(filename_);
 
   // compile proto file
-  if (save_successful && filename_.EndsWith(".proto")) {
-    // if we managed to successfully save a protobuf file, then
-    // run the protobuf compiler automatically
-    const size_t index = filename_.find_last_of(wxFileName::GetPathSeparators());
-    const wxString folder = filename_.SubString(0, index);
-    const wxString filename = filename_.substr(index+1);
-    const wxString cmd = wxString::Format("protoc --rust_out . %s", filename);
-    wxString result;
-    const bool proto_compile_successful = CmdRunner::Run(folder, cmd, &result);
-    if (proto_compile_successful) {
-      ShowInfo(main_, wxString::Format("%s compiled without errors", filename), "Compilation successful!");
-    }
-    else {
-      const std::vector<wxString> lines = Split(result, "\n");
-      // TODO: change a different error output pane...
-      main_->compiler_output().Clear();
-      for (const wxString& line : lines) {
-        CompilerMessage message;
-
-        wxString theline = line;
-        // if it looks like a protoc compiler message, transform it into a rustc message
-        if (CompilerMessage::Parse(CompilerMessage::SOURCE_PROTOC, folder, line, &message)) {
-          theline = message.ToStringRepresentation(CompilerMessage::SOURCE_RUSTC);
-        }
-        main_->compiler_output().Append(theline);
-      }
-      ShowError(main_, wxString::Format("%s failed to compile", filename), "Compilation failed!");
-    }
+  if (save_successful) {
+    CompileProtoFile(filename_, main_);
   }
   return save_successful;
 }
