@@ -7,11 +7,11 @@
 #include "ride/language.h"
 #include "ride/settings.h"
 #include "ride/project.h"
+#include "ride/outputdirector.h"
 
 class FileEdit;
 class SettingsDlg;
 class CompilerMessage;
-class OutputControl;
 class FindControl;
 class ProjectExplorer;
 
@@ -38,9 +38,6 @@ public:
   const ride::Settings& settings() const;
   void set_settings(const ride::Settings& settings);
 
-  void Clear();
-  void Append(const wxString& str);
-
   void OpenCompilerMessage(const CompilerMessage& message);
   void FileHasBeenRenamed(const wxString& old_path, const wxString& new_path);
 
@@ -51,6 +48,8 @@ public:
   FileEdit* GetFile(const wxString& file);
 
   const wxString& root_folder() const;
+
+  FoundEdit GetEditFromFileName(const wxString& file);
 
 private:
   void OnActivated(wxActivateEvent& event);
@@ -104,7 +103,8 @@ private:
   void OnViewSaveLayout(wxCommandEvent& event);
   void OnViewLoadLayout(wxCommandEvent& event);
   void OnViewShowFindResult(wxCommandEvent& event);
-  void OnViewShowOutput(wxCommandEvent& event);
+  void OnViewShowBuild(wxCommandEvent& event);
+  void OnViewShowCompile(wxCommandEvent& event);
   void OnViewShowProject(wxCommandEvent& event);
 
 	void OnFileExit(wxCommandEvent& event);
@@ -123,33 +123,35 @@ private:
 private:
   void ShowFindWindow();
   void ShowBuildWindow();
+  void ShowCompileWindow();
+
   void SaveSession();
   void RestoreSession();
-  FoundEdit GetEditFromFileName(const wxString& file);
-  void AddCompilerMessage(const CompilerMessage& mess);
   bool OpenProject(const wxString project_file);
 
   void UpdateTitle();
   void UpdateAllEdits();
   void CreateNotebook();
   FileEdit* GetSelectedEditorNull();
+  FileEdit* AddAllCompilerMessages(FileEdit* file_edit);
 
   wxAuiManager aui_;
   wxAuiNotebook* notebook_;
-  OutputControl* output_window_;
+  OutputDirector build_output_;
+  OutputDirector compiler_output_;
   FindControl* findres_window_;
   ProjectExplorer* project_explorer_;
 
   ride::Settings settings_;
   std::unique_ptr<Project> project_;
   wxString app_name_;
-  std::vector<CompilerMessage> compiler_messages_;
 
   wxString windows_locations_;
 
   wxMenuItem* menuItemViewFind_;
   wxMenuItem* menuItemViewProject_;
-  wxMenuItem* menuItemViewOutput_;
+  wxMenuItem* menuItemViewBuild_;
+  wxMenuItem* menuItemViewCompile_;
 
   wxWindow* last_focus_;
 

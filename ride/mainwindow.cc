@@ -75,7 +75,8 @@ enum
   ID_VIEW_LOAD_LAYOUT,
   ID_VIEW_SHOW_FINDRESULT,
   ID_VIEW_SHOW_PROJECT,
-  ID_VIEW_SHOW_OUTPUT,
+  ID_VIEW_SHOW_BUILD,
+  ID_VIEW_SHOW_COMPILE,
 
   ID_QUICK_OPEN
 };
@@ -131,7 +132,8 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_VIEW_SAVE_LAYOUT,    MainWindow::OnViewSaveLayout )
   EVT_MENU(ID_VIEW_LOAD_LAYOUT,    MainWindow::OnViewLoadLayout )
   EVT_MENU(ID_VIEW_SHOW_FINDRESULT,     MainWindow::OnViewShowFindResult )
-  EVT_MENU(ID_VIEW_SHOW_OUTPUT , MainWindow::OnViewShowOutput)
+  EVT_MENU(ID_VIEW_SHOW_BUILD , MainWindow::OnViewShowBuild)
+  EVT_MENU(ID_VIEW_SHOW_COMPILE, MainWindow::OnViewShowCompile)
   EVT_MENU(ID_VIEW_SHOW_PROJECT , MainWindow::OnViewShowProject)
   
   EVT_MENU(wxID_ABOUT             , MainWindow::OnAbout)
@@ -181,7 +183,8 @@ void MainWindow::OnActivated(wxActivateEvent& event) {
 //////////////////////////////////////////////////////////////////////////
 
 const wxString PANE_FIND_1 = "pane_findres1";
-const wxString PANE_OUTPUT = "pane_output";
+const wxString PANE_BUILD = "pane_output";
+const wxString PANE_COMPILE = "pane_compile";
 const wxString PANE_PROJECT = "pane_project";
 
 
@@ -228,7 +231,6 @@ const int AUI_OPTIONS = 0
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
 , aui_(NULL, AUI_OPTIONS)
-, output_window_(NULL)
 , findres_window_(NULL)
 , project_( new Project(this, wxEmptyString) )
 , app_name_(app_name)
@@ -325,7 +327,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   // build issues
   menuItemViewFind_ = AddMenuItem(menu_view, ID_VIEW_SHOW_FINDRESULT, "Find &result pane\tAlt-2", "").Checkable();
   // app output
-  menuItemViewOutput_ = AddMenuItem(menu_view, ID_VIEW_SHOW_OUTPUT, "&Output pane\tAlt-4", "").Checkable();
+  menuItemViewBuild_ = AddMenuItem(menu_view, ID_VIEW_SHOW_BUILD, "&Build pane\tAlt-4", "").Checkable();
+  menuItemViewCompile_ = AddMenuItem(menu_view, ID_VIEW_SHOW_COMPILE, "&Compile pane", "").Checkable();
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu *menu_help = new wxMenu;
@@ -347,11 +350,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   CreateNotebook();
 
   // output
-  output_window_ = new OutputControl(this);
-  output_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
-  output_window_->UpdateStyle();
-  output_window_->UpdateStyle();
-  aui_.AddPane(output_window_, wxAuiPaneInfo().Name(PANE_OUTPUT).Caption("Output").Bottom().CloseButton(true));
+  build_output_.Create(this, aui_, PANE_BUILD, "Build");
+  compiler_output_.Create(this, aui_, PANE_COMPILE, "Compile");
 
   findres_window_ = new FindControl(this);
   findres_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
@@ -417,7 +417,8 @@ void ShowPane(wxAuiManager* aui, const wxString& name) {
 void MainWindow::UpdateMenuItemView() {
   UpdateMenuItemBasedOnPane(&aui_, menuItemViewFind_, PANE_FIND_1);
   UpdateMenuItemBasedOnPane(&aui_, menuItemViewProject_, PANE_PROJECT);
-  UpdateMenuItemBasedOnPane(&aui_, menuItemViewOutput_, PANE_OUTPUT);
+  UpdateMenuItemBasedOnPane(&aui_, menuItemViewBuild_, PANE_BUILD);
+  UpdateMenuItemBasedOnPane(&aui_, menuItemViewCompile_, PANE_COMPILE);
 }
 
 void MainWindow::ShowFindWindow() {
@@ -425,7 +426,11 @@ void MainWindow::ShowFindWindow() {
 }
 
 void MainWindow::ShowBuildWindow() {
-  ShowPane(&aui_, PANE_OUTPUT);
+  ShowPane(&aui_, PANE_BUILD);
+}
+
+void MainWindow::ShowCompileWindow() {
+  ShowPane(&aui_, PANE_COMPILE);
 }
 
 void MainWindow::OnViewShowFindResult(wxCommandEvent& event){
@@ -433,8 +438,13 @@ void MainWindow::OnViewShowFindResult(wxCommandEvent& event){
   UpdateMenuItemView();
 }
 
-void MainWindow::OnViewShowOutput(wxCommandEvent& event) {
-  ShowHideAui(&aui_, PANE_OUTPUT);
+void MainWindow::OnViewShowBuild(wxCommandEvent& event) {
+  ShowHideAui(&aui_, PANE_BUILD);
+  UpdateMenuItemView();
+}
+
+void MainWindow::OnViewShowCompile(wxCommandEvent& event) {
+  ShowHideAui(&aui_, PANE_COMPILE);
   UpdateMenuItemView();
 }
 
@@ -492,41 +502,6 @@ MainWindow::~MainWindow() {
   aui_.UnInit();
 }
 
-void MainWindow::Clear() {
-  // todo: this probably needs to happen in the gui thread instead of here... or does it?
-  ClearOutput(output_window_);
-  compiler_messages_.resize(0);
-
-  for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
-    if (edit) {
-      edit->ClearCompilerMessages();
-    }
-  }
-}
-
-void MainWindow::Append(const wxString& str) {
-  // todo: this probably needs to happen in the gui thread instead of here... or does it?
-  WriteLine(output_window_, str);
-
-  CompilerMessage mess;
-  if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, root_folder(), str, &mess)) {
-    AddCompilerMessage(mess);
-  }
-}
-
-void MainWindow::AddCompilerMessage(const CompilerMessage& mess) {
-  compiler_messages_.push_back(mess);
-  for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
-    if (edit) {
-      if (edit->filename() == mess.file()) {
-        edit->AddCompilerMessage(mess);
-      }
-    }
-  }
-}
-
 void MainWindow::ReloadFilesIfNeeded() {
   for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
@@ -568,13 +543,9 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
   }
 }
 
-FileEdit* AddCompilerMessages(const std::vector<CompilerMessage>& messages, FileEdit* file_edit) {
-  for (size_t i = 0; i < messages.size(); ++i) {
-    const CompilerMessage message = messages[i];
-    if (message.file() == file_edit->filename()) {
-      file_edit->AddCompilerMessage(message);
-    }
-  }
+FileEdit* MainWindow::AddAllCompilerMessages(FileEdit* file_edit) {
+  build_output_.AddAllCompilerMessages(file_edit);
+  compiler_output_.AddAllCompilerMessages(file_edit);
   return file_edit;
 }
 
@@ -605,7 +576,7 @@ FileEdit* MainWindow::OpenFile(const wxString& file, int start_line, int start_i
   };
   FileEdit* found_edit_or_new = found_edit.edit != NULL
     ? found_edit.edit
-    : AddCompilerMessages(compiler_messages_, new FileEdit(notebook_, this, full_path))
+    : AddAllCompilerMessages(new FileEdit(notebook_, this, full_path))
     ;
   found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
   found_edit_or_new->SetFocus();
@@ -685,8 +656,9 @@ void MainWindow::UpdateAllEdits() {
       edit->UpdateTextControl();
     }
   }
-  output_window_->UpdateStyle();
   findres_window_->UpdateStyle();
+  build_output_.UpdateStyles();
+  compiler_output_.UpdateStyles();
 }
 
 void MainWindow::OnFileShowSettings(wxCommandEvent& event) {
