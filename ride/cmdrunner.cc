@@ -14,9 +14,11 @@ const bool CmdRunner::Run(const wxString& root, const wxString& cmd, wxString* o
     *out = "Unable to start";
     return false;
   }
+  wxAppConsole* app_console = wxAppConsole::GetInstance();
+  assert(app_console);
   while (runner.IsRunning()) {
     // wait...
-    wxYield();
+    app_console->Yield();
   }
   const int result = runner.GetExitCode();
   *out = runner.output;
