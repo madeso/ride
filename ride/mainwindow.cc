@@ -154,6 +154,7 @@ void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& evt) {
   if (selected_file) {
     file_name = selected_file->filename();
     selected_file->SetFocus();
+    selected_file->UpdateStatusText();
   }
 
   project_explorer_->HighlightOpenFile(file_name);
@@ -227,6 +228,9 @@ const int AUI_OPTIONS = 0
 | wxAUI_MGR_LIVE_RESIZE // When a docked pane is resized, its content is refreshed in live (instead of moving the border alone and refreshing the content at the end). 
 ;
 
+void MainWindow::SetStatusText(const wxString& text, StatusBarWidgets widget) {
+  statusbar_->SetStatusText(text, widget);
+}
 
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
@@ -235,6 +239,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 , project_( new Project(this, wxEmptyString) )
 , app_name_(app_name)
 , last_focus_(NULL)
+, statusbar_(NULL)
 {
 #ifdef _WIN32
   SetIcon(wxICON(aaaaa_logo));
@@ -344,8 +349,15 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   SetMenuBar(menu_bar);
   
 
-  CreateStatusBar();
-  SetStatusText("");
+  statusbar_ = CreateStatusBar(STATUSBAR_MAXCOUNT);
+  const int small_width = 50;
+  int widths[STATUSBAR_MAXCOUNT] = { 0, };
+  widths[STATUSBAR_GENERAL] = -1;
+  widths[STATUSBAR_LINE] = small_width;
+  widths[STATUSBAR_COL] = small_width;
+  widths[STATUSBAR_CH] = small_width;
+  widths[STATUSBAR_INS] = 22;
+  statusbar_->SetStatusWidths(STATUSBAR_MAXCOUNT, widths);
 
   CreateNotebook();
 

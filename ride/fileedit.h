@@ -40,6 +40,8 @@ public:
   bool AcceptsFocusFromKeyboard() const;
 
   wxStyledTextCtrl* GetStc();
+
+  void UpdateStatusText();
 public:
   bool Save();
   bool SaveAs();

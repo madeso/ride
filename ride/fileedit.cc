@@ -471,6 +471,7 @@ void FileEdit::UpdateTextControl() {
 }
 
 void FileEdit::UpdateFilename() {
+  UpdateStatusText();
   if (filename_.IsEmpty() == false) {
     size_t index = notebook_->GetPageIndex(this);
     notebook_->SetPageToolTip(index, filename_);
@@ -724,8 +725,10 @@ void FileEdit::OnUpdateUi(wxStyledTextEvent& event)
   const int type = event.GetUpdated();
 
   if (type & wxSTC_UPDATE_SELECTION) {
+    // todo: move to a better place, custom event?
     HighlightCurrentWord();
     UpdateBraceMatching();
+    UpdateStatusText();
   }
 }
 
@@ -733,4 +736,14 @@ void FileEdit::OnChanged(wxStyledTextEvent& event) {
   UpdateTitle();
   HighlightCurrentWord();
   UpdateBraceMatching();
+}
+
+void FileEdit::UpdateStatusText() {
+  main_->SetStatusText(filename_, STATUSBAR_GENERAL); // change to only display the last 127 characters?
+  const auto line = text_->GetCurrentLine();
+  const auto cp = text_->GetCurrentPos();
+  main_->SetStatusText(wxString::Format("Ln %d", line+1), STATUSBAR_LINE);
+  main_->SetStatusText(text_->GetOvertype() ? "OVR" : "INS", STATUSBAR_INS);
+  main_->SetStatusText(wxString::Format("Col %d", text_->GetColumn(cp)), STATUSBAR_COL);
+  main_->SetStatusText(wxString::Format("Ch %d", cp - text_->PositionFromLine(line)), STATUSBAR_CH);
 }

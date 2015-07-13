@@ -29,6 +29,15 @@ struct FoundEdit {
 
 void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer);
 
+enum StatusBarWidgets {
+  STATUSBAR_GENERAL,
+  STATUSBAR_LINE,
+  STATUSBAR_COL,
+  STATUSBAR_CH,
+  STATUSBAR_INS,
+  STATUSBAR_MAXCOUNT
+};
+
 class MainWindow: public wxFrame
 {
 public:
@@ -37,6 +46,8 @@ public:
 
   const ride::Settings& settings() const;
   void set_settings(const ride::Settings& settings);
+
+  void SetStatusText(const wxString& text, StatusBarWidgets widget);
 
   void OpenCompilerMessage(const CompilerMessage& message);
   void FileHasBeenRenamed(const wxString& old_path, const wxString& new_path);
@@ -138,6 +149,9 @@ private:
   FileEdit* GetSelectedEditorNull();
   FileEdit* AddAllCompilerMessages(FileEdit* file_edit);
 
+  void UpdateMenuItemView();
+
+  private:
   wxAuiManager aui_;
   wxAuiNotebook* notebook_;
   OutputDirector build_output_;
@@ -157,8 +171,7 @@ private:
   wxMenuItem* menuItemViewCompile_;
 
   wxWindow* last_focus_;
-
-  void UpdateMenuItemView();
+  wxStatusBar* statusbar_;
 };
 
 #endif  // RIDE_MAINWINDOW_H
