@@ -74,6 +74,7 @@ public:
   void OnCharAdded(wxStyledTextEvent& event);
   void OnUpdateUi(wxStyledTextEvent& event);
   void OnChanged(wxStyledTextEvent& event);
+  void OnSelectionUpdated(wxCommandEvent& event);
 
   ~FileEdit();
 private:

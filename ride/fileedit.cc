@@ -24,6 +24,8 @@
 #include "ride/autocomplete.h"
 #include "ride/compileutils.h"
 
+wxDEFINE_EVENT(EVENT_UPDATE_SELECTION, wxCommandEvent);
+
 void FileEdit::Undo() {
   if (!text_->CanUndo()) return;
   text_->Undo();
@@ -530,6 +532,7 @@ wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
   EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnCharAdded)
   EVT_STC_UPDATEUI(wxID_ANY, FileEdit::OnUpdateUi)
   EVT_STC_CHANGE(wxID_ANY, FileEdit::OnChanged)
+  EVT_COMMAND(wxID_ANY, EVENT_UPDATE_SELECTION, FileEdit::OnSelectionUpdated)
 wxEND_EVENT_TABLE()
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
@@ -725,11 +728,15 @@ void FileEdit::OnUpdateUi(wxStyledTextEvent& event)
   const int type = event.GetUpdated();
 
   if (type & wxSTC_UPDATE_SELECTION) {
-    // todo: move to a better place, custom event?
-    HighlightCurrentWord();
-    UpdateBraceMatching();
-    UpdateStatusText();
+    wxCommandEvent event(EVENT_UPDATE_SELECTION);
+    wxPostEvent(this, event);
   }
+}
+
+void FileEdit::OnSelectionUpdated(wxCommandEvent& event) {
+  HighlightCurrentWord();
+  UpdateBraceMatching();
+  UpdateStatusText();
 }
 
 void FileEdit::OnChanged(wxStyledTextEvent& event) {
