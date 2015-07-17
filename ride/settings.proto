@@ -397,3 +397,10 @@ message FindDlg {
 message DialogData {
 	optional FindDlg find_dlg = 1;
 }
+
+/* ******************************************************************************************* */
+
+message Project {
+  optional int32 tabWidth = 1 [default=4];
+  optional bool useTabs = 2 [default=false];
+}

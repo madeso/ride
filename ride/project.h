@@ -9,9 +9,19 @@ class MainWindow;
 class Project : public MultiRunner {
 public:
   Project(MainWindow* output, const wxString& root_folder);
+  ~Project();
   const wxString& root_folder() const;
 
+  bool Save();
+
+  int tabwidth() const;
+  bool usetabs() const;
+
+  void set_tabwidth(int tabwidth);
+  void set_usetabs(bool usetabs);
+
   const wxString GetCargoFile() const;
+  const wxString GetProjectFile() const;
 
   bool IsPartOfProject(const wxString& filename);
 
@@ -35,6 +45,9 @@ private:
 private:
   MainWindow* main_;
   wxString root_folder_;
+
+  int tabwidth_;
+  bool usetabs_;
 };
 
 

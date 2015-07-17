@@ -6,17 +6,60 @@
 #include "ride/wxutils.h"
 
 #include "ride/mainwindow.h"
+#include "settings.pb.h"
+#include "ride/proto.h"
 
 Project::Project(MainWindow* output, const wxString& root_folder) : main_(output), root_folder_(root_folder) {
+  set_tabwidth(output->settings().tabwidth());
+  set_usetabs(output->settings().usetabs());
+  if (root_folder_.IsEmpty() == false) {
+    ride::Project project;
+    if (LoadProto(&project, GetProjectFile())) {
+      set_tabwidth(project.tabwidth());
+      set_usetabs(project.usetabs());
+    }
+  }
+}
+
+Project::~Project() {
+  Save();
 }
 
 const wxString& Project::root_folder() const {
   return root_folder_;
 }
 
+bool Project::Save() {
+  if (root_folder_.IsEmpty() ) return false;
+  ride::Project project;
+  project.set_tabwidth(tabwidth());
+  project.set_usetabs(usetabs());
+  return SaveProto(&project, GetProjectFile());
+}
+
+int Project::tabwidth() const {
+  return tabwidth_;
+}
+bool Project::usetabs() const {
+  return usetabs_;
+}
+
+void Project::set_tabwidth(int tabwidth) {
+  tabwidth_ = tabwidth;
+}
+void Project::set_usetabs(bool usetabs) {
+  usetabs_ = usetabs;
+}
+
 const wxString Project::GetCargoFile() const {
   if (root_folder_.IsEmpty()) return "";
   wxFileName cargo(root_folder_, "cargo.toml");
+  return cargo.GetFullPath();
+}
+
+const wxString Project::GetProjectFile() const {
+  if (root_folder_.IsEmpty()) return "";
+  wxFileName cargo(root_folder_, "project.ride");
   return cargo.GetFullPath();
 }
 
@@ -31,6 +74,7 @@ void Project::Settings() {
 
 void Project::SaveAllFiles() {
   main_->SaveAllChangedProjectFiles();
+  Save();
 }
 
 void Project::Build(bool origin_main) {

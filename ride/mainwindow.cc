@@ -515,6 +515,13 @@ const ride::Settings& MainWindow::settings() const {
 
 MainWindow::~MainWindow() {
   aui_.UnInit();
+
+  // release the currently loaded project, allowing it to save proto files
+  // before we kill the proto library below
+  project_.reset();
+
+  // shutdown protobuf now, to avoid spewing out memory leaks...
+  google::protobuf::ShutdownProtobufLibrary();
 }
 
 void MainWindow::ReloadFilesIfNeeded() {
@@ -662,8 +669,6 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
 
   SaveSession();
 
-  // shutdown protobuf now, to avoid spewing out memory leaks...
-  google::protobuf::ShutdownProtobufLibrary();
   evt.Skip();
 }
 
