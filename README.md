@@ -12,6 +12,7 @@ The current features are:
 	- Double clicking on warnings/errors to go to them.
 	- Context clicking on warnings/errors to google them.
 * A basic project/cargo (file) explorer
+* Space/tab settings are saved per project so the same settings are used by everyone on the project
 
 The project aim is to implement as much of it in C++ and then port it to rust when rust is released.
 
@@ -22,7 +23,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 # Features needed for a useful state
 
 * Project file so we can open project with File->Open
-* Have space/tab settings per project so the same settings are used by everyone on the project
 * Implement all missing event handlers.
 * Close project
 * Stop build
