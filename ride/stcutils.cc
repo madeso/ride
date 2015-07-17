@@ -4,6 +4,7 @@
 #include <wx/stc/stc.h>
 #include "ride/language.h"
 #include "settings.pb.h"
+#include "project.h"
 
 enum {
   FOLDING_WIDTH = 16
@@ -253,7 +254,7 @@ void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set) {
   text_ctrl->SetMarginWidth(ID_MARGIN_LINENUMBER, set.linenumberenable() ? line_margin_width_ : 0);
 }
 
-void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language) {
+void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language, Project* project) {
   const ride::FontsAndColors& cols = set.fonts_and_colors();
   // initialize styles
   text_ctrl->StyleClearAll();
@@ -297,8 +298,8 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Lang
 #undef FRONT_AND_BACK
 
   // set spaces and indention
-  text_ctrl->SetTabWidth(set.tabwidth());
-  text_ctrl->SetUseTabs(set.usetabs());
+  text_ctrl->SetTabWidth(project ? project->tabwidth(): set.tabwidth());
+  text_ctrl->SetUseTabs(project ? project->usetabs() : set.usetabs());
   text_ctrl->SetTabIndents(set.tabindents());
   text_ctrl->SetBackSpaceUnIndents(set.backspaceunindents());
   text_ctrl->SetIndent(set.tabwidth());

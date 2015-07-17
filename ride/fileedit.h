@@ -8,6 +8,7 @@ class wxAuiNotebook;
 class MainWindow;
 class CompilerMessage;
 class Language;
+class Project;
 
 namespace ride {
   class Settings;

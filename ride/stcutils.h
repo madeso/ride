@@ -5,6 +5,7 @@
 #include <wx/stc/stc.h>
 
 class Language;
+class Project;
 
 namespace ride {
   class Settings;
@@ -31,7 +32,7 @@ enum
   ID_INDICATOR_SELECT_HIGHLIGHT
 };
 
-void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language);
+void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language, Project* project);
 void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
 void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
 void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);

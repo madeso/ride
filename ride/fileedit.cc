@@ -23,6 +23,7 @@
 #include "ride/stcutils.h"
 #include "ride/autocomplete.h"
 #include "ride/compileutils.h"
+#include "ride/project.h"
 
 wxDEFINE_EVENT(EVENT_UPDATE_SELECTION, wxCommandEvent);
 
@@ -468,7 +469,10 @@ void FileEdit::ShowAutocomplete() {
 
 void FileEdit::UpdateTextControl() {
   const ride::Settings& set = main_->settings();
-  SetupScintilla(text_, set, current_language_);
+
+  Project* project = main_->project();
+
+  SetupScintilla(text_, set, current_language_, project->IsPartOfProject(filename_) ? project : NULL);
   SetupScintillaAutoCompleteImages(text_);
 }
 

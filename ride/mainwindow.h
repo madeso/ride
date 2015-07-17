@@ -65,6 +65,8 @@ public:
   OutputDirector& build_output();
   OutputDirector& compiler_output();
 
+  Project* project();
+
 private:
   void OnActivated(wxActivateEvent& event);
 

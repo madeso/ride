@@ -655,6 +655,11 @@ OutputDirector& MainWindow::compiler_output() {
   return compiler_output_;
 }
 
+Project* MainWindow::project() {
+  assert(project_.get());
+  return project_.get();
+}
+
 void MainWindow::OnClose(wxCloseEvent& evt) {
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
     FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
