@@ -88,11 +88,10 @@ bool Project::IsPartOfProject(const wxString& filename) {
 }
 
 void Project::Settings() {
+  // todo: implement me
 }
 
 void Project::SelectActiveBuild() {
-  // todo: implement me
-
   std::vector<wxString> names;
   names.reserve(project_.build_settings_size());
   for (const ride::BuildSetting& setting : project_.build_settings()) {
