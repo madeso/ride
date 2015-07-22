@@ -231,6 +231,7 @@ const int AUI_OPTIONS = 0
 ;
 
 void MainWindow::SetStatusText(const wxString& text, StatusBarWidgets widget) {
+  assert(statusbar_);
   statusbar_->SetStatusText(text, widget);
 }
 
@@ -238,11 +239,11 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
 , aui_(NULL, AUI_OPTIONS)
 , findres_window_(NULL)
-, project_( new Project(this, wxEmptyString) )
 , app_name_(app_name)
 , last_focus_(NULL)
 , statusbar_(NULL)
 {
+  project_.reset(new Project(this, wxEmptyString));
 #ifdef _WIN32
   SetIcon(wxICON(aaaaa_logo));
 #else
@@ -356,6 +357,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   const int small_width = 50;
   int widths[STATUSBAR_MAXCOUNT] = { 0, };
   widths[STATUSBAR_GENERAL] = -1;
+  widths[STATUSBAR_PROJECT_CONF] = small_width*2;
   widths[STATUSBAR_LINE] = small_width;
   widths[STATUSBAR_COL] = small_width;
   widths[STATUSBAR_CH] = small_width;
@@ -385,6 +387,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 
   RestoreSession();
   UpdateMenuItemView();
+
+  project_->SetMainStatusbarText();
 }
 
 void MainWindow::OnViewRestoreWindows(wxCommandEvent& event){
@@ -835,6 +839,7 @@ bool MainWindow::OpenProject(const wxString full_path) {
   project_.reset(new Project(this, project_folder));
   project_explorer_->SetFolder(project_folder);
   UpdateTitle();
+  project_->SetMainStatusbarText();
   return true;
 }
 

@@ -29,6 +29,7 @@ public:
 
   void Settings();
   void SelectActiveBuild();
+  void SetMainStatusbarText();
 
   void Build   (bool origin_main=true);
   void Clean   (bool origin_main=true);

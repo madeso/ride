@@ -32,7 +32,6 @@ Project::Project(MainWindow* output, const wxString& root_folder) : main_(output
     // validate project file
     GetCurrentBuildSetting();
   }
-
 }
 
 Project::~Project() {
@@ -105,6 +104,7 @@ void Project::SelectActiveBuild() {
   if (dialog_result != wxID_OK) return;
   user_.set_build_setting(dlg.GetSelection());
   SaveUser();
+  SetMainStatusbarText();
 }
 
 void Project::SaveAllFiles() {
@@ -215,14 +215,24 @@ bool Project::SaveUser() {
 }
 
 int Project::GetSelectedBuildIndex() {
+  if (project_.build_settings_size() <= 0) return -1;
+
   if (user_.build_setting() < 0 || user_.build_setting() >= project_.build_settings_size()) {
     user_.set_build_setting(0);
     SaveUser();
+    SetMainStatusbarText();
   }
 
   return user_.build_setting();
 }
 
 const ride::BuildSetting& Project::GetCurrentBuildSetting() {
-  return project_.build_settings(GetSelectedBuildIndex());
+  int index = GetSelectedBuildIndex();
+  if (index == -1) return ride::BuildSetting::default_instance();
+  else return project_.build_settings(index);
+}
+
+void Project::SetMainStatusbarText() {
+  main_->SetStatusText(wxString::Format("%s / Run", GetCurrentBuildSetting().name())
+    , STATUSBAR_PROJECT_CONF);
 }
