@@ -428,10 +428,11 @@ message RunSetting {
 	optional string arguments = 3;
 	optional string folder = 4;
 	optional string cmd_before_launch = 5;
-	optional bool attach_to_application  = 6;
-}
-
-message UserProject {
-	repeated RunSetting run = 1;
+	optional bool attach_to_application = 6;
 }
 */
+
+message UserProject {
+	optional int32 build_setting = 1 [default=-1];
+	/* repeated RunSetting run = 3; */
+}

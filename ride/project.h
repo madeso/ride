@@ -23,6 +23,7 @@ public:
 
   const wxString GetCargoFile() const;
   const wxString GetProjectFile() const;
+  const wxString GetUserFile() const;
 
   bool IsPartOfProject(const wxString& filename);
 
@@ -43,11 +44,16 @@ private:
   void CleanOutput();
   void RunCmd(const wxString& cmd);
 
+  bool SaveUser();
+  int GetSelectedBuildIndex();
+  const ride::BuildSetting& GetCurrentBuildSetting();
+
 private:
   MainWindow* main_;
   wxString root_folder_;
 
   ride::Project project_;
+  ride::UserProject user_;
 };
 
 
