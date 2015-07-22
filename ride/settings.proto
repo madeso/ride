@@ -400,7 +400,38 @@ message DialogData {
 
 /* ******************************************************************************************* */
 
+message BuildSetting {
+	optional string name = 1;
+	optional bool release = 2;
+	repeated string features = 3;
+	optional bool no_default_features = 4;
+	optional string target = 5;
+	optional bool verbose = 6;
+
+	optional string custom_arguments = 100;
+}
+
 message Project {
   optional int32 tabWidth = 1 [default=4];
   optional bool useTabs = 2 [default=false];
+
+  repeated BuildSetting build_settings = 3;
 }
+
+/* ******************************************************************************************* */
+
+/*
+message RunSetting {
+	optional string name = 1;
+
+	optional string application = 2;
+	optional string arguments = 3;
+	optional string folder = 4;
+	optional string cmd_before_launch = 5;
+	optional bool attach_to_application  = 6;
+}
+
+message UserProject {
+	repeated RunSetting run = 1;
+}
+*/
