@@ -13,6 +13,16 @@ Project::Project(MainWindow* output, const wxString& root_folder) : main_(output
   if (root_folder_.IsEmpty() == false) {
     if (LoadProto(&project_, GetProjectFile()) == false) {
     }
+    if (project_.build_settings_size() == 0) {
+      // add default build settings to the project
+      ride::BuildSetting* debug = project_.add_build_settings();
+      debug->set_name("Debug");
+      debug->set_release(false);
+
+      ride::BuildSetting* release = project_.add_build_settings();
+      release->set_name("Release");
+      release->set_release(true);
+    }
   }
 
 }
