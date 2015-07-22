@@ -3,6 +3,7 @@
 
 #include "ride/wx.h"
 #include "ride/runner.h"
+#include "settings.pb.h"
 
 class MainWindow;
 
@@ -46,8 +47,7 @@ private:
   MainWindow* main_;
   wxString root_folder_;
 
-  int tabwidth_;
-  bool usetabs_;
+  ride::Project project_;
 };
 
 

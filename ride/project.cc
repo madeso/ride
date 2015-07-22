@@ -10,15 +10,11 @@
 #include "ride/proto.h"
 
 Project::Project(MainWindow* output, const wxString& root_folder) : main_(output), root_folder_(root_folder) {
-  set_tabwidth(output->settings().tabwidth());
-  set_usetabs(output->settings().usetabs());
   if (root_folder_.IsEmpty() == false) {
-    ride::Project project;
-    if (LoadProto(&project, GetProjectFile())) {
-      set_tabwidth(project.tabwidth());
-      set_usetabs(project.usetabs());
+    if (LoadProto(&project_, GetProjectFile()) == false) {
     }
   }
+
 }
 
 Project::~Project() {
@@ -38,17 +34,17 @@ bool Project::Save() {
 }
 
 int Project::tabwidth() const {
-  return tabwidth_;
+  return project_.tabwidth();
 }
 bool Project::usetabs() const {
-  return usetabs_;
+  return project_.usetabs();
 }
 
 void Project::set_tabwidth(int tabwidth) {
-  tabwidth_ = tabwidth;
+  project_.set_tabwidth(tabwidth);
 }
 void Project::set_usetabs(bool usetabs) {
-  usetabs_ = usetabs;
+  project_.set_usetabs(usetabs);
 }
 
 const wxString Project::GetCargoFile() const {
