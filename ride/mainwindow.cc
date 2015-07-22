@@ -357,7 +357,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   const int small_width = 50;
   int widths[STATUSBAR_MAXCOUNT] = { 0, };
   widths[STATUSBAR_GENERAL] = -1;
-  widths[STATUSBAR_PROJECT_CONF] = small_width*2;
+  widths[STATUSBAR_BUILD_CONF] = small_width;
+  widths[STATUSBAR_RUN_CONF] = small_width;
   widths[STATUSBAR_LINE] = small_width;
   widths[STATUSBAR_COL] = small_width;
   widths[STATUSBAR_CH] = small_width;

@@ -233,6 +233,6 @@ const ride::BuildSetting& Project::GetCurrentBuildSetting() {
 }
 
 void Project::SetMainStatusbarText() {
-  main_->SetStatusText(wxString::Format("%s / Run", GetCurrentBuildSetting().name())
-    , STATUSBAR_PROJECT_CONF);
+  main_->SetStatusText(GetCurrentBuildSetting().name(), STATUSBAR_BUILD_CONF);
+  main_->SetStatusText("Run", STATUSBAR_RUN_CONF);
 }

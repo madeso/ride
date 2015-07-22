@@ -31,7 +31,8 @@ void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplor
 
 enum StatusBarWidgets {
   STATUSBAR_GENERAL,
-  STATUSBAR_PROJECT_CONF,
+  STATUSBAR_BUILD_CONF,
+  STATUSBAR_RUN_CONF,
   STATUSBAR_LINE,
   STATUSBAR_COL,
   STATUSBAR_CH,
