@@ -28,6 +28,8 @@ public:
   bool IsPartOfProject(const wxString& filename);
 
   void Settings();
+  void SelectActiveBuild();
+
   void Build   (bool origin_main=true);
   void Clean   (bool origin_main=true);
   void Rebuild (bool origin_main=true);

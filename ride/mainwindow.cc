@@ -59,6 +59,7 @@ enum
   ID_PROJECT_OPEN,
   ID_PROJECT_SETTINGS,
   ID_PROJECT_BUILD,
+  ID_PROJECT_SELECT_ACTIVE_BUILD,
   ID_PROJECT_CLEAN,
   ID_PROJECT_REBUILD,
   ID_PROJECT_DOC,
@@ -112,21 +113,22 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_EDIT_SHOW_PROPERTIES, MainWindow::OnEditShowProperties)
   EVT_MENU(ID_EDIT_SHOW_AUTOCOMPLETE, MainWindow::OnEditShowAutocomplete)
   
-  EVT_MENU(ID_PROJECT_NEW         , MainWindow::OnProjectNew      )
-  EVT_MENU(ID_PROJECT_OPEN        , MainWindow::OnProjectOpen     )
-  EVT_MENU(ID_PROJECT_SETTINGS    , MainWindow::OnProjectSettings )
-  EVT_MENU(ID_PROJECT_BUILD       , MainWindow::OnProjectBuild    )
-  EVT_MENU(ID_PROJECT_CLEAN       , MainWindow::OnProjectClean    )
-  EVT_MENU(ID_PROJECT_REBUILD     , MainWindow::OnProjectRebuild  )
-  EVT_MENU(ID_PROJECT_DOC         , MainWindow::OnProjectDoc      )
-  EVT_MENU(ID_PROJECT_RUN         , MainWindow::OnProjectRun      )
-  EVT_MENU(ID_PROJECT_TEST        , MainWindow::OnProjectTest     )
-  EVT_MENU(ID_PROJECT_BENCH       , MainWindow::OnProjectBench    )
-  EVT_MENU(ID_PROJECT_UPDATE      , MainWindow::OnProjectUpdate   )
-  EVT_MENU(wxID_NEW               , MainWindow::OnProjectFileNew  )
-  EVT_MENU(ID_QUICK_OPEN          , MainWindow::OnProjectQuickOpen)
-  EVT_MENU(ID_FIND_IN_FILES       , MainWindow::OnProjectFindInFiles)
-  EVT_MENU(ID_REPLACE_IN_FILES    , MainWindow::OnProjectReplaceInFiles)
+  EVT_MENU(ID_PROJECT_NEW                , MainWindow::OnProjectNew              )
+  EVT_MENU(ID_PROJECT_OPEN               , MainWindow::OnProjectOpen             )
+  EVT_MENU(ID_PROJECT_SETTINGS           , MainWindow::OnProjectSettings         )
+  EVT_MENU(ID_PROJECT_BUILD              , MainWindow::OnProjectBuild            )
+  EVT_MENU(ID_PROJECT_SELECT_ACTIVE_BUILD, MainWindow::OnProjectSelectActiveBuild)
+  EVT_MENU(ID_PROJECT_CLEAN              , MainWindow::OnProjectClean            )
+  EVT_MENU(ID_PROJECT_REBUILD            , MainWindow::OnProjectRebuild          )
+  EVT_MENU(ID_PROJECT_DOC                , MainWindow::OnProjectDoc              )
+  EVT_MENU(ID_PROJECT_RUN                , MainWindow::OnProjectRun              )
+  EVT_MENU(ID_PROJECT_TEST               , MainWindow::OnProjectTest             )
+  EVT_MENU(ID_PROJECT_BENCH              , MainWindow::OnProjectBench            )
+  EVT_MENU(ID_PROJECT_UPDATE             , MainWindow::OnProjectUpdate           )
+  EVT_MENU(wxID_NEW                      , MainWindow::OnProjectFileNew          )
+  EVT_MENU(ID_QUICK_OPEN                 , MainWindow::OnProjectQuickOpen        )
+  EVT_MENU(ID_FIND_IN_FILES              , MainWindow::OnProjectFindInFiles      )
+  EVT_MENU(ID_REPLACE_IN_FILES           , MainWindow::OnProjectReplaceInFiles   )
   
   EVT_MENU(ID_VIEW_RESTORE_WINDOWS,MainWindow::OnViewRestoreWindows )
   EVT_MENU(ID_VIEW_SAVE_LAYOUT,    MainWindow::OnViewSaveLayout )
@@ -306,8 +308,9 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   AddMenuItem(menu_project, ID_PROJECT_SETTINGS, "Project settings...", "Change the ride project settings", project_settings_xpm);
   menu_project->AppendSeparator();
   AddMenuItem(menu_project, ID_PROJECT_BUILD, "Build\tCtrl-B", "Compile the current project", project_build_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_SELECT_ACTIVE_BUILD, "Select active build...\tCtrl-Shift-B", "Select to build debug, release etc");
   AddMenuItem(menu_project, ID_PROJECT_CLEAN, "Clean", "Remove the target directory", project_clean_xpm);
-  AddMenuItem(menu_project, ID_PROJECT_REBUILD, "Rebuild\tCtrl-Shift-B", "Clean + Build", project_rebuild_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_REBUILD, "Rebuild", "Clean + Build", project_rebuild_xpm);
   AddMenuItem(menu_project, ID_PROJECT_DOC, "Doc", "Build this project's and its dependencies' documentation", project_doc_xpm);
   AddMenuItem(menu_project, ID_PROJECT_RUN, "Run\tF5", "Build and execute src/main.rs", project_run_xpm);
   AddMenuItem(menu_project, ID_PROJECT_TEST, "Test", "Run the tests", project_test_xpm);
@@ -863,14 +866,15 @@ void MainWindow::OnProjectQuickOpen(wxCommandEvent& event) {
   }
 
 MEM_FUN(Settings)
-MEM_FUN(Build   )
-MEM_FUN(Clean   )
-MEM_FUN(Rebuild )
-MEM_FUN(Doc     )
-MEM_FUN(Run     )
-MEM_FUN(Test    )
-MEM_FUN(Bench   )
-MEM_FUN(Update  )
+MEM_FUN(Build            )
+MEM_FUN(SelectActiveBuild)
+MEM_FUN(Clean            )
+MEM_FUN(Rebuild          )
+MEM_FUN(Doc              )
+MEM_FUN(Run              )
+MEM_FUN(Test             )
+MEM_FUN(Bench            )
+MEM_FUN(Update           )
 #undef MEM_FUN
 
 ride::WindowState GetState(wxFrame* main) {

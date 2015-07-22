@@ -88,6 +88,9 @@ bool Project::IsPartOfProject(const wxString& filename) {
 }
 
 void Project::Settings() {
+}
+
+void Project::SelectActiveBuild() {
   // todo: implement me
 
   std::vector<wxString> names;
