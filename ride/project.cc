@@ -37,10 +37,7 @@ const wxString& Project::root_folder() const {
 
 bool Project::Save() {
   if (root_folder_.IsEmpty() ) return false;
-  ride::Project project;
-  project.set_tabwidth(tabwidth());
-  project.set_usetabs(usetabs());
-  return SaveProto(&project, GetProjectFile());
+  return SaveProto(&project_, GetProjectFile());
 }
 
 int Project::tabwidth() const {
