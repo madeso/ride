@@ -5,14 +5,28 @@ compiler:
 
 before_install:
   - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-  - sudo add-apt-repository -y ppa:wxformbuilder/wxwidgets
   - sudo add-apt-repository -y ppa:chris-lea/protobuf
   - sudo apt-get update -qq
-  - sudo apt-get install -qq --assume-yes graphviz doxygen libwxgtk3.0-dev libprotobuf-dev protobuf-compiler
+  - sudo apt-get install -qq --assume-yes graphviz doxygen libgtk2.0-dev libprotobuf-dev protobuf-compiler
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
 
 before_script:
+  - pwd
+  - mkdir wx3
+  - cd wx3
+  - wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz
+  - tar -zcvf wx.tar.gz .
+  - ls
+  - mkdir gtk-build
+  - cd gtk-build
+  - ../configure --help
+  - ../configure --with-opengl
+  - make
+  - sudo make install
+  - wx-config --version
+  - cd $TRAVIS_BUILD_DIR
+  - pwd
   - mkdir build
   - cd build
   - cmake -DBUILD_USE_CLANG_FORMAT=OFF -DBUILD_USE_CPPLINT=OFF -DBUILD_USE_DOXYGEN=OFF -DBUILD_USE_DOXYGEN_GLOBAL=OFF -DBUILD_USE_CPPCHECK=OFF -DUSE_WXWIDGETS_LEGACY_FINDTEXT=ON -DUSE_CPP_AS_RUST=ON ..
