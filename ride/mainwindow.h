@@ -121,6 +121,7 @@ private:
   void OnViewRestoreWindows(wxCommandEvent& event);
   void OnViewSaveLayout(wxCommandEvent& event);
   void OnViewLoadLayout(wxCommandEvent& event);
+  void OnViewShowStart(wxCommandEvent& event);
   void OnViewShowFindResult(wxCommandEvent& event);
   void OnViewShowBuild(wxCommandEvent& event);
   void OnViewShowCompile(wxCommandEvent& event);

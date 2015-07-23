@@ -25,6 +25,8 @@
 #include "ride/outputcontrol.h"
 #include "ride/findcontrol.h"
 
+#include <wx/webview.h>
+
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
 template<typename T>
@@ -75,6 +77,7 @@ enum
   ID_VIEW_SAVE_LAYOUT,
   ID_VIEW_LOAD_LAYOUT,
   ID_VIEW_SHOW_FINDRESULT,
+  ID_VIEW_SHOW_START,
   ID_VIEW_SHOW_PROJECT,
   ID_VIEW_SHOW_BUILD,
   ID_VIEW_SHOW_COMPILE,
@@ -134,6 +137,7 @@ wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
   EVT_MENU(ID_VIEW_SAVE_LAYOUT,    MainWindow::OnViewSaveLayout )
   EVT_MENU(ID_VIEW_LOAD_LAYOUT,    MainWindow::OnViewLoadLayout )
   EVT_MENU(ID_VIEW_SHOW_FINDRESULT,     MainWindow::OnViewShowFindResult )
+  EVT_MENU(ID_VIEW_SHOW_START, MainWindow::OnViewShowStart)
   EVT_MENU(ID_VIEW_SHOW_BUILD , MainWindow::OnViewShowBuild)
   EVT_MENU(ID_VIEW_SHOW_COMPILE, MainWindow::OnViewShowCompile)
   EVT_MENU(ID_VIEW_SHOW_PROJECT , MainWindow::OnViewShowProject)
@@ -235,6 +239,12 @@ void MainWindow::SetStatusText(const wxString& text, StatusBarWidgets widget) {
   statusbar_->SetStatusText(text, widget);
 }
 
+void CreateStartPage(MainWindow* parent, wxAuiNotebook* notebook) {
+  // replace with wxWebView.
+  wxWebView* ctrl = wxWebView::New(parent, wxID_ANY, "http://rust-ide.tumblr.com/", wxDefaultPosition, wxSize(400, 300));
+  notebook->AddPage(ctrl, wxT("Start"), true);
+}
+
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
 , aui_(NULL, AUI_OPTIONS)
@@ -333,6 +343,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 
   // shortcuts stolen from qt creator: https://wiki.qt.io/Qt_Creator_Keyboard_Shortcuts
   menuItemViewProject_ = AddMenuItem(menu_view, ID_VIEW_SHOW_PROJECT, "&Project pane\tAlt-0", "").Checkable();
+  AddMenuItem(menu_view, ID_VIEW_SHOW_START, "&Start page", "");
   // build issues
   menuItemViewFind_ = AddMenuItem(menu_view, ID_VIEW_SHOW_FINDRESULT, "Find &result pane\tAlt-2", "").Checkable();
   // app output
@@ -380,6 +391,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   // project explorer
   project_explorer_ = new ProjectExplorer(this);
   aui_.AddPane(project_explorer_, wxAuiPaneInfo().Name(PANE_PROJECT).Caption("Project").Left().CloseButton(true));
+
+  CreateStartPage(this, notebook_);
 
   aui_.Update();
   UpdateTitle();
@@ -454,6 +467,11 @@ void MainWindow::ShowBuildWindow() {
 void MainWindow::ShowCompileWindow() {
   ShowPane(&aui_, PANE_COMPILE);
   aui_.Update();
+}
+
+void MainWindow::OnViewShowStart(wxCommandEvent& event){
+  // TODO
+  wxMessageBox("IMPLEMENT ME");
 }
 
 void MainWindow::OnViewShowFindResult(wxCommandEvent& event){

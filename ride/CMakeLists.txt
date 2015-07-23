@@ -7,7 +7,9 @@ else(${MSVC})
 	SET(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 endif(${MSVC})
 
-find_package(wxWidgets COMPONENTS core aui base stc adv scintilla REQUIRED)
+# html propgrid xml xrc net webview
+
+find_package(wxWidgets COMPONENTS core webview aui base stc adv scintilla REQUIRED)
 include( "${wxWidgets_USE_FILE}" )
 message(STATUS "wxWidgets use file: ${wxWidgets_USE_FILE}")
 
