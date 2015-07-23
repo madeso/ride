@@ -18,8 +18,10 @@ before_script:
   - wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz
   - tar -xvzf wx.tar.gz
   - ls
+  - cd wxWidgets-WX_3_0_2
   - mkdir gtk-build
   - cd gtk-build
+  - pwd
   - ../configure --help
   - ../configure --with-opengl
   - make
