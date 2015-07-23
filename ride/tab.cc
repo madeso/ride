@@ -1,9 +1,14 @@
 #include "ride/tab.h"
 
-#include "ride/fileedit.h"
+#include "ride/wx.h"
+#include <cassert>
 
-Tab::Tab(FileEdit* edit) : edit_(edit) {
-  assert(edit_);
+Tab::Tab(FileEdit* edit) : edit_(edit), start_(NULL) {
+  assert(edit);
+}
+
+Tab::Tab(StartPageTab* start) : edit_(NULL), start_(start) {
+  assert(start);
 }
 
 Tab::~Tab() {
@@ -11,6 +16,10 @@ Tab::~Tab() {
 
 FileEdit* Tab::ToFileEdit() {
   assert(this);
-  assert(edit_);
   return edit_;
+}
+
+StartPageTab* Tab::ToStartPage() {
+  assert(this);
+  return start_;
 }

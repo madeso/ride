@@ -25,8 +25,8 @@
 #include "ride/outputcontrol.h"
 #include "ride/findcontrol.h"
 
-#include <wx/webview.h>
 #include "ride/tab.h"
+#include "ride/startpage.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -241,12 +241,6 @@ void MainWindow::SetStatusText(const wxString& text, StatusBarWidgets widget) {
   statusbar_->SetStatusText(text, widget);
 }
 
-void CreateStartPage(MainWindow* parent, wxAuiNotebook* notebook) {
-  // replace with wxWebView.
-  wxWebView* ctrl = wxWebView::New(parent, wxID_ANY, "http://rust-ide.tumblr.com/", wxDefaultPosition, wxSize(400, 300));
-  notebook->AddPage(ctrl, wxT("Start"), true);
-}
-
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
 , aui_(NULL, AUI_OPTIONS)
@@ -394,7 +388,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   project_explorer_ = new ProjectExplorer(this);
   aui_.AddPane(project_explorer_, wxAuiPaneInfo().Name(PANE_PROJECT).Caption("Project").Left().CloseButton(true));
 
-  CreateStartPage(this, notebook_);
+  new StartPageTab(notebook_, this);
 
   aui_.Update();
   UpdateTitle();
