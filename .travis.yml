@@ -16,7 +16,7 @@ before_script:
   - mkdir wx3
   - cd wx3
   - wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz
-  - tar -xvzf wx.tar.gz
+  - tar -xzf wx.tar.gz
   - ls
   - cd wxWidgets-WX_3_0_2
   - mkdir gtk-build
