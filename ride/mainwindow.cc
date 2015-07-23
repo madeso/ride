@@ -26,18 +26,20 @@
 #include "ride/findcontrol.h"
 
 #include <wx/webview.h>
+#include "ride/tab.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
-template<typename T>
-T* NotebookFromIndexOrNull(wxAuiNotebook* notebook, int tab_index) {
+Tab* TabFromIndex(wxAuiNotebook* notebook, int tab_index) {
   wxWindow* window = notebook->GetPage(tab_index);
-  if (window->IsKindOf(CLASSINFO(T))) {
-    return reinterpret_cast<T*>(window);
-  }
-  else {
-    return NULL;
-  }
+  void* data = window->GetClientData();
+  assert(data);
+  return reinterpret_cast<Tab*>(data);
+}
+
+FileEdit* NotebookFromIndexOrNull(wxAuiNotebook* notebook, int tab_index) {
+  Tab* tab = TabFromIndex(notebook, tab_index);
+  return tab->ToFileEdit();
 }
 
 enum
@@ -526,13 +528,13 @@ void MainWindow::OpenCompilerMessage(const CompilerMessage& message) {
 
 void MainWindow::CreateNotebook() {
   wxSize client_size = GetClientSize();
-  
+
   notebook_ = new wxAuiNotebook(this, wxID_ANY,
     wxPoint(client_size.x, client_size.y),
     wxSize(430, 200),
     wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxNO_BORDER);
 
-  aui_.AddPane(notebook_, wxAuiPaneInfo().Name(wxT("notebook_content")).PaneBorder(false).CloseButton(false).Movable(false).CenterPane() );
+  aui_.AddPane(notebook_, wxAuiPaneInfo().Name(wxT("notebook_content")).PaneBorder(false).CloseButton(false).Movable(false).CenterPane());
 }
 
 const ride::Settings& MainWindow::settings() const {
@@ -552,7 +554,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::ReloadFilesIfNeeded() {
   for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
+    FileEdit* edit = NotebookFromIndexOrNull(notebook_, i);
     if (edit) {
       edit->ReloadFileIfNeeded();
     }
@@ -646,11 +648,11 @@ FileEdit* MainWindow::GetSelectedEditorNull() {
   if (selected_tab_index == -1) {
     return NULL;
   }
-  return NotebookFromIndexOrNull<FileEdit>(notebook_, selected_tab_index);
+  return NotebookFromIndexOrNull(notebook_, selected_tab_index);
 }
 
 void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
-  FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, evt.GetSelection());
+  FileEdit* edit = NotebookFromIndexOrNull(notebook_, evt.GetSelection());
   if (edit) {
     if (edit->CanClose(true) == false) {
       evt.Veto();
@@ -660,7 +662,7 @@ void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
 
 FoundEdit MainWindow::GetEditFromFileName(const wxString& file) {
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
+    FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
     if (edit) {
       if (edit->filename() == file) {
         return FoundEdit(tab_index, edit);
@@ -688,7 +690,7 @@ Project* MainWindow::project() {
 
 void MainWindow::OnClose(wxCloseEvent& evt) {
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
+    FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
     if (edit) {
       const bool canAbort = evt.CanVeto();
       if (edit->CanClose(canAbort) == false) {
@@ -712,7 +714,7 @@ void MainWindow::set_settings(const ride::Settings& settings) {
 
 void MainWindow::UpdateAllEdits() {
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
+    FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
     if (edit) {
       edit->UpdateTextControl();
     }
@@ -740,8 +742,8 @@ void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
 }
 
 void MainWindow::OnEditFind(wxCommandEvent& event) {
-  FileEdit* selected_edit = GetSelectedEditorNull(); 
-  if (selected_edit == NULL) return; 
+  FileEdit* selected_edit = GetSelectedEditorNull();
+  if (selected_edit == NULL) return;
   ShowFindWindow();
   selected_edit->Find(findres_window_, project_->root_folder());
 }
@@ -822,7 +824,7 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
   }
 
   // open project
-  if (false == OpenProject(dlg.GetTarget()) ) {
+  if (false == OpenProject(dlg.GetTarget())) {
     ShowError(this, "Unable to open cargo project", "Unable to open");
   }
 
@@ -864,7 +866,7 @@ bool MainWindow::OpenProject(const wxString full_path) {
 
 void MainWindow::SaveAllChangedProjectFiles() {
   for (unsigned int i = 0; i < notebook_->GetPageCount(); ++i) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, i);
+    FileEdit* edit = NotebookFromIndexOrNull(notebook_, i);
     if (edit) {
       if (project_->IsPartOfProject(edit->filename())) {
         edit->Save();
@@ -927,7 +929,7 @@ void MainWindow::SaveSession() {
   session.set_aui_perspective(perspective);
 
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
-    FileEdit* edit = NotebookFromIndexOrNull<FileEdit>(notebook_, tab_index);
+    FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
     if (edit) {
       int start_line = 0;
       int start_index = 0; 

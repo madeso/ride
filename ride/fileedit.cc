@@ -328,12 +328,14 @@ wxDateTime GetFileDetectionTime(const wxString file) {
 
 FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file)
   : wxControl(parent, wxID_ANY)
+  , tab_(this)
   , main_(parent)
   , notebook_(anotebook)
   , current_language_(NULL) 
   , highlight_current_word_last_start_position_(-1)
   , highlight_current_word_last_end_position_(-1)
 {
+  this->SetClientData(&tab_);
   assert(false == file.IsEmpty());
   text_ = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__
@@ -758,3 +760,4 @@ void FileEdit::UpdateStatusText() {
   main_->SetStatusText(wxString::Format("Col %d", text_->GetColumn(cp)), STATUSBAR_COL);
   main_->SetStatusText(wxString::Format("Ch %d", cp - text_->PositionFromLine(line)), STATUSBAR_CH);
 }
+

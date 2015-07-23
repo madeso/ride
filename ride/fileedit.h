@@ -2,6 +2,7 @@
 #define RIDE_FILEEDIT_H
 
 #include "ride/wx.h"
+#include "ride/tab.h"
 #include <wx/stc/stc.h>
 
 class wxAuiNotebook;
@@ -43,6 +44,7 @@ public:
   wxStyledTextCtrl* GetStc();
 
   void UpdateStatusText();
+
 public:
   bool Save();
   bool SaveAs();
@@ -92,6 +94,7 @@ private:
   void UpdateFileTime();
 
 private:
+  Tab tab_;
   MainWindow* main_;
   wxStyledTextCtrl* text_;
   wxAuiNotebook* notebook_;
