@@ -118,8 +118,38 @@ void Project::Build(bool origin_main) {
     SaveAllFiles();
   }
 
-  // todo: expand commandline with arguments
-  RunCmd("cargo build");
+  const ride::BuildSetting& build = GetCurrentBuildSetting();
+  wxString cmd = "cargo build";
+
+  if (build.release()) {
+    cmd += " --release";
+  }
+
+  if (build.features_size() > 0) {
+    cmd += " --features";
+    for (const std::string& f : build.features()) {
+      cmd += " " + f;
+    }
+  }
+
+  if (build.default_features() == false) {
+    cmd += " --no-default-features";
+  }
+
+  if (build.target().empty() == false) {
+    cmd += " --target " + build.target();
+  }
+
+  if (build.verbose()) {
+    cmd += " --verbose";
+  }
+
+  if (build.custom_arguments().empty() == false) {
+    cmd += " " + build.custom_arguments();
+  }
+
+  
+  RunCmd(cmd);
 }
 
 void Project::Clean(bool origin_main) {
