@@ -3,7 +3,14 @@
 #include <wx/uri.h>
 #include "ride/mainwindow.h"
 #include "ride/startpage.h"
+
+#define USE_WEBVIEW
+
+#ifdef USE_WEBVIEW
 #include <wx/webview.h>
+#else
+#include <wx/html/htmlwin.h>
+#endif
 
 StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
   : wxControl(parent, wxID_ANY)
@@ -13,7 +20,18 @@ StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
 {
   this->SetClientData(&tab_);
 
-  wxWebView* ctrl = wxWebView::New(parent, wxID_ANY, "http://rust-ide.tumblr.com/", wxDefaultPosition, wxSize(400, 300));
+#ifdef USE_WEBVIEW
+  wxWebView* ctrl = wxWebView::New(this, wxID_ANY, "http://rust-ide.tumblr.com/", wxDefaultPosition, wxSize(400, 300));
+#else
+  wxHtmlWindow* ctrl = new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition, wxSize(400, 300));
+  wxString html = 
+    "<html><body>"
+    "<h3>Welcome to RIDE</h3>"
+    "<br/><b>Overview</b><br/>"
+    "<p>RIDE is a Rust IDE.</p>"
+    "</body></html>";
+  ctrl->SetPage(html);
+#endif
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(ctrl, 1, wxEXPAND);
