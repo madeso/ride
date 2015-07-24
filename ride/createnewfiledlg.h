@@ -9,15 +9,15 @@ public:
 
   bool ShowModal();
 
-  const wxString GetFilePath() const;
-  const wxString GetTemplateSource() const;
+  const wxString file_path() const;
+  const wxString template_source() const;
 private:
   wxWindow* parent_;
   const wxString& project_folder_;
   const wxString& fodler_hint_;
 
-  wxString FilePath;
-  wxString TemplateSource;
+  wxString file_path_;
+  wxString template_source_;
 };
 
 #endif  // RIDE_CREATENEWFILEDLG_H

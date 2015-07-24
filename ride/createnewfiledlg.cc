@@ -42,18 +42,18 @@ bool CreateNewFileDlgHandler::ShowModal() {
   CreateNewFileDlg dlg(parent_, project_folder_, fodler_hint_);
   const bool ret = wxOK == dlg.ShowModal();
   if (ret) {
-    FilePath = dlg.GetFilePath();
-    TemplateSource = dlg.GetTemplateSource();
+    file_path_ = dlg.GetFilePath();
+    template_source_ = dlg.GetTemplateSource();
   }
   return ret;
 }
 
-const wxString CreateNewFileDlgHandler::GetFilePath() const {
-  return FilePath;
+const wxString CreateNewFileDlgHandler::file_path() const {
+  return file_path_;
 }
 
-const wxString CreateNewFileDlgHandler::GetTemplateSource() const {
-  return TemplateSource;
+const wxString CreateNewFileDlgHandler::template_source() const {
+  return template_source_;
 }
 
 //////////////////////////////////////////////////////////////////////////

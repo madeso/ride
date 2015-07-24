@@ -502,12 +502,12 @@ void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplor
   }
 
   {
-    wxFile file(dlg.GetFilePath(), wxFile::write);
-    file.Write(dlg.GetTemplateSource());
+    wxFile file(dlg.file_path(), wxFile::write);
+    file.Write(dlg.template_source());
     // file is written here
   }
   project_explorer->UpdateFolderStructure();
-  main->OpenFile(dlg.GetFilePath());
+  main->OpenFile(dlg.file_path());
 }
 
 
