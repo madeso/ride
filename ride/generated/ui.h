@@ -369,6 +369,37 @@ namespace ui
 		
 	};
 	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class ProjectSettings
+	///////////////////////////////////////////////////////////////////////////////
+	class ProjectSettings : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxNotebook* m_notebook3;
+			wxPanel* m_panel10;
+			wxPanel* m_panel11;
+			wxPanel* m_panel12;
+			wxPanel* m_panel13;
+			wxStdDialogButtonSizer* m_sdbSizer8;
+			wxButton* m_sdbSizer8OK;
+			wxButton* m_sdbSizer8Apply;
+			wxButton* m_sdbSizer8Cancel;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			ProjectSettings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 479,294 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+			~ProjectSettings();
+		
+	};
+	
 } // namespace ui
 
 #endif //__UI_H__

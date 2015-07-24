@@ -1160,3 +1160,54 @@ Find::~Find()
 	m_sdbSizer7OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Find::OnOk ), NULL, this );
 	
 }
+
+ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer18;
+	bSizer18 = new wxBoxSizer( wxVERTICAL );
+	
+	m_notebook3 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel10 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook3->AddPage( m_panel10, wxT("Cargo"), false );
+	m_panel11 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook3->AddPage( m_panel11, wxT("Editor"), false );
+	m_panel12 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook3->AddPage( m_panel12, wxT("Build"), false );
+	m_panel13 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook3->AddPage( m_panel13, wxT("Run"), false );
+	
+	bSizer18->Add( m_notebook3, 1, wxEXPAND | wxALL, 5 );
+	
+	m_sdbSizer8 = new wxStdDialogButtonSizer();
+	m_sdbSizer8OK = new wxButton( this, wxID_OK );
+	m_sdbSizer8->AddButton( m_sdbSizer8OK );
+	m_sdbSizer8Apply = new wxButton( this, wxID_APPLY );
+	m_sdbSizer8->AddButton( m_sdbSizer8Apply );
+	m_sdbSizer8Cancel = new wxButton( this, wxID_CANCEL );
+	m_sdbSizer8->AddButton( m_sdbSizer8Cancel );
+	m_sdbSizer8->Realize();
+	
+	bSizer18->Add( m_sdbSizer8, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer18 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	m_sdbSizer8Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
+	m_sdbSizer8Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
+	m_sdbSizer8OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );
+}
+
+ProjectSettings::~ProjectSettings()
+{
+	// Disconnect Events
+	m_sdbSizer8Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
+	m_sdbSizer8Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
+	m_sdbSizer8OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );
+	
+}

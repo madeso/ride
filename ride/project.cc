@@ -11,6 +11,8 @@
 
 #include <wx/choicdlg.h>
 
+#include "ride/projectsettingsdlg.h"
+
 Project::Project(MainWindow* output, const wxString& root_folder) : main_(output), root_folder_(root_folder) {
   if (root_folder_.IsEmpty() == false) {
     if (LoadProto(&project_, GetProjectFile()) == false) {
@@ -87,7 +89,7 @@ bool Project::IsPartOfProject(const wxString& filename) {
 }
 
 void Project::Settings() {
-  // todo: implement me
+  DoProjectSettingsDlg(main_, main_, this);
 }
 
 void Project::SelectActiveBuild() {

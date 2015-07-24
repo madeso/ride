@@ -12854,7 +12854,7 @@
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
                     <object class="wxStdDialogButtonSizer" expanded="1">
-                        <property name="Apply">0</property>
+                        <property name="Apply">1</property>
                         <property name="Cancel">1</property>
                         <property name="ContextHelp">0</property>
                         <property name="Help">0</property>
@@ -12865,12 +12865,12 @@
                         <property name="minimum_size"></property>
                         <property name="name">m_sdbSizer8</property>
                         <property name="permission">protected</property>
-                        <event name="OnApplyButtonClick"></event>
-                        <event name="OnCancelButtonClick"></event>
+                        <event name="OnApplyButtonClick">OnApply</event>
+                        <event name="OnCancelButtonClick">OnCancel</event>
                         <event name="OnContextHelpButtonClick"></event>
                         <event name="OnHelpButtonClick"></event>
                         <event name="OnNoButtonClick"></event>
-                        <event name="OnOKButtonClick"></event>
+                        <event name="OnOKButtonClick">OnOk</event>
                         <event name="OnSaveButtonClick"></event>
                         <event name="OnYesButtonClick"></event>
                     </object>
