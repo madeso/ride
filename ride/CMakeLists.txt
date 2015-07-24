@@ -9,7 +9,16 @@ endif(${MSVC})
 
 # html propgrid xml xrc net webview
 
+if(${MSVC})
+# on windows and visual-studio it requires scintilla
 find_package(wxWidgets COMPONENTS core webview aui base stc adv scintilla REQUIRED)
+else()
+find_package(wxWidgets COMPONENTS core webview aui base stc adv REQUIRED)
+# on travis we get a linker errror
+# that wx_gtk2u_scintilla-3.0 is missing, but the log says it builds
+#      libwxscintilla-3.0.a   ..bug? lets hope wx-config solve the problem for us since we use stc
+endif()
+
 include( "${wxWidgets_USE_FILE}" )
 message(STATUS "wxWidgets use file: ${wxWidgets_USE_FILE}")
 
