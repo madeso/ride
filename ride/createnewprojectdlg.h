@@ -1,12 +1,14 @@
 #ifndef RIDE_CREATENEWPROJECTDLG_H
 #define RIDE_CREATENEWPROJECTDLG_H
 
-#include "ride/generated/ui.h"
+#include "ride/wx.h"
 
-class CreateNewProjectDlg : public ui::CreateNewProject
+class CreateNewProjectDlgHandler
 {
 public:
-  CreateNewProjectDlg(wxWindow* parent);
+  CreateNewProjectDlgHandler(wxWindow* parent);
+
+  bool ShowModal();
 
   const wxString project_folder() const;
   const wxString project_name() const;
@@ -14,17 +16,13 @@ public:
   wxString GetTarget() const;
   wxString GenerateCargoCommandline() const;
 
-protected:
-  virtual void OnProjectNameEnter(wxCommandEvent& event);
-
-  virtual void OnProjectNameChanged(wxCommandEvent& event);
-  virtual void OnProjectFolderChanged(wxCommandEvent& event);
-  virtual void OnBrowseProjectFolder(wxCommandEvent& event);
-  virtual void OnCancel(wxCommandEvent& event);
-  virtual void OnOk(wxCommandEvent& event);
 private:
-  wxString GetVcsName() const;
-  void UpdateTarget();
+  wxWindow* parent_;
+
+  wxString project_folder_;
+  wxString project_name_;
+  wxString Target;
+  wxString CargoCommandline;
 };
 
 #endif  // RIDE_CREATENEWPROJECTDLG_H

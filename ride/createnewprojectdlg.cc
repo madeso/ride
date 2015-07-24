@@ -6,6 +6,69 @@
 #include "ride/resources/icons.h"
 #include "ride/wxutils.h"
 
+//////////////////////////////////////////////////////////////////////////
+
+#include "ride/generated/ui.h"
+
+class CreateNewProjectDlg : public ui::CreateNewProject
+{
+public:
+  CreateNewProjectDlg(wxWindow* parent);
+
+  const wxString project_folder() const;
+  const wxString project_name() const;
+
+  wxString GetTarget() const;
+  wxString GenerateCargoCommandline() const;
+
+protected:
+  virtual void OnProjectNameEnter(wxCommandEvent& event);
+
+  virtual void OnProjectNameChanged(wxCommandEvent& event);
+  virtual void OnProjectFolderChanged(wxCommandEvent& event);
+  virtual void OnBrowseProjectFolder(wxCommandEvent& event);
+  virtual void OnCancel(wxCommandEvent& event);
+  virtual void OnOk(wxCommandEvent& event);
+private:
+  wxString GetVcsName() const;
+  void UpdateTarget();
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+CreateNewProjectDlgHandler::CreateNewProjectDlgHandler(wxWindow* parent) : parent_(parent) {
+}
+
+bool CreateNewProjectDlgHandler::ShowModal() {
+  CreateNewProjectDlg dlg(parent_);
+  const bool ret = wxID_OK == dlg.ShowModal();
+  if (ret) {
+    project_folder_ = dlg.project_folder();
+    project_name_ = dlg.project_name();
+    Target = dlg.GetTarget();
+    CargoCommandline = dlg.GenerateCargoCommandline();
+  }
+  return ret;
+}
+
+const wxString CreateNewProjectDlgHandler::project_folder() const {
+  return project_folder_;
+}
+
+const wxString CreateNewProjectDlgHandler::project_name() const {
+  return project_name_;
+}
+
+wxString CreateNewProjectDlgHandler::GetTarget() const {
+  return Target;
+}
+
+wxString CreateNewProjectDlgHandler::GenerateCargoCommandline() const {
+  return CargoCommandline;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 enum ProjectTemplateType {
   PTT_UNKNOWN,
   PTT_BINARY,

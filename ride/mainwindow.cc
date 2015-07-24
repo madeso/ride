@@ -804,8 +804,8 @@ void MainWindow::UpdateTitle() {
 
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // todo: implement creation of new project
-  CreateNewProjectDlg dlg(this);
-  if (wxID_OK != dlg.ShowModal()) {
+  CreateNewProjectDlgHandler dlg(this);
+  if (false == dlg.ShowModal()) {
     return;
   }
   // run cargo new
