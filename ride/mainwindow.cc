@@ -811,13 +811,13 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // run cargo new
 
   wxString output;
-  if (CmdRunner::Run(dlg.project_folder(), dlg.GenerateCargoCommandline(), &output) == false) {
+  if (CmdRunner::Run(dlg.project_folder(), dlg.cargo_command_line(), &output) == false) {
     ShowError(this, output, "Unable to create project!");
     return;
   }
 
   // open project
-  if (false == OpenProject(dlg.GetTarget())) {
+  if (false == OpenProject(dlg.target())) {
     ShowError(this, "Unable to open cargo project", "Unable to open");
   }
 

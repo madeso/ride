@@ -45,8 +45,8 @@ bool CreateNewProjectDlgHandler::ShowModal() {
   if (ret) {
     project_folder_ = dlg.project_folder();
     project_name_ = dlg.project_name();
-    Target = dlg.GetTarget();
-    CargoCommandline = dlg.GenerateCargoCommandline();
+    target_ = dlg.GetTarget();
+    cargo_command_line_ = dlg.GenerateCargoCommandline();
   }
   return ret;
 }
@@ -59,12 +59,12 @@ const wxString CreateNewProjectDlgHandler::project_name() const {
   return project_name_;
 }
 
-wxString CreateNewProjectDlgHandler::GetTarget() const {
-  return Target;
+wxString CreateNewProjectDlgHandler::target() const {
+  return target_;
 }
 
-wxString CreateNewProjectDlgHandler::GenerateCargoCommandline() const {
-  return CargoCommandline;
+wxString CreateNewProjectDlgHandler::cargo_command_line() const {
+  return cargo_command_line_;
 }
 
 //////////////////////////////////////////////////////////////////////////

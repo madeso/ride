@@ -13,16 +13,16 @@ public:
   const wxString project_folder() const;
   const wxString project_name() const;
 
-  wxString GetTarget() const;
-  wxString GenerateCargoCommandline() const;
+  wxString target() const;
+  wxString cargo_command_line() const;
 
 private:
   wxWindow* parent_;
 
   wxString project_folder_;
   wxString project_name_;
-  wxString Target;
-  wxString CargoCommandline;
+  wxString target_;
+  wxString cargo_command_line_;
 };
 
 #endif  // RIDE_CREATENEWPROJECTDLG_H
