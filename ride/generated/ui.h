@@ -378,10 +378,16 @@ namespace ui
 		
 		protected:
 			wxNotebook* m_notebook3;
-			wxPanel* m_panel10;
-			wxPanel* m_panel11;
-			wxPanel* m_panel12;
-			wxPanel* m_panel13;
+			wxPanel* m_cargoPanel;
+			wxStaticText* m_staticText27;
+			wxTextCtrl* uiCargoName;
+			wxStaticText* m_staticText28;
+			wxTextCtrl* uiCargoVersion;
+			wxStaticText* m_staticText29;
+			wxListBox* uiCargoAuthors;
+			wxPanel* m_editorPanel;
+			wxPanel* m_buildPanel;
+			wxPanel* m_runPanel;
 			wxStdDialogButtonSizer* m_sdbSizer8;
 			wxButton* m_sdbSizer8OK;
 			wxButton* m_sdbSizer8Apply;

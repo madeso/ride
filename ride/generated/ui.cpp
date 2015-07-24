@@ -1169,14 +1169,46 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	bSizer18 = new wxBoxSizer( wxVERTICAL );
 	
 	m_notebook3 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	m_panel10 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook3->AddPage( m_panel10, wxT("Cargo"), false );
-	m_panel11 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook3->AddPage( m_panel11, wxT("Editor"), false );
-	m_panel12 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook3->AddPage( m_panel12, wxT("Build"), false );
-	m_panel13 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook3->AddPage( m_panel13, wxT("Run"), false );
+	m_cargoPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer13;
+	fgSizer13 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer13->AddGrowableCol( 1 );
+	fgSizer13->AddGrowableRow( 2 );
+	fgSizer13->SetFlexibleDirection( wxBOTH );
+	fgSizer13->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText27 = new wxStaticText( m_cargoPanel, wxID_ANY, wxT("Name:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText27->Wrap( -1 );
+	fgSizer13->Add( m_staticText27, 0, wxALL, 5 );
+	
+	uiCargoName = new wxTextCtrl( m_cargoPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer13->Add( uiCargoName, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText28 = new wxStaticText( m_cargoPanel, wxID_ANY, wxT("Version:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText28->Wrap( -1 );
+	fgSizer13->Add( m_staticText28, 0, wxALL, 5 );
+	
+	uiCargoVersion = new wxTextCtrl( m_cargoPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer13->Add( uiCargoVersion, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText29 = new wxStaticText( m_cargoPanel, wxID_ANY, wxT("Authors:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText29->Wrap( -1 );
+	fgSizer13->Add( m_staticText29, 0, wxALL, 5 );
+	
+	uiCargoAuthors = new wxListBox( m_cargoPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	fgSizer13->Add( uiCargoAuthors, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	m_cargoPanel->SetSizer( fgSizer13 );
+	m_cargoPanel->Layout();
+	fgSizer13->Fit( m_cargoPanel );
+	m_notebook3->AddPage( m_cargoPanel, wxT("&Cargo"), true );
+	m_editorPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook3->AddPage( m_editorPanel, wxT("&Editor"), false );
+	m_buildPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook3->AddPage( m_buildPanel, wxT("&Build"), false );
+	m_runPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook3->AddPage( m_runPanel, wxT("&Run"), false );
 	
 	bSizer18->Add( m_notebook3, 1, wxEXPAND | wxALL, 5 );
 	
