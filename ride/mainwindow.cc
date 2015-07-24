@@ -719,8 +719,7 @@ void MainWindow::UpdateAllEdits() {
 }
 
 void MainWindow::OnFileShowSettings(wxCommandEvent& event) {
-  SettingsDlg settings_dialog(this, this);
-  settings_dialog.ShowModal();
+  ShowSettingsDlg(this, this);
 }
 
 void MainWindow::OnFileSave(wxCommandEvent& event) {
