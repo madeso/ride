@@ -8,6 +8,11 @@
 
 #ifdef USE_WEBVIEW
 #include <wx/webview.h>
+
+#ifndef wxUSE_WEBVIEW
+#error need webview support
+#endif
+
 #else
 #include <wx/html/htmlwin.h>
 #endif
