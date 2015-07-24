@@ -5,6 +5,59 @@
 #include "ride/resources/icons.h"
 #include "ride/wxutils.h"
 
+//////////////////////////////////////////////////////////////////////////
+
+#include "ride/generated/ui.h"
+
+class CreateNewFileDlg : public ui::CreateNewFile
+{
+public:
+  CreateNewFileDlg(wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint);
+
+  const wxString GetFilePath() const;
+  const wxString GetTemplateSource() const;
+
+protected:
+  void OnTextChanged(wxCommandEvent& event);
+  void OnComboChanged(wxCommandEvent& event);
+  void OnCheckChanged(wxCommandEvent& event);
+
+  void OnNameEnter(wxCommandEvent& event);
+  void OnCancel(wxCommandEvent& event);
+  void OnOk(wxCommandEvent& event);
+
+private:
+  void UpdateTemplateSource();
+  wxString project_folder_;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+CreateNewFileDlgHandler::CreateNewFileDlgHandler(wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint)
+  : parent_(parent), project_folder_(project_folder), fodler_hint_(fodler_hint)
+{
+}
+
+bool CreateNewFileDlgHandler::ShowModal() {
+  CreateNewFileDlg dlg(parent_, project_folder_, fodler_hint_);
+  const bool ret = wxOK == dlg.ShowModal();
+  if (ret) {
+    FilePath = dlg.GetFilePath();
+    TemplateSource = dlg.GetTemplateSource();
+  }
+  return ret;
+}
+
+const wxString CreateNewFileDlgHandler::GetFilePath() const {
+  return FilePath;
+}
+
+const wxString CreateNewFileDlgHandler::GetTemplateSource() const {
+  return TemplateSource;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 class FileTemplate {
 public:
   virtual ~FileTemplate() {}

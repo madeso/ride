@@ -496,8 +496,8 @@ void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplor
     ShowError(main, "Unable to create file, no project open.", "Unable to create");
     return;
   }
-  CreateNewFileDlg dlg(main, project_root, project_explorer->GetRelativePathOfSelected());
-  if (wxOK != dlg.ShowModal()) {
+  CreateNewFileDlgHandler dlg(main, project_root, project_explorer->GetRelativePathOfSelected());
+  if (false == dlg.ShowModal()) {
     return;
   }
 
