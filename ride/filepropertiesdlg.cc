@@ -6,6 +6,33 @@
 #include <map>
 #include <vector>
 
+//////////////////////////////////////////////////////////////////////////
+
+#include "ride/generated/ui.h"
+class FilePropertiesDlg : public ui::FileProperties
+{
+public:
+  FilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl);
+
+protected:
+  void OnChangeEncoding(wxCommandEvent& event);
+  void OnChangeLineEnding(wxCommandEvent& event);
+
+private:
+  void UpdateGui();
+
+private:
+  wxStyledTextCtrl* ctrl_;
+};
+
+void ShowFilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl)
+{
+  FilePropertiesDlg dlg(parent, ctrl);
+  dlg.ShowModal();
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 class StringIntConverter {
 private:
   typedef std::vector<int> Ints;

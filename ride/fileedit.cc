@@ -193,8 +193,7 @@ void FileEdit::OpenInOnlineDocumentation() {
 }
 
 void FileEdit::ShowProperties() {
-  FilePropertiesDlg dlg(this, text_);
-  dlg.ShowModal();
+  ShowFilePropertiesDlg(this, text_);
 }
 
 //////////////////////////////////////////////////////////////////////////
