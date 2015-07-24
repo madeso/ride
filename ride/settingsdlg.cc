@@ -6,7 +6,62 @@
 #include <wx/fontenum.h>
 #include "ride/wxutils.h"
 
+#include "ride/form.h"
+
 //////////////////////////////////////////////////////////////////////////
+// custom form functions
+
+void ToGui(ride::Color data, wxColourPickerCtrl* gui)  {
+  gui->SetColour(C(data));
+}
+ride::Color ToData(wxColourPickerCtrl* gui)  {
+  return C(gui->GetColour());
+}
+
+void ToGui(ride::ViewWhitespace data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::ViewWhitespace ToData_VW(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(ViewWhitespace, gui->GetSelection());
+}
+
+void ToGui(ride::WrapMode data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::WrapMode ToData_WM(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(WrapMode, gui->GetSelection());
+}
+
+void ToGui(ride::EdgeStyle data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::EdgeStyle ToData_ES(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(EdgeStyle, gui->GetSelection());
+}
+
+void ToGui(ride::AutoIndentation data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::AutoIndentation ToData_AI(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(AutoIndentation, gui->GetSelection());
+}
+
+void ToGui(ride::MarkerSymbol data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::MarkerSymbol ToData_MS(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(MarkerSymbol, gui->GetSelection());
+}
+
+void ToGui(ride::IndicatorStyle data, wxComboBox* gui)  {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::IndicatorStyle ToData_IS(wxComboBox* gui)  {
+  RETURN_COMBOBOX_VALUE(IndicatorStyle, gui->GetSelection());
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 
 class SettingsDlg : public ui::Settings
 {
@@ -88,114 +143,6 @@ void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow)
 {
   SettingsDlg dlg(parent, mainwindow);
   dlg.ShowModal();
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-#define RETURN_COMBOBOX_VALUE(TYPE, VALUE) assert(ride::TYPE##_IsValid(VALUE)); return static_cast<ride::TYPE>(VALUE)
-#define DIALOG_DATA(ROOT, FUN, UI, SETNAME) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_##FUN(ToData##SETNAME(UI)); } } while(false)
-#define DIALOG_DATAX(ROOT, FUN, UI) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_allocated_##FUN(Allocate(ToData(UI))); } } while(false)
-
-template<typename T>
-T* Allocate(const T& t) {
-  return new T(t);
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void ToGui(bool data, wxCheckBox* gui)  {
-  gui->SetValue(data);
-}
-bool ToData(wxCheckBox* gui)  {
-  return gui->GetValue();
-}
-
-void ToGui(ride::Color data, wxColourPickerCtrl* gui)  {
-  gui->SetColour(C(data));
-}
-ride::Color ToData(wxColourPickerCtrl* gui)  {
-  return C(gui->GetColour());
-}
-
-void ToGui(ride::ViewWhitespace data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::ViewWhitespace ToData_VW(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(ViewWhitespace, gui->GetSelection());
-}
-
-void ToGui(ride::WrapMode data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::WrapMode ToData_WM(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(WrapMode, gui->GetSelection());
-}
-
-void ToGui(ride::EdgeStyle data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::EdgeStyle ToData_ES(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(EdgeStyle, gui->GetSelection());
-}
-
-void ToGui(ride::AutoIndentation data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::AutoIndentation ToData_AI(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(AutoIndentation, gui->GetSelection());
-}
-
-void ToGui(ride::MarkerSymbol data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::MarkerSymbol ToData_MS(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(MarkerSymbol, gui->GetSelection());
-}
-
-void ToGui(ride::IndicatorStyle data, wxComboBox* gui)  {
-  gui->SetSelection(static_cast<int>(data));
-}
-ride::IndicatorStyle ToData_IS(wxComboBox* gui)  {
-  RETURN_COMBOBOX_VALUE(IndicatorStyle, gui->GetSelection());
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void ToGui(google::protobuf::int32 data, wxTextCtrl* gui)  {
-  wxString value = wxString::FromDouble(data, 0);
-  gui->SetValue(value);
-}
-google::protobuf::int32 ToData(wxTextCtrl* gui)  {
-  const wxString value = gui->GetValue();
-  long ret = 0;
-  if (true == value.ToLong(&ret)) {
-    return ret;
-  }
-  if (value.length() == 0) return -1;
-  assert(false && "Unable to get integer value");
-  return -1;
-}
-
-void ToGui(std::string data, wxListBox* gui)  {
-  if (data == "") {
-    gui->SetSelection(wxNOT_FOUND);
-    return;
-  }
-
-  wxString str = wxString::FromUTF8(data.c_str());
-  int index = gui->FindString(str);
-  if (index == wxNOT_FOUND) {
-    index = gui->GetCount();
-    gui->AppendString(str);
-  }
-  gui->EnsureVisible(index);
-  gui->SetSelection(index);
-}
-
-std::string ToData(wxListBox* gui)  {
-  int selected = gui->GetSelection();
-  if (selected == wxNOT_FOUND) return "";
-  else return std::string(gui->GetString(selected).ToUTF8());
 }
 
 //////////////////////////////////////////////////////////////////////////
