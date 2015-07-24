@@ -23,7 +23,7 @@ before_script:
   - cd gtk-build
   - pwd
   - ../configure --help
-  - ../configure --with-opengl
+  - ../configure --with-opengl --enable-webview
   - make
   - sudo make install
   - wx-config --version
