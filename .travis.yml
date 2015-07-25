@@ -50,7 +50,7 @@ before_script:
   - mkdir gtk-build
   - cd gtk-build
   - ../configure --help
-  - ../configure --enable-webview
+  - ../configure --enable-webview --disable-compat28
   - make
   - sudo make install
   - wx-config --version
