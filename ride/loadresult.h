@@ -13,6 +13,7 @@ public:
 private:
   LoadResult();
   wxString message_;
+  bool ok_;
 };
 
 #endif  // LOADRESULT_H

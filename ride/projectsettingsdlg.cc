@@ -36,12 +36,43 @@ void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* pro
   dlg.ShowModal();
 }
 
+bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo, wxStaticText* error_display) {
+  if (cargo_file.IsEmpty()) {
+    error_display->SetLabelText("No project loaded");
+    return false;
+  }
+  const auto result = cargo->Load(cargo_file);
+  if (result.IsOk())
+  {
+    error_display->SetLabelText("");
+    return true;
+  }
+
+  error_display->SetLabelText(result.message());
+  return false;
+}
+
+class EnableDisable
+{
+public:
+  EnableDisable(bool enable) : enable_(enable) {}
+  const EnableDisable& operator()(wxWindowBase* b) const {
+    b->Enable(enable_);
+    return *this;
+  }
+private:
+  bool enable_;
+};
+
 ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project) :
 ::ui::ProjectSettings(parent, wxID_ANY), main_window_(mainwindow), project_(project)
 {
-  const wxString cargo_file = project_->GetCargoFile();
-  if (false == cargo_file.IsEmpty()) {
-    cargo_.Load( cargo_file );
+  if (false == LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError)) {
+    EnableDisable(false)
+      (uiCargoName)
+      (uiCargoVersion)
+      (uiCargoAuthors)
+      ;
   }
   AllToGui(true);
 }

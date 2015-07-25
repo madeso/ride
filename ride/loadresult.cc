@@ -3,12 +3,14 @@
 LoadResult LoadResult::Ok()
 {
   LoadResult ret;
+  ret.ok_ = true;
   return ret;
 }
 
 LoadResult LoadResult::Error(const wxString& message) {
   LoadResult ret;
   ret.message_ = message;
+  ret.ok_ = false;
   return ret;
 }
 
@@ -17,7 +19,7 @@ const wxString& LoadResult::message() const {
 }
 
 bool LoadResult::IsOk() const {
-  return false == message_.IsEmpty();
+  return ok_;
 }
 
 LoadResult::LoadResult() { }

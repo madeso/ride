@@ -1199,6 +1199,15 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	fgSizer13->Add( uiCargoAuthors, 0, wxALL|wxEXPAND, 5 );
 	
 	
+	fgSizer13->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiCargoLoadError = new wxStaticText( m_cargoPanel, wxID_ANY, wxT("Error message!"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiCargoLoadError->Wrap( -1 );
+	uiCargoLoadError->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 92, false, wxEmptyString ) );
+	
+	fgSizer13->Add( uiCargoLoadError, 0, wxALL|wxEXPAND, 5 );
+	
+	
 	m_cargoPanel->SetSizer( fgSizer13 );
 	m_cargoPanel->Layout();
 	fgSizer13->Fit( m_cargoPanel );
