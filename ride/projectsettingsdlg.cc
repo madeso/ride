@@ -5,6 +5,7 @@
 #include "ride/mainwindow.h"
 #include <wx/fontenum.h>
 #include "ride/wxutils.h"
+#include "ride/enabledisable.h"
 #include "ride/form.h"
 #include "ride/cargo.h"
 
@@ -51,18 +52,6 @@ bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo, wxStaticText* error
   error_display->SetLabelText(result.message());
   return false;
 }
-
-class EnableDisable
-{
-public:
-  EnableDisable(bool enable) : enable_(enable) {}
-  const EnableDisable& operator()(wxWindowBase* b) const {
-    b->Enable(enable_);
-    return *this;
-  }
-private:
-  bool enable_;
-};
 
 ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project) :
 ::ui::ProjectSettings(parent, wxID_ANY), main_window_(mainwindow), project_(project)
