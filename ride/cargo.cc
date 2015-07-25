@@ -1,9 +1,19 @@
 #include "ride/cargo.h"
+#include "cpptoml.h"
 
-void Cargo::Load(const wxString& file)
+LoadResult Cargo::Load(const wxString& file)
 {
-  // todo
-  name_ = "implement me";
+  try
+  {
+    cpptoml::table g = cpptoml::parse_file(static_cast<std::string>(file));
+
+    name_ = "implement me";
+    return LoadResult::Ok();
+  }
+  catch (const cpptoml::parse_exception& e)
+  {
+    return LoadResult::Error(e.what());
+  }
 }
 
 const wxString& Cargo::name() const

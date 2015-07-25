@@ -18,4 +18,5 @@ if(BUILD_USE_DOXYGEN_GLOBAL)
 endif(BUILD_USE_DOXYGEN_GLOBAL)
 
 include_directories(${CMAKE_SOURCE_DIR})
+include_directories(${CMAKE_SOURCE_DIR}/external/cpptoml/include)
 add_subdirectory(ride)

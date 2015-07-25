@@ -2,10 +2,11 @@
 #define CARGO_H
 
 #include "ride/wx.h"
+#include "ride/loadresult.h"
 
 class Cargo {
 public:
-  void Load(const wxString& file);
+  LoadResult Load(const wxString& file);
 
   const wxString& name() const;
   void set_name(const wxString& name);
