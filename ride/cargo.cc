@@ -101,9 +101,25 @@ namespace cargo
   const std::string VERSION = "version";
   const std::string AUTHORS = "authors";
   const std::string DEPENDENCIES = "dependencies";
+  const std::string FEATURES = "features";
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+void AddFeature(const std::vector<wxString>& deps, std::vector<wxString>* feats, const wxString& name)
+{
+  // test for invalid characters
+  if (name.Contains("/")) return;
+
+  // the "feature" is a dependency, don't add
+  if (std::find(deps.begin(), deps.end(), name) != deps.end()) return;
+
+  // the features already contain this feature
+  if (std::find(feats->begin(), feats->end(), name) != feats->end()) return;
+
+  // lets add it
+  feats->push_back(name);
+}
 
 LoadResult Cargo::Load(const wxString& file)
 {
@@ -123,6 +139,19 @@ LoadResult Cargo::Load(const wxString& file)
       for (const auto dep : *dependcies) {
         const std::string& name = dep.first;
         dependencies_.push_back(name);
+      }
+    }
+
+    auto features = root.get_table(cargo::FEATURES);
+    if (features.get() != NULL) {
+      for (const auto dep : *features) {
+        const std::string& name = dep.first;
+        AddFeature(dependencies_, &features_, name);
+        std::vector<wxString> deps;
+        TRY(SafeGet(cargo::FEATURES, features, name, &deps));
+        for (const wxString& dep : deps) {
+          AddFeature(dependencies_, &features_, name);
+        }
       }
     }
 
@@ -173,3 +202,14 @@ void Cargo::set_dependencies(const std::vector<wxString>& dependencies)
 {
   dependencies_ = dependencies;
 }
+
+const std::vector<wxString>& Cargo::features() const
+{
+  return features_;
+}
+
+void Cargo::set_features(const std::vector<wxString>& features)
+{
+  features_ = features;
+}
+

@@ -111,4 +111,5 @@ void ProjectSettingsDlg::CargoToGui(bool togui) {
   DIALOG_DATA(cargo_, version, uiCargoVersion, _Str);
   DIALOG_DATA(cargo_, authors, uiCargoAuthors, _Content);
   DIALOG_DATA(cargo_, dependencies, uiCargoDependencies, _Content);
+  DIALOG_DATA(cargo_, features, uiCargoFeatures, _Content);
 }

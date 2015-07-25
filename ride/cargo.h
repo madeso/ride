@@ -21,11 +21,15 @@ public:
 
   const std::vector<wxString>& dependencies() const;
   void set_dependencies(const std::vector<wxString>& dependencies);
+
+  const std::vector<wxString>& features() const;
+  void set_features(const std::vector<wxString>& features);
 private:
   wxString name_;
   wxString version_;
   std::vector<wxString> authors_;
   std::vector<wxString> dependencies_;
+  std::vector<wxString> features_;
 };
 
 #endif  // CARGO_H

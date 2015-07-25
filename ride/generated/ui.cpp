@@ -1224,6 +1224,18 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	m_dependenciesPanel->Layout();
 	bSizer22->Fit( m_dependenciesPanel );
 	m_notebook3->AddPage( m_dependenciesPanel, wxT("Cargo &Dependencies"), true );
+	m_featuresPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer24;
+	bSizer24 = new wxBoxSizer( wxVERTICAL );
+	
+	uiCargoFeatures = new wxListBox( m_featuresPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB ); 
+	bSizer24->Add( uiCargoFeatures, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	m_featuresPanel->SetSizer( bSizer24 );
+	m_featuresPanel->Layout();
+	bSizer24->Fit( m_featuresPanel );
+	m_notebook3->AddPage( m_featuresPanel, wxT("Cargo &Features"), false );
 	m_editorPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook3->AddPage( m_editorPanel, wxT("&Editor"), false );
 	m_buildPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );

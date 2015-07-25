@@ -388,6 +388,8 @@ namespace ui
 			wxStaticText* uiCargoLoadError;
 			wxPanel* m_dependenciesPanel;
 			wxListBox* uiCargoDependencies;
+			wxPanel* m_featuresPanel;
+			wxListBox* uiCargoFeatures;
 			wxPanel* m_editorPanel;
 			wxPanel* m_buildPanel;
 			wxPanel* m_runPanel;
