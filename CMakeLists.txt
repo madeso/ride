@@ -83,7 +83,7 @@ if(UNIX)
 
         if(NOT STDOPT)
             message(FATAL_ERROR
-                    "cpptoml requires a compiler with at least C++0x support")
+                    "ride requires a compiler with at least C++0x support")
         endif()
 
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${STDOPT}")
