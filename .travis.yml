@@ -4,8 +4,13 @@ compiler:
   - gcc
   - clang
 
-# update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
 install:
+#install ride dependencies
+  - sudo add-apt-repository -y ppa:chris-lea/protobuf
+  - sudo apt-get update -qq
+# todo: add graphviz doxygen
+  - sudo apt-get install -qq --assume-yes libgtk2.0-dev libprotobuf-dev protobuf-compiler libwebkit-dev
+# update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
   - sudo apt-get install libc6-i386
   - wget http://www.cmake.org/files/v3.0/cmake-3.0.1-Linux-i386.sh
   - sudo sh cmake-3.0.1-Linux-i386.sh --prefix=/usr/local --exclude-subdir
@@ -35,12 +40,6 @@ install:
   - if [ "`echo $CXX`" == "clang++" ]; then make; fi
   - if [ "`echo $CXX`" == "clang++" ]; then sudo make install; fi
   - if [ "`echo $CXX`" == "clang++" ]; then cd $cwd; fi
-#install ride dependencies
-  - sudo add-apt-repository -y ppa:chris-lea/protobuf
-  - sudo apt-get update -qq
-# todo: add graphviz doxygen
-  - sudo apt-get install -qq --assume-yes libgtk2.0-dev libprotobuf-dev protobuf-compiler libwebkit-dev
-
 before_script:
 # build wxWidgtets
   - mkdir wx3
