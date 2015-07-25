@@ -3,6 +3,7 @@
 
 #include "ride/wx.h"
 #include <string>
+#include <vector>
 #include <google/protobuf/stubs/common.h>
 class wxEditableListBox;
 
