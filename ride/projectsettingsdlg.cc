@@ -8,6 +8,7 @@
 #include "ride/enabledisable.h"
 #include "ride/form.h"
 #include "ride/cargo.h"
+#include "wx/editlbox.h"
 
 class ProjectSettingsDlg : public ui::ProjectSettings
 {
@@ -56,6 +57,8 @@ bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo, wxStaticText* error
 ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project) :
 ::ui::ProjectSettings(parent, wxID_ANY), main_window_(mainwindow), project_(project)
 {
+  // uiCargoAuthors = new wxEditableListBox(uiCargoAuthorsContainer, wxID_ANY, "", wxDefaultPosition, wxDefaultPosition, wxEL_DEFAULT_STYLE);
+
   if (false == LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError)) {
     EnableDisable(false)
       (uiCargoName)
@@ -91,4 +94,6 @@ void ProjectSettingsDlg::AllToGui(bool togui) {
 
 void ProjectSettingsDlg::CargoToGui(bool togui) {
   DIALOG_DATA(cargo_, name, uiCargoName, _Str);
+  DIALOG_DATA(cargo_, version, uiCargoVersion, _Str);
+  DIALOG_DATA(cargo_, authors, uiCargoAuthors,);
 }

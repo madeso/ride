@@ -1,5 +1,6 @@
 #include "ride/wx.h"
 #include "ride/form.h"
+#include "wx/editlbox.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -54,4 +55,22 @@ void ToGui(const wxString& data, wxTextCtrl* gui) {
 }
 wxString ToData_Str(wxTextCtrl* gui) {
   return gui->GetValue();
+}
+
+void ToGui(const std::vector<wxString>& data, wxEditableListBox * gui)
+{
+  wxArrayString wxarray(data.size(), &(data[0]));
+  gui->SetStrings(wxarray);
+  // gui->InsertItems(data.size(), &(data[0]), 0);
+}
+std::vector<wxString> ToData(wxEditableListBox * gui)
+{
+  wxArrayString wxarray;
+  gui->GetStrings(wxarray);
+  std::vector<wxString> ret(wxarray.size());
+  for (const wxString& s : wxarray) {
+    ret.push_back(s);
+  }
+  return ret;
+  // gui->GetItem(3);
 }

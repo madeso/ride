@@ -4,6 +4,7 @@
 #include "ride/wx.h"
 #include <string>
 #include <google/protobuf/stubs/common.h>
+class wxEditableListBox;
 
 #define RETURN_COMBOBOX_VALUE(TYPE, VALUE) assert(ride::TYPE##_IsValid(VALUE)); return static_cast<ride::TYPE>(VALUE)
 #define DIALOG_DATA(ROOT, FUN, UI, SETNAME) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_##FUN(ToData##SETNAME(UI)); } } while(false)
@@ -25,5 +26,8 @@ std::string ToData(wxListBox* gui);
 
 void ToGui(const wxString& data, wxTextCtrl* gui);
 wxString ToData_Str(wxTextCtrl* gui);
+
+void ToGui(const std::vector<wxString>& data, wxEditableListBox * gui);
+std::vector<wxString> ToData(wxEditableListBox * gui);
 
 #endif // FORM_H

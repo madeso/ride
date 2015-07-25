@@ -36,6 +36,7 @@
 #include <wx/listctrl.h>
 #include "ride/textctrllist.h"
 #include <wx/stc/stc.h>
+#include "wx/editlbox.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -384,7 +385,7 @@ namespace ui
 			wxStaticText* m_staticText28;
 			wxTextCtrl* uiCargoVersion;
 			wxStaticText* m_staticText29;
-			wxListBox* uiCargoAuthors;
+			wxEditableListBox* uiCargoAuthors;
 			wxStaticText* uiCargoLoadError;
 			wxPanel* m_editorPanel;
 			wxPanel* m_buildPanel;
@@ -402,7 +403,7 @@ namespace ui
 		
 		public:
 			
-			ProjectSettings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 479,294 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+			ProjectSettings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 666,535 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~ProjectSettings();
 		
 	};
