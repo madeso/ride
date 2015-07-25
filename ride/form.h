@@ -17,12 +17,13 @@ T* Allocate(const T& t) {
 void ToGui(bool data, wxCheckBox* gui);
 bool ToData(wxCheckBox* gui);
 
-//////////////////////////////////////////////////////////////////////////
-
 void ToGui(google::protobuf::int32 data, wxTextCtrl* gui);
-google::protobuf::int32 ToData(wxTextCtrl* gui);
+google::protobuf::int32 ToData_I32(wxTextCtrl* gui);
 
 void ToGui(std::string data, wxListBox* gui);
 std::string ToData(wxListBox* gui);
+
+void ToGui(const wxString& data, wxTextCtrl* gui);
+wxString ToData_Str(wxTextCtrl* gui);
 
 #endif // FORM_H

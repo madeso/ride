@@ -5,6 +5,8 @@
 #include "ride/mainwindow.h"
 #include <wx/fontenum.h>
 #include "ride/wxutils.h"
+#include "ride/form.h"
+#include "ride/cargo.h"
 
 class ProjectSettingsDlg : public ui::ProjectSettings
 {
@@ -15,6 +17,13 @@ protected:
   void OnApply(wxCommandEvent& event);
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
+
+protected:
+  void AllToGui(bool togui);
+  void CargoToGui(bool togui);
+
+protected:
+  Cargo cargo_;
 
 private:
   MainWindow* main_window_;
@@ -30,10 +39,16 @@ void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* pro
 ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project) :
 ::ui::ProjectSettings(parent, wxID_ANY), main_window_(mainwindow), project_(project)
 {
+  const wxString cargo_file = project_->GetCargoFile();
+  if (false == cargo_file.IsEmpty()) {
+    cargo_.Load( cargo_file );
+  }
+  AllToGui(true);
 }
 
 void ProjectSettingsDlg::OnApply( wxCommandEvent& event )
 {
+  AllToGui(false);
 }
 
 void ProjectSettingsDlg::OnCancel( wxCommandEvent& event )
@@ -43,5 +58,17 @@ void ProjectSettingsDlg::OnCancel( wxCommandEvent& event )
 
 void ProjectSettingsDlg::OnOk( wxCommandEvent& event )
 {
+  AllToGui(false);
   EndModal(wxOK);
+}
+
+void ProjectSettingsDlg::AllToGui(bool togui) {
+  CargoToGui(togui);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+
+void ProjectSettingsDlg::CargoToGui(bool togui) {
+  DIALOG_DATA(cargo_, name, uiCargoName, _Str);
 }

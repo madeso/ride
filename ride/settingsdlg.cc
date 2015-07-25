@@ -402,7 +402,7 @@ void SettingsDlg::StyleToGui(bool togui) {
   DIALOG_DATA(style, typeface, uiStyleTypeface,);
 
   DIALOG_DATA(style, use_font_size, uiStyleUseSize, );
-  DIALOG_DATA(style, font_size, uiStyleSize, );
+  DIALOG_DATA(style, font_size, uiStyleSize, _I32);
 
   DIALOG_DATA(style, use_foreground, uiStyleUseForeground,);
   DIALOG_DATAX(style, foreground, uiStyleForeground);
@@ -482,8 +482,8 @@ std::vector<IndicatorLink*> BuildIndicatorLinks() {
       \
       DIALOG_DATAX(ind, foreground, uiIndicatorColor);\
       DIALOG_DATA(ind, under, uiIndicatorUnder,);\
-      DIALOG_DATA(ind, alpha, uiIndicatorAlpha,);\
-      DIALOG_DATA(ind, outline_alpha, uiIndicatorOutlineAlpha,);\
+      DIALOG_DATA(ind, alpha, uiIndicatorAlpha,_I32);\
+      DIALOG_DATA(ind, outline_alpha, uiIndicatorOutlineAlpha,_I32);\
       \
       if( togui == false){\
         col.set_allocated_##ID(Allocate(ind));\
@@ -729,8 +729,8 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATA(current_settings_, linenumberenable, uiShowLineNumbers,);
   DIALOG_DATA(current_settings_, indentguideenable, uiIndentGuide,);
 
-  DIALOG_DATA(current_settings_, tabwidth, uiTabWidth, );
-  DIALOG_DATA(current_settings_, edgecolumn, uiEdgeColumn, );
+  DIALOG_DATA(current_settings_, tabwidth, uiTabWidth, _I32);
+  DIALOG_DATA(current_settings_, edgecolumn, uiEdgeColumn, _I32);
 
   DIALOG_DATA(current_settings_, whitespace, uiViewWhitespace, _VW);
   DIALOG_DATA(current_settings_, wordwrap, uiWordwrap, _WM);
@@ -757,7 +757,7 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATAX(fonts_and_colors, selection_background, uiEditSelectionBackground);
   
   DIALOG_DATA(current_settings_, current_line_visible, uiCurrentLineVisible, );
-  DIALOG_DATA(current_settings_, current_line_alpha, uiEditCurrentLineAlpha, );
+  DIALOG_DATA(current_settings_, current_line_alpha, uiEditCurrentLineAlpha, _I32);
   DIALOG_DATA(current_settings_, current_line_overdraw, uiEditCurrentLineOverdraw, );
   DIALOG_DATAX(fonts_and_colors, selected_line, uiEditCurrentLineColor);
 
