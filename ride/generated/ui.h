@@ -36,7 +36,6 @@
 #include <wx/listctrl.h>
 #include "ride/textctrllist.h"
 #include <wx/stc/stc.h>
-#include "wx/editlbox.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -385,7 +384,7 @@ namespace ui
 			wxStaticText* m_staticText28;
 			wxTextCtrl* uiCargoVersion;
 			wxStaticText* m_staticText29;
-			wxEditableListBox* uiCargoAuthors;
+			wxListBox* uiCargoAuthors;
 			wxStaticText* uiCargoLoadError;
 			wxPanel* m_editorPanel;
 			wxPanel* m_buildPanel;

@@ -106,5 +106,5 @@ bool ProjectSettingsDlg::Apply() {
 void ProjectSettingsDlg::CargoToGui(bool togui) {
   DIALOG_DATA(cargo_, name, uiCargoName, _Str);
   DIALOG_DATA(cargo_, version, uiCargoVersion, _Str);
-  DIALOG_DATA(cargo_, authors, uiCargoAuthors,);
+  DIALOG_DATA(cargo_, authors, uiCargoAuthors, _Content);
 }

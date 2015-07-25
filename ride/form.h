@@ -31,4 +31,7 @@ wxString ToData_Str(wxTextCtrl* gui);
 void ToGui(const std::vector<wxString>& data, wxEditableListBox * gui);
 std::vector<wxString> ToData(wxEditableListBox * gui);
 
+void ToGui(const std::vector<wxString>& data, wxListBox* gui);
+std::vector<wxString> ToData_Content(wxListBox * gui);
+
 #endif // FORM_H

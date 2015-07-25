@@ -72,3 +72,19 @@ std::vector<wxString> ToData(wxEditableListBox * gui)
   }
   return ret;
 }
+
+void ToGui(const std::vector<wxString>& data, wxListBox* gui)
+{
+  gui->Clear();
+  gui->InsertItems(data.size(), &(data[0]), 0);
+}
+
+std::vector<wxString> ToData_Content(wxListBox* gui)
+{
+  const wxArrayString content = gui->GetStrings();
+  std::vector<wxString> ret(content.size());
+  for (const wxString& c : content) {
+    ret.push_back(c);
+  }
+  return ret;
+}

@@ -1195,7 +1195,7 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	m_staticText29->Wrap( -1 );
 	fgSizer13->Add( m_staticText29, 0, wxALL, 5 );
 	
-	uiCargoAuthors = new wxEditableListBox(m_cargoPanel, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxEL_DEFAULT_STYLE);
+	uiCargoAuthors = new wxListBox( m_cargoPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, wxLB_ALWAYS_SB ); 
 	fgSizer13->Add( uiCargoAuthors, 0, wxALL|wxEXPAND, 5 );
 	
 	
