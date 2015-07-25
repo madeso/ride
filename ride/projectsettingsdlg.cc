@@ -21,6 +21,7 @@ protected:
   void OnOk(wxCommandEvent& event);
 
 protected:
+  bool Apply();
   void AllToGui(bool togui);
   void CargoToGui(bool togui);
 
@@ -57,21 +58,21 @@ bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo, wxStaticText* error
 ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project) :
 ::ui::ProjectSettings(parent, wxID_ANY), main_window_(mainwindow), project_(project)
 {
-  // uiCargoAuthors = new wxEditableListBox(uiCargoAuthorsContainer, wxID_ANY, "", wxDefaultPosition, wxDefaultPosition, wxEL_DEFAULT_STYLE);
+  LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
 
-  if (false == LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError)) {
-    EnableDisable(false)
-      (uiCargoName)
-      (uiCargoVersion)
-      (uiCargoAuthors)
-      ;
-  }
   AllToGui(true);
+
+  // disable all cargo related gui as we can't save toml files yet
+  EnableDisable(false)
+    (uiCargoName)
+    (uiCargoVersion)
+    (uiCargoAuthors)
+    ;
 }
 
 void ProjectSettingsDlg::OnApply( wxCommandEvent& event )
 {
-  AllToGui(false);
+  Apply();
 }
 
 void ProjectSettingsDlg::OnCancel( wxCommandEvent& event )
@@ -81,8 +82,9 @@ void ProjectSettingsDlg::OnCancel( wxCommandEvent& event )
 
 void ProjectSettingsDlg::OnOk( wxCommandEvent& event )
 {
-  AllToGui(false);
-  EndModal(wxOK);
+  if (Apply()) {
+    EndModal(wxOK);
+  }
 }
 
 void ProjectSettingsDlg::AllToGui(bool togui) {
@@ -90,6 +92,15 @@ void ProjectSettingsDlg::AllToGui(bool togui) {
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+bool ProjectSettingsDlg::Apply() {
+  AllToGui(false);
+
+  return true;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 
 
 void ProjectSettingsDlg::CargoToGui(bool togui) {
