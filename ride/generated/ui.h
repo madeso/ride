@@ -386,6 +386,8 @@ namespace ui
 			wxStaticText* m_staticText29;
 			wxListBox* uiCargoAuthors;
 			wxStaticText* uiCargoLoadError;
+			wxPanel* m_dependenciesPanel;
+			wxListBox* uiCargoDependencies;
 			wxPanel* m_editorPanel;
 			wxPanel* m_buildPanel;
 			wxPanel* m_runPanel;

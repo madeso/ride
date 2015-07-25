@@ -66,7 +66,10 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
   EnableDisable(false)
     (uiCargoName)
     (uiCargoVersion)
-    (uiCargoAuthors)
+    // we can't select or scroll in disabled listboxes 
+    // so lets keep them enabled since we can't really do anything in them
+    // (uiCargoAuthors)
+    // (uiCargoDependencies)
     ;
 }
 
@@ -107,4 +110,5 @@ void ProjectSettingsDlg::CargoToGui(bool togui) {
   DIALOG_DATA(cargo_, name, uiCargoName, _Str);
   DIALOG_DATA(cargo_, version, uiCargoVersion, _Str);
   DIALOG_DATA(cargo_, authors, uiCargoAuthors, _Content);
+  DIALOG_DATA(cargo_, dependencies, uiCargoDependencies, _Content);
 }

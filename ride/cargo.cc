@@ -100,6 +100,7 @@ namespace cargo
   const std::string NAME = "name";
   const std::string VERSION = "version";
   const std::string AUTHORS = "authors";
+  const std::string DEPENDENCIES = "dependencies";
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -110,14 +111,21 @@ LoadResult Cargo::Load(const wxString& file)
   {
     cpptoml::table root = cpptoml::parse_file(static_cast<std::string>(file));
 
-    
-
     auto package = root.get_table(cargo::PACKAGE);
     if ( package.get() == NULL ) return LoadResult::Error("No package in cargo file");
 
     TRY(SafeGet(cargo::PACKAGE, package, cargo::NAME, &name_));
     TRY(SafeGet(cargo::PACKAGE, package, cargo::VERSION, &version_));
     TRY(SafeGet(cargo::PACKAGE, package, cargo::AUTHORS, &authors_));
+
+    auto dependcies = root.get_table(cargo::DEPENDENCIES);
+    if (dependcies.get() != NULL) {
+      for (const auto dep : *dependcies) {
+        const std::string& name = dep.first;
+        dependencies_.push_back(name);
+      }
+    }
+
     return LoadResult::Ok();
   }
   catch (const cpptoml::parse_exception& e)
@@ -154,4 +162,14 @@ const std::vector<wxString>& Cargo::authors() const
 void Cargo::set_authors(const std::vector<wxString>& authors)
 {
   authors_ = authors;
+}
+
+const std::vector<wxString>& Cargo::dependencies() const
+{
+  return dependencies_;
+}
+
+void Cargo::set_dependencies(const std::vector<wxString>& dependencies)
+{
+  dependencies_ = dependencies;
 }

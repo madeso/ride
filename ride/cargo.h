@@ -18,10 +18,14 @@ public:
 
   const std::vector<wxString>& authors() const;
   void set_authors(const std::vector<wxString>& authors);
+
+  const std::vector<wxString>& dependencies() const;
+  void set_dependencies(const std::vector<wxString>& dependencies);
 private:
   wxString name_;
   wxString version_;
   std::vector<wxString> authors_;
+  std::vector<wxString> dependencies_;
 };
 
 #endif  // CARGO_H
