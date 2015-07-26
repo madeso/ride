@@ -9,6 +9,7 @@
 #include "ride/form.h"
 #include "ride/cargo.h"
 #include "wx/editlbox.h"
+#include "ride/commonimages.h"
 
 class ProjectSettingsDlg : public ui::ProjectSettings
 {
@@ -55,6 +56,23 @@ bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo, wxStaticText* error
   return false;
 }
 
+void SetImageAndRemoveText(wxButton* button, const wxBitmap& img)
+{
+  button->SetLabel("");
+  button->SetBitmapLabel( img );
+  const auto size = 28;
+  button->SetSize(size, size);
+}
+
+void SetImageAndRemoveText(wxButton* button, const wxArtID art)
+{
+  SetImageAndRemoveText(button, wxArtProvider::GetBitmap(art, wxART_BUTTON, wxSize(16, 16)));
+}
+void SetImageAndRemoveText(wxButton* button, const char* const* xpm)
+{
+  SetImageAndRemoveText(button, wxBitmap(xpm));
+}
+
 ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project) :
 ::ui::ProjectSettings(parent, wxID_ANY), main_window_(mainwindow), project_(project)
 {
@@ -71,6 +89,15 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
     // (uiCargoAuthors)
     // (uiCargoDependencies)
     ;
+
+  SetImageAndRemoveText(uiBuildConfigurationTargetHelp, wxART_HELP);
+  SetImageAndRemoveText(uiBuildConfigurationCustomArgsHelp, wxART_TIP);
+  SetImageAndRemoveText(uiBuildFeatureAdd, image::new_xpm);
+  SetImageAndRemoveText(uiBuildFeatureRemove, image::delete_xpm);
+  SetImageAndRemoveText(uiBuildFeatureEdit, image::edit_xpm);
+  SetImageAndRemoveText(uiBuildFeatureEdit, image::edit_xpm);
+  SetImageAndRemoveText(uiBuildFeatureUp, image::up_xpm);
+  SetImageAndRemoveText(uiBuildFeatureDown, image::down_xpm);
 }
 
 void ProjectSettingsDlg::OnApply( wxCommandEvent& event )

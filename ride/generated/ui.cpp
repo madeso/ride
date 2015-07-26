@@ -1272,19 +1272,15 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	wxBoxSizer* bSizer25;
 	bSizer25 = new wxBoxSizer( wxVERTICAL );
 	
-	wxFlexGridSizer* fgSizer19;
-	fgSizer19 = new wxFlexGridSizer( 0, 3, 0, 0 );
-	fgSizer19->AddGrowableCol( 0 );
-	fgSizer19->AddGrowableCol( 2 );
-	fgSizer19->SetFlexibleDirection( wxBOTH );
-	fgSizer19->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	wxBoxSizer* bSizer26;
+	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer26->Add( 100, 0, 0, wxEXPAND, 5 );
 	
 	m_staticText33 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Configuration:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText33->Wrap( -1 );
-	fgSizer19->Add( m_staticText33, 0, wxALL|wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer26;
-	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	bSizer26->Add( m_staticText33, 0, wxALL|wxEXPAND, 5 );
 	
 	uiBuildConfiguration = new wxComboBox(    m_buildPanel, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
 	uiBuildConfiguration->SetMinSize( wxSize( 200,-1 ) );
@@ -1295,13 +1291,10 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	bSizer26->Add( uiBuildManageConfigurations, 0, wxALL, 5 );
 	
 	
-	fgSizer19->Add( bSizer26, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	bSizer26->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	
-	fgSizer19->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	
-	bSizer25->Add( fgSizer19, 0, wxEXPAND, 5 );
+	bSizer25->Add( bSizer26, 0, wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer11;
 	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox(    m_buildPanel, wxID_ANY, wxT("label") ), wxVERTICAL );
