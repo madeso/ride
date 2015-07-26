@@ -92,12 +92,11 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
 
   SetImageAndRemoveText(uiBuildConfigurationTargetHelp, wxART_HELP);
   SetImageAndRemoveText(uiBuildConfigurationCustomArgsHelp, wxART_TIP);
-  SetImageAndRemoveText(uiBuildFeatureAdd, image::new_xpm);
-  SetImageAndRemoveText(uiBuildFeatureRemove, image::delete_xpm);
+  SetImageAndRemoveText(uiBuildFeatureAdd, wxART_NEW);
+  SetImageAndRemoveText(uiBuildFeatureRemove, wxART_DELETE);
   SetImageAndRemoveText(uiBuildFeatureEdit, image::edit_xpm);
-  SetImageAndRemoveText(uiBuildFeatureEdit, image::edit_xpm);
-  SetImageAndRemoveText(uiBuildFeatureUp, image::up_xpm);
-  SetImageAndRemoveText(uiBuildFeatureDown, image::down_xpm);
+  SetImageAndRemoveText(uiBuildFeatureUp, wxART_GO_UP);
+  SetImageAndRemoveText(uiBuildFeatureDown, wxART_GO_DOWN);
 }
 
 void ProjectSettingsDlg::OnApply( wxCommandEvent& event )
