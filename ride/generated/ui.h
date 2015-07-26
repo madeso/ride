@@ -92,41 +92,52 @@ namespace ui
 			wxPanel* m_editor;
 			wxNotebook* m_notebook2;
 			wxPanel* m_panel10;
-			wxCheckBox* uiShowLineNumbers;
-			wxCheckBox* uiDisplayEOL;
-			wxCheckBox* uiIndentGuide;
-			wxComboBox* uiViewWhitespace;
-			wxComboBox* uiWordwrap;
-			wxComboBox* uiEdgeStyle;
-			wxColourPickerCtrl* uiEdgeColor;
-			wxTextCtrl* uiEdgeColumn;
-			wxTextCtrl* uiTabWidth;
-			wxCheckBox* uiUseTabs;
-			wxCheckBox* uiTabIndents;
-			wxCheckBox* uiBackspaceUnindents;
 			wxCheckBox* uiAllowFolding;
 			wxCheckBox* uiFoldLevelNumbers;
 			wxCheckBox* uiFoldLineBeforeExpanded;
 			wxCheckBox* uiFoldLineBeforeContracted;
 			wxCheckBox* uiFoldLineAfterExpanded;
 			wxCheckBox* uiFoldLineAfterContracted;
-			wxCheckBox* uiEditCurrentLineOverdraw;
-			wxColourPickerCtrl* uiEditCurrentLineColor;
-			wxCheckBox* uiCurrentLineVisible;
-			wxTextCtrl* uiEditCurrentLineAlpha;
+			wxStaticText* m_staticText42;
 			wxColourPickerCtrl* uiEditFoldHi;
+			wxStaticText* m_staticText43;
 			wxColourPickerCtrl* uiEditFoldLow;
-			wxCheckBox* uiEditHighlightKeyword;
-			wxComboBox* uiEditIndentation;
+			wxCheckBox* uiCurrentLineVisible;
+			wxCheckBox* uiEditCurrentLineOverdraw;
+			wxStaticText* m_staticText39;
+			wxColourPickerCtrl* uiEditCurrentLineColor;
+			wxStaticText* m_staticText40;
+			wxTextCtrl* uiEditCurrentLineAlpha;
 			wxCheckBox* uiEditAutocompleteCurlyBraces;
 			wxCheckBox* uiEditAutocompleteParentheses;
 			wxCheckBox* uiEditAutocompleteBrackets;
-			wxCheckBox* uiEditShowMultilineIndicators;
-			wxCheckBox* uiEditShowCompilerAnnotations;
 			wxCheckBox* uiEditUseSelectionForeground;
 			wxColourPickerCtrl* uiEditSelectionForeground;
 			wxCheckBox* uiEditUseSelectionBackground;
 			wxColourPickerCtrl* uiEditSelectionBackground;
+			wxCheckBox* uiUseTabs;
+			wxStaticText* m_staticText41;
+			wxTextCtrl* uiTabWidth;
+			wxStaticText* m_staticText47;
+			wxComboBox* uiEdgeStyle;
+			wxStaticText* m_staticText48;
+			wxColourPickerCtrl* uiEdgeColor;
+			wxStaticText* m_staticText49;
+			wxTextCtrl* uiEdgeColumn;
+			wxCheckBox* uiTabIndents;
+			wxCheckBox* uiBackspaceUnindents;
+			wxCheckBox* uiIndentGuide;
+			wxStaticText* m_staticText44;
+			wxComboBox* uiEditIndentation;
+			wxCheckBox* uiDisplayEOL;
+			wxStaticText* m_staticText45;
+			wxComboBox* uiViewWhitespace;
+			wxStaticText* m_staticText46;
+			wxComboBox* uiWordwrap;
+			wxCheckBox* uiEditShowCompilerAnnotations;
+			wxCheckBox* uiEditShowMultilineIndicators;
+			wxCheckBox* uiEditHighlightKeyword;
+			wxCheckBox* uiShowLineNumbers;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxStdDialogButtonSizer* m_sdbSizer1;
@@ -152,9 +163,9 @@ namespace ui
 			virtual void OnMarkerColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnMarkerComboChanged( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnEditChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
