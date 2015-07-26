@@ -1223,7 +1223,7 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	m_dependenciesPanel->SetSizer( bSizer22 );
 	m_dependenciesPanel->Layout();
 	bSizer22->Fit( m_dependenciesPanel );
-	m_notebook3->AddPage( m_dependenciesPanel, wxT("Cargo &Dependencies"), true );
+	m_notebook3->AddPage( m_dependenciesPanel, wxT("Cargo &Dependencies"), false );
 	m_featuresPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer24;
 	bSizer24 = new wxBoxSizer( wxVERTICAL );
@@ -1237,9 +1237,167 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	bSizer24->Fit( m_featuresPanel );
 	m_notebook3->AddPage( m_featuresPanel, wxT("Cargo &Features"), false );
 	m_editorPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer16;
+	fgSizer16 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer16->AddGrowableCol( 1 );
+	fgSizer16->SetFlexibleDirection( wxBOTH );
+	fgSizer16->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer16->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText32 = new wxStaticText( m_editorPanel, wxID_ANY, wxT("Theese settings control the editor for the current project\nand are saved next to Cargo.toml in a file called project.ride"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText32->Wrap( -1 );
+	fgSizer16->Add( m_staticText32, 0, wxALL, 5 );
+	
+	m_staticText31 = new wxStaticText( m_editorPanel, wxID_ANY, wxT("Tab width:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText31->Wrap( -1 );
+	fgSizer16->Add( m_staticText31, 0, wxALL, 5 );
+	
+	 uiEditorTabWidth = new wxTextCtrl( m_editorPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer16->Add(  uiEditorTabWidth, 1, wxALL, 5 );
+	
+	
+	fgSizer16->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiEditorUseTabs = new wxCheckBox( m_editorPanel, wxID_ANY, wxT("Use tabs"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer16->Add( uiEditorUseTabs, 0, wxALL, 5 );
+	
+	
+	m_editorPanel->SetSizer( fgSizer16 );
+	m_editorPanel->Layout();
+	fgSizer16->Fit( m_editorPanel );
 	m_notebook3->AddPage( m_editorPanel, wxT("&Editor"), false );
-	m_buildPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook3->AddPage( m_buildPanel, wxT("&Build"), false );
+	   m_buildPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer25;
+	bSizer25 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer19;
+	fgSizer19 = new wxFlexGridSizer( 0, 3, 0, 0 );
+	fgSizer19->AddGrowableCol( 0 );
+	fgSizer19->AddGrowableCol( 2 );
+	fgSizer19->SetFlexibleDirection( wxBOTH );
+	fgSizer19->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText33 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Configuration:"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_staticText33->Wrap( -1 );
+	fgSizer19->Add( m_staticText33, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer26;
+	bSizer26 = new wxBoxSizer( wxHORIZONTAL );
+	
+	uiBuildConfiguration = new wxComboBox(    m_buildPanel, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiBuildConfiguration->SetMinSize( wxSize( 200,-1 ) );
+	
+	bSizer26->Add( uiBuildConfiguration, 1, wxALL, 5 );
+	
+	uiBuildManageConfigurations = new wxButton(    m_buildPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer26->Add( uiBuildManageConfigurations, 0, wxALL, 5 );
+	
+	
+	fgSizer19->Add( bSizer26, 0, wxALIGN_CENTER|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxEXPAND, 5 );
+	
+	
+	fgSizer19->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	bSizer25->Add( fgSizer19, 0, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer11;
+	sbSizer11 = new wxStaticBoxSizer( new wxStaticBox(    m_buildPanel, wxID_ANY, wxT("label") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer18;
+	fgSizer18 = new wxFlexGridSizer( 0, 3, 0, 0 );
+	fgSizer18->AddGrowableCol( 1 );
+	fgSizer18->AddGrowableRow( 5 );
+	fgSizer18->SetFlexibleDirection( wxBOTH );
+	fgSizer18->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiBuildConfigurationRelease = new wxCheckBox(    m_buildPanel, wxID_ANY, wxT("Release"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer18->Add( uiBuildConfigurationRelease, 0, wxALL, 5 );
+	
+	
+	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiBuildConfigurationDefaultFeatures = new wxCheckBox(    m_buildPanel, wxID_ANY, wxT("Add default features"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer18->Add( uiBuildConfigurationDefaultFeatures, 0, wxALL, 5 );
+	
+	
+	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	 uiBuildConfigurationVerbose = new wxCheckBox(    m_buildPanel, wxID_ANY, wxT("Verbose"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer18->Add(  uiBuildConfigurationVerbose, 0, wxALL, 5 );
+	
+	
+	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText37 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Target:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText37->Wrap( -1 );
+	fgSizer18->Add( m_staticText37, 0, wxALL, 5 );
+	
+	uiBuildConfigurationTarget = new wxTextCtrl(    m_buildPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer18->Add( uiBuildConfigurationTarget, 0, wxALL|wxEXPAND, 5 );
+	
+	uiBuildConfigurationTargetHelp = new wxButton(    m_buildPanel, wxID_ANY, wxT("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer18->Add( uiBuildConfigurationTargetHelp, 0, wxALL, 5 );
+	
+	m_staticText34 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Custom args:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText34->Wrap( -1 );
+	fgSizer18->Add( m_staticText34, 0, wxALL, 5 );
+	
+	uiBuildConfigurationCustomArgs = new wxTextCtrl(    m_buildPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer18->Add( uiBuildConfigurationCustomArgs, 0, wxALL|wxEXPAND, 5 );
+	
+	uiBuildConfigurationCustomArgsHelp = new wxButton(    m_buildPanel, wxID_ANY, wxT("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer18->Add( uiBuildConfigurationCustomArgsHelp, 0, wxALL, 5 );
+	
+	
+	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiBuildFeatures = new wxListBox(    m_buildPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	fgSizer18->Add( uiBuildFeatures, 1, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer28;
+	bSizer28 = new wxBoxSizer( wxVERTICAL );
+	
+	uiBuildFeatureAdd = new wxButton(    m_buildPanel, wxID_ANY, wxT("+"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiBuildFeatureAdd, 0, wxALL, 5 );
+	
+	uiBuildFeatureEdit = new wxButton(    m_buildPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiBuildFeatureEdit, 0, wxALL, 5 );
+	
+	uiBuildFeatureRemove = new wxButton(    m_buildPanel, wxID_ANY, wxT("-"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiBuildFeatureRemove, 0, wxALL, 5 );
+	
+	uiBuildFeatureUp = new wxButton(    m_buildPanel, wxID_ANY, wxT("/\\"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiBuildFeatureUp, 0, wxALL, 5 );
+	
+	uiBuildFeatureDown = new wxButton(    m_buildPanel, wxID_ANY, wxT("\\/"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiBuildFeatureDown, 0, wxALL, 5 );
+	
+	
+	fgSizer18->Add( bSizer28, 0, 0, 5 );
+	
+	
+	sbSizer11->Add( fgSizer18, 1, wxEXPAND, 5 );
+	
+	
+	bSizer25->Add( sbSizer11, 1, wxEXPAND, 5 );
+	
+	
+	m_buildPanel->SetSizer( bSizer25 );
+	m_buildPanel->Layout();
+	bSizer25->Fit(    m_buildPanel );
+	m_notebook3->AddPage(    m_buildPanel, wxT("&Build"), true );
 	m_runPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook3->AddPage( m_runPanel, wxT("&Run"), false );
 	
