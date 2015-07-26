@@ -2,10 +2,23 @@
 #define FORM_H
 
 #include "ride/wx.h"
+#include <wx/artprov.h>
 #include <string>
 #include <vector>
 #include <google/protobuf/stubs/common.h>
 class wxEditableListBox;
+
+//////////////////////////////////////////////////////////////////////////
+// form images
+
+void SetImageAndRemoveText(wxButton* button, const wxBitmap& img);
+
+void SetImageAndRemoveText(wxButton* button, const wxArtID art);
+void SetImageAndRemoveText(wxButton* button, const char* const* xpm);
+
+
+//////////////////////////////////////////////////////////////////////////
+// dialog data to gui and back
 
 #define RETURN_COMBOBOX_VALUE(TYPE, VALUE) assert(ride::TYPE##_IsValid(VALUE)); return static_cast<ride::TYPE>(VALUE)
 #define DIALOG_DATA(ROOT, FUN, UI, SETNAME) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_##FUN(ToData##SETNAME(UI)); } } while(false)

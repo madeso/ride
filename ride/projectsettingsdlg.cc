@@ -56,23 +56,6 @@ bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo, wxStaticText* error
   return false;
 }
 
-void SetImageAndRemoveText(wxButton* button, const wxBitmap& img)
-{
-  button->SetLabel("");
-  button->SetBitmapLabel( img );
-  const auto size = 28;
-  button->SetSize(size, size);
-}
-
-void SetImageAndRemoveText(wxButton* button, const wxArtID art)
-{
-  SetImageAndRemoveText(button, wxArtProvider::GetBitmap(art, wxART_BUTTON, wxSize(16, 16)));
-}
-void SetImageAndRemoveText(wxButton* button, const char* const* xpm)
-{
-  SetImageAndRemoveText(button, wxBitmap(xpm));
-}
-
 ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project) :
 ::ui::ProjectSettings(parent, wxID_ANY), main_window_(mainwindow), project_(project)
 {
