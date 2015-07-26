@@ -1353,8 +1353,9 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	uiBuildConfigurationCustomArgsHelp = new wxButton(    m_buildPanel, wxID_ANY, wxT("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	fgSizer18->Add( uiBuildConfigurationCustomArgsHelp, 0, wxALL, 5 );
 	
-	
-	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
+	m_staticText38 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Features:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText38->Wrap( -1 );
+	fgSizer18->Add( m_staticText38, 0, wxALL, 5 );
 	
 	uiBuildFeatures = new wxListBox(    m_buildPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	fgSizer18->Add( uiBuildFeatures, 1, wxALL|wxEXPAND, 5 );

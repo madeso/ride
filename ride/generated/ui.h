@@ -408,6 +408,7 @@ namespace ui
 			wxStaticText* m_staticText34;
 			wxTextCtrl* uiBuildConfigurationCustomArgs;
 			wxButton* uiBuildConfigurationCustomArgsHelp;
+			wxStaticText* m_staticText38;
 			wxListBox* uiBuildFeatures;
 			wxButton* uiBuildFeatureAdd;
 			wxButton* uiBuildFeatureEdit;
