@@ -87,73 +87,67 @@ enum
   ID_QUICK_OPEN
 };
 
-wxBEGIN_EVENT_TABLE(MainWindow, wxFrame)
-  EVT_MENU(wxID_OPEN              , MainWindow::OnFileOpen)
-  EVT_MENU(wxID_EXIT              , MainWindow::OnFileExit)
-  EVT_MENU(ID_FILE_RIDE_SETTINGS  , MainWindow::OnFileShowSettings)
-  EVT_MENU(wxID_SAVE              , MainWindow::OnFileSave)
-  EVT_MENU(wxID_SAVEAS            , MainWindow::OnFileSaveAs)
+void MainWindow::BindEvents() {
+  Bind(wxEVT_MENU, &MainWindow::OnFileOpen                      , this, wxID_OPEN                           );
+  Bind(wxEVT_MENU, &MainWindow::OnFileExit                      , this, wxID_EXIT                           );
+  Bind(wxEVT_MENU, &MainWindow::OnFileShowSettings              , this, ID_FILE_RIDE_SETTINGS               );
+  Bind(wxEVT_MENU, &MainWindow::OnFileSave                      , this, wxID_SAVE                           );
+  Bind(wxEVT_MENU, &MainWindow::OnFileSaveAs                    , this, wxID_SAVEAS                         );
+  Bind(wxEVT_MENU, &MainWindow::OnEditUndo                      , this, wxID_UNDO                           );
+  Bind(wxEVT_MENU, &MainWindow::OnEditRedo                      , this, wxID_REDO                           );
+  Bind(wxEVT_MENU, &MainWindow::OnEditCut                       , this, wxID_CUT                            );
+  Bind(wxEVT_MENU, &MainWindow::OnEditCopy                      , this, wxID_COPY                           );
+  Bind(wxEVT_MENU, &MainWindow::OnEditPaste                     , this, wxID_PASTE                          );
+  Bind(wxEVT_MENU, &MainWindow::OnEditDuplicate                 , this, wxID_DUPLICATE                      );
+  Bind(wxEVT_MENU, &MainWindow::OnEditDelete                    , this, wxID_DELETE                         );
+  Bind(wxEVT_MENU, &MainWindow::OnEditFind                      , this, wxID_FIND                           );
+  Bind(wxEVT_MENU, &MainWindow::OnEditReplace                   , this, wxID_REPLACE                        );
+  Bind(wxEVT_MENU, &MainWindow::OnEditMatchBrace                , this, ID_EDIT_MATCH_BRACE                 );
+  Bind(wxEVT_MENU, &MainWindow::OnEditSelectBrace               , this, ID_EDIT_SELECT_BRACE                );
+  Bind(wxEVT_MENU, &MainWindow::OnEditGotoLine                  , this, ID_EDIT_GOTO_LINE                   );
+  Bind(wxEVT_MENU, &MainWindow::OnEditIndent                    , this, wxID_INDENT                         );
+  Bind(wxEVT_MENU, &MainWindow::OnEditUnIndent                  , this, wxID_UNINDENT                       );
+  Bind(wxEVT_MENU, &MainWindow::OnEditSelectAll                 , this, wxID_SELECTALL                      );
+  Bind(wxEVT_MENU, &MainWindow::OnEditSelectLine                , this, ID_EDIT_SELECT_LINE                 );
+  Bind(wxEVT_MENU, &MainWindow::OnEditToUpper                   , this, ID_EDIT_TOUPPER                     );
+  Bind(wxEVT_MENU, &MainWindow::OnEditToLower                   , this, ID_EDIT_TOLOWER                     );
+  Bind(wxEVT_MENU, &MainWindow::OnEditMoveLinesUp               , this, ID_EDIT_MOVELINESUP                 );
+  Bind(wxEVT_MENU, &MainWindow::OnEditMoveLinesDown             , this, ID_EDIT_MOVELINESDOWN               );
+  Bind(wxEVT_MENU, &MainWindow::OnEditOpenInOnlineDocumentation , this, ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION);
+  Bind(wxEVT_MENU, &MainWindow::OnEditShowProperties            , this, ID_EDIT_SHOW_PROPERTIES             );
+  Bind(wxEVT_MENU, &MainWindow::OnEditShowAutocomplete          , this, ID_EDIT_SHOW_AUTOCOMPLETE           );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectNew                    , this, ID_PROJECT_NEW                      );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectOpen                   , this, ID_PROJECT_OPEN                     );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectSettings               , this, ID_PROJECT_SETTINGS                 );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectBuild                  , this, ID_PROJECT_BUILD                    );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectSelectActiveBuild      , this, ID_PROJECT_SELECT_ACTIVE_BUILD      );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectClean                  , this, ID_PROJECT_CLEAN                    );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectRebuild                , this, ID_PROJECT_REBUILD                  );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectDoc                    , this, ID_PROJECT_DOC                      );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectRun                    , this, ID_PROJECT_RUN                      );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectTest                   , this, ID_PROJECT_TEST                     );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectBench                  , this, ID_PROJECT_BENCH                    );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectUpdate                 , this, ID_PROJECT_UPDATE                   );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectFileNew                , this, wxID_NEW                            );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectQuickOpen              , this, ID_QUICK_OPEN                       );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectFindInFiles            , this, ID_FIND_IN_FILES                    );
+  Bind(wxEVT_MENU, &MainWindow::OnProjectReplaceInFiles         , this, ID_REPLACE_IN_FILES                 );
+  Bind(wxEVT_MENU, &MainWindow::OnViewRestoreWindows            , this, ID_VIEW_RESTORE_WINDOWS             );
+  Bind(wxEVT_MENU, &MainWindow::OnViewSaveLayout                , this, ID_VIEW_SAVE_LAYOUT                 );
+  Bind(wxEVT_MENU, &MainWindow::OnViewLoadLayout                , this, ID_VIEW_LOAD_LAYOUT                 );
+  Bind(wxEVT_MENU, &MainWindow::OnViewShowFindResult            , this, ID_VIEW_SHOW_FINDRESULT             );
+  Bind(wxEVT_MENU, &MainWindow::OnViewShowStart                 , this, ID_VIEW_SHOW_START                  );
+  Bind(wxEVT_MENU, &MainWindow::OnViewShowBuild                 , this, ID_VIEW_SHOW_BUILD                  );
+  Bind(wxEVT_MENU, &MainWindow::OnViewShowCompile               , this, ID_VIEW_SHOW_COMPILE                );
+  Bind(wxEVT_MENU, &MainWindow::OnViewShowProject               , this, ID_VIEW_SHOW_PROJECT                );
+  Bind(wxEVT_MENU, &MainWindow::OnAbout                         , this, wxID_ABOUT                          );
   
-  EVT_MENU(wxID_UNDO              , MainWindow::OnEditUndo)
-  EVT_MENU(wxID_REDO              , MainWindow::OnEditRedo)
-  EVT_MENU(wxID_CUT               , MainWindow::OnEditCut)
-  EVT_MENU(wxID_COPY              , MainWindow::OnEditCopy)
-  EVT_MENU(wxID_PASTE             , MainWindow::OnEditPaste)
-  EVT_MENU(wxID_DUPLICATE         , MainWindow::OnEditDuplicate)
-  EVT_MENU(wxID_DELETE            , MainWindow::OnEditDelete)
-  EVT_MENU(wxID_FIND              , MainWindow::OnEditFind)
-  EVT_MENU(wxID_REPLACE           , MainWindow::OnEditReplace)
-  EVT_MENU(ID_EDIT_MATCH_BRACE    , MainWindow::OnEditMatchBrace)
-  EVT_MENU(ID_EDIT_SELECT_BRACE   , MainWindow::OnEditSelectBrace)
-  EVT_MENU(ID_EDIT_GOTO_LINE      , MainWindow::OnEditGotoLine)
-  EVT_MENU(wxID_INDENT            , MainWindow::OnEditIndent)
-  EVT_MENU(wxID_UNINDENT          , MainWindow::OnEditUnIndent)
-  EVT_MENU(wxID_SELECTALL         , MainWindow::OnEditSelectAll)
-  EVT_MENU(ID_EDIT_SELECT_LINE    , MainWindow::OnEditSelectLine)
-  EVT_MENU(ID_EDIT_TOUPPER        , MainWindow::OnEditToUpper)
-  EVT_MENU(ID_EDIT_TOLOWER        , MainWindow::OnEditToLower)
-  EVT_MENU(ID_EDIT_MOVELINESUP    , MainWindow::OnEditMoveLinesUp)
-  EVT_MENU(ID_EDIT_MOVELINESDOWN  , MainWindow::OnEditMoveLinesDown)
-  EVT_MENU(ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION, MainWindow::OnEditOpenInOnlineDocumentation)
-  EVT_MENU(ID_EDIT_SHOW_PROPERTIES, MainWindow::OnEditShowProperties)
-  EVT_MENU(ID_EDIT_SHOW_AUTOCOMPLETE, MainWindow::OnEditShowAutocomplete)
-  
-  EVT_MENU(ID_PROJECT_NEW                , MainWindow::OnProjectNew              )
-  EVT_MENU(ID_PROJECT_OPEN               , MainWindow::OnProjectOpen             )
-  EVT_MENU(ID_PROJECT_SETTINGS           , MainWindow::OnProjectSettings         )
-  EVT_MENU(ID_PROJECT_BUILD              , MainWindow::OnProjectBuild            )
-  EVT_MENU(ID_PROJECT_SELECT_ACTIVE_BUILD, MainWindow::OnProjectSelectActiveBuild)
-  EVT_MENU(ID_PROJECT_CLEAN              , MainWindow::OnProjectClean            )
-  EVT_MENU(ID_PROJECT_REBUILD            , MainWindow::OnProjectRebuild          )
-  EVT_MENU(ID_PROJECT_DOC                , MainWindow::OnProjectDoc              )
-  EVT_MENU(ID_PROJECT_RUN                , MainWindow::OnProjectRun              )
-  EVT_MENU(ID_PROJECT_TEST               , MainWindow::OnProjectTest             )
-  EVT_MENU(ID_PROJECT_BENCH              , MainWindow::OnProjectBench            )
-  EVT_MENU(ID_PROJECT_UPDATE             , MainWindow::OnProjectUpdate           )
-  EVT_MENU(wxID_NEW                      , MainWindow::OnProjectFileNew          )
-  EVT_MENU(ID_QUICK_OPEN                 , MainWindow::OnProjectQuickOpen        )
-  EVT_MENU(ID_FIND_IN_FILES              , MainWindow::OnProjectFindInFiles      )
-  EVT_MENU(ID_REPLACE_IN_FILES           , MainWindow::OnProjectReplaceInFiles   )
-  
-  EVT_MENU(ID_VIEW_RESTORE_WINDOWS,MainWindow::OnViewRestoreWindows )
-  EVT_MENU(ID_VIEW_SAVE_LAYOUT,    MainWindow::OnViewSaveLayout )
-  EVT_MENU(ID_VIEW_LOAD_LAYOUT,    MainWindow::OnViewLoadLayout )
-  EVT_MENU(ID_VIEW_SHOW_FINDRESULT,     MainWindow::OnViewShowFindResult )
-  EVT_MENU(ID_VIEW_SHOW_START, MainWindow::OnViewShowStart)
-  EVT_MENU(ID_VIEW_SHOW_BUILD , MainWindow::OnViewShowBuild)
-  EVT_MENU(ID_VIEW_SHOW_COMPILE, MainWindow::OnViewShowCompile)
-  EVT_MENU(ID_VIEW_SHOW_PROJECT , MainWindow::OnViewShowProject)
-  
-  EVT_MENU(wxID_ABOUT             , MainWindow::OnAbout)
-  
-  EVT_CLOSE(MainWindow::OnClose)
-  EVT_ACTIVATE(MainWindow::OnActivated)
-  
-  EVT_AUINOTEBOOK_PAGE_CLOSE(wxID_ANY, MainWindow::OnNotebookPageClose)
-  EVT_AUINOTEBOOK_PAGE_CHANGED(wxID_ANY, MainWindow::OnNotebookPageChanged)
-
-  EVT_MENU_OPEN(MainWindow::OnMenuOpen)
-wxEND_EVENT_TABLE()
+  Bind(wxEVT_CLOSE_WINDOW, &MainWindow::OnClose, this);
+  Bind(wxEVT_ACTIVATE, &MainWindow::OnActivated, this);
+  Bind(wxEVT_AUINOTEBOOK_PAGE_CLOSE, &MainWindow::OnNotebookPageClose, this);
+  Bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED, &MainWindow::OnNotebookPageChanged, this);
+  Bind(wxEVT_MENU_OPEN, &MainWindow::OnMenuOpen, this);
+}
 
 void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& evt) {
   wxString file_name = wxEmptyString;
@@ -174,6 +168,7 @@ const wxString& MainWindow::root_folder() const {
 }
 
 void MainWindow::OnActivated(wxActivateEvent& event) {
+  if (closing_) return;
   if (event.GetActive()) {
     ReloadFilesIfNeeded();
 
@@ -243,12 +238,14 @@ void MainWindow::SetStatusText(const wxString& text, StatusBarWidgets widget) {
 
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 : wxFrame(NULL, wxID_ANY, app_name, pos, size)
+, closing_(false)
 , aui_(NULL, AUI_OPTIONS)
 , findres_window_(NULL)
 , app_name_(app_name)
 , last_focus_(NULL)
 , statusbar_(NULL)
 {
+  BindEvents();
   project_.reset(new Project(this, wxEmptyString));
 #ifdef _WIN32
   SetIcon(wxICON(aaaaa_logo));
@@ -406,11 +403,13 @@ void MainWindow::OnViewRestoreWindows(wxCommandEvent& event){
 }
 
 void MainWindow::OnViewSaveLayout(wxCommandEvent& event){
-  // todo...
+  // TODO
+  wxMessageBox("IMPLEMENT ME");
 }
 
 void MainWindow::OnViewLoadLayout(wxCommandEvent& event){
-  // todo...
+  // TODO
+  wxMessageBox("IMPLEMENT ME");
 }
 
 void ShowHideAui(wxAuiManager* aui, const wxString& name) {
@@ -683,6 +682,9 @@ Project* MainWindow::project() {
 }
 
 void MainWindow::OnClose(wxCloseEvent& evt) {
+  if (closing_) return;
+  closing_ = true;
+
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount(); ++tab_index) {
     FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
     if (edit) {

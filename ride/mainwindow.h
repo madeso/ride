@@ -138,7 +138,7 @@ private:
 
   void OnMenuOpen(wxMenuEvent& event);
 
-	wxDECLARE_EVENT_TABLE();
+  void BindEvents();
 
 private:
   void ShowFindWindow();
@@ -158,6 +158,7 @@ private:
   void UpdateMenuItemView();
 
   private:
+    bool closing_;
   wxAuiManager aui_;
   wxAuiNotebook* notebook_;
   OutputDirector build_output_;
