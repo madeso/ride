@@ -1129,7 +1129,7 @@ QuickOpen::QuickOpen( wxWindow* parent, wxWindowID id, const wxString& title, co
 	uiFileList = new wxListCtrl( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLC_REPORT );
 	bSizer17->Add( uiFileList, 1, wxALL|wxEXPAND, 5 );
 	
-	uiFilterName = new TextCtrlList( this, uiFileList );
+	uiFilterName = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer17->Add( uiFilterName, 0, wxALL|wxEXPAND, 5 );
 	
 	uiCaseSensitive = new wxCheckBox( this, wxID_ANY, wxT("Case sensitivity"), wxDefaultPosition, wxDefaultSize, 0 );

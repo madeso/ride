@@ -34,7 +34,6 @@
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/listctrl.h>
-#include "ride/textctrllist.h"
 #include <wx/stc/stc.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -320,7 +319,7 @@ namespace ui
 		
 		protected:
 			wxListCtrl* uiFileList;
-			TextCtrlList* uiFilterName;
+			wxTextCtrl* uiFilterName;
 			wxCheckBox* uiCaseSensitive;
 			wxStdDialogButtonSizer* m_sdbSizer6;
 			wxButton* m_sdbSizer6OK;
