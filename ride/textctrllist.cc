@@ -8,8 +8,8 @@ TextCtrlList::TextCtrlList(wxWindow* parent, wxListCtrl* list)
   , callback_(NULL)
   , last_selected_(0) {
   BindEvents();
-  list_->Connect(wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler(TextCtrlList::OnFileDeselected), NULL, this);
-  list_->Connect(wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler(TextCtrlList::OnFileSelected), NULL, this);
+  list_->Bind(wxEVT_COMMAND_LIST_ITEM_DESELECTED, &TextCtrlList::OnFileDeselected, this);
+  list_->Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &TextCtrlList::OnFileSelected, this);
 }
 
 TextCtrlList::~TextCtrlList() {
