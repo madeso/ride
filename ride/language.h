@@ -19,7 +19,7 @@ public:
 
   // internal
   // todo: move to protected/private
-  Language& operator()(const wxString& ext);
+  void AddExtension(const wxString& ext);
 
   bool IsKeyword(const wxString word) const;
 

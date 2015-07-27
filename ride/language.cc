@@ -117,9 +117,8 @@ void Language::SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& 
 #endif
 }
 
-Language& Language::operator()(const wxString& ext) {
+void Language::AddExtension(const wxString& ext) {
   file_patterns_.push_back(ext);
-  return *this;
 }
 
 bool Language::MatchPattern(const wxString& file) const {
@@ -163,16 +162,14 @@ const std::vector<wxString>& Language::GetKeywords() const {
 class CppLanguage : public Language {
 public:
   CppLanguage() : Language(_("C++"), wxSTC_LEX_CPP){
-    (*this)
-      (".c")
-      (".cc")
-      (".cpp")
-      (".cs")
-      (".h")
-      (".hh")
-      (".hpp")
-      (".hxx")
-      ;
+    AddExtension(".c");
+    AddExtension(".cc");
+    AddExtension(".cpp");
+    AddExtension(".cs");
+    AddExtension(".h");
+    AddExtension(".hh");
+    AddExtension(".hpp");
+    AddExtension(".hxx");
     const KeywordBuilder temp = KeywordBuilder()
       <<"asm"<<"auto"<<"bool"<<"break"<<"case"<<"catch"<<"char"<<"class"<<"const"<<"const_cast"
       <<"continue"<<"default"<<"delete"<<"do"<<"double"<<"dynamistyle_cast"<<"else"<<"enum"<<"explicit"
@@ -261,9 +258,7 @@ public:
 class RustLanguage : public Language {
 public:
   RustLanguage() : Language(_("Rust"), wxSTC_LEX_RUST){
-    (*this)
-      (".rs")
-      ;
+    AddExtension(".rs");
     const KeywordBuilder temp = KeywordBuilder()
       << "abstract" << "alignof" << "as" << "become" << "box"
       << "break" << "const" << "continue" << "crate" << "do"
@@ -398,9 +393,7 @@ public:
 class ProtobufLanguage : public Language {
 public:
   ProtobufLanguage() : Language(_("Protobuf"), wxSTC_LEX_CPP){
-    (*this)
-      (".proto")
-      ;
+    AddExtension(".proto");
   }
 
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
@@ -473,9 +466,7 @@ public:
 class MarkdownLanguage : public Language {
 public:
   MarkdownLanguage() : Language(_("Markdown"), wxSTC_LEX_MARKDOWN) {
-    (*this)
-      (".md")
-      ;
+    AddExtension(".md");
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     SetStyle(text, wxSTC_MARKDOWN_DEFAULT, settings.fonts_and_colors().default_style());
@@ -507,11 +498,9 @@ public:
 class PropertiesLanguage : public Language {
 public:
   PropertiesLanguage() : Language(_("Properties"), wxSTC_LEX_PROPERTIES) {
-    (*this)
-      (".props")
-      (".toml") // properties are kinda like toml
+    AddExtension(".props");
+      AddExtension(".toml"); // properties are kinda like toml
       // todo: implement a proper toml lexer/language
-      ;
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
@@ -528,9 +517,7 @@ public:
 class XmlLanguage : public Language {
 public:
   XmlLanguage() : Language(_("XML"), wxSTC_LEX_XML) {
-    (*this)
-      (".xml")
-      ;
+    AddExtension(".xml");
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
@@ -569,10 +556,8 @@ public:
 class CmakeLanguage : public Language {
 public:
   CmakeLanguage() : Language(_("CMake"), wxSTC_LEX_CMAKE) {
-    (*this)
-      (".cmake")
-      ("CMakeLists.txt")
-      ;
+    AddExtension(".cmake");
+    AddExtension("CMakeLists.txt");
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
@@ -612,9 +597,7 @@ public:
 class LuaLanguage : public Language {
 public:
   LuaLanguage() : Language(_("Lua"), wxSTC_LEX_LUA) {
-    (*this)
-      (".lua")
-      ;
+    AddExtension(".lua");
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
@@ -660,9 +643,7 @@ public:
 class YamlLanguage : public Language {
 public:
   YamlLanguage() : Language(_("YAML"), wxSTC_LEX_YAML) {
-    (*this)
-      (".yaml")
-      ;
+    AddExtension(".yaml");
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
