@@ -5,9 +5,12 @@
 class Language;
 
 enum class ShowAutoCompleteAction {
-  NO_FORCE // no forcing at all
-  ,FORCE_SIMPLE // simple forcing
-  ,FORCE_KEEP // forcing with no auto-hide
+  // no forcing at all
+  NO_FORCE,
+  // simple forcing
+  FORCE_SIMPLE,
+  // forcing with no auto-hide
+  FORCE_KEEP
 };
 
 class wxStyledTextCtrl;
