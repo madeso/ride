@@ -23,7 +23,7 @@
 #include "ride/cmdrunner.h"
 
 #include "ride/outputcontrol.h"
-#include "ride/findcontrol.h"
+#include "ride/findresultscontrol.h"
 
 #include "ride/tab.h"
 #include "ride/startpage.h"
@@ -375,7 +375,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
   build_output_.Create(this, aui_, PANE_BUILD, "Build");
   compiler_output_.Create(this, aui_, PANE_COMPILE, "Compile");
 
-  findres_window_ = new FindControl(this);
+  findres_window_ = new FindResultsControl(this);
   findres_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   findres_window_->UpdateStyle();
   findres_window_->UpdateStyle();

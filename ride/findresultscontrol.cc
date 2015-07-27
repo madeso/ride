@@ -1,4 +1,4 @@
-#include "ride/findcontrol.h"
+#include "ride/findresultscontrol.h"
 
 #include "ride/compilermessage.h"
 #include "ride/stcutils.h"
@@ -15,21 +15,21 @@ enum
 };
 
 
-FindControl::FindControl(MainWindow* main) : main_(main) {
+FindResultsControl::FindResultsControl(MainWindow* main) : main_(main) {
   BindEvents();
 }
 
-void FindControl::BindEvents() {
-    Bind(wxEVT_LEFT_DCLICK, &FindControl::OnDoubleClick, this);
-    Bind(wxEVT_CONTEXT_MENU, &FindControl::OnContextMenu, this);
+void FindResultsControl::BindEvents() {
+    Bind(wxEVT_LEFT_DCLICK, &FindResultsControl::OnDoubleClick, this);
+    Bind(wxEVT_CONTEXT_MENU, &FindResultsControl::OnContextMenu, this);
 
-    Bind(wxEVT_MENU, &FindControl::OnCopyThisCompilerMessage, this, ID_COPY_THIS_COMPILER_MESSAGE);
-    Bind(wxEVT_MENU, &FindControl::OnClearCompilerOuput, this, ID_CLEAR_COMPILER_OUTPUT);
-    Bind(wxEVT_MENU, &FindControl::OnSelectAll, this, wxID_SELECTALL);
-    Bind(wxEVT_MENU, &FindControl::OnCopy, this, wxID_COPY);
+    Bind(wxEVT_MENU, &FindResultsControl::OnCopyThisCompilerMessage, this, ID_COPY_THIS_COMPILER_MESSAGE);
+    Bind(wxEVT_MENU, &FindResultsControl::OnClearCompilerOuput, this, ID_CLEAR_COMPILER_OUTPUT);
+    Bind(wxEVT_MENU, &FindResultsControl::OnSelectAll, this, wxID_SELECTALL);
+    Bind(wxEVT_MENU, &FindResultsControl::OnCopy, this, wxID_COPY);
 }
 
-void FindControl::UpdateStyle() {
+void FindResultsControl::UpdateStyle() {
   this->StyleClearAll();
   this->SetReadOnly(true);
 
@@ -39,7 +39,7 @@ void FindControl::UpdateStyle() {
   this->SetEndAtLastLine(set.end_at_last_line());
 }
 
-void FindControl::OnContextMenu(wxContextMenuEvent& event) {
+void FindResultsControl::OnContextMenu(wxContextMenuEvent& event) {
   const wxPoint mouse_point = GetContextEventPosition(event);
   const wxPoint client_point = ScreenToClient(mouse_point);
   context_positon_ = this->PositionFromPoint(client_point);
@@ -61,7 +61,7 @@ void FindControl::OnContextMenu(wxContextMenuEvent& event) {
   PopupMenu(&menu);
 }
 
-void FindControl::OnCopyThisCompilerMessage(wxCommandEvent& event) {
+void FindResultsControl::OnCopyThisCompilerMessage(wxCommandEvent& event) {
   const wxString line_content = GetContextLineContent();
 
   CompilerMessage message;
@@ -76,19 +76,19 @@ void FindControl::OnCopyThisCompilerMessage(wxCommandEvent& event) {
   }
 }
 
-void FindControl::OnClearCompilerOuput(wxCommandEvent& event) {
+void FindResultsControl::OnClearCompilerOuput(wxCommandEvent& event) {
   ClearOutput(this);
 }
 
-void FindControl::OnSelectAll(wxCommandEvent& event) {
+void FindResultsControl::OnSelectAll(wxCommandEvent& event) {
   this->SelectAll();
 }
 
-void FindControl::OnCopy(wxCommandEvent& event) {
+void FindResultsControl::OnCopy(wxCommandEvent& event) {
   this->Copy();
 }
 
-const wxString FindControl::GetContextLineContent() {
+const wxString FindResultsControl::GetContextLineContent() {
   long line_number = 0;
   long col = 0;
   const long index = context_positon_;
@@ -98,7 +98,7 @@ const wxString FindControl::GetContextLineContent() {
   return line_content;
 }
 
-void FindControl::OnDoubleClick(wxMouseEvent& event) {
+void FindResultsControl::OnDoubleClick(wxMouseEvent& event) {
   long line_number = 0;
   long col = 0;
   long index = this->GetInsertionPoint();

@@ -6,9 +6,12 @@
 
 class MainWindow;
 
-class FindControl : public wxStyledTextCtrl {
+/** The main control of the find results window/pane.
+ * This is where the result of functions like 'find in files' are placed.
+ */
+class FindResultsControl : public wxStyledTextCtrl {
 public:
-  FindControl(MainWindow* main);
+  FindResultsControl(MainWindow* main);
 
   void UpdateStyle();
   const wxString GetContextLineContent();
