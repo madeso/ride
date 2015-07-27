@@ -7,7 +7,7 @@ TextCtrlList::TextCtrlList(wxWindow* parent, wxListCtrl* list)
   , list_(list)
   , callback_(NULL)
   , last_selected_(0) {
-  BindEvents();
+  // BindEvents();
 }
 
 TextCtrlList::~TextCtrlList() {

@@ -20,17 +20,101 @@ protected:
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
   void OnActivate(wxActivateEvent& event);
+  void OnContextSensitive(wxCommandEvent& event);
+  // virtual void OnFileDeselected(wxListEvent& event) { event.Skip(); }
+  // virtual void OnFileSelected(wxListEvent& event) { event.Skip(); }
+
   void OnTextUpdated();
   void OnTextEnter();
-  void OnContextSensitive(wxCommandEvent& event);
 
-  virtual void OnFileDeselected(wxListEvent& event) { event.Skip(); }
-  virtual void OnFileSelected(wxListEvent& event) { event.Skip(); }
+protected:
+  void OnKeyUp(wxKeyEvent& event);
+  void OnUpdated(wxCommandEvent& event);
+  void OnEnter(wxCommandEvent& event);
 
+  void OnFileDeselected(wxListEvent& event);
+  void OnFileSelected(wxListEvent& event);
+  int last_selected_;
+private:
+  void BindEvents();
   wxString root_;
   std::vector<wxString> files_;
   std::vector<wxString> filtered_paths_;
 };
+
+
+//////////////////////////////////////////////////////////////////////////
+
+
+void QuickOpenDlg::OnKeyUp(wxKeyEvent& event)
+{
+  if (uiFileList == NULL) return;
+
+  if (event.GetKeyCode() == WXK_UP) {
+    auto selected = ::GetSelection(uiFileList);
+    if (selected.empty()){
+      ::SetSelection(uiFileList, 0, true);
+    }
+    else {
+      long last = last_selected_; //  *selected.begin();
+      if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
+      long next = last - 1;
+      ::SetSelection(uiFileList, next, true);
+      if (last_selected_ == last) {
+        last_selected_ = next;
+        ::SetSelection(uiFileList, last, false);
+      }
+    }
+  }
+  else if (event.GetKeyCode() == WXK_DOWN) {
+    auto selected = ::GetSelection(uiFileList);
+    if (selected.empty()){
+      ::SetSelection(uiFileList, 0, true);
+    }
+    else {
+      long last = last_selected_; // *selected.rbegin();
+      if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
+      long next = last + 1;
+      ::SetSelection(uiFileList, next, true);
+      if (last_selected_ == last) {
+        last_selected_ = next;
+        ::SetSelection(uiFileList, last, false);
+      }
+    }
+  }
+  else {
+    event.Skip();
+  }
+}
+
+void QuickOpenDlg::OnUpdated(wxCommandEvent& event)
+{
+  OnTextUpdated();
+}
+
+void QuickOpenDlg::OnEnter(wxCommandEvent& event)
+{
+  OnTextEnter();
+}
+
+void QuickOpenDlg::OnFileDeselected(wxListEvent& event) {
+}
+
+void QuickOpenDlg::OnFileSelected(wxListEvent& event) {
+  last_selected_ = event.GetIndex();
+}
+
+void QuickOpenDlg::BindEvents()
+{
+  uiFilterName->Bind(wxEVT_TEXT_ENTER, &QuickOpenDlg::OnEnter, this);
+  uiFilterName->Bind(wxEVT_TEXT, &QuickOpenDlg::OnUpdated, this);
+  uiFilterName->Bind(wxEVT_KEY_UP, &QuickOpenDlg::OnKeyUp, this);
+
+  uiFileList->Bind(wxEVT_COMMAND_LIST_ITEM_DESELECTED, &QuickOpenDlg::OnFileDeselected, this);
+  uiFileList->Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &QuickOpenDlg::OnFileSelected, this);
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 void AddIfMoreThanOne(std::vector<wxString>& ret, const std::vector<wxString>& space) {
   if (space.size() != 1) {
@@ -171,7 +255,8 @@ QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const wxString& root, const std::ve
   uiFileList->SetColumnWidth(path_index, 300);
   uiFileList->SetColumnWidth(count_index, 50);
 
-  uiFilterName->set_callback(this);
+  BindEvents();
+  // uiFilterName->set_callback(this);
   // uiFileList->Bind(wxEVT_KEY_DOWN, &QuickOpenDlg::OnFilterKeyUp, this);
   UpdateFilters();
 }
