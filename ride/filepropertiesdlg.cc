@@ -38,7 +38,7 @@ private:
   typedef std::vector<int> Ints;
   typedef std::map<int, wxString> IntsToStrings;
 public:
-  StringIntConverter& operator()(int i, const wxString& str) {
+  StringIntConverter& Add(int i, const wxString& str) {
     strings_.Add(str);
     ints_.push_back(i);
     intstostrings_.insert(IntsToStrings::value_type(i, str));
@@ -74,36 +74,36 @@ private:
 
 const StringIntConverter& EOLString() {
   static StringIntConverter sic = StringIntConverter()
-    (wxSTC_EOL_CR, wxT("CR (Unix)"))
-    (wxSTC_EOL_CRLF, wxT("CRLF (Windows)"))
-    (wxSTC_EOL_LF, wxT("CR (Macintosh)"));
+    .Add(wxSTC_EOL_CR, wxT("CR (Unix)"))
+    .Add(wxSTC_EOL_CRLF, wxT("CRLF (Windows)"))
+    .Add(wxSTC_EOL_LF, wxT("CR (Macintosh)"));
   return sic;
 }
 
 const StringIntConverter& CodePageString() {
   static StringIntConverter sic = StringIntConverter()
-    (wxSTC_CP_UTF8, "UTF-8")
-    (wxSTC_CHARSET_ANSI, "Ansi")
-    (wxSTC_CHARSET_DEFAULT, "Default")
-    (wxSTC_CHARSET_BALTIC, "Baltic")
-    (wxSTC_CHARSET_CHINESEBIG5, "Chinesebig5")
-    (wxSTC_CHARSET_EASTEUROPE, "Easteurope")
-    (wxSTC_CHARSET_GB2312, "Gb2312")
-    (wxSTC_CHARSET_GREEK, "Greek")
-    (wxSTC_CHARSET_HANGUL, "Hangul")
-    (wxSTC_CHARSET_MAC, "Mac")
-    (wxSTC_CHARSET_OEM, "Oem")
-    (wxSTC_CHARSET_RUSSIAN, "Russian")
-    (wxSTC_CHARSET_CYRILLIC, "Cyrillic")
-    (wxSTC_CHARSET_SHIFTJIS, "Shiftjis")
-    (wxSTC_CHARSET_SYMBOL, "Symbol")
-    (wxSTC_CHARSET_TURKISH, "Turkish")
-    (wxSTC_CHARSET_JOHAB, "Johab")
-    (wxSTC_CHARSET_HEBREW, "Hebrew")
-    (wxSTC_CHARSET_ARABIC, "Arabic")
-    (wxSTC_CHARSET_VIETNAMESE, "Vietnamese")
-    (wxSTC_CHARSET_THAI, "Thai")
-    (wxSTC_CHARSET_8859_15, "8859_15");
+    .Add(wxSTC_CP_UTF8, "UTF-8")
+    .Add(wxSTC_CHARSET_ANSI, "Ansi")
+    .Add(wxSTC_CHARSET_DEFAULT, "Default")
+    .Add(wxSTC_CHARSET_BALTIC, "Baltic")
+    .Add(wxSTC_CHARSET_CHINESEBIG5, "Chinesebig5")
+    .Add(wxSTC_CHARSET_EASTEUROPE, "Easteurope")
+    .Add(wxSTC_CHARSET_GB2312, "Gb2312")
+    .Add(wxSTC_CHARSET_GREEK, "Greek")
+    .Add(wxSTC_CHARSET_HANGUL, "Hangul")
+    .Add(wxSTC_CHARSET_MAC, "Mac")
+    .Add(wxSTC_CHARSET_OEM, "Oem")
+    .Add(wxSTC_CHARSET_RUSSIAN, "Russian")
+    .Add(wxSTC_CHARSET_CYRILLIC, "Cyrillic")
+    .Add(wxSTC_CHARSET_SHIFTJIS, "Shiftjis")
+    .Add(wxSTC_CHARSET_SYMBOL, "Symbol")
+    .Add(wxSTC_CHARSET_TURKISH, "Turkish")
+    .Add(wxSTC_CHARSET_JOHAB, "Johab")
+    .Add(wxSTC_CHARSET_HEBREW, "Hebrew")
+    .Add(wxSTC_CHARSET_ARABIC, "Arabic")
+    .Add(wxSTC_CHARSET_VIETNAMESE, "Vietnamese")
+    .Add(wxSTC_CHARSET_THAI, "Thai")
+    .Add(wxSTC_CHARSET_8859_15, "8859_15");
   return sic;
 }
 
