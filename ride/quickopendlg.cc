@@ -5,11 +5,10 @@
 #include "ride/wxutils.h"
 #include <vector>
 #include <set>
-#include "ride/textctrllist.h"
 
 // based on http://docs.wholetomato.com/default.asp?W193
 
-class QuickOpenDlg : public ui::QuickOpen, TextCtrlCallback {
+class QuickOpenDlg : public ui::QuickOpen {
 public:
   QuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files);
   std::vector<wxString> GetSelectedFiles();
