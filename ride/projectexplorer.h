@@ -47,7 +47,7 @@ private:
   void OnEditLabelEnd(wxTreeEvent& event);
   
 
-  wxDECLARE_EVENT_TABLE();
+  void BindEvents();
 
 private:
   wxImageList images_;

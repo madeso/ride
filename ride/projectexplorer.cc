@@ -29,6 +29,7 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
   | wxTR_LINES_AT_ROOT
   | wxTR_EDIT_LABELS
   ), images_(16, 16), main_(main), last_highlighted_item_(NULL) {
+  BindEvents();
   UpdateColors();
 
   this->SetImageList(&images_);
@@ -450,24 +451,23 @@ void ProjectExplorer::OnOpenExplorer(wxCommandEvent& event) {
   wxLaunchDefaultApplication(data.second->path());
 }
 
-wxBEGIN_EVENT_TABLE(ProjectExplorer, wxTreeCtrl)
-EVT_LEFT_DCLICK(ProjectExplorer::OnDoubleClick)
-EVT_CONTEXT_MENU(ProjectExplorer::OnContextMenu)
+void ProjectExplorer::BindEvents() {
+  Bind(wxEVT_LEFT_DCLICK, &ProjectExplorer::OnDoubleClick, this);
+  Bind(wxEVT_CONTEXT_MENU, &ProjectExplorer::OnContextMenu, this);
+  
+  Bind(wxEVT_MENU, &ProjectExplorer::OnCreateNewFile, this, ID_CREATE_NEW_FILE);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnCreateNewFolder, this, ID_CREATE_NEW_FOLDER);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderCollapse, this, ID_FOLDER_COLLAPSE);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderExpand, this, ID_FOLDER_EXPAND);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderCollapseAllChildren, this, ID_FOLDER_COLLAPSE_ALL_CHILDREN);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderExpandAllChildren, this, ID_FOLDER_EXPAND_ALL_CHILDREN);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnCollapseAll, this, ID_COLLAPSE_ALL);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnExpandAll, this, ID_EXPAND_ALL);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnOpenFile, this, ID_OPEN_FILE);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnDeleteFileOrFolder, this, ID_DELETE_FILE_OR_FOLDER);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnRename, this, ID_RENAME);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnOpenExplorer, this, ID_OPEN_EXPLORER);
 
-EVT_MENU(ID_CREATE_NEW_FILE             , ProjectExplorer::OnCreateNewFile            )
-EVT_MENU(ID_CREATE_NEW_FOLDER           , ProjectExplorer::OnCreateNewFolder          )
-EVT_MENU(ID_FOLDER_COLLAPSE             , ProjectExplorer::OnFolderCollapse           )
-EVT_MENU(ID_FOLDER_EXPAND               , ProjectExplorer::OnFolderExpand             )
-EVT_MENU(ID_FOLDER_COLLAPSE_ALL_CHILDREN, ProjectExplorer::OnFolderCollapseAllChildren)
-EVT_MENU(ID_FOLDER_EXPAND_ALL_CHILDREN  , ProjectExplorer::OnFolderExpandAllChildren  )
-EVT_MENU(ID_COLLAPSE_ALL                , ProjectExplorer::OnCollapseAll              )
-EVT_MENU(ID_EXPAND_ALL                  , ProjectExplorer::OnExpandAll                )
-EVT_MENU(ID_OPEN_FILE                   , ProjectExplorer::OnOpenFile                 )
-EVT_MENU(ID_DELETE_FILE_OR_FOLDER       , ProjectExplorer::OnDeleteFileOrFolder       )
-EVT_MENU(ID_RENAME                      , ProjectExplorer::OnRename                   )
-EVT_MENU(ID_OPEN_EXPLORER               , ProjectExplorer::OnOpenExplorer             )
-
-EVT_TREE_BEGIN_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelStart)
-EVT_TREE_END_LABEL_EDIT(wxID_ANY, ProjectExplorer::OnEditLabelEnd)
-
-wxEND_EVENT_TABLE()
+  Bind(wxEVT_TREE_BEGIN_LABEL_EDIT, &ProjectExplorer::OnEditLabelStart, this);
+  Bind(wxEVT_TREE_END_LABEL_EDIT, &ProjectExplorer::OnEditLabelEnd, this);
+}
