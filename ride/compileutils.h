@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_COMPILEUTILS_H
 #define RIDE_COMPILEUTILS_H
 

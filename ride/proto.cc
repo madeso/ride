@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/proto.h"
 #include <wx/utils.h>
 

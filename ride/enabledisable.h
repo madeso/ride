@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_ENABLEDISABLE_H
 #define RIDE_ENABLEDISABLE_H
 

@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/wx.h"
 #include "ride/filepropertiesdlg.h"
 #include "ride/fileedit.h"

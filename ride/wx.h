@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_LOCALWX_H
 #define RIDE_LOCALWX_H
 

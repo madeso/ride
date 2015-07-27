@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/enabledisable.h"
 #include "ride/wx.h"
 

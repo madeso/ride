@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef CARGO_H
 #define CARGO_H
 

@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/wx.h"
 #include "ride/language.h"
 #include "ride/settings.h"

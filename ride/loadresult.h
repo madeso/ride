@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef LOADRESULT_H
 #define LOADRESULT_H
 

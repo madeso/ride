@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef FORM_H
 #define FORM_H
 

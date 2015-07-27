@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_RUNNER_H
 #define RIDE_RUNNER_H
 

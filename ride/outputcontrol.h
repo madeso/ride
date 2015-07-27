@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_OUTPUTCONTROL_H
 #define RIDE_OUTPUTCONTROL_H
 

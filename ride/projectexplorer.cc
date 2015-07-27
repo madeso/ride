@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/projectexplorer.h"
 
 #include <vector>

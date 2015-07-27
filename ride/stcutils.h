@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_STCUTILS_H_
 #define RIDE_STCUTILS_H_
 

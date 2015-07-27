@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_CREATENEWFILEDLG_H
 #define RIDE_CREATENEWFILEDLG_H
 

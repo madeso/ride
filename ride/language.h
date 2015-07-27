@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_LANGUAGE_H
 #define RIDE_LANGUAGE_H
 

@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef SETTINGS_DLG_H
 #define SETTINGS_DLG_H
 

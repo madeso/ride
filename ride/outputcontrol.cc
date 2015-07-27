@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/outputcontrol.h"
 
 #include "ride/mainwindow.h"

@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/wx.h"
 #include <wx/stc/stc.h>
 #include <wx/aui/aui.h>

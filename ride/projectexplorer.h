@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_PROJECTEXPLORER_H
 #define RIDE_PROJECTEXPLORER_H
 

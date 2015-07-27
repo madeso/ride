@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/findresultscontrol.h"
 
 #include "ride/compilermessage.h"

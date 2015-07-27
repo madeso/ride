@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/projectsettingsdlg.h"
 
 #include "ride/generated/ui.h"

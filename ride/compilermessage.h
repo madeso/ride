@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_COMPILER_MESSAGE_H
 #define RIDE_COMPILER_MESSAGE_H
 

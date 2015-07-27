@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/project.h"
 #include <wx/utils.h>
 #include <wx/process.h>

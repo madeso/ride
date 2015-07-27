@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef PROJECTSETTINGS_DLG_H
 #define PROJECTSETTINGS_DLG_H
 

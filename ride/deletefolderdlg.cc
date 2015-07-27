@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #include "ride/deletefolderdlg.h"
 
 #include "ride/wx.h"

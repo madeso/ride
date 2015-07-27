@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_FINDCONTROL_H_
 #define RIDE_FINDCONTROL_H_
 
