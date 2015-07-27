@@ -84,14 +84,13 @@ class RustClassFileTemplate : public FileTemplate{
 public:
   virtual const wxString GenerateContent(const wxString& name) {
     return wxString::Format(
-      "struct %s {" "\n"
-      "}"           "\n"
-      ""            "\n"
-      "impl %s {"   "\n"
-      "}"           "\n"
-      ""            "\n"
-      , name, name
-      );
+      "struct %s {\n"
+      "}\n"
+      "\n"
+      "impl %s {\n"
+      "}\n"
+      "\n"
+      , name, name);
   }
 } g_rust_class_file_template;
 
