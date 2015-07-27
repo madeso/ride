@@ -16,6 +16,17 @@ enum
 
 
 FindControl::FindControl(MainWindow* main) : main_(main) {
+  BindEvents();
+}
+
+void FindControl::BindEvents() {
+    Bind(wxEVT_LEFT_DCLICK, &FindControl::OnDoubleClick, this);
+    Bind(wxEVT_CONTEXT_MENU, &FindControl::OnContextMenu, this);
+
+    Bind(wxEVT_MENU, &FindControl::OnCopyThisCompilerMessage, this, ID_COPY_THIS_COMPILER_MESSAGE);
+    Bind(wxEVT_MENU, &FindControl::OnClearCompilerOuput, this, ID_CLEAR_COMPILER_OUTPUT);
+    Bind(wxEVT_MENU, &FindControl::OnSelectAll, this, wxID_SELECTALL);
+    Bind(wxEVT_MENU, &FindControl::OnCopy, this, wxID_COPY);
 }
 
 void FindControl::UpdateStyle() {
@@ -100,14 +111,3 @@ void FindControl::OnDoubleClick(wxMouseEvent& event) {
     main_->OpenCompilerMessage(message);
   }
 }
-
-wxBEGIN_EVENT_TABLE(FindControl, wxStyledTextCtrl)
-  EVT_LEFT_DCLICK(FindControl::OnDoubleClick)
-  EVT_CONTEXT_MENU(FindControl::OnContextMenu)
-
-  EVT_MENU(ID_COPY_THIS_COMPILER_MESSAGE, FindControl::OnCopyThisCompilerMessage)
-  EVT_MENU(ID_CLEAR_COMPILER_OUTPUT, FindControl::OnClearCompilerOuput)
-  EVT_MENU(wxID_SELECTALL, FindControl::OnSelectAll)
-  EVT_MENU(wxID_COPY, FindControl::OnCopy)
-wxEND_EVENT_TABLE()
-

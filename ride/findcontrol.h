@@ -20,7 +20,7 @@ protected:
   void OnSelectAll(wxCommandEvent& event);
   void OnCopy(wxCommandEvent& event);
   void OnDoubleClick(wxMouseEvent& event);
-  wxDECLARE_EVENT_TABLE();
+  void BindEvents();
 
 private:
   int context_positon_;
