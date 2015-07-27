@@ -8,8 +8,6 @@ TextCtrlList::TextCtrlList(wxWindow* parent, wxListCtrl* list)
   , callback_(NULL)
   , last_selected_(0) {
   BindEvents();
-  list_->Bind(wxEVT_COMMAND_LIST_ITEM_DESELECTED, &TextCtrlList::OnFileDeselected, this);
-  list_->Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &TextCtrlList::OnFileSelected, this);
 }
 
 TextCtrlList::~TextCtrlList() {
@@ -87,4 +85,7 @@ void TextCtrlList::BindEvents()
   Bind(wxEVT_TEXT_ENTER, &TextCtrlList::OnEnter, this);
   Bind(wxEVT_TEXT, &TextCtrlList::OnUpdated, this);
   Bind(wxEVT_KEY_UP, &TextCtrlList::OnKeyUp, this);
+
+  list_->Bind(wxEVT_COMMAND_LIST_ITEM_DESELECTED, &TextCtrlList::OnFileDeselected, this);
+  list_->Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &TextCtrlList::OnFileSelected, this);
 }
