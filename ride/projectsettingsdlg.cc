@@ -9,7 +9,7 @@
 #include "ride/form.h"
 #include "ride/cargo.h"
 #include "wx/editlbox.h"
-#include "ride/commonimages.h"
+#include "ride/resources/commonimages.h"
 
 class ProjectSettingsDlg : public ui::ProjectSettings
 {
