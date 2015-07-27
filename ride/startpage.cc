@@ -48,5 +48,3 @@ StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
 StartPageTab::~StartPageTab() {
 }
 
-wxBEGIN_EVENT_TABLE(StartPageTab, wxControl)
-wxEND_EVENT_TABLE()

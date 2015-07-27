@@ -16,9 +16,6 @@ private:
   Tab tab_;
   MainWindow* main_;
   wxAuiNotebook* notebook_;
-
-private:
-  wxDECLARE_EVENT_TABLE();
 };
 
 #endif  // RIDE_STARTPAGE_H
