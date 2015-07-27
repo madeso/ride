@@ -300,6 +300,7 @@ void Autocomplete(wxStyledTextCtrl* text, Language* current_language,
     }
 
     if (is_space_before) {
+      // TODO allow user to save theese templates
       wordlist.Add(WordEntry(wxString(80, '/'), AI_Snippet));
       const wxString indent =
           GetIndentationAsString(text, text->GetCurrentLine());
