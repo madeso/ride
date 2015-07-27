@@ -334,8 +334,9 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString&
   , highlight_current_word_last_start_position_(-1)
   , highlight_current_word_last_end_position_(-1)
 {
-  this->SetClientData(&tab_);
   assert(false == file.IsEmpty());
+  this->SetClientData(&tab_);
+  BindEvents();
   text_ = new wxStyledTextCtrl(this,  wxID_ANY, wxDefaultPosition, wxDefaultSize,
 #ifndef __WXMAC__
     wxSUNKEN_BORDER |
@@ -532,13 +533,14 @@ FileEdit::~FileEdit() {
   text_->SetClientData(NULL);
 }
 
-wxBEGIN_EVENT_TABLE(FileEdit, wxControl)
-  EVT_STC_MARGINCLICK(wxID_ANY, FileEdit::OnMarginClick)
-  EVT_STC_CHARADDED(wxID_ANY, FileEdit::OnCharAdded)
-  EVT_STC_UPDATEUI(wxID_ANY, FileEdit::OnUpdateUi)
-  EVT_STC_CHANGE(wxID_ANY, FileEdit::OnChanged)
-  EVT_COMMAND(wxID_ANY, EVENT_UPDATE_SELECTION, FileEdit::OnSelectionUpdated)
-wxEND_EVENT_TABLE()
+void FileEdit::BindEvents()
+{
+  Bind(wxEVT_STC_MARGINCLICK, &FileEdit::OnMarginClick, this);
+  Bind(wxEVT_STC_CHARADDED, &FileEdit::OnCharAdded, this);
+  Bind(wxEVT_STC_UPDATEUI, &FileEdit::OnUpdateUi, this);
+  Bind(wxEVT_STC_CHANGE, &FileEdit::OnChanged, this);
+  Bind(EVENT_UPDATE_SELECTION, &FileEdit::OnSelectionUpdated, this);
+}
 
 void FileEdit::OnMarginClick(wxStyledTextEvent& event)
 {

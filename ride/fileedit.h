@@ -107,7 +107,7 @@ private:
   wxDateTime last_modification_time_;
 
 private:
-  wxDECLARE_EVENT_TABLE();
+  void BindEvents();
 };
 
 #endif  // RIDE_FILEEDIT_H
