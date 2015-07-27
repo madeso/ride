@@ -7,6 +7,7 @@ TextCtrlList::TextCtrlList(wxWindow* parent, wxListCtrl* list)
   , list_(list)
   , callback_(NULL)
   , last_selected_(0) {
+  BindEvents();
   list_->Connect(wxEVT_COMMAND_LIST_ITEM_DESELECTED, wxListEventHandler(TextCtrlList::OnFileDeselected), NULL, this);
   list_->Connect(wxEVT_COMMAND_LIST_ITEM_SELECTED, wxListEventHandler(TextCtrlList::OnFileSelected), NULL, this);
 }
@@ -81,8 +82,9 @@ void TextCtrlList::OnFileSelected(wxListEvent& event) {
   last_selected_ = event.GetIndex();
 }
 
-wxBEGIN_EVENT_TABLE(TextCtrlList, wxTextCtrl)
-EVT_TEXT_ENTER(wxID_ANY, TextCtrlList::OnEnter)
-EVT_TEXT(wxID_ANY, TextCtrlList::OnUpdated)
-EVT_KEY_UP(TextCtrlList::OnKeyUp)
-wxEND_EVENT_TABLE()
+void TextCtrlList::BindEvents()
+{
+  Bind(wxEVT_TEXT_ENTER, &TextCtrlList::OnEnter, this);
+  Bind(wxEVT_TEXT, &TextCtrlList::OnUpdated, this);
+  Bind(wxEVT_KEY_UP, &TextCtrlList::OnKeyUp, this);
+}

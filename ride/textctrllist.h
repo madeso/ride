@@ -27,7 +27,7 @@ protected:
   void OnFileDeselected(wxListEvent& event);
   void OnFileSelected(wxListEvent& event);
 
-  wxDECLARE_EVENT_TABLE();
+  void BindEvents();
 private:
   wxListCtrl* list_;
   TextCtrlCallback* callback_;
