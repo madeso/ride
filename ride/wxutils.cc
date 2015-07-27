@@ -14,7 +14,7 @@ void WriteLine(wxStyledTextCtrl* stc, const wxString& str) {
   stc->AppendText(str);
   stc->AppendText(wxT("\n"));
   stc->SetReadOnly(true);
-  if (current_line >= line_count-1) {
+  if (current_line >= line_count - 1) {
     const int new_line = stc->GetLineCount();
     const int new_pos = stc->PositionFromLine(new_line);
     stc->SetSelection(new_pos, new_pos);
@@ -30,11 +30,11 @@ void ClearOutput(wxStyledTextCtrl* stc) {
 
 wxPoint GetContextEventPosition(const wxContextMenuEvent& event) {
   wxPoint ret = event.GetPosition();
-  // according to the documentation: http://docs.wxwidgets.org/trunk/classwx_context_menu_event.html#a291e3437b4bf913128ea14e511d161cb
+  // according to the documentation:
+  // http://docs.wxwidgets.org/trunk/classwx_context_menu_event.html#a291e3437b4bf913128ea14e511d161cb
   if (ret == wxDefaultPosition) {
     return wxGetMousePosition();
-  }
-  else {
+  } else {
     return ret;
   }
 }
@@ -58,17 +58,18 @@ std::vector<wxString> RemoveEmptyStrings(const std::vector<wxString>& v) {
   std::vector<wxString> ret;
   ret.reserve(v.size());
   for (const wxString& s : v) {
-    if (s.IsEmpty()) continue;
-    else ret.push_back(s);
+    if (s.IsEmpty())
+      continue;
+    else
+      ret.push_back(s);
   }
   return ret;
 }
 
-void SetSelection(wxListCtrl* list, long item, bool select){
+void SetSelection(wxListCtrl* list, long item, bool select) {
   if (select) {
     list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
-  }
-  else {
+  } else {
     list->SetItemState(item, 0, wxLIST_STATE_SELECTED);
   }
 }
@@ -76,11 +77,9 @@ void SetSelection(wxListCtrl* list, long item, bool select){
 std::vector<long> GetSelection(wxListCtrl* listctrl) {
   std::vector<long> ret;
   long item = -1;
-  while (true)
-  {
+  while (true) {
     item = listctrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item == -1)
-      break;
+    if (item == -1) break;
     ret.push_back(item);
   }
   return ret;
@@ -88,48 +87,47 @@ std::vector<long> GetSelection(wxListCtrl* listctrl) {
 
 void ClearSelection(wxListCtrl* listctrl) {
   long item = -1;
-  while (true)
-  {
+  while (true) {
     item = listctrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item == -1)
-      break;
+    if (item == -1) break;
     SetSelection(listctrl, item, false);
   }
 }
 
 DialogResult CDL(int dl) {
   switch (dl) {
-  case wxID_YES:
-    return DialogResult::YES;
-  case wxID_NO:
-    return DialogResult::NO;
-  case wxID_CANCEL:
-    return DialogResult::CANCEL;
-  default:
-    assert(0 && "Invalid dialog result");
-    return DialogResult::CANCEL;
+    case wxID_YES:
+      return DialogResult::YES;
+    case wxID_NO:
+      return DialogResult::NO;
+    case wxID_CANCEL:
+      return DialogResult::CANCEL;
+    default:
+      assert(0 && "Invalid dialog result");
+      return DialogResult::CANCEL;
   }
 }
 
 DialogResult ShowYesNo(wxWindow* self, const wxString& caption,
-  const wxMessageDialogBase::ButtonLabel& yes_button,
-  const wxMessageDialogBase::ButtonLabel& no_button,
-  const wxString& title_ok, const wxString title_error) {
-
+                       const wxMessageDialogBase::ButtonLabel& yes_button,
+                       const wxMessageDialogBase::ButtonLabel& no_button,
+                       const wxString& title_ok, const wxString title_error) {
   wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxICON_QUESTION);
   const bool label_change_ok = dlg.SetYesNoLabels(yes_button, no_button);
   dlg.SetMessage(label_change_ok ? title_ok : title_error);
   return CDL(dlg.ShowModal());
 }
 
-DialogResult ShowYesNoCancel(wxWindow* self, const wxString& caption,
-  const wxMessageDialogBase::ButtonLabel& yes_button,
-  const wxMessageDialogBase::ButtonLabel& no_button,
-  const wxMessageDialogBase::ButtonLabel& cancel_button,
-  const wxString& title_ok, const wxString title_error) {
-
-  wxMessageDialog dlg(self, _(""), caption, wxYES_NO | wxCANCEL | wxICON_QUESTION);
-  const bool label_change_ok = dlg.SetYesNoCancelLabels(yes_button, no_button, cancel_button);
+DialogResult ShowYesNoCancel(
+    wxWindow* self, const wxString& caption,
+    const wxMessageDialogBase::ButtonLabel& yes_button,
+    const wxMessageDialogBase::ButtonLabel& no_button,
+    const wxMessageDialogBase::ButtonLabel& cancel_button,
+    const wxString& title_ok, const wxString title_error) {
+  wxMessageDialog dlg(self, _(""), caption,
+                      wxYES_NO | wxCANCEL | wxICON_QUESTION);
+  const bool label_change_ok =
+      dlg.SetYesNoCancelLabels(yes_button, no_button, cancel_button);
   dlg.SetMessage(label_change_ok ? title_ok : title_error);
   return CDL(dlg.ShowModal());
 }
@@ -138,7 +136,8 @@ void ShowInfo(wxWindow* self, const wxString& message, const wxString& title) {
   wxMessageBox(message, title, wxICON_INFORMATION | wxOK | wxCENTRE, self);
 }
 
-void ShowWarning(wxWindow* self, const wxString& message, const wxString& title) {
+void ShowWarning(wxWindow* self, const wxString& message,
+                 const wxString& title) {
   wxMessageBox(message, title, wxICON_WARNING | wxOK | wxCENTRE, self);
 }
 
@@ -150,18 +149,18 @@ wxString ToShortString(const wxString& str, int max_length) {
   const wxString dots = wxT("...");
   if (str.length() > max_length + dots.length()) {
     return str.Left(max_length) + dots;
-  }
-  else {
+  } else {
     return str;
   }
 }
 
-int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos, const wxString& text, int flags, int* findEnd) {
+int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos,
+                const wxString& text, int flags, int* findEnd) {
   assert(stc);
 #ifdef USE_WXWIDGETS_LEGACY_FINDTEXT
   const int ret = stc->FindText(minPos, maxPos, text, flags);
-  if( findEnd ) {
-   *findEnd = ret;
+  if (findEnd) {
+    *findEnd = ret;
   }
   return ret;
 #else

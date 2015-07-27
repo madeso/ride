@@ -7,13 +7,13 @@
 class MainWindow;
 
 class OutputControl : public wxStyledTextCtrl {
-public:
+ public:
   OutputControl(MainWindow* main);
 
   void UpdateStyle();
   const wxString GetContextLineContent();
 
-protected:
+ protected:
   void OnContextMenu(wxContextMenuEvent& event);
   void OnRunThisCompilerMessage(wxCommandEvent& event);
   void OnCopyThisCompilerMessage(wxCommandEvent& event);
@@ -24,7 +24,7 @@ protected:
   void OnDoubleClick(wxMouseEvent& event);
   void BindEvents();
 
-private:
+ private:
   MainWindow* main_;
   int context_positon_;
 };

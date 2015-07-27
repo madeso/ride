@@ -3,16 +3,14 @@
 #include "ride/mainwindow.h"
 #include "settings.pb.h"
 
-class MyApp: public wxApp
-{
-public:
+class MyApp : public wxApp {
+ public:
   virtual bool OnInit();
 };
 
 wxIMPLEMENT_APP(MyApp);
 
-bool MyApp::OnInit()
-{
+bool MyApp::OnInit() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   const wxString DISPLAY_NAME = "Ride";
@@ -23,7 +21,8 @@ bool MyApp::OnInit()
   app_console->SetVendorName("madeso");
   app_console->SetVendorDisplayName("madeso");
 
-  MainWindow *main_window = new MainWindow(DISPLAY_NAME, wxPoint(50, 50), wxSize(450, 340));
-	main_window->Show( true );
-	return true;
+  MainWindow* main_window =
+      new MainWindow(DISPLAY_NAME, wxPoint(50, 50), wxSize(450, 340));
+  main_window->Show(true);
+  return true;
 }

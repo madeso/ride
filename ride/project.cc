@@ -13,7 +13,8 @@
 
 #include "ride/projectsettingsdlg.h"
 
-Project::Project(MainWindow* output, const wxString& root_folder) : main_(output), root_folder_(root_folder) {
+Project::Project(MainWindow* output, const wxString& root_folder)
+    : main_(output), root_folder_(root_folder) {
   if (root_folder_.IsEmpty() == false) {
     if (LoadProto(&project_, GetProjectFile()) == false) {
     }
@@ -36,34 +37,22 @@ Project::Project(MainWindow* output, const wxString& root_folder) : main_(output
   }
 }
 
-Project::~Project() {
-  Save();
-}
+Project::~Project() { Save(); }
 
-const wxString& Project::root_folder() const {
-  return root_folder_;
-}
+const wxString& Project::root_folder() const { return root_folder_; }
 
 bool Project::Save() {
-  if (root_folder_.IsEmpty() ) return false;
+  if (root_folder_.IsEmpty()) return false;
   bool project_saved = SaveProto(&project_, GetProjectFile());
   bool user_saved = SaveUser();
   return project_saved && user_saved;
 }
 
-int Project::tabwidth() const {
-  return project_.tabwidth();
-}
-bool Project::usetabs() const {
-  return project_.usetabs();
-}
+int Project::tabwidth() const { return project_.tabwidth(); }
+bool Project::usetabs() const { return project_.usetabs(); }
 
-void Project::set_tabwidth(int tabwidth) {
-  project_.set_tabwidth(tabwidth);
-}
-void Project::set_usetabs(bool usetabs) {
-  project_.set_usetabs(usetabs);
-}
+void Project::set_tabwidth(int tabwidth) { project_.set_tabwidth(tabwidth); }
+void Project::set_usetabs(bool usetabs) { project_.set_usetabs(usetabs); }
 
 const wxString Project::GetCargoFile() const {
   if (root_folder_.IsEmpty()) return "";
@@ -84,13 +73,12 @@ const wxString Project::GetUserFile() const {
 }
 
 bool Project::IsPartOfProject(const wxString& filename) {
-  // todo: implement a better logic for checking if the file is part of the project
+  // todo: implement a better logic for checking if the file is part of the
+  // project
   return true;
 }
 
-void Project::Settings() {
-  DoProjectSettingsDlg(main_, main_, this);
-}
+void Project::Settings() { DoProjectSettingsDlg(main_, main_, this); }
 
 void Project::SelectActiveBuild() {
   std::vector<wxString> names;
@@ -99,8 +87,9 @@ void Project::SelectActiveBuild() {
     names.push_back(setting.name());
   }
 
-  wxSingleChoiceDialog dlg(NULL, "Select build", "Build", names.size(), &names[0]);
-  dlg.SetSelection( user_.build_setting() );
+  wxSingleChoiceDialog dlg(NULL, "Select build", "Build", names.size(),
+                           &names[0]);
+  dlg.SetSelection(user_.build_setting());
   const int dialog_result = dlg.ShowModal();
 
   if (dialog_result != wxID_OK) return;
@@ -150,7 +139,6 @@ void Project::Build(bool origin_main) {
     cmd += " " + build.custom_arguments();
   }
 
-  
   RunCmd(cmd);
 }
 
@@ -190,7 +178,7 @@ void Project::Run(bool origin_main) {
   }
 
   Build(false);
-  //todo: run the application
+  // todo: run the application
 }
 
 void Project::Test(bool origin_main) {
@@ -225,31 +213,27 @@ void Project::Update(bool origin_main) {
 
 //////////////////////////////////////////////////////////////////////////
 
-void Project::CleanOutput() {
-  main_->build_output().Clear();
-}
+void Project::CleanOutput() { main_->build_output().Clear(); }
 
-void Project::Append(const wxString& str) {
-  main_->build_output().Append(str);
-}
+void Project::Append(const wxString& str) { main_->build_output().Append(str); }
 
 void Project::RunCmd(const wxString& cmd) {
   if (root_folder_.IsEmpty()) {
-    ShowInfo(main_, "No project open, you need to open a cargo project first!", "No project open!");
+    ShowInfo(main_, "No project open, you need to open a cargo project first!",
+             "No project open!");
     return;
   }
 
   MultiRunner::RunCmd(Command(root_folder_, cmd));
 }
 
-bool Project::SaveUser() {
-  return SaveProto(&user_, GetUserFile());
-}
+bool Project::SaveUser() { return SaveProto(&user_, GetUserFile()); }
 
 int Project::GetSelectedBuildIndex() {
   if (project_.build_settings_size() <= 0) return -1;
 
-  if (user_.build_setting() < 0 || user_.build_setting() >= project_.build_settings_size()) {
+  if (user_.build_setting() < 0 ||
+      user_.build_setting() >= project_.build_settings_size()) {
     user_.set_build_setting(0);
     SaveUser();
     SetMainStatusbarText();
@@ -260,8 +244,10 @@ int Project::GetSelectedBuildIndex() {
 
 const ride::BuildSetting& Project::GetCurrentBuildSetting() {
   int index = GetSelectedBuildIndex();
-  if (index == -1) return ride::BuildSetting::default_instance();
-  else return project_.build_settings(index);
+  if (index == -1)
+    return ride::BuildSetting::default_instance();
+  else
+    return project_.build_settings(index);
 }
 
 void Project::SetMainStatusbarText() {

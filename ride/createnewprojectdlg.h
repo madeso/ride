@@ -3,9 +3,8 @@
 
 #include "ride/wx.h"
 
-class CreateNewProjectDlgHandler
-{
-public:
+class CreateNewProjectDlgHandler {
+ public:
   CreateNewProjectDlgHandler(wxWindow* parent);
 
   bool ShowModal();
@@ -16,7 +15,7 @@ public:
   wxString target() const;
   wxString cargo_command_line() const;
 
-private:
+ private:
   wxWindow* parent_;
 
   wxString project_folder_;

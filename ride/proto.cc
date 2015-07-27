@@ -10,8 +10,9 @@ bool LoadProto(google::protobuf::Message* t, const wxString& path) {
   std::ifstream output(path.char_str());
   if (!output) return false;
   std::string data((std::istreambuf_iterator<char>(output)),
-    std::istreambuf_iterator<char>());
-  if (false == google::protobuf::TextFormat::ParseFromString(data, t)) return false;
+                   std::istreambuf_iterator<char>());
+  if (false == google::protobuf::TextFormat::ParseFromString(data, t))
+    return false;
   return true;
 }
 
@@ -19,7 +20,8 @@ bool SaveProto(google::protobuf::Message* t, const wxString& path) {
   assert(t);
   std::ofstream output(path.char_str());
   std::string data;
-  if (false == google::protobuf::TextFormat::PrintToString(*t, &data)) return false;
+  if (false == google::protobuf::TextFormat::PrintToString(*t, &data))
+    return false;
   // const auto data = t->SerializeAsString();
   if (data.empty()) return false;
   output << data;

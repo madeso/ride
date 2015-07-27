@@ -9,13 +9,15 @@
 // based on http://docs.wholetomato.com/default.asp?W193
 
 class QuickOpenDlg : public ui::QuickOpen {
-public:
-  QuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files);
+ public:
+  QuickOpenDlg(wxWindow* parent, const wxString& root,
+               const std::vector<wxString>& files);
   std::vector<wxString> GetSelectedFiles();
-private:
+
+ private:
   void UpdateFilters();
 
-protected:
+ protected:
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
   void OnActivate(wxActivateEvent& event);
@@ -26,7 +28,7 @@ protected:
   void OnTextUpdated();
   void OnTextEnter();
 
-protected:
+ protected:
   void OnKeyUp(wxKeyEvent& event);
   void OnUpdated(wxCommandEvent& event);
   void OnEnter(wxCommandEvent& event);
@@ -34,28 +36,25 @@ protected:
   void OnFileDeselected(wxListEvent& event);
   void OnFileSelected(wxListEvent& event);
   int last_selected_;
-private:
+
+ private:
   void BindEvents();
   wxString root_;
   std::vector<wxString> files_;
   std::vector<wxString> filtered_paths_;
 };
 
-
 //////////////////////////////////////////////////////////////////////////
 
-
-void QuickOpenDlg::OnKeyUp(wxKeyEvent& event)
-{
+void QuickOpenDlg::OnKeyUp(wxKeyEvent& event) {
   if (uiFileList == NULL) return;
 
   if (event.GetKeyCode() == WXK_UP) {
     auto selected = ::GetSelection(uiFileList);
-    if (selected.empty()){
+    if (selected.empty()) {
       ::SetSelection(uiFileList, 0, true);
-    }
-    else {
-      long last = last_selected_; //  *selected.begin();
+    } else {
+      long last = last_selected_;  //  *selected.begin();
       if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
       long next = last - 1;
       ::SetSelection(uiFileList, next, true);
@@ -64,14 +63,12 @@ void QuickOpenDlg::OnKeyUp(wxKeyEvent& event)
         ::SetSelection(uiFileList, last, false);
       }
     }
-  }
-  else if (event.GetKeyCode() == WXK_DOWN) {
+  } else if (event.GetKeyCode() == WXK_DOWN) {
     auto selected = ::GetSelection(uiFileList);
-    if (selected.empty()){
+    if (selected.empty()) {
       ::SetSelection(uiFileList, 0, true);
-    }
-    else {
-      long last = last_selected_; // *selected.rbegin();
+    } else {
+      long last = last_selected_;  // *selected.rbegin();
       if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
       long next = last + 1;
       ::SetSelection(uiFileList, next, true);
@@ -80,42 +77,36 @@ void QuickOpenDlg::OnKeyUp(wxKeyEvent& event)
         ::SetSelection(uiFileList, last, false);
       }
     }
-  }
-  else {
+  } else {
     event.Skip();
   }
 }
 
-void QuickOpenDlg::OnUpdated(wxCommandEvent& event)
-{
-  OnTextUpdated();
-}
+void QuickOpenDlg::OnUpdated(wxCommandEvent& event) { OnTextUpdated(); }
 
-void QuickOpenDlg::OnEnter(wxCommandEvent& event)
-{
-  OnTextEnter();
-}
+void QuickOpenDlg::OnEnter(wxCommandEvent& event) { OnTextEnter(); }
 
-void QuickOpenDlg::OnFileDeselected(wxListEvent& event) {
-}
+void QuickOpenDlg::OnFileDeselected(wxListEvent& event) {}
 
 void QuickOpenDlg::OnFileSelected(wxListEvent& event) {
   last_selected_ = event.GetIndex();
 }
 
-void QuickOpenDlg::BindEvents()
-{
+void QuickOpenDlg::BindEvents() {
   uiFilterName->Bind(wxEVT_TEXT_ENTER, &QuickOpenDlg::OnEnter, this);
   uiFilterName->Bind(wxEVT_TEXT, &QuickOpenDlg::OnUpdated, this);
   uiFilterName->Bind(wxEVT_KEY_UP, &QuickOpenDlg::OnKeyUp, this);
 
-  uiFileList->Bind(wxEVT_COMMAND_LIST_ITEM_DESELECTED, &QuickOpenDlg::OnFileDeselected, this);
-  uiFileList->Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED, &QuickOpenDlg::OnFileSelected, this);
+  uiFileList->Bind(wxEVT_COMMAND_LIST_ITEM_DESELECTED,
+                   &QuickOpenDlg::OnFileDeselected, this);
+  uiFileList->Bind(wxEVT_COMMAND_LIST_ITEM_SELECTED,
+                   &QuickOpenDlg::OnFileSelected, this);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-void AddIfMoreThanOne(std::vector<wxString>& ret, const std::vector<wxString>& space) {
+void AddIfMoreThanOne(std::vector<wxString>& ret,
+                      const std::vector<wxString>& space) {
   if (space.size() != 1) {
     ret.insert(ret.begin(), space.begin(), space.end());
   }
@@ -138,7 +129,7 @@ std::vector<wxString> SmartSplit(const wxString& str, const wxString& full) {
 int StartWithCount(const wxString& base, const wxString& test) {
   for (int i = 0; i < test.length(); ++i) {
     // base is shorter than test string, abort
-    if (i >= base.length() ) return i;
+    if (i >= base.length()) return i;
 
     // base string doesn't match, abort
     if (base[i] != test[i]) return i;
@@ -152,14 +143,17 @@ int EndsWithCount(const wxString& base, const wxString& test) {
     if (i >= base.length()) return i;
 
     // base string doesn't match, abort
-    if (base[base.length()-(i+1)] != test[test.length() - (i+1)]) return i;
+    if (base[base.length() - (i + 1)] != test[test.length() - (i + 1)])
+      return i;
   }
   return test.length();
 }
 
-bool MatchFilter(const wxString& filter, const wxString file, int* count, bool lower) {
-  const wxFileName name(lower ? file.Lower() : file); 
-  const auto filters = RemoveEmptyStrings(Split(lower ? filter.Lower() : filter, ' '));
+bool MatchFilter(const wxString& filter, const wxString file, int* count,
+                 bool lower) {
+  const wxFileName name(lower ? file.Lower() : file);
+  const auto filters =
+      RemoveEmptyStrings(Split(lower ? filter.Lower() : filter, ' '));
   const auto parts = SmartSplit(name.GetName(), name.GetFullName());
   if (filters.empty()) return true;
   for (auto fi : filters) {
@@ -173,20 +167,17 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count, bool l
       if (file.find(f) != wxString::npos) {
         *count += f.length();
       }
-    }
-    else {
+    } else {
       for (auto part : parts) {
         int change_match_count_by = 0;
         if (partial_matching) {
           if (part.find(f) != wxString::npos) {
             change_match_count_by = f.length();
           }
-        }
-        else {
+        } else {
           if (check_end_of_part) {
             change_match_count_by = EndsWithCount(part, f);
-          }
-          else {
+          } else {
             change_match_count_by = StartWithCount(part, f);
           }
         }
@@ -206,8 +197,10 @@ struct FilterMatch {
 
   FilterMatch(const wxString& p, int c) : path(p), count(c) {}
   bool operator<(const FilterMatch& rhs) const {
-    if (count == rhs.count) return path < rhs.path;
-    else return count < rhs.count;
+    if (count == rhs.count)
+      return path < rhs.path;
+    else
+      return count < rhs.count;
   }
 };
 
@@ -227,7 +220,7 @@ void QuickOpenDlg::UpdateFilters() {
   uiFileList->Freeze();
   uiFileList->DeleteAllItems();
   std::vector<wxString> paths;
-  for (const FilterMatch& match: matches) {
+  for (const FilterMatch& match : matches) {
     int i = uiFileList->InsertItem(0, "");
     uiFileList->SetItem(i, 0, wxFileName(match.path).GetFullName());
     uiFileList->SetItem(i, 1, match.path);
@@ -243,10 +236,9 @@ void QuickOpenDlg::UpdateFilters() {
   uiFileList->Thaw();
 }
 
-QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files)
-  : ui::QuickOpen(parent, wxID_ANY), files_(files)
-  , root_(root)
-{
+QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const wxString& root,
+                           const std::vector<wxString>& files)
+    : ui::QuickOpen(parent, wxID_ANY), files_(files), root_(root) {
   const long file_index = uiFileList->InsertColumn(0, "File");
   const long path_index = uiFileList->InsertColumn(1, "Path");
   const long count_index = uiFileList->InsertColumn(2, "Hits");
@@ -266,25 +258,17 @@ void QuickOpenDlg::OnActivate(wxActivateEvent& event) {
   uiFilterName->SetFocusFromKbd();
 }
 
-void QuickOpenDlg::OnTextEnter() {
-  EndModal(wxID_OK);
-}
+void QuickOpenDlg::OnTextEnter() { EndModal(wxID_OK); }
 
-void QuickOpenDlg::OnTextUpdated() {
-  UpdateFilters();
-}
+void QuickOpenDlg::OnTextUpdated() { UpdateFilters(); }
 
 void QuickOpenDlg::OnContextSensitive(wxCommandEvent& event) {
   UpdateFilters();
 }
 
-void QuickOpenDlg::OnCancel(wxCommandEvent& event) {
-  EndModal(wxID_CANCEL);
-}
+void QuickOpenDlg::OnCancel(wxCommandEvent& event) { EndModal(wxID_CANCEL); }
 
-void QuickOpenDlg::OnOk(wxCommandEvent& event) {
-  EndModal(wxID_OK);
-}
+void QuickOpenDlg::OnOk(wxCommandEvent& event) { EndModal(wxID_OK); }
 
 std::vector<wxString> QuickOpenDlg::GetSelectedFiles() {
   const auto selection = GetSelection(uiFileList);
@@ -295,10 +279,13 @@ std::vector<wxString> QuickOpenDlg::GetSelectedFiles() {
   return ret;
 }
 
-bool ShowQuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files, std::vector<wxString>* selected) {
+bool ShowQuickOpenDlg(wxWindow* parent, const wxString& root,
+                      const std::vector<wxString>& files,
+                      std::vector<wxString>* selected) {
   assert(selected);
   QuickOpenDlg dlg(parent, root, files);
-  if (wxID_OK != dlg.ShowModal()) return false;;
+  if (wxID_OK != dlg.ShowModal()) return false;
+  ;
   // do something!
   *selected = dlg.GetSelectedFiles();
   return true;

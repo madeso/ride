@@ -11,7 +11,7 @@ class wxFileName;
 class MainWindow;
 
 class ProjectExplorer : public wxTreeCtrl {
-public:
+ public:
   explicit ProjectExplorer(MainWindow* main);
 
   void UpdateColors();
@@ -25,31 +25,32 @@ public:
 
   const std::vector<wxString>& GetFiles() const;
 
-private:
-  void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, const wxString& relative_path, int index);
+ private:
+  void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent,
+                                const wxString filespec, const int flags,
+                                const wxString& relative_path, int index);
   void OnDoubleClick(wxMouseEvent& event);
   void OnContextMenu(wxContextMenuEvent& event);
 
-  void OnCreateNewFolder          (wxCommandEvent& event);
-  void OnCreateNewFile            (wxCommandEvent& event);
-  void OnFolderCollapse           (wxCommandEvent& event);
-  void OnFolderExpand             (wxCommandEvent& event);
+  void OnCreateNewFolder(wxCommandEvent& event);
+  void OnCreateNewFile(wxCommandEvent& event);
+  void OnFolderCollapse(wxCommandEvent& event);
+  void OnFolderExpand(wxCommandEvent& event);
   void OnFolderCollapseAllChildren(wxCommandEvent& event);
-  void OnFolderExpandAllChildren  (wxCommandEvent& event);
-  void OnCollapseAll              (wxCommandEvent& event);
-  void OnExpandAll                (wxCommandEvent& event);
-  void OnOpenFile                 (wxCommandEvent& event);
-  void OnDeleteFileOrFolder       (wxCommandEvent& event);
-  void OnRename                   (wxCommandEvent& event);
-  void OnOpenExplorer             (wxCommandEvent& event);
+  void OnFolderExpandAllChildren(wxCommandEvent& event);
+  void OnCollapseAll(wxCommandEvent& event);
+  void OnExpandAll(wxCommandEvent& event);
+  void OnOpenFile(wxCommandEvent& event);
+  void OnDeleteFileOrFolder(wxCommandEvent& event);
+  void OnRename(wxCommandEvent& event);
+  void OnOpenExplorer(wxCommandEvent& event);
 
   void OnEditLabelStart(wxTreeEvent& event);
   void OnEditLabelEnd(wxTreeEvent& event);
-  
 
   void BindEvents();
 
-private:
+ private:
   wxImageList images_;
   MainWindow* main_;
   wxString folder_;

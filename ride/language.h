@@ -1,7 +1,6 @@
 #ifndef RIDE_LANGUAGE_H
 #define RIDE_LANGUAGE_H
 
-
 #include <vector>
 #include <set>
 
@@ -10,7 +9,7 @@
 class wxStyledTextCtrl;
 
 class Language {
-public:
+ public:
   // internal
   // todo: move to protected/private
   bool MatchPattern(const wxString& file) const;
@@ -28,14 +27,18 @@ public:
 
   const std::vector<wxString>& GetKeywords() const;
 
-protected:
+ protected:
   Language(const wxString& name, int style);
-  virtual void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) = 0;
-  void SetProp(wxStyledTextCtrl* text, const wxString& name, const wxString& value);
-  void SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords);
+  virtual void DoStyleDocument(wxStyledTextCtrl* text,
+                               const ride::Settings& settings) = 0;
+  void SetProp(wxStyledTextCtrl* text, const wxString& name,
+               const wxString& value);
+  void SetKeys(wxStyledTextCtrl* text, unsigned int id,
+               const wxString& keywords);
 
   std::vector<wxString> keywords_;
-private:
+
+ private:
   wxString language_name_;
   int lexer_style_;
   std::vector<wxString> file_patterns_;

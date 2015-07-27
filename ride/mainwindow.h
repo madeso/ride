@@ -1,7 +1,6 @@
 #ifndef RIDE_MAINWINDOW_H
 #define RIDE_MAINWINDOW_H
 
-
 #include <wx/aui/aui.h>
 
 #include "ride/language.h"
@@ -16,7 +15,7 @@ class FindResultsControl;
 class ProjectExplorer;
 
 struct FoundEdit {
-  FoundEdit(size_t i, FileEdit* e) : index(i), edit(e) { }
+  FoundEdit(size_t i, FileEdit* e) : index(i), edit(e) {}
 
   // has a edit been found?
   operator bool() const { return edit != NULL; }
@@ -27,7 +26,8 @@ struct FoundEdit {
   FileEdit* edit;
 };
 
-void CreateNewFile(const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer);
+void CreateNewFile(const wxString& project_root, MainWindow* main,
+                   ProjectExplorer* project_explorer);
 
 enum StatusBarWidgets {
   STATUSBAR_GENERAL,
@@ -40,10 +40,9 @@ enum StatusBarWidgets {
   STATUSBAR_MAXCOUNT
 };
 
-class MainWindow: public wxFrame
-{
-public:
-	MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
+class MainWindow : public wxFrame {
+ public:
+  MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
   ~MainWindow();
 
   const ride::Settings& settings() const;
@@ -57,7 +56,9 @@ public:
   void SaveAllChangedProjectFiles();
   void ReloadFilesIfNeeded();
 
-  FileEdit* OpenFile(const wxString& file, int start_line = -1, int start_index = -1, int end_line = -1, int end_index = -1);
+  FileEdit* OpenFile(const wxString& file, int start_line = -1,
+                     int start_index = -1, int end_line = -1,
+                     int end_index = -1);
   FileEdit* GetFile(const wxString& file);
 
   const wxString& root_folder() const;
@@ -69,10 +70,10 @@ public:
 
   Project* project();
 
-private:
+ private:
   void OnActivated(wxActivateEvent& event);
 
-	void OnFileOpen(wxCommandEvent& event);
+  void OnFileOpen(wxCommandEvent& event);
   void OnFileSave(wxCommandEvent& event);
   void OnFileSaveAs(wxCommandEvent& event);
 
@@ -100,23 +101,22 @@ private:
   void OnEditShowProperties(wxCommandEvent& event);
   void OnEditShowAutocomplete(wxCommandEvent& event);
 
-  void OnProjectNew              (wxCommandEvent& event);
-  void OnProjectOpen             (wxCommandEvent& event);
-  void OnProjectSettings         (wxCommandEvent& event);
-  void OnProjectBuild            (wxCommandEvent& event);
+  void OnProjectNew(wxCommandEvent& event);
+  void OnProjectOpen(wxCommandEvent& event);
+  void OnProjectSettings(wxCommandEvent& event);
+  void OnProjectBuild(wxCommandEvent& event);
   void OnProjectSelectActiveBuild(wxCommandEvent& event);
-  void OnProjectClean            (wxCommandEvent& event);
-  void OnProjectRebuild          (wxCommandEvent& event);
-  void OnProjectDoc              (wxCommandEvent& event);
-  void OnProjectRun              (wxCommandEvent& event);
-  void OnProjectTest             (wxCommandEvent& event);
-  void OnProjectBench            (wxCommandEvent& event);
-  void OnProjectUpdate           (wxCommandEvent& event);
-  void OnProjectFileNew          (wxCommandEvent& event);
-  void OnProjectQuickOpen        (wxCommandEvent& event);
-  void OnProjectFindInFiles      (wxCommandEvent& event);
-  void OnProjectReplaceInFiles   (wxCommandEvent& event);
-
+  void OnProjectClean(wxCommandEvent& event);
+  void OnProjectRebuild(wxCommandEvent& event);
+  void OnProjectDoc(wxCommandEvent& event);
+  void OnProjectRun(wxCommandEvent& event);
+  void OnProjectTest(wxCommandEvent& event);
+  void OnProjectBench(wxCommandEvent& event);
+  void OnProjectUpdate(wxCommandEvent& event);
+  void OnProjectFileNew(wxCommandEvent& event);
+  void OnProjectQuickOpen(wxCommandEvent& event);
+  void OnProjectFindInFiles(wxCommandEvent& event);
+  void OnProjectReplaceInFiles(wxCommandEvent& event);
 
   void OnViewRestoreWindows(wxCommandEvent& event);
   void OnViewSaveLayout(wxCommandEvent& event);
@@ -127,8 +127,8 @@ private:
   void OnViewShowCompile(wxCommandEvent& event);
   void OnViewShowProject(wxCommandEvent& event);
 
-	void OnFileExit(wxCommandEvent& event);
-	void OnAbout(wxCommandEvent& event);
+  void OnFileExit(wxCommandEvent& event);
+  void OnAbout(wxCommandEvent& event);
   void OnFileShowSettings(wxCommandEvent& event);
 
   void OnClose(wxCloseEvent& event);
@@ -140,7 +140,7 @@ private:
 
   void BindEvents();
 
-private:
+ private:
   void ShowFindWindow();
   void ShowBuildWindow();
   void ShowCompileWindow();
@@ -157,8 +157,8 @@ private:
 
   void UpdateMenuItemView();
 
-  private:
-    bool closing_;
+ private:
+  bool closing_;
   wxAuiManager aui_;
   wxAuiNotebook* notebook_;
   OutputDirector build_output_;

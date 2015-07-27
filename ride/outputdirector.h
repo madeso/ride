@@ -12,19 +12,20 @@ class wxAuiManager;
 class FileEdit;
 
 class OutputDirector {
-public:
+ public:
   OutputDirector();
-  void Create(MainWindow* window, wxAuiManager& aui, const wxString& name, const wxString& caption);
+  void Create(MainWindow* window, wxAuiManager& aui, const wxString& name,
+              const wxString& caption);
 
   void Clear();
   void Append(const wxString& str);
   void UpdateStyles();
   void AddAllCompilerMessages(FileEdit* edit);
 
-protected:
+ protected:
   void AddCompilerMessage(const CompilerMessage& mess);
 
-private:
+ private:
   MainWindow* main_;
   OutputControl* control_;
   std::vector<wxString> files_;

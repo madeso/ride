@@ -11,64 +11,60 @@
 //////////////////////////////////////////////////////////////////////////
 // custom form functions
 
-void ToGui(ride::Color data, wxColourPickerCtrl* gui)  {
+void ToGui(ride::Color data, wxColourPickerCtrl* gui) {
   gui->SetColour(C(data));
 }
-ride::Color ToData(wxColourPickerCtrl* gui)  {
-  return C(gui->GetColour());
-}
+ride::Color ToData(wxColourPickerCtrl* gui) { return C(gui->GetColour()); }
 
-void ToGui(ride::ViewWhitespace data, wxComboBox* gui)  {
+void ToGui(ride::ViewWhitespace data, wxComboBox* gui) {
   gui->SetSelection(static_cast<int>(data));
 }
-ride::ViewWhitespace ToData_VW(wxComboBox* gui)  {
+ride::ViewWhitespace ToData_VW(wxComboBox* gui) {
   RETURN_COMBOBOX_VALUE(ViewWhitespace, gui->GetSelection());
 }
 
-void ToGui(ride::WrapMode data, wxComboBox* gui)  {
+void ToGui(ride::WrapMode data, wxComboBox* gui) {
   gui->SetSelection(static_cast<int>(data));
 }
-ride::WrapMode ToData_WM(wxComboBox* gui)  {
+ride::WrapMode ToData_WM(wxComboBox* gui) {
   RETURN_COMBOBOX_VALUE(WrapMode, gui->GetSelection());
 }
 
-void ToGui(ride::EdgeStyle data, wxComboBox* gui)  {
+void ToGui(ride::EdgeStyle data, wxComboBox* gui) {
   gui->SetSelection(static_cast<int>(data));
 }
-ride::EdgeStyle ToData_ES(wxComboBox* gui)  {
+ride::EdgeStyle ToData_ES(wxComboBox* gui) {
   RETURN_COMBOBOX_VALUE(EdgeStyle, gui->GetSelection());
 }
 
-void ToGui(ride::AutoIndentation data, wxComboBox* gui)  {
+void ToGui(ride::AutoIndentation data, wxComboBox* gui) {
   gui->SetSelection(static_cast<int>(data));
 }
-ride::AutoIndentation ToData_AI(wxComboBox* gui)  {
+ride::AutoIndentation ToData_AI(wxComboBox* gui) {
   RETURN_COMBOBOX_VALUE(AutoIndentation, gui->GetSelection());
 }
 
-void ToGui(ride::MarkerSymbol data, wxComboBox* gui)  {
+void ToGui(ride::MarkerSymbol data, wxComboBox* gui) {
   gui->SetSelection(static_cast<int>(data));
 }
-ride::MarkerSymbol ToData_MS(wxComboBox* gui)  {
+ride::MarkerSymbol ToData_MS(wxComboBox* gui) {
   RETURN_COMBOBOX_VALUE(MarkerSymbol, gui->GetSelection());
 }
 
-void ToGui(ride::IndicatorStyle data, wxComboBox* gui)  {
+void ToGui(ride::IndicatorStyle data, wxComboBox* gui) {
   gui->SetSelection(static_cast<int>(data));
 }
-ride::IndicatorStyle ToData_IS(wxComboBox* gui)  {
+ride::IndicatorStyle ToData_IS(wxComboBox* gui) {
   RETURN_COMBOBOX_VALUE(IndicatorStyle, gui->GetSelection());
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-
-class SettingsDlg : public ui::Settings
-{
-public:
+class SettingsDlg : public ui::Settings {
+ public:
   SettingsDlg(wxWindow* parent, MainWindow* mainwindow);
 
-protected:
+ protected:
   void OnApply(wxCommandEvent& event);
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
@@ -105,7 +101,7 @@ protected:
   void OnEditChanged(wxCommandEvent& event);
   void OnlyAllowNumberChars(wxKeyEvent& event);
 
-private:
+ private:
   MainWindow* main_window_;
   ride::Settings global_settings_;
   ride::Settings current_settings_;
@@ -139,8 +135,7 @@ private:
   void EditToGui(bool togui);
 };
 
-void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow)
-{
+void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow) {
   SettingsDlg dlg(parent, mainwindow);
   dlg.ShowModal();
 }
@@ -148,13 +143,10 @@ void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow)
 //////////////////////////////////////////////////////////////////////////
 
 class StyleLink {
-public:
-  StyleLink(const wxString& name)
-    : name_(name)
-  { }
+ public:
+  StyleLink(const wxString& name) : name_(name) {}
 
-  virtual ~StyleLink() {
-  };
+  virtual ~StyleLink(){};
 
   const wxString& name() const {
     assert(this);
@@ -167,20 +159,24 @@ public:
 
   // todo: add some form of group so we can easily group styles in the gui
 
-private:
+ private:
   wxString name_;
 };
 
 std::vector<StyleLink*> BuildStyleLinks() {
   std::vector<StyleLink*> ret;
 
-#define DEF_STYLE(NAME, STYLE) \
-  struct StyleLink##STYLE : public StyleLink { \
-    StyleLink##STYLE() : StyleLink(NAME) {} \
-    const ride::Style get(const ride::FontsAndColors& co){return co.has_ ## STYLE() ? co.STYLE() : ride::Style();}\
-    void set(ride::FontsAndColors& co, const ride::Style& style){co.set_allocated_ ## STYLE(Allocate(style));} \
-  };\
-  static StyleLink##STYLE styleLink##STYLE;\
+#define DEF_STYLE(NAME, STYLE)                                     \
+  struct StyleLink##STYLE : public StyleLink {                     \
+    StyleLink##STYLE() : StyleLink(NAME) {}                        \
+    const ride::Style get(const ride::FontsAndColors& co) {        \
+      return co.has_##STYLE() ? co.STYLE() : ride::Style();        \
+    }                                                              \
+    void set(ride::FontsAndColors& co, const ride::Style& style) { \
+      co.set_allocated_##STYLE(Allocate(style));                   \
+    }                                                              \
+  };                                                               \
+  static StyleLink##STYLE styleLink##STYLE;                        \
   ret.push_back(&styleLink##STYLE)
 
   DEF_STYLE("Default", default_style);
@@ -190,7 +186,7 @@ std::vector<StyleLink*> BuildStyleLinks() {
   DEF_STYLE("Control char", controlchar_style);
   DEF_STYLE("Indent guide", indentguide_style);
   DEF_STYLE("Calltip stype", calltip_style);
-  
+
   DEF_STYLE("Annotation error", annotation_error_style);
   DEF_STYLE("Annotation warning", annotation_warning_style);
 
@@ -299,10 +295,11 @@ const std::vector<StyleLink*>& StyleLinks() {
 }
 
 class FontLister : public wxFontEnumerator {
-public:
+ public:
   std::vector<wxString> fonts;
   virtual bool OnFacename(const wxString& font) {
-    // The version of the font with the '@' is a version optimized for writing in the vertical direction.
+    // The version of the font with the '@' is a version optimized for writing
+    // in the vertical direction.
     // https://groups.google.com/forum/#!topic/wx-users/3hjrhPlSULI
     if (font.StartsWith("@") == false) {
       fonts.push_back(font);
@@ -356,19 +353,22 @@ void SettingsDlg::SendStyleToMain() {
   if (allow_send_style_to_main_ == false) return;
   StyleToGui(false);
   main_window_->set_settings(current_settings_);
-  main_window_->set_settings(current_settings_); // update seems to lag behind one setSettings, this seems to fix that, weird... I should investigate this...
+  main_window_->set_settings(current_settings_);  // update seems to lag behind
+                                                  // one setSettings, this seems
+                                                  // to fix that, weird... I
+                                                  // should investigate this...
 }
 
-void SettingsDlg::SendEditToMain()
-{
-  if (allow_send_edit_to_main_ == false) { return; }
+void SettingsDlg::SendEditToMain() {
+  if (allow_send_edit_to_main_ == false) {
+    return;
+  }
   EditToGui(false);
   main_window_->set_settings(current_settings_);
 }
 
-void UpdateCheckEnabled(wxCheckBox* check, wxWindow* slave)
-{
-  slave->Enable( check->IsChecked() );
+void UpdateCheckEnabled(wxCheckBox* check, wxWindow* slave) {
+  slave->Enable(check->IsChecked());
 }
 
 void SettingsDlg::UpdateStyleEnable() {
@@ -385,28 +385,29 @@ void SettingsDlg::UpdateStyleEnable() {
 void SettingsDlg::StyleToGui(bool togui) {
   const int selection = uiFontStyles->GetSelection();
   if (selection == wxNOT_FOUND) return;
-  StyleLink* link = reinterpret_cast<StyleLink*>(uiFontStyles->GetClientData(selection));
+  StyleLink* link =
+      reinterpret_cast<StyleLink*>(uiFontStyles->GetClientData(selection));
   assert(link);
   if (link == NULL) return;
 
-  ride::Style style = link->get( current_settings_.fonts_and_colors() );
+  ride::Style style = link->get(current_settings_.fonts_and_colors());
 
   DIALOG_DATA(style, use_bold, uiStyleUseBold, );
-  DIALOG_DATA(style, bold, uiStyleBold,);
+  DIALOG_DATA(style, bold, uiStyleBold, );
   DIALOG_DATA(style, use_italic, uiStyleUseItalic, );
-  DIALOG_DATA(style, italic, uiStyleItalic,);
+  DIALOG_DATA(style, italic, uiStyleItalic, );
   DIALOG_DATA(style, use_underline, uiStyleUseUnderline, );
-  DIALOG_DATA(style, underline, uiStyleUnderline,);
+  DIALOG_DATA(style, underline, uiStyleUnderline, );
 
   DIALOG_DATA(style, use_typeface, uiStyleUseTypeface, );
-  DIALOG_DATA(style, typeface, uiStyleTypeface,);
+  DIALOG_DATA(style, typeface, uiStyleTypeface, );
 
   DIALOG_DATA(style, use_font_size, uiStyleUseSize, );
   DIALOG_DATA(style, font_size, uiStyleSize, _I32);
 
-  DIALOG_DATA(style, use_foreground, uiStyleUseForeground,);
+  DIALOG_DATA(style, use_foreground, uiStyleUseForeground, );
   DIALOG_DATAX(style, foreground, uiStyleForeground);
-  DIALOG_DATA(style, use_background, uiStyleUseBackground,);
+  DIALOG_DATA(style, use_background, uiStyleUseBackground, );
   DIALOG_DATAX(style, background, uiStyleBackground);
 
   if (togui == false) {
@@ -419,8 +420,10 @@ void SettingsDlg::StyleToGui(bool togui) {
 
 void SettingsDlg::StyleUpdateFontDisplay() {
   int selected_typeface = uiStyleTypeface->GetSelection();
-  wxString selected_facename = selected_typeface > 0 ? uiStyleTypeface->GetString(selected_typeface) : "";
-  wxFont font( wxFontInfo(12).FaceName(selected_facename) );
+  wxString selected_facename =
+      selected_typeface > 0 ? uiStyleTypeface->GetString(selected_typeface)
+                            : "";
+  wxFont font(wxFontInfo(12).FaceName(selected_facename));
   uiStyleExample->SetFont(font);
 }
 
@@ -449,55 +452,64 @@ void SettingsDlg::OnIndicatorText(wxCommandEvent& event) {
 }
 
 void SettingsDlg::SendIndicatorToMain() {
-  if (allow_send_indicator_to_main_ == false) { return; }
+  if (allow_send_indicator_to_main_ == false) {
+    return;
+  }
   IndicatorToGui(false);
   main_window_->set_settings(current_settings_);
 }
 
 class IndicatorLink {
-public:
-  IndicatorLink(const wxString& name) : name_(name) {
-  }
+ public:
+  IndicatorLink(const wxString& name) : name_(name) {}
 
   const wxString& name() const {
     assert(this);
     return name_;
   }
 
-  virtual void IndicatorToGui(bool togui, ride::FontsAndColors& fonts_and_colors, ride::Settings& current_settings_, wxComboBox* uiIndicatorStyle, wxColourPickerCtrl* uiIndicatorColor, wxCheckBox* uiIndicatorUnder, wxTextCtrl* uiIndicatorAlpha, wxTextCtrl* uiIndicatorOutlineAlpha) = 0;
+  virtual void IndicatorToGui(
+      bool togui, ride::FontsAndColors& fonts_and_colors,
+      ride::Settings& current_settings_, wxComboBox* uiIndicatorStyle,
+      wxColourPickerCtrl* uiIndicatorColor, wxCheckBox* uiIndicatorUnder,
+      wxTextCtrl* uiIndicatorAlpha, wxTextCtrl* uiIndicatorOutlineAlpha) = 0;
 
-private:
+ private:
   wxString name_;
 };
 
 std::vector<IndicatorLink*> BuildIndicatorLinks() {
   std::vector<IndicatorLink*> ret;
-#define DEF_INDICATOR_LINK(NAME, ID) \
-  class IndicatorLink##ID : public IndicatorLink {\
-  public:\
-    IndicatorLink##ID() : IndicatorLink(NAME) {}\
-    void IndicatorToGui(bool togui, ride::FontsAndColors& col, ride::Settings& set, wxComboBox* uiIndicatorStyle, wxColourPickerCtrl* uiIndicatorColor, wxCheckBox* uiIndicatorUnder, wxTextCtrl* uiIndicatorAlpha, wxTextCtrl* uiIndicatorOutlineAlpha) {\
-      DIALOG_DATA(set, ID, uiIndicatorStyle, _IS);\
-      ride::Indicator ind = col.ID();\
-      \
-      DIALOG_DATAX(ind, foreground, uiIndicatorColor);\
-      DIALOG_DATA(ind, under, uiIndicatorUnder,);\
-      DIALOG_DATA(ind, alpha, uiIndicatorAlpha,_I32);\
-      DIALOG_DATA(ind, outline_alpha, uiIndicatorOutlineAlpha,_I32);\
-      \
-      if( togui == false){\
-        col.set_allocated_##ID(Allocate(ind));\
-      }\
-    }\
-  };\
-  static IndicatorLink##ID indicator_link_##ID;\
+#define DEF_INDICATOR_LINK(NAME, ID)                                       \
+  class IndicatorLink##ID : public IndicatorLink {                         \
+   public:                                                                 \
+    IndicatorLink##ID() : IndicatorLink(NAME) {}                           \
+    void IndicatorToGui(bool togui, ride::FontsAndColors& col,             \
+                        ride::Settings& set, wxComboBox* uiIndicatorStyle, \
+                        wxColourPickerCtrl* uiIndicatorColor,              \
+                        wxCheckBox* uiIndicatorUnder,                      \
+                        wxTextCtrl* uiIndicatorAlpha,                      \
+                        wxTextCtrl* uiIndicatorOutlineAlpha) {             \
+      DIALOG_DATA(set, ID, uiIndicatorStyle, _IS);                         \
+      ride::Indicator ind = col.ID();                                      \
+                                                                           \
+      DIALOG_DATAX(ind, foreground, uiIndicatorColor);                     \
+      DIALOG_DATA(ind, under, uiIndicatorUnder, );                         \
+      DIALOG_DATA(ind, alpha, uiIndicatorAlpha, _I32);                     \
+      DIALOG_DATA(ind, outline_alpha, uiIndicatorOutlineAlpha, _I32);      \
+                                                                           \
+      if (togui == false) {                                                \
+        col.set_allocated_##ID(Allocate(ind));                             \
+      }                                                                    \
+    }                                                                      \
+  };                                                                       \
+  static IndicatorLink##ID indicator_link_##ID;                            \
   ret.push_back(&indicator_link_##ID)
 
   DEF_INDICATOR_LINK("Error", indicator_error);
   DEF_INDICATOR_LINK("Warning", indicator_warning);
   DEF_INDICATOR_LINK("Search highlight", indicator_search_highlight);
   DEF_INDICATOR_LINK("Select highlight", indicator_select_highlight);
-
 
 #undef DEF_INDICATOR_LINK
   return ret;
@@ -514,16 +526,19 @@ void SettingsDlg::IndicatorToGui(bool togui) {
   int selected_item = uiIndicatorList->GetSelection();
   if (selected_item == -1) return;
 
-  IndicatorLink* link = reinterpret_cast<IndicatorLink*>(uiIndicatorList->GetClientData(selected_item));
+  IndicatorLink* link = reinterpret_cast<IndicatorLink*>(
+      uiIndicatorList->GetClientData(selected_item));
   assert(link);
   if (link == NULL) return;
-  link->IndicatorToGui(togui, fonts_and_colors, current_settings_, uiIndicatorStyle, uiIndicatorColor, uiIndicatorUnder, uiIndicatorAlpha, uiIndicatorOutlineAlpha);
+  link->IndicatorToGui(togui, fonts_and_colors, current_settings_,
+                       uiIndicatorStyle, uiIndicatorColor, uiIndicatorUnder,
+                       uiIndicatorAlpha, uiIndicatorOutlineAlpha);
 
   if (togui == false) {
-    current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
+    current_settings_.set_allocated_fonts_and_colors(
+        Allocate(fonts_and_colors));
   }
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -540,36 +555,38 @@ void SettingsDlg::OnMarkerComboChanged(wxColourPickerEvent& event) {
 }
 
 class MarkerLink {
-public:
-  MarkerLink(const wxString& name) : name_(name) {
-  }
+ public:
+  MarkerLink(const wxString& name) : name_(name) {}
 
   const wxString& name() const {
     assert(this);
     return name_;
   }
 
-  virtual void MarkerToGui(bool togui, ride::FontsAndColors& ref, ride::Settings& set, wxComboBox* sym, wxColourPickerCtrl* fore, wxColourPickerCtrl* back) = 0;
-  
-private:
+  virtual void MarkerToGui(bool togui, ride::FontsAndColors& ref,
+                           ride::Settings& set, wxComboBox* sym,
+                           wxColourPickerCtrl* fore,
+                           wxColourPickerCtrl* back) = 0;
+
+ private:
   wxString name_;
 };
 
 std::vector<MarkerLink*> BuildMarkerLinks() {
   std::vector<MarkerLink*> ret;
-#define DEF_MARKER_LINK(NAME, ID) \
-  class MarkerLink##ID : public MarkerLink {\
-  public:\
-    MarkerLink##ID() : MarkerLink(NAME) {}\
-    void MarkerToGui(bool togui, ride::FontsAndColors& col, ride::Settings& set, wxComboBox* sym, wxColourPickerCtrl* fore, wxColourPickerCtrl* back) {\
-      DIALOG_DATA(set, ID, sym, _MS);\
-      DIALOG_DATAX(col, ID ##_foreground, fore);\
-      DIALOG_DATAX(col, ID ##_background, back);\
-      \
-      \
-    }\
-  };\
-  static MarkerLink##ID marker_link_##ID;\
+#define DEF_MARKER_LINK(NAME, ID)                                          \
+  class MarkerLink##ID : public MarkerLink {                               \
+   public:                                                                 \
+    MarkerLink##ID() : MarkerLink(NAME) {}                                 \
+    void MarkerToGui(bool togui, ride::FontsAndColors& col,                \
+                     ride::Settings& set, wxComboBox* sym,                 \
+                     wxColourPickerCtrl* fore, wxColourPickerCtrl* back) { \
+      DIALOG_DATA(set, ID, sym, _MS);                                      \
+      DIALOG_DATAX(col, ID##_foreground, fore);                            \
+      DIALOG_DATAX(col, ID##_background, back);                            \
+    }                                                                      \
+  };                                                                       \
+  static MarkerLink##ID marker_link_##ID;                                  \
   ret.push_back(&marker_link_##ID)
 
   DEF_MARKER_LINK("Folder", folder);
@@ -580,8 +597,7 @@ std::vector<MarkerLink*> BuildMarkerLinks() {
   DEF_MARKER_LINK("Folder mid tail", foldermidtail);
   DEF_MARKER_LINK("Folder tail", foldertail);
   DEF_MARKER_LINK("Folder sub", foldersub);
-  
-  
+
 #undef DEF_MARKER_LINK
   return ret;
 }
@@ -598,7 +614,9 @@ void SettingsDlg::OnMarkerListChanged(wxCommandEvent& event) {
 }
 
 void SettingsDlg::SendMarkerToMain() {
-  if (allow_send_marker_to_main_ == false) { return; }
+  if (allow_send_marker_to_main_ == false) {
+    return;
+  }
   MarkerToGui(false);
   main_window_->set_settings(current_settings_);
 }
@@ -609,24 +627,28 @@ void SettingsDlg::MarkerToGui(bool togui) {
   int selected_item = uiMarkerList->GetSelection();
   if (selected_item == -1) return;
 
-  MarkerLink* link = reinterpret_cast<MarkerLink*>(uiMarkerList->GetClientData(selected_item));
+  MarkerLink* link =
+      reinterpret_cast<MarkerLink*>(uiMarkerList->GetClientData(selected_item));
   assert(link);
   if (link == NULL) return;
-  link->MarkerToGui(togui, fonts_and_colors, current_settings_, uiMarkerSymbol, uiMarkerForegroundColor, uiMarkerBackgroundColor);
+  link->MarkerToGui(togui, fonts_and_colors, current_settings_, uiMarkerSymbol,
+                    uiMarkerForegroundColor, uiMarkerBackgroundColor);
 
   if (togui == false) {
-    current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
+    current_settings_.set_allocated_fonts_and_colors(
+        Allocate(fonts_and_colors));
   }
 }
-
 
 //////////////////////////////////////////////////////////////////////////
 
 int g_last_selected_font = 0;
 
-SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
-::ui::Settings(parent, wxID_ANY), main_window_(mainwindow), allow_send_edit_to_main_(false), allow_send_style_to_main_(false)
-{
+SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
+    : ::ui::Settings(parent, wxID_ANY),
+      main_window_(mainwindow),
+      allow_send_edit_to_main_(false),
+      allow_send_style_to_main_(false) {
   global_settings_ = main_window_->settings();
   current_settings_ = global_settings_;
   EditToGui(true);
@@ -634,7 +656,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow) :
   allow_send_marker_to_main_ = true;
   allow_send_indicator_to_main_ = true;
 
-  for (auto link: StyleLinks()) {
+  for (auto link : StyleLinks()) {
     uiFontStyles->Append(link->name(), link);
   }
   UpdateStyleFonts();
@@ -669,21 +691,18 @@ void SettingsDlg::StyleSaveSelectedIndex() {
   }
 }
 
-void SettingsDlg::OnApply( wxCommandEvent& event )
-{
+void SettingsDlg::OnApply(wxCommandEvent& event) {
   StyleSaveSelectedIndex();
   SendEditToMain();
 }
 
-void SettingsDlg::OnCancel( wxCommandEvent& event )
-{
+void SettingsDlg::OnCancel(wxCommandEvent& event) {
   main_window_->set_settings(global_settings_);
   StyleSaveSelectedIndex();
   EndModal(wxCANCEL);
 }
 
-void SettingsDlg::OnOk( wxCommandEvent& event )
-{
+void SettingsDlg::OnOk(wxCommandEvent& event) {
   StyleSaveSelectedIndex();
   EditToGui(false);
   StyleToGui(false);
@@ -695,26 +714,22 @@ void SettingsDlg::OnOk( wxCommandEvent& event )
   EndModal(wxOK);
 }
 
-void SettingsDlg::OnCheckboxChanged(wxCommandEvent& event)
-{
+void SettingsDlg::OnCheckboxChanged(wxCommandEvent& event) {
   assert(this);
   SendEditToMain();
 }
 
-void SettingsDlg::OnComboboxChanged(wxCommandEvent& event)
-{
+void SettingsDlg::OnComboboxChanged(wxCommandEvent& event) {
   assert(this);
   SendEditToMain();
 }
 
-void SettingsDlg::OnColorChanged(wxColourPickerEvent& event)
-{
+void SettingsDlg::OnColorChanged(wxColourPickerEvent& event) {
   assert(this);
   SendEditToMain();
 }
 
-void SettingsDlg::OnEditChanged(wxCommandEvent& event)
-{
+void SettingsDlg::OnEditChanged(wxCommandEvent& event) {
   assert(this);
   SendEditToMain();
 }
@@ -725,9 +740,9 @@ void SettingsDlg::EditToGui(bool togui) {
   ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors();
   ride::FoldFlags foldflags = current_settings_.foldflags();
 
-  DIALOG_DATA(current_settings_, displayeolenable, uiDisplayEOL,);
-  DIALOG_DATA(current_settings_, linenumberenable, uiShowLineNumbers,);
-  DIALOG_DATA(current_settings_, indentguideenable, uiIndentGuide,);
+  DIALOG_DATA(current_settings_, displayeolenable, uiDisplayEOL, );
+  DIALOG_DATA(current_settings_, linenumberenable, uiShowLineNumbers, );
+  DIALOG_DATA(current_settings_, indentguideenable, uiIndentGuide, );
 
   DIALOG_DATA(current_settings_, tabwidth, uiTabWidth, _I32);
   DIALOG_DATA(current_settings_, edgecolumn, uiEdgeColumn, _I32);
@@ -742,7 +757,7 @@ void SettingsDlg::EditToGui(bool togui) {
   DIALOG_DATA(current_settings_, backspaceunindents, uiBackspaceUnindents, );
 
   DIALOG_DATA(current_settings_, foldenable, uiAllowFolding, );
-  
+
   DIALOG_DATA(foldflags, levelnumbers, uiFoldLevelNumbers, );
   DIALOG_DATA(foldflags, linebefore_expanded, uiFoldLineBeforeExpanded, );
   DIALOG_DATA(foldflags, linebefore_contracted, uiFoldLineBeforeContracted, );
@@ -751,30 +766,43 @@ void SettingsDlg::EditToGui(bool togui) {
 
   DIALOG_DATAX(fonts_and_colors, edgecolor, uiEdgeColor);
 
-  DIALOG_DATA(fonts_and_colors, use_selection_foreground, uiEditUseSelectionForeground,);
-  DIALOG_DATAX(fonts_and_colors, selection_foreground, uiEditSelectionForeground);
-  DIALOG_DATA(fonts_and_colors, use_selection_background, uiEditUseSelectionBackground,);
-  DIALOG_DATAX(fonts_and_colors, selection_background, uiEditSelectionBackground);
-  
+  DIALOG_DATA(fonts_and_colors, use_selection_foreground,
+              uiEditUseSelectionForeground, );
+  DIALOG_DATAX(fonts_and_colors, selection_foreground,
+               uiEditSelectionForeground);
+  DIALOG_DATA(fonts_and_colors, use_selection_background,
+              uiEditUseSelectionBackground, );
+  DIALOG_DATAX(fonts_and_colors, selection_background,
+               uiEditSelectionBackground);
+
   DIALOG_DATA(current_settings_, current_line_visible, uiCurrentLineVisible, );
-  DIALOG_DATA(current_settings_, current_line_alpha, uiEditCurrentLineAlpha, _I32);
-  DIALOG_DATA(current_settings_, current_line_overdraw, uiEditCurrentLineOverdraw, );
+  DIALOG_DATA(current_settings_, current_line_alpha, uiEditCurrentLineAlpha,
+              _I32);
+  DIALOG_DATA(current_settings_, current_line_overdraw,
+              uiEditCurrentLineOverdraw, );
   DIALOG_DATAX(fonts_and_colors, selected_line, uiEditCurrentLineColor);
 
   DIALOG_DATAX(fonts_and_colors, fold_margin_hi, uiEditFoldHi);
   DIALOG_DATAX(fonts_and_colors, fold_margin_low, uiEditFoldLow);
 
-  DIALOG_DATA(current_settings_, highlight_word_also_highlight_keywords, uiEditHighlightKeyword, );
-    
-  DIALOG_DATA(current_settings_, autocomplete_curly_braces, uiEditAutocompleteCurlyBraces, );
-  DIALOG_DATA(current_settings_, autocomplete_parentheses, uiEditAutocompleteParentheses, );
-  DIALOG_DATA(current_settings_, autocomplete_brackets, uiEditAutocompleteBrackets, );
+  DIALOG_DATA(current_settings_, highlight_word_also_highlight_keywords,
+              uiEditHighlightKeyword, );
 
-  DIALOG_DATA(current_settings_, show_multiline_indicators, uiEditShowMultilineIndicators, );
-  DIALOG_DATA(current_settings_, show_compiler_messages_as_annotations, uiEditShowCompilerAnnotations, );
+  DIALOG_DATA(current_settings_, autocomplete_curly_braces,
+              uiEditAutocompleteCurlyBraces, );
+  DIALOG_DATA(current_settings_, autocomplete_parentheses,
+              uiEditAutocompleteParentheses, );
+  DIALOG_DATA(current_settings_, autocomplete_brackets,
+              uiEditAutocompleteBrackets, );
+
+  DIALOG_DATA(current_settings_, show_multiline_indicators,
+              uiEditShowMultilineIndicators, );
+  DIALOG_DATA(current_settings_, show_compiler_messages_as_annotations,
+              uiEditShowCompilerAnnotations, );
 
   if (togui == false) {
-    current_settings_.set_allocated_fonts_and_colors(Allocate(fonts_and_colors));
+    current_settings_.set_allocated_fonts_and_colors(
+        Allocate(fonts_and_colors));
     current_settings_.set_allocated_foldflags(Allocate(foldflags));
   }
 }
@@ -789,9 +817,7 @@ void SettingsDlg::OnlyAllowNumberChars(wxKeyEvent& event) {
   int index = NUMBERS.Index(event.m_uniChar);
   if (index < 0) {
     // event.Skip();
-  }
-  else {
+  } else {
     event.Skip();
   }
 }
-

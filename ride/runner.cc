@@ -13,17 +13,15 @@ const int RUNNER_CONSOLE_OPTION = wxEXEC_HIDE_CONSOLE;
 
 //////////////////////////////////////////////////////////////////////////
 
-Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {
-}
+Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {}
 
 //////////////////////////////////////////////////////////////////////////
 
 /// The idle timer let the runner be "notified" that there might be unread
 /// compiler messages instead of waiting to the end to read them all
 class IdleTimer : public wxTimer {
-public:
-  IdleTimer(SingleRunner::Pimpl* p) : pimpl_(p) {
-  }
+ public:
+  IdleTimer(SingleRunner::Pimpl* p) : pimpl_(p) {}
   void Notify();
 
   SingleRunner::Pimpl* pimpl_;
@@ -32,15 +30,18 @@ public:
 //////////////////////////////////////////////////////////////////////////
 
 struct SingleRunner::Pimpl {
-  explicit Pimpl(SingleRunner* p) : parent_(p), processes_(NULL), pid_(0), has_exit_code_(false), exit_code_(-1) {
+  explicit Pimpl(SingleRunner* p)
+      : parent_(p),
+        processes_(NULL),
+        pid_(0),
+        has_exit_code_(false),
+        exit_code_(-1) {
     assert(parent_);
     idle_timer_.reset(new IdleTimer(this));
   }
   ~Pimpl();
 
-  void Append(const wxString& s) {
-    parent_->Append(s);
-  }
+  void Append(const wxString& s) { parent_->Append(s); }
 
   bool RunCmd(const Command& cmd);
 
@@ -53,37 +54,31 @@ struct SingleRunner::Pimpl {
   }
 
   SingleRunner* parent_;
-  Process* processes_; // the current running process or NULL
-  long pid_; // the id of the current or previous running process
+  Process* processes_;  // the current running process or NULL
+  long pid_;            // the id of the current or previous running process
   std::unique_ptr<IdleTimer> idle_timer_;
 
   int exit_code() const {
     assert(has_exit_code_);
     return exit_code_;
   }
-  bool has_exit_code() const {
-    return has_exit_code_;
-  }
+  bool has_exit_code() const { return has_exit_code_; }
   void set_exit_code(int x) {
     exit_code_ = x;
     has_exit_code_ = true;
   }
 
-private:
+ private:
   bool has_exit_code_;
   int exit_code_;
 };
 
-void IdleTimer::Notify() {
-  pimpl_->Notify();
-}
+void IdleTimer::Notify() { pimpl_->Notify(); }
 
-class Process : public wxProcess
-{
-public:
+class Process : public wxProcess {
+ public:
   Process(SingleRunner::Pimpl* project, const wxString& cmd)
-    : wxProcess(wxPROCESS_DEFAULT), cmd_(cmd)
-  {
+      : wxProcess(wxPROCESS_DEFAULT), cmd_(cmd) {
     runner_ = project;
     Redirect();
   }
@@ -93,20 +88,25 @@ public:
     assert(runner_->pid_ == pid);
 
     // show the rest of the output
-    while (HasInput()) {}
-      
-    runner_->Append(wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
-      pid, cmd_.c_str(), status));
+    while (HasInput()) {
+    }
+
+    runner_->Append(
+        wxString::Format(wxT("Process %u ('%s') terminated with exit code %d."),
+                         pid, cmd_.c_str(), status));
     runner_->Append("");
     runner_->set_exit_code(status);
     runner_->OnCompleted();
   }
 
   virtual bool HasInput() {
-    // original source: http://sourceforge.net/p/fourpane/code/HEAD/tree/trunk/ExecuteInDialog.cpp
+    // original source:
+    // http://sourceforge.net/p/fourpane/code/HEAD/tree/trunk/ExecuteInDialog.cpp
 
-    // The original used wxTextInputStream to read a line at a time.  Fine, except when there was no \n, whereupon the thing would hang
-    // Instead, read the stream (which may occasionally contain non-ascii bytes e.g. from g++) into a memorybuffer, then to a wxString
+    // The original used wxTextInputStream to read a line at a time.  Fine,
+    // except when there was no \n, whereupon the thing would hang
+    // Instead, read the stream (which may occasionally contain non-ascii bytes
+    // e.g. from g++) into a memorybuffer, then to a wxString
 
     bool hasInput = false;
 
@@ -120,18 +120,17 @@ public:
         buf.AppendByte(c);
       } while (IsInputAvailable());
 
-      wxString line((const char*)buf.GetData(), wxConvUTF8, buf.GetDataLen()); // Convert the line to utf8
+      wxString line((const char*)buf.GetData(), wxConvUTF8,
+                    buf.GetDataLen());  // Convert the line to utf8
       runner_->Append(line);
       hasInput = true;
     }
 
-    while (IsErrorAvailable())
-    {
+    while (IsErrorAvailable()) {
       wxMemoryBuffer buf;
-      do
-      {
+      do {
         const char c = GetErrorStream()->GetC();
-        
+
         if (GetErrorStream()->Eof()) break;
         if (c == wxT('\n')) break;
         buf.AppendByte(c);
@@ -145,16 +144,14 @@ public:
     return hasInput;
   }
 
-protected:
-  SingleRunner::Pimpl *runner_;
+ protected:
+  SingleRunner::Pimpl* runner_;
   wxString cmd_;
 };
 
-SingleRunner::Pimpl::~Pimpl() {
-  delete processes_;
-}
+SingleRunner::Pimpl::~Pimpl() { delete processes_; }
 
-void SingleRunner::Pimpl::Notify(){
+void SingleRunner::Pimpl::Notify() {
   if (processes_) {
     // sometimes the output hangs until we close the window
     // seems to be waiting for output or something
@@ -173,7 +170,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   const int flags = wxEXEC_ASYNC | RUNNER_CONSOLE_OPTION;
 
   const long process_id = wxExecute(c.cmd, flags, process, &env);
-  
+
   // async call
   if (!process_id) {
     Append(wxT("Execution failed."));
@@ -192,11 +189,9 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
 
 //////////////////////////////////////////////////////////////////////////
 
-SingleRunner::SingleRunner() : pimpl(new Pimpl(this)) {
-}
+SingleRunner::SingleRunner() : pimpl(new Pimpl(this)) {}
 
-SingleRunner::~SingleRunner() {
-}
+SingleRunner::~SingleRunner() {}
 
 bool SingleRunner::RunCmd(const Command& cmd) {
   assert(pimpl);
@@ -225,10 +220,8 @@ int SingleRunner::GetExitCode() {
 //////////////////////////////////////////////////////////////////////////
 
 class MultiRunner::Runner : public SingleRunner {
-public:
-  Runner(MultiRunner* r) : runner_(r) {
-    assert(runner_);
-  }
+ public:
+  Runner(MultiRunner* r) : runner_(r) { assert(runner_); }
 
   virtual void Append(const wxString& str) {
     assert(runner_);
@@ -238,18 +231,15 @@ public:
     assert(runner_);
     runner_->RunNext(GetExitCode());
   }
-  bool Run(const Command& cmd) {
-    return RunCmd(cmd);
-  }
-private:
+  bool Run(const Command& cmd) { return RunCmd(cmd); }
+
+ private:
   MultiRunner* runner_;
 };
 
-MultiRunner::MultiRunner(){
-}
+MultiRunner::MultiRunner() {}
 
-MultiRunner::~MultiRunner(){
-}
+MultiRunner::~MultiRunner() {}
 
 bool MultiRunner::RunCmd(const Command& cmd) {
   commands_.push_back(cmd);
@@ -269,8 +259,7 @@ bool MultiRunner::RunNext(int last_exit_code) {
       commands_.erase(commands_.begin());
     }
     return run_result;
-  }
-  else {
+  } else {
     commands_.clear();
     return false;
   }

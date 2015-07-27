@@ -7,9 +7,7 @@
 #include <fstream>
 #include "ride/mainwindow.h"
 
-wxString GetConfigFolder() {
-  return wxStandardPaths::Get().GetUserDataDir();
-}
+wxString GetConfigFolder() { return wxStandardPaths::Get().GetUserDataDir(); }
 
 wxFileName GetConfigFile() {
   return wxFileName(GetConfigFolder(), "settings", "data");
@@ -33,13 +31,16 @@ void LoadSettings(wxWindow* main, ::ride::Settings& settings) {
 
 bool SaveSettings(wxWindow*, ::ride::Settings& settings) {
   const wxFileName config_file = GetConfigFile();
-  const bool create_result = config_file.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  const bool create_result =
+      config_file.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
   if (config_file.FileExists() && config_file.IsFileWritable() == false) {
     // abort if the file exist and isn't writable
     return false;
   }
   const wxString config_path = config_file.GetFullPath();
-  std::fstream config_stream(config_path.c_str().AsChar(), std::ios::out | std::ios::trunc | std::ios::binary);
+  std::fstream config_stream(
+      config_path.c_str().AsChar(),
+      std::ios::out | std::ios::trunc | std::ios::binary);
   return settings.SerializeToOstream(&config_stream);
 }
 
@@ -57,19 +58,20 @@ void LoadSession(wxWindow* main, ::ride::Session& settings) {
 
 bool SaveSession(wxWindow*, ::ride::Session& settings) {
   const wxFileName config_file = GetSessionFile();
-  const bool create_result = config_file.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  const bool create_result =
+      config_file.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
   if (config_file.FileExists() && config_file.IsFileWritable() == false) {
     // abort if the file exist and isn't writable
     return false;
   }
   const wxString config_path = config_file.GetFullPath();
-  std::fstream config_stream(config_path.c_str().AsChar(), std::ios::out | std::ios::trunc | std::ios::binary);
+  std::fstream config_stream(
+      config_path.c_str().AsChar(),
+      std::ios::out | std::ios::trunc | std::ios::binary);
   return settings.SerializeToOstream(&config_stream);
 }
 
-wxColor C(const ride::Color& c) {
-  return wxColor(c.r(), c.g(), c.b());
-}
+wxColor C(const ride::Color& c) { return wxColor(c.r(), c.g(), c.b()); }
 
 ride::Color C(const wxColor& c) {
   ride::Color r;

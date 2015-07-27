@@ -6,21 +6,24 @@
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"
 
-OutputDirector::OutputDirector()
-  : control_(NULL), main_(NULL) {
-}
+OutputDirector::OutputDirector() : control_(NULL), main_(NULL) {}
 
-void OutputDirector::Create(MainWindow* window, wxAuiManager& aui, const wxString& name, const wxString& caption) {
+void OutputDirector::Create(MainWindow* window, wxAuiManager& aui,
+                            const wxString& name, const wxString& caption) {
   main_ = window;
   control_ = new OutputControl(window);
-  control_->Create(window, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
+  control_->Create(window, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                   wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   control_->UpdateStyle();
   control_->UpdateStyle();
-  aui.AddPane(control_, wxAuiPaneInfo().Name(name).Caption(caption).Bottom().CloseButton(true));
+  aui.AddPane(
+      control_,
+      wxAuiPaneInfo().Name(name).Caption(caption).Bottom().CloseButton(true));
 }
 
 void OutputDirector::Clear() {
-  // todo: this probably needs to happen in the gui thread instead of here... or does it?
+  // todo: this probably needs to happen in the gui thread instead of here... or
+  // does it?
   ClearOutput(control_);
   compiler_messages_.resize(0);
 
@@ -33,11 +36,13 @@ void OutputDirector::Clear() {
 }
 
 void OutputDirector::Append(const wxString& str) {
-  // todo: this probably needs to happen in the gui thread instead of here... or does it?
+  // todo: this probably needs to happen in the gui thread instead of here... or
+  // does it?
   WriteLine(control_, str);
 
   CompilerMessage mess;
-  if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), str, &mess)) {
+  if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC,
+                             main_->root_folder(), str, &mess)) {
     AddCompilerMessage(mess);
   }
 }
@@ -46,14 +51,12 @@ void OutputDirector::AddCompilerMessage(const CompilerMessage& mess) {
   compiler_messages_.push_back(mess);
   files_.push_back(mess.file());
   FoundEdit edit = main_->GetEditFromFileName(mess.file());
-  if ( edit ) {
+  if (edit) {
     edit.edit->AddCompilerMessage(mess);
   }
 }
 
-void OutputDirector::UpdateStyles() {
-  control_->UpdateStyle();
-}
+void OutputDirector::UpdateStyles() { control_->UpdateStyle(); }
 
 void OutputDirector::AddAllCompilerMessages(FileEdit* file_edit) {
   for (const CompilerMessage message : compiler_messages_) {

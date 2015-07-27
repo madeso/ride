@@ -10,13 +10,13 @@ class MainWindow;
  * This is where the result of functions like 'find in files' are placed.
  */
 class FindResultsControl : public wxStyledTextCtrl {
-public:
+ public:
   FindResultsControl(MainWindow* main);
 
   void UpdateStyle();
   const wxString GetContextLineContent();
 
-protected:
+ protected:
   void OnContextMenu(wxContextMenuEvent& event);
   void OnCopyThisCompilerMessage(wxCommandEvent& event);
   void OnClearCompilerOuput(wxCommandEvent& event);
@@ -25,9 +25,9 @@ protected:
   void OnDoubleClick(wxMouseEvent& event);
   void BindEvents();
 
-private:
+ private:
   int context_positon_;
   MainWindow* main_;
 };
 
-#endif // RIDE_FINDCONTROL_H_
+#endif  // RIDE_FINDCONTROL_H_

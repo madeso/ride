@@ -10,9 +10,8 @@
 
 #include "ride/generated/ui.h"
 
-class CreateNewProjectDlg : public ui::CreateNewProject
-{
-public:
+class CreateNewProjectDlg : public ui::CreateNewProject {
+ public:
   CreateNewProjectDlg(wxWindow* parent);
 
   const wxString project_folder() const;
@@ -21,7 +20,7 @@ public:
   wxString GetTarget() const;
   wxString GenerateCargoCommandline() const;
 
-protected:
+ protected:
   virtual void OnProjectNameEnter(wxCommandEvent& event);
 
   virtual void OnProjectNameChanged(wxCommandEvent& event);
@@ -29,15 +28,16 @@ protected:
   virtual void OnBrowseProjectFolder(wxCommandEvent& event);
   virtual void OnCancel(wxCommandEvent& event);
   virtual void OnOk(wxCommandEvent& event);
-private:
+
+ private:
   wxString GetVcsName() const;
   void UpdateTarget();
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-CreateNewProjectDlgHandler::CreateNewProjectDlgHandler(wxWindow* parent) : parent_(parent) {
-}
+CreateNewProjectDlgHandler::CreateNewProjectDlgHandler(wxWindow* parent)
+    : parent_(parent) {}
 
 bool CreateNewProjectDlgHandler::ShowModal() {
   CreateNewProjectDlg dlg(parent_);
@@ -59,9 +59,7 @@ const wxString CreateNewProjectDlgHandler::project_name() const {
   return project_name_;
 }
 
-wxString CreateNewProjectDlgHandler::target() const {
-  return target_;
-}
+wxString CreateNewProjectDlgHandler::target() const { return target_; }
 
 wxString CreateNewProjectDlgHandler::cargo_command_line() const {
   return cargo_command_line_;
@@ -69,11 +67,7 @@ wxString CreateNewProjectDlgHandler::cargo_command_line() const {
 
 //////////////////////////////////////////////////////////////////////////
 
-enum ProjectTemplateType {
-  PTT_UNKNOWN,
-  PTT_BINARY,
-  PTT_LIBRARY
-};
+enum ProjectTemplateType { PTT_UNKNOWN, PTT_BINARY, PTT_LIBRARY };
 
 wxString GetValidDirectory(const wxString& dir) {
   if (dir.IsEmpty()) return "";
@@ -83,34 +77,40 @@ wxString GetValidDirectory(const wxString& dir) {
 }
 
 ProjectTemplateType GetPtt(wxListCtrl* list) {
-  const long selection = list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+  const long selection =
+      list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
   if (selection == -1) return PTT_UNKNOWN;
   wxUIntPtr data = list->GetItemData(selection);
-  if (data == PTT_LIBRARY) return PTT_LIBRARY;
-  else if (data == PTT_BINARY) return PTT_BINARY;
-  else return PTT_UNKNOWN;
+  if (data == PTT_LIBRARY)
+    return PTT_LIBRARY;
+  else if (data == PTT_BINARY)
+    return PTT_BINARY;
+  else
+    return PTT_UNKNOWN;
 }
 
-void AddItem(wxListCtrl* list, const wxString& text, int image, ProjectTemplateType type)
-{
+void AddItem(wxListCtrl* list, const wxString& text, int image,
+             ProjectTemplateType type) {
   long i = list->InsertItem(0, "", image);
   list->SetItemColumnImage(i, 0, image);
   list->SetItem(i, 1, text);
   list->SetItemData(i, type);
 }
 
-CreateNewProjectDlg::CreateNewProjectDlg(wxWindow* parent) : ui::CreateNewProject(parent) {
+CreateNewProjectDlg::CreateNewProjectDlg(wxWindow* parent)
+    : ui::CreateNewProject(parent) {
   uiVcs->SetSelection(0);
   uiProjectfolder->SetValue(wxStandardPaths::Get().GetDocumentsDir());
 
-  wxImageList* images = new wxImageList(16,16);
+  wxImageList* images = new wxImageList(16, 16);
   images->Add(wxIcon(create_app_xpm));
   images->Add(wxIcon(create_library_xpm));
   uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);
-  
+
   uiTemplates->InsertColumn(0, "");
   uiTemplates->SetColumnWidth(0, 20);
-  uiTemplates->InsertColumn(1, "Name", wxLIST_FORMAT_LEFT, wxLIST_AUTOSIZE_USEHEADER);
+  uiTemplates->InsertColumn(1, "Name", wxLIST_FORMAT_LEFT,
+                            wxLIST_AUTOSIZE_USEHEADER);
 
   AddItem(uiTemplates, "Library", 1, PTT_LIBRARY);
   AddItem(uiTemplates, "Binary", 0, PTT_BINARY);
@@ -132,7 +132,8 @@ void CreateNewProjectDlg::OnProjectFolderChanged(wxCommandEvent& event) {
 }
 
 void CreateNewProjectDlg::OnBrowseProjectFolder(wxCommandEvent& event) {
-  wxDirDialog dlg(NULL, "Choose project folder", uiProjectfolder->GetValue(), wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+  wxDirDialog dlg(NULL, "Choose project folder", uiProjectfolder->GetValue(),
+                  wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
   if (wxID_OK != dlg.ShowModal()) return;
   uiProjectfolder->SetValue(dlg.GetPath());
 }
@@ -165,29 +166,35 @@ const wxString CreateNewProjectDlg::project_name() const {
 }
 
 void CreateNewProjectDlg::OnOk(wxCommandEvent& event) {
-  if (project_folder().IsEmpty() == false && project_name().IsEmpty() == false && GetPtt(uiTemplates)!= PTT_UNKNOWN ) {
+  if (project_folder().IsEmpty() == false &&
+      project_name().IsEmpty() == false && GetPtt(uiTemplates) != PTT_UNKNOWN) {
     EndModal(wxID_OK);
-  }
-  else {
-    ShowError(this, "Please enter valid name and folder for the project", "Missing name and/or folder for project");
+  } else {
+    ShowError(this, "Please enter valid name and folder for the project",
+              "Missing name and/or folder for project");
   }
 }
 
 wxString CreateNewProjectDlg::GetVcsName() const {
   const int selected_item = uiVcs->GetSelection();
   switch (selected_item) {
-  case 0: return "none";
-  case 1: return "git";
-  case 2: return "hg";
-  default:
-    assert(0 && "Unknown selected VCS item");
-    return "none";
+    case 0:
+      return "none";
+    case 1:
+      return "git";
+    case 2:
+      return "hg";
+    default:
+      assert(0 && "Unknown selected VCS item");
+      return "none";
   }
 }
 
 wxString CreateNewProjectDlg::GenerateCargoCommandline() const {
-  const wxString template_cmd = GetPtt(uiTemplates) == PTT_BINARY ? "--bin " : "";
+  const wxString template_cmd =
+      GetPtt(uiTemplates) == PTT_BINARY ? "--bin " : "";
   const wxString travis_cmd = uiTravis->GetValue() ? "--travis " : "";
   const wxString vcs_name = GetVcsName();
-  return wxString::Format("cargo new --vcs %s %s%s%s", vcs_name, template_cmd, travis_cmd, project_name());
+  return wxString::Format("cargo new --vcs %s %s%s%s", vcs_name, template_cmd,
+                          travis_cmd, project_name());
 }

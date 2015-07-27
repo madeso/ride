@@ -16,6 +16,8 @@ enum class ShowAutoCompleteAction {
 class wxStyledTextCtrl;
 
 void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* stc);
-void Autocomplete(wxStyledTextCtrl* text, Language* current_language, const wxString& filename, const wxString& root_folder, wxWindow* self, ShowAutoCompleteAction action);
+void Autocomplete(wxStyledTextCtrl* text, Language* current_language,
+                  const wxString& filename, const wxString& root_folder,
+                  wxWindow* self, ShowAutoCompleteAction action);
 
 #endif  // RIDE_AUTOCOMPLETE_H

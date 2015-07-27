@@ -3,16 +3,11 @@
 #include "ride/wx.h"
 #include <cassert>
 
-Tab::Tab(FileEdit* edit) : edit_(edit), start_(NULL) {
-  assert(edit);
-}
+Tab::Tab(FileEdit* edit) : edit_(edit), start_(NULL) { assert(edit); }
 
-Tab::Tab(StartPageTab* start) : edit_(NULL), start_(start) {
-  assert(start);
-}
+Tab::Tab(StartPageTab* start) : edit_(NULL), start_(start) { assert(start); }
 
-Tab::~Tab() {
-}
+Tab::~Tab() {}
 
 FileEdit* Tab::ToFileEdit() {
   assert(this);

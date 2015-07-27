@@ -9,15 +9,15 @@
 
 #include "ride/generated/ui.h"
 
-class CreateNewFileDlg : public ui::CreateNewFile
-{
-public:
-  CreateNewFileDlg(wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint);
+class CreateNewFileDlg : public ui::CreateNewFile {
+ public:
+  CreateNewFileDlg(wxWindow* parent, const wxString& project_folder,
+                   const wxString& fodler_hint);
 
   const wxString GetFilePath() const;
   const wxString GetTemplateSource() const;
 
-protected:
+ protected:
   void OnTextChanged(wxCommandEvent& event);
   void OnComboChanged(wxCommandEvent& event);
   void OnCheckChanged(wxCommandEvent& event);
@@ -26,17 +26,19 @@ protected:
   void OnCancel(wxCommandEvent& event);
   void OnOk(wxCommandEvent& event);
 
-private:
+ private:
   void UpdateTemplateSource();
   wxString project_folder_;
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-CreateNewFileDlgHandler::CreateNewFileDlgHandler(wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint)
-  : parent_(parent), project_folder_(project_folder), fodler_hint_(fodler_hint)
-{
-}
+CreateNewFileDlgHandler::CreateNewFileDlgHandler(wxWindow* parent,
+                                                 const wxString& project_folder,
+                                                 const wxString& fodler_hint)
+    : parent_(parent),
+      project_folder_(project_folder),
+      fodler_hint_(fodler_hint) {}
 
 bool CreateNewFileDlgHandler::ShowModal() {
   CreateNewFileDlg dlg(parent_, project_folder_, fodler_hint_);
@@ -48,9 +50,7 @@ bool CreateNewFileDlgHandler::ShowModal() {
   return ret;
 }
 
-const wxString CreateNewFileDlgHandler::file_path() const {
-  return file_path_;
-}
+const wxString CreateNewFileDlgHandler::file_path() const { return file_path_; }
 
 const wxString CreateNewFileDlgHandler::template_source() const {
   return template_source_;
@@ -59,13 +59,13 @@ const wxString CreateNewFileDlgHandler::template_source() const {
 //////////////////////////////////////////////////////////////////////////
 
 class FileTemplate {
-public:
+ public:
   virtual ~FileTemplate() {}
   virtual const wxString GenerateContent(const wxString& name) = 0;
 };
 
-void AddFileTemplate(wxListCtrl* list, const wxString& text, int image, FileTemplate* ft)
-{
+void AddFileTemplate(wxListCtrl* list, const wxString& text, int image,
+                     FileTemplate* ft) {
   long i = list->InsertItem(0, "", image);
   list->SetItemColumnImage(i, 0, image);
   list->SetItem(i, 1, text);
@@ -74,39 +74,41 @@ void AddFileTemplate(wxListCtrl* list, const wxString& text, int image, FileTemp
 }
 
 class EmptyFileTemplate : public FileTemplate {
-public:
+ public:
   virtual const wxString GenerateContent(const wxString& name) {
     return wxEmptyString;
   }
 } g_empty_file_template;
 
-class RustClassFileTemplate : public FileTemplate{
-public:
+class RustClassFileTemplate : public FileTemplate {
+ public:
   virtual const wxString GenerateContent(const wxString& name) {
     return wxString::Format(
-      "struct %s {\n"
-      "}\n"
-      "\n"
-      "impl %s {\n"
-      "}\n"
-      "\n"
-      , name, name);
+        "struct %s {\n"
+        "}\n"
+        "\n"
+        "impl %s {\n"
+        "}\n"
+        "\n",
+        name, name);
   }
 } g_rust_class_file_template;
 
 enum {
-  REPLACE_SPACE_NOT
-  , REPLACE_SPACE_WITH_NONE
-  , REPLACE_SPACE_WITH_UNDERSCORE
-  , REPLACE_SPACE_WITH_DASH
+  REPLACE_SPACE_NOT,
+  REPLACE_SPACE_WITH_NONE,
+  REPLACE_SPACE_WITH_UNDERSCORE,
+  REPLACE_SPACE_WITH_DASH
 };
 
-CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint)
-  : ui::CreateNewFile(parent), project_folder_(project_folder) {
-  wxImageList* images = new wxImageList(16,16);
+CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent,
+                                   const wxString& project_folder,
+                                   const wxString& fodler_hint)
+    : ui::CreateNewFile(parent), project_folder_(project_folder) {
+  wxImageList* images = new wxImageList(16, 16);
   images->Add(wxIcon(file_normal_xpm));
   uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);
-  
+
   const long icon_index = uiTemplates->InsertColumn(0, "Icon");
   const long language_index = uiTemplates->InsertColumn(2, "Language");
   const long name_index = uiTemplates->InsertColumn(1, "Name");
@@ -131,17 +133,11 @@ CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent, const wxString& project_fol
   UpdateTemplateSource();
 }
 
-void CreateNewFileDlg::OnNameEnter(wxCommandEvent& event) {
-  OnOk(event);
-}
+void CreateNewFileDlg::OnNameEnter(wxCommandEvent& event) { OnOk(event); }
 
-void CreateNewFileDlg::OnCancel(wxCommandEvent& event) {
-  EndModal(wxCANCEL);
-}
+void CreateNewFileDlg::OnCancel(wxCommandEvent& event) { EndModal(wxCANCEL); }
 
-void CreateNewFileDlg::OnOk(wxCommandEvent& event) {
-  EndModal(wxOK);
-}
+void CreateNewFileDlg::OnOk(wxCommandEvent& event) { EndModal(wxOK); }
 
 const wxString CreateNewFileDlg::GetFilePath() const {
   wxString file_name = uiName->GetValue();
@@ -150,22 +146,21 @@ const wxString CreateNewFileDlg::GetFilePath() const {
   }
 
   const int action = uiReplaceAction->GetSelection();
-  switch (action)
-  {
-  case -1:
-  case REPLACE_SPACE_NOT:
-    break;
-  case REPLACE_SPACE_WITH_NONE:
+  switch (action) {
+    case -1:
+    case REPLACE_SPACE_NOT:
+      break;
+    case REPLACE_SPACE_WITH_NONE:
       file_name.Replace(" ", "");
       break;
-  case REPLACE_SPACE_WITH_UNDERSCORE:
+    case REPLACE_SPACE_WITH_UNDERSCORE:
       file_name.Replace(" ", "_");
       break;
-  case REPLACE_SPACE_WITH_DASH:
+    case REPLACE_SPACE_WITH_DASH:
       file_name.Replace(" ", "-");
       break;
-  default:
-        assert(false && "Invalid replace action!");
+    default:
+      assert(false && "Invalid replace action!");
   }
 
   wxFileName fn(project_folder_);
@@ -181,7 +176,7 @@ const wxString CreateNewFileDlg::GetFilePath() const {
   if (file_name != wxEmptyString) {
     fn.SetFullName(file_name);
     if (fn.GetExt() == wxEmptyString) {
-      fn.SetExt("rs"); // todo: use the extension from the template instead..
+      fn.SetExt("rs");  // todo: use the extension from the template instead..
     }
   }
 
@@ -189,7 +184,8 @@ const wxString CreateNewFileDlg::GetFilePath() const {
 }
 
 FileTemplate* GetFt(wxListCtrl* list) {
-  const long selection = list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+  const long selection =
+      list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
   if (selection == -1) return NULL;
   wxUIntPtr data = list->GetItemData(selection);
   FileTemplate* ret = reinterpret_cast<FileTemplate*>(data);
@@ -198,15 +194,22 @@ FileTemplate* GetFt(wxListCtrl* list) {
 
 const wxString CreateNewFileDlg::GetTemplateSource() const {
   FileTemplate* file_template = GetFt(uiTemplates);
-  if (file_template == NULL) return wxEmptyString;
-  else return file_template->GenerateContent(uiName->GetValue());
+  if (file_template == NULL)
+    return wxEmptyString;
+  else
+    return file_template->GenerateContent(uiName->GetValue());
 }
 
-void CreateNewFileDlg::OnTextChanged(wxCommandEvent& event)  { UpdateTemplateSource(); }
-void CreateNewFileDlg::OnComboChanged(wxCommandEvent& event) { UpdateTemplateSource(); }
-void CreateNewFileDlg::OnCheckChanged(wxCommandEvent& event) { UpdateTemplateSource(); }
+void CreateNewFileDlg::OnTextChanged(wxCommandEvent& event) {
+  UpdateTemplateSource();
+}
+void CreateNewFileDlg::OnComboChanged(wxCommandEvent& event) {
+  UpdateTemplateSource();
+}
+void CreateNewFileDlg::OnCheckChanged(wxCommandEvent& event) {
+  UpdateTemplateSource();
+}
 
 void CreateNewFileDlg::UpdateTemplateSource() {
   uiSuggestedFilePath->SetLabel(GetFilePath());
 }
-

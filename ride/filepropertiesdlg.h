@@ -6,4 +6,4 @@ class FileEdit;
 
 void ShowFilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl);
 
-#endif // SETTINGS_DLG_H
+#endif  // SETTINGS_DLG_H

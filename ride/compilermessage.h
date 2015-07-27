@@ -4,18 +4,16 @@
 #include "ride/wx.h"
 
 class CompilerMessage {
-public:
-  enum Type {
-    TYPE_UNKNOWN, TYPE_NOTE, TYPE_WARNING, TYPE_ERROR, TYPE_RELATED
-  };
+ public:
+  enum Type { TYPE_UNKNOWN, TYPE_NOTE, TYPE_WARNING, TYPE_ERROR, TYPE_RELATED };
 
-  enum Source {
-    SOURCE_RUSTC, SOURCE_PROTOC
-  };
+  enum Source { SOURCE_RUSTC, SOURCE_PROTOC };
 
   CompilerMessage();
-  CompilerMessage(const wxString& file, int start_line, int start_index, int end_line, int end_index, Type type, wxString message);
-  static bool Parse(const Source source, const wxString& root, const wxString& text, CompilerMessage* output);
+  CompilerMessage(const wxString& file, int start_line, int start_index,
+                  int end_line, int end_index, Type type, wxString message);
+  static bool Parse(const Source source, const wxString& root,
+                    const wxString& text, CompilerMessage* output);
 
   wxString ToStringRepresentation(const Source source);
 
@@ -35,7 +33,7 @@ public:
   Type type() const;
   const wxString& message() const;
 
-private:
+ private:
   wxString file_;
   int start_line_;
   int start_index_;

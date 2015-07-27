@@ -6,6 +6,7 @@
 class MainWindow;
 class Project;
 
-void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project);
+void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
+                          Project* project);
 
-#endif // SETTINGS_DLG_H
+#endif  // SETTINGS_DLG_H

@@ -18,23 +18,25 @@
 #endif
 
 StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
-  : wxControl(parent, wxID_ANY)
-  , tab_(this)
-  , main_(parent)
-  , notebook_(anotebook)
-{
+    : wxControl(parent, wxID_ANY),
+      tab_(this),
+      main_(parent),
+      notebook_(anotebook) {
   this->SetClientData(&tab_);
 
 #ifdef USE_WEBVIEW
-  wxWebView* ctrl = wxWebView::New(this, wxID_ANY, "http://rust-ide.tumblr.com/", wxDefaultPosition, wxSize(400, 300));
+  wxWebView* ctrl =
+      wxWebView::New(this, wxID_ANY, "http://rust-ide.tumblr.com/",
+                     wxDefaultPosition, wxSize(400, 300));
 #else
-  wxHtmlWindow* ctrl = new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition, wxSize(400, 300));
-  wxString html = 
-    "<html><body>"
-    "<h3>Welcome to RIDE</h3>"
-    "<br/><b>Overview</b><br/>"
-    "<p>RIDE is a Rust IDE.</p>"
-    "</body></html>";
+  wxHtmlWindow* ctrl =
+      new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition, wxSize(400, 300));
+  wxString html =
+      "<html><body>"
+      "<h3>Welcome to RIDE</h3>"
+      "<br/><b>Overview</b><br/>"
+      "<p>RIDE is a Rust IDE.</p>"
+      "</body></html>";
   ctrl->SetPage(html);
 #endif
 
@@ -45,6 +47,4 @@ StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
   notebook_->AddPage(this, wxT("Start"), true);
 }
 
-StartPageTab::~StartPageTab() {
-}
-
+StartPageTab::~StartPageTab() {}

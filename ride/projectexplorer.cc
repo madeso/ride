@@ -5,30 +5,26 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/textdlg.h>
-#include <wx/filefn.h> 
+#include <wx/filefn.h>
 
 #include "ride/mainwindow.h"
 #include "ride/resources/icons.h"
 #include "ride/wxutils.h"
 #include "ride/deletefolderdlg.h"
 
-enum {
-  ICON_FILE_NORMAL,
-  ICON_FOLDER_NORMAL
-};
+enum { ICON_FILE_NORMAL, ICON_FOLDER_NORMAL };
 
 const std::vector<wxString>& ProjectExplorer::GetFiles() const {
   return files_;
 }
 
 ProjectExplorer::ProjectExplorer(MainWindow* main)
-  : wxTreeCtrl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-  wxTR_HAS_BUTTONS
-  | wxTR_TWIST_BUTTONS
-  | wxTR_MULTIPLE
-  | wxTR_LINES_AT_ROOT
-  | wxTR_EDIT_LABELS
-  ), images_(16, 16), main_(main), last_highlighted_item_(NULL) {
+    : wxTreeCtrl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                 wxTR_HAS_BUTTONS | wxTR_TWIST_BUTTONS | wxTR_MULTIPLE |
+                     wxTR_LINES_AT_ROOT | wxTR_EDIT_LABELS),
+      images_(16, 16),
+      main_(main),
+      last_highlighted_item_(NULL) {
   BindEvents();
   UpdateColors();
 
@@ -39,7 +35,8 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
 }
 
 void ProjectExplorer::UpdateColors() {
-  const ride::Style& style = main_->settings().fonts_and_colors().default_style();
+  const ride::Style& style =
+      main_->settings().fonts_and_colors().default_style();
   this->SetBackgroundColour(C(style.background()));
   this->SetForegroundColour(C(style.foreground()));
 }
@@ -75,22 +72,18 @@ bool IsDirectory(const wxFileName& root, const wxString directory) {
 }
 
 class FileEntry : public wxTreeItemData {
-public:
-  FileEntry(bool is_directory, const wxString& path) : is_directory_(is_directory), path_(path) {
+ public:
+  FileEntry(bool is_directory, const wxString& path)
+      : is_directory_(is_directory), path_(path) {
     int i = 0;
   }
-  const wxString& path() const {
-    return path_;
-  }
-  void set_path(const wxString& path) {
-    path_ = path;
-  }
-  bool is_directory() const {
-    return is_directory_;
-  }
+  const wxString& path() const { return path_; }
+  void set_path(const wxString& path) { path_ = path; }
+  bool is_directory() const { return is_directory_; }
   const wxString GetRelativePath(const wxString root) const {
     if (is_directory_) return GetRelativeFolderPath(root);
-    const wxString ret = GetRelativeFolderPath(root) + wxFileName(path_).GetFullName();
+    const wxString ret =
+        GetRelativeFolderPath(root) + wxFileName(path_).GetFullName();
     return ret;
   }
   const wxString GetRelativeFolderPath(const wxString root) const {
@@ -98,27 +91,30 @@ public:
     fn.SetFullName(wxEmptyString);
     const wxString native_path = fn.GetFullPath(wxPATH_NATIVE);
     assert(native_path.StartsWith(root));
-    const wxString relative_native = native_path.Right(native_path.length() - root.length());
-    const wxString native_path_sep = wxString(1, wxFileName::GetPathSeparator());
+    const wxString relative_native =
+        native_path.Right(native_path.length() - root.length());
+    const wxString native_path_sep =
+        wxString(1, wxFileName::GetPathSeparator());
     wxString ret = relative_native;
     ret.Replace(native_path_sep, "/");
     return ret;
   }
-private:
+
+ private:
   bool is_directory_;
   wxString path_;
 };
 
 typedef std::pair<wxTreeItemId, FileEntry*> TreeItemFileEntry;
 
-TreeItemFileEntry GetTreeItemData(const ProjectExplorer* pe, wxTreeItemId selected) {
+TreeItemFileEntry GetTreeItemData(const ProjectExplorer* pe,
+                                  wxTreeItemId selected) {
   if (selected.IsOk() == false) return TreeItemFileEntry(NULL, NULL);
   wxTreeItemData* data = pe->GetItemData(selected);
   if (data) {
     FileEntry* entry = reinterpret_cast<FileEntry*>(data);
     return TreeItemFileEntry(selected, entry);
-  }
-  else {
+  } else {
     return TreeItemFileEntry(selected, NULL);
   }
 }
@@ -129,16 +125,18 @@ TreeItemFileEntry GetFocused(const ProjectExplorer* pe) {
 }
 
 void ProjectExplorer::UpdateFolderStructure() {
-  const int flags = wxDIR_FILES | wxDIR_DIRS; // walk files and folders
+  const int flags = wxDIR_FILES | wxDIR_DIRS;  // walk files and folders
   const wxString filespec = "";
-  
+
   last_highlighted_item_.Unset();
   folder_to_item_.clear();
   this->Freeze();
   this->DeleteAllItems();
   files_.resize(0);
-  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL, ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
-  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags, wxEmptyString, 0);
+  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL,
+                   ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
+  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags,
+                           wxEmptyString, 0);
   this->Thaw();
 
   this->ExpandAll();
@@ -156,8 +154,9 @@ wxString ProjectExplorer::GetRelativePathOfSelected() const {
   return file.second->GetRelativeFolderPath(folder_);
 }
 
-
-std::vector<wxString> TraverseFilesAndFolders(const wxFileName& root, const wxString filespec, const int flags) {
+std::vector<wxString> TraverseFilesAndFolders(const wxFileName& root,
+                                              const wxString filespec,
+                                              const int flags) {
   const wxString root_full_path = root.GetFullPath();
 
   if (root_full_path.IsEmpty()) return std::vector<wxString>();
@@ -169,8 +168,7 @@ std::vector<wxString> TraverseFilesAndFolders(const wxFileName& root, const wxSt
   std::vector<wxString> ret;
   wxString file_or_directory_name;
   bool cont = directory.GetFirst(&file_or_directory_name, filespec, flags);
-  while (cont)
-  {
+  while (cont) {
     ret.push_back(file_or_directory_name);
     cont = directory.GetNext(&file_or_directory_name);
   }
@@ -184,31 +182,33 @@ wxString JoinPath(const wxFileName& root, const wxString& file_or_folder) {
   return root.GetFullPath() + file_or_folder;
 }
 
-void ProjectExplorer::SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent, const wxString filespec, const int flags, const wxString& relative_path, int index)
-{
+void ProjectExplorer::SubUpdateFolderStructure(
+    const wxFileName& root, wxTreeItemId parent, const wxString filespec,
+    const int flags, const wxString& relative_path, int index) {
   const wxString root_full_path = root.GetFullPath();
-  const std::vector<wxString> files_and_folders = TraverseFilesAndFolders(root, filespec, flags);
-  for (const wxString file_or_directory_name : files_and_folders)
-  {
-    if( file_or_directory_name == "target" && index == 0 ) continue;
+  const std::vector<wxString> files_and_folders =
+      TraverseFilesAndFolders(root, filespec, flags);
+  for (const wxString file_or_directory_name : files_and_folders) {
+    if (file_or_directory_name == "target" && index == 0) continue;
 
     const bool is_dir = IsDirectory(root, file_or_directory_name);
     const int image = is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL;
 
     const wxString path = JoinPath(root, file_or_directory_name);
-    const wxString future_relative_path = relative_path + file_or_directory_name + "/";
+    const wxString future_relative_path =
+        relative_path + file_or_directory_name + "/";
     const wxString dir_path = wxDir(path).GetNameWithSep();
 
-    FileEntry* fileentry = new FileEntry(is_dir
-      , is_dir ? dir_path : path);
+    FileEntry* fileentry = new FileEntry(is_dir, is_dir ? dir_path : path);
     wxTreeItemData* data = fileentry;
-    wxTreeItemId child = this->AppendItem(parent, file_or_directory_name, image, image, data);
+    wxTreeItemId child =
+        this->AppendItem(parent, file_or_directory_name, image, image, data);
     folder_to_item_[path] = child;
     if (is_dir) {
       const wxFileName folder_name = SubFolder(root, file_or_directory_name);
-      SubUpdateFolderStructure(folder_name, child, filespec, flags, future_relative_path, index+1);
-    }
-    else {
+      SubUpdateFolderStructure(folder_name, child, filespec, flags,
+                               future_relative_path, index + 1);
+    } else {
       files_.push_back(fileentry->GetRelativePath(folder_));
     }
   }
@@ -228,21 +228,21 @@ void ProjectExplorer::OnDoubleClick(wxMouseEvent& event) {
 }
 
 enum {
-  ID_FOLDER_COLLAPSE = wxID_HIGHEST
-  , ID_FOLDER_EXPAND
+  ID_FOLDER_COLLAPSE = wxID_HIGHEST,
+  ID_FOLDER_EXPAND,
 
-  , ID_FOLDER_COLLAPSE_ALL_CHILDREN
-  , ID_FOLDER_EXPAND_ALL_CHILDREN
+  ID_FOLDER_COLLAPSE_ALL_CHILDREN,
+  ID_FOLDER_EXPAND_ALL_CHILDREN,
 
-  , ID_COLLAPSE_ALL
-  , ID_EXPAND_ALL
+  ID_COLLAPSE_ALL,
+  ID_EXPAND_ALL,
 
-  , ID_OPEN_FILE
-  , ID_CREATE_NEW_FILE
-  , ID_CREATE_NEW_FOLDER
-  , ID_DELETE_FILE_OR_FOLDER
-  , ID_RENAME
-  , ID_OPEN_EXPLORER
+  ID_OPEN_FILE,
+  ID_CREATE_NEW_FILE,
+  ID_CREATE_NEW_FOLDER,
+  ID_DELETE_FILE_OR_FOLDER,
+  ID_RENAME,
+  ID_OPEN_EXPLORER
 };
 
 void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
@@ -251,9 +251,11 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
 
   const auto selected = GetFocused(this);
 
-  const bool is_folder = selected.second ? selected.second->is_directory() == true  : false;
-  const bool is_file   = selected.second ? selected.second->is_directory() == false : false;
-  
+  const bool is_folder =
+      selected.second ? selected.second->is_directory() == true : false;
+  const bool is_file =
+      selected.second ? selected.second->is_directory() == false : false;
+
   wxMenu menu;
   AppendEnabled(menu, ID_OPEN_FILE, "Open file", is_file);
   AppendEnabled(menu, ID_RENAME, "Rename", is_file);
@@ -264,11 +266,13 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
   // open in shell
   menu.AppendSeparator();
   AppendEnabled(menu, ID_FOLDER_COLLAPSE, "Collapse", is_folder);
-  AppendEnabled(menu, ID_FOLDER_COLLAPSE_ALL_CHILDREN, "Collapse children", is_folder);
-  AppendEnabled(menu, ID_COLLAPSE_ALL, "Collapse all", true); 
+  AppendEnabled(menu, ID_FOLDER_COLLAPSE_ALL_CHILDREN, "Collapse children",
+                is_folder);
+  AppendEnabled(menu, ID_COLLAPSE_ALL, "Collapse all", true);
   menu.AppendSeparator();
   AppendEnabled(menu, ID_FOLDER_EXPAND, "Expand", is_folder);
-  AppendEnabled(menu, ID_FOLDER_EXPAND_ALL_CHILDREN, "Expand children", is_folder);
+  AppendEnabled(menu, ID_FOLDER_EXPAND_ALL_CHILDREN, "Expand children",
+                is_folder);
   AppendEnabled(menu, ID_EXPAND_ALL, "Expand all", true);
   menu.AppendSeparator();
   AppendEnabled(menu, ID_DELETE_FILE_OR_FOLDER, "Delete", true);
@@ -281,7 +285,7 @@ void ProjectExplorer::OnCreateNewFolder(wxCommandEvent& event) {
   wxTextEntryDialog dlg(this, "Please enter folder name:", "Folder name");
   if (dlg.ShowModal() != wxID_OK) return;
   const wxString folder_name = dlg.GetValue();
-  wxFileName fn(path_of_selected); 
+  wxFileName fn(path_of_selected);
   fn.AppendDir(folder_name);
   const wxString dir = fn.GetPathWithSep();
   const bool folder_exists = wxDir::Exists(dir);
@@ -301,39 +305,37 @@ void ProjectExplorer::OnCreateNewFile(wxCommandEvent& event) {
   CreateNewFile(folder_, main_, this);
 }
 
-void ProjectExplorer::OnFolderCollapse(wxCommandEvent& event){
+void ProjectExplorer::OnFolderCollapse(wxCommandEvent& event) {
   const auto selected = GetFocused(this);
   if (selected.first.IsOk() == false) return;
   this->Collapse(selected.first);
 }
 
-void ProjectExplorer::OnFolderExpand(wxCommandEvent& event){
+void ProjectExplorer::OnFolderExpand(wxCommandEvent& event) {
   const auto selected = GetFocused(this);
   if (selected.first.IsOk() == false) return;
   this->Expand(selected.first);
 }
 
-void ProjectExplorer::OnFolderCollapseAllChildren(wxCommandEvent& event){
+void ProjectExplorer::OnFolderCollapseAllChildren(wxCommandEvent& event) {
   const auto selected = GetFocused(this);
   if (selected.first.IsOk() == false) return;
   this->CollapseAllChildren(selected.first);
 }
 
-void ProjectExplorer::OnFolderExpandAllChildren(wxCommandEvent& event){
+void ProjectExplorer::OnFolderExpandAllChildren(wxCommandEvent& event) {
   const auto selected = GetFocused(this);
   if (selected.first.IsOk() == false) return;
   this->ExpandAllChildren(selected.first);
 }
 
-void ProjectExplorer::OnCollapseAll(wxCommandEvent& event){
+void ProjectExplorer::OnCollapseAll(wxCommandEvent& event) {
   this->CollapseAll();
 }
 
-void ProjectExplorer::OnExpandAll(wxCommandEvent& event){
-  this->ExpandAll();
-}
+void ProjectExplorer::OnExpandAll(wxCommandEvent& event) { this->ExpandAll(); }
 
-void ProjectExplorer::OnOpenFile(wxCommandEvent& event){
+void ProjectExplorer::OnOpenFile(wxCommandEvent& event) {
   const auto selected = GetFocused(this);
   OpenFile(selected, main_);
 }
@@ -341,16 +343,18 @@ void ProjectExplorer::OnOpenFile(wxCommandEvent& event){
 void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
   const auto selected = GetFocused(this);
   FileEntry* file = selected.second;
-  if (file == NULL)  return;
-  
-  // if a dialog is shown, the file pointer is invalidated, since we rebuild the whole tree structure and thus delete the entries
+  if (file == NULL) return;
+
+  // if a dialog is shown, the file pointer is invalidated, since we rebuild the
+  // whole tree structure and thus delete the entries
   // lets "fix" this for now by storing copies and setting our reference to null
   const wxString path = file->path();
   const bool is_directory = file->is_directory();
   file = NULL;
 
   if (is_directory) {
-    // we don't care about the value of these really, since the dialog should set them
+    // we don't care about the value of these really, since the dialog should
+    // set them
     // however, let's set them to a safe value to be sure
     bool full = false;
     bool recursive = false;
@@ -368,10 +372,10 @@ void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
     if (false == removed) {
       // wxWidgets seems to display a dialog here for us...
     }
-  }
-  else {
+  } else {
     wxString mess = "Do you want to delete " + path;
-    DialogResult ret = ShowYesNo(this, "Remove?", "Remove file", "Keep file", path, "Do you want to delete " + path);
+    DialogResult ret = ShowYesNo(this, "Remove?", "Remove file", "Keep file",
+                                 path, "Do you want to delete " + path);
     if (DialogResult::YES != ret) {
       return;
     }
@@ -387,7 +391,7 @@ void ProjectExplorer::OnEditLabelStart(wxTreeEvent& event) {
   if (event.IsEditCancelled()) return;
   auto data = GetTreeItemData(this, event.GetItem());
   FileEntry* file = data.second;
-  if (file == NULL)  {
+  if (file == NULL) {
     event.Veto();
     return;
   }
@@ -402,12 +406,12 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
   if (event.IsEditCancelled()) return;
   auto data = GetTreeItemData(this, event.GetItem());
   FileEntry* file = data.second;
-  if (file == NULL)  {
+  if (file == NULL) {
     event.Veto();
     return;
   }
-  const wxString text = event.GetLabel();// this->GetItemText(data.first);
-  
+  const wxString text = event.GetLabel();  // this->GetItemText(data.first);
+
   const wxString old_path = file->path();
   if (file->is_directory()) {
     wxFileName new_name(old_path);
@@ -423,8 +427,7 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
     // todo: rename directory!
     event.Veto();
     return;
-  }
-  else {
+  } else {
     wxFileName new_name(old_path);
     new_name.SetFullName(text);
     const wxString new_path = new_name.GetFullPath();
@@ -454,17 +457,22 @@ void ProjectExplorer::OnOpenExplorer(wxCommandEvent& event) {
 void ProjectExplorer::BindEvents() {
   Bind(wxEVT_LEFT_DCLICK, &ProjectExplorer::OnDoubleClick, this);
   Bind(wxEVT_CONTEXT_MENU, &ProjectExplorer::OnContextMenu, this);
-  
+
   Bind(wxEVT_MENU, &ProjectExplorer::OnCreateNewFile, this, ID_CREATE_NEW_FILE);
-  Bind(wxEVT_MENU, &ProjectExplorer::OnCreateNewFolder, this, ID_CREATE_NEW_FOLDER);
-  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderCollapse, this, ID_FOLDER_COLLAPSE);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnCreateNewFolder, this,
+       ID_CREATE_NEW_FOLDER);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderCollapse, this,
+       ID_FOLDER_COLLAPSE);
   Bind(wxEVT_MENU, &ProjectExplorer::OnFolderExpand, this, ID_FOLDER_EXPAND);
-  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderCollapseAllChildren, this, ID_FOLDER_COLLAPSE_ALL_CHILDREN);
-  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderExpandAllChildren, this, ID_FOLDER_EXPAND_ALL_CHILDREN);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderCollapseAllChildren, this,
+       ID_FOLDER_COLLAPSE_ALL_CHILDREN);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnFolderExpandAllChildren, this,
+       ID_FOLDER_EXPAND_ALL_CHILDREN);
   Bind(wxEVT_MENU, &ProjectExplorer::OnCollapseAll, this, ID_COLLAPSE_ALL);
   Bind(wxEVT_MENU, &ProjectExplorer::OnExpandAll, this, ID_EXPAND_ALL);
   Bind(wxEVT_MENU, &ProjectExplorer::OnOpenFile, this, ID_OPEN_FILE);
-  Bind(wxEVT_MENU, &ProjectExplorer::OnDeleteFileOrFolder, this, ID_DELETE_FILE_OR_FOLDER);
+  Bind(wxEVT_MENU, &ProjectExplorer::OnDeleteFileOrFolder, this,
+       ID_DELETE_FILE_OR_FOLDER);
   Bind(wxEVT_MENU, &ProjectExplorer::OnRename, this, ID_RENAME);
   Bind(wxEVT_MENU, &ProjectExplorer::OnOpenExplorer, this, ID_OPEN_EXPLORER);
 

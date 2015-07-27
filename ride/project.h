@@ -8,7 +8,7 @@
 class MainWindow;
 
 class Project : public MultiRunner {
-public:
+ public:
   Project(MainWindow* output, const wxString& root_folder);
   ~Project();
   const wxString& root_folder() const;
@@ -31,18 +31,19 @@ public:
   void SelectActiveBuild();
   void SetMainStatusbarText();
 
-  void Build   (bool origin_main=true);
-  void Clean   (bool origin_main=true);
-  void Rebuild (bool origin_main=true);
-  void Doc     (bool origin_main=true);
-  void Run     (bool origin_main=true);
-  void Test    (bool origin_main=true);
-  void Bench   (bool origin_main=true);
-  void Update  (bool origin_main=true);
+  void Build(bool origin_main = true);
+  void Clean(bool origin_main = true);
+  void Rebuild(bool origin_main = true);
+  void Doc(bool origin_main = true);
+  void Run(bool origin_main = true);
+  void Test(bool origin_main = true);
+  void Bench(bool origin_main = true);
+  void Update(bool origin_main = true);
 
-public:
+ public:
   void Append(const wxString& str);
-private:
+
+ private:
   void SaveAllFiles();
   void CleanOutput();
   void RunCmd(const wxString& cmd);
@@ -51,13 +52,12 @@ private:
   int GetSelectedBuildIndex();
   const ride::BuildSetting& GetCurrentBuildSetting();
 
-private:
+ private:
   MainWindow* main_;
   wxString root_folder_;
 
   ride::Project project_;
   ride::UserProject user_;
 };
-
 
 #endif  // RIDE_PROJECT_H

@@ -1,13 +1,11 @@
 #include "ride/cmdrunner.h"
 
-CmdRunner::CmdRunner() {
-}
+CmdRunner::CmdRunner() {}
 
-void CmdRunner::Append(const wxString& str) {
-  output += "\n" + str;
-}
+void CmdRunner::Append(const wxString& str) { output += "\n" + str; }
 
-const bool CmdRunner::Run(const wxString& root, const wxString& cmd, wxString* out) {
+const bool CmdRunner::Run(const wxString& root, const wxString& cmd,
+                          wxString* out) {
   assert(out);
   CmdRunner runner;
   if (false == runner.RunCmd(Command(root, cmd))) {

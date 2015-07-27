@@ -10,7 +10,6 @@ class wxWindow;
 void LoadSettings(wxWindow* main, ::ride::Settings& settings);
 bool SaveSettings(wxWindow* main, ::ride::Settings& settings);
 
-
 void LoadSession(wxWindow* main, ::ride::Session& session);
 bool SaveSession(wxWindow* main, ::ride::Session& session);
 

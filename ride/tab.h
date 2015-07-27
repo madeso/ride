@@ -5,7 +5,7 @@ class StartPageTab;
 class FileEdit;
 
 class Tab {
-public:
+ public:
   Tab(FileEdit* edit);
   Tab(StartPageTab* start);
   ~Tab();
@@ -13,7 +13,7 @@ public:
   StartPageTab* ToStartPage();
   FileEdit* ToFileEdit();
 
-private:
+ private:
   FileEdit* edit_;
   StartPageTab* start_;
 };

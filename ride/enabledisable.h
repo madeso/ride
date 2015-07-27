@@ -3,14 +3,13 @@
 
 class wxWindowBase;
 
-class EnableDisable
-{
-public:
+class EnableDisable {
+ public:
   EnableDisable(bool enable);
   const EnableDisable& operator<<(wxWindowBase* b) const;
-private:
+
+ private:
   bool enable_;
 };
-
 
 #endif  // RIDE_ENABLEDISABLE_H

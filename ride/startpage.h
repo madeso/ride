@@ -8,11 +8,11 @@ class wxAuiNotebook;
 class MainWindow;
 
 class StartPageTab : public wxControl {
-public:
+ public:
   StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent);
   ~StartPageTab();
 
-private:
+ private:
   Tab tab_;
   MainWindow* main_;
   wxAuiNotebook* notebook_;

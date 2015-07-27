@@ -10,7 +10,7 @@ class MultiRunner;
 
 /// a command to run
 class Command {
-public:
+ public:
   Command(const wxString& root, const wxString& cmd);
 
   wxString root;
@@ -19,43 +19,44 @@ public:
 
 /// only runs a single command
 class SingleRunner {
-public:
+ public:
   SingleRunner();
   ~SingleRunner();
 
   SingleRunner(const SingleRunner&) = delete;
   bool operator=(const SingleRunner&) = delete;
-  
+
   bool IsRunning() const;
 
-protected:
+ protected:
   bool RunCmd(const Command& cmd);
   virtual void Append(const wxString& str) = 0;
   virtual void Completed();
   int GetExitCode();
 
-public:
+ public:
   struct Pimpl;
 
-private:
+ private:
   friend struct Pimpl;
   std::unique_ptr<Pimpl> pimpl;
 };
 
 /// Run multiple commands by queuing them
 class MultiRunner {
-public:
+ public:
   MultiRunner();
   ~MultiRunner();
 
   MultiRunner(const MultiRunner&) = delete;
   bool operator=(const MultiRunner&) = delete;
-protected:
+
+ protected:
   bool RunCmd(const Command& cmd);
   bool IsRunning() const;
   virtual void Append(const wxString& str) = 0;
 
-private:
+ private:
   class Runner;
   friend class Runner;
   bool RunNext(int last_exit_code);
@@ -63,6 +64,5 @@ private:
   std::shared_ptr<Runner> last_runner_;
   std::vector<Command> commands_;
 };
-
 
 #endif  // RIDE_RUNNER_H

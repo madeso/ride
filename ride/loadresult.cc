@@ -1,7 +1,6 @@
 #include "ride/loadresult.h"
 
-LoadResult LoadResult::Ok()
-{
+LoadResult LoadResult::Ok() {
   LoadResult ret;
   ret.ok_ = true;
   return ret;
@@ -14,12 +13,8 @@ LoadResult LoadResult::Error(const wxString& message) {
   return ret;
 }
 
-const wxString& LoadResult::message() const {
-  return message_;
-}
+const wxString& LoadResult::message() const { return message_; }
 
-bool LoadResult::IsOk() const {
-  return ok_;
-}
+bool LoadResult::IsOk() const { return ok_; }
 
-LoadResult::LoadResult() { }
+LoadResult::LoadResult() {}

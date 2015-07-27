@@ -16,15 +16,30 @@ void SetImageAndRemoveText(wxButton* button, const wxBitmap& img);
 void SetImageAndRemoveText(wxButton* button, const wxArtID art);
 void SetImageAndRemoveText(wxButton* button, const char* const* xpm);
 
-
 //////////////////////////////////////////////////////////////////////////
 // dialog data to gui and back
 
-#define RETURN_COMBOBOX_VALUE(TYPE, VALUE) assert(ride::TYPE##_IsValid(VALUE)); return static_cast<ride::TYPE>(VALUE)
-#define DIALOG_DATA(ROOT, FUN, UI, SETNAME) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_##FUN(ToData##SETNAME(UI)); } } while(false)
-#define DIALOG_DATAX(ROOT, FUN, UI) do { if( togui ) { ToGui(ROOT.FUN(), UI); } else { ROOT.set_allocated_##FUN(Allocate(ToData(UI))); } } while(false)
+#define RETURN_COMBOBOX_VALUE(TYPE, VALUE) \
+  assert(ride::TYPE##_IsValid(VALUE));     \
+  return static_cast<ride::TYPE>(VALUE)
+#define DIALOG_DATA(ROOT, FUN, UI, SETNAME) \
+  do {                                      \
+    if (togui) {                            \
+      ToGui(ROOT.FUN(), UI);                \
+    } else {                                \
+      ROOT.set_##FUN(ToData##SETNAME(UI));  \
+    }                                       \
+  } while (false)
+#define DIALOG_DATAX(ROOT, FUN, UI)                   \
+  do {                                                \
+    if (togui) {                                      \
+      ToGui(ROOT.FUN(), UI);                          \
+    } else {                                          \
+      ROOT.set_allocated_##FUN(Allocate(ToData(UI))); \
+    }                                                 \
+  } while (false)
 
-template<typename T>
+template <typename T>
 T* Allocate(const T& t) {
   return new T(t);
 }
@@ -41,10 +56,10 @@ std::string ToData(wxListBox* gui);
 void ToGui(const wxString& data, wxTextCtrl* gui);
 wxString ToData_Str(wxTextCtrl* gui);
 
-void ToGui(const std::vector<wxString>& data, wxEditableListBox * gui);
-std::vector<wxString> ToData(wxEditableListBox * gui);
+void ToGui(const std::vector<wxString>& data, wxEditableListBox* gui);
+std::vector<wxString> ToData(wxEditableListBox* gui);
 
 void ToGui(const std::vector<wxString>& data, wxListBox* gui);
-std::vector<wxString> ToData_Content(wxListBox * gui);
+std::vector<wxString> ToData_Content(wxListBox* gui);
 
-#endif // FORM_H
+#endif  // FORM_H

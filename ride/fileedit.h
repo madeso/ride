@@ -12,15 +12,17 @@ class Language;
 class Project;
 
 namespace ride {
-  class Settings;
+class Settings;
 }
 
 class FileEdit : public wxControl {
-public:
+ public:
   FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file);
   const wxString& filename() const;
-  void SetSelection(int start_line, int start_index, int end_line, int end_index);
-  void GetSelection(int* start_line, int* start_index, int* end_line, int* end_index);
+  void SetSelection(int start_line, int start_index, int end_line,
+                    int end_index);
+  void GetSelection(int* start_line, int* start_index, int* end_line,
+                    int* end_index);
   void AddCompilerMessage(const CompilerMessage& mess);
   void ClearCompilerMessages();
   wxString GetLanguageName();
@@ -45,7 +47,7 @@ public:
 
   void UpdateStatusText();
 
-public:
+ public:
   bool Save();
   bool SaveAs();
   void Undo();
@@ -71,7 +73,7 @@ public:
 
   void ShowAutocomplete();
 
-public:
+ public:
   /** Event callback when a margin is clicked, used here for code folding */
   void OnMarginClick(wxStyledTextEvent& event);
   void OnCharAdded(wxStyledTextEvent& event);
@@ -80,7 +82,8 @@ public:
   void OnSelectionUpdated(wxCommandEvent& event);
 
   ~FileEdit();
-private:
+
+ private:
   void UpdateFilename();
   void UpdateTitle();
   bool SaveTo(const wxString& target);
@@ -93,7 +96,7 @@ private:
   void LoadFile();
   void UpdateFileTime();
 
-private:
+ private:
   Tab tab_;
   MainWindow* main_;
   wxStyledTextCtrl* text_;
@@ -106,7 +109,7 @@ private:
   int highlight_current_word_last_end_position_;
   wxDateTime last_modification_time_;
 
-private:
+ private:
   void BindEvents();
 };
 
