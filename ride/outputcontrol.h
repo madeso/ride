@@ -22,7 +22,7 @@ protected:
   void OnCopy(wxCommandEvent& event);
   void OnSearchForThisCompilerMessage(wxCommandEvent& event);
   void OnDoubleClick(wxMouseEvent& event);
-  wxDECLARE_EVENT_TABLE();
+  void BindEvents();
 
 private:
   MainWindow* main_;

@@ -33,6 +33,7 @@ const wxRegEx& GetCommandLineRegex() {
 }
 
 OutputControl::OutputControl(MainWindow* main) : main_(main) {
+  BindEvents();
 }
 
 wxString GetCommandLine(const CompilerMessage& mess) {
@@ -161,15 +162,14 @@ void OutputControl::OnDoubleClick(wxMouseEvent& event) {
     main_->OpenCompilerMessage(message);
   }
 }
-
-wxBEGIN_EVENT_TABLE(OutputControl, wxStyledTextCtrl)
-  EVT_LEFT_DCLICK(OutputControl::OnDoubleClick)
-  EVT_CONTEXT_MENU(OutputControl::OnContextMenu)
-  EVT_MENU(ID_SEARCH_FOR_THIS_COMPILER_MESSAGE, OutputControl::OnSearchForThisCompilerMessage)
-
-  EVT_MENU(ID_RUN_THIS_COMPILER_MESSAGE, OutputControl::OnRunThisCompilerMessage)
-  EVT_MENU(ID_COPY_THIS_COMPILER_MESSAGE, OutputControl::OnCopyThisCompilerMessage)
-  EVT_MENU(ID_CLEAR_COMPILER_OUTPUT, OutputControl::OnClearCompilerOuput)
-  EVT_MENU(wxID_SELECTALL, OutputControl::OnSelectAll)
-  EVT_MENU(wxID_COPY, OutputControl::OnCopy)
-wxEND_EVENT_TABLE()
+  
+void OutputControl::BindEvents() {
+  Bind(wxEVT_LEFT_DCLICK, &OutputControl::OnDoubleClick, this);
+  Bind(wxEVT_CONTEXT_MENU, &OutputControl::OnContextMenu, this);
+  Bind(wxEVT_MENU, &OutputControl::OnSearchForThisCompilerMessage, this, ID_SEARCH_FOR_THIS_COMPILER_MESSAGE);
+  Bind(wxEVT_MENU, &OutputControl::OnRunThisCompilerMessage, this, ID_RUN_THIS_COMPILER_MESSAGE);
+  Bind(wxEVT_MENU, &OutputControl::OnCopyThisCompilerMessage, this, ID_COPY_THIS_COMPILER_MESSAGE);
+  Bind(wxEVT_MENU, &OutputControl::OnClearCompilerOuput, this, ID_CLEAR_COMPILER_OUTPUT);
+  Bind(wxEVT_MENU, &OutputControl::OnSelectAll, this, wxID_SELECTALL);
+  Bind(wxEVT_MENU, &OutputControl::OnCopy, this, wxID_COPY);
+}
