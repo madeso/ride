@@ -1922,8 +1922,7 @@ def CheckSpacingForFunctionCall(filename, line, linenum, error):
         error(filename, linenum, 'whitespace/parens', 2,
               'Closing ) should be moved to the previous line')
       else:
-        error(filename, linenum, 'whitespace/parens', 2,
-              'Extra space before )')
+        pass # error(filename, linenum, 'whitespace/parens', 2, 'Extra space before )')
 
 
 def IsBlankLine(line):
