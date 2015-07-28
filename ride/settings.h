@@ -9,11 +9,11 @@
 
 class wxWindow;
 
-void LoadSettings(wxWindow* main, ::ride::Settings& settings);
-bool SaveSettings(wxWindow* main, ::ride::Settings& settings);
+void LoadSettings(wxWindow* main, ::ride::Settings* settings);
+bool SaveSettings(wxWindow* main, const ::ride::Settings& settings);
 
-void LoadSession(wxWindow* main, ::ride::Session& session);
-bool SaveSession(wxWindow* main, ::ride::Session& session);
+void LoadSession(wxWindow* main, ::ride::Session* session);
+bool SaveSession(wxWindow* main, const ::ride::Session& session);
 
 wxColor C(const ride::Color& c);
 ride::Color C(const wxColor& c);

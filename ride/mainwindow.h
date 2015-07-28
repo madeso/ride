@@ -135,8 +135,8 @@ class MainWindow : public wxFrame {
 
   void OnClose(wxCloseEvent& event);
 
-  void OnNotebookPageClose(wxAuiNotebookEvent& evt);
-  void OnNotebookPageChanged(wxAuiNotebookEvent& evt);
+  void OnNotebookPageClose(wxAuiNotebookEvent& event);
+  void OnNotebookPageChanged(wxAuiNotebookEvent& event);
 
   void OnMenuOpen(wxMenuEvent& event);
 

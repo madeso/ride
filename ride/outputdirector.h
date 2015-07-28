@@ -16,7 +16,7 @@ class FileEdit;
 class OutputDirector {
  public:
   OutputDirector();
-  void Create(MainWindow* window, wxAuiManager& aui, const wxString& name,
+  void Create(MainWindow* window, wxAuiManager* aui, const wxString& name,
               const wxString& caption);
 
   void Clear();

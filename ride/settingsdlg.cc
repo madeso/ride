@@ -471,7 +471,7 @@ class IndicatorLink {
   }
 
   virtual void IndicatorToGui(
-      bool togui, ride::FontsAndColors& fonts_and_colors,
+      bool togui, ride::FontsAndColors* fonts_and_colors,
       ride::Settings& current_settings_, wxComboBox* uiIndicatorStyle,
       wxColourPickerCtrl* uiIndicatorColor, wxCheckBox* uiIndicatorUnder,
       wxTextCtrl* uiIndicatorAlpha, wxTextCtrl* uiIndicatorOutlineAlpha) = 0;
@@ -486,14 +486,14 @@ std::vector<IndicatorLink*> BuildIndicatorLinks() {
   class IndicatorLink##ID : public IndicatorLink {                         \
    public:                                                                 \
     IndicatorLink##ID() : IndicatorLink(NAME) {}                           \
-    void IndicatorToGui(bool togui, ride::FontsAndColors& col,             \
+    void IndicatorToGui(bool togui, ride::FontsAndColors* col,             \
                         ride::Settings& set, wxComboBox* uiIndicatorStyle, \
                         wxColourPickerCtrl* uiIndicatorColor,              \
                         wxCheckBox* uiIndicatorUnder,                      \
                         wxTextCtrl* uiIndicatorAlpha,                      \
                         wxTextCtrl* uiIndicatorOutlineAlpha) {             \
       DIALOG_DATA(set, ID, uiIndicatorStyle, _IS);                         \
-      ride::Indicator ind = col.ID();                                      \
+      ride::Indicator ind = col->ID();                                     \
                                                                            \
       DIALOG_DATAX(ind, foreground, uiIndicatorColor);                     \
       DIALOG_DATA(ind, under, uiIndicatorUnder, );                         \
@@ -501,7 +501,7 @@ std::vector<IndicatorLink*> BuildIndicatorLinks() {
       DIALOG_DATA(ind, outline_alpha, uiIndicatorOutlineAlpha, _I32);      \
                                                                            \
       if (togui == false) {                                                \
-        col.set_allocated_##ID(Allocate(ind));                             \
+        col->set_allocated_##ID(Allocate(ind));                            \
       }                                                                    \
     }                                                                      \
   };                                                                       \
@@ -532,7 +532,7 @@ void SettingsDlg::IndicatorToGui(bool togui) {
       uiIndicatorList->GetClientData(selected_item));
   assert(link);
   if (link == NULL) return;
-  link->IndicatorToGui(togui, fonts_and_colors, current_settings_,
+  link->IndicatorToGui(togui, &fonts_and_colors, current_settings_,
                        uiIndicatorStyle, uiIndicatorColor, uiIndicatorUnder,
                        uiIndicatorAlpha, uiIndicatorOutlineAlpha);
 
@@ -565,7 +565,7 @@ class MarkerLink {
     return name_;
   }
 
-  virtual void MarkerToGui(bool togui, ride::FontsAndColors& ref,
+  virtual void MarkerToGui(bool togui, ride::FontsAndColors* ref,
                            ride::Settings& set, wxComboBox* sym,
                            wxColourPickerCtrl* fore,
                            wxColourPickerCtrl* back) = 0;
@@ -580,12 +580,12 @@ std::vector<MarkerLink*> BuildMarkerLinks() {
   class MarkerLink##ID : public MarkerLink {                               \
    public:                                                                 \
     MarkerLink##ID() : MarkerLink(NAME) {}                                 \
-    void MarkerToGui(bool togui, ride::FontsAndColors& col,                \
+    void MarkerToGui(bool togui, ride::FontsAndColors* col,                \
                      ride::Settings& set, wxComboBox* sym,                 \
                      wxColourPickerCtrl* fore, wxColourPickerCtrl* back) { \
       DIALOG_DATA(set, ID, sym, _MS);                                      \
-      DIALOG_DATAX(col, ID##_foreground, fore);                            \
-      DIALOG_DATAX(col, ID##_background, back);                            \
+      DIALOG_DATAX((*col), ID##_foreground, fore);                         \
+      DIALOG_DATAX((*col), ID##_background, back);                         \
     }                                                                      \
   };                                                                       \
   static MarkerLink##ID marker_link_##ID;                                  \
@@ -633,7 +633,7 @@ void SettingsDlg::MarkerToGui(bool togui) {
       reinterpret_cast<MarkerLink*>(uiMarkerList->GetClientData(selected_item));
   assert(link);
   if (link == NULL) return;
-  link->MarkerToGui(togui, fonts_and_colors, current_settings_, uiMarkerSymbol,
+  link->MarkerToGui(togui, &fonts_and_colors, current_settings_, uiMarkerSymbol,
                     uiMarkerForegroundColor, uiMarkerBackgroundColor);
 
   if (togui == false) {

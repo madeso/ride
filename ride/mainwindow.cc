@@ -276,7 +276,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
 #endif
   aui_.SetManagedWindow(this);
 
-  LoadSettings(this, settings_);
+  LoadSettings(this, &settings_);
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu* menu_file = new wxMenu;
@@ -432,8 +432,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   CreateNotebook();
 
   // output
-  build_output_.Create(this, aui_, PANE_BUILD, "Build");
-  compiler_output_.Create(this, aui_, PANE_COMPILE, "Compile");
+  build_output_.Create(this, &aui_, PANE_BUILD, "Build");
+  compiler_output_.Create(this, &aui_, PANE_COMPILE, "Compile");
 
   findres_window_ = new FindResultsControl(this);
   findres_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
@@ -1031,7 +1031,7 @@ void MainWindow::SaveSession() {
 
 void MainWindow::RestoreSession() {
   ride::Session session;
-  ::LoadSession(this, session);
+  ::LoadSession(this, &session);
   if (session.has_window_x()) {
     // if we have set the window x, we assume we have set them all
     SetSize(session.window_x(), session.window_y(), session.window_width(),

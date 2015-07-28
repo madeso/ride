@@ -19,19 +19,19 @@ wxFileName GetSessionFile() {
   return wxFileName(GetConfigFolder(), "session", "data");
 }
 
-void LoadSettings(wxWindow* main, ::ride::Settings& settings) {
+void LoadSettings(wxWindow* main, ::ride::Settings* settings) {
   const wxFileName confPath = GetConfigFile();
   const wxString path = confPath.GetFullPath();
   if (confPath.IsFileReadable()) {
     std::fstream input(path.c_str().AsChar(), std::ios::in | std::ios::binary);
-    const bool parse_result = settings.ParseFromIstream(&input);
+    const bool parse_result = settings->ParseFromIstream(&input);
     if (false == parse_result) {
       ShowWarning(main, "Unable to parse settings file!", "Error");
     }
   }
 }
 
-bool SaveSettings(wxWindow*, ::ride::Settings& settings) {
+bool SaveSettings(wxWindow*, const ::ride::Settings& settings) {
   const wxFileName config_file = GetConfigFile();
   const bool create_result =
       config_file.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
@@ -46,19 +46,19 @@ bool SaveSettings(wxWindow*, ::ride::Settings& settings) {
   return settings.SerializeToOstream(&config_stream);
 }
 
-void LoadSession(wxWindow* main, ::ride::Session& settings) {
+void LoadSession(wxWindow* main, ::ride::Session* settings) {
   const wxFileName confPath = GetSessionFile();
   const wxString path = confPath.GetFullPath();
   if (confPath.IsFileReadable()) {
     std::fstream input(path.c_str().AsChar(), std::ios::in | std::ios::binary);
-    const bool parse_result = settings.ParseFromIstream(&input);
+    const bool parse_result = settings->ParseFromIstream(&input);
     if (false == parse_result) {
       ShowWarning(main, "Unable to parse session file!", "Error");
     }
   }
 }
 
-bool SaveSession(wxWindow*, ::ride::Session& settings) {
+bool SaveSession(wxWindow*, const ::ride::Session& settings) {
   const wxFileName config_file = GetSessionFile();
   const bool create_result =
       config_file.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);

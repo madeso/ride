@@ -107,10 +107,10 @@ void QuickOpenDlg::BindEvents() {
 
 //////////////////////////////////////////////////////////////////////////
 
-void AddIfMoreThanOne(std::vector<wxString>& ret,
+void AddIfMoreThanOne(std::vector<wxString>* ret,
                       const std::vector<wxString>& space) {
   if (space.size() != 1) {
-    ret.insert(ret.begin(), space.begin(), space.end());
+    ret->insert(ret->begin(), space.begin(), space.end());
   }
 }
 
@@ -121,9 +121,9 @@ std::vector<wxString> SmartSplit(const wxString& str, const wxString& full) {
   std::vector<wxString> ret;
   ret.push_back(full);
 
-  AddIfMoreThanOne(ret, space);
-  AddIfMoreThanOne(ret, dash);
-  AddIfMoreThanOne(ret, under);
+  AddIfMoreThanOne(&ret, space);
+  AddIfMoreThanOne(&ret, dash);
+  AddIfMoreThanOne(&ret, under);
 
   return ret;
 }

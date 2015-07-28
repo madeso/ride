@@ -10,7 +10,7 @@
 
 OutputDirector::OutputDirector() : control_(NULL), main_(NULL) {}
 
-void OutputDirector::Create(MainWindow* window, wxAuiManager& aui,
+void OutputDirector::Create(MainWindow* window, wxAuiManager* aui,
                             const wxString& name, const wxString& caption) {
   main_ = window;
   control_ = new OutputControl(window);
@@ -18,7 +18,7 @@ void OutputDirector::Create(MainWindow* window, wxAuiManager& aui,
                    wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   control_->UpdateStyle();
   control_->UpdateStyle();
-  aui.AddPane(
+  aui->AddPane(
       control_,
       wxAuiPaneInfo().Name(name).Caption(caption).Bottom().CloseButton(true));
 }
