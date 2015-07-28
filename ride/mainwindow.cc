@@ -472,12 +472,12 @@ void MainWindow::OnViewRestoreWindows(wxCommandEvent& event) {
 }
 
 void MainWindow::OnViewSaveLayout(wxCommandEvent& event) {
-  // TODO
+  // TODO(Gustav) Implement
   wxMessageBox("IMPLEMENT ME");
 }
 
 void MainWindow::OnViewLoadLayout(wxCommandEvent& event) {
-  // TODO
+  // TODO(Gustav) Implement
   wxMessageBox("IMPLEMENT ME");
 }
 
@@ -534,7 +534,7 @@ void MainWindow::ShowCompileWindow() {
 }
 
 void MainWindow::OnViewShowStart(wxCommandEvent& event) {
-  // TODO
+  // TODO(Gustav) Implement
   wxMessageBox("IMPLEMENT ME");
 }
 
