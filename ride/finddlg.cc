@@ -23,7 +23,7 @@ class FindDlg : public ui::Find {
 
   const int GetFlags();
 
-  void ToData(ride::FindDlg& data) const;
+  void ToData(ride::FindDlg* data) const;
 
   wxStyledTextCtrl* GetStc() { return m_scintilla1; }
 
@@ -69,13 +69,13 @@ FindDlg::FindDlg(wxWindow* parent, const wxString& find,
   uiReplaceText->Enable(find_action == FindAction::Replace);
 }
 
-void FindDlg::ToData(ride::FindDlg& data) const {
-  data.set_sub_folders(uiIncludeSubFolders->GetValue());
-  data.set_match_case(uiMatchCase->GetValue());
-  data.set_match_whole_word(uiMatchWholeWord->GetValue());
-  data.set_match_start(uiFindWordStart->GetValue());
-  data.set_file_types(uiFileTypes->GetValue());
-  data.set_target(
+void FindDlg::ToData(ride::FindDlg* data) const {
+  data->set_sub_folders(uiIncludeSubFolders->GetValue());
+  data->set_match_case(uiMatchCase->GetValue());
+  data->set_match_whole_word(uiMatchWholeWord->GetValue());
+  data->set_match_start(uiFindWordStart->GetValue());
+  data->set_file_types(uiFileTypes->GetValue());
+  data->set_target(
       static_cast<::ride::FindDlgTarget>(uiFindTarget->GetSelection()));
 }
 
@@ -244,7 +244,7 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection,
               find_scope);
 
   if (wxID_OK != dlg.ShowModal()) return false;
-  dlg.ToData(find_dlg_data);
+  dlg.ToData(&find_dlg_data);
 
   std::vector<FindResult> results;
   wxString file_info = current_file;
