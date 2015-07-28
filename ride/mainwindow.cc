@@ -160,7 +160,7 @@ void MainWindow::BindEvents() {
   Bind(wxEVT_MENU_OPEN, &MainWindow::OnMenuOpen, this);
 }
 
-void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& evt) {
+void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& event) {
   wxString file_name = wxEmptyString;
 
   FileEdit* selected_file = GetSelectedEditorNull();
@@ -718,11 +718,11 @@ FileEdit* MainWindow::GetSelectedEditorNull() {
   return NotebookFromIndexOrNull(notebook_, selected_tab_index);
 }
 
-void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& evt) {
-  FileEdit* edit = NotebookFromIndexOrNull(notebook_, evt.GetSelection());
+void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& event) {
+  FileEdit* edit = NotebookFromIndexOrNull(notebook_, event.GetSelection());
   if (edit) {
     if (edit->CanClose(true) == false) {
-      evt.Veto();
+      event.Veto();
     }
   }
 }
@@ -756,7 +756,7 @@ Project* MainWindow::project() {
   return project_.get();
 }
 
-void MainWindow::OnClose(wxCloseEvent& evt) {
+void MainWindow::OnClose(wxCloseEvent& event) {
   if (closing_) return;
   closing_ = true;
 
@@ -764,9 +764,9 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
        ++tab_index) {
     FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
     if (edit) {
-      const bool canAbort = evt.CanVeto();
+      const bool canAbort = event.CanVeto();
       if (edit->CanClose(canAbort) == false) {
-        evt.Veto();
+        event.Veto();
         return;
       }
     }
@@ -774,7 +774,7 @@ void MainWindow::OnClose(wxCloseEvent& evt) {
 
   SaveSession();
 
-  evt.Skip();
+  event.Skip();
 }
 
 void MainWindow::set_settings(const ride::Settings& settings) {
