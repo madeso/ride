@@ -3203,7 +3203,7 @@ def CheckLanguage(filename, clean_lines, linenum, file_extension, include_state,
     if not Search(
         r'(for|swap|Swap|operator[<>][<>])\s*\(\s*'
         r'(?:(?:typename\s*)?[\w:]|<.*>)+\s*&',
-        fnline):
+        fnline) and not Search('wx[a-zA-Z0-9_]+Event& event', fnline):
       error(filename, linenum, 'runtime/references', 2,
             'Is this a non-const reference? '
             'If so, make const or use a pointer.')
