@@ -3,7 +3,7 @@
 #include "ride/projectexplorer.h"
 
 #include <vector>
-
+#include <utility>
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/textdlg.h>

@@ -30,6 +30,8 @@
 #include "ride/tab.h"
 #include "ride/startpage.h"
 
+#include <vector>
+
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
 Tab* TabFromIndex(wxAuiNotebook* notebook, int tab_index) {

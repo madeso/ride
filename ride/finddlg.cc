@@ -13,6 +13,7 @@
 #include "ride/fileedit.h"
 
 #include <memory>
+#include <vector>
 
 class FindDlg : public ui::Find {
  public:

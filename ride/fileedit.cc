@@ -12,6 +12,7 @@
 #include <vector>
 #include <set>
 #include <cassert>
+#include <algorithm>
 
 #include "ride/compilermessage.h"
 #include "ride/filepropertiesdlg.h"

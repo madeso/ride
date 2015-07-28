@@ -11,6 +11,9 @@
 #include "settings.pb.h"
 #include "ride/proto.h"
 
+#include <string>
+#include <vector>
+
 #include <wx/choicdlg.h>
 
 #include "ride/projectsettingsdlg.h"

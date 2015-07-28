@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <fstream>
+#include <string>
 #include <google/protobuf/text_format.h>
 
 bool LoadProto(google::protobuf::Message* t, const wxString& path) {
