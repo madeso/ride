@@ -130,7 +130,7 @@ class Main:
                                         print ''
                                     current_class = i.line_class
                                     print i.line
-                                print '\n\n'
+                                print '---------------\n\n'
                         except StopFile:
                             self.error_count += 1
                         self.line_num = -1
