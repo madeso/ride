@@ -33,8 +33,8 @@ class Language {
   Language(const wxString& name, int style);
   virtual void DoStyleDocument(wxStyledTextCtrl* text,
                                const ride::Settings& settings) = 0;
-  void SetProp(wxStyledTextCtrl* text, const wxString& name,
-               const wxString& value);
+  void SetProperty(wxStyledTextCtrl* text, const wxString& name,
+                   const wxString& value);
   void SetKeys(wxStyledTextCtrl* text, unsigned int id,
                const wxString& keywords);
 

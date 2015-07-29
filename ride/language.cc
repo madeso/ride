@@ -111,8 +111,8 @@ void Language::StyleDocument(wxStyledTextCtrl* text,
 #endif
 }
 
-void Language::SetProp(wxStyledTextCtrl* text, const wxString& name,
-                       const wxString& value) {
+void Language::SetProperty(wxStyledTextCtrl* text, const wxString& name,
+                           const wxString& value) {
   text->SetProperty(name, value);
 #ifdef _DEBUG
   assert(used_properties_.find(name) == used_properties_.end());
@@ -290,33 +290,33 @@ class CppLanguage : public Language {
     SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT,
              settings.fonts_and_colors().style_preprocessorcomment());
 
-    SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
-    SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
-    SetProp(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
-    SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
-    SetProp(text, wxT("styling.within.preprocessor"),
-            b2s01(settings.styling_within_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.allow.dollars"),
-            b2s01(settings.lexer_cpp_allow_dollars()));
-    SetProp(text, wxT("lexer.cpp.track.preprocessor"),
-            b2s01(settings.lexer_cpp_track_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.update.preprocessor"),
-            b2s01(settings.lexer_cpp_update_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.triplequoted.strings"),
-            b2s01(settings.lexer_cpp_triplequoted_strings()));
-    SetProp(text, wxT("lexer.cpp.hashquoted.strings"),
-            b2s01(settings.lexer_cpp_hashquoted_strings()));
-    SetProp(text, wxT("fold.cpp.syntax.based"),
-            b2s01(settings.fold_cpp_syntax_based()));
-    SetProp(text, wxT("fold.cpp.comment.multiline"),
-            b2s01(settings.fold_cpp_comment_multiline()));
-    SetProp(text, wxT("fold.cpp.comment.explicit"),
-            b2s01(settings.fold_cpp_comment_explicit()));
-    SetProp(text, wxT("fold.cpp.explicit.anywhere"),
-            b2s01(settings.fold_cpp_explicit_anywhere()));
-    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
-    SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
-    SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
+    SetProperty(text, wxT("fold"), b2s01(settings.foldenable()));
+    SetProperty(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
+    SetProperty(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
+    SetProperty(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
+    SetProperty(text, wxT("styling.within.preprocessor"),
+                b2s01(settings.styling_within_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.allow.dollars"),
+                b2s01(settings.lexer_cpp_allow_dollars()));
+    SetProperty(text, wxT("lexer.cpp.track.preprocessor"),
+                b2s01(settings.lexer_cpp_track_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.update.preprocessor"),
+                b2s01(settings.lexer_cpp_update_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.triplequoted.strings"),
+                b2s01(settings.lexer_cpp_triplequoted_strings()));
+    SetProperty(text, wxT("lexer.cpp.hashquoted.strings"),
+                b2s01(settings.lexer_cpp_hashquoted_strings()));
+    SetProperty(text, wxT("fold.cpp.syntax.based"),
+                b2s01(settings.fold_cpp_syntax_based()));
+    SetProperty(text, wxT("fold.cpp.comment.multiline"),
+                b2s01(settings.fold_cpp_comment_multiline()));
+    SetProperty(text, wxT("fold.cpp.comment.explicit"),
+                b2s01(settings.fold_cpp_comment_explicit()));
+    SetProperty(text, wxT("fold.cpp.explicit.anywhere"),
+                b2s01(settings.fold_cpp_explicit_anywhere()));
+    SetProperty(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
+    SetProperty(text, wxT("fold.cpp.explicit.start"), _T("//{"));
+    SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 
     const wxString CppWordlist2 = "file";
     const wxString CppWordlist3 =
@@ -472,22 +472,22 @@ class RustLanguage : public Language {
              settings.fonts_and_colors().style_preprocessorcomment());
     SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().style_uuid());
 
-    SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
-    SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
-    SetProp(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
-    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
-    SetProp(text, wxT("fold.rust.syntax.based"),
-            b2s01(settings.fold_cpp_syntax_based()));
-    SetProp(text, wxT("fold.rust.comment.multiline"),
-            b2s01(settings.fold_cpp_comment_multiline()));
-    SetProp(text, wxT("fold.rust.comment.explicit"),
-            b2s01(settings.fold_cpp_comment_explicit()));
-    SetProp(text, wxT("fold.rust.explicit.anywhere"),
-            b2s01(settings.fold_cpp_explicit_anywhere()));
-    SetProp(text, wxT("fold.rust.explicit.start"), _T("//{"));
-    SetProp(text, wxT("fold.rust.explicit.end"), _T("//}"));
-    SetProp(text, wxT("lexer.rust.fold.at.else"),
-            b2s01(settings.fold_at_else()));
+    SetProperty(text, wxT("fold"), b2s01(settings.foldenable()));
+    SetProperty(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
+    SetProperty(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
+    SetProperty(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
+    SetProperty(text, wxT("fold.rust.syntax.based"),
+                b2s01(settings.fold_cpp_syntax_based()));
+    SetProperty(text, wxT("fold.rust.comment.multiline"),
+                b2s01(settings.fold_cpp_comment_multiline()));
+    SetProperty(text, wxT("fold.rust.comment.explicit"),
+                b2s01(settings.fold_cpp_comment_explicit()));
+    SetProperty(text, wxT("fold.rust.explicit.anywhere"),
+                b2s01(settings.fold_cpp_explicit_anywhere()));
+    SetProperty(text, wxT("fold.rust.explicit.start"), _T("//{"));
+    SetProperty(text, wxT("fold.rust.explicit.end"), _T("//}"));
+    SetProperty(text, wxT("lexer.rust.fold.at.else"),
+                b2s01(settings.fold_at_else()));
 #else
     SetStyle(text, wxSTC_C_DEFAULT,
              settings.fonts_and_colors().default_style());
@@ -533,33 +533,33 @@ class RustLanguage : public Language {
     SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT,
              settings.fonts_and_colors().style_preprocessorcomment());
 
-    SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
-    SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
-    SetProp(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
-    SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
-    SetProp(text, wxT("styling.within.preprocessor"),
-            b2s01(settings.styling_within_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.allow.dollars"),
-            b2s01(settings.lexer_cpp_allow_dollars()));
-    SetProp(text, wxT("lexer.cpp.track.preprocessor"),
-            b2s01(settings.lexer_cpp_track_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.update.preprocessor"),
-            b2s01(settings.lexer_cpp_update_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.triplequoted.strings"),
-            b2s01(settings.lexer_cpp_triplequoted_strings()));
-    SetProp(text, wxT("lexer.cpp.hashquoted.strings"),
-            b2s01(settings.lexer_cpp_hashquoted_strings()));
-    SetProp(text, wxT("fold.cpp.syntax.based"),
-            b2s01(settings.fold_cpp_syntax_based()));
-    SetProp(text, wxT("fold.cpp.comment.multiline"),
-            b2s01(settings.fold_cpp_comment_multiline()));
-    SetProp(text, wxT("fold.cpp.comment.explicit"),
-            b2s01(settings.fold_cpp_comment_explicit()));
-    SetProp(text, wxT("fold.cpp.explicit.anywhere"),
-            b2s01(settings.fold_cpp_explicit_anywhere()));
-    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
-    SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
-    SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
+    SetProperty(text, wxT("fold"), b2s01(settings.foldenable()));
+    SetProperty(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
+    SetProperty(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
+    SetProperty(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
+    SetProperty(text, wxT("styling.within.preprocessor"),
+                b2s01(settings.styling_within_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.allow.dollars"),
+                b2s01(settings.lexer_cpp_allow_dollars()));
+    SetProperty(text, wxT("lexer.cpp.track.preprocessor"),
+                b2s01(settings.lexer_cpp_track_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.update.preprocessor"),
+                b2s01(settings.lexer_cpp_update_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.triplequoted.strings"),
+                b2s01(settings.lexer_cpp_triplequoted_strings()));
+    SetProperty(text, wxT("lexer.cpp.hashquoted.strings"),
+                b2s01(settings.lexer_cpp_hashquoted_strings()));
+    SetProperty(text, wxT("fold.cpp.syntax.based"),
+                b2s01(settings.fold_cpp_syntax_based()));
+    SetProperty(text, wxT("fold.cpp.comment.multiline"),
+                b2s01(settings.fold_cpp_comment_multiline()));
+    SetProperty(text, wxT("fold.cpp.comment.explicit"),
+                b2s01(settings.fold_cpp_comment_explicit()));
+    SetProperty(text, wxT("fold.cpp.explicit.anywhere"),
+                b2s01(settings.fold_cpp_explicit_anywhere()));
+    SetProperty(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
+    SetProperty(text, wxT("fold.cpp.explicit.start"), _T("//{"));
+    SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 #endif
     // end of setstyle/setprop fallback
 
@@ -631,33 +631,33 @@ class ProtobufLanguage : public Language {
     SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT,
              settings.fonts_and_colors().style_preprocessorcomment());
 
-    SetProp(text, wxT("fold"), b2s01(settings.foldenable()));
-    SetProp(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
-    SetProp(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
-    SetProp(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
-    SetProp(text, wxT("styling.within.preprocessor"),
-            b2s01(settings.styling_within_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.allow.dollars"),
-            b2s01(settings.lexer_cpp_allow_dollars()));
-    SetProp(text, wxT("lexer.cpp.track.preprocessor"),
-            b2s01(settings.lexer_cpp_track_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.update.preprocessor"),
-            b2s01(settings.lexer_cpp_update_preprocessor()));
-    SetProp(text, wxT("lexer.cpp.triplequoted.strings"),
-            b2s01(settings.lexer_cpp_triplequoted_strings()));
-    SetProp(text, wxT("lexer.cpp.hashquoted.strings"),
-            b2s01(settings.lexer_cpp_hashquoted_strings()));
-    SetProp(text, wxT("fold.cpp.syntax.based"),
-            b2s01(settings.fold_cpp_syntax_based()));
-    SetProp(text, wxT("fold.cpp.comment.multiline"),
-            b2s01(settings.fold_cpp_comment_multiline()));
-    SetProp(text, wxT("fold.cpp.comment.explicit"),
-            b2s01(settings.fold_cpp_comment_explicit()));
-    SetProp(text, wxT("fold.cpp.explicit.anywhere"),
-            b2s01(settings.fold_cpp_explicit_anywhere()));
-    SetProp(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
-    SetProp(text, wxT("fold.cpp.explicit.start"), _T("//{"));
-    SetProp(text, wxT("fold.cpp.explicit.end"), _T("//}"));
+    SetProperty(text, wxT("fold"), b2s01(settings.foldenable()));
+    SetProperty(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
+    SetProperty(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
+    SetProperty(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
+    SetProperty(text, wxT("styling.within.preprocessor"),
+                b2s01(settings.styling_within_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.allow.dollars"),
+                b2s01(settings.lexer_cpp_allow_dollars()));
+    SetProperty(text, wxT("lexer.cpp.track.preprocessor"),
+                b2s01(settings.lexer_cpp_track_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.update.preprocessor"),
+                b2s01(settings.lexer_cpp_update_preprocessor()));
+    SetProperty(text, wxT("lexer.cpp.triplequoted.strings"),
+                b2s01(settings.lexer_cpp_triplequoted_strings()));
+    SetProperty(text, wxT("lexer.cpp.hashquoted.strings"),
+                b2s01(settings.lexer_cpp_hashquoted_strings()));
+    SetProperty(text, wxT("fold.cpp.syntax.based"),
+                b2s01(settings.fold_cpp_syntax_based()));
+    SetProperty(text, wxT("fold.cpp.comment.multiline"),
+                b2s01(settings.fold_cpp_comment_multiline()));
+    SetProperty(text, wxT("fold.cpp.comment.explicit"),
+                b2s01(settings.fold_cpp_comment_explicit()));
+    SetProperty(text, wxT("fold.cpp.explicit.anywhere"),
+                b2s01(settings.fold_cpp_explicit_anywhere()));
+    SetProperty(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
+    SetProperty(text, wxT("fold.cpp.explicit.start"), _T("//{"));
+    SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 
     SetKeys(text, 0, KeywordBuilder() << "message"
                                       << "required"
