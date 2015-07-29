@@ -4,7 +4,7 @@
 #include <wx/utils.h>
 
 #include <cassert>
-#include <fstream>
+#include <fstream>  // NOLINT this is how we use protobuf
 #include <string>
 #include <google/protobuf/text_format.h>
 
