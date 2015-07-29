@@ -34,6 +34,7 @@ class Main:
             r'#include <[a-zA-Z0-9]+>',
             r'#include "[a-zA-Z]+.pb.h"',
             r'#include "cpptoml.h"',
+            r'#include "ride_compiler_settings.h"',
             r'#include "ride/generated/[a-zA-Z]+\.h"',
             r'#include "ride/resources/[a-zA-Z]+\.h"',
             r'#include "ride/[a-zA-Z]+\.h"'
