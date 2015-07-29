@@ -124,7 +124,11 @@ class Main:
                             if print_sort:
                                 includes.sort(cmp=include_compare)
                                 print 'I think the correct order would be:'
+                                current_class = includes[0].line_class
                                 for i in includes:
+                                    if current_class != i.line_class:
+                                        print ''
+                                    current_class = i.line_class
                                     print i.line
                                 print '\n\n'
                         except StopFile:
