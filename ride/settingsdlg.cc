@@ -485,8 +485,7 @@ class IndicatorLink {
 std::vector<IndicatorLink*> BuildIndicatorLinks() {
   std::vector<IndicatorLink*> ret;
 #define DEF_INDICATOR_LINK(NAME, ID)                                       \
-  class IndicatorLink##ID : public IndicatorLink {                         \
-   public:                                                                 \
+  struct IndicatorLink##ID : public IndicatorLink {                        \
     IndicatorLink##ID() : IndicatorLink(NAME) {}                           \
     void IndicatorToGui(bool togui, ride::FontsAndColors* col,             \
                         ride::Settings& set, wxComboBox* uiIndicatorStyle, \
@@ -579,8 +578,7 @@ class MarkerLink {
 std::vector<MarkerLink*> BuildMarkerLinks() {
   std::vector<MarkerLink*> ret;
 #define DEF_MARKER_LINK(NAME, ID)                                          \
-  class MarkerLink##ID : public MarkerLink {                               \
-   public:                                                                 \
+  struct MarkerLink##ID : public MarkerLink {                              \
     MarkerLink##ID() : MarkerLink(NAME) {}                                 \
     void MarkerToGui(bool togui, ride::FontsAndColors* col,                \
                      ride::Settings& set, wxComboBox* sym,                 \
