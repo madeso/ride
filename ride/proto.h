@@ -3,10 +3,10 @@
 #ifndef RIDE_PROTO_H
 #define RIDE_PROTO_H
 
+#include <google/protobuf/message.h>
+
 #include "ride/wx.h"
 #include <wx/filename.h>
-
-#include <google/protobuf/message.h>
 
 bool LoadProto(google::protobuf::Message* t, const wxString& path);
 bool SaveProto(google::protobuf::Message* t, const wxString& path);

@@ -3,11 +3,12 @@
 #ifndef FORM_H
 #define FORM_H
 
+#include <google/protobuf/stubs/common.h>
+
 #include "ride/wx.h"
 #include <wx/artprov.h>
 #include <string>
 #include <vector>
-#include <google/protobuf/stubs/common.h>
 class wxEditableListBox;
 
 //////////////////////////////////////////////////////////////////////////
