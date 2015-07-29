@@ -56,6 +56,14 @@ if(BUILD_USE_CLANG_FORMAT)
 				   COMMENT "Running clang format" VERBATIM)
 endif(BUILD_USE_CLANG_FORMAT)
 
+if(BUILD_USE_INCLUDECHECK)
+	add_custom_command(TARGET ${PROJECT_NAME}
+				   PRE_BUILD
+				   COMMAND ./check_includes.py ${CMAKE_CURRENT_SOURCE_DIR}/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+				   COMMENT "Checking includes" VERBATIM)
+endif(BUILD_USE_INCLUDECHECK)
+
 if(BUILD_USE_CPPLINT)
 	add_custom_command(TARGET ${PROJECT_NAME}
 					   PRE_BUILD

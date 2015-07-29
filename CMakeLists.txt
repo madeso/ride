@@ -7,6 +7,7 @@ option(BUILD_USE_CPPLINT "Add cpplint to the build" ON)
 option(BUILD_USE_DOXYGEN "Add doxygen to the build" ON)
 option(BUILD_USE_DOXYGEN_GLOBAL "Add doxygen as a seperate build" ON)
 option(BUILD_USE_CPPCHECK "run cppcheck on all source" ON)
+option(BUILD_USE_INCLUDECHECK "run custom script to include order problems" ON)
 
 ##########################################################################################################################
 # copied from cpptoml https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/CMakeLists.txt
