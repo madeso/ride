@@ -2,7 +2,7 @@
 
 #include "ride/cargo.h"
 #include <string>
-#include "cpptoml.h"
+#include "cpptoml.h"  // NOLINT this is how it should be included
 
 //////////////////////////////////////////////////////////////////////////
 
