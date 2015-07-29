@@ -111,6 +111,8 @@ class Main:
                             print_sort = False
                             for line in f:
                                 self.line_num += 1
+                                if line.startswith('// headerlint: disable'):
+                                    break
                                 if line.startswith('#include'):
                                     l = line.rstrip()
                                     line_class = self.classify(l)
@@ -124,6 +126,7 @@ class Main:
                             if print_sort:
                                 includes.sort(cmp=include_compare)
                                 print 'I think the correct order would be:'
+                                print '------------------'
                                 current_class = includes[0].line_class
                                 for i in includes:
                                     if current_class != i.line_class:
