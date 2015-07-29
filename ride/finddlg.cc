@@ -6,7 +6,7 @@
 #include "ride/generated/ui.h"
 #include "ride/wxutils.h"
 
-#include "wx/stc/stc.h"
+#include <wx/stc/stc.h>
 #include "ride/settings.h"
 #include <wx/dir.h>
 #include "ride/mainwindow.h"

@@ -6,7 +6,7 @@
 #include <wx/stc/stc.h>
 #include "ride/language.h"
 #include "settings.pb.h"
-#include "project.h"
+#include "ride/project.h"
 
 enum { FOLDING_WIDTH = 16 };
 

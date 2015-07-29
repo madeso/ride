@@ -6,7 +6,7 @@
 #include "ride/mainwindow.h"
 #include "ride/compilermessage.h"
 #include "ride/cmdrunner.h"
-#include "wx/filename.h"
+#include <wx/filename.h>
 #include <vector>
 
 void AddAllOutput(const wxString& result, const CompilerMessage::Source source,

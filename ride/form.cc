@@ -2,7 +2,7 @@
 
 #include <ride/wx.h>
 #include "ride/form.h"
-#include "wx/editlbox.h"
+#include <wx/editlbox.h>
 
 //////////////////////////////////////////////////////////////////////////
 

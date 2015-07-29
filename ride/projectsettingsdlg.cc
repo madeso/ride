@@ -10,7 +10,7 @@
 #include "ride/enabledisable.h"
 #include "ride/form.h"
 #include "ride/cargo.h"
-#include "wx/editlbox.h"
+#include <wx/editlbox.h>
 #include "ride/resources/commonimages.h"
 
 class ProjectSettingsDlg : public ui::ProjectSettings {
