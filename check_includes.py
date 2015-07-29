@@ -16,7 +16,7 @@ class Main:
         self.line_num = 0
 
     def error(self, message):
-        print '{}({}): {}'.format(self.filename, self.line_num, message)
+        print '{}({}): error CHK3030: {}'.format(self.filename, self.line_num, message)
 
     def classify(self, line):
         """
