@@ -4,9 +4,8 @@
 #define RIDE_OUTPUTDIRECTOR_H
 
 #include <ride/wx.h>
-#include "ride/compilermessage.h"
-
 #include <vector>
+#include "ride/compilermessage.h"
 
 class OutputControl;
 class MainWindow;

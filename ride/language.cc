@@ -1,12 +1,16 @@
 // Copyright (2015) Gustav
 
-#include <ride/wx.h>
 #include "ride/language.h"
-#include "ride/settings.h"
+
+#include <ride/wx.h>
 #include <wx/stc/stc.h>
+
 #include <cassert>
-#include "ride/wxutils.h"
+
 #include "ride_compiler_settings.h"
+
+#include "ride/settings.h"
+#include "ride/wxutils.h"
 
 void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style);
 

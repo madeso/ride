@@ -1,13 +1,15 @@
 // Copyright (2015) Gustav
 
-#include <ride/wx.h>
 #include "ride/settings.h"
-#include "ride/wxutils.h"
+
+#include <ride/wx.h>
 
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
-#include "ride/proto.h"
+
 #include "ride/mainwindow.h"
+#include "ride/proto.h"
+#include "ride/wxutils.h"
 
 wxString GetConfigFolder() { return wxStandardPaths::Get().GetUserDataDir(); }
 

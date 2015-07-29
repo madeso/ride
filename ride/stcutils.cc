@@ -3,9 +3,12 @@
 #include "ride/stcutils.h"
 
 #include <ride/wx.h>
+
 #include <wx/stc/stc.h>
-#include "ride/language.h"
+
 #include "settings.pb.h"
+
+#include "ride/language.h"
 #include "ride/project.h"
 
 enum { FOLDING_WIDTH = 16 };

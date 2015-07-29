@@ -2,17 +2,19 @@
 
 #include "ride/projectexplorer.h"
 
-#include <vector>
-#include <utility>
 #include <wx/dir.h>
+#include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/textdlg.h>
-#include <wx/filefn.h>
 
-#include "ride/mainwindow.h"
+#include <utility>
+#include <vector>
+
 #include "ride/resources/icons.h"
-#include "ride/wxutils.h"
+
 #include "ride/deletefolderdlg.h"
+#include "ride/mainwindow.h"
+#include "ride/wxutils.h"
 
 enum { ICON_FILE_NORMAL, ICON_FOLDER_NORMAL };
 

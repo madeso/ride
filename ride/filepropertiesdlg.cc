@@ -1,16 +1,20 @@
 // Copyright (2015) Gustav
 
-#include <ride/wx.h>
 #include "ride/filepropertiesdlg.h"
-#include "ride/fileedit.h"
-#include "ride/wxutils.h"
+
+#include <ride/wx.h>
 
 #include <map>
 #include <vector>
 
+#include "ride/generated/ui.h"
+#include "ride/generated/ui.h"
+
+#include "ride/fileedit.h"
+#include "ride/wxutils.h"
+
 //////////////////////////////////////////////////////////////////////////
 
-#include "ride/generated/ui.h"
 class FilePropertiesDlg : public ui::FileProperties {
  public:
   FilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl);

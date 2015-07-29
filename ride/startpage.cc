@@ -1,23 +1,27 @@
 // Copyright (2015) Gustav
 
-#include <ride/wx.h>
-#include <wx/aui/aui.h>
-#include <wx/uri.h>
-#include "ride/mainwindow.h"
-#include "ride/startpage.h"
-
+// TODO(gustav) move to a config or a better place
 #define USE_WEBVIEW
 
+#include "ride/startpage.h"
+
+#include <ride/wx.h>
+
+#include <wx/uri.h>
 #ifdef USE_WEBVIEW
 #include <wx/webview.h>
-
 #ifndef wxUSE_WEBVIEW
 #error need webview support
 #endif
+#endif
 
-#else
+#include <wx/aui/aui.h>
+
+#ifndef USE_WEBVIEW
 #include <wx/html/htmlwin.h>
 #endif
+
+#include "ride/mainwindow.h"
 
 StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
     : wxControl(parent, wxID_ANY),

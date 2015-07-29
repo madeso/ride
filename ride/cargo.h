@@ -4,9 +4,8 @@
 #define CARGO_H
 
 #include <ride/wx.h>
-#include "ride/loadresult.h"
-
 #include <vector>
+#include "ride/loadresult.h"
 
 class Cargo {
  public:

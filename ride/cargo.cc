@@ -1,8 +1,8 @@
 // Copyright (2015) Gustav
 
 #include "ride/cargo.h"
-#include "cpptoml.h"
 #include <string>
+#include "cpptoml.h"
 
 //////////////////////////////////////////////////////////////////////////
 

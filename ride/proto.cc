@@ -2,8 +2,9 @@
 
 #include "ride/proto.h"
 
-#include <wx/utils.h>
 #include <google/protobuf/text_format.h>
+
+#include <wx/utils.h>
 
 #include <cassert>
 #include <fstream>  // NOLINT this is how we use protobuf

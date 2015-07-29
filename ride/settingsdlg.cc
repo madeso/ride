@@ -1,16 +1,19 @@
 // Copyright (2015) Gustav
 
-#include <ride/wx.h>
-#include "ride/generated/ui.h"
-#include "ride/settings.h"
 #include "ride/settingsdlg.h"
-#include "ride/mainwindow.h"
-#include <wx/fontenum.h>
-#include "ride/wxutils.h"
 
-#include "ride/form.h"
+#include <ride/wx.h>
+
+#include <wx/fontenum.h>
 
 #include <vector>
+
+#include "ride/generated/ui.h"
+
+#include "ride/form.h"
+#include "ride/mainwindow.h"
+#include "ride/settings.h"
+#include "ride/wxutils.h"
 
 //////////////////////////////////////////////////////////////////////////
 // custom form functions

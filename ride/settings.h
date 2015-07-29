@@ -3,9 +3,9 @@
 #ifndef RIDE_SETTINGS_H
 #define RIDE_SETTINGS_H
 
-#include "settings.pb.h"
-
 #include <wx/colour.h>
+
+#include "settings.pb.h"
 
 class wxWindow;
 

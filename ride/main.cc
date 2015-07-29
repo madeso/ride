@@ -2,8 +2,9 @@
 
 #include <ride/wx.h>
 
-#include "ride/mainwindow.h"
 #include "settings.pb.h"
+
+#include "ride/mainwindow.h"
 
 class MyApp : public wxApp {
  public:

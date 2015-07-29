@@ -1,13 +1,17 @@
 // Copyright (2015) Gustav
 
 #include "ride/compileutils.h"
+
 #include <ride/wx.h>
-#include "ride/wxutils.h"
-#include "ride/mainwindow.h"
-#include "ride/compilermessage.h"
-#include "ride/cmdrunner.h"
+
 #include <wx/filename.h>
+
 #include <vector>
+
+#include "ride/cmdrunner.h"
+#include "ride/compilermessage.h"
+#include "ride/mainwindow.h"
+#include "ride/wxutils.h"
 
 void AddAllOutput(const wxString& result, const CompilerMessage::Source source,
                   const wxString folder, MainWindow* main_window) {

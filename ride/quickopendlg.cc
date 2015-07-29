@@ -3,10 +3,13 @@
 #include "ride/quickopendlg.h"
 
 #include <ride/wx.h>
-#include "ride/generated/ui.h"
-#include "ride/wxutils.h"
-#include <vector>
+
 #include <set>
+#include <vector>
+
+#include "ride/generated/ui.h"
+
+#include "ride/wxutils.h"
 
 // based on http://docs.wholetomato.com/default.asp?W193
 

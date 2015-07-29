@@ -4,8 +4,8 @@
 #define RIDE_PROJECT_H
 
 #include <ride/wx.h>
-#include "ride/runner.h"
 #include "settings.pb.h"
+#include "ride/runner.h"
 
 class MainWindow;
 

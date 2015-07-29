@@ -4,9 +4,10 @@
 #define RIDE_WXUTILS_H
 
 #include <wx/gdicmn.h>
-#include <wx/string.h>
-#include <vector>
 #include <wx/msgdlg.h>
+#include <wx/string.h>
+
+#include <vector>
 
 class wxContextMenuEvent;
 class wxMenu;

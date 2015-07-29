@@ -3,6 +3,8 @@
 #ifndef RIDE_LOCALWX_H
 #define RIDE_LOCALWX_H
 
+// headerlint: disable
+
 // hopefully this fixes this error:
 // http://stackoverflow.com/questions/13219007/xcode-4-5-tr1-type-traits-file-not-found
 

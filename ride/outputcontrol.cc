@@ -2,15 +2,17 @@
 
 #include "ride/outputcontrol.h"
 
-#include "ride/mainwindow.h"
-#include "settings.pb.h"
-#include "ride/stcutils.h"
-#include "ride/compilermessage.h"
-#include "ride/wxutils.h"
-#include <wx/uri.h>
 #include <wx/clipbrd.h>
 #include <wx/regex.h>
+#include <wx/uri.h>
+
+#include "settings.pb.h"
+
 #include "ride/cmdrunner.h"
+#include "ride/compilermessage.h"
+#include "ride/mainwindow.h"
+#include "ride/stcutils.h"
+#include "ride/wxutils.h"
 
 enum {
   ID_FIRST = wxID_HIGHEST,

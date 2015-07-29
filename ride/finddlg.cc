@@ -3,17 +3,20 @@
 #include "ride/finddlg.h"
 
 #include <ride/wx.h>
-#include "ride/generated/ui.h"
-#include "ride/wxutils.h"
+
+#include <wx/dir.h>
 
 #include <wx/stc/stc.h>
-#include "ride/settings.h"
-#include <wx/dir.h>
-#include "ride/mainwindow.h"
-#include "ride/fileedit.h"
 
 #include <memory>
 #include <vector>
+
+#include "ride/generated/ui.h"
+
+#include "ride/fileedit.h"
+#include "ride/mainwindow.h"
+#include "ride/settings.h"
+#include "ride/wxutils.h"
 
 class FindDlg : public ui::Find {
  public:

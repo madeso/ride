@@ -1,36 +1,34 @@
 // Copyright (2015) Gustav
 
-#include <ride/wx.h>
-#include <wx/stc/stc.h>
-#include <wx/aui/aui.h>
-#include <wx/filename.h>
-#include <wx/aboutdlg.h>
-#include <wx/uri.h>
-#include <wx/clipbrd.h>
-
 #include "ride/mainwindow.h"
-#include "ride/fileedit.h"
 
-#include "ride/settingsdlg.h"
-#include "ride/compilermessage.h"
-#include "ride/projectexplorer.h"
-#include "ride/createnewprojectdlg.h"
-#include "ride/createnewfiledlg.h"
+#include <ride/wx.h>
 
-#include "ride/resources/icons.h"
-#include "ride/wxutils.h"
-#include "ride/runner.h"
-#include "ride/quickopendlg.h"
-
-#include "ride/cmdrunner.h"
-
-#include "ride/outputcontrol.h"
-#include "ride/findresultscontrol.h"
-
-#include "ride/tab.h"
-#include "ride/startpage.h"
+#include <wx/aboutdlg.h>
+#include <wx/clipbrd.h>
+#include <wx/filename.h>
+#include <wx/uri.h>
+#include <wx/aui/aui.h>
+#include <wx/stc/stc.h>
 
 #include <vector>
+
+#include "ride/resources/icons.h"
+
+#include "ride/cmdrunner.h"
+#include "ride/compilermessage.h"
+#include "ride/createnewfiledlg.h"
+#include "ride/createnewprojectdlg.h"
+#include "ride/fileedit.h"
+#include "ride/findresultscontrol.h"
+#include "ride/outputcontrol.h"
+#include "ride/projectexplorer.h"
+#include "ride/quickopendlg.h"
+#include "ride/runner.h"
+#include "ride/settingsdlg.h"
+#include "ride/startpage.h"
+#include "ride/tab.h"
+#include "ride/wxutils.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 

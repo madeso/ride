@@ -2,16 +2,19 @@
 
 #include "ride/projectsettingsdlg.h"
 
-#include "ride/generated/ui.h"
-#include "ride/project.h"
-#include "ride/mainwindow.h"
+#include <wx/editlbox.h>
 #include <wx/fontenum.h>
-#include "ride/wxutils.h"
+
+#include "ride/generated/ui.h"
+
+#include "ride/resources/commonimages.h"
+
+#include "ride/cargo.h"
 #include "ride/enabledisable.h"
 #include "ride/form.h"
-#include "ride/cargo.h"
-#include <wx/editlbox.h>
-#include "ride/resources/commonimages.h"
+#include "ride/mainwindow.h"
+#include "ride/project.h"
+#include "ride/wxutils.h"
 
 class ProjectSettingsDlg : public ui::ProjectSettings {
  public:

@@ -1,15 +1,20 @@
 // Copyright (2015) Gustav
 
-#include <ride/wx.h>
 #include "ride/createnewfiledlg.h"
-#include <wx/filename.h>
+
+#include <ride/wx.h>
+
 #include <wx/dir.h>
+#include <wx/filename.h>
+
+#include "ride/generated/ui.h"
+#include "ride/generated/ui.h"
+
 #include "ride/resources/icons.h"
+
 #include "ride/wxutils.h"
 
 //////////////////////////////////////////////////////////////////////////
-
-#include "ride/generated/ui.h"
 
 class CreateNewFileDlg : public ui::CreateNewFile {
  public:

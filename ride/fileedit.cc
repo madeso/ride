@@ -1,32 +1,34 @@
 // Copyright (2015) Gustav
 
+#include "ride/fileedit.h"
+
 #include <ride/wx.h>
-#include <wx/stc/stc.h>
-#include <wx/aui/aui.h>
+
 #include <wx/filename.h>
 #include <wx/msgdlg.h>
-#include <wx/uri.h>
 #include <wx/numdlg.h>
 #include <wx/tokenzr.h>
+#include <wx/uri.h>
+#include <wx/aui/aui.h>
+#include <wx/stc/stc.h>
 
-#include <vector>
-#include <set>
-#include <cassert>
 #include <algorithm>
-
-#include "ride/compilermessage.h"
-#include "ride/filepropertiesdlg.h"
-#include "ride/mainwindow.h"
-#include "ride/fileedit.h"
-#include "ride/wxutils.h"
-#include "ride/finddlg.h"
-#include "ride/cmdrunner.h"
+#include <cassert>
+#include <set>
+#include <vector>
 
 #include "ride/resources/icons.h"
-#include "ride/stcutils.h"
+
 #include "ride/autocomplete.h"
+#include "ride/cmdrunner.h"
+#include "ride/compilermessage.h"
 #include "ride/compileutils.h"
+#include "ride/filepropertiesdlg.h"
+#include "ride/finddlg.h"
+#include "ride/mainwindow.h"
 #include "ride/project.h"
+#include "ride/stcutils.h"
+#include "ride/wxutils.h"
 
 wxDEFINE_EVENT(EVENT_UPDATE_SELECTION, wxCommandEvent);
 
