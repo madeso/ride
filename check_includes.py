@@ -23,45 +23,27 @@ class Main:
         :rtype : str
         """
         name = os.path.splitext(os.path.basename(self.filename))[0]
+        patterns = [
+            r'#include "ride/' + name + r'+\.h"',
+            r'#include <google/[a-zA-Z_0-9]+(/[a-zA-Z_0-9]+)*.h>',
+            r'#include <ride/wx.h>',
+            r'#include <wx/[a-zA-Z]+\.h>',
+            r'#include <wx/aui/[a-zA-Z]+\.h>',
+            r'#include <wx/html/[a-zA-Z]+\.h>',
+            r'#include <wx/stc/[a-zA-Z]+\.h>',
+            r'#include <[a-zA-Z0-9]+>',
+            r'#include "[a-zA-Z]+.pb.h"',
+            r'#include "cpptoml.h"',
+            r'#include "ride/generated/[a-zA-Z]+\.h"',
+            r'#include "ride/resources/[a-zA-Z]+\.h"',
+            r'#include "ride/[a-zA-Z]+\.h"'
+        ]
+
         index = 0
-        if re.match(r'#include "ride/' + name + r'+\.h"', line):
-            return index
-        index += 1
-        if re.match(r'#include <google/[a-zA-Z_0-9]+(/[a-zA-Z_0-9]+)*.h>', line):
-            return index
-        index += 1
-        if re.match(r'#include <ride/wx.h>', line):
-            return index
-        index += 1
-        if re.match(r'#include <wx/[a-zA-Z]+\.h>', line):
-            return index
-        index += 1
-        if re.match(r'#include <wx/aui/[a-zA-Z]+\.h>', line):
-            return index
-        index += 1
-        if re.match(r'#include <wx/html/[a-zA-Z]+\.h>', line):
-            return index
-        index += 1
-        if re.match(r'#include <wx/stc/[a-zA-Z]+\.h>', line):
-            return index
-        index += 1
-        if re.match(r'#include <[a-zA-Z0-9]+>', line):
-            return index
-        index += 1
-        if re.match(r'#include "[a-zA-Z]+.pb.h"', line):
-            return index
-        index += 1
-        if re.match(r'#include "cpptoml.h"', line):
-            return index
-        index += 1
-        if re.match(r'#include "ride/generated/[a-zA-Z]+\.h"', line):
-            return index
-        index += 1
-        if re.match(r'#include "ride/resources/[a-zA-Z]+\.h"', line):
-            return index
-        index += 1
-        if re.match(r'#include "ride/[a-zA-Z]+\.h"', line):
-            return index
+        for p in patterns:
+            if re.match(p, line):
+                return index
+            index += 1
 
         self.error('{} is a invalid header'.format(line))
         raise StopFile()
