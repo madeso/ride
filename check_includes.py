@@ -15,6 +15,14 @@ class Include:
         self.line_class = c
         self.line = l
 
+
+def include_compare(lhs, rhs):
+    if lhs.line_class == rhs.line_class:
+        return lhs.line < rhs.line
+    else:
+        return lhs.line_class < rhs.line_class
+
+
 class Main:
     def __init__(self):
         self.filename = ""
@@ -103,7 +111,7 @@ class Main:
                                     if verbose:
                                         print line_class, l
                             if print_sort:
-                                includes.sort(key=lambda x: x.line_class)
+                                includes.sort(cmp=include_compare)
                                 print 'I think the correct order would be:'
                                 for i in includes:
                                     print i.line
