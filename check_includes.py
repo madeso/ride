@@ -105,7 +105,7 @@ class Main:
                                     line_class = self.classify(l)
                                     includes.append(Include(line_class, l))
                                     if last_class > line_class:
-                                        self.error('Include order error')
+                                        self.error('Include order error for ' + l)
                                         print_sort = True
                                     last_class = line_class
                                     if verbose:
