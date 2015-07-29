@@ -2,7 +2,7 @@
 
 #include "ride/tab.h"
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include <cassert>
 
 Tab::Tab(FileEdit* edit) : edit_(edit), start_(NULL) { assert(edit); }

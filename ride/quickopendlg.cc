@@ -2,7 +2,7 @@
 
 #include "ride/quickopendlg.h"
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/generated/ui.h"
 #include "ride/wxutils.h"
 #include <vector>

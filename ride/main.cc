@@ -1,6 +1,6 @@
 // Copyright (2015) Gustav
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 
 #include "ride/mainwindow.h"
 #include "settings.pb.h"

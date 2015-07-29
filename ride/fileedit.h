@@ -3,7 +3,7 @@
 #ifndef RIDE_FILEEDIT_H
 #define RIDE_FILEEDIT_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/tab.h"
 #include <wx/stc/stc.h>
 

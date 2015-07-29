@@ -5,7 +5,7 @@
 
 #include <google/protobuf/message.h>
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include <wx/filename.h>
 
 bool LoadProto(google::protobuf::Message* t, const wxString& path);

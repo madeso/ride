@@ -1,21 +1,21 @@
 // Copyright (2015) Gustav
 
 #include "ride/project.h"
+
+#include <wx/choicdlg.h>
 #include <wx/utils.h>
 #include <wx/process.h>
 #include <wx/txtstrm.h>
 #include <wx/filename.h>
-#include "ride/wxutils.h"
-
-#include "ride/mainwindow.h"
-#include "settings.pb.h"
-#include "ride/proto.h"
 
 #include <string>
 #include <vector>
 
-#include <wx/choicdlg.h>
+#include "settings.pb.h"
 
+#include "ride/wxutils.h"
+#include "ride/mainwindow.h"
+#include "ride/proto.h"
 #include "ride/projectsettingsdlg.h"
 
 Project::Project(MainWindow* output, const wxString& root_folder)

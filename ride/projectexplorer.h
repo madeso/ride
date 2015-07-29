@@ -3,7 +3,7 @@
 #ifndef RIDE_PROJECTEXPLORER_H
 #define RIDE_PROJECTEXPLORER_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include <wx/treectrl.h>
 #include <wx/imaglist.h>
 #include <map>

@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
 #include "ride/wxutils.h"
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include <wx/listctrl.h>
 #include <wx/stc/stc.h>
 #include <wx/tokenzr.h>

@@ -3,7 +3,7 @@
 #ifndef LOADRESULT_H
 #define LOADRESULT_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 
 class LoadResult {
  public:

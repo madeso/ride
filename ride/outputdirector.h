@@ -3,7 +3,7 @@
 #ifndef RIDE_OUTPUTDIRECTOR_H
 #define RIDE_OUTPUTDIRECTOR_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/compilermessage.h"
 
 #include <vector>

@@ -1,6 +1,6 @@
 // Copyright (2015) Gustav
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/createnewfiledlg.h"
 #include <wx/filename.h>
 #include <wx/dir.h>

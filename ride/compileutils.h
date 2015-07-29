@@ -3,7 +3,7 @@
 #ifndef RIDE_COMPILEUTILS_H
 #define RIDE_COMPILEUTILS_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 class MainWindow;
 
 void CompileProtoFile(const wxString& filename, MainWindow* main_window);

@@ -2,7 +2,7 @@
 
 #include "ride/finddlg.h"
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/generated/ui.h"
 #include "ride/wxutils.h"
 

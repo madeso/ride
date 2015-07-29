@@ -1,9 +1,9 @@
 // Copyright (2015) Gustav
 
-#include "ride/wxutils.h"
-#include "ride/wx.h"
-#include "ride/outputdirector.h"
+#include <ride/wx.h>
 
+#include "ride/wxutils.h"
+#include "ride/outputdirector.h"
 #include "ride/outputcontrol.h"
 #include "ride/mainwindow.h"
 #include "ride/fileedit.h"

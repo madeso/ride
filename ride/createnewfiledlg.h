@@ -3,7 +3,7 @@
 #ifndef RIDE_CREATENEWFILEDLG_H
 #define RIDE_CREATENEWFILEDLG_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 
 class CreateNewFileDlgHandler {
  public:

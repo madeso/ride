@@ -3,7 +3,7 @@
 #ifndef PROJECTSETTINGS_DLG_H
 #define PROJECTSETTINGS_DLG_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 
 class MainWindow;
 class Project;

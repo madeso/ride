@@ -1,12 +1,13 @@
 // Copyright (2015) Gustav
 
 #include "ride/proto.h"
+
 #include <wx/utils.h>
+#include <google/protobuf/text_format.h>
 
 #include <cassert>
 #include <fstream>  // NOLINT this is how we use protobuf
 #include <string>
-#include <google/protobuf/text_format.h>
 
 bool LoadProto(google::protobuf::Message* t, const wxString& path) {
   assert(t);

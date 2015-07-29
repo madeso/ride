@@ -1,6 +1,6 @@
 // Copyright (2015) Gustav
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/settings.h"
 #include "ride/wxutils.h"
 

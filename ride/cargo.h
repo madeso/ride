@@ -3,7 +3,7 @@
 #ifndef CARGO_H
 #define CARGO_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/loadresult.h"
 
 #include <vector>

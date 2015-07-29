@@ -2,7 +2,7 @@
 
 #include "ride/stcutils.h"
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include <wx/stc/stc.h>
 #include "ride/language.h"
 #include "settings.pb.h"

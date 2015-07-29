@@ -3,7 +3,7 @@
 #ifndef RIDE_AUTOCOMPLETE_H
 #define RIDE_AUTOCOMPLETE_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 class Language;
 
 enum class ShowAutoCompleteAction {

@@ -2,7 +2,7 @@
 
 #include "ride/deletefolderdlg.h"
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/generated/ui.h"
 
 class DeleteFolderDlg : public ui::DeleteFolder {

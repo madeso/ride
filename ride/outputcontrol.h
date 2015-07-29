@@ -3,7 +3,7 @@
 #ifndef RIDE_OUTPUTCONTROL_H
 #define RIDE_OUTPUTCONTROL_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include <wx/stc/stc.h>
 
 class MainWindow;

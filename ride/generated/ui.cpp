@@ -5,7 +5,7 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 
 #include "ui.h"
 

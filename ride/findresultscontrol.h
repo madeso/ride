@@ -3,7 +3,7 @@
 #ifndef RIDE_FINDCONTROL_H_
 #define RIDE_FINDCONTROL_H_
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include <wx/stc/stc.h>
 
 class MainWindow;

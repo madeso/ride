@@ -3,10 +3,10 @@
 #ifndef RIDE_RUNNER_H
 #define RIDE_RUNNER_H
 
+#include <ride/wx.h>
+
 #include <vector>
 #include <memory>
-
-#include "ride/wx.h"
 
 class MultiRunner;
 

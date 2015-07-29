@@ -2,11 +2,12 @@
 
 #include "ride/findresultscontrol.h"
 
+#include <wx/clipbrd.h>
+
 #include "ride/compilermessage.h"
 #include "ride/stcutils.h"
 #include "ride/mainwindow.h"
 #include "ride/wxutils.h"
-#include <wx/clipbrd.h>
 
 enum {
   ID_FIRST = wxID_HIGHEST,

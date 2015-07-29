@@ -5,7 +5,7 @@
 
 #include <google/protobuf/stubs/common.h>
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include <wx/artprov.h>
 #include <string>
 #include <vector>

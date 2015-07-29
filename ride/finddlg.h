@@ -3,7 +3,7 @@
 #ifndef RIDE_FINDDLG_H
 #define RIDE_FINDDLG_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 
 class wxStyledTextCtrl;
 class MainWindow;

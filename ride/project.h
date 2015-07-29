@@ -3,7 +3,7 @@
 #ifndef RIDE_PROJECT_H
 #define RIDE_PROJECT_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/runner.h"
 #include "settings.pb.h"
 

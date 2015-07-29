@@ -3,7 +3,7 @@
 #ifndef RIDE_COMPILER_MESSAGE_H
 #define RIDE_COMPILER_MESSAGE_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 
 class CompilerMessage {
  public:

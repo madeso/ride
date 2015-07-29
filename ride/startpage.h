@@ -3,7 +3,7 @@
 #ifndef RIDE_STARTPAGE_H
 #define RIDE_STARTPAGE_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/tab.h"
 
 class wxAuiNotebook;

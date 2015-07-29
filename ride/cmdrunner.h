@@ -3,7 +3,7 @@
 #ifndef RIDE_CMDRUNNER_H
 #define RIDE_CMDRUNNER_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 #include "ride/runner.h"
 
 class CmdRunner : public SingleRunner {

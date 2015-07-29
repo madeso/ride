@@ -3,7 +3,7 @@
 #ifndef RIDE_CREATENEWPROJECTDLG_H
 #define RIDE_CREATENEWPROJECTDLG_H
 
-#include "ride/wx.h"
+#include <ride/wx.h>
 
 class CreateNewProjectDlgHandler {
  public:
