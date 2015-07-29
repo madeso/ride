@@ -16,11 +16,22 @@ class Include:
         self.line = l
 
 
+def int_compare(lhs, rhs):
+    return lhs - rhs
+
+
+def str_cmp(lhs, rhs):
+    if lhs == rhs:
+        return 0
+    if lhs < rhs:
+        return -1
+    return 1
+
 def include_compare(lhs, rhs):
     if lhs.line_class == rhs.line_class:
-        return lhs.line < rhs.line
+        return str_cmp(lhs.line, rhs.line)
     else:
-        return lhs.line_class < rhs.line_class
+        return int_compare(lhs.line_class,  rhs.line_class)
 
 
 class Main:
