@@ -4,10 +4,16 @@
 #define RIDE_PROTO_H
 
 #include "ride/wx.h"
+#include <wx/filename.h>
 
 #include <google/protobuf/message.h>
 
 bool LoadProto(google::protobuf::Message* t, const wxString& path);
 bool SaveProto(google::protobuf::Message* t, const wxString& path);
+
+bool LoadProtoBinary(google::protobuf::Message* message,
+                     const wxFileName& file_name);
+bool SaveProtoBinary(const google::protobuf::Message& message,
+                     const wxFileName& file_name);
 
 #endif  // RIDE_PROTO_H
