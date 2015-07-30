@@ -21,9 +21,9 @@
 #endif
 #endif
 
-#include <wx/wxprec.h>
+#include <wx/wxprec.h>  // NOLINT header order is b/c compiler fixes
 #ifndef WX_PRECOMP
-#include <wx/wx.h>
+#include <wx/wx.h>  // NOLINT header order is b/c compiler fixes
 #endif
 
 #endif  // RIDE_LOCALWX_H
