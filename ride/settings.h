@@ -5,7 +5,7 @@
 
 #include <wx/colour.h>
 
-#include "settings.pb.h"
+#include "settings.pb.h"  // NOLINT this is how we include it
 
 class wxWindow;
 

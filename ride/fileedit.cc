@@ -129,7 +129,7 @@ void FileEdit::GotoLine() {
   const int total_plus_one = text_->GetLineCount() + 1;
   const wxString message =
       wxString::Format("Enter line number(1-%d)", total_plus_one);
-  const long new_line_one_based =
+  const auto new_line_one_based =
       wxGetNumberFromUser(message, wxEmptyString, "Goto line",
                           text_->GetCurrentLine() + 1, 1, total_plus_one);
   if (new_line_one_based == -1) return;
@@ -238,8 +238,8 @@ void FileEdit::GetSelection(int* start_line, int* start_index, int* end_line,
   assert(start_index);
   assert(end_line);
   assert(end_index);
-  long from = 0;
-  long to = 0;
+  long from = 0;  // NOLINT wx uses long, we need to use long
+  long to = 0;    // NOLINT wx uses long, we need to use long
   text_->GetSelection(&from, &to);
   FromTextOffsetToLineCol(text_, from, start_line, start_index);
   FromTextOffsetToLineCol(text_, to, end_line, end_index);
@@ -365,7 +365,7 @@ void FileEdit::UpdateFileTime() {
 
 class TrueFalse {
  public:
-  TrueFalse(bool* capture) : capture_(capture) {
+  explcit TrueFalse(bool* capture) : capture_(capture) {
     assert(capture_);
     assert(*capture_ == false);
     *capture_ = true;

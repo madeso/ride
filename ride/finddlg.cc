@@ -145,7 +145,7 @@ struct FindResult {
 
 class UndoRedo {
  public:
-  UndoRedo(wxStyledTextCtrl* s) : stc(s) {
+  explicit UndoRedo(wxStyledTextCtrl* s) : stc(s) {
     assert(stc);
     stc->BeginUndoAction();
   }

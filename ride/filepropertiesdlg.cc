@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "ride/generated/ui.h"
-#include "ride/generated/ui.h"
 
 #include "ride/fileedit.h"
 #include "ride/wxutils.h"

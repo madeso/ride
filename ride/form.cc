@@ -32,7 +32,7 @@ void ToGui(google::protobuf::int32 data, wxTextCtrl* gui) {
 }
 google::protobuf::int32 ToData_I32(wxTextCtrl* gui) {
   const wxString value = gui->GetValue();
-  long ret = 0;
+  long ret = 0;  // NOLINT wx uses long
   if (true == value.ToLong(&ret)) {
     return ret;
   }

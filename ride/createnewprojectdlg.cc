@@ -9,7 +9,6 @@
 #include <wx/stdpaths.h>
 
 #include "ride/generated/ui.h"
-#include "ride/generated/ui.h"
 
 #include "ride/resources/icons.h"
 
@@ -19,7 +18,7 @@
 
 class CreateNewProjectDlg : public ui::CreateNewProject {
  public:
-  CreateNewProjectDlg(wxWindow* parent);
+  explicit CreateNewProjectDlg(wxWindow* parent);
 
   const wxString project_folder() const;
   const wxString project_name() const;
@@ -84,7 +83,7 @@ wxString GetValidDirectory(const wxString& dir) {
 }
 
 ProjectTemplateType GetPtt(wxListCtrl* list) {
-  const long selection =
+  const auto selection =
       list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
   if (selection == -1) return PTT_UNKNOWN;
   wxUIntPtr data = list->GetItemData(selection);
@@ -98,7 +97,7 @@ ProjectTemplateType GetPtt(wxListCtrl* list) {
 
 void AddItem(wxListCtrl* list, const wxString& text, int image,
              ProjectTemplateType type) {
-  long i = list->InsertItem(0, "", image);
+  auto i = list->InsertItem(0, "", image);
   list->SetItemColumnImage(i, 0, image);
   list->SetItem(i, 1, text);
   list->SetItemData(i, type);

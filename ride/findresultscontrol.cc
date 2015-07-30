@@ -97,8 +97,8 @@ void FindResultsControl::OnSelectAll(wxCommandEvent& event) {
 void FindResultsControl::OnCopy(wxCommandEvent& event) { this->Copy(); }
 
 const wxString FindResultsControl::GetContextLineContent() {
-  long line_number = 0;
-  long col = 0;
+  long line_number = 0;  // NOLINT wx uses long
+  long col = 0;          // NOLINT wx uses long
   const long index = context_positon_;
   this->PositionToXY(index, &col, &line_number);
   if (line_number == -1) return wxEmptyString;
@@ -107,9 +107,9 @@ const wxString FindResultsControl::GetContextLineContent() {
 }
 
 void FindResultsControl::OnDoubleClick(wxMouseEvent& event) {
-  long line_number = 0;
-  long col = 0;
-  long index = this->GetInsertionPoint();
+  long line_number = 0;  // NOLINT wx uses long
+  long col = 0;          // NOLINT wx uses long
+  auto index = this->GetInsertionPoint();
   this->PositionToXY(index, &col, &line_number);
   if (line_number == -1) return;
   wxString line_content = GetLineText(line_number);

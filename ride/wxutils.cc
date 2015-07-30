@@ -9,7 +9,7 @@
 
 #include <wx/stc/stc.h>
 
-#include "ride_compiler_settings.h"
+#include "ride_compiler_settings.h"  // NOLINT this is how we include it
 
 void WriteLine(wxStyledTextCtrl* stc, const wxString& str) {
   const int current_pos = stc->GetCurrentPos();

@@ -290,7 +290,6 @@ bool ShowQuickOpenDlg(wxWindow* parent, const wxString& root,
   assert(selected);
   QuickOpenDlg dlg(parent, root, files);
   if (wxID_OK != dlg.ShowModal()) return false;
-  ;
   // do something!
   *selected = dlg.GetSelectedFiles();
   return true;

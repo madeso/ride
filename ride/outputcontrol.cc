@@ -6,7 +6,7 @@
 #include <wx/regex.h>
 #include <wx/uri.h>
 
-#include "settings.pb.h"
+#include "settings.pb.h"  // NOLINT this is how we include it
 
 #include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"

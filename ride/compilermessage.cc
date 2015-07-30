@@ -50,7 +50,7 @@ const wxString SIMPLE_REGEX_OUTPUT = "^" + FILE + "\\:" + INT + WS + TEXT + "$";
 // settings.proto:5:9: Expected "]".
 const wxString PROTOC_REGEX_OUTPUT =
     "^" + FILE + "\\:" + INT + ":" + INT + ":" + WS + TEXT + "$";
-}
+}  // namespace regex
 
 namespace {
 struct FileTest {
@@ -66,7 +66,7 @@ struct FileTest {
     assert(file.Matches("lala.txt"));
   }
 } test;
-}
+}  // namespace
 
 const wxRegEx& ComplexRegexOutput() {
   static wxRegEx ret(regex::COMPLEX_REGEX_OUTPUT, wxRE_ADVANCED);

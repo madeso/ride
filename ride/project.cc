@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "settings.pb.h"
+#include "settings.pb.h"  // NOLINT this is how we include it
 
 #include "ride/wxutils.h"
 #include "ride/mainwindow.h"

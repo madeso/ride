@@ -2,7 +2,7 @@
 
 #include <ride/wx.h>
 
-#include "settings.pb.h"
+#include "settings.pb.h"  // NOLINT this is how we include it
 
 #include "ride/mainwindow.h"
 

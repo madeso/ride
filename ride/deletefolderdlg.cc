@@ -61,7 +61,6 @@ bool ShowDeleteFolderDlg(wxWindow* parent, const wxString& folder, bool* full,
   DeleteFolderDlg dlg(parent, "Are you sure you want to delete " + folder,
                       "Delete?");
   if (wxID_YES != dlg.ShowModal()) return false;
-  ;
   *full = dlg.full();
   *recursive = dlg.recursive();
   return true;

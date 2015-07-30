@@ -6,7 +6,7 @@
 
 #include <wx/stc/stc.h>
 
-#include "settings.pb.h"
+#include "settings.pb.h"  // NOLINT this is how we include it
 
 #include "ride/language.h"
 #include "ride/project.h"

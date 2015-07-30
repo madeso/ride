@@ -7,7 +7,7 @@
 
 #include <cassert>
 
-#include "ride_compiler_settings.h"
+#include "ride_compiler_settings.h"  // NOLINT this is how we include it
 
 #include "ride/settings.h"
 #include "ride/wxutils.h"

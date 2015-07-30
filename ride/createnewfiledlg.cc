@@ -8,7 +8,6 @@
 #include <wx/filename.h>
 
 #include "ride/generated/ui.h"
-#include "ride/generated/ui.h"
 
 #include "ride/resources/icons.h"
 
@@ -73,7 +72,7 @@ class FileTemplate {
 
 void AddFileTemplate(wxListCtrl* list, const wxString& text, int image,
                      FileTemplate* ft) {
-  long i = list->InsertItem(0, "", image);
+  auto i = list->InsertItem(0, "", image);
   list->SetItemColumnImage(i, 0, image);
   list->SetItem(i, 1, text);
   list->SetItem(i, 2, "Rust");
@@ -116,9 +115,9 @@ CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent,
   images->Add(wxIcon(file_normal_xpm));
   uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);
 
-  const long icon_index = uiTemplates->InsertColumn(0, "Icon");
-  const long language_index = uiTemplates->InsertColumn(2, "Language");
-  const long name_index = uiTemplates->InsertColumn(1, "Name");
+  const auto icon_index = uiTemplates->InsertColumn(0, "Icon");
+  const auto language_index = uiTemplates->InsertColumn(2, "Language");
+  const auto name_index = uiTemplates->InsertColumn(1, "Name");
   uiTemplates->SetColumnWidth(icon_index, 20);
   uiTemplates->SetColumnWidth(language_index, 60);
   uiTemplates->SetColumnWidth(name_index, 200);
@@ -191,7 +190,7 @@ const wxString CreateNewFileDlg::GetFilePath() const {
 }
 
 FileTemplate* GetFt(wxListCtrl* list) {
-  const long selection =
+  const auto selection =
       list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
   if (selection == -1) return NULL;
   wxUIntPtr data = list->GetItemData(selection);
