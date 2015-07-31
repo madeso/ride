@@ -1,3 +1,5 @@
+// Copyright (2015) Gustav
+
 #ifndef RIDE_TAB_H_
 #define RIDE_TAB_H_
 
