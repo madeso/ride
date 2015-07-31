@@ -365,7 +365,7 @@ void FileEdit::UpdateFileTime() {
 
 class TrueFalse {
  public:
-  explcit TrueFalse(bool* capture) : capture_(capture) {
+  explicit TrueFalse(bool* capture) : capture_(capture) {
     assert(capture_);
     assert(*capture_ == false);
     *capture_ = true;
