@@ -40,7 +40,7 @@ class QuickOpenDlg : public ui::QuickOpen {
 
   void OnFileDeselected(wxListEvent& event);
   void OnFileSelected(wxListEvent& event);
-  int last_selected_;
+  WXID last_selected_;
 
  private:
   void BindEvents();
@@ -59,9 +59,9 @@ void QuickOpenDlg::OnKeyUp(wxKeyEvent& event) {
     if (selected.empty()) {
       ::SetSelection(uiFileList, 0, true);
     } else {
-      long last = last_selected_;  //  *selected.begin();
+      WXID last = last_selected_;  //  *selected.begin();
       if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
-      long next = last - 1;
+      WXID next = last - 1;
       ::SetSelection(uiFileList, next, true);
       if (last_selected_ == last) {
         last_selected_ = next;
@@ -73,9 +73,9 @@ void QuickOpenDlg::OnKeyUp(wxKeyEvent& event) {
     if (selected.empty()) {
       ::SetSelection(uiFileList, 0, true);
     } else {
-      long last = last_selected_;  // *selected.rbegin();
+      WXID last = last_selected_;  // *selected.rbegin();
       if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
-      long next = last + 1;
+      WXID next = last + 1;
       ::SetSelection(uiFileList, next, true);
       if (last_selected_ == last) {
         last_selected_ = next;
@@ -244,9 +244,9 @@ void QuickOpenDlg::UpdateFilters() {
 QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const wxString& root,
                            const std::vector<wxString>& files)
     : ui::QuickOpen(parent, wxID_ANY), files_(files), root_(root) {
-  const long file_index = uiFileList->InsertColumn(0, "File");
-  const long path_index = uiFileList->InsertColumn(1, "Path");
-  const long count_index = uiFileList->InsertColumn(2, "Hits");
+  const WXID file_index = uiFileList->InsertColumn(0, "File");
+  const WXID path_index = uiFileList->InsertColumn(1, "Path");
+  const WXID count_index = uiFileList->InsertColumn(2, "Hits");
   uiFileList->SetColumnWidth(file_index, 150);
   uiFileList->SetColumnWidth(path_index, 300);
   uiFileList->SetColumnWidth(count_index, 50);

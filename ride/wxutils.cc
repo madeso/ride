@@ -71,7 +71,7 @@ std::vector<wxString> RemoveEmptyStrings(const std::vector<wxString>& v) {
   return ret;
 }
 
-void SetSelection(wxListCtrl* list, long item, bool select) {
+void SetSelection(wxListCtrl* list, WXID item, bool select) {
   if (select) {
     list->SetItemState(item, wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
   } else {
@@ -79,9 +79,9 @@ void SetSelection(wxListCtrl* list, long item, bool select) {
   }
 }
 
-std::vector<long> GetSelection(wxListCtrl* listctrl) {
-  std::vector<long> ret;
-  long item = -1;
+std::vector<WXID> GetSelection(wxListCtrl* listctrl) {
+  std::vector<WXID> ret;
+  WXID item = -1;
   while (true) {
     item = listctrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item == -1) break;
@@ -91,7 +91,7 @@ std::vector<long> GetSelection(wxListCtrl* listctrl) {
 }
 
 void ClearSelection(wxListCtrl* listctrl) {
-  long item = -1;
+  WXID item = -1;
   while (true) {
     item = listctrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (item == -1) break;

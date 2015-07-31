@@ -238,8 +238,8 @@ void FileEdit::GetSelection(int* start_line, int* start_index, int* end_line,
   assert(start_index);
   assert(end_line);
   assert(end_index);
-  long from = 0;
-  long to = 0;
+  WXID from = 0;
+  WXID to = 0;
   text_->GetSelection(&from, &to);
   FromTextOffsetToLineCol(text_, from, start_line, start_index);
   FromTextOffsetToLineCol(text_, to, end_line, end_index);

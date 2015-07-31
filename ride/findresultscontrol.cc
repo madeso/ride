@@ -7,6 +7,7 @@
 #include "ride/compilermessage.h"
 #include "ride/stcutils.h"
 #include "ride/mainwindow.h"
+#include "ride/wxid.h"
 #include "ride/wxutils.h"
 
 enum {
@@ -97,9 +98,9 @@ void FindResultsControl::OnSelectAll(wxCommandEvent& event) {
 void FindResultsControl::OnCopy(wxCommandEvent& event) { this->Copy(); }
 
 const wxString FindResultsControl::GetContextLineContent() {
-  long line_number = 0;
-  long col = 0;
-  const long index = context_positon_;
+  WXID line_number = 0;
+  WXID col = 0;
+  const WXID index = context_positon_;
   this->PositionToXY(index, &col, &line_number);
   if (line_number == -1) return wxEmptyString;
   const wxString line_content = GetLineText(line_number);
@@ -107,8 +108,8 @@ const wxString FindResultsControl::GetContextLineContent() {
 }
 
 void FindResultsControl::OnDoubleClick(wxMouseEvent& event) {
-  long line_number = 0;
-  long col = 0;
+  WXID line_number = 0;
+  WXID col = 0;
   auto index = this->GetInsertionPoint();
   this->PositionToXY(index, &col, &line_number);
   if (line_number == -1) return;

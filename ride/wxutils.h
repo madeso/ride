@@ -9,6 +9,8 @@
 
 #include <vector>
 
+#include "ride/wxid.h"
+
 class wxContextMenuEvent;
 class wxMenu;
 class wxWindow;
@@ -23,8 +25,8 @@ void AppendEnabled(wxMenu& menu, int id, const wxString& text, bool enabled);
 std::vector<wxString> Split(const wxString& str, const wxString& c);
 std::vector<wxString> RemoveEmptyStrings(const std::vector<wxString>& v);
 
-void SetSelection(wxListCtrl* list, long item, bool select);
-std::vector<long> GetSelection(wxListCtrl* listctrl);
+void SetSelection(wxListCtrl* list, WXID item, bool select);
+std::vector<WXID> GetSelection(wxListCtrl* listctrl);
 void ClearSelection(wxListCtrl* listctrl);
 
 enum class DialogResult { YES, NO, CANCEL };

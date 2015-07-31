@@ -6,6 +6,7 @@
 #include <wx/txtstrm.h>
 
 #include "ride/mainwindow.h"
+#include "ride/wxid.h"
 
 class PipedProcess;
 class Process;
@@ -57,7 +58,7 @@ struct SingleRunner::Pimpl {
 
   SingleRunner* parent_;
   Process* processes_;  // the current running process or NULL
-  long pid_;            // the id of the current or previous running process
+  WXID pid_;            // the id of the current or previous running process
   std::unique_ptr<IdleTimer> idle_timer_;
 
   int exit_code() const {
@@ -171,7 +172,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
 
   const int flags = wxEXEC_ASYNC | RUNNER_CONSOLE_OPTION;
 
-  const long process_id = wxExecute(c.cmd, flags, process, &env);
+  const WXID process_id = wxExecute(c.cmd, flags, process, &env);
 
   // async call
   if (!process_id) {

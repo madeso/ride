@@ -4,6 +4,8 @@
 #include <ride/wx.h>
 #include <wx/editlbox.h>
 
+#include "ride/wxid.h"
+
 //////////////////////////////////////////////////////////////////////////
 
 void SetImageAndRemoveText(wxButton* button, const wxBitmap& img) {
@@ -32,7 +34,7 @@ void ToGui(google::protobuf::int32 data, wxTextCtrl* gui) {
 }
 google::protobuf::int32 ToData_I32(wxTextCtrl* gui) {
   const wxString value = gui->GetValue();
-  long ret = 0;  // NOLINT wx uses long
+  WXID ret = 0;
   if (true == value.ToLong(&ret)) {
     return ret;
   }

@@ -135,9 +135,9 @@ void OutputControl::OnSelectAll(wxCommandEvent& event) { this->SelectAll(); }
 void OutputControl::OnCopy(wxCommandEvent& event) { this->Copy(); }
 
 const wxString OutputControl::GetContextLineContent() {
-  long line_number = 0;
-  long col = 0;
-  const long index = context_positon_;
+  WXID line_number = 0;
+  WXID col = 0;
+  const WXID index = context_positon_;
   this->PositionToXY(index, &col, &line_number);
   if (line_number == -1) return wxEmptyString;
   const wxString line_content = GetLineText(line_number);
@@ -163,9 +163,9 @@ void OutputControl::OnSearchForThisCompilerMessage(wxCommandEvent& event) {
 }
 
 void OutputControl::OnDoubleClick(wxMouseEvent& event) {
-  long line_number = 0;
-  long col = 0;
-  long index = this->GetInsertionPoint();
+  WXID line_number = 0;
+  WXID col = 0;
+  WXID index = this->GetInsertionPoint();
   this->PositionToXY(index, &col, &line_number);
   if (line_number == -1) return;
   wxString line_content = GetLineText(line_number);
