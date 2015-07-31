@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_OUTPUTCONTROL_H
-#define RIDE_OUTPUTCONTROL_H
+#ifndef RIDE_OUTPUTCONTROL_H_
+#define RIDE_OUTPUTCONTROL_H_
 
 #include <ride/wx.h>
 #include <wx/stc/stc.h>
@@ -31,4 +31,4 @@ class OutputControl : public wxStyledTextCtrl {
   int context_positon_;
 };
 
-#endif  // RIDE_OUTPUTCONTROL_H
+#endif  // RIDE_OUTPUTCONTROL_H_

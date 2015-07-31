@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_ENABLEDISABLE_H
-#define RIDE_ENABLEDISABLE_H
+#ifndef RIDE_ENABLEDISABLE_H_
+#define RIDE_ENABLEDISABLE_H_
 
 class wxWindowBase;
 
@@ -14,4 +14,4 @@ class EnableDisable {
   bool enable_;
 };
 
-#endif  // RIDE_ENABLEDISABLE_H
+#endif  // RIDE_ENABLEDISABLE_H_

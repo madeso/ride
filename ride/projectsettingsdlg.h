@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef PROJECTSETTINGS_DLG_H
-#define PROJECTSETTINGS_DLG_H
+#ifndef RIDE_PROJECTSETTINGSDLG_H_
+#define RIDE_PROJECTSETTINGSDLG_H_
 
 #include <ride/wx.h>
 
@@ -11,4 +11,4 @@ class Project;
 void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
                           Project* project);
 
-#endif  // SETTINGS_DLG_H
+#endif  // RIDE_PROJECTSETTINGSDLG_H_

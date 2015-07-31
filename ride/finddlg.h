@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_FINDDLG_H
-#define RIDE_FINDDLG_H
+#ifndef RIDE_FINDDLG_H_
+#define RIDE_FINDDLG_H_
 
 #include <ride/wx.h>
 
@@ -17,4 +17,4 @@ bool ShowFindDlg(MainWindow* main, const wxString& current_selection,
                  wxStyledTextCtrl* output, FindAction find,
                  FindScope find_scope);
 
-#endif  // RIDE_FINDDLG_H
+#endif  // RIDE_FINDDLG_H_

@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_AUTOCOMPLETE_H
-#define RIDE_AUTOCOMPLETE_H
+#ifndef RIDE_AUTOCOMPLETE_H_
+#define RIDE_AUTOCOMPLETE_H_
 
 #include <ride/wx.h>
 class Language;
@@ -22,4 +22,4 @@ void Autocomplete(wxStyledTextCtrl* text, Language* current_language,
                   const wxString& filename, const wxString& root_folder,
                   wxWindow* self, ShowAutoCompleteAction action);
 
-#endif  // RIDE_AUTOCOMPLETE_H
+#endif  // RIDE_AUTOCOMPLETE_H_

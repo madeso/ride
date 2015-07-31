@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_MAINWINDOW_H
-#define RIDE_MAINWINDOW_H
+#ifndef RIDE_MAINWINDOW_H_
+#define RIDE_MAINWINDOW_H_
 
 #include <wx/aui/aui.h>
 
@@ -183,4 +183,4 @@ class MainWindow : public wxFrame {
   wxStatusBar* statusbar_;
 };
 
-#endif  // RIDE_MAINWINDOW_H
+#endif  // RIDE_MAINWINDOW_H_

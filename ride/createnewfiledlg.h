@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_CREATENEWFILEDLG_H
-#define RIDE_CREATENEWFILEDLG_H
+#ifndef RIDE_CREATENEWFILEDLG_H_
+#define RIDE_CREATENEWFILEDLG_H_
 
 #include <ride/wx.h>
 
@@ -24,4 +24,4 @@ class CreateNewFileDlgHandler {
   wxString template_source_;
 };
 
-#endif  // RIDE_CREATENEWFILEDLG_H
+#endif  // RIDE_CREATENEWFILEDLG_H_

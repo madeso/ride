@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_WXUTILS_H
-#define RIDE_WXUTILS_H
+#ifndef RIDE_WXUTILS_H_
+#define RIDE_WXUTILS_H_
 
 #include <wx/gdicmn.h>
 #include <wx/msgdlg.h>
@@ -53,4 +53,4 @@ wxString ToShortString(const wxString& str, int max_length);
 int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos,
                 const wxString& text, int flags, int* findEnd);
 
-#endif  // RIDE_WXUTILS_H
+#endif  // RIDE_WXUTILS_H_

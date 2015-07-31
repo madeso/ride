@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_OUTPUTDIRECTOR_H
-#define RIDE_OUTPUTDIRECTOR_H
+#ifndef RIDE_OUTPUTDIRECTOR_H_
+#define RIDE_OUTPUTDIRECTOR_H_
 
 #include <ride/wx.h>
 #include <vector>
@@ -33,4 +33,4 @@ class OutputDirector {
   std::vector<CompilerMessage> compiler_messages_;
 };
 
-#endif  // RIDE_OUTPUTDIRECTOR_H
+#endif  // RIDE_OUTPUTDIRECTOR_H_

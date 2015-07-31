@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_RUNNER_H
-#define RIDE_RUNNER_H
+#ifndef RIDE_RUNNER_H_
+#define RIDE_RUNNER_H_
 
 #include <ride/wx.h>
 
@@ -67,4 +67,4 @@ class MultiRunner {
   std::vector<Command> commands_;
 };
 
-#endif  // RIDE_RUNNER_H
+#endif  // RIDE_RUNNER_H_

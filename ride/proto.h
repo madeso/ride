@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_PROTO_H
-#define RIDE_PROTO_H
+#ifndef RIDE_PROTO_H_
+#define RIDE_PROTO_H_
 
 #include <google/protobuf/message.h>
 
@@ -16,4 +16,4 @@ bool LoadProtoBinary(google::protobuf::Message* message,
 bool SaveProtoBinary(const google::protobuf::Message& message,
                      const wxFileName& file_name);
 
-#endif  // RIDE_PROTO_H
+#endif  // RIDE_PROTO_H_

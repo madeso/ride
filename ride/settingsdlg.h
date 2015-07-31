@@ -1,11 +1,11 @@
 // Copyright (2015) Gustav
 
-#ifndef SETTINGS_DLG_H
-#define SETTINGS_DLG_H
+#ifndef RIDE_SETTINGSDLG_H_
+#define RIDE_SETTINGSDLG_H_
 
 class wxWindow;
 class MainWindow;
 
 void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow);
 
-#endif  // SETTINGS_DLG_H
+#endif  // RIDE_SETTINGSDLG_H_

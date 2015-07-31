@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_COMPILER_MESSAGE_H
-#define RIDE_COMPILER_MESSAGE_H
+#ifndef RIDE_COMPILERMESSAGE_H_
+#define RIDE_COMPILERMESSAGE_H_
 
 #include <ride/wx.h>
 
@@ -45,4 +45,4 @@ class CompilerMessage {
   wxString message_;
 };
 
-#endif  // RIDE_COMPILER_MESSAGE_H
+#endif  // RIDE_COMPILERMESSAGE_H_

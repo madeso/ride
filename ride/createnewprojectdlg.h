@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_CREATENEWPROJECTDLG_H
-#define RIDE_CREATENEWPROJECTDLG_H
+#ifndef RIDE_CREATENEWPROJECTDLG_H_
+#define RIDE_CREATENEWPROJECTDLG_H_
 
 #include <ride/wx.h>
 
@@ -26,4 +26,4 @@ class CreateNewProjectDlgHandler {
   wxString cargo_command_line_;
 };
 
-#endif  // RIDE_CREATENEWPROJECTDLG_H
+#endif  // RIDE_CREATENEWPROJECTDLG_H_

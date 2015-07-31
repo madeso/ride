@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_FINDCONTROL_H_
-#define RIDE_FINDCONTROL_H_
+#ifndef RIDE_FINDRESULTSCONTROL_H_
+#define RIDE_FINDRESULTSCONTROL_H_
 
 #include <ride/wx.h>
 #include <wx/stc/stc.h>
@@ -32,4 +32,4 @@ class FindResultsControl : public wxStyledTextCtrl {
   MainWindow* main_;
 };
 
-#endif  // RIDE_FINDCONTROL_H_
+#endif  // RIDE_FINDRESULTSCONTROL_H_

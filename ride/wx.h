@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_LOCALWX_H
-#define RIDE_LOCALWX_H
+#ifndef RIDE_WX_H_
+#define RIDE_WX_H_
 
 // headerlint: disable
 
@@ -26,4 +26,4 @@
 #include <wx/wx.h>  // NOLINT header order is b/c compiler fixes
 #endif
 
-#endif  // RIDE_LOCALWX_H
+#endif  // RIDE_WX_H_

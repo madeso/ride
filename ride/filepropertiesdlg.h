@@ -1,11 +1,11 @@
 // Copyright (2015) Gustav
 
-#ifndef SETTINGS_DLG_H
-#define SETTINGS_DLG_H
+#ifndef RIDE_FILEPROPERTIESDLG_H_
+#define RIDE_FILEPROPERTIESDLG_H_
 
 class wxStyledTextCtrl;
 class FileEdit;
 
 void ShowFilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl);
 
-#endif  // SETTINGS_DLG_H
+#endif  // RIDE_FILEPROPERTIESDLG_H_

@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_PROJECTEXPLORER_H
-#define RIDE_PROJECTEXPLORER_H
+#ifndef RIDE_PROJECTEXPLORER_H_
+#define RIDE_PROJECTEXPLORER_H_
 
 #include <ride/wx.h>
 #include <wx/treectrl.h>
@@ -61,4 +61,4 @@ class ProjectExplorer : public wxTreeCtrl {
   std::vector<wxString> files_;
 };
 
-#endif  // RIDE_PROJECTEXPLORER_H
+#endif  // RIDE_PROJECTEXPLORER_H_

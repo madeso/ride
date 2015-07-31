@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_FILEEDIT_H
-#define RIDE_FILEEDIT_H
+#ifndef RIDE_FILEEDIT_H_
+#define RIDE_FILEEDIT_H_
 
 #include <ride/wx.h>
 #include <wx/stc/stc.h>
@@ -115,4 +115,4 @@ class FileEdit : public wxControl {
   void BindEvents();
 };
 
-#endif  // RIDE_FILEEDIT_H
+#endif  // RIDE_FILEEDIT_H_

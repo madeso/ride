@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_STARTPAGE_H
-#define RIDE_STARTPAGE_H
+#ifndef RIDE_STARTPAGE_H_
+#define RIDE_STARTPAGE_H_
 
 #include <ride/wx.h>
 #include "ride/tab.h"
@@ -20,4 +20,4 @@ class StartPageTab : public wxControl {
   wxAuiNotebook* notebook_;
 };
 
-#endif  // RIDE_STARTPAGE_H
+#endif  // RIDE_STARTPAGE_H_

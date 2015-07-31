@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef LOADRESULT_H
-#define LOADRESULT_H
+#ifndef RIDE_LOADRESULT_H_
+#define RIDE_LOADRESULT_H_
 
 #include <ride/wx.h>
 
@@ -18,4 +18,4 @@ class LoadResult {
   bool ok_;
 };
 
-#endif  // LOADRESULT_H
+#endif  // RIDE_LOADRESULT_H_

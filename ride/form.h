@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef FORM_H
-#define FORM_H
+#ifndef RIDE_FORM_H_
+#define RIDE_FORM_H_
 
 #include <google/protobuf/stubs/common.h>
 
@@ -65,4 +65,4 @@ std::vector<wxString> ToData(wxEditableListBox* gui);
 void ToGui(const std::vector<wxString>& data, wxListBox* gui);
 std::vector<wxString> ToData_Content(wxListBox* gui);
 
-#endif  // FORM_H
+#endif  // RIDE_FORM_H_

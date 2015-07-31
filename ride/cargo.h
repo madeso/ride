@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef CARGO_H
-#define CARGO_H
+#ifndef RIDE_CARGO_H_
+#define RIDE_CARGO_H_
 
 #include <ride/wx.h>
 #include <vector>
@@ -34,4 +34,4 @@ class Cargo {
   std::vector<wxString> features_;
 };
 
-#endif  // CARGO_H
+#endif  // RIDE_CARGO_H_

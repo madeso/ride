@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_SETTINGS_H
-#define RIDE_SETTINGS_H
+#ifndef RIDE_SETTINGS_H_
+#define RIDE_SETTINGS_H_
 
 #include <wx/colour.h>
 
@@ -18,4 +18,4 @@ bool SaveSession(wxWindow* main, const ::ride::Session& session);
 wxColor C(const ride::Color& c);
 ride::Color C(const wxColor& c);
 
-#endif  // RIDE_SETTINGS_H
+#endif  // RIDE_SETTINGS_H_

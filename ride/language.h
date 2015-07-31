@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_LANGUAGE_H
-#define RIDE_LANGUAGE_H
+#ifndef RIDE_LANGUAGE_H_
+#define RIDE_LANGUAGE_H_
 
 #include <vector>
 #include <set>
@@ -54,4 +54,4 @@ Language* NullLanguage();
 Language* DetermineLanguage(const wxString& filepath);
 wxString GetFilePattern();
 
-#endif  // RIDE_LANGUAGE_H
+#endif  // RIDE_LANGUAGE_H_

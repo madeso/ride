@@ -1,5 +1,5 @@
-#ifndef RIDE_TAB_H
-#define RIDE_TAB_H
+#ifndef RIDE_TAB_H_
+#define RIDE_TAB_H_
 
 class StartPageTab;
 class FileEdit;
@@ -18,4 +18,4 @@ class Tab {
   StartPageTab* start_;
 };
 
-#endif  // RIDE_TAB_H
+#endif  // RIDE_TAB_H_

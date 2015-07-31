@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
-#ifndef RIDE_CMDRUNNER_H
-#define RIDE_CMDRUNNER_H
+#ifndef RIDE_CMDRUNNER_H_
+#define RIDE_CMDRUNNER_H_
 
 #include <ride/wx.h>
 #include "ride/runner.h"
@@ -19,4 +19,4 @@ class CmdRunner : public SingleRunner {
                         wxString* out);
 };
 
-#endif  // RIDE_CMDRUNNER_H
+#endif  // RIDE_CMDRUNNER_H_
