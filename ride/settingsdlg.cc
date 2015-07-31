@@ -153,7 +153,7 @@ class StyleLink {
  public:
   StyleLink(const wxString& name) : name_(name) {}
 
-  virtual ~StyleLink(){};
+  virtual ~StyleLink() {}
 
   const wxString& name() const {
     assert(this);

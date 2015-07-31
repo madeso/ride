@@ -71,12 +71,11 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
   AllToGui(true);
 
   // disable all cargo related gui as we can't save toml files yet
-  EnableDisable(false) << uiCargoName << uiCargoVersion
-      // we can't select or scroll in disabled listboxes
-      // so lets keep them enabled since we can't really do anything in them
-      // << uiCargoAuthors
-      // << uiCargoDependencies
-      ;
+  EnableDisable(false) << uiCargoName << uiCargoVersion;
+  // we can't select or scroll in disabled listboxes
+  // so lets keep them enabled since we can't really do anything in them
+  // << uiCargoAuthors
+  // << uiCargoDependencies
 
   SetImageAndRemoveText(uiBuildConfigurationTargetHelp, wxART_HELP);
   SetImageAndRemoveText(uiBuildConfigurationCustomArgsHelp, wxART_TIP);
