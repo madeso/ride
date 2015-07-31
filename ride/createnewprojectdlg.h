@@ -7,7 +7,7 @@
 
 class CreateNewProjectDlgHandler {
  public:
-  CreateNewProjectDlgHandler(wxWindow* parent);
+  explicit CreateNewProjectDlgHandler(wxWindow* parent);
 
   bool ShowModal();
 

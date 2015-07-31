@@ -13,7 +13,7 @@ class MainWindow;
  */
 class FindResultsControl : public wxStyledTextCtrl {
  public:
-  FindResultsControl(MainWindow* main);
+  explicit FindResultsControl(MainWindow* main);
 
   void UpdateStyle();
   const wxString GetContextLineContent();

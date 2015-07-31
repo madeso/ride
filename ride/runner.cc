@@ -24,7 +24,7 @@ Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {}
 /// compiler messages instead of waiting to the end to read them all
 class IdleTimer : public wxTimer {
  public:
-  IdleTimer(SingleRunner::Pimpl* p) : pimpl_(p) {}
+  explicit IdleTimer(SingleRunner::Pimpl* p) : pimpl_(p) {}
   void Notify();
 
   SingleRunner::Pimpl* pimpl_;
@@ -224,7 +224,7 @@ int SingleRunner::GetExitCode() {
 
 class MultiRunner::Runner : public SingleRunner {
  public:
-  Runner(MultiRunner* r) : runner_(r) { assert(runner_); }
+  explicit Runner(MultiRunner* r) : runner_(r) { assert(runner_); }
 
   virtual void Append(const wxString& str) {
     assert(runner_);

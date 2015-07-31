@@ -151,7 +151,7 @@ void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow) {
 
 class StyleLink {
  public:
-  StyleLink(const wxString& name) : name_(name) {}
+  explicit StyleLink(const wxString& name) : name_(name) {}
 
   virtual ~StyleLink() {}
 
@@ -468,7 +468,7 @@ void SettingsDlg::SendIndicatorToMain() {
 
 class IndicatorLink {
  public:
-  IndicatorLink(const wxString& name) : name_(name) {}
+  explicit IndicatorLink(const wxString& name) : name_(name) {}
 
   const wxString& name() const {
     assert(this);
@@ -562,7 +562,7 @@ void SettingsDlg::OnMarkerComboChanged(wxColourPickerEvent& event) {
 
 class MarkerLink {
  public:
-  MarkerLink(const wxString& name) : name_(name) {}
+  explicit MarkerLink(const wxString& name) : name_(name) {}
 
   const wxString& name() const {
     assert(this);

@@ -8,8 +8,8 @@ class FileEdit;
 
 class Tab {
  public:
-  Tab(FileEdit* edit);
-  Tab(StartPageTab* start);
+  explicit Tab(FileEdit* edit);
+  explicit Tab(StartPageTab* start);
   ~Tab();
 
   StartPageTab* ToStartPage();

@@ -10,7 +10,7 @@ class MainWindow;
 
 class OutputControl : public wxStyledTextCtrl {
  public:
-  OutputControl(MainWindow* main);
+  explicit OutputControl(MainWindow* main);
 
   void UpdateStyle();
   const wxString GetContextLineContent();

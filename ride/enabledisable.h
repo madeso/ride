@@ -7,7 +7,7 @@ class wxWindowBase;
 
 class EnableDisable {
  public:
-  EnableDisable(bool enable);
+  explicit EnableDisable(bool enable);
   const EnableDisable& operator<<(wxWindowBase* b) const;
 
  private:
