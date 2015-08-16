@@ -31,10 +31,18 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   void AllToGui(bool togui);
   void CargoToGui(bool togui);
   void EditorToGui(bool togui);
+  void BuildToGui(bool togui);
 
   void OnlyAllowNumberChars(wxKeyEvent& event);
   void OnTabWdithChanged(wxCommandEvent& event);
   void OnEditorUseTabsClicked(wxCommandEvent& event);
+
+  void OnBuildConfiguration(wxCommandEvent& event);
+  void OnBuildConfigurationModify(wxCommandEvent& event);
+  void OnBuildCheckbox(wxCommandEvent& event);
+  void OnBuildText(wxCommandEvent& event);
+  void OnBuildTargetHelp(wxCommandEvent& event);
+  void OnBuildCustomArgHelp(wxCommandEvent& event);
 
  protected:
   Cargo cargo_;
@@ -44,6 +52,7 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   Project* project_;
   ride::Project project_backup_;
   bool allow_editor_to_gui_;
+  bool allow_build_to_gui_;
 };
 
 void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
@@ -74,7 +83,8 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
       main_window_(mainwindow),
       project_(project),
       project_backup_(project->project()),
-      allow_editor_to_gui_(true) {
+      allow_editor_to_gui_(true),
+      allow_build_to_gui_(true) {
   LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
 
   AllToGui(true);
@@ -112,6 +122,7 @@ void ProjectSettingsDlg::OnOk(wxCommandEvent& event) {
 void ProjectSettingsDlg::AllToGui(bool togui) {
   CargoToGui(togui);
   EditorToGui(togui);
+  BuildToGui(togui);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -157,4 +168,65 @@ void ProjectSettingsDlg::OnTabWdithChanged(wxCommandEvent& event) {
 }
 void ProjectSettingsDlg::OnEditorUseTabsClicked(wxCommandEvent& event) {
   EditorToGui(false);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void ProjectSettingsDlg::OnBuildConfiguration(wxCommandEvent& event) {
+  BuildToGui(true);
+}
+
+void ProjectSettingsDlg::OnBuildConfigurationModify(wxCommandEvent& event) {
+  // todo
+}
+
+void ProjectSettingsDlg::OnBuildCheckbox(wxCommandEvent& event) {
+  BuildToGui(false);
+}
+
+void ProjectSettingsDlg::OnBuildText(wxCommandEvent& event) {
+  BuildToGui(false);
+}
+
+void ProjectSettingsDlg::OnBuildTargetHelp(wxCommandEvent& event) {
+  ShowInfo(this, "this is a build target info", "info");
+}
+
+void ProjectSettingsDlg::OnBuildCustomArgHelp(wxCommandEvent& event) {
+  ShowInfo(this, "this is a custom argument info", "info");
+}
+
+void ProjectSettingsDlg::BuildToGui(bool togui) {
+  if (togui && static_cast<wxItemContainer*>(uiBuildConfiguration)->IsEmpty()) {
+    for (int i = 0; i < project_->project().build_settings_size(); ++i) {
+      ride::BuildSetting* bs =
+          project_->project_ptr()->mutable_build_settings(i);
+      uiBuildConfiguration->Append(bs->name().c_str(),
+                                   reinterpret_cast<void*>(bs));
+    }
+  }
+
+  const int selection = uiBuildConfiguration->GetSelection();
+  const bool found = selection != wxNOT_FOUND;
+  EnableDisable(found) << uiBuildConfigurationRelease
+                       << uiBuildConfigurationDefaultFeatures
+                       << uiBuildConfigurationVerbose
+                       << uiBuildConfigurationTarget
+                       << uiBuildConfigurationTargetHelp
+                       << uiBuildConfigurationCustomArgs
+                       << uiBuildConfigurationCustomArgsHelp << uiBuildFeatures
+                       << uiBuildFeatureAdd << uiBuildFeatureRemove
+                       << uiBuildFeatureUp << uiBuildFeatureDown
+                       << uiBuildFeatureEdit;
+
+  if (!found) return;
+  void* d = uiBuildConfiguration->GetClientData(selection);
+  ride::BuildSetting& setting = *reinterpret_cast<ride::BuildSetting*>(d);
+
+  DIALOG_DATA(setting, release, uiBuildConfigurationRelease, );
+  DIALOG_DATA(setting, default_features, uiBuildConfigurationDefaultFeatures, );
+  DIALOG_DATA(setting, verbose, uiBuildConfigurationVerbose, );
+
+  DIALOG_DATA(setting, target, uiBuildConfigurationTarget, _Str);
+  DIALOG_DATA(setting, custom_arguments, uiBuildConfigurationCustomArgs, _Str);
 }

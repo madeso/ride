@@ -1415,7 +1415,7 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	m_editorPanel->SetSizer( fgSizer16 );
 	m_editorPanel->Layout();
 	fgSizer16->Fit( m_editorPanel );
-	m_notebook3->AddPage( m_editorPanel, wxT("&Editor"), true );
+	m_notebook3->AddPage( m_editorPanel, wxT("&Editor"), false );
 	   m_buildPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer25;
 	bSizer25 = new wxBoxSizer( wxVERTICAL );
@@ -1539,7 +1539,7 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	m_buildPanel->SetSizer( bSizer25 );
 	m_buildPanel->Layout();
 	bSizer25->Fit(    m_buildPanel );
-	m_notebook3->AddPage(    m_buildPanel, wxT("&Build"), false );
+	m_notebook3->AddPage(    m_buildPanel, wxT("&Build"), true );
 	m_runPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook3->AddPage( m_runPanel, wxT("&Run"), false );
 	
@@ -1566,6 +1566,15 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	 uiEditorTabWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( ProjectSettings::OnlyAllowNumberChars ), NULL, this );
 	 uiEditorTabWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnTabWdithChanged ), NULL, this );
 	uiEditorUseTabs->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnEditorUseTabsClicked ), NULL, this );
+	uiBuildConfiguration->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( ProjectSettings::OnBuildConfiguration ), NULL, this );
+	uiBuildManageConfigurations->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildConfigurationModify ), NULL, this );
+	uiBuildConfigurationRelease->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCheckbox ), NULL, this );
+	uiBuildConfigurationDefaultFeatures->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCheckbox ), NULL, this );
+	 uiBuildConfigurationVerbose->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCheckbox ), NULL, this );
+	uiBuildConfigurationTarget->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnBuildText ), NULL, this );
+	uiBuildConfigurationTargetHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildTargetHelp ), NULL, this );
+	uiBuildConfigurationCustomArgs->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnBuildText ), NULL, this );
+	uiBuildConfigurationCustomArgsHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCustomArgHelp ), NULL, this );
 	m_sdbSizer8Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
 	m_sdbSizer8Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
 	m_sdbSizer8OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );
@@ -1577,6 +1586,15 @@ ProjectSettings::~ProjectSettings()
 	 uiEditorTabWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( ProjectSettings::OnlyAllowNumberChars ), NULL, this );
 	 uiEditorTabWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnTabWdithChanged ), NULL, this );
 	uiEditorUseTabs->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnEditorUseTabsClicked ), NULL, this );
+	uiBuildConfiguration->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( ProjectSettings::OnBuildConfiguration ), NULL, this );
+	uiBuildManageConfigurations->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildConfigurationModify ), NULL, this );
+	uiBuildConfigurationRelease->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCheckbox ), NULL, this );
+	uiBuildConfigurationDefaultFeatures->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCheckbox ), NULL, this );
+	 uiBuildConfigurationVerbose->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCheckbox ), NULL, this );
+	uiBuildConfigurationTarget->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnBuildText ), NULL, this );
+	uiBuildConfigurationTargetHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildTargetHelp ), NULL, this );
+	uiBuildConfigurationCustomArgs->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnBuildText ), NULL, this );
+	uiBuildConfigurationCustomArgsHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCustomArgHelp ), NULL, this );
 	m_sdbSizer8Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
 	m_sdbSizer8Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
 	m_sdbSizer8OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );

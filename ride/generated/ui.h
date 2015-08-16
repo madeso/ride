@@ -435,6 +435,12 @@ namespace ui
 			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
 			virtual void OnTabWdithChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnEditorUseTabsClicked( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildConfiguration( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildConfigurationModify( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildCheckbox( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildText( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildTargetHelp( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildCustomArgHelp( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
