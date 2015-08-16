@@ -432,6 +432,9 @@ namespace ui
 			wxButton* m_sdbSizer8Cancel;
 			
 			// Virtual event handlers, overide them in your derived class
+			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
+			virtual void OnTabWdithChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnEditorUseTabsClicked( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }

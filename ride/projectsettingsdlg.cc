@@ -30,6 +30,11 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   bool Apply();
   void AllToGui(bool togui);
   void CargoToGui(bool togui);
+  void EditorToGui(bool togui);
+
+  void OnlyAllowNumberChars(wxKeyEvent& event);
+  void OnTabWdithChanged(wxCommandEvent& event);
+  void OnEditorUseTabsClicked(wxCommandEvent& event);
 
  protected:
   Cargo cargo_;
@@ -37,6 +42,8 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
  private:
   MainWindow* main_window_;
   Project* project_;
+  ride::Project project_backup_;
+  bool allow_editor_to_gui_;
 };
 
 void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
@@ -65,7 +72,9 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
                                        Project* project)
     : ::ui::ProjectSettings(parent, wxID_ANY),
       main_window_(mainwindow),
-      project_(project) {
+      project_(project),
+      project_backup_(project->project()),
+      allow_editor_to_gui_(true) {
   LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
 
   AllToGui(true);
@@ -88,7 +97,11 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
 
 void ProjectSettingsDlg::OnApply(wxCommandEvent& event) { Apply(); }
 
-void ProjectSettingsDlg::OnCancel(wxCommandEvent& event) { EndModal(wxCANCEL); }
+void ProjectSettingsDlg::OnCancel(wxCommandEvent& event) {
+  project_->set_project(project_backup_);
+  EditorToGui(true);
+  EndModal(wxCANCEL);
+}
 
 void ProjectSettingsDlg::OnOk(wxCommandEvent& event) {
   if (Apply()) {
@@ -96,12 +109,16 @@ void ProjectSettingsDlg::OnOk(wxCommandEvent& event) {
   }
 }
 
-void ProjectSettingsDlg::AllToGui(bool togui) { CargoToGui(togui); }
+void ProjectSettingsDlg::AllToGui(bool togui) {
+  CargoToGui(togui);
+  EditorToGui(togui);
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 bool ProjectSettingsDlg::Apply() {
   AllToGui(false);
+  project_backup_ = project_->project();
 
   return true;
 }
@@ -114,4 +131,30 @@ void ProjectSettingsDlg::CargoToGui(bool togui) {
   DIALOG_DATA(cargo_, authors, uiCargoAuthors, _Content);
   DIALOG_DATA(cargo_, dependencies, uiCargoDependencies, _Content);
   DIALOG_DATA(cargo_, features, uiCargoFeatures, _Content);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void ProjectSettingsDlg::EditorToGui(bool togui) {
+  if (allow_editor_to_gui_ == false) return;
+  allow_editor_to_gui_ = false;
+  ride::Project& project = *project_->project_ptr();
+  DIALOG_DATA(project, tabwidth, uiEditorTabWidth, _I32);
+  DIALOG_DATA(project, usetabs, uiEditorUseTabs, );
+
+  if (togui == false) {
+    main_window_->ProjectSettingsHasChanged();
+    main_window_->ProjectSettingsHasChanged();
+  }
+  allow_editor_to_gui_ = true;
+}
+
+void ProjectSettingsDlg::OnlyAllowNumberChars(wxKeyEvent& event) {
+  ::OnlyAllowNumberChars(event);
+}
+void ProjectSettingsDlg::OnTabWdithChanged(wxCommandEvent& event) {
+  EditorToGui(false);
+}
+void ProjectSettingsDlg::OnEditorUseTabsClicked(wxCommandEvent& event) {
+  EditorToGui(false);
 }

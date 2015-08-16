@@ -23,6 +23,10 @@ class Project : public MultiRunner {
   void set_tabwidth(int tabwidth);
   void set_usetabs(bool usetabs);
 
+  const ride::Project& project() const;
+  ride::Project* project_ptr();
+  void set_project(const ride::Project& project);
+
   const wxString GetCargoFile() const;
   const wxString GetProjectFile() const;
   const wxString GetUserFile() const;

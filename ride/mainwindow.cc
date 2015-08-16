@@ -780,6 +780,8 @@ void MainWindow::set_settings(const ride::Settings& settings) {
   project_explorer_->UpdateColors();
 }
 
+void MainWindow::ProjectSettingsHasChanged() { UpdateAllEdits(); }
+
 void MainWindow::UpdateAllEdits() {
   for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount();
        ++tab_index) {

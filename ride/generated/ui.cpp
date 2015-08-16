@@ -5,7 +5,7 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include <ride/wx.h>
+#include "ride/wx.h"
 
 #include "ui.h"
 
@@ -1396,26 +1396,26 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	m_staticText32 = new wxStaticText( m_editorPanel, wxID_ANY, wxT("Theese settings control the editor for the current project\nand are saved next to Cargo.toml in a file called project.ride"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText32->Wrap( -1 );
-	fgSizer16->Add( m_staticText32, 0, wxALL, 5 );
+	fgSizer16->Add( m_staticText32, 0, wxALL|wxEXPAND, 5 );
 	
 	m_staticText31 = new wxStaticText( m_editorPanel, wxID_ANY, wxT("Tab width:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText31->Wrap( -1 );
 	fgSizer16->Add( m_staticText31, 0, wxALL, 5 );
 	
 	 uiEditorTabWidth = new wxTextCtrl( m_editorPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer16->Add(  uiEditorTabWidth, 1, wxALL, 5 );
+	fgSizer16->Add(  uiEditorTabWidth, 1, wxALL|wxEXPAND, 5 );
 	
 	
 	fgSizer16->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	uiEditorUseTabs = new wxCheckBox( m_editorPanel, wxID_ANY, wxT("Use tabs"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer16->Add( uiEditorUseTabs, 0, wxALL, 5 );
+	fgSizer16->Add( uiEditorUseTabs, 0, wxALL|wxEXPAND, 5 );
 	
 	
 	m_editorPanel->SetSizer( fgSizer16 );
 	m_editorPanel->Layout();
 	fgSizer16->Fit( m_editorPanel );
-	m_notebook3->AddPage( m_editorPanel, wxT("&Editor"), false );
+	m_notebook3->AddPage( m_editorPanel, wxT("&Editor"), true );
 	   m_buildPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer25;
 	bSizer25 = new wxBoxSizer( wxVERTICAL );
@@ -1539,7 +1539,7 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	m_buildPanel->SetSizer( bSizer25 );
 	m_buildPanel->Layout();
 	bSizer25->Fit(    m_buildPanel );
-	m_notebook3->AddPage(    m_buildPanel, wxT("&Build"), true );
+	m_notebook3->AddPage(    m_buildPanel, wxT("&Build"), false );
 	m_runPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook3->AddPage( m_runPanel, wxT("&Run"), false );
 	
@@ -1563,6 +1563,9 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	 uiEditorTabWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( ProjectSettings::OnlyAllowNumberChars ), NULL, this );
+	 uiEditorTabWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnTabWdithChanged ), NULL, this );
+	uiEditorUseTabs->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnEditorUseTabsClicked ), NULL, this );
 	m_sdbSizer8Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
 	m_sdbSizer8Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
 	m_sdbSizer8OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );
@@ -1571,6 +1574,9 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 ProjectSettings::~ProjectSettings()
 {
 	// Disconnect Events
+	 uiEditorTabWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( ProjectSettings::OnlyAllowNumberChars ), NULL, this );
+	 uiEditorTabWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnTabWdithChanged ), NULL, this );
+	uiEditorUseTabs->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnEditorUseTabsClicked ), NULL, this );
 	m_sdbSizer8Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
 	m_sdbSizer8Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
 	m_sdbSizer8OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );

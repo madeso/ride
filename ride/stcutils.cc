@@ -360,11 +360,12 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set,
 #undef FRONT_AND_BACK
 
   // set spaces and indention
-  text_ctrl->SetTabWidth(project ? project->tabwidth() : set.tabwidth());
+  const int tabwidth = project ? project->tabwidth() : set.tabwidth();
+  text_ctrl->SetTabWidth(tabwidth);
   text_ctrl->SetUseTabs(project ? project->usetabs() : set.usetabs());
   text_ctrl->SetTabIndents(set.tabindents());
   text_ctrl->SetBackSpaceUnIndents(set.backspaceunindents());
-  text_ctrl->SetIndent(set.tabwidth());
+  text_ctrl->SetIndent(tabwidth);
 
   text_ctrl->SetViewEOL(set.displayeolenable());
   text_ctrl->SetIndentationGuides(set.indentguideenable());

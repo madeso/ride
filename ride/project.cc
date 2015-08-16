@@ -59,6 +59,10 @@ bool Project::usetabs() const { return project_.usetabs(); }
 void Project::set_tabwidth(int tabwidth) { project_.set_tabwidth(tabwidth); }
 void Project::set_usetabs(bool usetabs) { project_.set_usetabs(usetabs); }
 
+const ride::Project& Project::project() const { return project_; }
+ride::Project* Project::project_ptr() { return &project_; }
+void Project::set_project(const ride::Project& project) { project_ = project; }
+
 const wxString Project::GetCargoFile() const {
   if (root_folder_.IsEmpty()) return "";
   wxFileName cargo(root_folder_, "cargo.toml");

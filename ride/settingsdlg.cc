@@ -815,14 +815,5 @@ void SettingsDlg::EditToGui(bool togui) {
 //////////////////////////////////////////////////////////////////////////
 
 void SettingsDlg::OnlyAllowNumberChars(wxKeyEvent& event) {
-  const wxString NUMBERS = "0123456789";
-  if (event.m_uniChar == 0) {
-    event.Skip();
-  }
-  int index = NUMBERS.Index(event.m_uniChar);
-  if (index < 0) {
-    // event.Skip();
-  } else {
-    event.Skip();
-  }
+  ::OnlyAllowNumberChars(event);
 }

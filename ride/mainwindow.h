@@ -54,6 +54,7 @@ class MainWindow : public wxFrame {
 
   void OpenCompilerMessage(const CompilerMessage& message);
   void FileHasBeenRenamed(const wxString& old_path, const wxString& new_path);
+  void ProjectSettingsHasChanged();
 
   void SaveAllChangedProjectFiles();
   void ReloadFilesIfNeeded();
