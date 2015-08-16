@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 void OnlyAllowNumberChars(wxKeyEvent& event) {
-  const wxString NUMBERS = "0123456789";
+  const wxString NUMBERS = "0123456789\b";
   if (event.m_uniChar == 0) {
     event.Skip();
   }
