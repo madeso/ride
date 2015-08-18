@@ -275,6 +275,8 @@ void ProjectSettingsDlg::OnBuildFeatureEdit(wxCommandEvent& event) {
   if (build == NULL) return;
 
   const int selection = uiBuildFeatures->GetSelection();
+  if (selection == -1) return;
+
   wxTextEntryDialog entry(this, "New feature name");
   entry.SetValue(build->features(selection));
   if (entry.ShowModal() != wxID_OK) return;
@@ -283,7 +285,21 @@ void ProjectSettingsDlg::OnBuildFeatureEdit(wxCommandEvent& event) {
 }
 
 void ProjectSettingsDlg::OnBuildFeatureRemove(wxCommandEvent& event) {
-  event.Skip();
+  ride::BuildSetting* build = GetSelectedBuildSetting();
+  if (build == NULL) return;
+
+  const int selection = uiBuildFeatures->GetSelection();
+  if (selection == -1) return;
+
+  build->mutable_features()->DeleteSubrange(selection, 1);
+
+  // move back one
+  int new_selection = selection - 1;
+  // if there aren't a selection and there are more items, select the first one
+  if (new_selection == -1 && build->features_size() > 0) new_selection = 0;
+  uiBuildFeatures->SetSelection(new_selection);
+
+  BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureUp(wxCommandEvent& event) {
