@@ -262,6 +262,7 @@ ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting() {
 
 void ProjectSettingsDlg::OnBuildFeatureAdd(wxCommandEvent& event) {
   ride::BuildSetting* build = GetSelectedBuildSetting();
+  if (build == NULL) return;
   wxTextEntryDialog entry(this, "Feature name");
   if (entry.ShowModal() != wxID_OK) return;
   std::string* new_feature = build->add_features();
@@ -270,7 +271,15 @@ void ProjectSettingsDlg::OnBuildFeatureAdd(wxCommandEvent& event) {
 }
 
 void ProjectSettingsDlg::OnBuildFeatureEdit(wxCommandEvent& event) {
-  event.Skip();
+  ride::BuildSetting* build = GetSelectedBuildSetting();
+  if (build == NULL) return;
+
+  const int selection = uiBuildFeatures->GetSelection();
+  wxTextEntryDialog entry(this, "New feature name");
+  entry.SetValue(build->features(selection));
+  if (entry.ShowModal() != wxID_OK) return;
+  build->set_features(selection, entry.GetValue().c_str());
+  BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureRemove(wxCommandEvent& event) {
