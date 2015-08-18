@@ -441,6 +441,11 @@ namespace ui
 			virtual void OnBuildText( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnBuildTargetHelp( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnBuildCustomArgHelp( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildFeatureAdd( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildFeatureEdit( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildFeatureRemove( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildFeatureUp( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnBuildFeatureDown( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }

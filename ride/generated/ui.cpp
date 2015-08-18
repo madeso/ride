@@ -1575,6 +1575,11 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	uiBuildConfigurationTargetHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildTargetHelp ), NULL, this );
 	uiBuildConfigurationCustomArgs->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnBuildText ), NULL, this );
 	uiBuildConfigurationCustomArgsHelp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCustomArgHelp ), NULL, this );
+	uiBuildFeatureAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureAdd ), NULL, this );
+	uiBuildFeatureEdit->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureEdit ), NULL, this );
+	uiBuildFeatureRemove->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureRemove ), NULL, this );
+	uiBuildFeatureUp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureUp ), NULL, this );
+	uiBuildFeatureDown->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureDown ), NULL, this );
 	m_sdbSizer8Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
 	m_sdbSizer8Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
 	m_sdbSizer8OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );
@@ -1595,6 +1600,11 @@ ProjectSettings::~ProjectSettings()
 	uiBuildConfigurationTargetHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildTargetHelp ), NULL, this );
 	uiBuildConfigurationCustomArgs->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnBuildText ), NULL, this );
 	uiBuildConfigurationCustomArgsHelp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildCustomArgHelp ), NULL, this );
+	uiBuildFeatureAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureAdd ), NULL, this );
+	uiBuildFeatureEdit->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureEdit ), NULL, this );
+	uiBuildFeatureRemove->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureRemove ), NULL, this );
+	uiBuildFeatureUp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureUp ), NULL, this );
+	uiBuildFeatureDown->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureDown ), NULL, this );
 	m_sdbSizer8Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
 	m_sdbSizer8Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
 	m_sdbSizer8OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );

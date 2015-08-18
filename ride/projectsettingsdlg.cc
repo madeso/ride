@@ -4,6 +4,9 @@
 
 #include <wx/editlbox.h>
 #include <wx/fontenum.h>
+#include <wx/textdlg.h>
+
+#include <string>
 
 #include "ride/generated/ui.h"
 
@@ -32,7 +35,9 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   void CargoToGui(bool togui);
   void EditorToGui(bool togui);
   void BuildToGui(bool togui);
+  ride::BuildSetting* GetSelectedBuildSetting();
 
+ protected:
   void OnlyAllowNumberChars(wxKeyEvent& event);
   void OnTabWdithChanged(wxCommandEvent& event);
   void OnEditorUseTabsClicked(wxCommandEvent& event);
@@ -43,6 +48,12 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   void OnBuildText(wxCommandEvent& event);
   void OnBuildTargetHelp(wxCommandEvent& event);
   void OnBuildCustomArgHelp(wxCommandEvent& event);
+
+  void OnBuildFeatureAdd(wxCommandEvent& event);
+  void OnBuildFeatureEdit(wxCommandEvent& event);
+  void OnBuildFeatureRemove(wxCommandEvent& event);
+  void OnBuildFeatureUp(wxCommandEvent& event);
+  void OnBuildFeatureDown(wxCommandEvent& event);
 
  protected:
   Cargo cargo_;
@@ -206,22 +217,18 @@ void ProjectSettingsDlg::BuildToGui(bool togui) {
     }
   }
 
-  const int selection = uiBuildConfiguration->GetSelection();
-  const bool found = selection != wxNOT_FOUND;
-  EnableDisable(found) << uiBuildConfigurationRelease
-                       << uiBuildConfigurationDefaultFeatures
-                       << uiBuildConfigurationVerbose
-                       << uiBuildConfigurationTarget
-                       << uiBuildConfigurationTargetHelp
-                       << uiBuildConfigurationCustomArgs
-                       << uiBuildConfigurationCustomArgsHelp << uiBuildFeatures
-                       << uiBuildFeatureAdd << uiBuildFeatureRemove
-                       << uiBuildFeatureUp << uiBuildFeatureDown
-                       << uiBuildFeatureEdit;
+  ride::BuildSetting* setting_ptr = GetSelectedBuildSetting();
+  EnableDisable(setting_ptr != NULL)
+      << uiBuildConfigurationRelease << uiBuildConfigurationDefaultFeatures
+      << uiBuildConfigurationVerbose << uiBuildConfigurationTarget
+      << uiBuildConfigurationTargetHelp << uiBuildConfigurationCustomArgs
+      << uiBuildConfigurationCustomArgsHelp << uiBuildFeatures
+      << uiBuildFeatureAdd << uiBuildFeatureRemove << uiBuildFeatureUp
+      << uiBuildFeatureDown << uiBuildFeatureEdit;
 
-  if (!found) return;
-  void* d = uiBuildConfiguration->GetClientData(selection);
-  ride::BuildSetting& setting = *reinterpret_cast<ride::BuildSetting*>(d);
+  if (setting_ptr == NULL) return;
+
+  ride::BuildSetting& setting = *setting_ptr;
 
   DIALOG_DATA(setting, release, uiBuildConfigurationRelease, );
   DIALOG_DATA(setting, default_features, uiBuildConfigurationDefaultFeatures, );
@@ -229,4 +236,51 @@ void ProjectSettingsDlg::BuildToGui(bool togui) {
 
   DIALOG_DATA(setting, target, uiBuildConfigurationTarget, _Str);
   DIALOG_DATA(setting, custom_arguments, uiBuildConfigurationCustomArgs, _Str);
+
+  if (togui) {
+    int selection = uiBuildFeatures->GetSelection();
+    uiBuildFeatures->Clear();
+    for (int i = 0; i < setting.features_size(); ++i) {
+      uiBuildFeatures->AppendString(setting.features(i));
+    }
+    if (setting.features_size() > 0) {
+      uiBuildFeatures->SetSelection(selection);
+    }
+  }
+}
+
+ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting() {
+  const int selection = uiBuildConfiguration->GetSelection();
+  const bool found = selection != wxNOT_FOUND;
+
+  if (!found) return NULL;
+  void* d = uiBuildConfiguration->GetClientData(selection);
+  ride::BuildSetting* setting = reinterpret_cast<ride::BuildSetting*>(d);
+
+  return setting;
+}
+
+void ProjectSettingsDlg::OnBuildFeatureAdd(wxCommandEvent& event) {
+  ride::BuildSetting* build = GetSelectedBuildSetting();
+  wxTextEntryDialog entry(this, "Feature name");
+  if (entry.ShowModal() != wxID_OK) return;
+  std::string* new_feature = build->add_features();
+  *new_feature = entry.GetValue().c_str();
+  BuildToGui(true);
+}
+
+void ProjectSettingsDlg::OnBuildFeatureEdit(wxCommandEvent& event) {
+  event.Skip();
+}
+
+void ProjectSettingsDlg::OnBuildFeatureRemove(wxCommandEvent& event) {
+  event.Skip();
+}
+
+void ProjectSettingsDlg::OnBuildFeatureUp(wxCommandEvent& event) {
+  event.Skip();
+}
+
+void ProjectSettingsDlg::OnBuildFeatureDown(wxCommandEvent& event) {
+  event.Skip();
 }
