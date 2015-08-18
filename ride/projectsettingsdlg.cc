@@ -6,6 +6,7 @@
 #include <wx/fontenum.h>
 #include <wx/textdlg.h>
 
+#include <algorithm>
 #include <string>
 
 #include "ride/generated/ui.h"
@@ -303,9 +304,33 @@ void ProjectSettingsDlg::OnBuildFeatureRemove(wxCommandEvent& event) {
 }
 
 void ProjectSettingsDlg::OnBuildFeatureUp(wxCommandEvent& event) {
-  event.Skip();
+  ride::BuildSetting* build = GetSelectedBuildSetting();
+  if (build == NULL) return;
+
+  const int selection = uiBuildFeatures->GetSelection();
+  if (selection == -1) return;
+
+  const int next_index = selection - 1;
+  if (next_index == -1) return;
+
+  std::swap(*build->mutable_features(selection),
+            *build->mutable_features(next_index));
+  uiBuildFeatures->SetSelection(next_index);
+  BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureDown(wxCommandEvent& event) {
-  event.Skip();
+  ride::BuildSetting* build = GetSelectedBuildSetting();
+  if (build == NULL) return;
+
+  const int selection = uiBuildFeatures->GetSelection();
+  if (selection == -1) return;
+
+  const int next_index = selection + 1;
+  if (next_index >= build->features_size()) return;
+
+  std::swap(*build->mutable_features(selection),
+            *build->mutable_features(next_index));
+  uiBuildFeatures->SetSelection(next_index);
+  BuildToGui(true);
 }
