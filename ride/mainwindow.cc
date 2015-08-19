@@ -185,8 +185,11 @@ void MainWindow::OnActivated(wxActivateEvent& event) {
 
     // last focus is here since alt-tab seems to really screw with the focusing
     if (last_focus_) {
-      last_focus_->SetFocus();
-      last_focus_->SetFocusFromKbd();
+      // store the last focus since a focus change
+      // might change the focus variable
+      wxWindow* focus = last_focus_;
+      focus->SetFocus();
+      focus->SetFocusFromKbd();
     }
   } else {
     last_focus_ = FindFocus();
