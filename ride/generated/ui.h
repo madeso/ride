@@ -425,6 +425,8 @@ namespace ui
 			wxButton* uiBuildFeatureRemove;
 			wxButton* uiBuildFeatureUp;
 			wxButton* uiBuildFeatureDown;
+			wxStaticText* m_staticText48;
+			wxTextCtrl* uiBuildCommandLine;
 			wxPanel* m_runPanel;
 			wxStdDialogButtonSizer* m_sdbSizer8;
 			wxButton* m_sdbSizer8OK;

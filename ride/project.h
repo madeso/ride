@@ -66,4 +66,6 @@ class Project : public MultiRunner {
   ride::UserProject user_;
 };
 
+wxString BuildCommandLine(const ride::BuildSetting& build);
+
 #endif  // RIDE_PROJECT_H_

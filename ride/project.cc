@@ -112,13 +112,7 @@ void Project::SaveAllFiles() {
   Save();
 }
 
-void Project::Build(bool origin_main) {
-  if (origin_main) {
-    CleanOutput();
-    SaveAllFiles();
-  }
-
-  const ride::BuildSetting& build = GetCurrentBuildSetting();
+wxString BuildCommandLine(const ride::BuildSetting& build) {
   wxString cmd = "cargo build";
 
   if (build.release()) {
@@ -147,6 +141,18 @@ void Project::Build(bool origin_main) {
   if (build.custom_arguments().empty() == false) {
     cmd += " " + build.custom_arguments();
   }
+
+  return cmd;
+}
+
+void Project::Build(bool origin_main) {
+  if (origin_main) {
+    CleanOutput();
+    SaveAllFiles();
+  }
+
+  const ride::BuildSetting& build = GetCurrentBuildSetting();
+  const wxString cmd = BuildCommandLine(build);
 
   RunCmd(cmd);
 }

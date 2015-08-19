@@ -241,6 +241,10 @@ void ProjectSettingsDlg::BuildToGui(bool togui) {
   DIALOG_DATA(setting, custom_arguments, uiBuildConfigurationCustomArgs, _Str);
 
   feature_list_.ToGui(&setting, togui);
+
+  if (togui == false) {
+    uiBuildCommandLine->SetValue(BuildCommandLine(setting));
+  }
 }
 
 ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting() {

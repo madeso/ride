@@ -1529,6 +1529,13 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	fgSizer18->Add( bSizer28, 0, 0, 5 );
 	
+	m_staticText48 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Build command:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48->Wrap( -1 );
+	fgSizer18->Add( m_staticText48, 0, wxALL, 5 );
+	
+	uiBuildCommandLine = new wxTextCtrl(    m_buildPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	fgSizer18->Add( uiBuildCommandLine, 0, wxALL|wxEXPAND, 5 );
+	
 	
 	sbSizer11->Add( fgSizer18, 1, wxEXPAND, 5 );
 	
