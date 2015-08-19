@@ -460,6 +460,43 @@ namespace ui
 		
 	};
 	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class Configurations
+	///////////////////////////////////////////////////////////////////////////////
+	class Configurations : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxListBox* uiList;
+			wxButton* uiListAdd;
+			wxButton*  uiListChange;
+			wxButton* uiListRemove;
+			wxButton* uiListUp;
+			wxButton* uiListDown;
+			wxStdDialogButtonSizer* m_sdbSizer9;
+			wxButton* m_sdbSizer9OK;
+			wxButton* m_sdbSizer9Apply;
+			wxButton* m_sdbSizer9Cancel;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnAdd( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnEdit( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRemove( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnUp( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnDown( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			Configurations( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Configurations"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 463,349 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+			~Configurations();
+		
+	};
+	
 } // namespace ui
 
 #endif //__UI_H__

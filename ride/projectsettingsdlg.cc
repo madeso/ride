@@ -20,6 +20,34 @@
 #include "ride/mainwindow.h"
 #include "ride/project.h"
 #include "ride/wxutils.h"
+#include "ride/configurationsdlg.h"
+
+struct FeatureFunctions {
+  static int Size(ride::BuildSetting* bs) { return bs->features_size(); }
+
+  static wxString GetDisplayString(ride::BuildSetting* bs, int i) {
+    return bs->features(i);
+  }
+
+  static void SetDisplayString(ride::BuildSetting* bs, int i,
+                               const wxString& new_string) {
+    bs->set_features(i, new_string);
+  }
+
+  static void Add(ride::BuildSetting* bs, const wxString& name) {
+    std::string* new_feature = bs->add_features();
+    *new_feature = name;
+  }
+
+  static void Remove(ride::BuildSetting* bs, int i) {
+    bs->mutable_features()->DeleteSubrange(i, 1);
+  }
+
+  static void Swap(ride::BuildSetting* bs, int selection, int next_index) {
+    std::swap(*bs->mutable_features(selection),
+              *bs->mutable_features(next_index));
+  }
+};
 
 class ProjectSettingsDlg : public ui::ProjectSettings {
  public:
@@ -66,7 +94,7 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   ride::Project project_backup_;
   bool allow_editor_to_gui_;
   bool allow_build_to_gui_;
-  GuiList<ride::BuildSetting> feature_list_;
+  GuiList<ride::BuildSetting, FeatureFunctions> feature_list_;
 };
 
 void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
@@ -191,7 +219,10 @@ void ProjectSettingsDlg::OnBuildConfiguration(wxCommandEvent& event) {
 }
 
 void ProjectSettingsDlg::OnBuildConfigurationModify(wxCommandEvent& event) {
-  // todo
+  const bool need_update = DoConfigurationsDlg(this, main_window_, project_);
+  if (need_update == false) return;
+  uiBuildConfiguration->Clear();
+  BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildCheckbox(wxCommandEvent& event) {

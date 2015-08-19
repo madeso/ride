@@ -1617,3 +1617,86 @@ ProjectSettings::~ProjectSettings()
 	m_sdbSizer8OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );
 	
 }
+
+Configurations::Configurations( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer25;
+	bSizer25 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer22;
+	fgSizer22 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer22->AddGrowableCol( 0 );
+	fgSizer22->AddGrowableRow( 0 );
+	fgSizer22->SetFlexibleDirection( wxBOTH );
+	fgSizer22->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	fgSizer22->Add( uiList, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer28;
+	bSizer28 = new wxBoxSizer( wxVERTICAL );
+	
+	uiListAdd = new wxButton( this, wxID_ANY, wxT("+"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiListAdd, 0, wxALL, 5 );
+	
+	 uiListChange = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add(  uiListChange, 0, wxALL, 5 );
+	
+	uiListRemove = new wxButton( this, wxID_ANY, wxT("-"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiListRemove, 0, wxALL, 5 );
+	
+	uiListUp = new wxButton( this, wxID_ANY, wxT("/\\"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiListUp, 0, wxALL, 5 );
+	
+	uiListDown = new wxButton( this, wxID_ANY, wxT("\\/"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiListDown, 0, wxALL, 5 );
+	
+	
+	fgSizer22->Add( bSizer28, 1, wxEXPAND, 5 );
+	
+	
+	bSizer25->Add( fgSizer22, 1, wxEXPAND, 5 );
+	
+	m_sdbSizer9 = new wxStdDialogButtonSizer();
+	m_sdbSizer9OK = new wxButton( this, wxID_OK );
+	m_sdbSizer9->AddButton( m_sdbSizer9OK );
+	m_sdbSizer9Apply = new wxButton( this, wxID_APPLY );
+	m_sdbSizer9->AddButton( m_sdbSizer9Apply );
+	m_sdbSizer9Cancel = new wxButton( this, wxID_CANCEL );
+	m_sdbSizer9->AddButton( m_sdbSizer9Cancel );
+	m_sdbSizer9->Realize();
+	
+	bSizer25->Add( m_sdbSizer9, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer25 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	uiListAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnAdd ), NULL, this );
+	 uiListChange->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnEdit ), NULL, this );
+	uiListRemove->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnRemove ), NULL, this );
+	uiListUp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnUp ), NULL, this );
+	uiListDown->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnDown ), NULL, this );
+	m_sdbSizer9Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnApply ), NULL, this );
+	m_sdbSizer9Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnCancel ), NULL, this );
+	m_sdbSizer9OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnOk ), NULL, this );
+}
+
+Configurations::~Configurations()
+{
+	// Disconnect Events
+	uiListAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnAdd ), NULL, this );
+	 uiListChange->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnEdit ), NULL, this );
+	uiListRemove->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnRemove ), NULL, this );
+	uiListUp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnUp ), NULL, this );
+	uiListDown->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnDown ), NULL, this );
+	m_sdbSizer9Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnApply ), NULL, this );
+	m_sdbSizer9Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnCancel ), NULL, this );
+	m_sdbSizer9OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnOk ), NULL, this );
+	
+}

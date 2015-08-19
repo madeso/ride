@@ -5,10 +5,7 @@
 
 #include <ride/wx.h>
 
-#include <string>
-#include <algorithm>
-
-template <typename TContainer>
+template <typename TContainer, typename TContainerFunctions>
 class GuiList {
  public:
   GuiList(wxListBox* list, wxWindow* window)
@@ -29,10 +26,11 @@ class GuiList {
     if (togui) {
       int selection = uiBuildFeatures->GetSelection();
       uiBuildFeatures->Clear();
-      for (int i = 0; i < build->features_size(); ++i) {
-        uiBuildFeatures->AppendString(build->features(i));
+      for (int i = 0; i < TContainerFunctions::Size(build); ++i) {
+        uiBuildFeatures->AppendString(
+            TContainerFunctions::GetDisplayString(build, i));
       }
-      if (build->features_size() > 0) {
+      if (TContainerFunctions::Size(build) > 0) {
         uiBuildFeatures->SetSelection(selection);
       }
     }
@@ -43,8 +41,7 @@ class GuiList {
     if (build == NULL) return false;
     wxTextEntryDialog entry(window_, "Feature name");
     if (entry.ShowModal() != wxID_OK) return false;
-    std::string* new_feature = build->add_features();
-    *new_feature = entry.GetValue().c_str();
+    TContainerFunctions::Add(build, entry.GetValue());
     return true;
   }
 
@@ -54,9 +51,9 @@ class GuiList {
     if (selection == -1) return false;
 
     wxTextEntryDialog entry(window_, "New feature name");
-    entry.SetValue(build->features(selection));
+    entry.SetValue(TContainerFunctions::GetDisplayString(build, selection));
     if (entry.ShowModal() != wxID_OK) return false;
-    build->set_features(selection, entry.GetValue().c_str());
+    TContainerFunctions::SetDisplayString(build, selection, entry.GetValue());
     return true;
   }
 
@@ -65,13 +62,14 @@ class GuiList {
     const int selection = uiBuildFeatures->GetSelection();
     if (selection == -1) return false;
 
-    build->mutable_features()->DeleteSubrange(selection, 1);
+    TContainerFunctions::Remove(build, selection);
 
     // move back one
     int new_selection = selection - 1;
     // if there aren't a selection and there are more items, select the first
     // one
-    if (new_selection == -1 && build->features_size() > 0) new_selection = 0;
+    if (new_selection == -1 && TContainerFunctions::Size(build) > 0)
+      new_selection = 0;
     uiBuildFeatures->SetSelection(new_selection);
     return true;
   }
@@ -84,8 +82,7 @@ class GuiList {
     const int next_index = selection - 1;
     if (next_index == -1) return false;
 
-    std::swap(*build->mutable_features(selection),
-              *build->mutable_features(next_index));
+    TContainerFunctions::Swap(build, selection, next_index);
     uiBuildFeatures->SetSelection(next_index);
     return true;
   }
@@ -96,10 +93,9 @@ class GuiList {
     if (selection == -1) return false;
 
     const int next_index = selection + 1;
-    if (next_index >= build->features_size()) return false;
+    if (next_index >= TContainerFunctions::Size(build)) return false;
 
-    std::swap(*build->mutable_features(selection),
-              *build->mutable_features(next_index));
+    TContainerFunctions::Swap(build, selection, next_index);
     uiBuildFeatures->SetSelection(next_index);
     return true;
   }
