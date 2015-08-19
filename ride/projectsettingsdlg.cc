@@ -142,9 +142,10 @@ void ProjectSettingsDlg::AllToGui(bool togui) {
 
 bool ProjectSettingsDlg::Apply() {
   AllToGui(false);
+
   project_backup_ = project_->project();
 
-  return true;
+  return project_->Save();
 }
 
 //////////////////////////////////////////////////////////////////////////
