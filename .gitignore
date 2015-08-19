@@ -27,7 +27,10 @@
 *.out
 *.app
 
+# Visual Studio compiled rc file
+*.aps
+
+# Ride specific
 build/*
 doc/*
-
 samples/projects/*
