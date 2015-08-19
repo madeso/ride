@@ -16,6 +16,7 @@
 #include "ride/cargo.h"
 #include "ride/enabledisable.h"
 #include "ride/form.h"
+#include "ride/guilist.h"
 #include "ride/mainwindow.h"
 #include "ride/project.h"
 #include "ride/wxutils.h"
@@ -65,6 +66,7 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   ride::Project project_backup_;
   bool allow_editor_to_gui_;
   bool allow_build_to_gui_;
+  GuiList<ride::BuildSetting> feature_list_;
 };
 
 void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
@@ -96,7 +98,8 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
       project_(project),
       project_backup_(project->project()),
       allow_editor_to_gui_(true),
-      allow_build_to_gui_(true) {
+      allow_build_to_gui_(true),
+      feature_list_(uiBuildFeatures, this) {
   LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
 
   AllToGui(true);
@@ -110,11 +113,9 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
 
   SetImageAndRemoveText(uiBuildConfigurationTargetHelp, wxART_HELP);
   SetImageAndRemoveText(uiBuildConfigurationCustomArgsHelp, wxART_TIP);
-  SetImageAndRemoveText(uiBuildFeatureAdd, wxART_NEW);
-  SetImageAndRemoveText(uiBuildFeatureRemove, wxART_DELETE);
-  SetImageAndRemoveText(uiBuildFeatureEdit, image::edit_xpm);
-  SetImageAndRemoveText(uiBuildFeatureUp, wxART_GO_UP);
-  SetImageAndRemoveText(uiBuildFeatureDown, wxART_GO_DOWN);
+
+  feature_list_.Setup(uiBuildFeatureAdd, uiBuildFeatureRemove,
+                      uiBuildFeatureEdit, uiBuildFeatureUp, uiBuildFeatureDown);
 }
 
 void ProjectSettingsDlg::OnApply(wxCommandEvent& event) { Apply(); }
@@ -238,16 +239,7 @@ void ProjectSettingsDlg::BuildToGui(bool togui) {
   DIALOG_DATA(setting, target, uiBuildConfigurationTarget, _Str);
   DIALOG_DATA(setting, custom_arguments, uiBuildConfigurationCustomArgs, _Str);
 
-  if (togui) {
-    int selection = uiBuildFeatures->GetSelection();
-    uiBuildFeatures->Clear();
-    for (int i = 0; i < setting.features_size(); ++i) {
-      uiBuildFeatures->AppendString(setting.features(i));
-    }
-    if (setting.features_size() > 0) {
-      uiBuildFeatures->SetSelection(selection);
-    }
-  }
+  feature_list_.ToGui(&setting, togui);
 }
 
 ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting() {
@@ -262,75 +254,37 @@ ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting() {
 }
 
 void ProjectSettingsDlg::OnBuildFeatureAdd(wxCommandEvent& event) {
-  ride::BuildSetting* build = GetSelectedBuildSetting();
-  if (build == NULL) return;
-  wxTextEntryDialog entry(this, "Feature name");
-  if (entry.ShowModal() != wxID_OK) return;
-  std::string* new_feature = build->add_features();
-  *new_feature = entry.GetValue().c_str();
+  if (false == feature_list_.Add(GetSelectedBuildSetting())) {
+    return;
+  }
   BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureEdit(wxCommandEvent& event) {
-  ride::BuildSetting* build = GetSelectedBuildSetting();
-  if (build == NULL) return;
-
-  const int selection = uiBuildFeatures->GetSelection();
-  if (selection == -1) return;
-
-  wxTextEntryDialog entry(this, "New feature name");
-  entry.SetValue(build->features(selection));
-  if (entry.ShowModal() != wxID_OK) return;
-  build->set_features(selection, entry.GetValue().c_str());
+  if (false == feature_list_.Edit(GetSelectedBuildSetting())) {
+    return;
+  }
   BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureRemove(wxCommandEvent& event) {
-  ride::BuildSetting* build = GetSelectedBuildSetting();
-  if (build == NULL) return;
-
-  const int selection = uiBuildFeatures->GetSelection();
-  if (selection == -1) return;
-
-  build->mutable_features()->DeleteSubrange(selection, 1);
-
-  // move back one
-  int new_selection = selection - 1;
-  // if there aren't a selection and there are more items, select the first one
-  if (new_selection == -1 && build->features_size() > 0) new_selection = 0;
-  uiBuildFeatures->SetSelection(new_selection);
+  if (false == feature_list_.Remove(GetSelectedBuildSetting())) {
+    return;
+  }
 
   BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureUp(wxCommandEvent& event) {
-  ride::BuildSetting* build = GetSelectedBuildSetting();
-  if (build == NULL) return;
-
-  const int selection = uiBuildFeatures->GetSelection();
-  if (selection == -1) return;
-
-  const int next_index = selection - 1;
-  if (next_index == -1) return;
-
-  std::swap(*build->mutable_features(selection),
-            *build->mutable_features(next_index));
-  uiBuildFeatures->SetSelection(next_index);
+  if (false == feature_list_.Up(GetSelectedBuildSetting())) {
+    return;
+  }
   BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureDown(wxCommandEvent& event) {
-  ride::BuildSetting* build = GetSelectedBuildSetting();
-  if (build == NULL) return;
-
-  const int selection = uiBuildFeatures->GetSelection();
-  if (selection == -1) return;
-
-  const int next_index = selection + 1;
-  if (next_index >= build->features_size()) return;
-
-  std::swap(*build->mutable_features(selection),
-            *build->mutable_features(next_index));
-  uiBuildFeatures->SetSelection(next_index);
+  if (false == feature_list_.Down(GetSelectedBuildSetting())) {
+    return;
+  }
   BuildToGui(true);
 }
