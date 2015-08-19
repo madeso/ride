@@ -87,3 +87,17 @@ if(BUILD_USE_DOXYGEN)
 					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 					   COMMENT "Running Doxygen" VERBATIM)
 endif(BUILD_USE_DOXYGEN)
+
+# Amend manifest to tell Windows that the application is DPI aware (needed for Windows 8.1 and up)
+IF (MSVC)
+	IF (CMAKE_MAJOR_VERSION LESS 3)
+		MESSAGE(WARNING "CMake version 3.0 or newer is required use build variable TARGET_FILE")
+	ELSE()
+		ADD_CUSTOM_COMMAND(
+			TARGET ${PROJECT_NAME}
+			POST_BUILD
+			COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\dpiaware.manifest.xml\" -inputresource:\"$<TARGET_FILE:${PROJECT_NAME}>\"\;\#1 -outputresource:\"$<TARGET_FILE:${PROJECT_NAME}>\"\;\#1
+			COMMENT "Adding display aware manifest..." 
+		)
+	ENDIF()
+ENDIF(MSVC)
