@@ -25,9 +25,9 @@ Some of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 
 * Project file so we can open project with File->Open
 * Implement all missing event handlers.
+* Fix wxWidgets pull request suggestions
 * Close project
 * Stop build
-* Fix startpage
 * Build spinner indicator via wxInfoBar?
 * View build list
 * Fix pdf paste issue, "optionally only allow safe characters"
@@ -38,6 +38,7 @@ Some of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Helpful setup-rust setting page
 * Cleanup the massive editor settings dialog
 * Create a better start page
+* Make sure osx and linux builds fine
 
 # Somewhat sorted roadmap
 
