@@ -17,7 +17,7 @@ The current features are:
 
 The project aim is to implement as much of it in C++ and then port it to rust when wxWidgets for rust is available.
 
-Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
+Some of the development is streamed [on twitch](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
 
 ![screenshot](screenshots/3.png)
 
