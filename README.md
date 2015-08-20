@@ -13,6 +13,7 @@ The current features are:
 	- Context clicking on warnings/errors to google them.
 * A basic project/cargo (file) explorer
 * Space/tab settings are saved per project so the same settings are used by everyone on the project
+* Autocompile protobuf files
 
 The project aim is to implement as much of it in C++ and then port it to rust when rust is released.
 
@@ -26,18 +27,20 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Implement all missing event handlers.
 * Close project
 * Stop build
+* Fix startpage
 * Build spinner indicator via wxInfoBar?
 * View build list
 * Fix pdf paste issue, "optionally only allow safe characters"
 * Fix create project issue
 * Specify paths to external tools under settings
-* A msi installer for windows
+* A msi installer for windows (or CPack)
 * Detect invalid path/configurations by running cargo -v on startup
 * Helpful setup-rust setting page
+* Cleanup the massive editor settings dialog
+* Create a better start page
 
 # Somewhat sorted roadmap
 
-* run 'protoc --rust_out . file.proto' when saving proto files
 * Add support for https://github.com/maxsnew/cargo-dot
 * Paste selection to http://lightpaste.com/ or http://hastebin.com/
 * Support aui docking, http://trac.wxwidgets.org/ticket/9419 https://github.com/redtide/wxWidgets/tree/aui-dynamic-notebook, wxAui rewrite planned in 3.2 http://trac.wxwidgets.org/wiki/Roadmap
@@ -56,7 +59,6 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Expose all aui settings in gui + settings
 * Add println! format! argument highlighting
 * Add configurable shortcuts
-* Cpack support (=installer for ride)
 * Goto definition & goto definition of type via [racer](https://github.com/phildawes/racer)
 * Code snippets
 * Implement ctrl+tab like visual studio to switch between open documents
