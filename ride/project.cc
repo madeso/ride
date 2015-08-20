@@ -63,6 +63,8 @@ const ride::Project& Project::project() const { return project_; }
 ride::Project* Project::project_ptr() { return &project_; }
 void Project::set_project(const ride::Project& project) { project_ = project; }
 
+const ride::UserProject& Project::user() const { return user_; }
+
 const wxString Project::GetCargoFile() const {
   if (root_folder_.IsEmpty()) return "";
   wxFileName cargo(root_folder_, "cargo.toml");

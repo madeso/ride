@@ -249,6 +249,7 @@ void ProjectSettingsDlg::BuildToGui(bool togui) {
       uiBuildConfiguration->Append(bs->name().c_str(),
                                    reinterpret_cast<void*>(bs));
     }
+    uiBuildConfiguration->Select(project_->user().build_setting());
   }
 
   ride::BuildSetting* setting_ptr = GetSelectedBuildSetting();
