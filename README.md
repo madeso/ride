@@ -30,7 +30,7 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * View build list
 * Fix pdf paste issue
 * Fix create project issue
-* specify paths to external tools under settings
+* Specify paths to external tools under settings
 
 # Somewhat sorted roadmap
 
