@@ -15,7 +15,7 @@ The current features are:
 * Space/tab settings are saved per project so the same settings are used by everyone on the project
 * Autocompile protobuf files
 
-The project aim is to implement as much of it in C++ and then port it to rust when rust is released.
+The project aim is to implement as much of it in C++ and then port it to rust when wxWidgets for rust is available.
 
 Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
 
