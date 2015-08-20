@@ -26,11 +26,14 @@ Most of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 * Implement all missing event handlers.
 * Close project
 * Stop build
-* Build spinner indicator
+* Build spinner indicator via wxInfoBar?
 * View build list
-* Fix pdf paste issue
+* Fix pdf paste issue, "optionally only allow safe characters"
 * Fix create project issue
 * Specify paths to external tools under settings
+* A msi installer for windows
+* Detect invalid path/configurations by running cargo -v on startup
+* Helpful setup-rust setting page
 
 # Somewhat sorted roadmap
 
