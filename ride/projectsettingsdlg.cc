@@ -173,6 +173,7 @@ bool ProjectSettingsDlg::Apply() {
 
   project_backup_ = project_->project();
 
+  project_->SetMainStatusbarText();
   return project_->Save();
 }
 

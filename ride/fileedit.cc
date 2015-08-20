@@ -412,6 +412,7 @@ void FileEdit::ReloadFileIfNeeded() {
                       "you want to reload it?",
                       filename_)) == DialogResult::YES) {
       LoadFile();
+      UpdateTitle();
     } else {
       // if the user said "keep changes", we will remember that modification and
       // not ask again for this "change" by remembering the modification time.
