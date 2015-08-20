@@ -39,7 +39,7 @@ class GuiList {
 
   bool Add(TContainer* build) {
     if (build == NULL) return false;
-    wxTextEntryDialog entry(window_, "Feature name");
+    wxTextEntryDialog entry(window_, TContainerFunctions::ADD_TEXT);
     if (entry.ShowModal() != wxID_OK) return false;
     TContainerFunctions::Add(build, entry.GetValue());
     return true;
@@ -50,7 +50,7 @@ class GuiList {
     const int selection = uiBuildFeatures->GetSelection();
     if (selection == -1) return false;
 
-    wxTextEntryDialog entry(window_, "New feature name");
+    wxTextEntryDialog entry(window_, TContainerFunctions::EDIT_TEXT);
     entry.SetValue(TContainerFunctions::GetDisplayString(build, selection));
     if (entry.ShowModal() != wxID_OK) return false;
     TContainerFunctions::SetDisplayString(build, selection, entry.GetValue());

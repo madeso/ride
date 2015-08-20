@@ -23,6 +23,9 @@
 #include "ride/configurationsdlg.h"
 
 struct FeatureFunctions {
+  static const wxString ADD_TEXT;
+  static const wxString EDIT_TEXT;
+
   static int Size(ride::BuildSetting* bs) { return bs->features_size(); }
 
   static wxString GetDisplayString(ride::BuildSetting* bs, int i) {
@@ -48,6 +51,10 @@ struct FeatureFunctions {
               *bs->mutable_features(next_index));
   }
 };
+
+const wxString FeatureFunctions::ADD_TEXT = "Name of the feature to add";
+const wxString FeatureFunctions::EDIT_TEXT =
+    "Please specify the new feature name";
 
 class ProjectSettingsDlg : public ui::ProjectSettings {
  public:

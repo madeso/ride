@@ -22,6 +22,9 @@
 #include "ride/wxutils.h"
 
 struct ProjectFunctions {
+  static const wxString ADD_TEXT;
+  static const wxString EDIT_TEXT;
+
   static int Size(ride::Project* p) { return p->build_settings_size(); }
 
   static wxString GetDisplayString(ride::Project* p, int i) {
@@ -47,6 +50,10 @@ struct ProjectFunctions {
               *p->mutable_build_settings(next_index));
   }
 };
+
+const wxString ProjectFunctions::ADD_TEXT = "Name of build to create";
+const wxString ProjectFunctions::EDIT_TEXT =
+    "Please specify the new build name";
 
 class ConfigurationsDlg : public ui::Configurations {
  public:
