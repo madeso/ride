@@ -252,7 +252,8 @@ const int AUI_OPTIONS =
     // of moving the border alone and refreshing the content at the end).
     wxAUI_MGR_LIVE_RESIZE;
 
-void MainWindow::SetStatusText(const wxString& text, StatusBarWidgets widget) {
+void MainWindow::SetStatusBarText(const wxString& text,
+                                  StatusBarWidgets widget) {
   assert(statusbar_);
   statusbar_->SetStatusText(text, widget);
 }

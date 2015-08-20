@@ -50,7 +50,7 @@ class MainWindow : public wxFrame {
   const ride::Settings& settings() const;
   void set_settings(const ride::Settings& settings);
 
-  void SetStatusText(const wxString& text, StatusBarWidgets widget);
+  void SetStatusBarText(const wxString& text, StatusBarWidgets widget);
 
   void OpenCompilerMessage(const CompilerMessage& message);
   void FileHasBeenRenamed(const wxString& old_path, const wxString& new_path);
