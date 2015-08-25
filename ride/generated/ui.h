@@ -172,7 +172,7 @@ namespace ui
 		
 		public:
 			
-			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 648,789 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 648,789 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~Settings();
 		
 	};
@@ -305,7 +305,7 @@ namespace ui
 		
 		public:
 			
-			DeleteFolder( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
+			DeleteFolder( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Delete folder?"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxDEFAULT_DIALOG_STYLE ); 
 			~DeleteFolder();
 		
 	};
@@ -455,7 +455,7 @@ namespace ui
 		
 		public:
 			
-			ProjectSettings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 666,535 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			ProjectSettings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Project settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 666,535 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~ProjectSettings();
 		
 	};
