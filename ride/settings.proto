@@ -428,7 +428,7 @@ message RunSetting {
 	optional string arguments = 3;
 	optional string folder = 4;
 	optional string cmd_before_launch = 5;
-	optional bool attach_to_application = 6;
+	optional bool wait_for_exit = 6;
 }
 */
 
