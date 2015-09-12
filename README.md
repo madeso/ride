@@ -20,16 +20,17 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 Some of the development is streamed [on twitch](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
 
 ![screenshot](screenshots/3.png)
+![screenshot](screenshots/2.png)
+![screenshot](screenshots/1.png)
 
 # Getting ride
-To be written. Issue #73
+This isn't finished. Eventually there should be a installer here, since that isn't finished, you need to download the source and build it yourself.
 
-# Building ride:
-To be fleshed out. Issue #73
+# Building ride
+You need CMake, a C++ compiler, protobuf and wxWidgets 3+. Doxygen, Python 2, clang-format and cppcheck are optional and can be disabled via the CMake BUILD_USE_ variables. To actually build it, it is pretty standard. Use CMake to generate a configuration and then build that configuration.
 
-Here are the dependencies:
- - wxWidgets with modifications to expose a more complete find text inteface. Currently [forked here](https://github.com/madeso/wxWidgets) with a [pull request here](https://github.com/wxWidgets/wxWidgets/pull/23)
- - google protobuf
+## wxWidgets 3.x
+Currently there the wxWidgets used is a fork from the public wxWidgets master. Issue #16 is looking to fix this. The public download of wxWidgets 3.0 or the public master can be used but then the CMake variables USE_CPP_AS_RUST use WX_WIDGETS_LEGACY_FINDTEXT has to be changed to true.
 
 # Contributing
-To be written. Issue #73
+I accept pull requests. Follow the google C++ style guide when writing new code.
