@@ -37,6 +37,11 @@ Project::Project(MainWindow* output, const wxString& root_folder)
     if (LoadProto(&user_, GetUserFile()) == false) {
     }
 
+    if (user_.run_size() == 0) {
+      ride::RunSetting* run = user_.add_run();
+      SaveUser();
+    }
+
     // validate project file
     GetCurrentBuildSetting();
   }

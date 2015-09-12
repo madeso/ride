@@ -428,6 +428,22 @@ namespace ui
 			wxStaticText* m_staticText48;
 			wxTextCtrl* uiBuildCommandLine;
 			wxPanel* m_runPanel;
+			wxStaticText* m_staticText49;
+			wxComboBox* uiRunConfigurations;
+			wxButton* uiRunManageConfigurations;
+			wxStaticText* m_staticText50;
+			wxTextCtrl* uiRunApplication;
+			wxButton* m_button18;
+			wxStaticText* m_staticText51;
+			wxTextCtrl* uiRunArguments;
+			wxButton* m_button211;
+			wxStaticText* m_staticText52;
+			wxTextCtrl* uiRunFolder;
+			wxButton* m_button20;
+			wxStaticText* m_staticText53;
+			wxTextCtrl* uiCmdBeforeLaunch;
+			wxButton* m_button21;
+			wxCheckBox* uiWaitForExit;
 			wxStdDialogButtonSizer* m_sdbSizer8;
 			wxButton* m_sdbSizer8OK;
 			wxButton* m_sdbSizer8Apply;
@@ -448,6 +464,14 @@ namespace ui
 			virtual void OnBuildFeatureRemove( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnBuildFeatureUp( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnBuildFeatureDown( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRunConfiguration( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRunConfigurationModify( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRunText( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRunApplication( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRunArguments( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRunFolder( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCmdBeforeLaunch( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRunCheck( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }

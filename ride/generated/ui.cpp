@@ -1546,9 +1546,110 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	m_buildPanel->SetSizer( bSizer25 );
 	m_buildPanel->Layout();
 	bSizer25->Fit(    m_buildPanel );
-	m_notebook3->AddPage(    m_buildPanel, wxT("&Build"), true );
+	m_notebook3->AddPage(    m_buildPanel, wxT("&Build"), false );
 	m_runPanel = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook3->AddPage( m_runPanel, wxT("&Run"), false );
+	wxBoxSizer* bSizer27;
+	bSizer27 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer281;
+	bSizer281 = new wxBoxSizer( wxVERTICAL );
+	
+	wxBoxSizer* bSizer29;
+	bSizer29 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText49 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Run:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText49->Wrap( -1 );
+	bSizer29->Add( m_staticText49, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	uiRunConfigurations = new wxComboBox( m_runPanel, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_READONLY ); 
+	uiRunConfigurations->SetMinSize( wxSize( 200,-1 ) );
+	
+	bSizer29->Add( uiRunConfigurations, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	uiRunManageConfigurations = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer29->Add( uiRunManageConfigurations, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	
+	bSizer29->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	bSizer281->Add( bSizer29, 0, wxEXPAND, 5 );
+	
+	
+	bSizer27->Add( bSizer281, 0, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer16;
+	sbSizer16 = new wxStaticBoxSizer( new wxStaticBox( m_runPanel, wxID_ANY, wxT("label") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer23;
+	fgSizer23 = new wxFlexGridSizer( 0, 3, 0, 0 );
+	fgSizer23->AddGrowableCol( 1 );
+	fgSizer23->SetFlexibleDirection( wxBOTH );
+	fgSizer23->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText50 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Application to launch:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText50->Wrap( -1 );
+	fgSizer23->Add( m_staticText50, 0, wxALL, 5 );
+	
+	uiRunApplication = new wxTextCtrl( m_runPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer23->Add( uiRunApplication, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button18 = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer23->Add( m_button18, 0, wxALL, 5 );
+	
+	m_staticText51 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Arguments to app:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText51->Wrap( -1 );
+	fgSizer23->Add( m_staticText51, 0, wxALL, 5 );
+	
+	uiRunArguments = new wxTextCtrl( m_runPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer23->Add( uiRunArguments, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button211 = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer23->Add( m_button211, 0, wxALL, 5 );
+	
+	m_staticText52 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Startup folder:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText52->Wrap( -1 );
+	fgSizer23->Add( m_staticText52, 0, wxALL, 5 );
+	
+	uiRunFolder = new wxTextCtrl( m_runPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer23->Add( uiRunFolder, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button20 = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer23->Add( m_button20, 0, wxALL, 5 );
+	
+	m_staticText53 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Cmd before launch"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText53->Wrap( -1 );
+	fgSizer23->Add( m_staticText53, 0, wxALL, 5 );
+	
+	uiCmdBeforeLaunch = new wxTextCtrl( m_runPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer23->Add( uiCmdBeforeLaunch, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button21 = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer23->Add( m_button21, 0, wxALL, 5 );
+	
+	
+	fgSizer23->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiWaitForExit = new wxCheckBox( m_runPanel, wxID_ANY, wxT("Wait for application exit"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer23->Add( uiWaitForExit, 0, wxALL, 5 );
+	
+	
+	fgSizer23->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	sbSizer16->Add( fgSizer23, 1, wxEXPAND, 5 );
+	
+	
+	bSizer27->Add( sbSizer16, 1, wxEXPAND, 5 );
+	
+	
+	m_runPanel->SetSizer( bSizer27 );
+	m_runPanel->Layout();
+	bSizer27->Fit( m_runPanel );
+	m_notebook3->AddPage( m_runPanel, wxT("&Run"), true );
 	
 	bSizer18->Add( m_notebook3, 1, wxEXPAND | wxALL, 5 );
 	
@@ -1587,6 +1688,17 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	uiBuildFeatureRemove->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureRemove ), NULL, this );
 	uiBuildFeatureUp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureUp ), NULL, this );
 	uiBuildFeatureDown->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureDown ), NULL, this );
+	uiRunConfigurations->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( ProjectSettings::OnRunConfiguration ), NULL, this );
+	uiRunManageConfigurations->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunConfigurationModify ), NULL, this );
+	uiRunApplication->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnRunText ), NULL, this );
+	m_button18->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunApplication ), NULL, this );
+	uiRunArguments->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnRunText ), NULL, this );
+	m_button211->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunArguments ), NULL, this );
+	uiRunFolder->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnRunText ), NULL, this );
+	m_button20->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunFolder ), NULL, this );
+	uiCmdBeforeLaunch->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnRunText ), NULL, this );
+	m_button21->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCmdBeforeLaunch ), NULL, this );
+	uiWaitForExit->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunCheck ), NULL, this );
 	m_sdbSizer8Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
 	m_sdbSizer8Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
 	m_sdbSizer8OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );
@@ -1612,6 +1724,17 @@ ProjectSettings::~ProjectSettings()
 	uiBuildFeatureRemove->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureRemove ), NULL, this );
 	uiBuildFeatureUp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureUp ), NULL, this );
 	uiBuildFeatureDown->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnBuildFeatureDown ), NULL, this );
+	uiRunConfigurations->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( ProjectSettings::OnRunConfiguration ), NULL, this );
+	uiRunManageConfigurations->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunConfigurationModify ), NULL, this );
+	uiRunApplication->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnRunText ), NULL, this );
+	m_button18->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunApplication ), NULL, this );
+	uiRunArguments->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnRunText ), NULL, this );
+	m_button211->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunArguments ), NULL, this );
+	uiRunFolder->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnRunText ), NULL, this );
+	m_button20->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunFolder ), NULL, this );
+	uiCmdBeforeLaunch->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ProjectSettings::OnRunText ), NULL, this );
+	m_button21->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCmdBeforeLaunch ), NULL, this );
+	uiWaitForExit->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ProjectSettings::OnRunCheck ), NULL, this );
 	m_sdbSizer8Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnApply ), NULL, this );
 	m_sdbSizer8Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnCancel ), NULL, this );
 	m_sdbSizer8OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ProjectSettings::OnOk ), NULL, this );

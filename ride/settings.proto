@@ -420,19 +420,17 @@ message Project {
 
 /* ******************************************************************************************* */
 
-/*
 message RunSetting {
 	optional string name = 1;
 
-	optional string application = 2;
-	optional string arguments = 3;
-	optional string folder = 4;
-	optional string cmd_before_launch = 5;
-	optional bool wait_for_exit = 6;
+	optional string application = 2 [default="%built_application%"];
+	optional string arguments = 3 [default=""];
+	optional string folder = 4 [default="%cargo_folder%"];
+	optional string cmd_before_launch = 5 [default=""];
+	optional bool wait_for_exit = 6 [default=false];
 }
-*/
 
 message UserProject {
 	optional int32 build_setting = 1 [default=-1];
-	/* repeated RunSetting run = 3; */
+	repeated RunSetting run = 3;
 }
