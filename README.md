@@ -24,13 +24,13 @@ Some of the development is streamed [on twitch](http://www.twitch.tv/imadesome) 
 ![screenshot](screenshots/2.png)
 
 # Getting ride
-This isn't finished. Eventually there should be a installer here, since that isn't finished, you need to download the source and build it yourself.
+This isn't finished. Eventually there should be a installer here, but that isn't finished. [Issue #13](https://github.com/madeso/ride/issues/13) is looking to fix this. If you want to try it, you need to download the source and build it yourself.
 
 # Building ride
 You need CMake, a C++ compiler, protobuf and wxWidgets 3+. Doxygen, Python 2, clang-format and cppcheck are optional and can be disabled via the CMake BUILD_USE_ variables. To actually build it, it is pretty standard. Use CMake to generate a configuration and then build that configuration.
 
 ## wxWidgets 3.x
-Currently there the wxWidgets used is a fork from the public wxWidgets master. [Issue #16](https://github.com/madeso/ride/issues/16) is looking to fix this. The public download of wxWidgets 3.0 or the public master can be used but then the CMake variables USE_CPP_AS_RUST use WX_WIDGETS_LEGACY_FINDTEXT has to be changed to true.
+Currently the wxWidgets used is a fork from the public wxWidgets master. [Issue #16](https://github.com/madeso/ride/issues/16) is looking to fix this. The public download of wxWidgets 3.0 or the public master can be used but then the CMake variables USE_CPP_AS_RUST use WX_WIDGETS_LEGACY_FINDTEXT has to be changed to true.
 
 # Contributing
 I accept pull requests. Follow the google C++ style guide when writing new code.
