@@ -72,7 +72,9 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   void CargoToGui(bool togui);
   void EditorToGui(bool togui);
   void BuildToGui(bool togui);
+  void RunToGui(bool togui);
   ride::BuildSetting* GetSelectedBuildSetting();
+  ride::RunSetting* GetSelectedRunSetting();
 
  protected:
   void OnlyAllowNumberChars(wxKeyEvent& event);
@@ -92,6 +94,15 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   void OnBuildFeatureUp(wxCommandEvent& event);
   void OnBuildFeatureDown(wxCommandEvent& event);
 
+  void OnRunConfiguration(wxCommandEvent& event);
+  void OnRunConfigurationModify(wxCommandEvent& event);
+  void OnRunText(wxCommandEvent& event);
+  void OnRunApplication(wxCommandEvent& event);
+  void OnRunArguments(wxCommandEvent& event);
+  void OnRunFolder(wxCommandEvent& event);
+  void OnCmdBeforeLaunch(wxCommandEvent& event);
+  void OnRunCheck(wxCommandEvent& event);
+
  protected:
   Cargo cargo_;
 
@@ -99,8 +110,10 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   MainWindow* main_window_;
   Project* project_;
   ride::Project project_backup_;
+  ride::UserProject user_backup_;
   bool allow_editor_to_gui_;
   bool allow_build_to_gui_;
+  bool allow_run_to_gui_;
   GuiList<ride::BuildSetting, FeatureFunctions> feature_list_;
 };
 
@@ -132,8 +145,10 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
       main_window_(mainwindow),
       project_(project),
       project_backup_(project->project()),
+      user_backup_(project->user()),
       allow_editor_to_gui_(true),
       allow_build_to_gui_(true),
+      allow_run_to_gui_(true),
       feature_list_(uiBuildFeatures, this) {
   LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
 
@@ -157,6 +172,7 @@ void ProjectSettingsDlg::OnApply(wxCommandEvent& event) { Apply(); }
 
 void ProjectSettingsDlg::OnCancel(wxCommandEvent& event) {
   project_->set_project(project_backup_);
+  project_->set_user(user_backup_);
   EditorToGui(true);
   EndModal(wxCANCEL);
 }
@@ -171,6 +187,7 @@ void ProjectSettingsDlg::AllToGui(bool togui) {
   CargoToGui(togui);
   EditorToGui(togui);
   BuildToGui(togui);
+  RunToGui(togui);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -179,6 +196,7 @@ bool ProjectSettingsDlg::Apply() {
   AllToGui(false);
 
   project_backup_ = project_->project();
+  user_backup_ = project_->user();
 
   project_->SetMainStatusbarText();
   return project_->Save();
@@ -333,3 +351,79 @@ void ProjectSettingsDlg::OnBuildFeatureDown(wxCommandEvent& event) {
   }
   BuildToGui(true);
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+ride::RunSetting* ProjectSettingsDlg::GetSelectedRunSetting() {
+  const int selection = uiRunConfigurations->GetSelection();
+  const bool found = selection != wxNOT_FOUND;
+
+  if (!found) return NULL;
+  void* d = uiRunConfigurations->GetClientData(selection);
+  ride::RunSetting* setting = reinterpret_cast<ride::RunSetting*>(d);
+
+  return setting;
+}
+
+void ProjectSettingsDlg::RunToGui(bool togui) {
+  if (allow_run_to_gui_ == false) return;
+  allow_run_to_gui_ = false;
+
+  if (togui && static_cast<wxItemContainer*>(uiRunConfigurations)->IsEmpty()) {
+    for (int i = 0; i < project_->user().run_size(); ++i) {
+      ride::RunSetting* rs = project_->user_ptr()->mutable_run(i);
+      uiRunConfigurations->Append(rs->name().c_str(),
+                                  reinterpret_cast<void*>(rs));
+    }
+    uiRunConfigurations->Select(project_->user().run_setting());
+  }
+
+  ride::RunSetting* setting_ptr = GetSelectedRunSetting();
+  EnableDisable(setting_ptr != NULL)
+      << uiRunApplication << uiRunApplicationCmd << uiRunArguments
+      << uiRunArgumentsCmd << uiRunFolder << uiRunFolderCmd << uiCmdBeforeLaunch
+      << uiCmdBeforeLaunchCmd << uiRunWaitForExit;
+
+  if (setting_ptr == NULL) {
+    allow_run_to_gui_ = true;
+    return;
+  }
+
+  ride::RunSetting& setting = *setting_ptr;
+
+  DIALOG_DATA(setting, application, uiRunApplication, _Str);
+  DIALOG_DATA(setting, arguments, uiRunArguments, _Str);
+  DIALOG_DATA(setting, folder, uiRunFolder, _Str);
+  DIALOG_DATA(setting, cmd_before_launch, uiCmdBeforeLaunch, _Str);
+  DIALOG_DATA(setting, wait_for_exit, uiRunWaitForExit, );
+
+  allow_run_to_gui_ = true;
+}
+
+void ProjectSettingsDlg::OnRunConfiguration(wxCommandEvent& event) {
+  RunToGui(true);
+}
+
+void ProjectSettingsDlg::OnRunConfigurationModify(wxCommandEvent& event) {
+  ShowInfo(this, "This is not implemented yet", "Not implemented");
+}
+
+void ProjectSettingsDlg::OnRunText(wxCommandEvent& event) { RunToGui(false); }
+
+void ProjectSettingsDlg::OnRunApplication(wxCommandEvent& event) {
+  ShowInfo(this, "This is not implemented yet", "Not implemented");
+}
+
+void ProjectSettingsDlg::OnRunArguments(wxCommandEvent& event) {
+  ShowInfo(this, "This is not implemented yet", "Not implemented");
+}
+
+void ProjectSettingsDlg::OnRunFolder(wxCommandEvent& event) {
+  ShowInfo(this, "This is not implemented yet", "Not implemented");
+}
+
+void ProjectSettingsDlg::OnCmdBeforeLaunch(wxCommandEvent& event) {
+  ShowInfo(this, "This is not implemented yet", "Not implemented");
+}
+
+void ProjectSettingsDlg::OnRunCheck(wxCommandEvent& event) { RunToGui(false); }

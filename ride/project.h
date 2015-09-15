@@ -28,6 +28,8 @@ class Project : public MultiRunner {
   void set_project(const ride::Project& project);
 
   const ride::UserProject& user() const;
+  ride::UserProject* Project::user_ptr();
+  void set_user(const ride::UserProject& user);
 
   const wxString GetCargoFile() const;
   const wxString GetProjectFile() const;

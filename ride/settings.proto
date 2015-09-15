@@ -421,7 +421,7 @@ message Project {
 /* ******************************************************************************************* */
 
 message RunSetting {
-	optional string name = 1;
+	optional string name = 1 [default="Run"];
 
 	optional string application = 2 [default="%built_application%"];
 	optional string arguments = 3 [default=""];
@@ -432,5 +432,6 @@ message RunSetting {
 
 message UserProject {
 	optional int32 build_setting = 1 [default=-1];
+	optional int32 run_setting = 2 [default=-1];
 	repeated RunSetting run = 3;
 }
