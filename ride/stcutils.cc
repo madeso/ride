@@ -198,7 +198,7 @@ int C(ride::WrapVisualFlags flags) {
     ret |= wxSTC_WRAPVISUALFLAG_MARGIN;
   }
   return ret;
-};
+}
 
 int C(ride::Annotation ann) {
   switch (ann) {
