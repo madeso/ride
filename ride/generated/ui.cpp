@@ -1823,3 +1823,74 @@ Configurations::~Configurations()
 	m_sdbSizer9OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Configurations::OnOk ), NULL, this );
 	
 }
+
+VariableEditor::VariableEditor( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer30;
+	bSizer30 = new wxBoxSizer( wxVERTICAL );
+	
+	uiText = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer30->Add( uiText, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer31;
+	bSizer31 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_staticText54 = new wxStaticText( this, wxID_ANY, wxT("Add:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText54->Wrap( -1 );
+	bSizer31->Add( m_staticText54, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_button22 = new wxButton( this, wxID_ANY, wxT("File..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer31->Add( m_button22, 0, wxALL, 5 );
+	
+	m_button23 = new wxButton( this, wxID_ANY, wxT("Folder..."), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer31->Add( m_button23, 0, wxALL, 5 );
+	
+	
+	bSizer30->Add( bSizer31, 0, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer17;
+	sbSizer17 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Custom variables") ), wxVERTICAL );
+	
+	uiCustomVariables = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	sbSizer17->Add( uiCustomVariables, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer30->Add( sbSizer17, 1, wxEXPAND, 5 );
+	
+	m_sdbSizer10 = new wxStdDialogButtonSizer();
+	m_sdbSizer10OK = new wxButton( this, wxID_OK );
+	m_sdbSizer10->AddButton( m_sdbSizer10OK );
+	m_sdbSizer10Cancel = new wxButton( this, wxID_CANCEL );
+	m_sdbSizer10->AddButton( m_sdbSizer10Cancel );
+	m_sdbSizer10->Realize();
+	
+	bSizer30->Add( m_sdbSizer10, 0, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer30 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+	
+	// Connect Events
+	uiText->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( VariableEditor::OnTextChanged ), NULL, this );
+	m_button22->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnFile ), NULL, this );
+	m_button23->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnFolder ), NULL, this );
+	uiCustomVariables->Connect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( VariableEditor::OnCustomDoubleClick ), NULL, this );
+	m_sdbSizer10Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnCancel ), NULL, this );
+	m_sdbSizer10OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnOk ), NULL, this );
+}
+
+VariableEditor::~VariableEditor()
+{
+	// Disconnect Events
+	uiText->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( VariableEditor::OnTextChanged ), NULL, this );
+	m_button22->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnFile ), NULL, this );
+	m_button23->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnFolder ), NULL, this );
+	uiCustomVariables->Disconnect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( VariableEditor::OnCustomDoubleClick ), NULL, this );
+	m_sdbSizer10Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnCancel ), NULL, this );
+	m_sdbSizer10OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnOk ), NULL, this );
+	
+}

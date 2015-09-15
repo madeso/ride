@@ -21,6 +21,7 @@
 #include "ride/project.h"
 #include "ride/wxutils.h"
 #include "ride/configurationsdlg.h"
+#include "ride/variableeditor.h"
 
 struct FeatureFunctions {
   static const wxString ADD_TEXT;
@@ -411,19 +412,35 @@ void ProjectSettingsDlg::OnRunConfigurationModify(wxCommandEvent& event) {
 void ProjectSettingsDlg::OnRunText(wxCommandEvent& event) { RunToGui(false); }
 
 void ProjectSettingsDlg::OnRunApplication(wxCommandEvent& event) {
-  ShowInfo(this, "This is not implemented yet", "Not implemented");
+  ride::RunSetting* r = GetSelectedRunSetting();
+  std::string s = r->application();
+  if (false == DoVariableEditor(this, &s)) return;
+  r->set_application(s);
+  RunToGui(true);
 }
 
 void ProjectSettingsDlg::OnRunArguments(wxCommandEvent& event) {
-  ShowInfo(this, "This is not implemented yet", "Not implemented");
+  ride::RunSetting* r = GetSelectedRunSetting();
+  std::string s = r->arguments();
+  if (false == DoVariableEditor(this, &s)) return;
+  r->set_arguments(s);
+  RunToGui(true);
 }
 
 void ProjectSettingsDlg::OnRunFolder(wxCommandEvent& event) {
-  ShowInfo(this, "This is not implemented yet", "Not implemented");
+  ride::RunSetting* r = GetSelectedRunSetting();
+  std::string s = r->folder();
+  if (false == DoVariableEditor(this, &s)) return;
+  r->set_folder(s);
+  RunToGui(true);
 }
 
 void ProjectSettingsDlg::OnCmdBeforeLaunch(wxCommandEvent& event) {
-  ShowInfo(this, "This is not implemented yet", "Not implemented");
+  ride::RunSetting* r = GetSelectedRunSetting();
+  std::string s = r->cmd_before_launch();
+  if (false == DoVariableEditor(this, &s)) return;
+  r->set_cmd_before_launch(s);
+  RunToGui(true);
 }
 
 void ProjectSettingsDlg::OnRunCheck(wxCommandEvent& event) { RunToGui(false); }

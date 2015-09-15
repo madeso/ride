@@ -521,6 +521,39 @@ namespace ui
 		
 	};
 	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class VariableEditor
+	///////////////////////////////////////////////////////////////////////////////
+	class VariableEditor : public wxDialog 
+	{
+		private:
+		
+		protected:
+			wxTextCtrl* uiText;
+			wxStaticText* m_staticText54;
+			wxButton* m_button22;
+			wxButton* m_button23;
+			wxListBox* uiCustomVariables;
+			wxStdDialogButtonSizer* m_sdbSizer10;
+			wxButton* m_sdbSizer10OK;
+			wxButton* m_sdbSizer10Cancel;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnTextChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnFile( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnFolder( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCustomDoubleClick( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			VariableEditor( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 434,250 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			~VariableEditor();
+		
+	};
+	
 } // namespace ui
 
 #endif //__UI_H__
