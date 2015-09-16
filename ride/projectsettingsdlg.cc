@@ -21,6 +21,7 @@
 #include "ride/project.h"
 #include "ride/wxutils.h"
 #include "ride/buildconfigurationsdlg.h"
+#include "ride/runconfigurationsdlg.h"
 #include "ride/variableeditor.h"
 
 struct FeatureFunctions {
@@ -74,6 +75,7 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   void EditorToGui(bool togui);
   void BuildToGui(bool togui);
   void RunToGui(bool togui);
+
   ride::BuildSetting* GetSelectedBuildSetting();
   ride::RunSetting* GetSelectedRunSetting();
 
@@ -407,7 +409,10 @@ void ProjectSettingsDlg::OnRunConfiguration(wxCommandEvent& event) {
 }
 
 void ProjectSettingsDlg::OnRunConfigurationModify(wxCommandEvent& event) {
-  ShowInfo(this, "This is not implemented yet", "Not implemented");
+  const bool need_update = DoRunConfigurationsDlg(this, main_window_, project_);
+  if (need_update == false) return;
+  uiRunConfigurations->Clear();
+  RunToGui(true);
 }
 
 void ProjectSettingsDlg::OnRunText(wxCommandEvent& event) { RunToGui(false); }
