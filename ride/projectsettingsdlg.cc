@@ -20,7 +20,7 @@
 #include "ride/mainwindow.h"
 #include "ride/project.h"
 #include "ride/wxutils.h"
-#include "ride/configurationsdlg.h"
+#include "ride/buildconfigurationsdlg.h"
 #include "ride/variableeditor.h"
 
 struct FeatureFunctions {
@@ -246,7 +246,8 @@ void ProjectSettingsDlg::OnBuildConfiguration(wxCommandEvent& event) {
 }
 
 void ProjectSettingsDlg::OnBuildConfigurationModify(wxCommandEvent& event) {
-  const bool need_update = DoConfigurationsDlg(this, main_window_, project_);
+  const bool need_update =
+      DoBuildConfigurationsDlg(this, main_window_, project_);
   if (need_update == false) return;
   uiBuildConfiguration->Clear();
   BuildToGui(true);
