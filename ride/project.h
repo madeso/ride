@@ -62,6 +62,9 @@ class Project : public MultiRunner {
   int GetSelectedBuildIndex();
   const ride::BuildSetting& GetCurrentBuildSetting();
 
+  int Project::GetSelectedRunIndex();
+  const ride::RunSetting& Project::GetCurrentRunSetting();
+
  private:
   MainWindow* main_;
   wxString root_folder_;

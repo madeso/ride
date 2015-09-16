@@ -276,8 +276,28 @@ const ride::BuildSetting& Project::GetCurrentBuildSetting() {
     return project_.build_settings(index);
 }
 
+int Project::GetSelectedRunIndex() {
+  if (user_.run_size() <= 0) return -1;
+
+  if (user_.run_setting() < 0 || user_.run_setting() >= user_.run_size()) {
+    user_.set_run_setting(0);
+    SaveUser();
+    SetMainStatusbarText();
+  }
+
+  return user_.run_setting();
+}
+
+const ride::RunSetting& Project::GetCurrentRunSetting() {
+  int index = GetSelectedRunIndex();
+  if (index == -1)
+    return ride::RunSetting::default_instance();
+  else
+    return user_.run(index);
+}
+
 void Project::SetMainStatusbarText() {
   main_->SetStatusBarText(GetCurrentBuildSetting().name(),
                           STATUSBAR_BUILD_CONF);
-  main_->SetStatusBarText("Run", STATUSBAR_RUN_CONF);
+  main_->SetStatusBarText(GetCurrentRunSetting().name(), STATUSBAR_RUN_CONF);
 }
