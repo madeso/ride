@@ -64,7 +64,7 @@ class Project : public MultiRunner {
   const ride::BuildSetting& GetCurrentBuildSetting();
 
   int Project::GetSelectedRunIndex();
-  const ride::RunSetting& Project::GetCurrentRunSetting();
+  const ride::RunSetting& GetCurrentRunSetting();
 
  private:
   MainWindow* main_;
