@@ -48,8 +48,7 @@ bool LoadProtoBinary(google::protobuf::Message* message,
 
 bool SaveProtoBinary(const google::protobuf::Message& message,
                      const wxFileName& file_name) {
-  const bool create_result =
-      file_name.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  file_name.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
   if (file_name.FileExists() && file_name.IsFileWritable() == false) {
     // abort if the file exist and isn't writable
     return false;

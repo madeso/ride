@@ -205,7 +205,7 @@ bool SingleRunner::RunCmd(const Command& cmd) {
 bool SingleRunner::IsRunning() const {
   const bool has_process = pimpl->processes_ != NULL;
   if (has_process == false) return false;
-  const bool exists = wxProcess::Exists(pimpl->processes_->GetPid());
+  // const bool exists = wxProcess::Exists(pimpl->processes_->GetPid());
   pimpl->processes_->HasInput();
   return !pimpl->has_exit_code();
 }

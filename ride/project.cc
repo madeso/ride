@@ -38,7 +38,7 @@ Project::Project(MainWindow* output, const wxString& root_folder)
     }
 
     if (user_.run_size() == 0) {
-      ride::RunSetting* run = user_.add_run();
+      user_.add_run();
       SaveUser();
     }
 

@@ -78,9 +78,7 @@ bool IsDirectory(const wxFileName& root, const wxString directory) {
 class FileEntry : public wxTreeItemData {
  public:
   FileEntry(bool is_directory, const wxString& path)
-      : is_directory_(is_directory), path_(path) {
-    int i = 0;
-  }
+      : is_directory_(is_directory), path_(path) {}
   const wxString& path() const { return path_; }
   void set_path(const wxString& path) { path_ = path; }
   bool is_directory() const { return is_directory_; }
@@ -445,7 +443,6 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
     file->set_path(new_path);
     return;
   }
-  event.Veto();
 }
 
 void ProjectExplorer::OnRename(wxCommandEvent& event) {

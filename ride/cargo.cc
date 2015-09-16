@@ -153,7 +153,7 @@ LoadResult Cargo::Load(const wxString& file) {
         std::vector<wxString> deps;
         TRY(SafeGet(cargo::FEATURES, features, name, &deps));
         for (const wxString& dep : deps) {
-          AddFeature(dependencies_, &features_, name);
+          AddFeature(dependencies_, &features_, dep);
         }
       }
     }
