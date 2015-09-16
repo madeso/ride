@@ -118,6 +118,24 @@ void Project::SelectActiveBuild() {
   SetMainStatusbarText();
 }
 
+void Project::SelectActiveRun() {
+  std::vector<wxString> names;
+  names.reserve(user_.run_size());
+  for (const ride::RunSetting& setting : user_.run()) {
+    names.push_back(setting.name());
+  }
+
+  wxSingleChoiceDialog dlg(NULL, "Select run", "Build", names.size(),
+                           &names[0]);
+  dlg.SetSelection(user_.run_setting());
+  const int dialog_result = dlg.ShowModal();
+
+  if (dialog_result != wxID_OK) return;
+  user_.set_run_setting(dlg.GetSelection());
+  SaveUser();
+  SetMainStatusbarText();
+}
+
 void Project::SaveAllFiles() {
   main_->SaveAllChangedProjectFiles();
   Save();

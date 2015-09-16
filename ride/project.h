@@ -39,6 +39,7 @@ class Project : public MultiRunner {
 
   void Settings();
   void SelectActiveBuild();
+  void SelectActiveRun();
   void SetMainStatusbarText();
 
   void Build(bool origin_main = true);

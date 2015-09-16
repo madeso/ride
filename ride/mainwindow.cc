@@ -69,6 +69,7 @@ enum {
   ID_PROJECT_REBUILD,
   ID_PROJECT_DOC,
   ID_PROJECT_RUN,
+  ID_PROJECT_SELECT_ACTIVE_RUN,
   ID_PROJECT_TEST,
   ID_PROJECT_BENCH,
   ID_PROJECT_UPDATE,
@@ -132,6 +133,8 @@ void MainWindow::BindEvents() {
   Bind(wxEVT_MENU, &MainWindow::OnProjectRebuild, this, ID_PROJECT_REBUILD);
   Bind(wxEVT_MENU, &MainWindow::OnProjectDoc, this, ID_PROJECT_DOC);
   Bind(wxEVT_MENU, &MainWindow::OnProjectRun, this, ID_PROJECT_RUN);
+  Bind(wxEVT_MENU, &MainWindow::OnProjectSelectActiveRun, this,
+       ID_PROJECT_SELECT_ACTIVE_RUN);
   Bind(wxEVT_MENU, &MainWindow::OnProjectTest, this, ID_PROJECT_TEST);
   Bind(wxEVT_MENU, &MainWindow::OnProjectBench, this, ID_PROJECT_BENCH);
   Bind(wxEVT_MENU, &MainWindow::OnProjectUpdate, this, ID_PROJECT_UPDATE);
@@ -354,7 +357,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
               "Compile the current project", project_build_xpm);
   AddMenuItem(menu_project, ID_PROJECT_SELECT_ACTIVE_BUILD,
               "Select active build...\tCtrl-Shift-B",
-              "Select to build debug, release etc");
+              "Select the active build configuration");
   AddMenuItem(menu_project, ID_PROJECT_CLEAN, "Clean",
               "Remove the target directory", project_clean_xpm);
   AddMenuItem(menu_project, ID_PROJECT_REBUILD, "Rebuild", "Clean + Build",
@@ -364,6 +367,9 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
               project_doc_xpm);
   AddMenuItem(menu_project, ID_PROJECT_RUN, "Run\tF5",
               "Build and execute src/main.rs", project_run_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_SELECT_ACTIVE_RUN,
+              "Select active run...\tShift-F5",
+              "Select the active run configuration");
   AddMenuItem(menu_project, ID_PROJECT_TEST, "Test", "Run the tests",
               project_test_xpm);
   AddMenuItem(menu_project, ID_PROJECT_BENCH, "Bench", "Run the benchmarks",
@@ -977,6 +983,7 @@ MEM_FUN(Clean)
 MEM_FUN(Rebuild)
 MEM_FUN(Doc)
 MEM_FUN(Run)
+MEM_FUN(SelectActiveRun)
 MEM_FUN(Test)
 MEM_FUN(Bench)
 MEM_FUN(Update)

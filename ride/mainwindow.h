@@ -113,6 +113,7 @@ class MainWindow : public wxFrame {
   void OnProjectRebuild(wxCommandEvent& event);
   void OnProjectDoc(wxCommandEvent& event);
   void OnProjectRun(wxCommandEvent& event);
+  void OnProjectSelectActiveRun(wxCommandEvent& event);
   void OnProjectTest(wxCommandEvent& event);
   void OnProjectBench(wxCommandEvent& event);
   void OnProjectUpdate(wxCommandEvent& event);
