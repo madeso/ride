@@ -103,6 +103,7 @@ RunConfigurationsDlg::RunConfigurationsDlg(wxWindow* parent,
       feature_list_(uiList, this),
       has_applied_(false) {
   AllToGui(true);
+  SetTitle("Run Configuration Manager");
 
   feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp,
                       uiListDown);
