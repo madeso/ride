@@ -98,6 +98,15 @@ if(${MSVC})
 	# C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xutility(2132): warning C4996: 'std::_Copy_impl': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS.
 	add_definitions("-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS")
 	message(STATUS "Adding _SCL_SECURE_NO_WARNINGS and _CRT_SECURE_NO_WARNINGS")
+	
+	# Force to always compile with W4
+	if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+	else()
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+	endif()
+	
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4100 /wd4018 /wd4389 /wd4125 /wd4127 /wd4512 /wd4244 /wd4996") # unref parameter, < signed/unsigned mismatch, == signed/unsigned mismatch, decimal digit termnates octal(protobuf warning), constant conditional (protobuf), assignment couldnt be generated(protobuf), possible loss of data(protobuf), deprecated (generated/ui.cpp)
 endif(${MSVC})
 
 find_package(Doxygen REQUIRED)
