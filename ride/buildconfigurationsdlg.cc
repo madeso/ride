@@ -58,7 +58,7 @@ const wxString ProjectBuildFunctions::EDIT_TEXT =
 class BuildConfigurationsDlg : public ui::Configurations {
  public:
   BuildConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                         Project* project);
+                         Project* project, int selected);
 
   bool has_applied() const { return has_applied_; }
 
@@ -87,8 +87,8 @@ class BuildConfigurationsDlg : public ui::Configurations {
 };
 
 bool DoBuildConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                              Project* project) {
-  BuildConfigurationsDlg dlg(parent, mainwindow, project);
+                              Project* project, int selected) {
+  BuildConfigurationsDlg dlg(parent, mainwindow, project, selected);
   dlg.ShowModal();
 
   return dlg.has_applied();
@@ -96,7 +96,7 @@ bool DoBuildConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
 
 BuildConfigurationsDlg::BuildConfigurationsDlg(wxWindow* parent,
                                                MainWindow* mainwindow,
-                                               Project* project)
+                                               Project* project, int selected)
     : ::ui::Configurations(parent, wxID_ANY),
       main_window_(mainwindow),
       project_(project),
@@ -106,6 +106,7 @@ BuildConfigurationsDlg::BuildConfigurationsDlg(wxWindow* parent,
   AllToGui(true);
   SetTitle("Build Configuration Manager");
 
+  feature_list_.Select(selected, project->project_ptr());
   feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp,
                       uiListDown);
 }

@@ -9,6 +9,6 @@ class MainWindow;
 class Project;
 
 bool DoBuildConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                              Project* project);
+                              Project* project, int selected);
 
 #endif  // RIDE_BUILDCONFIGURATIONSDLG_H_

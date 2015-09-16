@@ -21,6 +21,13 @@ class GuiList {
     SetImageAndRemoveText(down_button, wxART_GO_DOWN);
   }
 
+  void Select(int selected, TContainer* build) {
+    if (build == NULL) return;
+    if (selected >= TContainerFunctions::Size(build)) return;
+    if (selected < 0) return;
+    uiBuildFeatures->SetSelection(selected);
+  }
+
   bool ToGui(TContainer* build, bool togui) {
     if (build == NULL) return false;
     if (togui) {

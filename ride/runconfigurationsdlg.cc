@@ -57,7 +57,7 @@ const wxString ProjectRunFunctions::EDIT_TEXT =
 class RunConfigurationsDlg : public ui::Configurations {
  public:
   RunConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                       Project* project);
+                       Project* project, int selected);
 
   bool has_applied() const { return has_applied_; }
 
@@ -86,8 +86,8 @@ class RunConfigurationsDlg : public ui::Configurations {
 };
 
 bool DoRunConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                            Project* project) {
-  RunConfigurationsDlg dlg(parent, mainwindow, project);
+                            Project* project, int selected) {
+  RunConfigurationsDlg dlg(parent, mainwindow, project, selected);
   dlg.ShowModal();
 
   return dlg.has_applied();
@@ -95,7 +95,7 @@ bool DoRunConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
 
 RunConfigurationsDlg::RunConfigurationsDlg(wxWindow* parent,
                                            MainWindow* mainwindow,
-                                           Project* project)
+                                           Project* project, int selected)
     : ::ui::Configurations(parent, wxID_ANY),
       main_window_(mainwindow),
       project_(project),
@@ -105,6 +105,7 @@ RunConfigurationsDlg::RunConfigurationsDlg(wxWindow* parent,
   AllToGui(true);
   SetTitle("Run Configuration Manager");
 
+  feature_list_.Select(selected, project->user_ptr());
   feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp,
                       uiListDown);
 }

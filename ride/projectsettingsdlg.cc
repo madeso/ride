@@ -248,8 +248,8 @@ void ProjectSettingsDlg::OnBuildConfiguration(wxCommandEvent& event) {
 }
 
 void ProjectSettingsDlg::OnBuildConfigurationModify(wxCommandEvent& event) {
-  const bool need_update =
-      DoBuildConfigurationsDlg(this, main_window_, project_);
+  const bool need_update = DoBuildConfigurationsDlg(
+      this, main_window_, project_, uiBuildConfiguration->GetSelection());
   if (need_update == false) return;
   uiBuildConfiguration->Clear();
   BuildToGui(true);
@@ -409,7 +409,8 @@ void ProjectSettingsDlg::OnRunConfiguration(wxCommandEvent& event) {
 }
 
 void ProjectSettingsDlg::OnRunConfigurationModify(wxCommandEvent& event) {
-  const bool need_update = DoRunConfigurationsDlg(this, main_window_, project_);
+  const bool need_update = DoRunConfigurationsDlg(
+      this, main_window_, project_, uiRunConfigurations->GetSelection());
   if (need_update == false) return;
   uiRunConfigurations->Clear();
   RunToGui(true);
