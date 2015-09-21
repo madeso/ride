@@ -25,37 +25,43 @@ CompilerMessage::CompilerMessage(const wxString& file, int start_line,
       message_(message) {}
 
 namespace regex {
-const wxString WS = "[ \\t]*";
-const wxString SEP = "[/\\\\]";
-const wxString DRIVE = "(?:[a-zA-Z]\\:)?";
-const wxString NAME = "[a-zA-Z\\.0-9\\-_]+";
-const wxString FILE =
-    "(" + DRIVE + SEP + "?(?:" + NAME + SEP + ")*" + NAME + "?)";
+const wxString WS() { return "[ \\t]*"; }
+const wxString SEP() { return "[/\\\\]"; }
+const wxString DRIVE() { return "(?:[a-zA-Z]\\:)?"; }
+const wxString NAME() { return "[a-zA-Z\\.0-9\\-_]+"; }
+const wxString FILE() {
+  return "(" + DRIVE() + SEP() + "?(?:" + NAME() + SEP() + ")*" + NAME() + "?)";
+}
 // const wxString FILE =
-// "(?:[\\w]\\:|\\\\)(\\\\[a-z_\\-\\s0-9\\.]+)+\\.[a-zA-Z]+";
-const wxString INT = "([0-9]+)";
-const wxString ID = "([a-zA-Z]+)";
-const wxString TEXT = "(.+)";
+// "(?:[\\w]\\:|\\\\)(\\\\[a-z_\\-\\s0-9\\.]+)+\\.[a-zA-Z]+"; }
+const wxString INT() { return "([0-9]+)"; }
+const wxString ID() { return "([a-zA-Z]+)"; }
+const wxString Text() { return "(.+)"; }
 
 // C:\Users\gustav\WorkingFolder\librust\src\rng.rs:16 : 1 : 21 : 2 warning :
 // type could implement `Copy`; consider adding `impl Copy`,
 // #[warn(missing_copy_implementations)] on by default
-const wxString COMPLEX_REGEX_OUTPUT =
-    "^" + FILE + "\\:" + INT + WS + "\\:" + WS + INT + WS + "\\:" + WS + INT +
-    WS + "\\:" + WS + INT + WS + ID + WS + "\\:" + WS + TEXT + "$";
+const wxString COMPLEX_REGEX_OUTPUT() {
+  return "^" + FILE() + "\\:" + INT() + WS() + "\\:" + WS() + INT() + WS() +
+         "\\:" + WS() + INT() + WS() + "\\:" + WS() + INT() + WS() + ID() +
+         WS() + "\\:" + WS() + Text() + "$";
+}
 
 // C:\Users\gustav\WorkingFolder\librust\src\crc32.rs:4 pub struct Crc32 {
-const wxString SIMPLE_REGEX_OUTPUT = "^" + FILE + "\\:" + INT + WS + TEXT + "$";
+const wxString SIMPLE_REGEX_OUTPUT() {
+  return "^" + FILE() + "\\:" + INT() + WS() + Text() + "$";
+}
 
 // settings.proto:5:9: Expected "]".
-const wxString PROTOC_REGEX_OUTPUT =
-    "^" + FILE + "\\:" + INT + ":" + INT + ":" + WS + TEXT + "$";
+const wxString PROTOC_REGEX_OUTPUT() {
+  return "^" + FILE() + "\\:" + INT() + ":" + INT() + ":" + WS() + Text() + "$";
+}
 }  // namespace regex
 
 namespace {
 struct FileTest {
   FileTest() {
-    wxRegEx file("^" + regex::FILE + "$", wxRE_ADVANCED);
+    wxRegEx file("^" + regex::FILE() + "$", wxRE_ADVANCED);
     assert(file.IsValid() && "File regex failed to compile");
 
     assert(file.Matches("C:\\test.txt"));
@@ -69,19 +75,19 @@ struct FileTest {
 }  // namespace
 
 const wxRegEx& ComplexRegexOutput() {
-  static wxRegEx ret(regex::COMPLEX_REGEX_OUTPUT, wxRE_ADVANCED);
+  static wxRegEx ret(regex::COMPLEX_REGEX_OUTPUT(), wxRE_ADVANCED);
   assert(ret.IsValid() && "Complex output regex failed to compile");
   return ret;
 }
 
 const wxRegEx& RegexOutputRelated() {
-  static wxRegEx ret(regex::SIMPLE_REGEX_OUTPUT, wxRE_ADVANCED);
+  static wxRegEx ret(regex::SIMPLE_REGEX_OUTPUT(), wxRE_ADVANCED);
   assert(ret.IsValid() && "Simple output regex failed to compile");
   return ret;
 }
 
 const wxRegEx& ProtocRegexOutput() {
-  static wxRegEx ret(regex::PROTOC_REGEX_OUTPUT, wxRE_ADVANCED);
+  static wxRegEx ret(regex::PROTOC_REGEX_OUTPUT(), wxRE_ADVANCED);
   assert(ret.IsValid() && "Protoc regex failed to compile");
   return ret;
 }
