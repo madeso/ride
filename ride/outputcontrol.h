@@ -8,12 +8,15 @@
 
 class MainWindow;
 
-class OutputControl : public wxStyledTextCtrl {
+class OutputControl : public wxControl {
  public:
   explicit OutputControl(MainWindow* main);
 
   void UpdateStyle();
   const wxString GetContextLineContent();
+
+  void ClearOutput();
+  void WriteLine(const wxString& str);
 
  protected:
   void OnContextMenu(wxContextMenuEvent& event);
@@ -28,6 +31,7 @@ class OutputControl : public wxStyledTextCtrl {
 
  private:
   MainWindow* main_;
+  wxStyledTextCtrl* text_;
   int context_positon_;
 };
 

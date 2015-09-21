@@ -15,8 +15,6 @@ void OutputDirector::Create(MainWindow* window, wxAuiManager* aui,
                             const wxString& name, const wxString& caption) {
   main_ = window;
   control_ = new OutputControl(window);
-  control_->Create(window, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                   wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   control_->UpdateStyle();
   control_->UpdateStyle();
   aui->AddPane(
@@ -27,7 +25,7 @@ void OutputDirector::Create(MainWindow* window, wxAuiManager* aui,
 void OutputDirector::Clear() {
   // todo: this probably needs to happen in the gui thread instead of here... or
   // does it?
-  ClearOutput(control_);
+  control_->ClearOutput();
   compiler_messages_.resize(0);
 
   for (const wxString file : files_) {
@@ -41,7 +39,7 @@ void OutputDirector::Clear() {
 void OutputDirector::Append(const wxString& str) {
   // todo: this probably needs to happen in the gui thread instead of here... or
   // does it?
-  WriteLine(control_, str);
+  control_->WriteLine(str);
 
   CompilerMessage mess;
   if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC,

@@ -36,7 +36,15 @@ const wxRegEx& GetCommandLineRegex() {
   return ret;
 }
 
-OutputControl::OutputControl(MainWindow* main) : main_(main) { BindEvents(); }
+OutputControl::OutputControl(MainWindow* main)
+    : wxControl(main, wxID_ANY), main_(main) {
+  text_ = new wxStyledTextCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                               wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
+  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+  sizer->Add(text_, 1, wxEXPAND);
+  SetSizer(sizer);
+  BindEvents();
+}
 
 wxString GetCommandLine(const CompilerMessage& mess) {
   if (GetCommandLineRegex().Matches(mess.message())) {
@@ -50,21 +58,21 @@ wxString GetCommandLine(const CompilerMessage& mess) {
 }
 
 void OutputControl::UpdateStyle() {
-  this->StyleClearAll();
-  this->SetReadOnly(true);
+  text_->StyleClearAll();
+  text_->SetReadOnly(true);
 
   const ride::Settings& set = main_->settings();
-  SetupScintillaCurrentLine(this, set);
-  SetupScintillaDefaultStyles(this, set);
-  this->SetEndAtLastLine(set.end_at_last_line());
+  SetupScintillaCurrentLine(text_, set);
+  SetupScintillaDefaultStyles(text_, set);
+  text_->SetEndAtLastLine(set.end_at_last_line());
 }
 
 void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
   const wxPoint mouse_point = GetContextEventPosition(event);
   const wxPoint client_point = ScreenToClient(mouse_point);
-  context_positon_ = this->PositionFromPoint(client_point);
+  context_positon_ = text_->PositionFromPoint(client_point);
 
-  const bool has_selected = this->GetSelectedText().IsEmpty() == false;
+  const bool has_selected = text_->GetSelectedText().IsEmpty() == false;
   const wxString line_content = GetContextLineContent();
   CompilerMessage compiler_message;
   const bool has_compiler_message = CompilerMessage::Parse(
@@ -127,22 +135,25 @@ void OutputControl::OnCopyThisCompilerMessage(wxCommandEvent& event) {
 }
 
 void OutputControl::OnClearCompilerOuput(wxCommandEvent& event) {
-  ClearOutput(this);
+  ::ClearOutput(text_);
 }
 
-void OutputControl::OnSelectAll(wxCommandEvent& event) { this->SelectAll(); }
+void OutputControl::OnSelectAll(wxCommandEvent& event) { text_->SelectAll(); }
 
-void OutputControl::OnCopy(wxCommandEvent& event) { this->Copy(); }
+void OutputControl::OnCopy(wxCommandEvent& event) { text_->Copy(); }
 
 const wxString OutputControl::GetContextLineContent() {
   WXID line_number = 0;
   WXID col = 0;
   const WXID index = context_positon_;
-  this->PositionToXY(index, &col, &line_number);
+  text_->PositionToXY(index, &col, &line_number);
   if (line_number == -1) return wxEmptyString;
-  const wxString line_content = GetLineText(line_number);
+  const wxString line_content = text_->GetLineText(line_number);
   return line_content;
 }
+
+void OutputControl::ClearOutput() { ::ClearOutput(text_); }
+void OutputControl::WriteLine(const wxString& str) { ::WriteLine(text_, str); }
 
 void OutputControl::OnSearchForThisCompilerMessage(wxCommandEvent& event) {
   const wxString line_content = GetContextLineContent();
@@ -165,10 +176,10 @@ void OutputControl::OnSearchForThisCompilerMessage(wxCommandEvent& event) {
 void OutputControl::OnDoubleClick(wxMouseEvent& event) {
   WXID line_number = 0;
   WXID col = 0;
-  WXID index = this->GetInsertionPoint();
-  this->PositionToXY(index, &col, &line_number);
+  WXID index = text_->GetInsertionPoint();
+  text_->PositionToXY(index, &col, &line_number);
   if (line_number == -1) return;
-  wxString line_content = GetLineText(line_number);
+  wxString line_content = text_->GetLineText(line_number);
 
   CompilerMessage message;
   if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC,
