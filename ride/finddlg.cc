@@ -17,6 +17,7 @@
 #include "ride/mainwindow.h"
 #include "ride/settings.h"
 #include "ride/wxutils.h"
+#include "ride/findresultscontrol.h"
 
 class FindDlg : public ui::Find {
  public:
@@ -241,7 +242,7 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback,
 
 bool ShowFindDlg(MainWindow* parent, const wxString& current_selection,
                  const wxString& current_file, const wxString root_folder,
-                 wxStyledTextCtrl* output, FindAction find_action,
+                 FindResultsControl* output, FindAction find_action,
                  FindScope find_scope) {
   static ride::FindDlg find_dlg_data;
   FindDlg dlg(parent, current_selection, find_dlg_data, find_action,
@@ -283,19 +284,18 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection,
 
   const auto count = results.size();
 
-  ClearOutput(output);
+  output->ClearOutput();
 
   const wxString find_text =
       find_action == FindAction::Find
           ? wxString::Format("Searched for '%s'", dlg.GetText())
           : wxString::Format("Replaced '%s' with '%s'", dlg.GetText(),
                              dlg.getReplaceText());
-  WriteLine(output, wxString::Format("%s in %s", find_text, file_info));
-  WriteLine(output,
-            wxString::Format(
-                "%s %d matches",
-                find_action == FindAction::Find ? "Found" : "Replaced", count));
-  WriteLine(output, "");
+  output->WriteLine(wxString::Format("%s in %s", find_text, file_info));
+  output->WriteLine(wxString::Format(
+      "%s %d matches", find_action == FindAction::Find ? "Found" : "Replaced",
+      count));
+  output->WriteLine("");
   for (auto res : results) {
     // try to format the same way rust related error looks like so we can reuse
     // the parser code for both and get some synergy effects
@@ -303,7 +303,7 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection,
         "%s:%d : %d : %d : %d %s: %s", res.file, res.start_line, res.start_col,
         res.end_line, res.end_col,
         find_action == FindAction::Find ? "found" : "replaced", res.content);
-    WriteLine(output, mess);
+    output->WriteLine(mess);
   }
 
   return true;

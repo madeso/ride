@@ -442,8 +442,6 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   compiler_output_.Create(this, &aui_, PANE_COMPILE, "Compile");
 
   findres_window_ = new FindResultsControl(this);
-  findres_window_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                          wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   findres_window_->UpdateStyle();
   findres_window_->UpdateStyle();
   aui_.AddPane(findres_window_, wxAuiPaneInfo()
