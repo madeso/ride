@@ -649,7 +649,8 @@ void MainWindow::OnAbout(wxCommandEvent& event) {
 }
 
 void MainWindow::OnFileOpen(wxCommandEvent& event) {
-  wxFileDialog open_file(this, _("Open file"), "", "", GetFilePattern(),
+  wxFileDialog open_file(this, _("Open file"), "", "",
+                         languages_.GetFilePattern(),
                          wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE);
   if (open_file.ShowModal() == wxID_CANCEL) return;
 
@@ -696,9 +697,9 @@ FileEdit* MainWindow::OpenFile(const wxString& file, int start_line,
     notebook_->SetSelection(found_edit.index);
   };
   FileEdit* found_edit_or_new =
-      found_edit.edit != NULL
-          ? found_edit.edit
-          : AddAllCompilerMessages(new FileEdit(notebook_, this, full_path));
+      found_edit.edit != NULL ? found_edit.edit
+                              : AddAllCompilerMessages(new FileEdit(
+                                    notebook_, this, full_path, &languages_));
   found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
   found_edit_or_new->SetFocus();
 

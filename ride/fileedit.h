@@ -13,6 +13,7 @@ class CompilerMessage;
 class Language;
 class Project;
 class FindResultsControl;
+class Languages;
 
 namespace ride {
 class Settings;
@@ -20,7 +21,8 @@ class Settings;
 
 class FileEdit : public wxControl {
  public:
-  FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file);
+  FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file,
+           Languages* languages);
   const wxString& filename() const;
   void SetSelection(int start_line, int start_index, int end_line,
                     int end_index);
@@ -105,6 +107,7 @@ class FileEdit : public wxControl {
   wxStyledTextCtrl* text_;
   wxAuiNotebook* notebook_;
   wxString filename_;
+  Languages* languages_;
 
   Language* current_language_;
 

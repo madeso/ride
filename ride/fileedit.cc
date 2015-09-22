@@ -327,14 +327,18 @@ wxDateTime GetFileDetectionTime(const wxString file) {
 }
 
 FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
-                   const wxString& file)
+                   const wxString& file, Languages* languages)
     : wxControl(parent, wxID_ANY),
       tab_(this),
       main_(parent),
       notebook_(anotebook),
+      languages_(languages),
       current_language_(NULL),
       highlight_current_word_last_start_position_(-1),
       highlight_current_word_last_end_position_(-1) {
+  assert(anotebook);
+  assert(parent);
+  assert(languages);
   assert(false == file.IsEmpty());
   this->SetClientData(&tab_);
   BindEvents();
@@ -438,7 +442,8 @@ bool FileEdit::Save() {
 }
 
 bool FileEdit::SaveAs() {
-  wxFileDialog saveFileDialog(this, _("Save file"), "", "", GetFilePattern(),
+  wxFileDialog saveFileDialog(this, _("Save file"), "", "",
+                              languages_->GetFilePattern(),
                               wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   if (saveFileDialog.ShowModal() == wxID_CANCEL) return false;
   return SaveTo(saveFileDialog.GetPath());
@@ -493,7 +498,7 @@ void FileEdit::UpdateFilename() {
     notebook_->SetPageToolTip(index, filename_);
 
     wxFileName fname(filename_);
-    current_language_ = DetermineLanguage(fname.GetFullName());
+    current_language_ = languages_->DetermineLanguage(fname.GetFullName());
     UpdateTextControl();
     UpdateTextControl();  // update colors again, doing it twice seems to be
                           // needed to apply the colors

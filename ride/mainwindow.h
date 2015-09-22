@@ -183,6 +183,8 @@ class MainWindow : public wxFrame {
 
   wxWindow* last_focus_;
   wxStatusBar* statusbar_;
+
+  Languages languages_;
 };
 
 #endif  // RIDE_MAINWINDOW_H_

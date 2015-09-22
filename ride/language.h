@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <set>
+#include <memory>
 
 #include "ride/settings.h"
 
@@ -50,8 +51,18 @@ class Language {
 #endif
 };
 
-Language* NullLanguage();
-Language* DetermineLanguage(const wxString& filepath);
-wxString GetFilePattern();
+class Languages {
+ public:
+  Languages();
+  ~Languages();
+
+  Language* GetNullLanguage();
+  Language* DetermineLanguage(const wxString& filepath);
+  wxString GetFilePattern();
+
+ private:
+  struct LanguagesPimpl;
+  std::unique_ptr<LanguagesPimpl> pimpl_;
+};
 
 #endif  // RIDE_LANGUAGE_H_

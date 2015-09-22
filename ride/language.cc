@@ -337,7 +337,7 @@ class CppLanguage : public Language {
     SetKeys(text, 3, "");  // global classes and typedefs
     SetKeys(text, 4, "");  // preprocessor defines
   }
-} g_language_cpp;
+};
 
 #ifdef USE_CPP_AS_RUST
 #ifdef wxSTC_LEX_RUST
@@ -578,7 +578,7 @@ class RustLanguage : public Language {
     SetKeys(text, 6, "");
 #endif
   }
-} g_language_rust;
+};
 
 class ProtobufLanguage : public Language {
  public:
@@ -696,14 +696,7 @@ class ProtobufLanguage : public Language {
     SetKeys(text, 3, "");  // global classes and typedefs
     SetKeys(text, 4, "");  // preprocessor defines
   }
-} g_language_protobuf;
-
-class NullLanguage : public Language {
- public:
-  NullLanguage() : Language(_("NULL"), wxSTC_LEX_NULL) {}
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
-  }
-} g_language_null;
+};
 
 class MarkdownLanguage : public Language {
  public:
@@ -756,7 +749,7 @@ class MarkdownLanguage : public Language {
     SetStyle(text, wxSTC_MARKDOWN_CODEBK,
              settings.fonts_and_colors().markdown_codebk());
   }
-} g_language_markdown;
+};
 
 class PropertiesLanguage : public Language {
  public:
@@ -780,7 +773,7 @@ class PropertiesLanguage : public Language {
              settings.fonts_and_colors().props_defval());
     SetStyle(text, wxSTC_PROPS_KEY, settings.fonts_and_colors().props_key());
   }
-} g_language_properties;
+};
 
 class XmlLanguage : public Language {
  public:
@@ -826,7 +819,7 @@ class XmlLanguage : public Language {
     SetKeys(text, 4, "");                     // PHP keywords
     SetKeys(text, 5, "");                     // SGML and DTD keywords
   }
-} g_language_xml;
+};
 
 class CmakeLanguage : public Language {
  public:
@@ -897,7 +890,7 @@ class CmakeLanguage : public Language {
     SetKeys(text, 1, "CMAKE_ROOT CMAKE_SOURCE_DIR");            // Parameters
     SetKeys(text, 2, "");                                       // UserDefined
   }
-} g_language_cmake;
+};
 
 class LuaLanguage : public Language {
  public:
@@ -952,7 +945,7 @@ class LuaLanguage : public Language {
     SetKeys(text, 6, "");  // user3
     SetKeys(text, 7, "");  // user4
   }
-} g_language_lua;
+};
 
 class YamlLanguage : public Language {
  public:
@@ -983,47 +976,73 @@ class YamlLanguage : public Language {
 
     SetKeys(text, 0, "");  // keywords
   }
-} g_language_yaml;
+};
 
-std::vector<Language*> BuildLanguageList() {
-  std::vector<Language*> ret;
-  ret.push_back(&g_language_rust);
-  ret.push_back(&g_language_protobuf);
-  ret.push_back(&g_language_properties);
-  ret.push_back(&g_language_cpp);
-  ret.push_back(&g_language_markdown);
-  ret.push_back(&g_language_xml);
-  ret.push_back(&g_language_cmake);
-  ret.push_back(&g_language_lua);
-  ret.push_back(&g_language_yaml);
-  return ret;
-}
+class NullLanguage : public Language {
+ public:
+  NullLanguage() : Language(_("NULL"), wxSTC_LEX_NULL) {}
+  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
+  }
+};
 
-const std::vector<Language*> LanguageList = BuildLanguageList();
+struct Languages::LanguagesPimpl {
+  LanguagesPimpl() : LanguageList(BuildLanguageList()) {}
 
-wxString GetFilePattern() {
+  std::vector<Language*> BuildLanguageList() {
+    std::vector<Language*> ret;
+    ret.push_back(&language_rust_);
+    ret.push_back(&language_protobuf_);
+    ret.push_back(&language_properties_);
+    ret.push_back(&language_cpp_);
+    ret.push_back(&language_markdown_);
+    ret.push_back(&language_xml_);
+    ret.push_back(&language_cmake_);
+    ret.push_back(&language_lua_);
+    ret.push_back(&language_yaml_);
+    return ret;
+  }
+
+  CppLanguage language_cpp_;
+  RustLanguage language_rust_;
+  ProtobufLanguage language_protobuf_;
+  NullLanguage language_null_;
+  MarkdownLanguage language_markdown_;
+  PropertiesLanguage language_properties_;
+  XmlLanguage language_xml_;
+  CmakeLanguage language_cmake_;
+  LuaLanguage language_lua_;
+  YamlLanguage language_yaml_;
+
+  const std::vector<Language*> LanguageList;
+};
+
+Languages::Languages() : pimpl_(new Languages::LanguagesPimpl()) {}
+Languages::~Languages() {}
+
+wxString Languages::GetFilePattern() {
   wxString ret = "All files (*.*)|*.*";
 
   // need to loop from back to front to get the LanguageList in order for
   // display
   // since we are adding 'back to front'
-  for (std::vector<Language*>::const_reverse_iterator l = LanguageList.rbegin();
-       l != LanguageList.rend(); ++l) {
+  for (std::vector<Language*>::const_reverse_iterator l =
+           pimpl_->LanguageList.rbegin();
+       l != pimpl_->LanguageList.rend(); ++l) {
     Language* lang = *l;
     ret = lang->GetFilePattern() + "|" + ret;
   }
   return ret;
 }
 
-Language* DetermineLanguage(const wxString& filepath) {
-  for (std::vector<Language*>::const_iterator l = LanguageList.begin();
-       l != LanguageList.end(); ++l) {
+Language* Languages::DetermineLanguage(const wxString& filepath) {
+  for (std::vector<Language*>::const_iterator l = pimpl_->LanguageList.begin();
+       l != pimpl_->LanguageList.end(); ++l) {
     Language* lang = *l;
     if (lang->MatchPattern(filepath)) {
       return lang;
     }
   }
-  return &g_language_null;
+  return &pimpl_->language_null_;
 }
 
-Language* NullLanguage() { return &g_language_null; }
+Language* Languages::GetNullLanguage() { return &pimpl_->language_null_; }
