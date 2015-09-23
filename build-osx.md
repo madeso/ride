@@ -15,3 +15,6 @@ One has to set the cmake variable cmake_osx_deployment_target to 10.10.
 * exc_bad_access in wxWindowBase::SetName called in wxNonOwnedWindow::Create
 * "non-virtual thunk to Editor::NotifyDeleted(Document*, void*)", referenced from: vtable for ScintillaWX in stcdll_ScintillaWX.o
 * type_traits file not found in wx/strvararg.h
+
+# brew
+There [might be a issue](https://github.com/madeso/ride/issues/87) with installing dependencies via brew though it hasn't been confirmed if it is brew related or not.
