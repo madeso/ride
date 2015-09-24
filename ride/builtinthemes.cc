@@ -1,18 +1,17 @@
 // Copyright (2015) Gustav
 
-#include "ride/builtintemplates.h"
+#include "ride/builtinthemes.h"
 
 #include <string>
 
-typedef google::protobuf::RepeatedPtrField<ride::Template> TemplateList;
+typedef google::protobuf::RepeatedPtrField<ride::Theme> ThemeList;
 
-ride::Template* GetOrCreateTemplate(TemplateList* templates,
-                                    const std::string& name) {
-  for (ride::Template& t : *templates) {
+ride::Theme* GetOrCreateTheme(ThemeList* themes, const std::string& name) {
+  for (ride::Theme& t : *themes) {
     if (t.name() == name) return &t;
   }
 
-  ride::Template* temp = templates->Add();
+  ride::Theme* temp = themes->Add();
   temp->set_name(name);
   return temp;
 }
@@ -64,7 +63,7 @@ void SetupDefaultTemplate(ride::FontsAndColors* colors) {
 
   colors->set_allocated_default_style(NewStyle(NULL, NewColor(211)));
 
-  colors->set_allocated_selected_line(NewColor(255, 255, 0)); // yellow
+  colors->set_allocated_selected_line(NewColor(255, 255, 0));  // yellow
   colors->set_allocated_style_comment(NewStyle(NewColor(0, 255, 0)));
   colors->set_allocated_style_commentline(NewStyle(NewColor(0, 255, 0)));
   colors->set_allocated_style_commentdoc(NewStyle(NewColor(0, 255, 0)));
@@ -91,12 +90,12 @@ const ride::Color solarized_blue = MakeColor(38, 139, 210);
 const ride::Color solarized_cyan = MakeColor(42, 161, 152);
 const ride::Color solarized_green = MakeColor(133, 153, 0);
 
-void AddBuiltInTemplates(::ride::Settings* settings) {
-  TemplateList* templates = settings->mutable_templates();
+void AddBuiltInThemes(::ride::Settings* settings) {
+  ThemeList* themes = settings->mutable_themes();
 
   const std::string RIDE_AUTHOR = "ride-default";
 
-  ride::Template* temp = GetOrCreateTemplate(templates, "Ride (default)");
+  ride::Theme* temp = GetOrCreateTheme(themes, "Ride (default)");
   temp->set_author(RIDE_AUTHOR);
   SetupDefaultTemplate(temp->mutable_data());
 }

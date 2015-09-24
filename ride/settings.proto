@@ -264,7 +264,7 @@ message FontsAndColors {
   optional Style rust_lex_error = 801;
 }
 
-message Template {
+message Theme {
 	optional string name = 1;
 	optional string author = 2;
 	optional string description = 3;
@@ -333,7 +333,7 @@ message Settings {
 
   optional bool show_compiler_messages_as_annotations = 40 [default=true];
 
-  repeated Template templates = 41;
+  repeated Theme themes = 41;
 
   // indicators
   optional IndicatorStyle indicator_error = 100 [default=INDICATORSTYLE_SQUIGGLE];
