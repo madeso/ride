@@ -10,6 +10,7 @@
 #include "ride/mainwindow.h"
 #include "ride/proto.h"
 #include "ride/wxutils.h"
+#include "ride/builtintemplates.h"
 
 wxString GetConfigFolder() { return wxStandardPaths::Get().GetUserDataDir(); }
 
@@ -25,6 +26,7 @@ void LoadSettings(wxWindow* main, ::ride::Settings* settings) {
   if (false == LoadProtoBinary(settings, GetConfigFile())) {
     ShowWarning(main, "Unable to parse settings file!", "Error");
   }
+  AddBuiltInTemplates(settings);
 }
 
 bool SaveSettings(wxWindow*, const ::ride::Settings& settings) {

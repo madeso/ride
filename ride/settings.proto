@@ -98,25 +98,25 @@ enum MarkerSymbol {
 }
 
 message Style {
-  optional bool use_typeface = 1;
+  optional bool use_typeface = 1 [default=false];
   optional string typeface = 2;
 
-  optional bool use_bold = 3;
+  optional bool use_bold = 3 [default=false];
   optional bool bold = 4;
 
-  optional bool use_italic = 5;
+  optional bool use_italic = 5 [default=false];
   optional bool italic = 6;
 
-  optional bool use_underline = 7;
+  optional bool use_underline = 7 [default=false];
   optional bool underline = 8;
 
-  optional bool use_font_size = 9;
+  optional bool use_font_size = 9 [default=false];
   optional int32 font_size = 10;
 
-  optional bool use_foreground = 11;
+  optional bool use_foreground = 11 [default=false];
   optional Color foreground = 12;
 
-  optional bool use_background = 13;
+  optional bool use_background = 13 [default=false];
   optional Color background = 14;
 };
 
@@ -264,6 +264,14 @@ message FontsAndColors {
   optional Style rust_lex_error = 801;
 }
 
+message Template {
+	optional string name = 1;
+	optional string author = 2;
+	optional string description = 3;
+
+	optional FontsAndColors data = 10;
+}
+
 message WrapVisualFlags {
 	optional bool end = 1 [default=false]; // Visual flag at end of subline of a wrapped line.
 	optional bool start = 2 [default=false]; // Visual flag at begin of subline of a wrapped line. Subline is indented by at least 1 to make room for the flag.
@@ -324,6 +332,8 @@ message Settings {
   optional bool show_multiline_indicators = 39 [default=false];
 
   optional bool show_compiler_messages_as_annotations = 40 [default=true];
+
+  repeated Template templates = 41;
 
   // indicators
   optional IndicatorStyle indicator_error = 100 [default=INDICATORSTYLE_SQUIGGLE];
