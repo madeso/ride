@@ -161,6 +161,12 @@ class SettingsDlg : public ui::Settings {
   ride::Settings global_settings_;
   ride::Settings current_settings_;
 
+  void UpdateMain() {
+    for (int i = 0; i < 2; ++i) {
+      main_window_->set_settings(current_settings_);
+    }
+  }
+
   //////////////////////////////////////////////////////////////////////////
   // Style tab
   bool allow_send_style_to_main_;
@@ -755,11 +761,13 @@ void SettingsDlg::StyleSaveSelectedIndex() {
 
 void SettingsDlg::OnApply(wxCommandEvent& event) {
   StyleSaveSelectedIndex();
-  SendEditToMain();
+  UpdateMain();
 }
 
 void SettingsDlg::OnCancel(wxCommandEvent& event) {
+  current_settings_ = global_settings_;
   main_window_->set_settings(global_settings_);
+  UpdateMain();
   StyleSaveSelectedIndex();
   EndModal(wxCANCEL);
 }
@@ -888,7 +896,7 @@ void SettingsDlg::OnThemeApplySelected(wxCommandEvent& event) {
   IndicatorToGui(true);
   MarkerToGui(true);
 
-  SendEditToMain();
+  UpdateMain();
 }
 
 // import theme from file
