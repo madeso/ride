@@ -4,6 +4,7 @@
 #define RIDE_GUILIST_H_
 
 #include <ride/wx.h>
+#include "ride/resources/commonimages.h"
 
 template <typename TContainer, typename TContainerFunctions>
 class GuiList {

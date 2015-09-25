@@ -7,6 +7,7 @@
 #include <wx/fontenum.h>
 
 #include <vector>
+#include <algorithm>
 
 #include "ride/generated/ui.h"
 
@@ -14,6 +15,7 @@
 #include "ride/mainwindow.h"
 #include "ride/settings.h"
 #include "ride/wxutils.h"
+#include "ride/guilist.h"
 
 //////////////////////////////////////////////////////////////////////////
 // custom form functions
@@ -67,6 +69,40 @@ ride::IndicatorStyle ToData_IS(wxComboBox* gui) {
 
 //////////////////////////////////////////////////////////////////////////
 
+struct ThemeFunctions {
+  static const wxString ADD_TEXT;
+  static const wxString EDIT_TEXT;
+
+  static int Size(ride::Settings* bs) { return bs->themes_size(); }
+
+  static wxString GetDisplayString(ride::Settings* bs, int i) {
+    return bs->themes(i).name();
+  }
+
+  static void SetDisplayString(ride::Settings* bs, int i,
+                               const wxString& new_string) {
+    bs->mutable_themes(i)->set_name(new_string);
+  }
+
+  static void Add(ride::Settings* bs, const wxString& name) {
+    ride::Theme* theme = bs->add_themes();
+    theme->set_name(name);
+    theme->set_allocated_data(new ride::FontsAndColors(bs->fonts_and_colors()));
+  }
+
+  static void Remove(ride::Settings* bs, int i) {
+    bs->mutable_themes()->DeleteSubrange(i, 1);
+  }
+
+  static void Swap(ride::Settings* bs, int selection, int next_index) {
+    std::swap(*bs->mutable_themes(selection), *bs->mutable_themes(next_index));
+  }
+};
+const wxString ThemeFunctions::ADD_TEXT = "Save current theme as ";
+const wxString ThemeFunctions::EDIT_TEXT = "Please specify the new theme name";
+
+//////////////////////////////////////////////////////////////////////////
+
 class SettingsDlg : public ui::Settings {
  public:
   SettingsDlg(wxWindow* parent, MainWindow* mainwindow);
@@ -108,6 +144,18 @@ class SettingsDlg : public ui::Settings {
   void OnEditChanged(wxCommandEvent& event);
   void OnlyAllowNumberChars(wxKeyEvent& event);
 
+  //////////////////////////////////////////////////////////////////////////
+  // Theme tab
+
+  void OnThemeApplySelected(wxCommandEvent& event);
+  void OnThemeExportSelected(wxCommandEvent& event);
+
+  void OnAdd(wxCommandEvent& event);
+  void OnEdit(wxCommandEvent& event);
+  void OnRemove(wxCommandEvent& event);
+  void OnUp(wxCommandEvent& event);
+  void OnDown(wxCommandEvent& event);
+
  private:
   MainWindow* main_window_;
   ride::Settings global_settings_;
@@ -140,6 +188,11 @@ class SettingsDlg : public ui::Settings {
   bool allow_send_edit_to_main_;
   void SendEditToMain();
   void EditToGui(bool togui);
+
+  //////////////////////////////////////////////////////////////////////////
+  // Theme tab
+  GuiList<ride::Settings, ThemeFunctions> theme_list_;
+  void ThemeToGui(bool togui);
 };
 
 void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow) {
@@ -653,9 +706,12 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
     : ::ui::Settings(parent, wxID_ANY),
       main_window_(mainwindow),
       allow_send_edit_to_main_(false),
-      allow_send_style_to_main_(false) {
+      allow_send_style_to_main_(false),
+      theme_list_(uiThemeList, this) {
   global_settings_ = main_window_->settings();
   current_settings_ = global_settings_;
+  theme_list_.Setup(uiThemeListAdd, uiThemeListRemove, uiThemeListChange,
+                    uiThemeListUp, uiThemeListDown);
   EditToGui(true);
   allow_send_edit_to_main_ = true;
   allow_send_marker_to_main_ = true;
@@ -686,6 +742,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
 
   StyleToGui(true);
   MarkerToGui(true);
+  ThemeToGui(true);
   UpdateStyleEnable();
 }
 
@@ -810,6 +867,53 @@ void SettingsDlg::EditToGui(bool togui) {
         Allocate(fonts_and_colors));
     current_settings_.set_allocated_foldflags(Allocate(foldflags));
   }
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+void SettingsDlg::ThemeToGui(bool togui) {
+  theme_list_.ToGui(&current_settings_, togui);
+}
+
+void SettingsDlg::OnThemeApplySelected(wxCommandEvent& event) {}
+
+// import theme from file
+
+void SettingsDlg::OnThemeExportSelected(wxCommandEvent& event) {}
+
+void SettingsDlg::OnAdd(wxCommandEvent& event) {
+  if (false == theme_list_.Add(&current_settings_)) {
+    return;
+  }
+  ThemeToGui(true);
+}
+
+void SettingsDlg::OnEdit(wxCommandEvent& event) {
+  if (false == theme_list_.Edit(&current_settings_)) {
+    return;
+  }
+  ThemeToGui(true);
+}
+
+void SettingsDlg::OnRemove(wxCommandEvent& event) {
+  if (false == theme_list_.Remove(&current_settings_)) {
+    return;
+  }
+  ThemeToGui(true);
+}
+
+void SettingsDlg::OnUp(wxCommandEvent& event) {
+  if (false == theme_list_.Up(&current_settings_)) {
+    return;
+  }
+  ThemeToGui(true);
+}
+
+void SettingsDlg::OnDown(wxCommandEvent& event) {
+  if (false == theme_list_.Down(&current_settings_)) {
+    return;
+  }
+  ThemeToGui(true);
 }
 
 //////////////////////////////////////////////////////////////////////////

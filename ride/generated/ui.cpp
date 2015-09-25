@@ -19,7 +19,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
-	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP );
 	m_fonts = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer6;
 	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -604,9 +604,79 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_editor->SetSizer( bSizer2 );
 	m_editor->Layout();
 	bSizer2->Fit( m_editor );
-	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), true );
+	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), false );
 	m_window = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	m_notebook1->AddPage( m_window, wxT("Window behaviour"), false );
+	m_themes = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer28;
+	fgSizer28 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer28->AddGrowableCol( 0 );
+	fgSizer28->AddGrowableRow( 1 );
+	fgSizer28->SetFlexibleDirection( wxBOTH );
+	fgSizer28->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxFlexGridSizer* fgSizer31;
+	fgSizer31 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer31->AddGrowableCol( 1 );
+	fgSizer31->SetFlexibleDirection( wxBOTH );
+	fgSizer31->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText55 = new wxStaticText( m_themes, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText55->Wrap( -1 );
+	fgSizer31->Add( m_staticText55, 0, wxALL, 5 );
+	
+	m_button40 = new wxButton( m_themes, wxID_ANY, wxT("Use selected theme"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_button40, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText56 = new wxStaticText( m_themes, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText56->Wrap( -1 );
+	fgSizer31->Add( m_staticText56, 0, wxALL, 5 );
+	
+	m_button41 = new wxButton( m_themes, wxID_ANY, wxT("Export selected theme"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_button41, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer28->Add( fgSizer31, 1, wxEXPAND, 5 );
+	
+	wxFlexGridSizer* fgSizer221;
+	fgSizer221 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer221->AddGrowableCol( 0 );
+	fgSizer221->AddGrowableRow( 0 );
+	fgSizer221->SetFlexibleDirection( wxBOTH );
+	fgSizer221->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiThemeList = new wxListBox( m_themes, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	fgSizer221->Add( uiThemeList, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer28;
+	bSizer28 = new wxBoxSizer( wxVERTICAL );
+	
+	uiThemeListAdd = new wxButton( m_themes, wxID_ANY, wxT("+"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiThemeListAdd, 0, wxALL, 5 );
+	
+	 uiThemeListChange = new wxButton( m_themes, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add(  uiThemeListChange, 0, wxALL, 5 );
+	
+	uiThemeListRemove = new wxButton( m_themes, wxID_ANY, wxT("-"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiThemeListRemove, 0, wxALL, 5 );
+	
+	uiThemeListUp = new wxButton( m_themes, wxID_ANY, wxT("/\\"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiThemeListUp, 0, wxALL, 5 );
+	
+	uiThemeListDown = new wxButton( m_themes, wxID_ANY, wxT("\\/"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiThemeListDown, 0, wxALL, 5 );
+	
+	
+	fgSizer221->Add( bSizer28, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer28->Add( fgSizer221, 1, wxEXPAND, 5 );
+	
+	
+	m_themes->SetSizer( fgSizer28 );
+	m_themes->Layout();
+	fgSizer28->Fit( m_themes );
+	m_notebook1->AddPage( m_themes, wxT("Themes"), true );
 	
 	bSizer3->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
 	
@@ -691,6 +761,13 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiWordwrap->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
 	uiEditHighlightKeyword->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiShowLineNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
+	m_button40->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeApplySelected ), NULL, this );
+	m_button41->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeExportSelected ), NULL, this );
+	uiThemeListAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnAdd ), NULL, this );
+	 uiThemeListChange->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnEdit ), NULL, this );
+	uiThemeListRemove->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnRemove ), NULL, this );
+	uiThemeListUp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnUp ), NULL, this );
+	uiThemeListDown->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnDown ), NULL, this );
 	m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
 	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
 	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
@@ -761,6 +838,13 @@ Settings::~Settings()
 	uiWordwrap->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
 	uiEditHighlightKeyword->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiShowLineNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
+	m_button40->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeApplySelected ), NULL, this );
+	m_button41->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeExportSelected ), NULL, this );
+	uiThemeListAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnAdd ), NULL, this );
+	 uiThemeListChange->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnEdit ), NULL, this );
+	uiThemeListRemove->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnRemove ), NULL, this );
+	uiThemeListUp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnUp ), NULL, this );
+	uiThemeListDown->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnDown ), NULL, this );
 	m_sdbSizer1Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
 	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
 	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );

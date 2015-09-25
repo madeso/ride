@@ -109,6 +109,6 @@ void AddBuiltInThemes(::ride::Settings* settings) {
     // if the current settings is missing the fonts and colors
     // apply the default theme
     settings->set_allocated_fonts_and_colors(
-      new ride::FontsAndColors(default_theme->data()));
+        new ride::FontsAndColors(default_theme->data()));
   }
 }

@@ -139,6 +139,17 @@ namespace ui
 			wxCheckBox* uiShowLineNumbers;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
+			wxPanel* m_themes;
+			wxStaticText* m_staticText55;
+			wxButton* m_button40;
+			wxStaticText* m_staticText56;
+			wxButton* m_button41;
+			wxListBox* uiThemeList;
+			wxButton* uiThemeListAdd;
+			wxButton*  uiThemeListChange;
+			wxButton* uiThemeListRemove;
+			wxButton* uiThemeListUp;
+			wxButton* uiThemeListDown;
 			wxStdDialogButtonSizer* m_sdbSizer1;
 			wxButton* m_sdbSizer1OK;
 			wxButton* m_sdbSizer1Apply;
@@ -165,6 +176,13 @@ namespace ui
 			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnEditChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnThemeApplySelected( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnThemeExportSelected( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnAdd( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnEdit( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRemove( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnUp( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnDown( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
