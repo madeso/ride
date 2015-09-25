@@ -875,7 +875,21 @@ void SettingsDlg::ThemeToGui(bool togui) {
   theme_list_.ToGui(&current_settings_, togui);
 }
 
-void SettingsDlg::OnThemeApplySelected(wxCommandEvent& event) {}
+void SettingsDlg::OnThemeApplySelected(wxCommandEvent& event) {
+  int selected = uiThemeList->GetSelection();
+  if (selected == -1) {
+    return;
+  }
+  current_settings_.set_allocated_fonts_and_colors(
+      new ride::FontsAndColors(current_settings_.themes(selected).data()));
+
+  EditToGui(true);
+  StyleToGui(true);
+  IndicatorToGui(true);
+  MarkerToGui(true);
+
+  SendEditToMain();
+}
 
 // import theme from file
 
