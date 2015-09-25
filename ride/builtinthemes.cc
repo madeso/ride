@@ -49,6 +49,7 @@ ride::Style* NewStyle(ride::Color* front, ride::Color* back = NULL,
   }
 
   if (bold) {
+    style->set_use_bold(true);
     style->set_bold(true);
   }
 
@@ -63,13 +64,19 @@ void SetupDefaultTemplate(ride::FontsAndColors* colors) {
   colors->set_allocated_selection_foreground(NewColor(255, 255, 255));
   colors->set_allocated_selection_background(NewColor(0, 0, 0));
 
-  colors->set_allocated_default_style(NewStyle(NewColor(0), NewColor(211)));
+  colors->set_allocated_default_style(NewStyle(NewColor(0), NewColor(224)));
+  colors->set_allocated_line_number_style(NewStyle(0, NewColor(224)));
+  colors->set_allocated_fold_margin_hi(NewColor(192));
+  colors->set_allocated_fold_margin_low(NewColor(224));
 
   colors->set_allocated_selected_line(NewColor(255, 255, 0));  // yellow
-  colors->set_allocated_style_comment(NewStyle(NewColor(0, 255, 0)));
-  colors->set_allocated_style_commentline(NewStyle(NewColor(0, 255, 0)));
-  colors->set_allocated_style_commentdoc(NewStyle(NewColor(0, 255, 0)));
-  colors->set_allocated_style_commentlinedoc(NewStyle(NewColor(0, 255, 0)));
+
+  ride::Color comment = MakeColor(128, 64, 0);
+  colors->set_allocated_style_comment(NewStyle(new ride::Color(comment)));
+  colors->set_allocated_style_commentline(NewStyle(new ride::Color(comment)));
+  colors->set_allocated_style_commentdoc(NewStyle(new ride::Color(comment)));
+  colors->set_allocated_style_commentlinedoc(
+      NewStyle(new ride::Color(comment)));
   colors->set_allocated_style_keyword(
       NewStyle(NewColor(0, 0, 255), NULL, true));
 }
