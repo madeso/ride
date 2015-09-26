@@ -99,10 +99,17 @@ void SetupDefaultTemplate(ride::FontsAndColors* colors) {
   colors->set_allocated_props_key(New(Style(New(Color(128, 128, 255)))));
   colors->set_allocated_props_section(New(Style(NULL, NULL, true)));
 
-  colors->set_allocated_indicator_error(New(Indicator(Color(255, 60, 60))));
-  colors->set_allocated_indicator_warning(New(Indicator(Color(0, 255, 0))));
+  const ride::Color error = Color(255, 60, 60);
+  const ride::Color warning = Color(0, 255, 0);
+
+  colors->set_allocated_indicator_error(New(Indicator(error)));
+  colors->set_allocated_indicator_warning(New(Indicator(warning)));
   colors->set_allocated_indicator_search_highlight(New(Indicator(Color(200))));
   colors->set_allocated_indicator_select_highlight(New(Indicator(Color(180))));
+
+  colors->set_allocated_annotation_error_style(New(Style(NULL, New(error))));
+  colors->set_allocated_annotation_warning_style(
+      New(Style(NULL, New(warning))));
 }
 
 //////////////////////////////////////////////////////////////////////////
