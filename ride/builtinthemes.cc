@@ -28,6 +28,8 @@ ride::Color MakeColor(google::protobuf::int32 r, google::protobuf::int32 g,
   return c;
 }
 
+ride::Color MakeColor(google::protobuf::int32 c) { return MakeColor(c, c, c); }
+
 ride::Color* NewColor(google::protobuf::int32 r, google::protobuf::int32 g,
                       google::protobuf::int32 b) {
   return new ride::Color(MakeColor(r, g, b));
@@ -57,6 +59,17 @@ ride::Style* NewStyle(ride::Color* front, ride::Color* back = NULL,
   return style;
 }
 
+template <typename T>
+T* New(const T& t) {
+  return new T(t);
+}
+
+ride::Indicator MakeIndicator(const ride::Color& c) {
+  ride::Indicator ind;
+  ind.set_allocated_foreground(New(c));
+  return ind;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 void SetupDefaultTemplate(ride::FontsAndColors* colors) {
@@ -65,7 +78,7 @@ void SetupDefaultTemplate(ride::FontsAndColors* colors) {
   colors->set_allocated_selection_foreground(NewColor(255, 255, 255));
   colors->set_allocated_selection_background(NewColor(0, 0, 0));
 
-  ride::Color bkg = MakeColor(224, 224, 224);
+  ride::Color bkg = MakeColor(224);
 
   colors->set_allocated_default_style(
       NewStyle(NewColor(0), new ride::Color(bkg)));
@@ -94,6 +107,15 @@ void SetupDefaultTemplate(ride::FontsAndColors* colors) {
 
   colors->set_allocated_props_key(NewStyle(NewColor(128, 128, 255)));
   colors->set_allocated_props_section(NewStyle(NULL, NULL, true));
+
+  colors->set_allocated_indicator_error(
+      New(MakeIndicator(MakeColor(255, 60, 60))));
+  colors->set_allocated_indicator_warning(
+      New(MakeIndicator(MakeColor(0, 255, 0))));
+  colors->set_allocated_indicator_search_highlight(
+      New(MakeIndicator(MakeColor(200))));
+  colors->set_allocated_indicator_select_highlight(
+      New(MakeIndicator(MakeColor(180))));
 }
 
 //////////////////////////////////////////////////////////////////////////
