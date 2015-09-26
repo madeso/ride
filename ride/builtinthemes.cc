@@ -13,6 +13,7 @@ ride::Theme* GetOrCreateTheme(ThemeList* themes, const std::string& name) {
 
   ride::Theme* temp = themes->Add();
   temp->set_name(name);
+  temp->set_can_remove(false);
   return temp;
 }
 
@@ -64,8 +65,11 @@ void SetupDefaultTemplate(ride::FontsAndColors* colors) {
   colors->set_allocated_selection_foreground(NewColor(255, 255, 255));
   colors->set_allocated_selection_background(NewColor(0, 0, 0));
 
-  colors->set_allocated_default_style(NewStyle(NewColor(0), NewColor(224)));
-  colors->set_allocated_line_number_style(NewStyle(0, NewColor(224)));
+  ride::Color bkg = MakeColor(224, 224, 224);
+
+  colors->set_allocated_default_style(
+      NewStyle(NewColor(0), new ride::Color(bkg)));
+  colors->set_allocated_line_number_style(NewStyle(0, new ride::Color(bkg)));
   colors->set_allocated_fold_margin_hi(NewColor(192));
   colors->set_allocated_fold_margin_low(NewColor(224));
 
@@ -79,6 +83,14 @@ void SetupDefaultTemplate(ride::FontsAndColors* colors) {
       NewStyle(new ride::Color(comment)));
   colors->set_allocated_style_keyword(
       NewStyle(NewColor(0, 0, 255), NULL, true));
+
+  colors->set_allocated_folderend_background(new ride::Color(bkg));
+  colors->set_allocated_folderopenmid_background(new ride::Color(bkg));
+  colors->set_allocated_foldermidtail_background(new ride::Color(bkg));
+  colors->set_allocated_foldertail_background(new ride::Color(bkg));
+  colors->set_allocated_foldersub_background(new ride::Color(bkg));
+  colors->set_allocated_folder_background(new ride::Color(bkg));
+  colors->set_allocated_folderopen_background(new ride::Color(bkg));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -106,10 +118,7 @@ const ride::Color solarized_green = MakeColor(133, 153, 0);
 void AddBuiltInThemes(::ride::Settings* settings) {
   ThemeList* themes = settings->mutable_themes();
 
-  const std::string RIDE_AUTHOR = "ride-default";
-
   ride::Theme* default_theme = GetOrCreateTheme(themes, "Ride (default)");
-  default_theme->set_author(RIDE_AUTHOR);
   SetupDefaultTemplate(default_theme->mutable_data());
 
   if (false == settings->has_fonts_and_colors()) {

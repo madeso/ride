@@ -102,16 +102,16 @@ message Style {
   optional string typeface = 2;
 
   optional bool use_bold = 3 [default=false];
-  optional bool bold = 4;
+  optional bool bold = 4 [default=false];
 
   optional bool use_italic = 5 [default=false];
-  optional bool italic = 6;
+  optional bool italic = 6 [default=false];
 
   optional bool use_underline = 7 [default=false];
-  optional bool underline = 8;
+  optional bool underline = 8 [default=false];
 
   optional bool use_font_size = 9 [default=false];
-  optional int32 font_size = 10;
+  optional int32 font_size = 10 [default=10];
 
   optional bool use_foreground = 11 [default=false];
   optional Color foreground = 12;
@@ -266,8 +266,9 @@ message FontsAndColors {
 
 message Theme {
 	optional string name = 1;
-	optional string author = 2;
-	optional string description = 3;
+	// optional string author = 2;
+	// optional string description = 3;
+	optional bool can_remove = 4 [default=true];
 
 	optional FontsAndColors data = 10;
 }

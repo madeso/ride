@@ -16,6 +16,7 @@
 #include "ride/settings.h"
 #include "ride/wxutils.h"
 #include "ride/guilist.h"
+#include "ride/proto.h"
 
 //////////////////////////////////////////////////////////////////////////
 // custom form functions
@@ -149,6 +150,7 @@ class SettingsDlg : public ui::Settings {
 
   void OnThemeApplySelected(wxCommandEvent& event);
   void OnThemeExportSelected(wxCommandEvent& event);
+  void OnThemeImport(wxCommandEvent& event);
 
   void OnAdd(wxCommandEvent& event);
   void OnEdit(wxCommandEvent& event);
@@ -901,7 +903,41 @@ void SettingsDlg::OnThemeApplySelected(wxCommandEvent& event) {
 
 // import theme from file
 
-void SettingsDlg::OnThemeExportSelected(wxCommandEvent& event) {}
+void SettingsDlg::OnThemeExportSelected(wxCommandEvent& event) {
+  int selected = uiThemeList->GetSelection();
+  if (selected == -1) {
+    return;
+  }
+
+  wxFileDialog saveFileDialog(this, _("Save theme"), "", "",
+                              "Ride themes (*.ridetheme)|*.ridetheme",
+                              wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+  if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
+
+  bool saved = SaveProtoBinary(current_settings_.themes(selected),
+                               saveFileDialog.GetPath());
+  if (saved == false) {
+    ShowError(this, "Failed to save theme", "Failed to save");
+  }
+}
+
+void SettingsDlg::OnThemeImport(wxCommandEvent& event) {
+  wxFileDialog saveFileDialog(this, _("Open theme"), "", "",
+                              "Ride themes (*.ridetheme)|*.ridetheme",
+                              wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+  if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
+
+  ride::Theme theme;
+  bool saved = LoadProtoBinary(&theme, saveFileDialog.GetPath());
+  if (saved == false) {
+    ShowError(this, "Failed to import theme", "Failed to import");
+    return;
+  }
+
+  ride::Theme* new_theme = current_settings_.add_themes();
+  new_theme->CopyFrom(theme);
+  ThemeToGui(true);
+}
 
 void SettingsDlg::OnAdd(wxCommandEvent& event) {
   if (false == theme_list_.Add(&current_settings_)) {

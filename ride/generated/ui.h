@@ -140,9 +140,8 @@ namespace ui
 			wxPanel* m_panel11;
 			wxPanel* m_window;
 			wxPanel* m_themes;
-			wxStaticText* m_staticText55;
 			wxButton* m_button40;
-			wxStaticText* m_staticText56;
+			wxButton* m_button42;
 			wxButton* m_button41;
 			wxListBox* uiThemeList;
 			wxButton* uiThemeListAdd;
@@ -177,6 +176,7 @@ namespace ui
 			virtual void OnEditChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnThemeApplySelected( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnThemeImport( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnThemeExportSelected( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnAdd( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnEdit( wxCommandEvent& event ) { event.Skip(); }

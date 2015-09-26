@@ -11,8 +11,7 @@
 
 #include "ride/settings.h"
 #include "ride/wxutils.h"
-
-void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style);
+#include "ride/stcutils.h"
 
 wxString b2s01(bool b);
 
@@ -246,8 +245,8 @@ class CppLanguage : public Language {
   }
   wxString primary_keywords_;
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
-    SetStyle(text, wxSTC_C_DEFAULT,
-             settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style(),
+             true);
     SetStyle(text, wxSTC_C_COMMENT,
              settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_C_COMMENTLINE,
@@ -408,7 +407,7 @@ class RustLanguage : public Language {
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
 #ifndef USE_CPP_AS_RUST
     SetStyle(text, wxSTC_RUST_DEFAULT,
-             settings.fonts_and_colors().default_style());
+             settings.fonts_and_colors().default_style(), true);
     SetStyle(text, wxSTC_RUST_COMMENTBLOCK,
              settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_RUST_COMMENTLINE,
@@ -489,8 +488,8 @@ class RustLanguage : public Language {
     SetProperty(text, wxT("lexer.rust.fold.at.else"),
                 b2s01(settings.fold_at_else()));
 #else
-    SetStyle(text, wxSTC_C_DEFAULT,
-             settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style(),
+             true);
     SetStyle(text, wxSTC_C_COMMENT,
              settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_C_COMMENTLINE,
@@ -587,8 +586,8 @@ class ProtobufLanguage : public Language {
   }
 
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
-    SetStyle(text, wxSTC_C_DEFAULT,
-             settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style(),
+             true);
     SetStyle(text, wxSTC_C_COMMENT,
              settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_C_COMMENTLINE,
@@ -705,7 +704,7 @@ class MarkdownLanguage : public Language {
   }
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     SetStyle(text, wxSTC_MARKDOWN_DEFAULT,
-             settings.fonts_and_colors().default_style());
+             settings.fonts_and_colors().default_style(), true);
     SetStyle(text, wxSTC_MARKDOWN_LINE_BEGIN,
              settings.fonts_and_colors().markdown_line_begin());
     SetStyle(text, wxSTC_MARKDOWN_STRONG1,
@@ -762,7 +761,7 @@ class PropertiesLanguage : public Language {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_PROPS_DEFAULT,
-             settings.fonts_and_colors().default_style());
+             settings.fonts_and_colors().default_style(), true);
     SetStyle(text, wxSTC_PROPS_COMMENT,
              settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_PROPS_SECTION,
@@ -781,8 +780,8 @@ class XmlLanguage : public Language {
   void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
-    SetStyle(text, wxSTC_H_DEFAULT,
-             settings.fonts_and_colors().default_style());
+    SetStyle(text, wxSTC_H_DEFAULT, settings.fonts_and_colors().default_style(),
+             true);
     SetStyle(text, wxSTC_H_TAG, settings.fonts_and_colors().h_tag());
     SetStyle(text, wxSTC_H_TAGUNKNOWN,
              settings.fonts_and_colors().h_tagunknown());
@@ -831,7 +830,7 @@ class CmakeLanguage : public Language {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_CMAKE_DEFAULT,
-             settings.fonts_and_colors().default_style());
+             settings.fonts_and_colors().default_style(), true);
     SetStyle(text, wxSTC_CMAKE_COMMENT,
              settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_CMAKE_STRINGDQ,
@@ -899,7 +898,7 @@ class LuaLanguage : public Language {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_LUA_DEFAULT,
-             settings.fonts_and_colors().default_style());
+             settings.fonts_and_colors().default_style(), true);
     SetStyle(text, wxSTC_LUA_COMMENT,
              settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_LUA_COMMENTLINE,
@@ -956,7 +955,7 @@ class YamlLanguage : public Language {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_YAML_DEFAULT,
-             settings.fonts_and_colors().default_style());
+             settings.fonts_and_colors().default_style(), true);
     SetStyle(text, wxSTC_YAML_COMMENT,
              settings.fonts_and_colors().style_comment());
     SetStyle(text, wxSTC_YAML_IDENTIFIER,

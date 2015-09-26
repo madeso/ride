@@ -6,6 +6,8 @@
 #include <ride/wx.h>
 #include <wx/stc/stc.h>
 
+#include "settings.pb.h"  // NOLINT this is how we include it
+
 class Language;
 class Project;
 
@@ -27,6 +29,9 @@ enum {
   ID_INDICATOR_SEARCH_HIGHLIGHT,
   ID_INDICATOR_SELECT_HIGHLIGHT
 };
+
+void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style,
+              bool force = false);
 
 void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set,
                     Language* language, Project* project);

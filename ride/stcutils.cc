@@ -77,35 +77,36 @@ int C(ride::FoldFlags f) {
   return ret;
 }
 
-void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style) {
+void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style,
+              bool force) {
   if (style.use_typeface()) {
     text->StyleSetFaceName(id, style.typeface());
   }
 
-  if (style.use_bold()) {
+  if (style.use_bold() || force) {
     // optional bool bold = 4;
     text->StyleSetBold(id, style.bold());
   }
 
-  if (style.use_italic()) {
+  if (style.use_italic() || force) {
     // optional bool italic = 6;
     text->StyleSetItalic(id, style.italic());
   }
 
-  if (style.use_underline()) {
+  if (style.use_underline() || force) {
     // optional bool underline = 8;
     text->StyleSetUnderline(id, style.underline());
   }
 
-  if (style.use_font_size()) {
+  if (style.use_font_size() || force) {
     // optional int32 font_size = 10;
     text->StyleSetSize(id, style.font_size());
   }
 
-  if (style.use_foreground()) {
+  if (style.use_foreground() || force) {
     text->StyleSetForeground(id, C(style.foreground()));
   }
-  if (style.use_background()) {
+  if (style.use_background() || force) {
     text->StyleSetBackground(id, C(style.background()));
   }
 }
@@ -240,7 +241,7 @@ void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl,
 void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl,
                                  const ride::Settings& set) {
   SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT,
-           set.fonts_and_colors().default_style());
+           set.fonts_and_colors().default_style(), true);
   SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER,
            set.fonts_and_colors().line_number_style());
   SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT,

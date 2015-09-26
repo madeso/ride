@@ -616,21 +616,16 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	fgSizer28->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
 	wxFlexGridSizer* fgSizer31;
-	fgSizer31 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer31->AddGrowableCol( 1 );
+	fgSizer31 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer31->AddGrowableCol( 0 );
 	fgSizer31->SetFlexibleDirection( wxBOTH );
 	fgSizer31->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText55 = new wxStaticText( m_themes, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText55->Wrap( -1 );
-	fgSizer31->Add( m_staticText55, 0, wxALL, 5 );
 	
 	m_button40 = new wxButton( m_themes, wxID_ANY, wxT("Use selected theme"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer31->Add( m_button40, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText56 = new wxStaticText( m_themes, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText56->Wrap( -1 );
-	fgSizer31->Add( m_staticText56, 0, wxALL, 5 );
+	m_button42 = new wxButton( m_themes, wxID_ANY, wxT("Import theme"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_button42, 0, wxALL|wxEXPAND, 5 );
 	
 	m_button41 = new wxButton( m_themes, wxID_ANY, wxT("Export selected theme"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer31->Add( m_button41, 0, wxALL|wxEXPAND, 5 );
@@ -762,6 +757,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiEditHighlightKeyword->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiShowLineNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	m_button40->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeApplySelected ), NULL, this );
+	m_button42->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeImport ), NULL, this );
 	m_button41->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeExportSelected ), NULL, this );
 	uiThemeListAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnAdd ), NULL, this );
 	 uiThemeListChange->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnEdit ), NULL, this );
@@ -839,6 +835,7 @@ Settings::~Settings()
 	uiEditHighlightKeyword->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	uiShowLineNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
 	m_button40->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeApplySelected ), NULL, this );
+	m_button42->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeImport ), NULL, this );
 	m_button41->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeExportSelected ), NULL, this );
 	uiThemeListAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnAdd ), NULL, this );
 	 uiThemeListChange->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnEdit ), NULL, this );
