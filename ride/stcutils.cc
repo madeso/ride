@@ -6,10 +6,14 @@
 
 #include <wx/stc/stc.h>
 
+#include <string>
+#include <vector>
+
 #include "settings.pb.h"  // NOLINT this is how we include it
 
 #include "ride/language.h"
 #include "ride/project.h"
+#include "ride/wxutils.h"
 
 enum { FOLDING_WIDTH = 16 };
 
@@ -77,10 +81,59 @@ int C(ride::FoldFlags f) {
   return ret;
 }
 
+bool Contains(const std::vector<wxString>& vec, const std::string& str) {
+  return std::find(vec.begin(), vec.end(), str) != vec.end();
+}
+
+std::string DetermineTypeface(const std::string& suggestion) {
+  const std::vector<wxString> all_fonts = ListFonts(false);
+  if (Contains(all_fonts, suggestion)) {
+    // the suggestion is found
+    return suggestion;
+  }
+
+  const std::vector<wxString> monospaced = ListFonts(true);
+
+#define FONTCHECK(FONTNAME)               \
+  do {                                    \
+    if (Contains(monospaced, FONTNAME)) { \
+      return FONTNAME;                    \
+    }                                     \
+  } while (false)
+  // http://hivelogic.com/articles/top-10-programming-fonts
+  // http://www.slant.co/topics/67/~what-are-the-best-programming-fonts
+  FONTCHECK("Source Code Pro");
+  FONTCHECK("Consolas");
+  FONTCHECK("Ubuntu Mono");
+  FONTCHECK("Inconsolata-g");
+  FONTCHECK("Inconsolata");
+  FONTCHECK("Monaco");
+  FONTCHECK("DejaVu Sans Mono");
+  FONTCHECK("Deja Vu Sans Mono");
+  FONTCHECK("Anonymous Pro");
+  // FONTCHECK("Menlo"); // doen't work on size 10?
+  FONTCHECK("Envy Code R");
+  FONTCHECK("Droid Sans Mono");
+  FONTCHECK("Liberation Mono");
+  FONTCHECK("Monofur");
+  FONTCHECK("Proggy");
+  FONTCHECK("Profont");
+  FONTCHECK("ProFontX");
+  FONTCHECK("Andale Mono");
+  FONTCHECK("Courier New");
+  FONTCHECK("Courier");
+#undef FONTCHECK
+
+  return "";
+}
+
 void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style,
               bool force) {
-  if (style.use_typeface()) {
-    text->StyleSetFaceName(id, style.typeface());
+  if (style.use_typeface() || force) {
+    const std::string typeface = DetermineTypeface(style.typeface());
+    if (false == typeface.empty()) {
+      text->StyleSetFaceName(id, typeface);
+    }
   }
 
   if (style.use_bold() || force) {

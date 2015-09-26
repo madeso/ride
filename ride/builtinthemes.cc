@@ -91,6 +91,9 @@ void SetupDefaultTemplate(ride::FontsAndColors* colors) {
   colors->set_allocated_foldersub_background(new ride::Color(bkg));
   colors->set_allocated_folder_background(new ride::Color(bkg));
   colors->set_allocated_folderopen_background(new ride::Color(bkg));
+
+  colors->set_allocated_props_key(NewStyle(NewColor(128, 128, 255)));
+  colors->set_allocated_props_section(NewStyle(NULL, NULL, true));
 }
 
 //////////////////////////////////////////////////////////////////////////

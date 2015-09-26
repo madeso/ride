@@ -53,4 +53,6 @@ wxString ToShortString(const wxString& str, int max_length);
 int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos,
                 const wxString& text, int flags, int* findEnd);
 
+std::vector<wxString> ListFonts(bool show_only_fixed_size);
+
 #endif  // RIDE_WXUTILS_H_

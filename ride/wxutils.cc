@@ -6,6 +6,7 @@
 
 #include <wx/listctrl.h>
 #include <wx/tokenzr.h>
+#include <wx/fontenum.h>
 
 #include <wx/stc/stc.h>
 
@@ -171,4 +172,24 @@ int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos,
 #else
   return stc->FindText(minPos, maxPos, text, flags, findEnd);
 #endif
+}
+
+class FontLister : public wxFontEnumerator {
+ public:
+  std::vector<wxString> fonts;
+  virtual bool OnFacename(const wxString& font) {
+    // The version of the font with the '@' is a version optimized for writing
+    // in the vertical direction.
+    // https://groups.google.com/forum/#!topic/wx-users/3hjrhPlSULI
+    if (font.StartsWith("@") == false) {
+      fonts.push_back(font);
+    }
+    return true;
+  }
+};
+
+std::vector<wxString> ListFonts(bool show_only_fixed_size) {
+  FontLister all_fonts;
+  all_fonts.EnumerateFacenames(wxFONTENCODING_SYSTEM, show_only_fixed_size);
+  return all_fonts.fonts;
 }

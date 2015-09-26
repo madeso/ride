@@ -4,8 +4,6 @@
 
 #include <ride/wx.h>
 
-#include <wx/fontenum.h>
-
 #include <vector>
 #include <algorithm>
 
@@ -362,32 +360,16 @@ const std::vector<StyleLink*>& StyleLinks() {
   return links;
 }
 
-class FontLister : public wxFontEnumerator {
- public:
-  std::vector<wxString> fonts;
-  virtual bool OnFacename(const wxString& font) {
-    // The version of the font with the '@' is a version optimized for writing
-    // in the vertical direction.
-    // https://groups.google.com/forum/#!topic/wx-users/3hjrhPlSULI
-    if (font.StartsWith("@") == false) {
-      fonts.push_back(font);
-    }
-    return true;
-  }
-};
-
 void SettingsDlg::OnOnlyFixedSysChanged(wxCommandEvent& event) {
   UpdateStyleFonts();
 }
 
 void SettingsDlg::UpdateStyleFonts() {
-  FontLister all_fonts;
+  const std::vector<wxString> all_fonts =
+      ListFonts(uiStyleOnlyFixedSize->GetValue());
 
-  const bool show_only_fixed_size = uiStyleOnlyFixedSize->GetValue();
-
-  all_fonts.EnumerateFacenames(wxFONTENCODING_SYSTEM, show_only_fixed_size);
   uiStyleTypeface->Clear();
-  for (auto name : all_fonts.fonts) {
+  for (auto name : all_fonts) {
     uiStyleTypeface->AppendString(name);
   }
 }
