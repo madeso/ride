@@ -127,6 +127,10 @@ class BasicThemeBuilder {
     select_hi_ = c;
     return *this;
   }
+  BasicThemeBuilder& set_edge_color(const ride::Color& c) {
+    edge_color_ = c;
+    return *this;
+  }
 
   const ride::Color& selection_foreground() { return selection_foreground_; }
   const ride::Color& selection_background() { return selection_background_; }
@@ -143,6 +147,7 @@ class BasicThemeBuilder {
   const ride::Color& warning_front() { return warning_front_; }
   const ride::Color& search_hi() { return search_hi_; }
   const ride::Color& select_hi() { return select_hi_; }
+  const ride::Color& edge_color() { return edge_color_; }
 
   void Setup(ride::FontsAndColors* colors) {
     colors->set_use_selection_background(true);
@@ -193,6 +198,8 @@ class BasicThemeBuilder {
         New(Style(New(error_front_), New(error_))));
     colors->set_allocated_annotation_warning_style(
         New(Style(New(warning_front_), New(warning_))));
+
+    colors->set_allocated_edgecolor(New(edge_color_));
   }
 
  private:
@@ -211,6 +218,7 @@ class BasicThemeBuilder {
   ride::Color warning_front_;
   ride::Color search_hi_;
   ride::Color select_hi_;
+  ride::Color edge_color_;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -232,6 +240,7 @@ void SetupDefaultTheme(ride::FontsAndColors* colors) {
       .set_warning_front(Color(0))
       .set_search_hi(Color(200))
       .set_select_hi(Color(180))
+      .set_edge_color(Color(0))
       .Setup(colors);
 }
 
@@ -272,6 +281,7 @@ void SetupSolarizedDarkTheme(ride::FontsAndColors* colors) {
       .set_warning_front(solarized_base03)
       .set_search_hi(solarized_base01)
       .set_select_hi(solarized_base02)
+      .set_edge_color(solarized_base01)
       .Setup(colors);
 }
 
