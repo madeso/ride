@@ -107,8 +107,16 @@ class BasicThemeBuilder {
     error_ = c;
     return *this;
   }
+  BasicThemeBuilder& set_error_front(const ride::Color& c) {
+    error_front_ = c;
+    return *this;
+  }
   BasicThemeBuilder& set_warning(const ride::Color& c) {
     warning_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_warning_front(const ride::Color& c) {
+    warning_front_ = c;
     return *this;
   }
   BasicThemeBuilder& set_search_hi(const ride::Color& c) {
@@ -130,7 +138,9 @@ class BasicThemeBuilder {
   const ride::Color& comment() { return comment_; }
   const ride::Color& keyword() { return keyword_; }
   const ride::Color& error() { return error_; }
+  const ride::Color& error_front() { return error_front_; }
   const ride::Color& warning() { return warning_; }
+  const ride::Color& warning_front() { return warning_front_; }
   const ride::Color& search_hi() { return search_hi_; }
   const ride::Color& select_hi() { return select_hi_; }
 
@@ -179,9 +189,10 @@ class BasicThemeBuilder {
     colors->set_allocated_indicator_select_highlight(
         New(Indicator(select_hi_)));
 
-    colors->set_allocated_annotation_error_style(New(Style(NULL, New(error_))));
+    colors->set_allocated_annotation_error_style(
+        New(Style(New(error_front_), New(error_))));
     colors->set_allocated_annotation_warning_style(
-        New(Style(NULL, New(warning_))));
+        New(Style(New(warning_front_), New(warning_))));
   }
 
  private:
@@ -195,7 +206,9 @@ class BasicThemeBuilder {
   ride::Color comment_;
   ride::Color keyword_;
   ride::Color error_;
+  ride::Color error_front_;
   ride::Color warning_;
+  ride::Color warning_front_;
   ride::Color search_hi_;
   ride::Color select_hi_;
 };
@@ -214,7 +227,9 @@ void SetupDefaultTheme(ride::FontsAndColors* colors) {
       .set_comment(Color(128, 64, 0))
       .set_keyword(Color(0, 0, 255))
       .set_error(Color(255, 60, 60))
+      .set_error_front(Color(0))
       .set_warning(Color(0, 255, 0))
+      .set_warning_front(Color(0))
       .set_search_hi(Color(200))
       .set_select_hi(Color(180))
       .Setup(colors);
@@ -252,7 +267,9 @@ void SetupSolarizedDarkTheme(ride::FontsAndColors* colors) {
       .set_comment(solarized_base01)
       .set_keyword(solarized_base1)
       .set_error(solarized_red)
+      .set_error_front(solarized_base03)
       .set_warning(solarized_base00)
+      .set_warning_front(solarized_base03)
       .set_search_hi(solarized_base01)
       .set_select_hi(solarized_base02)
       .Setup(colors);
