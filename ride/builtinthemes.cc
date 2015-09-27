@@ -65,51 +65,159 @@ ride::Indicator Indicator(const ride::Color& c) {
 
 //////////////////////////////////////////////////////////////////////////
 
+class BasicThemeBuilder {
+ public:
+  BasicThemeBuilder& set_selection_foreground(const ride::Color& c) {
+    selection_foreground_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_selection_background(const ride::Color& c) {
+    selection_background_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_front(const ride::Color& c) {
+    front_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_bkg(const ride::Color& c) {
+    bkg_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_fold_hi(const ride::Color& c) {
+    fold_hi_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_fold_lo(const ride::Color& c) {
+    fold_lo_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_selected_line(const ride::Color& c) {
+    selected_line_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_comment(const ride::Color& c) {
+    comment_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_keyword(const ride::Color& c) {
+    keyword_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_error(const ride::Color& c) {
+    error_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_warning(const ride::Color& c) {
+    warning_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_search_hi(const ride::Color& c) {
+    search_hi_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_select_hi(const ride::Color& c) {
+    select_hi_ = c;
+    return *this;
+  }
+
+  const ride::Color& selection_foreground() { return selection_foreground_; }
+  const ride::Color& selection_background() { return selection_background_; }
+  const ride::Color& front() { return front_; }
+  const ride::Color& bkg() { return bkg_; }
+  const ride::Color& fold_hi() { return fold_hi_; }
+  const ride::Color& fold_lo() { return fold_lo_; }
+  const ride::Color& selected_line() { return selected_line_; }
+  const ride::Color& comment() { return comment_; }
+  const ride::Color& keyword() { return keyword_; }
+  const ride::Color& error() { return error_; }
+  const ride::Color& warning() { return warning_; }
+  const ride::Color& search_hi() { return search_hi_; }
+  const ride::Color& select_hi() { return select_hi_; }
+
+  void Setup(ride::FontsAndColors* colors) {
+    colors->set_use_selection_background(true);
+    colors->set_use_selection_foreground(true);
+    colors->set_allocated_selection_foreground(New(selection_foreground_));
+    colors->set_allocated_selection_background(New(selection_background_));
+
+    colors->set_allocated_default_style(New(Style(New(front_), New(bkg_))));
+    colors->set_allocated_line_number_style(New(Style(NULL, New(bkg_))));
+    colors->set_allocated_fold_margin_hi(New(fold_hi_));
+    colors->set_allocated_fold_margin_low(New(fold_lo_));
+
+    colors->set_allocated_selected_line(New(selected_line_));  // yellow
+
+    colors->set_allocated_style_comment(New(Style(New(comment_))));
+    colors->set_allocated_style_commentline(New(Style(New(comment_))));
+    colors->set_allocated_style_commentdoc(New(Style(New(comment_))));
+    colors->set_allocated_style_commentlinedoc(New(Style(New(comment_))));
+    colors->set_allocated_style_keyword(New(Style(New(keyword_), NULL, true)));
+
+    colors->set_allocated_folderend_foreground(New(front_));
+    colors->set_allocated_folderopenmid_foreground(New(front_));
+    colors->set_allocated_foldermidtail_foreground(New(front_));
+    colors->set_allocated_foldertail_foreground(New(front_));
+    colors->set_allocated_foldersub_foreground(New(front_));
+    colors->set_allocated_folder_foreground(New(front_));
+    colors->set_allocated_folderopen_foreground(New(front_));
+
+    colors->set_allocated_folderend_background(New(bkg_));
+    colors->set_allocated_folderopenmid_background(New(bkg_));
+    colors->set_allocated_foldermidtail_background(New(bkg_));
+    colors->set_allocated_foldertail_background(New(bkg_));
+    colors->set_allocated_foldersub_background(New(bkg_));
+    colors->set_allocated_folder_background(New(bkg_));
+    colors->set_allocated_folderopen_background(New(bkg_));
+
+    colors->set_allocated_props_key(New(Style(New(keyword_))));
+    colors->set_allocated_props_section(New(Style(NULL, NULL, true)));
+
+    colors->set_allocated_indicator_error(New(Indicator(error_)));
+    colors->set_allocated_indicator_warning(New(Indicator(warning_)));
+    colors->set_allocated_indicator_search_highlight(
+        New(Indicator(search_hi_)));
+    colors->set_allocated_indicator_select_highlight(
+        New(Indicator(select_hi_)));
+
+    colors->set_allocated_annotation_error_style(New(Style(NULL, New(error_))));
+    colors->set_allocated_annotation_warning_style(
+        New(Style(NULL, New(warning_))));
+  }
+
+ private:
+  ride::Color selection_foreground_;
+  ride::Color selection_background_;
+  ride::Color front_;
+  ride::Color bkg_;
+  ride::Color fold_hi_;
+  ride::Color fold_lo_;
+  ride::Color selected_line_;
+  ride::Color comment_;
+  ride::Color keyword_;
+  ride::Color error_;
+  ride::Color warning_;
+  ride::Color search_hi_;
+  ride::Color select_hi_;
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 void SetupDefaultTemplate(ride::FontsAndColors* colors) {
-  colors->set_use_selection_background(true);
-  colors->set_use_selection_foreground(true);
-  colors->set_allocated_selection_foreground(New(Color(255, 255, 255)));
-  colors->set_allocated_selection_background(New(Color(0, 0, 0)));
-
-  ride::Color bkg = Color(224);
-
-  colors->set_allocated_default_style(New(Style(New(Color(0)), New(bkg))));
-  colors->set_allocated_line_number_style(New(Style(NULL, New(bkg))));
-  colors->set_allocated_fold_margin_hi(New(Color(192)));
-  colors->set_allocated_fold_margin_low(New(Color(224)));
-
-  colors->set_allocated_selected_line(New(Color(255, 255, 0)));  // yellow
-
-  ride::Color comment = Color(128, 64, 0);
-  colors->set_allocated_style_comment(New(Style(New(comment))));
-  colors->set_allocated_style_commentline(New(Style(New(comment))));
-  colors->set_allocated_style_commentdoc(New(Style(New(comment))));
-  colors->set_allocated_style_commentlinedoc(New(Style(New(comment))));
-  colors->set_allocated_style_keyword(
-      New(Style(New(Color(0, 0, 255)), NULL, true)));
-
-  colors->set_allocated_folderend_background(New(bkg));
-  colors->set_allocated_folderopenmid_background(New(bkg));
-  colors->set_allocated_foldermidtail_background(New(bkg));
-  colors->set_allocated_foldertail_background(New(bkg));
-  colors->set_allocated_foldersub_background(New(bkg));
-  colors->set_allocated_folder_background(New(bkg));
-  colors->set_allocated_folderopen_background(New(bkg));
-
-  colors->set_allocated_props_key(New(Style(New(Color(128, 128, 255)))));
-  colors->set_allocated_props_section(New(Style(NULL, NULL, true)));
-
-  const ride::Color error = Color(255, 60, 60);
-  const ride::Color warning = Color(0, 255, 0);
-
-  colors->set_allocated_indicator_error(New(Indicator(error)));
-  colors->set_allocated_indicator_warning(New(Indicator(warning)));
-  colors->set_allocated_indicator_search_highlight(New(Indicator(Color(200))));
-  colors->set_allocated_indicator_select_highlight(New(Indicator(Color(180))));
-
-  colors->set_allocated_annotation_error_style(New(Style(NULL, New(error))));
-  colors->set_allocated_annotation_warning_style(
-      New(Style(NULL, New(warning))));
+  BasicThemeBuilder()
+      .set_selection_foreground(Color(255))
+      .set_selection_background(Color(0))
+      .set_front(Color(0))
+      .set_bkg(Color(224))
+      .set_fold_hi(Color(192))
+      .set_fold_lo(Color(224))
+      .set_selected_line(Color(255, 255, 0))  // yellow
+      .set_comment(Color(128, 64, 0))
+      .set_keyword(Color(0, 0, 255))
+      .set_error(Color(255, 60, 60))
+      .set_warning(Color(0, 255, 0))
+      .set_search_hi(Color(200))
+      .set_select_hi(Color(180))
+      .Setup(colors);
 }
 
 //////////////////////////////////////////////////////////////////////////
