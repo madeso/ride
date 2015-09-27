@@ -202,7 +202,7 @@ class BasicThemeBuilder {
 
 //////////////////////////////////////////////////////////////////////////
 
-void SetupDefaultTemplate(ride::FontsAndColors* colors) {
+void SetupDefaultTheme(ride::FontsAndColors* colors) {
   BasicThemeBuilder()
       .set_selection_foreground(Color(255))
       .set_selection_background(Color(0))
@@ -240,13 +240,35 @@ const ride::Color solarized_blue = Color(38, 139, 210);
 const ride::Color solarized_cyan = Color(42, 161, 152);
 const ride::Color solarized_green = Color(133, 153, 0);
 
+void SetupSolarizedDarkTheme(ride::FontsAndColors* colors) {
+  BasicThemeBuilder()
+      .set_selection_foreground(solarized_base1)
+      .set_selection_background(solarized_base00)
+      .set_front(solarized_base0)
+      .set_bkg(solarized_base03)
+      .set_fold_hi(solarized_base02)
+      .set_fold_lo(solarized_base02)
+      .set_selected_line(solarized_base02)
+      .set_comment(solarized_base01)
+      .set_keyword(solarized_base1)
+      .set_error(solarized_red)
+      .set_warning(solarized_base00)
+      .set_search_hi(solarized_base01)
+      .set_select_hi(solarized_base02)
+      .Setup(colors);
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 void AddBuiltInThemes(::ride::Settings* settings) {
   ThemeList* themes = settings->mutable_themes();
 
   ride::Theme* default_theme = GetOrCreateTheme(themes, "Ride (default)");
-  SetupDefaultTemplate(default_theme->mutable_data());
+  SetupDefaultTheme(default_theme->mutable_data());
+
+  ride::Theme* solarized_dark_theme =
+      GetOrCreateTheme(themes, "Solarized (dark)");
+  SetupSolarizedDarkTheme(solarized_dark_theme->mutable_data());
 
   if (false == settings->has_fonts_and_colors()) {
     // if the current settings is missing the fonts and colors
