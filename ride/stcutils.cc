@@ -268,6 +268,36 @@ int C(ride::Annotation ann) {
   }
 }
 
+int C(ride::CaretStyle st) {
+  switch (st) {
+    case ride::CARETSTYLE_INVISIBLE:
+      return wxSTC_CARETSTYLE_INVISIBLE;
+    case ride::CARETSTYLE_LINE:
+      return wxSTC_CARETSTYLE_LINE;
+    case ride::CARETSTYLE_BLOCK:
+      return wxSTC_CARETSTYLE_BLOCK;
+    default:
+      assert(0 && "Unknown caret sticky");
+      return wxSTC_CARETSTYLE_LINE;
+      break;
+  }
+}
+
+int C(ride::CaretSticky st) {
+  switch (st) {
+    case ride::CARETSTICKY_OFF:
+      return wxSTC_CARETSTICKY_OFF;
+    case ride::CARETSTICKY_WHITESPACE:
+      return wxSTC_CARETSTICKY_WHITESPACE;
+    case ride::CARETSTICKY_ON:
+      return wxSTC_CARETSTICKY_ON;
+    default:
+      assert(0 && "Unknown caret sticky");
+      return wxSTC_CARETSTICKY_ON;
+      break;
+  }
+}
+
 void SetIndicator(wxStyledTextCtrl* text, int index,
                   const ride::Indicator& indicator,
                   const ride::IndicatorStyle indicator_style) {
@@ -289,6 +319,17 @@ void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl,
   text_ctrl->SetCaretLineVisible(set.current_line_visible());
   // todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier
   // to change settings
+
+  // and caret
+
+  int cp = text_ctrl->GetCaretPeriod();
+  int cw = text_ctrl->GetCaretWidth();
+
+  text_ctrl->SetCaretForeground(C(set.fonts_and_colors().caret_foreground()));
+  text_ctrl->SetCaretPeriod(set.caret_period());
+  text_ctrl->SetCaretWidth(set.caret_width());
+  text_ctrl->SetCaretSticky(C(set.caret_sticky()));
+  text_ctrl->SetCaretStyle(C(set.caret_style()));
 }
 
 void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl,

@@ -97,6 +97,18 @@ enum MarkerSymbol {
 	MARKERSYMBOL_PLUS = 8;
 }
 
+enum CaretStyle {
+	CARETSTYLE_INVISIBLE = 0;
+	CARETSTYLE_LINE = 1;
+	CARETSTYLE_BLOCK = 2;
+}
+
+enum CaretSticky {
+	CARETSTICKY_OFF = 0;
+	CARETSTICKY_WHITESPACE = 1;
+	CARETSTICKY_ON = 2;
+}
+
 message Style {
   optional bool use_typeface = 1 [default=false];
   optional string typeface = 2;
@@ -165,6 +177,8 @@ message FontsAndColors {
   optional Color foldersub_background = 48;
   optional Color folder_background = 49;
   optional Color folderopen_background = 50;
+
+  optional Color caret_foreground = 51;
 
   // common styles
   optional Style style_comment = 101;
@@ -335,6 +349,11 @@ message Settings {
   optional bool show_compiler_messages_as_annotations = 40 [default=true];
 
   repeated Theme themes = 41;
+
+  optional int32 caret_period = 42 [default=500];
+  optional int32 caret_width = 43 [default=1];
+  optional CaretSticky caret_sticky = 44 [default=CARETSTICKY_ON];
+  optional CaretStyle caret_style = 45 [default=CARETSTYLE_LINE];
 
   // indicators
   optional IndicatorStyle indicator_error = 100 [default=INDICATORSTYLE_SQUIGGLE];
