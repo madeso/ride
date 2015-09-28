@@ -256,42 +256,45 @@ void SetupDefaultTheme(ride::FontsAndColors* colors) {
 //////////////////////////////////////////////////////////////////////////
 
 // solarized colors from http://ethanschoonover.com/solarized
-const ride::Color solarized_base03 = Color(0, 43, 54);
-const ride::Color solarized_base02 = Color(7, 54, 66);
-const ride::Color solarized_base01 = Color(88, 110, 117);
-const ride::Color solarized_base00 = Color(101, 123, 131);
-const ride::Color solarized_base0 = Color(131, 148, 150);
-const ride::Color solarized_base1 = Color(147, 161, 161);
-const ride::Color solarized_base2 = Color(238, 232, 213);
-const ride::Color solarized_base3 = Color(253, 246, 227);
-const ride::Color solarized_yellow = Color(181, 137, 0);
-const ride::Color solarized_orange = Color(203, 75, 22);
-const ride::Color solarized_red = Color(220, 50, 47);
-const ride::Color solarized_magenta = Color(211, 54, 130);
-const ride::Color solarized_violet = Color(108, 113, 196);
-const ride::Color solarized_blue = Color(38, 139, 210);
-const ride::Color solarized_cyan = Color(42, 161, 152);
-const ride::Color solarized_green = Color(133, 153, 0);
+namespace solarized {
+const ride::Color base03 = Color(0, 43, 54);
+const ride::Color base02 = Color(7, 54, 66);
+const ride::Color base01 = Color(88, 110, 117);
+const ride::Color base00 = Color(101, 123, 131);
+const ride::Color base0 = Color(131, 148, 150);
+const ride::Color base1 = Color(147, 161, 161);
+const ride::Color base2 = Color(238, 232, 213);
+const ride::Color base3 = Color(253, 246, 227);
+const ride::Color yellow = Color(181, 137, 0);
+const ride::Color orange = Color(203, 75, 22);
+const ride::Color red = Color(220, 50, 47);
+const ride::Color magenta = Color(211, 54, 130);
+const ride::Color violet = Color(108, 113, 196);
+const ride::Color blue = Color(38, 139, 210);
+const ride::Color cyan = Color(42, 161, 152);
+const ride::Color green = Color(133, 153, 0);
+}  // namespace solarized
 
 void SetupSolarizedDarkTheme(ride::FontsAndColors* colors) {
+  using namespace solarized;  // NOLINT
   BasicThemeBuilder()
-      .set_selection_foreground(solarized_base1)
-      .set_selection_background(solarized_base00)
-      .set_front(solarized_base0)
-      .set_bkg(solarized_base03)
-      .set_fold_hi(solarized_base02)
-      .set_fold_lo(solarized_base02)
-      .set_selected_line(solarized_base02)
-      .set_comment(solarized_base01)
-      .set_keyword(solarized_base1)
-      .set_error(solarized_red)
-      .set_error_front(solarized_base03)
-      .set_warning(solarized_base00)
-      .set_warning_front(solarized_base03)
-      .set_search_hi(solarized_base01)
-      .set_select_hi(solarized_base02)
-      .set_edge_color(solarized_base01)
-      .set_caret_color(solarized_base00)
+      .set_selection_foreground(base1)
+      .set_selection_background(base00)
+      .set_front(base0)
+      .set_bkg(base03)
+      .set_fold_hi(base02)
+      .set_fold_lo(base02)
+      .set_selected_line(base02)
+      .set_comment(base01)
+      .set_keyword(base1)
+      .set_error(red)
+      .set_error_front(base03)
+      .set_warning(base00)
+      .set_warning_front(base03)
+      .set_search_hi(base01)
+      .set_select_hi(base02)
+      .set_edge_color(base01)
+      .set_caret_color(base00)
       .Setup(colors);
 }
 
