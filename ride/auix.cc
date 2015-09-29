@@ -51,6 +51,25 @@ static void IndentPressedBitmap(wxRect* rect, int button_state) {
   }
 }
 
+wxColour CalculateBaseColor() {
+#if defined(__WXMAC__) && wxOSX_USE_COCOA_OR_CARBON
+  wxColor baseColour =
+      wxColour(wxMacCreateCGColorFromHITheme(kThemeBrushToolbarBackground));
+#else
+  wxColor baseColour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
+#endif
+
+  // the baseColour is too pale to use as our base colour,
+  // so darken it a bit --
+  if ((255 - baseColour.Red()) + (255 - baseColour.Green()) +
+          (255 - baseColour.Blue()) <
+      60) {
+    baseColour = baseColour.ChangeLightness(92);
+  }
+
+  return baseColour;
+}
+
 }  // namespace
 
 class wxAuiCommandCapture : public wxEvtHandler {
@@ -118,28 +137,17 @@ AuiGenericTabArt::AuiGenericTabArt() {
   m_fixedTabWidth = 100;
   m_tabCtrlHeight = 0;
 
-#if defined(__WXMAC__) && wxOSX_USE_COCOA_OR_CARBON
-  wxColor baseColour =
-      wxColour(wxMacCreateCGColorFromHITheme(kThemeBrushToolbarBackground));
-#else
-  wxColor baseColour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
-#endif
+  const wxColor baseColour = CalculateBaseColor();
+  const wxColor borderColor = baseColour.ChangeLightness(75);
+  const wxColor black(0, 0, 0);
 
-  // the baseColour is too pale to use as our base colour,
-  // so darken it a bit --
-  if ((255 - baseColour.Red()) + (255 - baseColour.Green()) +
-          (255 - baseColour.Blue()) <
-      60) {
-    baseColour = baseColour.ChangeLightness(92);
-  }
-
-  m_activeColour = baseColour;
-  m_baseColour = baseColour;
-  wxColor borderColour = baseColour.ChangeLightness(75);
-
-  m_borderPen = wxPen(borderColour);
-  m_baseColourPen = wxPen(m_baseColour);
-  m_baseColourBrush = wxBrush(m_baseColour);
+  backgroundColor_ = baseColour;
+  activeTabBackground_ = baseColour;
+  inactiveTabBackground_ = baseColour;
+  activeBorderColor_ = borderColor;
+  inactiveBorderColor_ = borderColor;
+  activeTabText_ = black;
+  inactiveTabText_ = black;
 
   m_activeCloseBmp = wxAuiBitmapFromBits(close_bits, 16, 16, *wxBLACK);
   m_disabledCloseBmp =
@@ -203,8 +211,6 @@ void AuiGenericTabArt::DrawBackground(wxDC& dc,  // NOLINT
                                       wxWindow* WXUNUSED(wnd),
                                       const wxRect& rect) {
   // draw background
-  wxColor top_color = m_baseColour.ChangeLightness(90);
-  wxColor bottom_color = m_baseColour.ChangeLightness(170);
   wxRect r;
 
   if (m_flags & wxAUI_NB_BOTTOM)
@@ -214,14 +220,14 @@ void AuiGenericTabArt::DrawBackground(wxDC& dc,  // NOLINT
   else  // for wxAUI_NB_TOP
     r = wxRect(rect.x, rect.y, rect.width + 2, rect.height - 3);
 
-  dc.SetPen(m_baseColourPen);
-  dc.SetBrush(m_baseColourBrush);
+  dc.SetPen(wxPen(backgroundColor_));
+  dc.SetBrush(wxBrush(backgroundColor_));
   dc.DrawRectangle(r);
 
   // draw base lines
 
-  dc.SetPen(wxPen(bottom_color));
-  dc.SetBrush(wxBrush(bottom_color));
+  dc.SetPen(wxPen(activeTabBackground_));
+  dc.SetBrush(wxBrush(activeTabBackground_));
 
   int y = rect.GetHeight();
   int w = rect.GetWidth();
@@ -340,12 +346,12 @@ void AuiGenericTabArt::DrawTab(wxDC& dc, wxWindow* wnd,  // NOLINT
 
     // draw base background color
     wxRect r(tab_x, tab_y, tab_width, tab_height);
-    dc.SetPen(wxPen(m_activeColour));
-    dc.SetBrush(wxBrush(m_activeColour));
+    dc.SetPen(wxPen(activeTabBackground_));
+    dc.SetBrush(wxBrush(activeTabBackground_));
     dc.DrawRectangle(r.x + 1, r.y + 1, r.width - 1, r.height - 4);
 
     // these two points help the rounded corners appear more antialiased
-    dc.SetPen(wxPen(m_activeColour));
+    dc.SetPen(wxPen(activeTabBackground_));
     dc.DrawPoint(r.x + 2, r.y + 1);
     dc.DrawPoint(r.x + r.width - 2, r.y + 1);
 
@@ -360,25 +366,24 @@ void AuiGenericTabArt::DrawTab(wxDC& dc, wxWindow* wnd,  // NOLINT
 
     wxRect r(tab_x, tab_y + 1, tab_width, tab_height - 3);
 
-    dc.SetPen(wxPen(m_baseColour));
-    dc.SetBrush(wxBrush(m_baseColour));
+    dc.SetPen(wxPen(inactiveTabBackground_));
+    dc.SetBrush(wxBrush(inactiveTabBackground_));
     dc.DrawRectangle(r.x + 1, r.y + 1, r.width - 1, r.height - 4);
   }
 
   // draw tab outline
-  dc.SetPen(m_borderPen);
+  if (page.active) {
+    dc.SetPen(wxPen(activeBorderColor_));
+  } else {
+    dc.SetPen(wxPen(inactiveBorderColor_));
+  }
   dc.SetBrush(*wxTRANSPARENT_BRUSH);
   dc.DrawPolygon(WXSIZEOF(border_points), border_points);
 
   // there are two horizontal grey lines at the bottom of the tab control,
   // this gets rid of the top one of those lines in the tab control
   if (page.active) {
-    if (m_flags & wxAUI_NB_BOTTOM)
-      dc.SetPen(wxPen(m_baseColour.ChangeLightness(170)));
-    // TODO(unknown): else if (m_flags &wxAUI_NB_LEFT) {}
-    // TODO(unknown): else if (m_flags &wxAUI_NB_RIGHT) {}
-    else  // for wxAUI_NB_TOP
-      dc.SetPen(m_baseColourPen);
+    dc.SetPen(wxPen(activeTabBackground_));
     dc.DrawLine(border_points[0].x + 1, border_points[0].y, border_points[5].x,
                 border_points[5].y);
   }
@@ -410,7 +415,11 @@ void AuiGenericTabArt::DrawTab(wxDC& dc, wxWindow* wnd,  // NOLINT
       dc, caption, tab_width - (text_offset - tab_x) - close_button_width);
 
   // draw tab text
-  dc.SetTextForeground(wxColor(255, 255, 255));
+  if (page.active) {
+    dc.SetTextForeground(activeTabText_);
+  } else {
+    dc.SetTextForeground(inactiveTabText_);
+  }
   dc.DrawText(draw_text, text_offset,
               drawn_tab_yoff + (drawn_tab_height) / 2 - (texty / 2) - 1);
 
@@ -669,12 +678,14 @@ void AuiGenericTabArt::SetMeasuringFont(const wxFont& font) {
 }
 
 void AuiGenericTabArt::SetColour(const wxColour& colour) {
-  m_baseColour = colour;
-  m_borderPen = wxPen(m_baseColour.ChangeLightness(75));
-  m_baseColourPen = wxPen(m_baseColour);
-  m_baseColourBrush = wxBrush(m_baseColour);
+  wxColor border = colour.ChangeLightness(75);
+
+  backgroundColor_ = colour;
+  inactiveTabBackground_ = colour;
+  activeBorderColor_ = border;
+  inactiveBorderColor_ = border;
 }
 
 void AuiGenericTabArt::SetActiveColour(const wxColour& colour) {
-  m_activeColour = colour;
+  activeTabBackground_ = colour;
 }

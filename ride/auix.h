@@ -52,11 +52,16 @@ class AuiGenericTabArt : public wxAuiTabArt {
   wxFont m_normalFont;
   wxFont m_selectedFont;
   wxFont m_measuringFont;
-  wxColour m_baseColour;
-  wxPen m_baseColourPen;
-  wxPen m_borderPen;
-  wxBrush m_baseColourBrush;
-  wxColour m_activeColour;
+
+  // base
+  wxColor backgroundColor_;
+  wxColor activeTabBackground_;
+  wxColor inactiveTabBackground_;
+  wxColor activeBorderColor_;
+  wxColor inactiveBorderColor_;
+  wxColor activeTabText_;
+  wxColor inactiveTabText_;
+
   wxBitmap m_activeCloseBmp;
   wxBitmap m_disabledCloseBmp;
   wxBitmap m_activeLeftBmp;
