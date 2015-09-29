@@ -328,7 +328,8 @@ wxDateTime GetFileDetectionTime(const wxString file) {
 
 FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
                    const wxString& file, Languages* languages)
-    : wxControl(parent, wxID_ANY),
+    : wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                wxBORDER_NONE),
       tab_(this),
       main_(parent),
       notebook_(anotebook),
@@ -343,10 +344,7 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
   this->SetClientData(&tab_);
   BindEvents();
   text_ = new wxStyledTextCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-#ifndef __WXMAC__
-                               wxSUNKEN_BORDER |
-#endif
-                                   wxVSCROLL);
+                               wxBORDER_NONE | wxVSCROLL);
 
   filename_ = file;
   LoadFile();

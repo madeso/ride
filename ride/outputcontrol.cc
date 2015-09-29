@@ -37,9 +37,12 @@ const wxRegEx& GetCommandLineRegex() {
 }
 
 OutputControl::OutputControl(MainWindow* main)
-    : wxControl(main, wxID_ANY), main_(main) {
-  text_ = new wxStyledTextCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                               wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
+    : wxControl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                wxBORDER_NONE),
+      main_(main) {
+  text_ = new wxStyledTextCtrl(
+      this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+      wxBORDER_NONE | wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(text_, 1, wxEXPAND);
   SetSizer(sizer);
