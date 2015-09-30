@@ -3,8 +3,10 @@
 #ifndef RIDE_AUIX_H_
 #define RIDE_AUIX_H_
 
+#include <ride/wx.h>
+
 #include <wx/aui/tabart.h>
-#include "ride/wx.h"
+#include <wx/generic/statusbr.h>
 
 class AuiGenericTabArt : public wxAuiTabArt {
  public:
@@ -48,6 +50,14 @@ class AuiGenericTabArt : public wxAuiTabArt {
   int GetBestTabCtrlSize(wxWindow* wnd, const wxAuiNotebookPageArray& pages,
                          const wxSize& requiredBmpSize) wxOVERRIDE;
 
+  AuiGenericTabArt& set_backgroundColor(const wxColor& c);
+  AuiGenericTabArt& set_activeTabBackground(const wxColor& c);
+  AuiGenericTabArt& set_inactiveTabBackground(const wxColor& c);
+  AuiGenericTabArt& set_activeBorderColor(const wxColor& c);
+  AuiGenericTabArt& set_inactiveBorderColor(const wxColor& c);
+  AuiGenericTabArt& set_activeTabText(const wxColor& c);
+  AuiGenericTabArt& set_inactiveTabText(const wxColor& c);
+
  protected:
   wxFont m_normalFont;
   wxFont m_selectedFont;
@@ -74,6 +84,28 @@ class AuiGenericTabArt : public wxAuiTabArt {
   int m_fixedTabWidth;
   int m_tabCtrlHeight;
   unsigned int m_flags;
+};
+
+class StatusBarGeneric : public wxStatusBarGeneric {
+ public:
+  StatusBarGeneric(wxWindow* parent, wxWindowID winid = wxID_ANY,
+                   long style = wxSTB_DEFAULT_STYLE,  // NOLINT wx default
+                   const wxString& name = wxStatusBarNameStr);
+
+  void set_shadow(const wxColor& shadow) { shadow_ = shadow; }
+  void set_highlight(const wxColor& highlight) { highlight_ = highlight; }
+
+ private:
+  wxColor shadow_;
+  wxColor highlight_;
+  int wxFIELD_TEXT_MARGIN;
+
+ protected:
+  void InitColours();
+
+  void DrawField(wxDC& dc, int i, int textHeight);  // NOLINT
+
+  void DrawFieldText(wxDC& dc, const wxRect& rect, int i, int textHeight);
 };
 
 #endif  // RIDE_AUIX_H_

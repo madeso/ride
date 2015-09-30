@@ -232,16 +232,25 @@ void AuiGenericTabArt::DrawBackground(wxDC& dc,  // NOLINT
   int y = rect.GetHeight();
   int w = rect.GetWidth();
 
+  int tabheight = 3;
+
+  int ypos = -1;
   if (m_flags & wxAUI_NB_BOTTOM) {
     // dc.SetBrush(wxBrush(bottom_color));
-    dc.DrawRectangle(-1, 0, w + 2, 4);
+    dc.DrawRectangle(-1, 0, w + 2, tabheight);
+    ypos = tabheight;
   } else {
     // for wxAUI_NB_TOP
     // TODO(unknown): else if (m_flags &wxAUI_NB_LEFT) {}
     // TODO(unknown): else if (m_flags &wxAUI_NB_RIGHT) {}
     // dc.SetBrush(m_baseColourBrush);
-    dc.DrawRectangle(-1, y - 4, w + 2, 4);
+    dc.DrawRectangle(-1, y - tabheight, w + 2, tabheight);
+    ypos = y - tabheight;
   }
+
+  dc.SetPen(wxPen(activeBorderColor_));
+  ypos -= 1;
+  dc.DrawLine(-1, ypos, w + 2, ypos);
 }
 
 // DrawTab() draws an individual tab.
@@ -354,21 +363,17 @@ void AuiGenericTabArt::DrawTab(wxDC& dc, wxWindow* wnd,  // NOLINT
     dc.SetPen(wxPen(activeTabBackground_));
     dc.DrawPoint(r.x + 2, r.y + 1);
     dc.DrawPoint(r.x + r.width - 2, r.y + 1);
-
-    // set rectangle down a bit for gradient drawing
-    r.SetHeight(r.GetHeight() / 2);
-    r.x += 2;
-    r.width -= 3;
-    r.y += r.height;
-    r.y -= 2;
   } else {
     // draw inactive tab
 
-    wxRect r(tab_x, tab_y + 1, tab_width, tab_height - 3);
+    wxRect r(tab_x, tab_y, tab_width, tab_height);
 
     dc.SetPen(wxPen(inactiveTabBackground_));
     dc.SetBrush(wxBrush(inactiveTabBackground_));
     dc.DrawRectangle(r.x + 1, r.y + 1, r.width - 1, r.height - 4);
+
+    // dc.DrawPoint(r.x + 2, r.y + 1);
+    // dc.DrawPoint(r.x + r.width - 2, r.y + 1);
   }
 
   // draw tab outline
@@ -688,4 +693,157 @@ void AuiGenericTabArt::SetColour(const wxColour& colour) {
 
 void AuiGenericTabArt::SetActiveColour(const wxColour& colour) {
   activeTabBackground_ = colour;
+}
+
+AuiGenericTabArt& AuiGenericTabArt::set_backgroundColor(const wxColor& c) {
+  backgroundColor_ = c;
+  return *this;
+}
+AuiGenericTabArt& AuiGenericTabArt::set_activeTabBackground(const wxColor& c) {
+  activeTabBackground_ = c;
+  return *this;
+}
+AuiGenericTabArt& AuiGenericTabArt::set_inactiveTabBackground(
+    const wxColor& c) {
+  inactiveTabBackground_ = c;
+  return *this;
+}
+AuiGenericTabArt& AuiGenericTabArt::set_activeBorderColor(const wxColor& c) {
+  activeBorderColor_ = c;
+  return *this;
+}
+AuiGenericTabArt& AuiGenericTabArt::set_inactiveBorderColor(const wxColor& c) {
+  inactiveBorderColor_ = c;
+  return *this;
+}
+AuiGenericTabArt& AuiGenericTabArt::set_activeTabText(const wxColor& c) {
+  activeTabText_ = c;
+  return *this;
+}
+AuiGenericTabArt& AuiGenericTabArt::set_inactiveTabText(const wxColor& c) {
+  inactiveTabText_ = c;
+  return *this;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+StatusBarGeneric::StatusBarGeneric(wxWindow* parent, wxWindowID winid,
+                                   long style,  // NOLINT wx default
+                                   const wxString& name) {
+  wxFIELD_TEXT_MARGIN = 5;
+  shadow_ = wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW);
+  highlight_ = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHILIGHT);
+  Init();
+  Create(parent, winid, style, name);
+  SetThemeEnabled(false);
+}
+
+void StatusBarGeneric::InitColours() {
+  m_mediumShadowPen = wxPen(shadow_);
+  m_hilightPen = wxPen(highlight_);
+}
+
+void StatusBarGeneric::DrawField(wxDC& dc, int i, int textHeight) {  // NOLINT
+  wxRect rect;
+  GetFieldRect(i, rect);
+
+  if (rect.GetWidth() <= 0)
+    return;  // happens when the status bar is shrunk in a very small area!
+
+  int style = m_panes[i].GetStyle();
+  if (style == wxSB_RAISED || style == wxSB_SUNKEN) {
+    // Draw border
+    // For wxSB_SUNKEN: paint a grey background, plus 3-d border (one black
+    // rectangle)
+    // Inside this, left and top sides (dark grey). Bottom and right (white).
+    // Reverse it for wxSB_RAISED
+
+    dc.SetPen((style == wxSB_RAISED) ? m_mediumShadowPen : m_hilightPen);
+
+    // Right and bottom lines
+    dc.DrawLine(rect.x + rect.width, rect.y, rect.x + rect.width,
+                rect.y + rect.height);
+    dc.DrawLine(rect.x + rect.width, rect.y + rect.height, rect.x,
+                rect.y + rect.height);
+
+    dc.SetPen((style == wxSB_RAISED) ? m_hilightPen : m_mediumShadowPen);
+
+    // Left and top lines
+    dc.DrawLine(rect.x, rect.y + rect.height, rect.x, rect.y);
+    dc.DrawLine(rect.x, rect.y, rect.x + rect.width, rect.y);
+  } else if (style == wxSB_NORMAL) {
+    if (i != 0) {
+      dc.SetPen(m_mediumShadowPen);
+      dc.DrawLine(rect.x, rect.y + rect.height, rect.x, rect.y);
+    }
+  }
+
+  DrawFieldText(dc, rect, i, textHeight);
+}
+
+void StatusBarGeneric::DrawFieldText(wxDC& dc, const wxRect& rect, int i,
+                                     int textHeight) {
+  wxString text(GetStatusText(i));
+  if (text.empty()) return;  // optimization
+
+  int xpos = rect.x + wxFIELD_TEXT_MARGIN,
+      maxWidth = rect.width - 2 * wxFIELD_TEXT_MARGIN,
+      ypos = static_cast<int>(((rect.height - textHeight) / 2) + rect.y + 0.5);
+
+  if (ShowsSizeGrip()) {
+    // don't write text over the size grip:
+    // NOTE: overloading DoGetClientSize() and GetClientAreaOrigin() wouldn't
+    //       work because the adjustment needs to be done only when drawing
+    //       the field text and not also when drawing the background, the
+    //       size grip itself, etc
+    if ((GetLayoutDirection() == wxLayout_RightToLeft && i == 0) ||
+        (GetLayoutDirection() != wxLayout_RightToLeft &&
+         i == static_cast<int>(m_panes.GetCount() - 1))) {
+      const wxRect& gripRc = GetSizeGripRect();
+
+      // NOTE: we don't need any special treatment wrt to the layout direction
+      //       since DrawText() will automatically adjust the origin of the
+      //       text accordingly to the layout in use
+
+      maxWidth -= gripRc.width;
+    }
+  }
+
+  // eventually ellipsize the text so that it fits the field width
+
+  wxEllipsizeMode ellmode = (wxEllipsizeMode)-1;
+  if (HasFlag(wxSTB_ELLIPSIZE_START))
+    ellmode = wxELLIPSIZE_START;
+  else if (HasFlag(wxSTB_ELLIPSIZE_MIDDLE))
+    ellmode = wxELLIPSIZE_MIDDLE;
+  else if (HasFlag(wxSTB_ELLIPSIZE_END))
+    ellmode = wxELLIPSIZE_END;
+
+  if (ellmode == (wxEllipsizeMode)-1) {
+    // if we have the wxSTB_SHOW_TIPS we must set the ellipsized flag even if
+    // we don't ellipsize the text but just truncate it
+    if (HasFlag(wxSTB_SHOW_TIPS))
+      SetEllipsizedFlag(i, dc.GetTextExtent(text).GetWidth() > maxWidth);
+
+    dc.SetClippingRegion(rect);
+  } else {
+    text = wxControl::Ellipsize(text, dc, ellmode, maxWidth,
+                                wxELLIPSIZE_FLAGS_EXPAND_TABS);
+    // Ellipsize() will do something only if necessary
+
+    // update the ellipsization status for this pane; this is used later to
+    // decide whether a tooltip should be shown or not for this pane
+    // (if we have wxSTB_SHOW_TIPS)
+    SetEllipsizedFlag(i, text != GetStatusText(i));
+  }
+
+#if defined(__WXGTK__) || defined(__WXMAC__)
+  xpos++;
+  ypos++;
+#endif
+
+  // draw the text
+  dc.DrawText(text, xpos, ypos);
+
+  if (ellmode == (wxEllipsizeMode)-1) dc.DestroyClippingRegion();
 }
