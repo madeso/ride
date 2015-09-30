@@ -57,6 +57,7 @@ class Main:
             r'#include <wx/aui/[a-zA-Z]+\.h>',
             r'#include <wx/html/[a-zA-Z]+\.h>',
             r'#include <wx/stc/[a-zA-Z]+\.h>',
+            r'#include <wx/generic/[a-zA-Z]+\.h>',
             r'#include <[a-zA-Z0-9]+>',
             r'#include "[a-zA-Z]+.pb.h"',
             r'#include "cpptoml.h"',
