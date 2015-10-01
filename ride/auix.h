@@ -5,7 +5,10 @@
 
 #include <ride/wx.h>
 
+#include <wx/defs.h>
+
 #include <wx/aui/tabart.h>
+
 #include <wx/generic/statusbr.h>
 
 class AuiGenericTabArt : public wxAuiTabArt {
