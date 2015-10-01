@@ -5,8 +5,6 @@
 
 #include <ride/wx.h>
 
-#include <wx/defs.h>
-
 #include <wx/aui/tabart.h>
 
 #include <wx/generic/statusbr.h>
@@ -16,42 +14,42 @@ class AuiGenericTabArt : public wxAuiTabArt {
   AuiGenericTabArt();
   virtual ~AuiGenericTabArt();
 
-  wxAuiTabArt* Clone() wxOVERRIDE;
-  void SetFlags(unsigned int flags) wxOVERRIDE;
-  void SetSizingInfo(const wxSize& tabCtrlSize, size_t tabCount) wxOVERRIDE;
+  wxAuiTabArt* Clone();
+  void SetFlags(unsigned int flags);
+  void SetSizingInfo(const wxSize& tabCtrlSize, size_t tabCount);
 
-  void SetNormalFont(const wxFont& font) wxOVERRIDE;
-  void SetSelectedFont(const wxFont& font) wxOVERRIDE;
-  void SetMeasuringFont(const wxFont& font) wxOVERRIDE;
-  void SetColour(const wxColour& colour) wxOVERRIDE;
-  void SetActiveColour(const wxColour& colour) wxOVERRIDE;
+  void SetNormalFont(const wxFont& font);
+  void SetSelectedFont(const wxFont& font);
+  void SetMeasuringFont(const wxFont& font);
+  void SetColour(const wxColour& colour);
+  void SetActiveColour(const wxColour& colour);
 
-  void DrawBorder(wxDC& dc, wxWindow* wnd, const wxRect& rect) wxOVERRIDE;
+  void DrawBorder(wxDC& dc, wxWindow* wnd, const wxRect& rect);
 
-  void DrawBackground(wxDC& dc, wxWindow* wnd, const wxRect& rect) wxOVERRIDE;
+  void DrawBackground(wxDC& dc, wxWindow* wnd, const wxRect& rect);
 
   void DrawTab(wxDC& dc, wxWindow* wnd, const wxAuiNotebookPage& pane,
                const wxRect& inRect, int closeButtonState, wxRect* outTabRect,
-               wxRect* outButtonRect, int* xExtent) wxOVERRIDE;
+               wxRect* outButtonRect, int* xExtent);
 
   void DrawButton(wxDC& dc, wxWindow* wnd, const wxRect& inRect, int bitmapId,
-                  int buttonState, int orientation, wxRect* outRect) wxOVERRIDE;
+                  int buttonState, int orientation, wxRect* outRect);
 
-  int GetIndentSize() wxOVERRIDE;
+  int GetIndentSize();
 
-  int GetBorderWidth(wxWindow* wnd) wxOVERRIDE;
+  int GetBorderWidth(wxWindow* wnd);
 
-  int GetAdditionalBorderSpace(wxWindow* wnd) wxOVERRIDE;
+  int GetAdditionalBorderSpace(wxWindow* wnd);
 
   wxSize GetTabSize(wxDC& dc, wxWindow* wnd, const wxString& caption,
                     const wxBitmap& bitmap, bool active, int closeButtonState,
-                    int* xExtent) wxOVERRIDE;
+                    int* xExtent);
 
   int ShowDropDown(wxWindow* wnd, const wxAuiNotebookPageArray& items,
-                   int activeIdx) wxOVERRIDE;
+                   int activeIdx);
 
   int GetBestTabCtrlSize(wxWindow* wnd, const wxAuiNotebookPageArray& pages,
-                         const wxSize& requiredBmpSize) wxOVERRIDE;
+                         const wxSize& requiredBmpSize);
 
   AuiGenericTabArt& set_backgroundColor(const wxColor& c);
   AuiGenericTabArt& set_activeTabBackground(const wxColor& c);
