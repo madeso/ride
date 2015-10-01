@@ -29,6 +29,7 @@
 #include "ride/startpage.h"
 #include "ride/tab.h"
 #include "ride/wxutils.h"
+#include "ride/auix.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -421,8 +422,16 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   menu_bar->Append(menu_help, "&Help");
   SetMenuBar(menu_bar);
 
-  statusbar_ = CreateStatusBar(STATUSBAR_MAXCOUNT);
-  const int small_width = 50;
+  int sbstyle =
+      wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
+  StatusBarGeneric* sbg = new StatusBarGeneric(this, wxID_ANY, sbstyle);
+  statusbar_ = reinterpret_cast<wxStatusBar*>(sbg);
+  SetStatusBar(statusbar_);
+  sbg->set_highlight(wxColor(255, 255, 255));
+  sbg->set_shadow(wxColor(0, 0, 0));
+  statusbar_->SetFieldsCount(STATUSBAR_MAXCOUNT);
+
+  const int small_width = 60;
   int widths[STATUSBAR_MAXCOUNT] = {
       0,
   };
@@ -432,8 +441,16 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   widths[STATUSBAR_LINE] = small_width;
   widths[STATUSBAR_COL] = small_width;
   widths[STATUSBAR_CH] = small_width;
-  widths[STATUSBAR_INS] = 22;
+  widths[STATUSBAR_INS] = small_width;
   statusbar_->SetStatusWidths(STATUSBAR_MAXCOUNT, widths);
+
+  int styles[STATUSBAR_MAXCOUNT] = {
+      0,
+  };
+  for (int i = 0; i < STATUSBAR_MAXCOUNT; ++i) {
+    styles[i] = wxSB_NORMAL;
+  }
+  statusbar_->SetStatusStyles(STATUSBAR_MAXCOUNT, styles);
 
   CreateNotebook();
 
@@ -459,6 +476,49 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
                                       .CloseButton(true));
 
   new StartPageTab(notebook_, this);
+
+  wxAuiDockArt* dock_art = aui_.GetArtProvider();
+  dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, wxColor(255, 0, 0));
+  dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, wxColor(255, 0, 0));
+  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_COLOUR, wxColor(255, 0, 0));
+  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR,
+                     wxColor(255, 0, 0));
+  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_COLOUR, wxColor(255, 0, 0));
+  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR,
+                     wxColor(255, 0, 0));
+  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR,
+                     wxColor(255, 255, 255));
+  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR,
+                     wxColor(255, 255, 255));
+  dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, wxColor(255, 0, 0));
+  dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, wxColor(0, 0, 255));
+
+  AuiGenericTabArt* tab_art = new AuiGenericTabArt();
+  // tab_art->SetColour(wxColor(255, 0, 0, 0));
+  // tab_art->SetActiveColour(wxColor(255, 0, 0));
+  tab_art->set_backgroundColor(wxColor(255, 0, 0));
+  tab_art->set_activeTabBackground(wxColor(255, 255, 255));
+  tab_art->set_inactiveTabBackground(wxColor(0, 255, 0));
+  tab_art->set_activeBorderColor(wxColor(0, 0, 0));
+  tab_art->set_inactiveBorderColor(wxColor(0, 0, 0, 0));
+  tab_art->set_activeTabText(wxColor(0, 0, 0));
+  tab_art->set_inactiveTabText(wxColor(0, 0, 255));
+  notebook_->SetArtProvider(tab_art);
+
+  wxStatusBar* sb = GetStatusBar();
+  sb->SetForegroundColour(wxColor(255, 255, 255));
+  // sb->SetOwnForegroundColour(wxColor(255, 0, 0));
+  sb->SetBackgroundColour(wxColor(255, 0, 0));
+  // sb->SetOwnBackgroundColour(wxColor(255, 0, 0));
+
+  this->SetForegroundColour(wxColor(255, 0, 0));
+  // this->SetOwnForegroundColour(wxColor(255, 0, 0));
+  this->SetBackgroundColour(wxColor(255, 0, 0));
+  // this->SetOwnBackgroundColour(wxColor(255, 0, 0));
+
+  // sb->SetupColours();
+
+  notebook_->Update();
 
   aui_.Update();
   UpdateTitle();
