@@ -15,6 +15,7 @@ class SettingsDlg;
 class CompilerMessage;
 class FindResultsControl;
 class ProjectExplorer;
+class StatusBarGeneric;
 
 struct FoundEdit {
   FoundEdit(size_t i, FileEdit* e) : index(i), edit(e) {}
@@ -49,6 +50,8 @@ class MainWindow : public wxFrame {
 
   const ride::Settings& settings() const;
   void set_settings(const ride::Settings& settings);
+
+  void UpdateTheme();
 
   void SetStatusBarText(const wxString& text, StatusBarWidgets widget);
 
@@ -182,7 +185,7 @@ class MainWindow : public wxFrame {
   wxMenuItem* menuItemViewCompile_;
 
   wxWindow* last_focus_;
-  wxStatusBar* statusbar_;
+  StatusBarGeneric* statusbar_;
 
   Languages languages_;
 };

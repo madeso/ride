@@ -424,11 +424,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
 
   int sbstyle =
       wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
-  StatusBarGeneric* sbg = new StatusBarGeneric(this, wxID_ANY, sbstyle);
-  statusbar_ = reinterpret_cast<wxStatusBar*>(sbg);
-  SetStatusBar(statusbar_);
-  sbg->set_highlight(wxColor(255, 255, 255));
-  sbg->set_shadow(wxColor(0, 0, 0));
+  statusbar_ = new StatusBarGeneric(this, wxID_ANY, sbstyle);
+  SetStatusBar(reinterpret_cast<wxStatusBar*>(statusbar_));
   statusbar_->SetFieldsCount(STATUSBAR_MAXCOUNT);
 
   const int small_width = 60;
@@ -477,6 +474,25 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
 
   new StartPageTab(notebook_, this);
 
+  UpdateTheme();
+
+  notebook_->Update();
+  aui_.Update();
+
+  aui_.Update();
+  UpdateTitle();
+
+  windows_locations_ = aui_.SavePerspective();
+
+  RestoreSession();
+  UpdateMenuItemView();
+
+  project_->SetMainStatusbarText();
+}
+
+void MainWindow::UpdateTheme() {
+  const ride::FontsAndColors& c = settings_.fonts_and_colors();
+
   wxAuiDockArt* dock_art = aui_.GetArtProvider();
   dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, wxColor(255, 0, 0));
   dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, wxColor(255, 0, 0));
@@ -505,30 +521,14 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   tab_art->set_inactiveTabText(wxColor(0, 0, 255));
   notebook_->SetArtProvider(tab_art);
 
-  wxStatusBar* sb = GetStatusBar();
-  sb->SetForegroundColour(wxColor(255, 255, 255));
-  // sb->SetOwnForegroundColour(wxColor(255, 0, 0));
-  sb->SetBackgroundColour(wxColor(255, 0, 0));
-  // sb->SetOwnBackgroundColour(wxColor(255, 0, 0));
+  statusbar_->set_highlight(wxColor(255, 255, 255));
+  // only used with raised and sunken styles
+  // statusbar_->set_shadow(wxColor(0, 0, 0));
+  statusbar_->SetForegroundColour(wxColor(255, 255, 255));
+  statusbar_->SetBackgroundColour(wxColor(255, 0, 0));
 
   this->SetForegroundColour(wxColor(255, 0, 0));
-  // this->SetOwnForegroundColour(wxColor(255, 0, 0));
   this->SetBackgroundColour(wxColor(255, 0, 0));
-  // this->SetOwnBackgroundColour(wxColor(255, 0, 0));
-
-  // sb->SetupColours();
-
-  notebook_->Update();
-
-  aui_.Update();
-  UpdateTitle();
-
-  windows_locations_ = aui_.SavePerspective();
-
-  RestoreSession();
-  UpdateMenuItemView();
-
-  project_->SetMainStatusbarText();
 }
 
 void MainWindow::OnViewRestoreWindows(wxCommandEvent& event) {
@@ -846,6 +846,7 @@ void MainWindow::set_settings(const ride::Settings& settings) {
   assert(this);
   this->settings_ = settings;
   UpdateAllEdits();
+  UpdateTheme();
   project_explorer_->UpdateColors();
 }
 
