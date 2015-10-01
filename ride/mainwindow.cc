@@ -494,38 +494,40 @@ void MainWindow::UpdateTheme() {
   const ride::FontsAndColors& c = settings_.fonts_and_colors();
 
   wxAuiDockArt* dock_art = aui_.GetArtProvider();
-  dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, wxColor(255, 0, 0));
-  dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, wxColor(255, 0, 0));
-  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_COLOUR, wxColor(255, 0, 0));
+  dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, C(c.dock_background()));
+  dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, C(c.dock_sash()));
+  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_COLOUR,
+                     C(c.dock_active_caption()));
   dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR,
-                     wxColor(255, 0, 0));
-  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_COLOUR, wxColor(255, 0, 0));
+                     C(c.dock_active_caption_gradient()));
+  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_COLOUR,
+                     C(c.dock_inactive_caption()));
   dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR,
-                     wxColor(255, 0, 0));
+                     C(c.dock_inactive_caption_gradient()));
   dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR,
-                     wxColor(255, 255, 255));
+                     C(c.dock_active_caption_text()));
   dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR,
-                     wxColor(255, 255, 255));
-  dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, wxColor(255, 0, 0));
-  dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, wxColor(0, 0, 255));
+                     C(c.dock_inactive_caption_text()));
+  dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, C(c.dock_border()));
+  dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, C(c.dock_gripper()));
 
   AuiGenericTabArt* tab_art = new AuiGenericTabArt();
   // tab_art->SetColour(wxColor(255, 0, 0, 0));
   // tab_art->SetActiveColour(wxColor(255, 0, 0));
-  tab_art->set_backgroundColor(wxColor(255, 0, 0));
-  tab_art->set_activeTabBackground(wxColor(255, 255, 255));
-  tab_art->set_inactiveTabBackground(wxColor(0, 255, 0));
-  tab_art->set_activeBorderColor(wxColor(0, 0, 0));
-  tab_art->set_inactiveBorderColor(wxColor(0, 0, 0, 0));
-  tab_art->set_activeTabText(wxColor(0, 0, 0));
-  tab_art->set_inactiveTabText(wxColor(0, 0, 255));
+  tab_art->set_backgroundColor(C(c.tab_background()));
+  tab_art->set_activeTabBackground(C(c.tab_active_tab()));
+  tab_art->set_inactiveTabBackground(C(c.tab_inactive_tab()));
+  tab_art->set_activeBorderColor(C(c.tab_active_border()));
+  tab_art->set_inactiveBorderColor(C(c.tab_inactive_border()));
+  tab_art->set_activeTabText(C(c.tab_active_text()));
+  tab_art->set_inactiveTabText(C(c.tab_inactive_text()));
   notebook_->SetArtProvider(tab_art);
 
-  statusbar_->set_highlight(wxColor(255, 255, 255));
+  statusbar_->set_highlight(C(c.statusbar_highlight()));
   // only used with raised and sunken styles
   // statusbar_->set_shadow(wxColor(0, 0, 0));
-  statusbar_->SetForegroundColour(wxColor(255, 255, 255));
-  statusbar_->SetBackgroundColour(wxColor(255, 0, 0));
+  statusbar_->SetForegroundColour(C(c.statusbar_foreground()));
+  statusbar_->SetBackgroundColour(C(c.statusbar_background()));
 
   this->SetForegroundColour(wxColor(255, 0, 0));
   this->SetBackgroundColour(wxColor(255, 0, 0));
