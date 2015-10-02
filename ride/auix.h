@@ -96,14 +96,14 @@ class StatusBarGeneric : public wxStatusBarGeneric {
   void set_shadow(const wxColor& shadow) { shadow_ = shadow; }
   void set_highlight(const wxColor& highlight) { highlight_ = highlight; }
 
+  void InitColours();
+
  private:
   wxColor shadow_;
   wxColor highlight_;
   int wxFIELD_TEXT_MARGIN;
 
  protected:
-  void InitColours();
-
   void DrawField(wxDC& dc, int i, int textHeight);  // NOLINT
 
   void DrawFieldText(wxDC& dc, const wxRect& rect, int i, int textHeight);

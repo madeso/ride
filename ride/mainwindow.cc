@@ -523,11 +523,12 @@ void MainWindow::UpdateTheme() {
   tab_art->set_inactiveTabText(C(c.tab_inactive_text()));
   notebook_->SetArtProvider(tab_art);
 
-  statusbar_->set_highlight(C(c.statusbar_highlight()));
   // only used with raised and sunken styles
-  // statusbar_->set_shadow(wxColor(0, 0, 0));
+  // statusbar_->set_highlight();
+  statusbar_->set_shadow(C(c.statusbar_shadow()));
   statusbar_->SetForegroundColour(C(c.statusbar_foreground()));
   statusbar_->SetBackgroundColour(C(c.statusbar_background()));
+  statusbar_->InitColours();
 
   this->SetForegroundColour(wxColor(255, 0, 0));
   this->SetBackgroundColour(wxColor(255, 0, 0));

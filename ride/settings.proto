@@ -294,7 +294,7 @@ message FontsAndColors {
   optional Color tab_inactive_border		    = 1014;
   optional Color tab_active_text			    = 1015;
   optional Color tab_inactive_text			    = 1016;
-  optional Color statusbar_highlight		    = 1017;
+  optional Color statusbar_shadow		        = 1017;
   optional Color statusbar_foreground		    = 1018;
   optional Color statusbar_background		    = 1019;
 }
