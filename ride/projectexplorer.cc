@@ -25,7 +25,7 @@ const std::vector<wxString>& ProjectExplorer::GetFiles() const {
 ProjectExplorer::ProjectExplorer(MainWindow* main)
     : wxTreeCtrl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                  wxTR_HAS_BUTTONS | wxTR_TWIST_BUTTONS | wxTR_MULTIPLE |
-                     wxTR_LINES_AT_ROOT | wxTR_EDIT_LABELS),
+                     wxTR_LINES_AT_ROOT | wxTR_EDIT_LABELS | wxBORDER_NONE),
       images_(16, 16),
       main_(main),
       last_highlighted_item_(NULL) {
