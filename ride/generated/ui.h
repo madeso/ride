@@ -139,6 +139,58 @@ namespace ui
 			wxCheckBox* uiShowLineNumbers;
 			wxPanel* m_panel11;
 			wxPanel* m_window;
+			wxNotebook* m_notebook4;
+			wxPanel* m_panel17;
+			wxStaticText* m_staticText55;
+			wxColourPickerCtrl* uiWindowDockCommonBackground;
+			wxStaticText* m_staticText56;
+			wxColourPickerCtrl* uiWindowDockCommonSash;
+			wxStaticText* m_staticText57;
+			wxColourPickerCtrl* uiWindowDockCommonBorder;
+			wxStaticText* m_staticText58;
+			wxColourPickerCtrl* uiWindowDockCommonGripper;
+			wxStaticText* m_staticText59;
+			wxColourPickerCtrl* uiWindowDockActiveCaption;
+			wxStaticText* m_staticText60;
+			wxColourPickerCtrl* uiWindowDockActiveGradient;
+			wxStaticText* m_staticText61;
+			wxColourPickerCtrl* uiWindowDockActiveText;
+			wxStaticText* m_staticText62;
+			wxColourPickerCtrl* uiWindowDockInactiveCaption;
+			wxStaticText* m_staticText63;
+			wxColourPickerCtrl* uiWindowDockInactiveGradient;
+			wxStaticText* m_staticText64;
+			wxColourPickerCtrl* uiWindowDockInactiveText;
+			wxPanel* m_panel18;
+			wxStaticText* m_staticText65;
+			wxColourPickerCtrl* uiWindowTabCommonBackground;
+			wxStaticText* m_staticText77;
+			wxColourPickerCtrl* uiWindowTabCommonBorder;
+			wxStaticText* m_staticText78;
+			wxColourPickerCtrl* uiWindowTabCommonSash;
+			wxStaticText* m_staticText66;
+			wxColourPickerCtrl* uiWindowTabActiveTab;
+			wxStaticText* m_staticText67;
+			wxColourPickerCtrl* uiWindowTabActiveBorder;
+			wxStaticText* m_staticText68;
+			wxColourPickerCtrl* uiWindowTabActiveText;
+			wxStaticText* m_staticText69;
+			wxColourPickerCtrl* uiWindowTabInactiveTab;
+			wxStaticText* m_staticText70;
+			wxColourPickerCtrl* uiWindowTabInactiveBorder;
+			wxStaticText* m_staticText71;
+			wxColourPickerCtrl* uiWindowTabInactiveText;
+			wxPanel* m_panel19;
+			wxStaticText* m_staticText72;
+			wxComboBox* uiWindowStatusbarStyle;
+			wxStaticText* m_staticText73;
+			wxColourPickerCtrl* uiWindowStatusbarForeground;
+			wxStaticText* m_staticText74;
+			wxColourPickerCtrl* uiWindowStatusbarBackground;
+			wxStaticText* m_staticText75;
+			wxColourPickerCtrl* uiWindowStatusbarShadow;
+			wxStaticText* m_staticText76;
+			wxColourPickerCtrl* uiWindowStatusbarHighlight;
 			wxPanel* m_themes;
 			wxButton* m_button40;
 			wxButton* m_button42;
@@ -175,6 +227,8 @@ namespace ui
 			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnEditChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnWindowColorChange( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnWindowComboChange( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnThemeApplySelected( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnThemeImport( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnThemeExportSelected( wxCommandEvent& event ) { event.Skip(); }

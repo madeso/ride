@@ -109,6 +109,13 @@ enum CaretSticky {
 	CARETSTICKY_ON = 2;
 }
 
+enum StatusbarStyle {
+	STATUSBAR_STYLE_NONE = 0;
+	STATUSBAR_STYLE_BAR = 1;
+	STATUSBAR_STYLE_RAISED = 2;
+	STATUSBAR_STYLE_SUNKEN = 3;
+}
+
 message Style {
   optional bool use_typeface = 1 [default=false];
   optional string typeface = 2;
@@ -287,16 +294,22 @@ message FontsAndColors {
   optional Color dock_inactive_caption_text	    = 1007;
   optional Color dock_border				    = 1008;
   optional Color dock_gripper				    = 1009;
+
   optional Color tab_background				    = 1010;
-  optional Color tab_active_tab				    = 1011;
-  optional Color tab_inactive_tab			    = 1012;
-  optional Color tab_active_border			    = 1013;
-  optional Color tab_inactive_border		    = 1014;
-  optional Color tab_active_text			    = 1015;
-  optional Color tab_inactive_text			    = 1016;
-  optional Color statusbar_shadow		        = 1017;
-  optional Color statusbar_foreground		    = 1018;
-  optional Color statusbar_background		    = 1019;
+  optional Color tab_border				        = 1011;
+  optional Color tab_sash				        = 1012;
+  optional Color tab_active_tab				    = 1013;
+  optional Color tab_inactive_tab			    = 1014;
+  optional Color tab_active_border			    = 1015;
+  optional Color tab_inactive_border		    = 1016;
+  optional Color tab_active_text			    = 1017;
+  optional Color tab_inactive_text			    = 1018;
+  
+  optional StatusbarStyle statusbar_style	    = 1019 [ default=STATUSBAR_STYLE_BAR ] ;
+  optional Color statusbar_shadow		        = 1020;
+  optional Color statusbar_highlight	        = 1021;
+  optional Color statusbar_foreground		    = 1022;
+  optional Color statusbar_background		    = 1023;
 }
 
 message Theme {

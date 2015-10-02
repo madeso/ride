@@ -522,9 +522,13 @@ void MainWindow::UpdateTheme() {
   tab_art->set_activeTabText(C(c.tab_active_text()));
   tab_art->set_inactiveTabText(C(c.tab_inactive_text()));
   notebook_->SetArtProvider(tab_art);
+  notebook_->GetAuiManager().GetArtProvider()->SetColour(
+      wxAUI_DOCKART_BORDER_COLOUR, C(c.tab_border()));
+  notebook_->GetAuiManager().GetArtProvider()->SetColour(
+      wxAUI_DOCKART_SASH_COLOUR, C(c.tab_sash()));
 
-  // only used with raised and sunken styles
-  // statusbar_->set_highlight();
+  // todo: set style
+  statusbar_->set_highlight(C(c.statusbar_highlight()));
   statusbar_->set_shadow(C(c.statusbar_shadow()));
   statusbar_->SetForegroundColour(C(c.statusbar_foreground()));
   statusbar_->SetBackgroundColour(C(c.statusbar_background()));
@@ -659,9 +663,10 @@ void MainWindow::OpenCompilerMessage(const CompilerMessage& message) {
 void MainWindow::CreateNotebook() {
   wxSize client_size = GetClientSize();
 
-  notebook_ = new wxAuiNotebook(
+  notebook_ = new wxAuiNotebook();
+  notebook_->Create(
       this, wxID_ANY, wxPoint(client_size.x, client_size.y), wxSize(430, 200),
-      wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxNO_BORDER);
+      wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxBORDER_NONE);
 
   aui_.AddPane(notebook_, wxAuiPaneInfo()
                               .Name(wxT("notebook_content"))
