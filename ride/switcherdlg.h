@@ -13,8 +13,9 @@
 #define RIDE_SWITCHERDLG_H_
 
 #include <ride/wx.h>
-#include <wx/dynarray.h>
 #include <wx/html/htmlwin.h>
+
+#include <vector>
 
 /*!
  * wxSwitcherItem
@@ -133,7 +134,7 @@ class wxSwitcherItem : public wxObject {
   wxWindow* m_window;
 };
 
-WX_DECLARE_OBJARRAY(wxSwitcherItem, wxSwitcherItemArray);
+typedef std::vector<wxSwitcherItem> wxSwitcherItemArray;
 
 /*!
  * wxSwitcherItems
@@ -184,7 +185,7 @@ class wxSwitcherItems : public wxObject {
   const wxSwitcherItem& GetItem(int i) const;
   wxSwitcherItem& GetItem(int i);
 
-  int GetItemCount() const { return m_items.GetCount(); }
+  int GetItemCount() const { return m_items.size(); }
 
   void SetRowCount(int rows) { m_rowCount = rows; }
   int GetRowCount() const { return m_rowCount; }

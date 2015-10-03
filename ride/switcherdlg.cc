@@ -22,10 +22,6 @@
 #define wxSWITCHER_TEXT_MARGIN_Y 2
 #define wxSWITCHER_USE_BUFFERED_PAINTING 1
 
-#include <wx/arrimpl.cpp>
-
-WX_DEFINE_OBJARRAY(wxSwitcherItemArray);
-
 /*!
  * An object containing information about one item
  */
@@ -74,7 +70,7 @@ bool wxSwitcherItem::operator==(const wxSwitcherItem& item) const {
 IMPLEMENT_CLASS(wxSwitcherItems, wxObject)
 
 bool wxSwitcherItems::operator==(const wxSwitcherItems& items) const {
-  if (m_items.GetCount() != items.m_items.GetCount()) return false;
+  if (m_items.size() != items.m_items.size()) return false;
 
   if (m_selection != items.m_selection || m_rowCount != items.m_rowCount ||
       m_columnCount != items.m_columnCount)
@@ -88,7 +84,7 @@ bool wxSwitcherItems::operator==(const wxSwitcherItems& items) const {
     return false;
 
   size_t i;
-  for (i = 0; i < m_items.GetCount(); i++) {
+  for (i = 0; i < m_items.size(); i++) {
     if (!(m_items[i] == items.m_items[i])) return false;
   }
 
@@ -115,8 +111,8 @@ void wxSwitcherItems::Copy(const wxSwitcherItems& items) {
   Clear();
 
   size_t i;
-  for (i = 0; i < items.m_items.GetCount(); i++) {
-    m_items.Add(items.m_items[i]);
+  for (i = 0; i < items.m_items.size(); i++) {
+    m_items.push_back(items.m_items[i]);
   }
 
   m_selection = items.m_selection;
@@ -143,7 +139,7 @@ wxSwitcherItem& wxSwitcherItems::AddItem(const wxString& title,
 }
 
 wxSwitcherItem& wxSwitcherItems::AddItem(const wxSwitcherItem& item) {
-  m_items.Add(item);
+  m_items.push_back(item);
   return m_items[GetItemCount() - 1];
 }
 
@@ -156,11 +152,11 @@ wxSwitcherItem& wxSwitcherItems::AddGroup(const wxString& title,
   return item;
 }
 
-void wxSwitcherItems::Clear() { m_items.Clear(); }
+void wxSwitcherItems::Clear() { m_items.resize(0); }
 
 int wxSwitcherItems::FindItemByName(const wxString& name) const {
   size_t i;
-  for (i = 0; i < m_items.GetCount(); i++) {
+  for (i = 0; i < m_items.size(); i++) {
     if (m_items[i].GetName() == name) return i;
   }
 
@@ -169,7 +165,7 @@ int wxSwitcherItems::FindItemByName(const wxString& name) const {
 
 int wxSwitcherItems::FindItemById(int id) const {
   size_t i;
-  for (i = 0; i < m_items.GetCount(); i++) {
+  for (i = 0; i < m_items.size(); i++) {
     if (m_items[i].GetId() == id) return i;
   }
 
@@ -227,7 +223,7 @@ void wxSwitcherItems::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
   dc.SetBackgroundMode(wxTRANSPARENT);
 
   size_t i;
-  for (i = 0; i < m_items.GetCount(); i++) {
+  for (i = 0; i < m_items.size(); i++) {
     wxSwitcherItem& item = m_items[i];
     bool selected = (static_cast<int>(i) == m_selection);
 
@@ -300,7 +296,7 @@ wxSize wxSwitcherItems::CalculateItemSize(wxDC& dc) {  // NOLINT
   if (GetItemFont().Ok()) standardFont = GetItemFont();
 
   size_t i;
-  for (i = 0; i < m_items.GetCount(); i++) {
+  for (i = 0; i < m_items.size(); i++) {
     wxSwitcherItem& item = m_items[i];
 
     if (item.GetFont().Ok()) {
@@ -333,8 +329,8 @@ wxSize wxSwitcherItems::CalculateItemSize(wxDC& dc) {  // NOLINT
 
 // Find the index for the item associated with the current focus
 int wxSwitcherItems::GetIndexForFocus() const {
-  for (size_t i = 0; i < m_items.GetCount(); i++) {
-    wxSwitcherItem& item = m_items[i];
+  for (size_t i = 0; i < m_items.size(); i++) {
+    const wxSwitcherItem& item = m_items[i];
     if (item.GetWindow()) {
       if (wxFindFocusDescendant(item.GetWindow())) return i;
     }
@@ -345,8 +341,8 @@ int wxSwitcherItems::GetIndexForFocus() const {
 
 // Hit test, returning an index or -1
 int wxSwitcherItems::HitTest(const wxPoint& pt) const {
-  for (size_t i = 0; i < m_items.GetCount(); i++) {
-    wxSwitcherItem& item = m_items[i];
+  for (size_t i = 0; i < m_items.size(); i++) {
+    const wxSwitcherItem& item = m_items[i];
     if (item.GetRect().Contains(pt)) return static_cast<int>(i);
   }
 
