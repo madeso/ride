@@ -511,6 +511,8 @@ void MainWindow::UpdateTheme() {
   dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, C(c.dock_border()));
   dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, C(c.dock_gripper()));
 
+  // we have to create a new tab art each time as wx copies it around
+  // like crazy and out new values are not set if we just change a member
   AuiGenericTabArt* tab_art = new AuiGenericTabArt();
   // tab_art->SetColour(wxColor(255, 0, 0, 0));
   // tab_art->SetActiveColour(wxColor(255, 0, 0));
@@ -527,7 +529,7 @@ void MainWindow::UpdateTheme() {
   notebook_->GetAuiManager().GetArtProvider()->SetColour(
       wxAUI_DOCKART_SASH_COLOUR, C(c.tab_sash()));
 
-  // todo: set style
+  // TODO(Gustav) Add style
   statusbar_->set_highlight(C(c.statusbar_highlight()));
   statusbar_->set_shadow(C(c.statusbar_shadow()));
   statusbar_->SetForegroundColour(C(c.statusbar_foreground()));
@@ -536,6 +538,9 @@ void MainWindow::UpdateTheme() {
 
   this->SetForegroundColour(wxColor(255, 0, 0));
   this->SetBackgroundColour(wxColor(255, 0, 0));
+
+  aui_.Update();    // we changed the tab art, update all the sizes
+  this->Refresh();  // and then force a repaint
 }
 
 void MainWindow::OnViewRestoreWindows(wxCommandEvent& event) {
