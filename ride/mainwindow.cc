@@ -406,7 +406,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   wxString switcherAccel = wxT("Ctrl+Tab");
 #endif
 
-  AddMenuItem(menu_view, ID_VIEW_SWITCH_PANE, wxString(_("S&witch Window...")) + wxT("\t") + switcherAccel, "");
+  AddMenuItem(menu_view, ID_VIEW_SWITCH_PANE,
+              wxString(_("S&witch Window...")) + wxT("\t") + switcherAccel, "");
   menu_view->AppendSeparator();
 
   // shortcuts stolen from qt creator:
@@ -655,19 +656,18 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 
   // Add the main windows and toolbars, in two separate columns
 
-  // We'll use the item 'id' to store the notebook selection, or -1 if not a page
+  // We'll use the item 'id' to store the notebook selection, or -1 if not a
+  // page
 
   size_t i;
   size_t k;
-  for (k = 0; k < 2; k++)
-  {
+  for (k = 0; k < 2; k++) {
     if (k == 0)
       items.AddGroup(_("Main Windows"), wxT("mainwindows"));
     else
       items.AddGroup(_("Toolbars"), wxT("toolbars")).BreakColumn();
 
-    for (i = 0; i < aui_.GetAllPanes().GetCount(); i++)
-    {
+    for (i = 0; i < aui_.GetAllPanes().GetCount(); i++) {
       wxAuiPaneInfo& info = aui_.GetAllPanes()[i];
 
       wxString name = info.name;
@@ -675,8 +675,8 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 
       wxToolBar* toolBar = wxDynamicCast(info.window, wxToolBar);
 
-      if (!caption.IsEmpty() && ((toolBar != NULL && k == 1) || (toolBar == NULL && k == 0)))
-      {
+      if (!caption.IsEmpty() &&
+          ((toolBar != NULL && k == 1) || (toolBar == NULL && k == 0))) {
         items.AddItem(caption, name, -1).SetWindow(toolBar);
       }
     }
@@ -686,16 +686,13 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 
   items.AddGroup(_("Notebook Pages"), wxT("pages")).BreakColumn();
 
-  for (i = 0; i < aui_.GetAllPanes().GetCount(); i++)
-  {
+  for (i = 0; i < aui_.GetAllPanes().GetCount(); i++) {
     wxAuiPaneInfo& info = aui_.GetAllPanes()[i];
 
     wxAuiNotebook* nb = wxDynamicCast(info.window, wxAuiNotebook);
-    if (nb)
-    {
+    if (nb) {
       size_t j;
-      for (j = 0; j < nb->GetPageCount(); j++)
-      {
+      for (j = 0; j < nb->GetPageCount(); j++) {
         wxString name = nb->GetPageText(j);
         wxWindow* win = nb->GetPage(j);
 
@@ -707,8 +704,7 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
   // Select the focused window
 
   int idx = items.GetIndexForFocus();
-  if (idx != wxNOT_FOUND)
-    items.SetSelection(idx);
+  if (idx != wxNOT_FOUND) items.SetSelection(idx);
 
 #ifdef __WXMAC__
   items.SetBackgroundColour(*wxWHITE);
@@ -718,8 +714,8 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 
   wxSwitcherDialog dlg(items, this);
 
-  // In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
-  // to treat / in the same was as tab (i.e. cycle through the names)
+// In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
+// to treat / in the same was as tab (i.e. cycle through the names)
 
 #ifdef __WXGTK__
   dlg.SetExtraNavigationKey(wxT('/'));
@@ -732,23 +728,19 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 
   int ans = dlg.ShowModal();
 
-  if (ans == wxID_OK && dlg.GetSelection() != -1)
-  {
+  if (ans == wxID_OK && dlg.GetSelection() != -1) {
     wxSwitcherItem& item = items.GetItem(dlg.GetSelection());
 
-    if (item.GetId() == -1)
-    {
+    if (item.GetId() == -1) {
       wxAuiPaneInfo& info = aui_.GetPane(item.GetName());
       info.Show();
       aui_.Update();
       info.window->SetFocus();
-    }
-    else
-    {
-      wxAuiNotebook* nb = wxDynamicCast(item.GetWindow()->GetParent(), wxAuiNotebook);
+    } else {
+      wxAuiNotebook* nb =
+          wxDynamicCast(item.GetWindow()->GetParent(), wxAuiNotebook);
       wxWindow* win = item.GetWindow();
-      if (nb)
-      {
+      if (nb) {
         nb->SetSelection(item.GetId());
         win->SetFocus();
       }
