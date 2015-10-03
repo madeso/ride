@@ -30,6 +30,7 @@
 #include "ride/tab.h"
 #include "ride/wxutils.h"
 #include "ride/auix.h"
+#include "ride/switcherdlg.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -81,6 +82,7 @@ enum {
   ID_VIEW_RESTORE_WINDOWS,
   ID_VIEW_SAVE_LAYOUT,
   ID_VIEW_LOAD_LAYOUT,
+  ID_VIEW_SWITCH_PANE,
   ID_VIEW_SHOW_FINDRESULT,
   ID_VIEW_SHOW_START,
   ID_VIEW_SHOW_PROJECT,
@@ -154,6 +156,8 @@ void MainWindow::BindEvents() {
   Bind(wxEVT_MENU, &MainWindow::OnViewShowBuild, this, ID_VIEW_SHOW_BUILD);
   Bind(wxEVT_MENU, &MainWindow::OnViewShowCompile, this, ID_VIEW_SHOW_COMPILE);
   Bind(wxEVT_MENU, &MainWindow::OnViewShowProject, this, ID_VIEW_SHOW_PROJECT);
+  Bind(wxEVT_MENU, &MainWindow::OnViewShitchPane, this, ID_VIEW_SWITCH_PANE);
+
   Bind(wxEVT_MENU, &MainWindow::OnAbout, this, wxID_ABOUT);
 
   Bind(wxEVT_CLOSE_WINDOW, &MainWindow::OnClose, this);
@@ -393,6 +397,16 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   AddMenuItem(menu_view, ID_VIEW_RESTORE_WINDOWS, "Restore window layout", "");
   AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
+
+#if defined(__WXMAC__)
+  wxString switcherAccel = wxT("Alt+Tab");
+#elif defined(__WXGTK__)
+  wxString switcherAccel = wxT("Ctrl+/");
+#else
+  wxString switcherAccel = wxT("Ctrl+Tab");
+#endif
+
+  AddMenuItem(menu_view, ID_VIEW_SWITCH_PANE, wxString(_("S&witch Window...")) + wxT("\t") + switcherAccel, "");
   menu_view->AppendSeparator();
 
   // shortcuts stolen from qt creator:
@@ -493,7 +507,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
 void MainWindow::UpdateTheme() {
   const ride::FontsAndColors& c = settings_.fonts_and_colors();
 
-  wxAuiDockArt* dock_art = aui_.GetArtProvider();
+  wxAuiDockArt* dock_art = new wxAuiDefaultDockArt();
   dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, C(c.dock_background()));
   dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, C(c.dock_sash()));
   dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_COLOUR,
@@ -510,6 +524,7 @@ void MainWindow::UpdateTheme() {
                      C(c.dock_inactive_caption_text()));
   dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, C(c.dock_border()));
   dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, C(c.dock_gripper()));
+  aui_.SetArtProvider(dock_art);
 
   // we have to create a new tab art each time as wx copies it around
   // like crazy and out new values are not set if we just change a member
@@ -632,6 +647,113 @@ void MainWindow::OnViewShowCompile(wxCommandEvent& event) {
 void MainWindow::OnViewShowProject(wxCommandEvent& event) {
   ShowHideAui(&aui_, PANE_PROJECT);
   UpdateMenuItemView();
+}
+
+void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
+  wxSwitcherItems items;
+  items.SetRowCount(12);
+
+  // Add the main windows and toolbars, in two separate columns
+
+  // We'll use the item 'id' to store the notebook selection, or -1 if not a page
+
+  size_t i;
+  size_t k;
+  for (k = 0; k < 2; k++)
+  {
+    if (k == 0)
+      items.AddGroup(_("Main Windows"), wxT("mainwindows"));
+    else
+      items.AddGroup(_("Toolbars"), wxT("toolbars")).BreakColumn();
+
+    for (i = 0; i < aui_.GetAllPanes().GetCount(); i++)
+    {
+      wxAuiPaneInfo& info = aui_.GetAllPanes()[i];
+
+      wxString name = info.name;
+      wxString caption = info.caption;
+
+      wxToolBar* toolBar = wxDynamicCast(info.window, wxToolBar);
+
+      if (!caption.IsEmpty() && ((toolBar != NULL && k == 1) || (toolBar == NULL && k == 0)))
+      {
+        items.AddItem(caption, name, -1).SetWindow(toolBar);
+      }
+    }
+  }
+
+  // Now add the wxAuiNotebook pages
+
+  items.AddGroup(_("Notebook Pages"), wxT("pages")).BreakColumn();
+
+  for (i = 0; i < aui_.GetAllPanes().GetCount(); i++)
+  {
+    wxAuiPaneInfo& info = aui_.GetAllPanes()[i];
+
+    wxAuiNotebook* nb = wxDynamicCast(info.window, wxAuiNotebook);
+    if (nb)
+    {
+      size_t j;
+      for (j = 0; j < nb->GetPageCount(); j++)
+      {
+        wxString name = nb->GetPageText(j);
+        wxWindow* win = nb->GetPage(j);
+
+        items.AddItem(name, name, j, nb->GetPageBitmap(j)).SetWindow(win);
+      }
+    }
+  }
+
+  // Select the focused window
+
+  int idx = items.GetIndexForFocus();
+  if (idx != wxNOT_FOUND)
+    items.SetSelection(idx);
+
+#ifdef __WXMAC__
+  items.SetBackgroundColour(*wxWHITE);
+#endif
+
+  // Show the switcher dialog
+
+  wxSwitcherDialog dlg(items, this);
+
+  // In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
+  // to treat / in the same was as tab (i.e. cycle through the names)
+
+#ifdef __WXGTK__
+  dlg.SetExtraNavigationKey(wxT('/'));
+#endif
+
+#ifdef __WXMAC__
+  dlg.SetBackgroundColour(*wxWHITE);
+  dlg.SetModifierKey(WXK_ALT);
+#endif
+
+  int ans = dlg.ShowModal();
+
+  if (ans == wxID_OK && dlg.GetSelection() != -1)
+  {
+    wxSwitcherItem& item = items.GetItem(dlg.GetSelection());
+
+    if (item.GetId() == -1)
+    {
+      wxAuiPaneInfo& info = aui_.GetPane(item.GetName());
+      info.Show();
+      aui_.Update();
+      info.window->SetFocus();
+    }
+    else
+    {
+      wxAuiNotebook* nb = wxDynamicCast(item.GetWindow()->GetParent(), wxAuiNotebook);
+      wxWindow* win = item.GetWindow();
+      if (nb)
+      {
+        nb->SetSelection(item.GetId());
+        win->SetFocus();
+      }
+    }
+  }
 }
 
 void CreateNewFile(const wxString& project_root, MainWindow* main,
