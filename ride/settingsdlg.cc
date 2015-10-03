@@ -144,6 +144,11 @@ class SettingsDlg : public ui::Settings {
   void OnlyAllowNumberChars(wxKeyEvent& event);
 
   //////////////////////////////////////////////////////////////////////////
+  // Window tab
+  void OnWindowColorChange(wxColourPickerEvent& event);
+  void OnWindowComboChange(wxCommandEvent& event);
+
+  //////////////////////////////////////////////////////////////////////////
   // Theme tab
 
   void OnThemeApplySelected(wxCommandEvent& event);
@@ -194,6 +199,12 @@ class SettingsDlg : public ui::Settings {
   bool allow_send_edit_to_main_;
   void SendEditToMain();
   void EditToGui(bool togui);
+
+  //////////////////////////////////////////////////////////////////////////
+  // Window tab
+  bool allow_send_window_to_main_;
+  void SendWindowToMain();
+  void WindowToGui(bool togui);
 
   //////////////////////////////////////////////////////////////////////////
   // Theme tab
@@ -706,6 +717,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
   allow_send_edit_to_main_ = true;
   allow_send_marker_to_main_ = true;
   allow_send_indicator_to_main_ = true;
+  allow_send_window_to_main_ = true;
 
   for (auto link : StyleLinks()) {
     uiFontStyles->Append(link->name(), link);
@@ -733,6 +745,7 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
   StyleToGui(true);
   MarkerToGui(true);
   ThemeToGui(true);
+  WindowToGui(true);
   UpdateStyleEnable();
 }
 
@@ -761,12 +774,15 @@ void SettingsDlg::OnOk(wxCommandEvent& event) {
   EditToGui(false);
   StyleToGui(false);
   MarkerToGui(false);
+  WindowToGui(false);
   main_window_->set_settings(current_settings_);
   if (false == SaveSettings(this, current_settings_)) {
     ShowError(this, "Failed to save settings", "Failed!");
   }
   EndModal(wxOK);
 }
+
+//////////////////////////////////////////////////////////////////////////
 
 void SettingsDlg::OnCheckboxChanged(wxCommandEvent& event) {
   assert(this);
@@ -863,6 +879,72 @@ void SettingsDlg::EditToGui(bool togui) {
 
 //////////////////////////////////////////////////////////////////////////
 
+// bool allow_send_window_to_main_;
+void SettingsDlg::SendWindowToMain() {
+  if (allow_send_window_to_main_ == false) {
+    return;
+  }
+  WindowToGui(false);
+  main_window_->set_settings(current_settings_);
+}
+
+void SettingsDlg::WindowToGui(bool togui) {
+  ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors();
+
+  DIALOG_DATAX(fonts_and_colors, dock_background, uiWindowDockCommonBackground);
+  DIALOG_DATAX(fonts_and_colors, dock_sash, uiWindowDockCommonSash);
+  DIALOG_DATAX(fonts_and_colors, dock_active_caption,
+               uiWindowDockActiveCaption);
+  DIALOG_DATAX(fonts_and_colors, dock_active_caption_gradient,
+               uiWindowDockActiveGradient);
+  DIALOG_DATAX(fonts_and_colors, dock_inactive_caption,
+               uiWindowDockInactiveCaption);
+  DIALOG_DATAX(fonts_and_colors, dock_inactive_caption_gradient,
+               uiWindowDockInactiveGradient);
+  DIALOG_DATAX(fonts_and_colors, dock_active_caption_text,
+               uiWindowDockActiveText);
+  DIALOG_DATAX(fonts_and_colors, dock_inactive_caption_text,
+               uiWindowDockInactiveText);
+  DIALOG_DATAX(fonts_and_colors, dock_border, uiWindowDockCommonBorder);
+  DIALOG_DATAX(fonts_and_colors, dock_gripper, uiWindowDockCommonGripper);
+  DIALOG_DATAX(fonts_and_colors, tab_background, uiWindowTabCommonBackground);
+  DIALOG_DATAX(fonts_and_colors, tab_border, uiWindowTabCommonBorder);
+  DIALOG_DATAX(fonts_and_colors, tab_sash, uiWindowTabCommonSash);
+  DIALOG_DATAX(fonts_and_colors, tab_active_tab, uiWindowTabActiveTab);
+  DIALOG_DATAX(fonts_and_colors, tab_inactive_tab, uiWindowTabInactiveTab);
+  DIALOG_DATAX(fonts_and_colors, tab_active_border, uiWindowTabActiveBorder);
+  DIALOG_DATAX(fonts_and_colors, tab_inactive_border,
+               uiWindowTabInactiveBorder);
+  DIALOG_DATAX(fonts_and_colors, tab_active_text, uiWindowTabActiveText);
+  DIALOG_DATAX(fonts_and_colors, tab_inactive_text, uiWindowTabInactiveText);
+  DIALOG_DATAX(fonts_and_colors, statusbar_shadow, uiWindowStatusbarShadow);
+  DIALOG_DATAX(fonts_and_colors, statusbar_highlight,
+               uiWindowStatusbarHighlight);
+  DIALOG_DATAX(fonts_and_colors, statusbar_foreground,
+               uiWindowStatusbarForeground);
+  DIALOG_DATAX(fonts_and_colors, statusbar_background,
+               uiWindowStatusbarBackground);
+
+  /*
+  optional StatusbarStyle statusbar_style	    = 1019 [
+  */
+
+  if (togui == false) {
+    current_settings_.set_allocated_fonts_and_colors(
+        Allocate(fonts_and_colors));
+  }
+}
+void SettingsDlg::OnWindowColorChange(wxColourPickerEvent& event) {
+  assert(this);
+  SendWindowToMain();
+}
+void SettingsDlg::OnWindowComboChange(wxCommandEvent& event) {
+  assert(this);
+  SendWindowToMain();
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 void SettingsDlg::ThemeToGui(bool togui) {
   theme_list_.ToGui(&current_settings_, togui);
 }
@@ -879,6 +961,7 @@ void SettingsDlg::OnThemeApplySelected(wxCommandEvent& event) {
   StyleToGui(true);
   IndicatorToGui(true);
   MarkerToGui(true);
+  WindowToGui(true);
 
   UpdateMain();
 }
