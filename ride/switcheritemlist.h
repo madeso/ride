@@ -28,15 +28,12 @@ class SwitcherItemList : public wxObject {
   DECLARE_CLASS(SwitcherItemList)
 
  public:
-  SwitcherItemList() { Init(); }
-  SwitcherItemList(const SwitcherItemList& items) {
-    Init();
-    Copy(items);
-  }
+  SwitcherItemList();
+  SwitcherItemList(const SwitcherItemList& items);
 
   bool operator==(const SwitcherItemList& items) const;
 
-  void operator=(const SwitcherItemList& items) { Copy(items); }
+  void operator=(const SwitcherItemList& items);
 
   void Init();
 
@@ -57,7 +54,7 @@ class SwitcherItemList : public wxObject {
 
   void set_selection(int sel);
   void SelectByName(const wxString& name);  // by name
-  int selection() const { return selection_; }
+  int selection() const;
 
   // Find the index for the item associated with the current focus
   int GetIndexForFocus() const;
@@ -68,36 +65,28 @@ class SwitcherItemList : public wxObject {
   const SwitcherItem& GetItem(int i) const;
   SwitcherItem& GetItem(int i);
 
-  int GetItemCount() const { return items_.size(); }
+  int GetItemCount() const;
 
-  void set_row_count(int rows) { row_count_ = rows; }
-  int row_count() const { return row_count_; }
+  void set_row_count(int rows);
+  int row_count() const;
 
-  void set_column_count(int cols) { column_count_ = cols; }
-  int column_count() const { return column_count_; }
+  void set_column_count(int cols);
+  int column_count() const;
 
-  void set_background_color(const wxColour& colour) {
-    background_color_ = colour;
-  }
-  const wxColour& background_color() const { return background_color_; }
+  void set_background_color(const wxColour& colour);
+  const wxColour& background_color() const;
 
-  void set_text_color(const wxColour& colour) { text_color_ = colour; }
-  const wxColour& text_color() const { return text_color_; }
+  void set_text_color(const wxColour& colour);
+  const wxColour& text_color() const;
 
-  void set_selection_color(const wxColour& colour) {
-    selection_color_ = colour;
-  }
-  const wxColour& selection_color() const { return selection_color_; }
+  void set_selection_color(const wxColour& colour);
+  const wxColour& selection_color() const;
 
-  void set_selection_outline_color(const wxColour& colour) {
-    selection_outline_color_ = colour;
-  }
-  const wxColour& selection_outline_color() const {
-    return selection_outline_color_;
-  }
+  void set_selection_outline_color(const wxColour& colour);
+  const wxColour& selection_outline_color() const;
 
-  void set_item_font(const wxFont& font) { item_font_ = font; }
-  const wxFont& item_font() const { return item_font_; }
+  void set_item_font(const wxFont& font);
+  const wxFont& item_font() const;
 
   // Implementation
 

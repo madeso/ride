@@ -24,6 +24,13 @@
 
 IMPLEMENT_CLASS(SwitcherItemList, wxObject)
 
+SwitcherItemList::SwitcherItemList() { Init(); }
+
+SwitcherItemList::SwitcherItemList(const SwitcherItemList& items) {
+  Init();
+  Copy(items);
+}
+
 bool SwitcherItemList::operator==(const SwitcherItemList& items) const {
   if (items_.size() != items.items_.size()) return false;
 
@@ -46,6 +53,8 @@ bool SwitcherItemList::operator==(const SwitcherItemList& items) const {
   return true;
 }
 
+void SwitcherItemList::operator=(const SwitcherItemList& items) { Copy(items); }
+
 void SwitcherItemList::Init() {
   selection_ = -1;
   row_count_ = 10;
@@ -55,8 +64,8 @@ void SwitcherItemList::Init() {
 // If on Windows XP/Vista, use more appropriate colours.
 /*
 if (wxUxThemeEngine::GetIfActive()) {
-  SetSelectionOutlineColour(wxColour(49, 106, 197));
-  SetSelectionColour(wxColour(193, 210, 238));
+SetSelectionOutlineColour(wxColour(49, 106, 197));
+SetSelectionColour(wxColour(193, 210, 238));
 }
 */
 #endif
@@ -134,9 +143,68 @@ void SwitcherItemList::SelectByName(const wxString& name) {
   if (idx != -1) set_selection(idx);
 }
 
+int SwitcherItemList::selection() const { return selection_; }
+
+int SwitcherItemList::GetIndexForFocus() const {
+  for (size_t i = 0; i < items_.size(); i++) {
+    const SwitcherItem& item = items_[i];
+    if (item.window()) {
+      if (wxFindFocusDescendant(item.window())) return i;
+    }
+  }
+
+  return wxNOT_FOUND;
+}
+
+int SwitcherItemList::HitTest(const wxPoint& pt) const {
+  for (size_t i = 0; i < items_.size(); i++) {
+    const SwitcherItem& item = items_[i];
+    if (item.rect().Contains(pt)) return static_cast<int>(i);
+  }
+
+  return wxNOT_FOUND;
+}
+
 const SwitcherItem& SwitcherItemList::GetItem(int i) const { return items_[i]; }
 
 SwitcherItem& SwitcherItemList::GetItem(int i) { return items_[i]; }
+
+int SwitcherItemList::GetItemCount() const { return items_.size(); }
+
+void SwitcherItemList::set_row_count(int rows) { row_count_ = rows; }
+int SwitcherItemList::row_count() const { return row_count_; }
+
+void SwitcherItemList::set_column_count(int cols) { column_count_ = cols; }
+int SwitcherItemList::column_count() const { return column_count_; }
+
+void SwitcherItemList::set_background_color(const wxColour& colour) {
+  background_color_ = colour;
+}
+const wxColour& SwitcherItemList::background_color() const {
+  return background_color_;
+}
+
+void SwitcherItemList::set_text_color(const wxColour& colour) {
+  text_color_ = colour;
+}
+const wxColour& SwitcherItemList::text_color() const { return text_color_; }
+
+void SwitcherItemList::set_selection_color(const wxColour& colour) {
+  selection_color_ = colour;
+}
+const wxColour& SwitcherItemList::selection_color() const {
+  return selection_color_;
+}
+
+void SwitcherItemList::set_selection_outline_color(const wxColour& colour) {
+  selection_outline_color_ = colour;
+}
+const wxColour& SwitcherItemList::selection_outline_color() const {
+  return selection_outline_color_;
+}
+
+void SwitcherItemList::set_item_font(const wxFont& font) { item_font_ = font; }
+const wxFont& SwitcherItemList::item_font() const { return item_font_; }
 
 void SwitcherItemList::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
   wxColour backgroundColour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
@@ -277,26 +345,4 @@ wxSize SwitcherItemList::CalculateItemSize(wxDC& dc) {  // NOLINT
   }
 
   return sz;
-}
-
-// Find the index for the item associated with the current focus
-int SwitcherItemList::GetIndexForFocus() const {
-  for (size_t i = 0; i < items_.size(); i++) {
-    const SwitcherItem& item = items_[i];
-    if (item.window()) {
-      if (wxFindFocusDescendant(item.window())) return i;
-    }
-  }
-
-  return wxNOT_FOUND;
-}
-
-// Hit test, returning an index or -1
-int SwitcherItemList::HitTest(const wxPoint& pt) const {
-  for (size_t i = 0; i < items_.size(); i++) {
-    const SwitcherItem& item = items_[i];
-    if (item.rect().Contains(pt)) return static_cast<int>(i);
-  }
-
-  return wxNOT_FOUND;
 }
