@@ -246,7 +246,10 @@ class wxMultiColumnListCtrl : public wxControl {
                         const wxPoint& pos = wxDefaultPosition,
                         const wxSize& size = wxDefaultSize,
                         long style = 0);  // NOLINT
-  wxMultiColumnListCtrl() { Init(); }
+  wxMultiColumnListCtrl() {
+    BindEvents();
+    Init();
+  }
 
   bool Create(wxWindow* parent, wxWindowID id,
               const wxPoint& pos = wxDefaultPosition,
@@ -288,6 +291,7 @@ class wxMultiColumnListCtrl : public wxControl {
     Refresh();
   }
   void Init();
+  void BindEvents();
   void GenerateSelectionEvent();
   void AdvanceToNextSelectableItem(int direction);
   void SendCloseEvent();
@@ -297,8 +301,6 @@ class wxMultiColumnListCtrl : public wxControl {
   wxSize overall_size_;
   int extra_navigation_key_;
   int modifier_key_;
-
-  DECLARE_EVENT_TABLE()
 };
 
 /*!
@@ -309,7 +311,10 @@ class wxMultiColumnListCtrl : public wxControl {
 class wxSwitcherDialog : public wxDialog {
  public:
   // constructors and destructors
-  wxSwitcherDialog() { Init(); }
+  wxSwitcherDialog() {
+    BindEvents();
+    Init();
+  }
   wxSwitcherDialog(const wxSwitcherItems& items, wxWindow* parent,
                    wxWindowID id = -1,
                    const wxString& title = _("Pane Switcher"),
@@ -326,6 +331,7 @@ class wxSwitcherDialog : public wxDialog {
               = wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxBORDER_SIMPLE);
 
   void Init();
+  void BindEvents();
 
   void OnCloseWindow(wxCloseEvent& event);
   void OnActivate(wxActivateEvent& event);
@@ -357,8 +363,6 @@ class wxSwitcherDialog : public wxDialog {
   wxColour border_color_;
   int extra_navigation_key_;
   int modifier_key_;
-
-  DECLARE_EVENT_TABLE()
 };
 
 #endif  // RIDE_SWITCHERDLG_H_

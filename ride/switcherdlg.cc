@@ -353,14 +353,34 @@ int wxSwitcherItems::HitTest(const wxPoint& pt) const {
  * A control for displaying several columns (not scrollable)
  */
 
-BEGIN_EVENT_TABLE(wxMultiColumnListCtrl, wxControl)
-EVT_PAINT(wxMultiColumnListCtrl::OnPaint)
-EVT_ERASE_BACKGROUND(wxMultiColumnListCtrl::OnEraseBackground)
-EVT_MOUSE_EVENTS(wxMultiColumnListCtrl::OnMouseEvent)
-EVT_CHAR(wxMultiColumnListCtrl::OnChar)
-EVT_KEY_DOWN(wxMultiColumnListCtrl::OnKey)
-EVT_KEY_UP(wxMultiColumnListCtrl::OnKey)
-END_EVENT_TABLE()
+void wxMultiColumnListCtrl::BindEvents() {
+  Bind(wxEVT_LEFT_DOWN, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_UP, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_DCLICK, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_DOWN, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_UP, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_DCLICK, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_DOWN, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_UP, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_DCLICK, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_DOWN, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_UP, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_DCLICK, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_DOWN, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_UP, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_DCLICK, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MOTION, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEAVE_WINDOW, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_ENTER_WINDOW, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MOUSEWHEEL, &wxMultiColumnListCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MAGNIFY, &wxMultiColumnListCtrl::OnMouseEvent, this);
+
+  Bind(wxEVT_PAINT, &wxMultiColumnListCtrl::OnPaint, this);
+  Bind(wxEVT_ERASE_BACKGROUND, &wxMultiColumnListCtrl::OnEraseBackground, this);
+  Bind(wxEVT_CHAR, &wxMultiColumnListCtrl::OnChar, this);
+  Bind(wxEVT_KEY_DOWN, &wxMultiColumnListCtrl::OnKey, this);
+  Bind(wxEVT_KEY_UP, &wxMultiColumnListCtrl::OnKey, this);
+}
 
 IMPLEMENT_CLASS(wxMultiColumnListCtrl, wxControl)
 
@@ -671,23 +691,19 @@ void wxMultiColumnListCtrl::Init() {
   extra_navigation_key_ = 0;
 }
 
-/*!
- * wxSwitcherDialog shows a wxMultiColumnListCtrl with a list of panes
- * and tabs for the user to choose. Ctrl+Tab cycles through them.
- */
-
-BEGIN_EVENT_TABLE(wxSwitcherDialog, wxDialog)
-EVT_CLOSE(wxSwitcherDialog::OnCloseWindow)
-EVT_ACTIVATE(wxSwitcherDialog::OnActivate)
-EVT_LISTBOX(wxID_ANY, wxSwitcherDialog::OnSelectItem)
-EVT_PAINT(wxSwitcherDialog::OnPaint)
-END_EVENT_TABLE()
+void wxSwitcherDialog::BindEvents() {
+  Bind(wxEVT_CLOSE_WINDOW, &wxSwitcherDialog::OnCloseWindow, this);
+  Bind(wxEVT_ACTIVATE, &wxSwitcherDialog::OnActivate, this);
+  Bind(wxEVT_LISTBOX, &wxSwitcherDialog::OnSelectItem, this, wxID_ANY);
+  Bind(wxEVT_PAINT, &wxSwitcherDialog::OnPaint, this);
+}
 
 wxSwitcherDialog::wxSwitcherDialog(const wxSwitcherItems& items,
                                    wxWindow* parent, wxWindowID id,
                                    const wxString& title,
                                    const wxPoint& position, const wxSize& size,
                                    long style) {  // NOLINT
+  BindEvents();
   Init();
 
   Create(items, parent, id, title, position, size, style);
