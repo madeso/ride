@@ -14,20 +14,22 @@
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-SwitcherDialog::SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
-                               wxWindowID id, const wxString& title,
-                               const wxPoint& position, const wxSize& size,
-                               long style) {  // NOLINT
-  BindEvents();
-  Init();
+SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
+                         wxWindowID id, const wxString& title,
+                         const wxPoint& position, const wxSize& size,
+                         long style)  // NOLINT
+    : list_ctrl_(NULL),
+      description_ctrl_(NULL),
+      is_closing_(false),
+      switcher_border_style_(0),
+      modifier_key_(-1),
+      extra_navigation_key_(-1),
+      border_color_(*wxBLACK) {
+  Bind(wxEVT_CLOSE_WINDOW, &SwitcherDlg::OnCloseWindow, this);
+  Bind(wxEVT_ACTIVATE, &SwitcherDlg::OnActivate, this);
+  Bind(wxEVT_LISTBOX, &SwitcherDlg::OnSelectItem, this, wxID_ANY);
+  Bind(wxEVT_PAINT, &SwitcherDlg::OnPaint, this);
 
-  Create(items, parent, id, title, position, size, style);
-}
-
-bool SwitcherDialog::Create(const SwitcherItemList& items, wxWindow* parent,
-                            wxWindowID id, const wxString& title,
-                            const wxPoint& position, const wxSize& size,
-                            long style) {  // NOLINT
   switcher_border_style_ = (style & wxBORDER_MASK);
   if (switcher_border_style_ == wxBORDER_NONE)
     switcher_border_style_ = wxBORDER_SIMPLE;
@@ -48,9 +50,7 @@ bool SwitcherDialog::Create(const SwitcherItemList& items, wxWindow* parent,
 
   if (modifier_key_ != -1) list_ctrl_->set_modifier_key(modifier_key_);
 
-  int borderStyle = wxSIMPLE_BORDER;
-
-  borderStyle = wxBORDER_NONE;
+  int borderStyle = wxBORDER_NONE;
 #if defined(__WXMSW__) && wxCHECK_VERSION(2, 8, 5)
 // borderStyle = wxBORDER_THEME;
 #endif
@@ -82,30 +82,9 @@ bool SwitcherDialog::Create(const SwitcherItemList& items, wxWindow* parent,
   list_ctrl_->AdvanceToNextSelectableItem(1);
 
   ShowDescription(list_ctrl_->items().selection());
-
-  return true;
 }
 
-void SwitcherDialog::Init() {
-  list_ctrl_ = NULL;
-  description_ctrl_ = NULL;
-  is_closing_ = false;
-  switcher_border_style_ = 0;
-
-  modifier_key_ = -1;
-  extra_navigation_key_ = -1;
-
-  border_color_ = *wxBLACK;
-}
-
-void SwitcherDialog::BindEvents() {
-  Bind(wxEVT_CLOSE_WINDOW, &SwitcherDialog::OnCloseWindow, this);
-  Bind(wxEVT_ACTIVATE, &SwitcherDialog::OnActivate, this);
-  Bind(wxEVT_LISTBOX, &SwitcherDialog::OnSelectItem, this, wxID_ANY);
-  Bind(wxEVT_PAINT, &SwitcherDialog::OnPaint, this);
-}
-
-void SwitcherDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
+void SwitcherDlg::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
   if (is_closing_) return;
 
   if (IsModal()) {
@@ -118,7 +97,7 @@ void SwitcherDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
   }
 }
 
-void SwitcherDialog::OnActivate(wxActivateEvent& event) {
+void SwitcherDlg::OnActivate(wxActivateEvent& event) {
   if (!event.GetActive()) {
     if (!is_closing_) {
       is_closing_ = true;
@@ -127,11 +106,11 @@ void SwitcherDialog::OnActivate(wxActivateEvent& event) {
   }
 }
 
-void SwitcherDialog::OnSelectItem(wxCommandEvent& event) {
+void SwitcherDlg::OnSelectItem(wxCommandEvent& event) {
   ShowDescription(event.GetSelection());
 }
 
-void SwitcherDialog::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
+void SwitcherDlg::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
   wxPaintDC dc(this);
 
   if (switcher_border_style_ == wxBORDER_SIMPLE) {
@@ -149,7 +128,7 @@ void SwitcherDialog::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 }
 
 // Get the selected item
-int SwitcherDialog::GetSelection() const {
+int SwitcherDlg::GetSelection() const {
   return list_ctrl_->items().selection();
 }
 
@@ -164,7 +143,7 @@ static wxString ColourToHexString(const wxColour& col) {
   return hex;
 }
 
-void SwitcherDialog::ShowDescription(int i) {
+void SwitcherDlg::ShowDescription(int i) {
   SwitcherItem& item = list_ctrl_->items().GetItem(i);
 
   wxColour colour = list_ctrl_->items().background_color();
@@ -185,25 +164,20 @@ void SwitcherDialog::ShowDescription(int i) {
   description_ctrl_->SetPage(html);
 }
 
-void SwitcherDialog::set_border_color(const wxColour& colour) {
+void SwitcherDlg::set_border_color(const wxColour& colour) {
   border_color_ = colour;
 }
 
-// Set an extra key that can be used to cycle through items,
-// in case not using the Ctrl+Tab combination
-void SwitcherDialog::set_extra_navigation_key(int keyCode) {
+void SwitcherDlg::set_extra_navigation_key(int keyCode) {
   extra_navigation_key_ = keyCode;
   if (list_ctrl_) list_ctrl_->set_extra_navigation_key(keyCode);
 }
-int SwitcherDialog::extra_navigation_key() const {
-  return extra_navigation_key_;
-}
 
-// Set the modifier used to invoke the dialog, and therefore to test for
-// release
-void SwitcherDialog::set_modifier_key(int modifierKey) {
+int SwitcherDlg::extra_navigation_key() const { return extra_navigation_key_; }
+
+void SwitcherDlg::set_modifier_key(int modifierKey) {
   modifier_key_ = modifierKey;
   if (list_ctrl_) list_ctrl_->set_modifier_key(modifierKey);
 }
 
-int SwitcherDialog::modifier_key() const { return modifier_key_; }
+int SwitcherDlg::modifier_key() const { return modifier_key_; }

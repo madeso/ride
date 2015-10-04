@@ -26,24 +26,14 @@
  * and tabs for the user to choose. Ctrl+Tab cycles through them.
  */
 
-class SwitcherDialog : public wxDialog {
+class SwitcherDlg : public wxDialog {
  public:
-  SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
-                 wxWindowID id = -1, const wxString& title = _("Pane Switcher"),
-                 const wxPoint& pos = wxDefaultPosition,
-                 const wxSize& size = wxDefaultSize,
-                 long style  // NOLINT
-                 = wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxBORDER_SIMPLE);
-
-  bool Create(const SwitcherItemList& items, wxWindow* parent,
+  SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
               wxWindowID id = -1, const wxString& title = _("Pane Switcher"),
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize,
               long style  // NOLINT
               = wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxBORDER_SIMPLE);
-
-  void Init();
-  void BindEvents();
 
   void OnCloseWindow(wxCloseEvent& event);
   void OnActivate(wxActivateEvent& event);
@@ -68,7 +58,7 @@ class SwitcherDialog : public wxDialog {
   int modifier_key() const;
 
  private:
-  SwitcherDialog();
+  SwitcherDlg();
 
  private:
   SwitcherCtrl* list_ctrl_;
