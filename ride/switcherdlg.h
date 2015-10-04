@@ -28,8 +28,6 @@
 
 class SwitcherDialog : public wxDialog {
  public:
-  // constructors and destructors
-  SwitcherDialog();
   SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
                  wxWindowID id = -1, const wxString& title = _("Pane Switcher"),
                  const wxPoint& pos = wxDefaultPosition,
@@ -68,6 +66,9 @@ class SwitcherDialog : public wxDialog {
   // release
   void set_modifier_key(int modifierKey);
   int modifier_key() const;
+
+ private:
+  SwitcherDialog();
 
  private:
   SwitcherCtrl* list_ctrl_;

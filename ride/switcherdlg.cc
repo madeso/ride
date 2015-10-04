@@ -18,12 +18,6 @@
 // #include <wx/msw/uxtheme.h>
 #endif
 
-// constructors and destructors
-SwitcherDialog::SwitcherDialog() {
-  BindEvents();
-  Init();
-}
-
 SwitcherDialog::SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
                                wxWindowID id, const wxString& title,
                                const wxPoint& position, const wxSize& size,
