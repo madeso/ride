@@ -27,9 +27,9 @@
  * An object containing switcher items
  */
 
-IMPLEMENT_CLASS(SwitcherItems, wxObject)
+IMPLEMENT_CLASS(SwitcherItemList, wxObject)
 
-bool SwitcherItems::operator==(const SwitcherItems& items) const {
+bool SwitcherItemList::operator==(const SwitcherItemList& items) const {
   if (items_.size() != items.items_.size()) return false;
 
   if (selection_ != items.selection_ || row_count_ != items.row_count_ ||
@@ -51,7 +51,7 @@ bool SwitcherItems::operator==(const SwitcherItems& items) const {
   return true;
 }
 
-void SwitcherItems::Init() {
+void SwitcherItemList::Init() {
   selection_ = -1;
   row_count_ = 10;
   column_count_ = 0;
@@ -67,7 +67,7 @@ if (wxUxThemeEngine::GetIfActive()) {
 #endif
 }
 
-void SwitcherItems::Copy(const SwitcherItems& items) {
+void SwitcherItemList::Copy(const SwitcherItemList& items) {
   Clear();
 
   size_t i;
@@ -86,9 +86,9 @@ void SwitcherItems::Copy(const SwitcherItems& items) {
   item_font_ = items.item_font_;
 }
 
-SwitcherItem& SwitcherItems::AddItem(const wxString& title,
-                                     const wxString& name, int id,
-                                     const wxBitmap& bitmap) {
+SwitcherItem& SwitcherItemList::AddItem(const wxString& title,
+                                        const wxString& name, int id,
+                                        const wxBitmap& bitmap) {
   SwitcherItem item;
   item.set_title(title);
   item.set_name(name);
@@ -98,23 +98,23 @@ SwitcherItem& SwitcherItems::AddItem(const wxString& title,
   return AddItem(item);
 }
 
-SwitcherItem& SwitcherItems::AddItem(const SwitcherItem& item) {
+SwitcherItem& SwitcherItemList::AddItem(const SwitcherItem& item) {
   items_.push_back(item);
   return items_[GetItemCount() - 1];
 }
 
-SwitcherItem& SwitcherItems::AddGroup(const wxString& title,
-                                      const wxString& name, int id,
-                                      const wxBitmap& bitmap) {
+SwitcherItem& SwitcherItemList::AddGroup(const wxString& title,
+                                         const wxString& name, int id,
+                                         const wxBitmap& bitmap) {
   SwitcherItem& item = AddItem(title, name, id, bitmap);
   item.set_is_group(true);
 
   return item;
 }
 
-void SwitcherItems::Clear() { items_.resize(0); }
+void SwitcherItemList::Clear() { items_.resize(0); }
 
-int SwitcherItems::FindItemByName(const wxString& name) const {
+int SwitcherItemList::FindItemByName(const wxString& name) const {
   size_t i;
   for (i = 0; i < items_.size(); i++) {
     if (items_[i].name() == name) return i;
@@ -123,7 +123,7 @@ int SwitcherItems::FindItemByName(const wxString& name) const {
   return -1;
 }
 
-int SwitcherItems::FindItemById(int id) const {
+int SwitcherItemList::FindItemById(int id) const {
   size_t i;
   for (i = 0; i < items_.size(); i++) {
     if (items_[i].id() == id) return i;
@@ -132,18 +132,18 @@ int SwitcherItems::FindItemById(int id) const {
   return -1;
 }
 
-void SwitcherItems::SetSelection(int sel) { selection_ = sel; }
+void SwitcherItemList::SetSelection(int sel) { selection_ = sel; }
 
-void SwitcherItems::SetSelection(const wxString& name) {
+void SwitcherItemList::SetSelection(const wxString& name) {
   int idx = FindItemByName(name);
   if (idx != -1) SetSelection(idx);
 }
 
-const SwitcherItem& SwitcherItems::GetItem(int i) const { return items_[i]; }
+const SwitcherItem& SwitcherItemList::GetItem(int i) const { return items_[i]; }
 
-SwitcherItem& SwitcherItems::GetItem(int i) { return items_[i]; }
+SwitcherItem& SwitcherItemList::GetItem(int i) { return items_[i]; }
 
-void SwitcherItems::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
+void SwitcherItemList::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
   wxColour backgroundColour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
   wxColour standardTextColour =
       wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
@@ -238,7 +238,7 @@ void SwitcherItems::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
   }
 }
 
-wxSize SwitcherItems::CalculateItemSize(wxDC& dc) {  // NOLINT
+wxSize SwitcherItemList::CalculateItemSize(wxDC& dc) {  // NOLINT
   // Start off allowing for an icon
   wxSize sz(150, 16);
   wxFont standardFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
@@ -285,7 +285,7 @@ wxSize SwitcherItems::CalculateItemSize(wxDC& dc) {  // NOLINT
 }
 
 // Find the index for the item associated with the current focus
-int SwitcherItems::GetIndexForFocus() const {
+int SwitcherItemList::GetIndexForFocus() const {
   for (size_t i = 0; i < items_.size(); i++) {
     const SwitcherItem& item = items_[i];
     if (item.window()) {
@@ -297,7 +297,7 @@ int SwitcherItems::GetIndexForFocus() const {
 }
 
 // Hit test, returning an index or -1
-int SwitcherItems::HitTest(const wxPoint& pt) const {
+int SwitcherItemList::HitTest(const wxPoint& pt) const {
   for (size_t i = 0; i < items_.size(); i++) {
     const SwitcherItem& item = items_[i];
     if (item.rect().Contains(pt)) return static_cast<int>(i);
@@ -653,7 +653,7 @@ void SwitcherDialog::BindEvents() {
   Bind(wxEVT_PAINT, &SwitcherDialog::OnPaint, this);
 }
 
-SwitcherDialog::SwitcherDialog(const SwitcherItems& items, wxWindow* parent,
+SwitcherDialog::SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
                                wxWindowID id, const wxString& title,
                                const wxPoint& position, const wxSize& size,
                                long style) {  // NOLINT
@@ -663,7 +663,7 @@ SwitcherDialog::SwitcherDialog(const SwitcherItems& items, wxWindow* parent,
   Create(items, parent, id, title, position, size, style);
 }
 
-bool SwitcherDialog::Create(const SwitcherItems& items, wxWindow* parent,
+bool SwitcherDialog::Create(const SwitcherItemList& items, wxWindow* parent,
                             wxWindowID id, const wxString& title,
                             const wxPoint& position, const wxSize& size,
                             long style) {  // NOLINT

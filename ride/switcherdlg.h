@@ -26,23 +26,23 @@ typedef std::vector<SwitcherItem> wxSwitcherItemArray;
  * An object containing switcher items
  */
 
-class SwitcherItems : public wxObject {
-  DECLARE_CLASS(SwitcherItems)
+class SwitcherItemList : public wxObject {
+  DECLARE_CLASS(SwitcherItemList)
 
  public:
-  SwitcherItems() { Init(); }
-  SwitcherItems(const SwitcherItems& items) {
+  SwitcherItemList() { Init(); }
+  SwitcherItemList(const SwitcherItemList& items) {
     Init();
     Copy(items);
   }
 
-  bool operator==(const SwitcherItems& items) const;
+  bool operator==(const SwitcherItemList& items) const;
 
-  void operator=(const SwitcherItems& items) { Copy(items); }
+  void operator=(const SwitcherItemList& items) { Copy(items); }
 
   void Init();
 
-  void Copy(const SwitcherItems& items);
+  void Copy(const SwitcherItemList& items);
 
   // Public API
 
@@ -142,9 +142,9 @@ class MultiColumnListCtrl : public wxControl {
 
   // Public API
 
-  void SetItems(const SwitcherItems& items) { items_ = items; }
-  const SwitcherItems& GetItems() const { return items_; }
-  SwitcherItems& GetItems() { return items_; }
+  void SetItems(const SwitcherItemList& items) { items_ = items; }
+  const SwitcherItemList& GetItems() const { return items_; }
+  SwitcherItemList& GetItems() { return items_; }
 
   // Set an extra key that can be used to cycle through items,
   // in case not using the Ctrl+Tab combination
@@ -182,7 +182,7 @@ class MultiColumnListCtrl : public wxControl {
   void SendCloseEvent();
 
  protected:
-  SwitcherItems items_;
+  SwitcherItemList items_;
   wxSize overall_size_;
   int extra_navigation_key_;
   int modifier_key_;
@@ -200,15 +200,15 @@ class SwitcherDialog : public wxDialog {
     BindEvents();
     Init();
   }
-  SwitcherDialog(const SwitcherItems& items, wxWindow* parent,
+  SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
                  wxWindowID id = -1, const wxString& title = _("Pane Switcher"),
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize,
                  long style  // NOLINT
                  = wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxBORDER_SIMPLE);
 
-  bool Create(const SwitcherItems& items, wxWindow* parent, wxWindowID id = -1,
-              const wxString& title = _("Pane Switcher"),
+  bool Create(const SwitcherItemList& items, wxWindow* parent,
+              wxWindowID id = -1, const wxString& title = _("Pane Switcher"),
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize,
               long style  // NOLINT

@@ -651,7 +651,7 @@ void MainWindow::OnViewShowProject(wxCommandEvent& event) {
 }
 
 void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
-  SwitcherItems items;
+  SwitcherItemList items;
   items.SetRowCount(12);
 
   // Add the main windows and toolbars, in two separate columns
