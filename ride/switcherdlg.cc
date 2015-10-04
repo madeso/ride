@@ -106,9 +106,9 @@ void MultiColumnListCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 
   wxRect rect = GetClientRect();
 
-  if (items_.GetColumnCount() == 0) CalculateLayout(dc);
+  if (items_.column_count() == 0) CalculateLayout(dc);
 
-  if (items_.GetColumnCount() == 0) return;
+  if (items_.column_count() == 0) return;
 
   items_.PaintItems(dc, this);
 }
@@ -119,7 +119,7 @@ void MultiColumnListCtrl::OnMouseEvent(wxMouseEvent& event) {
 
     int idx = items_.HitTest(event.GetPosition());
     if (idx != wxNOT_FOUND) {
-      items_.SetSelection(idx);
+      items_.set_selection(idx);
 
       SendCloseEvent();
     }
@@ -138,21 +138,20 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
   }
 
   if (event.GetKeyCode() == WXK_ESCAPE || event.GetKeyCode() == WXK_RETURN) {
-    if (event.GetKeyCode() == WXK_ESCAPE) items_.SetSelection(-1);
+    if (event.GetKeyCode() == WXK_ESCAPE) items_.set_selection(-1);
 
     SendCloseEvent();
   } else if (event.GetKeyCode() == WXK_TAB ||
              event.GetKeyCode() == GetExtraNavigationKey()) {
     if (event.ShiftDown()) {
-      items_.SetSelection(items_.GetSelection() - 1);
-      if (items_.GetSelection() < 0)
-        items_.SetSelection(items_.GetItemCount() - 1);
+      items_.set_selection(items_.selection() - 1);
+      if (items_.selection() < 0)
+        items_.set_selection(items_.GetItemCount() - 1);
 
       AdvanceToNextSelectableItem(-1);
     } else {
-      items_.SetSelection(items_.GetSelection() + 1);
-      if (items_.GetSelection() >= items_.GetItemCount())
-        items_.SetSelection(0);
+      items_.set_selection(items_.selection() + 1);
+      if (items_.selection() >= items_.GetItemCount()) items_.set_selection(0);
 
       AdvanceToNextSelectableItem(1);
     }
@@ -162,8 +161,8 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_DOWN ||
              event.GetKeyCode() == WXK_NUMPAD_DOWN) {
-    items_.SetSelection(items_.GetSelection() + 1);
-    if (items_.GetSelection() >= items_.GetItemCount()) items_.SetSelection(0);
+    items_.set_selection(items_.selection() + 1);
+    if (items_.selection() >= items_.GetItemCount()) items_.set_selection(0);
 
     AdvanceToNextSelectableItem(1);
 
@@ -172,9 +171,8 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_UP ||
              event.GetKeyCode() == WXK_NUMPAD_UP) {
-    items_.SetSelection(items_.GetSelection() - 1);
-    if (items_.GetSelection() < 0)
-      items_.SetSelection(items_.GetItemCount() - 1);
+    items_.set_selection(items_.selection() - 1);
+    if (items_.selection() < 0) items_.set_selection(items_.GetItemCount() - 1);
 
     AdvanceToNextSelectableItem(-1);
 
@@ -183,7 +181,7 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_HOME ||
              event.GetKeyCode() == WXK_NUMPAD_HOME) {
-    items_.SetSelection(0);
+    items_.set_selection(0);
 
     AdvanceToNextSelectableItem(1);
 
@@ -192,7 +190,7 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_END ||
              event.GetKeyCode() == WXK_NUMPAD_END) {
-    items_.SetSelection(items_.GetItemCount() - 1);
+    items_.set_selection(items_.GetItemCount() - 1);
 
     AdvanceToNextSelectableItem(-1);
 
@@ -201,11 +199,11 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_LEFT ||
              event.GetKeyCode() == WXK_NUMPAD_LEFT) {
-    SwitcherItem& item = items_.GetItem(items_.GetSelection());
+    SwitcherItem& item = items_.GetItem(items_.selection());
 
     int row = item.row_pos();
     int newCol = item.get_col_pos() - 1;
-    if (newCol < 0) newCol = (items_.GetColumnCount() - 1);
+    if (newCol < 0) newCol = (items_.column_count() - 1);
 
     // Find the first item from the end whose row matches and whose column is
     // equal or lower
@@ -213,7 +211,7 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     for (i = items_.GetItemCount() - 1; i >= 0; i--) {
       SwitcherItem& item2 = items_.GetItem(i);
       if (item2.get_col_pos() == newCol && item2.row_pos() <= row) {
-        items_.SetSelection(i);
+        items_.set_selection(i);
         break;
       }
     }
@@ -225,11 +223,11 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_RIGHT ||
              event.GetKeyCode() == WXK_NUMPAD_RIGHT) {
-    SwitcherItem& item = items_.GetItem(items_.GetSelection());
+    SwitcherItem& item = items_.GetItem(items_.selection());
 
     int row = item.row_pos();
     int newCol = item.get_col_pos() + 1;
-    if (newCol >= items_.GetColumnCount()) newCol = 0;
+    if (newCol >= items_.column_count()) newCol = 0;
 
     // Find the first item from the end whose row matches and whose column is
     // equal or lower
@@ -237,7 +235,7 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     for (i = items_.GetItemCount() - 1; i >= 0; i--) {
       SwitcherItem& item2 = items_.GetItem(i);
       if (item2.get_col_pos() == newCol && item2.row_pos() <= row) {
-        items_.SetSelection(i);
+        items_.set_selection(i);
         break;
       }
     }
@@ -256,19 +254,19 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
 void MultiColumnListCtrl::AdvanceToNextSelectableItem(int direction) {
   if (items_.GetItemCount() < 2) return;
 
-  if (items_.GetSelection() == -1) items_.SetSelection(0);
+  if (items_.selection() == -1) items_.set_selection(0);
 
-  int oldSel = items_.GetSelection();
+  int oldSel = items_.selection();
 
   while (true) {
-    if (items_.GetItem(items_.GetSelection()).is_group()) {
-      items_.SetSelection(items_.GetSelection() + direction);
-      if (items_.GetSelection() == -1)
-        items_.SetSelection(items_.GetItemCount() - 1);
-      else if (items_.GetSelection() == items_.GetItemCount())
-        items_.SetSelection(0);
+    if (items_.GetItem(items_.selection()).is_group()) {
+      items_.set_selection(items_.selection() + direction);
+      if (items_.selection() == -1)
+        items_.set_selection(items_.GetItemCount() - 1);
+      else if (items_.selection() == items_.GetItemCount())
+        items_.set_selection(0);
 
-      if (items_.GetSelection() == oldSel) break;
+      if (items_.selection() == oldSel) break;
     } else {
       break;
     }
@@ -278,7 +276,7 @@ void MultiColumnListCtrl::AdvanceToNextSelectableItem(int direction) {
 void MultiColumnListCtrl::GenerateSelectionEvent() {
   wxCommandEvent event(wxEVT_COMMAND_LISTBOX_SELECTED, GetId());
   event.SetEventObject(this);
-  event.SetInt(items_.GetSelection());
+  event.SetInt(items_.selection());
 
   GetEventHandler()->ProcessEvent(event);
 }
@@ -289,7 +287,7 @@ void MultiColumnListCtrl::CalculateLayout() {
 }
 
 void MultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
-  if (items_.GetSelection() == -1) items_.SetSelection(0);
+  if (items_.selection() == -1) items_.set_selection(0);
 
   int columnCount = 1;
 
@@ -329,7 +327,7 @@ void MultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
 
     bool stopBreaking = breaking;
 
-    if ((currentRow > items_.GetRowCount()) ||
+    if ((currentRow > items_.row_count()) ||
         (items_.GetItem(i).break_column() && !breaking && (currentRow != 1))) {
       currentRow = 0;
       columnCount++;
@@ -351,7 +349,7 @@ void MultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
     if (stopBreaking) breaking = false;
   }
 
-  items_.SetColumnCount(columnCount);
+  items_.set_column_count(columnCount);
 
   InvalidateBestSize();
 }
@@ -431,12 +429,12 @@ bool SwitcherDialog::Create(const SwitcherItemList& items, wxWindow* parent,
 
   Centre(wxBOTH);
 
-  if (list_ctrl_->GetItems().GetSelection() == -1)
-    list_ctrl_->GetItems().SetSelection(0);
+  if (list_ctrl_->GetItems().selection() == -1)
+    list_ctrl_->GetItems().set_selection(0);
 
   list_ctrl_->AdvanceToNextSelectableItem(1);
 
-  ShowDescription(list_ctrl_->GetItems().GetSelection());
+  ShowDescription(list_ctrl_->GetItems().selection());
 
   return true;
 }
@@ -474,7 +472,7 @@ void SwitcherDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
 
 // Get the selected item
 int SwitcherDialog::GetSelection() const {
-  return list_ctrl_->GetItems().GetSelection();
+  return list_ctrl_->GetItems().selection();
 }
 
 void SwitcherDialog::OnActivate(wxActivateEvent& event) {
@@ -521,7 +519,7 @@ static wxString ColourToHexString(const wxColour& col) {
 void SwitcherDialog::ShowDescription(int i) {
   SwitcherItem& item = list_ctrl_->GetItems().GetItem(i);
 
-  wxColour colour = list_ctrl_->GetItems().GetBackgroundColour();
+  wxColour colour = list_ctrl_->GetItems().background_color();
   if (!colour.Ok()) colour = GetBackgroundColour();
 
   wxString backgroundColourHex = ColourToHexString(colour);

@@ -652,7 +652,7 @@ void MainWindow::OnViewShowProject(wxCommandEvent& event) {
 
 void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
   SwitcherItemList items;
-  items.SetRowCount(12);
+  items.set_row_count(12);
 
   // Add the main windows and toolbars, in two separate columns
 
@@ -704,10 +704,10 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
   // Select the focused window
 
   int idx = items.GetIndexForFocus();
-  if (idx != wxNOT_FOUND) items.SetSelection(idx);
+  if (idx != wxNOT_FOUND) items.set_selection(idx);
 
 #ifdef __WXMAC__
-  items.SetBackgroundColour(*wxWHITE);
+  items.set_background_color(*wxWHITE);
 #endif
 
   // Show the switcher dialog

@@ -127,11 +127,11 @@ int SwitcherItemList::FindItemById(int id) const {
   return -1;
 }
 
-void SwitcherItemList::SetSelection(int sel) { selection_ = sel; }
+void SwitcherItemList::set_selection(int sel) { selection_ = sel; }
 
-void SwitcherItemList::SetSelection(const wxString& name) {
+void SwitcherItemList::SelectByName(const wxString& name) {
   int idx = FindItemByName(name);
-  if (idx != -1) SetSelection(idx);
+  if (idx != -1) set_selection(idx);
 }
 
 const SwitcherItem& SwitcherItemList::GetItem(int i) const { return items_[i]; }
@@ -150,17 +150,17 @@ void SwitcherItemList::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
   wxFont groupFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
   groupFont.SetWeight(wxBOLD);
 
-  if (GetBackgroundColour().Ok()) backgroundColour = GetBackgroundColour();
+  if (background_color().Ok()) backgroundColour = background_color();
 
-  if (GetTextColour().Ok()) standardTextColour = GetTextColour();
+  if (text_color().Ok()) standardTextColour = text_color();
 
-  if (GetSelectionColour().Ok()) selectionColour = GetSelectionColour();
+  if (selection_color().Ok()) selectionColour = selection_color();
 
-  if (GetSelectionOutlineColour().Ok())
-    selectionOutlineColour = GetSelectionOutlineColour();
+  if (selection_outline_color().Ok())
+    selectionOutlineColour = selection_outline_color();
 
-  if (GetItemFont().Ok()) {
-    standardFont = GetItemFont();
+  if (item_font().Ok()) {
+    standardFont = item_font();
     groupFont =
         wxFont(standardFont.GetPointSize(), standardFont.GetFamily(),
                standardFont.GetStyle(), wxBOLD, standardFont.GetUnderlined(),
@@ -245,7 +245,7 @@ wxSize SwitcherItemList::CalculateItemSize(wxDC& dc) {  // NOLINT
   int maxWidth = 300;
   int maxHeight = 40;
 
-  if (GetItemFont().Ok()) standardFont = GetItemFont();
+  if (item_font().Ok()) standardFont = item_font();
 
   size_t i;
   for (i = 0; i < items_.size(); i++) {

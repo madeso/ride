@@ -74,7 +74,7 @@ class MultiColumnListCtrl : public wxControl {
   void CalculateLayout();
   void CalculateLayout(wxDC& dc);  // NOLINT
   void InvalidateLayout() {
-    items_.SetColumnCount(0);
+    items_.set_column_count(0);
     Refresh();
   }
   void Init();
