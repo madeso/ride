@@ -26,48 +26,48 @@
  * A control for displaying several columns (not scrollable)
  */
 
-void MultiColumnListCtrl::BindEvents() {
-  Bind(wxEVT_LEFT_DOWN, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEFT_UP, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEFT_DCLICK, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_DOWN, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_UP, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_DCLICK, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_DOWN, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_UP, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_DCLICK, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_DOWN, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_UP, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_DCLICK, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_DOWN, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_UP, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_DCLICK, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MOTION, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEAVE_WINDOW, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_ENTER_WINDOW, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MOUSEWHEEL, &MultiColumnListCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MAGNIFY, &MultiColumnListCtrl::OnMouseEvent, this);
+void SwitcherCtrl::BindEvents() {
+  Bind(wxEVT_LEFT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MOTION, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEAVE_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_ENTER_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MOUSEWHEEL, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MAGNIFY, &SwitcherCtrl::OnMouseEvent, this);
 
-  Bind(wxEVT_PAINT, &MultiColumnListCtrl::OnPaint, this);
-  Bind(wxEVT_ERASE_BACKGROUND, &MultiColumnListCtrl::OnEraseBackground, this);
-  Bind(wxEVT_CHAR, &MultiColumnListCtrl::OnChar, this);
-  Bind(wxEVT_KEY_DOWN, &MultiColumnListCtrl::OnKey, this);
-  Bind(wxEVT_KEY_UP, &MultiColumnListCtrl::OnKey, this);
+  Bind(wxEVT_PAINT, &SwitcherCtrl::OnPaint, this);
+  Bind(wxEVT_ERASE_BACKGROUND, &SwitcherCtrl::OnEraseBackground, this);
+  Bind(wxEVT_CHAR, &SwitcherCtrl::OnChar, this);
+  Bind(wxEVT_KEY_DOWN, &SwitcherCtrl::OnKey, this);
+  Bind(wxEVT_KEY_UP, &SwitcherCtrl::OnKey, this);
 }
 
-IMPLEMENT_CLASS(MultiColumnListCtrl, wxControl)
+IMPLEMENT_CLASS(SwitcherCtrl, wxControl)
 
-MultiColumnListCtrl::MultiColumnListCtrl(wxWindow* parent, wxWindowID id,
-                                         const wxPoint& pos, const wxSize& size,
-                                         long style) {  // NOLINT
+SwitcherCtrl::SwitcherCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pos,
+                           const wxSize& size,
+                           long style) {  // NOLINT
   Init();
 
   Create(parent, id, pos, size, style);
 }
 
-bool MultiColumnListCtrl::Create(wxWindow* parent, wxWindowID id,
-                                 const wxPoint& pos, const wxSize& size,
-                                 long style) {  // NOLINT
+bool SwitcherCtrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
+                          const wxSize& size,
+                          long style) {  // NOLINT
   wxControl::Create(parent, id, pos, size, style);
 
   SetInitialBestSize(size);
@@ -76,9 +76,9 @@ bool MultiColumnListCtrl::Create(wxWindow* parent, wxWindowID id,
 }
 
 // Overrides
-wxSize MultiColumnListCtrl::DoGetBestSize() const { return overall_size_; }
+wxSize SwitcherCtrl::DoGetBestSize() const { return overall_size_; }
 
-void MultiColumnListCtrl::SendCloseEvent() {
+void SwitcherCtrl::SendCloseEvent() {
   wxWindow* topLevel = GetParent();
   while (topLevel && !topLevel->IsTopLevel()) topLevel = topLevel->GetParent();
 
@@ -92,12 +92,11 @@ void MultiColumnListCtrl::SendCloseEvent() {
   }
 }
 
-void MultiColumnListCtrl::OnEraseBackground(
-    wxEraseEvent& WXUNUSED(event)) {  // NOLINT
-                                      // Do nothing
+void SwitcherCtrl::OnEraseBackground(wxEraseEvent& WXUNUSED(event)) {  // NOLINT
+  // Do nothing
 }
 
-void MultiColumnListCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
+void SwitcherCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 #if wxSWITCHER_USE_BUFFERED_PAINTING
   wxBufferedPaintDC dc(this);
 #else
@@ -113,7 +112,7 @@ void MultiColumnListCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
   items_.PaintItems(dc, this);
 }
 
-void MultiColumnListCtrl::OnMouseEvent(wxMouseEvent& event) {
+void SwitcherCtrl::OnMouseEvent(wxMouseEvent& event) {
   if (event.LeftDown()) {
     SetFocus();
 
@@ -126,9 +125,9 @@ void MultiColumnListCtrl::OnMouseEvent(wxMouseEvent& event) {
   }
 }
 
-void MultiColumnListCtrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
+void SwitcherCtrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
 
-void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
+void SwitcherCtrl::OnKey(wxKeyEvent& event) {
   if (event.GetEventType() == wxEVT_KEY_UP) {
     if (event.GetKeyCode() == GetModifierKey()) {
       SendCloseEvent();
@@ -251,7 +250,7 @@ void MultiColumnListCtrl::OnKey(wxKeyEvent& event) {
 }
 
 // Advance to the next selectable item
-void MultiColumnListCtrl::AdvanceToNextSelectableItem(int direction) {
+void SwitcherCtrl::AdvanceToNextSelectableItem(int direction) {
   if (items_.GetItemCount() < 2) return;
 
   if (items_.selection() == -1) items_.set_selection(0);
@@ -273,7 +272,7 @@ void MultiColumnListCtrl::AdvanceToNextSelectableItem(int direction) {
   }
 }
 
-void MultiColumnListCtrl::GenerateSelectionEvent() {
+void SwitcherCtrl::GenerateSelectionEvent() {
   wxCommandEvent event(wxEVT_COMMAND_LISTBOX_SELECTED, GetId());
   event.SetEventObject(this);
   event.SetInt(items_.selection());
@@ -281,12 +280,12 @@ void MultiColumnListCtrl::GenerateSelectionEvent() {
   GetEventHandler()->ProcessEvent(event);
 }
 
-void MultiColumnListCtrl::CalculateLayout() {
+void SwitcherCtrl::CalculateLayout() {
   wxClientDC dc(this);
   CalculateLayout(dc);
 }
 
-void MultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
+void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
   if (items_.selection() == -1) items_.set_selection(0);
 
   int columnCount = 1;
@@ -354,7 +353,7 @@ void MultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
   InvalidateBestSize();
 }
 
-void MultiColumnListCtrl::Init() {
+void SwitcherCtrl::Init() {
   overall_size_ = wxSize(200, 100);
   modifier_key_ = WXK_CONTROL;
   extra_navigation_key_ = 0;
@@ -390,7 +389,7 @@ bool SwitcherDialog::Create(const SwitcherItemList& items, wxWindow* parent,
 
   wxDialog::Create(parent, id, title, position, size, style);
 
-  list_ctrl_ = new MultiColumnListCtrl();
+  list_ctrl_ = new SwitcherCtrl();
   list_ctrl_->SetItems(items);
   list_ctrl_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                      wxWANTS_CHARS | wxNO_BORDER);

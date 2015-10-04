@@ -25,15 +25,15 @@
  * A control for displaying several columns (not scrollable)
  */
 
-class MultiColumnListCtrl : public wxControl {
-  DECLARE_CLASS(MultiColumnListCtrl)
+class SwitcherCtrl : public wxControl {
+  DECLARE_CLASS(SwitcherCtrl)
 
  public:
-  MultiColumnListCtrl(wxWindow* parent, wxWindowID id,
-                      const wxPoint& pos = wxDefaultPosition,
-                      const wxSize& size = wxDefaultSize,
-                      long style = 0);  // NOLINT
-  MultiColumnListCtrl() {
+  SwitcherCtrl(wxWindow* parent, wxWindowID id,
+               const wxPoint& pos = wxDefaultPosition,
+               const wxSize& size = wxDefaultSize,
+               long style = 0);  // NOLINT
+  SwitcherCtrl() {
     BindEvents();
     Init();
   }
@@ -142,7 +142,7 @@ class SwitcherDialog : public wxDialog {
   int GetModifierKey() const { return modifier_key_; }
 
  private:
-  MultiColumnListCtrl* list_ctrl_;
+  SwitcherCtrl* list_ctrl_;
   wxHtmlWindow* description_ctrl_;
   bool is_closing_;
   long switcher_border_style_;  // NOLINT
