@@ -44,19 +44,19 @@ class SwitcherCtrl : public wxControl {
 
   // Public API
 
-  void SetItems(const SwitcherItemList& items) { items_ = items; }
-  const SwitcherItemList& GetItems() const { return items_; }
-  SwitcherItemList& GetItems() { return items_; }
+  void set_items(const SwitcherItemList& items) { items_ = items; }
+  const SwitcherItemList& items() const { return items_; }
+  SwitcherItemList& items() { return items_; }
 
   // Set an extra key that can be used to cycle through items,
   // in case not using the Ctrl+Tab combination
-  void SetExtraNavigationKey(int keyCode) { extra_navigation_key_ = keyCode; }
-  int GetExtraNavigationKey() const { return extra_navigation_key_; }
+  void set_extra_navigation_key(int keyCode) { extra_navigation_key_ = keyCode; }
+  int extra_navigation_key() const { return extra_navigation_key_; }
 
   // Set the modifier used to invoke the dialog, and therefore to test for
   // release
-  void SetModifierKey(int modifierKey) { modifier_key_ = modifierKey; }
-  int GetModifierKey() const { return modifier_key_; }
+  void set_modifier_key(int modifierKey) { modifier_key_ = modifierKey; }
+  int modifier_key() const { return modifier_key_; }
 
   // Event handlers
 

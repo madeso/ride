@@ -49,15 +49,15 @@ bool SwitcherDialog::Create(const SwitcherItemList& items, wxWindow* parent,
   wxDialog::Create(parent, id, title, position, size, style);
 
   list_ctrl_ = new SwitcherCtrl();
-  list_ctrl_->SetItems(items);
+  list_ctrl_->set_items(items);
   list_ctrl_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                      wxWANTS_CHARS | wxNO_BORDER);
   list_ctrl_->CalculateLayout();
 
   if (extra_navigation_key_ != -1)
-    list_ctrl_->SetExtraNavigationKey(extra_navigation_key_);
+    list_ctrl_->set_extra_navigation_key(extra_navigation_key_);
 
-  if (modifier_key_ != -1) list_ctrl_->SetModifierKey(modifier_key_);
+  if (modifier_key_ != -1) list_ctrl_->set_modifier_key(modifier_key_);
 
   int borderStyle = wxSIMPLE_BORDER;
 
@@ -87,12 +87,12 @@ bool SwitcherDialog::Create(const SwitcherItemList& items, wxWindow* parent,
 
   Centre(wxBOTH);
 
-  if (list_ctrl_->GetItems().selection() == -1)
-    list_ctrl_->GetItems().set_selection(0);
+  if (list_ctrl_->items().selection() == -1)
+    list_ctrl_->items().set_selection(0);
 
   list_ctrl_->AdvanceToNextSelectableItem(1);
 
-  ShowDescription(list_ctrl_->GetItems().selection());
+  ShowDescription(list_ctrl_->items().selection());
 
   return true;
 }
@@ -130,7 +130,7 @@ void SwitcherDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
 
 // Get the selected item
 int SwitcherDialog::GetSelection() const {
-  return list_ctrl_->GetItems().selection();
+  return list_ctrl_->items().selection();
 }
 
 void SwitcherDialog::OnActivate(wxActivateEvent& event) {
@@ -175,9 +175,9 @@ static wxString ColourToHexString(const wxColour& col) {
 }
 
 void SwitcherDialog::ShowDescription(int i) {
-  SwitcherItem& item = list_ctrl_->GetItems().GetItem(i);
+  SwitcherItem& item = list_ctrl_->items().GetItem(i);
 
-  wxColour colour = list_ctrl_->GetItems().background_color();
+  wxColour colour = list_ctrl_->items().background_color();
   if (!colour.Ok()) colour = GetBackgroundColour();
 
   wxString backgroundColourHex = ColourToHexString(colour);
@@ -197,10 +197,10 @@ void SwitcherDialog::ShowDescription(int i) {
 
 void SwitcherDialog::SetExtraNavigationKey(int keyCode) {
   extra_navigation_key_ = keyCode;
-  if (list_ctrl_) list_ctrl_->SetExtraNavigationKey(keyCode);
+  if (list_ctrl_) list_ctrl_->set_extra_navigation_key(keyCode);
 }
 
 void SwitcherDialog::SetModifierKey(int modifierKey) {
   modifier_key_ = modifierKey;
-  if (list_ctrl_) list_ctrl_->SetModifierKey(modifierKey);
+  if (list_ctrl_) list_ctrl_->set_modifier_key(modifierKey);
 }

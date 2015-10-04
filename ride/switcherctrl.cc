@@ -127,7 +127,7 @@ void SwitcherCtrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
 
 void SwitcherCtrl::OnKey(wxKeyEvent& event) {
   if (event.GetEventType() == wxEVT_KEY_UP) {
-    if (event.GetKeyCode() == GetModifierKey()) {
+    if (event.GetKeyCode() == modifier_key()) {
       SendCloseEvent();
     }
     event.Skip();
@@ -139,7 +139,7 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
 
     SendCloseEvent();
   } else if (event.GetKeyCode() == WXK_TAB ||
-             event.GetKeyCode() == GetExtraNavigationKey()) {
+             event.GetKeyCode() == extra_navigation_key()) {
     if (event.ShiftDown()) {
       items_.set_selection(items_.selection() - 1);
       if (items_.selection() < 0)
