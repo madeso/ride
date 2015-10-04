@@ -651,7 +651,7 @@ void MainWindow::OnViewShowProject(wxCommandEvent& event) {
 }
 
 void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
-  wxSwitcherItems items;
+  SwitcherItems items;
   items.SetRowCount(12);
 
   // Add the main windows and toolbars, in two separate columns
@@ -712,7 +712,7 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 
   // Show the switcher dialog
 
-  wxSwitcherDialog dlg(items, this);
+  SwitcherDialog dlg(items, this);
 
 // In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
 // to treat / in the same was as tab (i.e. cycle through the names)
@@ -729,7 +729,7 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
   int ans = dlg.ShowModal();
 
   if (ans == wxID_OK && dlg.GetSelection() != -1) {
-    wxSwitcherItem& item = items.GetItem(dlg.GetSelection());
+    SwitcherItem& item = items.GetItem(dlg.GetSelection());
 
     if (item.GetId() == -1) {
       wxAuiPaneInfo& info = aui_.GetPane(item.GetName());
