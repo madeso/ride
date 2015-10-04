@@ -23,19 +23,10 @@
  */
 
 class SwitcherItem : public wxObject {
-  DECLARE_CLASS(SwitcherItem)
-
  public:
   SwitcherItem();
-  SwitcherItem(const SwitcherItem& item);
 
   bool operator==(const SwitcherItem& item) const;
-
-  void operator=(const SwitcherItem& item);
-
-  void Init();
-
-  void Copy(const SwitcherItem& item);
 
   SwitcherItem& set_title(const wxString& title);
   const wxString& title() const;
