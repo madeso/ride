@@ -29,37 +29,37 @@
 IMPLEMENT_CLASS(wxSwitcherItem, wxObject)
 
 void wxSwitcherItem::Init() {
-  m_id = 0;
-  m_isGroup = false;
-  m_breakColumn = false;
-  m_rowPos = 0;
-  m_colPos = 0;
-  m_window = NULL;
+  id_ = 0;
+  is_group_ = false;
+  break_column_ = false;
+  row_pos_ = 0;
+  col_pos_ = 0;
+  window_ = NULL;
 }
 
 void wxSwitcherItem::Copy(const wxSwitcherItem& item) {
-  m_id = item.m_id;
-  m_name = item.m_name;
-  m_title = item.m_title;
-  m_isGroup = item.m_isGroup;
-  m_breakColumn = item.m_breakColumn;
-  m_rect = item.m_rect;
-  m_font = item.m_font;
-  m_textColour = item.m_textColour;
-  m_bitmap = item.m_bitmap;
-  m_description = item.m_description;
-  m_rowPos = item.m_rowPos;
-  m_colPos = item.m_colPos;
-  m_window = item.m_window;
+  id_ = item.id_;
+  name_ = item.name_;
+  title_ = item.title_;
+  is_group_ = item.is_group_;
+  break_column_ = item.break_column_;
+  rect_ = item.rect_;
+  font_ = item.font_;
+  text_color_ = item.text_color_;
+  bitmap_ = item.bitmap_;
+  description_ = item.description_;
+  row_pos_ = item.row_pos_;
+  col_pos_ = item.col_pos_;
+  window_ = item.window_;
 }
 
 bool wxSwitcherItem::operator==(const wxSwitcherItem& item) const {
-  return (m_id == item.m_id && m_name == item.m_name &&
-          m_title == item.m_title && m_description == item.m_description &&
-          m_isGroup == item.m_isGroup && m_breakColumn == item.m_breakColumn &&
-          m_rect == item.m_rect && m_font == item.m_font &&
-          m_textColour == item.m_textColour && m_colPos == item.m_colPos &&
-          m_rowPos == item.m_rowPos && m_window == item.m_window);
+  return (id_ == item.id_ && name_ == item.name_ && title_ == item.title_ &&
+          description_ == item.description_ && is_group_ == item.is_group_ &&
+          break_column_ == item.break_column_ && rect_ == item.rect_ &&
+          font_ == item.font_ && text_color_ == item.text_color_ &&
+          col_pos_ == item.col_pos_ && row_pos_ == item.row_pos_ &&
+          window_ == item.window_);
 }
 
 /*!
@@ -70,31 +70,31 @@ bool wxSwitcherItem::operator==(const wxSwitcherItem& item) const {
 IMPLEMENT_CLASS(wxSwitcherItems, wxObject)
 
 bool wxSwitcherItems::operator==(const wxSwitcherItems& items) const {
-  if (m_items.size() != items.m_items.size()) return false;
+  if (items_.size() != items.items_.size()) return false;
 
-  if (m_selection != items.m_selection || m_rowCount != items.m_rowCount ||
-      m_columnCount != items.m_columnCount)
+  if (selection_ != items.selection_ || row_count_ != items.row_count_ ||
+      column_count_ != items.column_count_)
     return false;
 
-  if (m_backgroundColour != items.m_backgroundColour ||
-      m_textColour != items.m_textColour ||
-      m_selectionColour != items.m_selectionColour ||
-      m_selectionOutlineColour != items.m_selectionOutlineColour ||
-      m_itemFont != items.m_itemFont)
+  if (background_color_ != items.background_color_ ||
+      text_color_ != items.text_color_ ||
+      selection_color_ != items.selection_color_ ||
+      selection_outline_color_ != items.selection_outline_color_ ||
+      item_font_ != items.item_font_)
     return false;
 
   size_t i;
-  for (i = 0; i < m_items.size(); i++) {
-    if (!(m_items[i] == items.m_items[i])) return false;
+  for (i = 0; i < items_.size(); i++) {
+    if (!(items_[i] == items.items_[i])) return false;
   }
 
   return true;
 }
 
 void wxSwitcherItems::Init() {
-  m_selection = -1;
-  m_rowCount = 10;
-  m_columnCount = 0;
+  selection_ = -1;
+  row_count_ = 10;
+  column_count_ = 0;
 
 #if defined(__WXMSW__) && wxUSE_UXTHEME
 // If on Windows XP/Vista, use more appropriate colours.
@@ -111,19 +111,19 @@ void wxSwitcherItems::Copy(const wxSwitcherItems& items) {
   Clear();
 
   size_t i;
-  for (i = 0; i < items.m_items.size(); i++) {
-    m_items.push_back(items.m_items[i]);
+  for (i = 0; i < items.items_.size(); i++) {
+    items_.push_back(items.items_[i]);
   }
 
-  m_selection = items.m_selection;
-  m_rowCount = items.m_rowCount;
-  m_columnCount = items.m_columnCount;
+  selection_ = items.selection_;
+  row_count_ = items.row_count_;
+  column_count_ = items.column_count_;
 
-  m_backgroundColour = items.m_backgroundColour;
-  m_textColour = items.m_textColour;
-  m_selectionColour = items.m_selectionColour;
-  m_selectionOutlineColour = items.m_selectionOutlineColour;
-  m_itemFont = items.m_itemFont;
+  background_color_ = items.background_color_;
+  text_color_ = items.text_color_;
+  selection_color_ = items.selection_color_;
+  selection_outline_color_ = items.selection_outline_color_;
+  item_font_ = items.item_font_;
 }
 
 wxSwitcherItem& wxSwitcherItems::AddItem(const wxString& title,
@@ -139,8 +139,8 @@ wxSwitcherItem& wxSwitcherItems::AddItem(const wxString& title,
 }
 
 wxSwitcherItem& wxSwitcherItems::AddItem(const wxSwitcherItem& item) {
-  m_items.push_back(item);
-  return m_items[GetItemCount() - 1];
+  items_.push_back(item);
+  return items_[GetItemCount() - 1];
 }
 
 wxSwitcherItem& wxSwitcherItems::AddGroup(const wxString& title,
@@ -152,12 +152,12 @@ wxSwitcherItem& wxSwitcherItems::AddGroup(const wxString& title,
   return item;
 }
 
-void wxSwitcherItems::Clear() { m_items.resize(0); }
+void wxSwitcherItems::Clear() { items_.resize(0); }
 
 int wxSwitcherItems::FindItemByName(const wxString& name) const {
   size_t i;
-  for (i = 0; i < m_items.size(); i++) {
-    if (m_items[i].GetName() == name) return i;
+  for (i = 0; i < items_.size(); i++) {
+    if (items_[i].GetName() == name) return i;
   }
 
   return -1;
@@ -165,14 +165,14 @@ int wxSwitcherItems::FindItemByName(const wxString& name) const {
 
 int wxSwitcherItems::FindItemById(int id) const {
   size_t i;
-  for (i = 0; i < m_items.size(); i++) {
-    if (m_items[i].GetId() == id) return i;
+  for (i = 0; i < items_.size(); i++) {
+    if (items_[i].GetId() == id) return i;
   }
 
   return -1;
 }
 
-void wxSwitcherItems::SetSelection(int sel) { m_selection = sel; }
+void wxSwitcherItems::SetSelection(int sel) { selection_ = sel; }
 
 void wxSwitcherItems::SetSelection(const wxString& name) {
   int idx = FindItemByName(name);
@@ -180,10 +180,10 @@ void wxSwitcherItems::SetSelection(const wxString& name) {
 }
 
 const wxSwitcherItem& wxSwitcherItems::GetItem(int i) const {
-  return m_items[i];
+  return items_[i];
 }
 
-wxSwitcherItem& wxSwitcherItems::GetItem(int i) { return m_items[i]; }
+wxSwitcherItem& wxSwitcherItems::GetItem(int i) { return items_[i]; }
 
 void wxSwitcherItems::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
   wxColour backgroundColour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
@@ -223,9 +223,9 @@ void wxSwitcherItems::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
   dc.SetBackgroundMode(wxTRANSPARENT);
 
   size_t i;
-  for (i = 0; i < m_items.size(); i++) {
-    wxSwitcherItem& item = m_items[i];
-    bool selected = (static_cast<int>(i) == m_selection);
+  for (i = 0; i < items_.size(); i++) {
+    wxSwitcherItem& item = items_[i];
+    bool selected = (static_cast<int>(i) == selection_);
 
     if (selected) {
       dc.SetPen(wxPen(selectionOutlineColour));
@@ -296,8 +296,8 @@ wxSize wxSwitcherItems::CalculateItemSize(wxDC& dc) {  // NOLINT
   if (GetItemFont().Ok()) standardFont = GetItemFont();
 
   size_t i;
-  for (i = 0; i < m_items.size(); i++) {
-    wxSwitcherItem& item = m_items[i];
+  for (i = 0; i < items_.size(); i++) {
+    wxSwitcherItem& item = items_[i];
 
     if (item.GetFont().Ok()) {
       dc.SetFont(item.GetFont());
@@ -329,8 +329,8 @@ wxSize wxSwitcherItems::CalculateItemSize(wxDC& dc) {  // NOLINT
 
 // Find the index for the item associated with the current focus
 int wxSwitcherItems::GetIndexForFocus() const {
-  for (size_t i = 0; i < m_items.size(); i++) {
-    const wxSwitcherItem& item = m_items[i];
+  for (size_t i = 0; i < items_.size(); i++) {
+    const wxSwitcherItem& item = items_[i];
     if (item.GetWindow()) {
       if (wxFindFocusDescendant(item.GetWindow())) return i;
     }
@@ -341,8 +341,8 @@ int wxSwitcherItems::GetIndexForFocus() const {
 
 // Hit test, returning an index or -1
 int wxSwitcherItems::HitTest(const wxPoint& pt) const {
-  for (size_t i = 0; i < m_items.size(); i++) {
-    const wxSwitcherItem& item = m_items[i];
+  for (size_t i = 0; i < items_.size(); i++) {
+    const wxSwitcherItem& item = items_[i];
     if (item.GetRect().Contains(pt)) return static_cast<int>(i);
   }
 
@@ -384,7 +384,7 @@ bool wxMultiColumnListCtrl::Create(wxWindow* parent, wxWindowID id,
 }
 
 // Overrides
-wxSize wxMultiColumnListCtrl::DoGetBestSize() const { return m_overallSize; }
+wxSize wxMultiColumnListCtrl::DoGetBestSize() const { return overall_size_; }
 
 void wxMultiColumnListCtrl::SendCloseEvent() {
   wxWindow* topLevel = GetParent();
@@ -414,20 +414,20 @@ void wxMultiColumnListCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 
   wxRect rect = GetClientRect();
 
-  if (m_items.GetColumnCount() == 0) CalculateLayout(dc);
+  if (items_.GetColumnCount() == 0) CalculateLayout(dc);
 
-  if (m_items.GetColumnCount() == 0) return;
+  if (items_.GetColumnCount() == 0) return;
 
-  m_items.PaintItems(dc, this);
+  items_.PaintItems(dc, this);
 }
 
 void wxMultiColumnListCtrl::OnMouseEvent(wxMouseEvent& event) {
   if (event.LeftDown()) {
     SetFocus();
 
-    int idx = m_items.HitTest(event.GetPosition());
+    int idx = items_.HitTest(event.GetPosition());
     if (idx != wxNOT_FOUND) {
-      m_items.SetSelection(idx);
+      items_.SetSelection(idx);
 
       SendCloseEvent();
     }
@@ -446,21 +446,21 @@ void wxMultiColumnListCtrl::OnKey(wxKeyEvent& event) {
   }
 
   if (event.GetKeyCode() == WXK_ESCAPE || event.GetKeyCode() == WXK_RETURN) {
-    if (event.GetKeyCode() == WXK_ESCAPE) m_items.SetSelection(-1);
+    if (event.GetKeyCode() == WXK_ESCAPE) items_.SetSelection(-1);
 
     SendCloseEvent();
   } else if (event.GetKeyCode() == WXK_TAB ||
              event.GetKeyCode() == GetExtraNavigationKey()) {
     if (event.ShiftDown()) {
-      m_items.SetSelection(m_items.GetSelection() - 1);
-      if (m_items.GetSelection() < 0)
-        m_items.SetSelection(m_items.GetItemCount() - 1);
+      items_.SetSelection(items_.GetSelection() - 1);
+      if (items_.GetSelection() < 0)
+        items_.SetSelection(items_.GetItemCount() - 1);
 
       AdvanceToNextSelectableItem(-1);
     } else {
-      m_items.SetSelection(m_items.GetSelection() + 1);
-      if (m_items.GetSelection() >= m_items.GetItemCount())
-        m_items.SetSelection(0);
+      items_.SetSelection(items_.GetSelection() + 1);
+      if (items_.GetSelection() >= items_.GetItemCount())
+        items_.SetSelection(0);
 
       AdvanceToNextSelectableItem(1);
     }
@@ -470,9 +470,8 @@ void wxMultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_DOWN ||
              event.GetKeyCode() == WXK_NUMPAD_DOWN) {
-    m_items.SetSelection(m_items.GetSelection() + 1);
-    if (m_items.GetSelection() >= m_items.GetItemCount())
-      m_items.SetSelection(0);
+    items_.SetSelection(items_.GetSelection() + 1);
+    if (items_.GetSelection() >= items_.GetItemCount()) items_.SetSelection(0);
 
     AdvanceToNextSelectableItem(1);
 
@@ -481,9 +480,9 @@ void wxMultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_UP ||
              event.GetKeyCode() == WXK_NUMPAD_UP) {
-    m_items.SetSelection(m_items.GetSelection() - 1);
-    if (m_items.GetSelection() < 0)
-      m_items.SetSelection(m_items.GetItemCount() - 1);
+    items_.SetSelection(items_.GetSelection() - 1);
+    if (items_.GetSelection() < 0)
+      items_.SetSelection(items_.GetItemCount() - 1);
 
     AdvanceToNextSelectableItem(-1);
 
@@ -492,7 +491,7 @@ void wxMultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_HOME ||
              event.GetKeyCode() == WXK_NUMPAD_HOME) {
-    m_items.SetSelection(0);
+    items_.SetSelection(0);
 
     AdvanceToNextSelectableItem(1);
 
@@ -501,7 +500,7 @@ void wxMultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_END ||
              event.GetKeyCode() == WXK_NUMPAD_END) {
-    m_items.SetSelection(m_items.GetItemCount() - 1);
+    items_.SetSelection(items_.GetItemCount() - 1);
 
     AdvanceToNextSelectableItem(-1);
 
@@ -510,19 +509,19 @@ void wxMultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_LEFT ||
              event.GetKeyCode() == WXK_NUMPAD_LEFT) {
-    wxSwitcherItem& item = m_items.GetItem(m_items.GetSelection());
+    wxSwitcherItem& item = items_.GetItem(items_.GetSelection());
 
     int row = item.GetRowPos();
     int newCol = item.GetColPos() - 1;
-    if (newCol < 0) newCol = (m_items.GetColumnCount() - 1);
+    if (newCol < 0) newCol = (items_.GetColumnCount() - 1);
 
     // Find the first item from the end whose row matches and whose column is
     // equal or lower
     int i;
-    for (i = m_items.GetItemCount() - 1; i >= 0; i--) {
-      wxSwitcherItem& item2 = m_items.GetItem(i);
+    for (i = items_.GetItemCount() - 1; i >= 0; i--) {
+      wxSwitcherItem& item2 = items_.GetItem(i);
       if (item2.GetColPos() == newCol && item2.GetRowPos() <= row) {
-        m_items.SetSelection(i);
+        items_.SetSelection(i);
         break;
       }
     }
@@ -534,19 +533,19 @@ void wxMultiColumnListCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_RIGHT ||
              event.GetKeyCode() == WXK_NUMPAD_RIGHT) {
-    wxSwitcherItem& item = m_items.GetItem(m_items.GetSelection());
+    wxSwitcherItem& item = items_.GetItem(items_.GetSelection());
 
     int row = item.GetRowPos();
     int newCol = item.GetColPos() + 1;
-    if (newCol >= m_items.GetColumnCount()) newCol = 0;
+    if (newCol >= items_.GetColumnCount()) newCol = 0;
 
     // Find the first item from the end whose row matches and whose column is
     // equal or lower
     int i;
-    for (i = m_items.GetItemCount() - 1; i >= 0; i--) {
-      wxSwitcherItem& item2 = m_items.GetItem(i);
+    for (i = items_.GetItemCount() - 1; i >= 0; i--) {
+      wxSwitcherItem& item2 = items_.GetItem(i);
       if (item2.GetColPos() == newCol && item2.GetRowPos() <= row) {
-        m_items.SetSelection(i);
+        items_.SetSelection(i);
         break;
       }
     }
@@ -563,21 +562,21 @@ void wxMultiColumnListCtrl::OnKey(wxKeyEvent& event) {
 
 // Advance to the next selectable item
 void wxMultiColumnListCtrl::AdvanceToNextSelectableItem(int direction) {
-  if (m_items.GetItemCount() < 2) return;
+  if (items_.GetItemCount() < 2) return;
 
-  if (m_items.GetSelection() == -1) m_items.SetSelection(0);
+  if (items_.GetSelection() == -1) items_.SetSelection(0);
 
-  int oldSel = m_items.GetSelection();
+  int oldSel = items_.GetSelection();
 
   while (true) {
-    if (m_items.GetItem(m_items.GetSelection()).GetIsGroup()) {
-      m_items.SetSelection(m_items.GetSelection() + direction);
-      if (m_items.GetSelection() == -1)
-        m_items.SetSelection(m_items.GetItemCount() - 1);
-      else if (m_items.GetSelection() == m_items.GetItemCount())
-        m_items.SetSelection(0);
+    if (items_.GetItem(items_.GetSelection()).GetIsGroup()) {
+      items_.SetSelection(items_.GetSelection() + direction);
+      if (items_.GetSelection() == -1)
+        items_.SetSelection(items_.GetItemCount() - 1);
+      else if (items_.GetSelection() == items_.GetItemCount())
+        items_.SetSelection(0);
 
-      if (m_items.GetSelection() == oldSel) break;
+      if (items_.GetSelection() == oldSel) break;
     } else {
       break;
     }
@@ -587,7 +586,7 @@ void wxMultiColumnListCtrl::AdvanceToNextSelectableItem(int direction) {
 void wxMultiColumnListCtrl::GenerateSelectionEvent() {
   wxCommandEvent event(wxEVT_COMMAND_LISTBOX_SELECTED, GetId());
   event.SetEventObject(this);
-  event.SetInt(m_items.GetSelection());
+  event.SetInt(items_.GetSelection());
 
   GetEventHandler()->ProcessEvent(event);
 }
@@ -598,7 +597,7 @@ void wxMultiColumnListCtrl::CalculateLayout() {
 }
 
 void wxMultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
-  if (m_items.GetSelection() == -1) m_items.SetSelection(0);
+  if (items_.GetSelection() == -1) items_.SetSelection(0);
 
   int columnCount = 1;
 
@@ -609,8 +608,8 @@ void wxMultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
   // Inter-row spacing
   int rowSpacing = 2;
 
-  wxSize itemSize = m_items.CalculateItemSize(dc);
-  m_overallSize = wxSize(350, 200);
+  wxSize itemSize = items_.CalculateItemSize(dc);
+  overall_size_ = wxSize(350, 200);
 
   size_t i;
   int currentRow = 0;
@@ -619,18 +618,18 @@ void wxMultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
 
   bool breaking = false;
 
-  for (i = 0; i < (size_t)m_items.GetItemCount(); i++) {
-    wxSize oldOverallSize = m_overallSize;
+  for (i = 0; i < (size_t)items_.GetItemCount(); i++) {
+    wxSize oldOverallSize = overall_size_;
 
-    m_items.GetItem(i).SetRect(wxRect(x, y, itemSize.x, itemSize.y));
-    m_items.GetItem(i).SetColPos(columnCount - 1);
-    m_items.GetItem(i).SetRowPos(currentRow);
+    items_.GetItem(i).SetRect(wxRect(x, y, itemSize.x, itemSize.y));
+    items_.GetItem(i).SetColPos(columnCount - 1);
+    items_.GetItem(i).SetRowPos(currentRow);
 
-    if (m_items.GetItem(i).GetRect().GetBottom() > m_overallSize.y)
-      m_overallSize.y = m_items.GetItem(i).GetRect().GetBottom() + yMargin;
+    if (items_.GetItem(i).GetRect().GetBottom() > overall_size_.y)
+      overall_size_.y = items_.GetItem(i).GetRect().GetBottom() + yMargin;
 
-    if (m_items.GetItem(i).GetRect().GetRight() > m_overallSize.x)
-      m_overallSize.x = m_items.GetItem(i).GetRect().GetRight() + xMargin;
+    if (items_.GetItem(i).GetRect().GetRight() > overall_size_.x)
+      overall_size_.x = items_.GetItem(i).GetRect().GetRight() + xMargin;
 
     currentRow++;
 
@@ -638,8 +637,8 @@ void wxMultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
 
     bool stopBreaking = breaking;
 
-    if ((currentRow > m_items.GetRowCount()) ||
-        (m_items.GetItem(i).GetBreakColumn() && !breaking &&
+    if ((currentRow > items_.GetRowCount()) ||
+        (items_.GetItem(i).GetBreakColumn() && !breaking &&
          (currentRow != 1))) {
       currentRow = 0;
       columnCount++;
@@ -647,11 +646,11 @@ void wxMultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
       y = yMargin;
 
       // Make sure we don't orphan a group
-      if (m_items.GetItem(i).GetIsGroup() ||
-          (m_items.GetItem(i).GetBreakColumn() && !breaking)) {
-        m_overallSize = oldOverallSize;
+      if (items_.GetItem(i).GetIsGroup() ||
+          (items_.GetItem(i).GetBreakColumn() && !breaking)) {
+        overall_size_ = oldOverallSize;
 
-        if (m_items.GetItem(i).GetBreakColumn()) breaking = true;
+        if (items_.GetItem(i).GetBreakColumn()) breaking = true;
 
         // Repeat the last item, in the next column
         i--;
@@ -661,15 +660,15 @@ void wxMultiColumnListCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
     if (stopBreaking) breaking = false;
   }
 
-  m_items.SetColumnCount(columnCount);
+  items_.SetColumnCount(columnCount);
 
   InvalidateBestSize();
 }
 
 void wxMultiColumnListCtrl::Init() {
-  m_overallSize = wxSize(200, 100);
-  m_modifierKey = WXK_CONTROL;
-  m_extraNavigationKey = 0;
+  overall_size_ = wxSize(200, 100);
+  modifier_key_ = WXK_CONTROL;
+  extra_navigation_key_ = 0;
 }
 
 /*!
@@ -698,25 +697,25 @@ bool wxSwitcherDialog::Create(const wxSwitcherItems& items, wxWindow* parent,
                               wxWindowID id, const wxString& title,
                               const wxPoint& position, const wxSize& size,
                               long style) {  // NOLINT
-  m_switcherBorderStyle = (style & wxBORDER_MASK);
-  if (m_switcherBorderStyle == wxBORDER_NONE)
-    m_switcherBorderStyle = wxBORDER_SIMPLE;
+  switcher_border_style_ = (style & wxBORDER_MASK);
+  if (switcher_border_style_ == wxBORDER_NONE)
+    switcher_border_style_ = wxBORDER_SIMPLE;
 
   style &= wxBORDER_MASK;
   style |= wxBORDER_NONE;
 
   wxDialog::Create(parent, id, title, position, size, style);
 
-  m_listCtrl = new wxMultiColumnListCtrl();
-  m_listCtrl->SetItems(items);
-  m_listCtrl->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+  list_ctrl_ = new wxMultiColumnListCtrl();
+  list_ctrl_->SetItems(items);
+  list_ctrl_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                      wxWANTS_CHARS | wxNO_BORDER);
-  m_listCtrl->CalculateLayout();
+  list_ctrl_->CalculateLayout();
 
-  if (m_extraNavigationKey != -1)
-    m_listCtrl->SetExtraNavigationKey(m_extraNavigationKey);
+  if (extra_navigation_key_ != -1)
+    list_ctrl_->SetExtraNavigationKey(extra_navigation_key_);
 
-  if (m_modifierKey != -1) m_listCtrl->SetModifierKey(m_modifierKey);
+  if (modifier_key_ != -1) list_ctrl_->SetModifierKey(modifier_key_);
 
   int borderStyle = wxSIMPLE_BORDER;
 
@@ -725,45 +724,45 @@ bool wxSwitcherDialog::Create(const wxSwitcherItems& items, wxWindow* parent,
 // borderStyle = wxBORDER_THEME;
 #endif
 
-  m_descriptionCtrl = new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition,
+  description_ctrl_ = new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition,
                                        wxSize(-1, 100), borderStyle);
-  m_descriptionCtrl->SetHTMLBackgroundColour(GetBackgroundColour());
+  description_ctrl_->SetHTMLBackgroundColour(GetBackgroundColour());
 
 #ifdef __WXGTK20__
   int fontSize = 11;
-  m_descriptionCtrl->SetStandardFonts(fontSize);
+  description_ctrl_->SetStandardFonts(fontSize);
 #endif
 
   wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   SetSizer(sizer);
 
-  sizer->Add(m_listCtrl, 1, wxALL | wxEXPAND, 10);
-  sizer->Add(m_descriptionCtrl, 0, wxALL | wxEXPAND, 10);
+  sizer->Add(list_ctrl_, 1, wxALL | wxEXPAND, 10);
+  sizer->Add(description_ctrl_, 0, wxALL | wxEXPAND, 10);
 
   sizer->SetSizeHints(this);
 
-  m_listCtrl->SetFocus();
+  list_ctrl_->SetFocus();
 
   Centre(wxBOTH);
 
-  if (m_listCtrl->GetItems().GetSelection() == -1)
-    m_listCtrl->GetItems().SetSelection(0);
+  if (list_ctrl_->GetItems().GetSelection() == -1)
+    list_ctrl_->GetItems().SetSelection(0);
 
-  m_listCtrl->AdvanceToNextSelectableItem(1);
+  list_ctrl_->AdvanceToNextSelectableItem(1);
 
-  ShowDescription(m_listCtrl->GetItems().GetSelection());
+  ShowDescription(list_ctrl_->GetItems().GetSelection());
 
   return true;
 }
 
 void wxSwitcherDialog::Init() {
-  m_listCtrl = NULL;
-  m_descriptionCtrl = NULL;
-  m_closing = false;
-  m_switcherBorderStyle = 0;
+  list_ctrl_ = NULL;
+  description_ctrl_ = NULL;
+  is_closing_ = false;
+  switcher_border_style_ = 0;
 
-  m_modifierKey = -1;
-  m_extraNavigationKey = -1;
+  modifier_key_ = -1;
+  extra_navigation_key_ = -1;
 
 #if defined(__WXMSW__) && wxUSE_UXTHEME
 /* if (wxUxThemeEngine::GetIfActive())
@@ -771,14 +770,14 @@ void wxSwitcherDialog::Init() {
 else
 */
 #endif
-  m_borderColour = *wxBLACK;
+  border_color_ = *wxBLACK;
 }
 
 void wxSwitcherDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
-  if (m_closing) return;
+  if (is_closing_) return;
 
   if (IsModal()) {
-    m_closing = true;
+    is_closing_ = true;
 
     if (GetSelection() == -1)
       EndModal(wxID_CANCEL);
@@ -789,13 +788,13 @@ void wxSwitcherDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
 
 // Get the selected item
 int wxSwitcherDialog::GetSelection() const {
-  return m_listCtrl->GetItems().GetSelection();
+  return list_ctrl_->GetItems().GetSelection();
 }
 
 void wxSwitcherDialog::OnActivate(wxActivateEvent& event) {
   if (!event.GetActive()) {
-    if (!m_closing) {
-      m_closing = true;
+    if (!is_closing_) {
+      is_closing_ = true;
       EndModal(wxID_CANCEL);
     }
   }
@@ -804,15 +803,15 @@ void wxSwitcherDialog::OnActivate(wxActivateEvent& event) {
 void wxSwitcherDialog::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
   wxPaintDC dc(this);
 
-  if (m_switcherBorderStyle == wxBORDER_SIMPLE) {
-    dc.SetPen(wxPen(m_borderColour));
+  if (switcher_border_style_ == wxBORDER_SIMPLE) {
+    dc.SetPen(wxPen(border_color_));
     dc.SetBrush(*wxTRANSPARENT_BRUSH);
 
     wxRect rect(GetClientRect());
     dc.DrawRectangle(rect);
 
     // Draw border around the HTML control
-    rect = m_descriptionCtrl->GetRect();
+    rect = description_ctrl_->GetRect();
     rect.Inflate(1, 1);
     dc.DrawRectangle(rect);
   }
@@ -834,9 +833,9 @@ static wxString ColourToHexString(const wxColour& col) {
 }
 
 void wxSwitcherDialog::ShowDescription(int i) {
-  wxSwitcherItem& item = m_listCtrl->GetItems().GetItem(i);
+  wxSwitcherItem& item = list_ctrl_->GetItems().GetItem(i);
 
-  wxColour colour = m_listCtrl->GetItems().GetBackgroundColour();
+  wxColour colour = list_ctrl_->GetItems().GetBackgroundColour();
   if (!colour.Ok()) colour = GetBackgroundColour();
 
   wxString backgroundColourHex = ColourToHexString(colour);
@@ -851,15 +850,15 @@ void wxSwitcherDialog::ShowDescription(int i) {
 
   html += wxT("</body>");
 
-  m_descriptionCtrl->SetPage(html);
+  description_ctrl_->SetPage(html);
 }
 
 void wxSwitcherDialog::SetExtraNavigationKey(int keyCode) {
-  m_extraNavigationKey = keyCode;
-  if (m_listCtrl) m_listCtrl->SetExtraNavigationKey(keyCode);
+  extra_navigation_key_ = keyCode;
+  if (list_ctrl_) list_ctrl_->SetExtraNavigationKey(keyCode);
 }
 
 void wxSwitcherDialog::SetModifierKey(int modifierKey) {
-  m_modifierKey = modifierKey;
-  if (m_listCtrl) m_listCtrl->SetModifierKey(modifierKey);
+  modifier_key_ = modifierKey;
+  if (list_ctrl_) list_ctrl_->SetModifierKey(modifierKey);
 }

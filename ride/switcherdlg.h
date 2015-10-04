@@ -41,97 +41,97 @@ class wxSwitcherItem : public wxObject {
   void Copy(const wxSwitcherItem& item);
 
   wxSwitcherItem& SetTitle(const wxString& title) {
-    m_title = title;
+    title_ = title;
     return (*this);
   }
-  const wxString& GetTitle() const { return m_title; }
+  const wxString& GetTitle() const { return title_; }
 
   wxSwitcherItem& SetName(const wxString& name) {
-    m_name = name;
+    name_ = name;
     return (*this);
   }
-  const wxString& GetName() const { return m_name; }
+  const wxString& GetName() const { return name_; }
 
   wxSwitcherItem& SetDescription(const wxString& descr) {
-    m_description = descr;
+    description_ = descr;
     return (*this);
   }
-  const wxString& GetDescription() const { return m_description; }
+  const wxString& GetDescription() const { return description_; }
 
   wxSwitcherItem& SetId(int id) {
-    m_id = id;
+    id_ = id;
     return (*this);
   }
-  int GetId() const { return m_id; }
+  int GetId() const { return id_; }
 
   wxSwitcherItem& SetIsGroup(bool isGroup) {
-    m_isGroup = isGroup;
+    is_group_ = isGroup;
     return (*this);
   }
-  bool GetIsGroup() const { return m_isGroup; }
+  bool GetIsGroup() const { return is_group_; }
 
   wxSwitcherItem& BreakColumn(bool breakCol = true) {
-    m_breakColumn = breakCol;
+    break_column_ = breakCol;
     return (*this);
   }
-  bool GetBreakColumn() const { return m_breakColumn; }
+  bool GetBreakColumn() const { return break_column_; }
 
   wxSwitcherItem& SetRect(const wxRect& rect) {
-    m_rect = rect;
+    rect_ = rect;
     return (*this);
   }
-  const wxRect& GetRect() const { return m_rect; }
+  const wxRect& GetRect() const { return rect_; }
 
   wxSwitcherItem& SetTextColour(const wxColour& colour) {
-    m_textColour = colour;
+    text_color_ = colour;
     return (*this);
   }
-  const wxColour& GetTextColour() const { return m_textColour; }
+  const wxColour& GetTextColour() const { return text_color_; }
 
   wxSwitcherItem& SetFont(const wxFont& font) {
-    m_font = font;
+    font_ = font;
     return (*this);
   }
-  const wxFont& GetFont() const { return m_font; }
+  const wxFont& GetFont() const { return font_; }
 
   wxSwitcherItem& SetBitmap(const wxBitmap& bitmap) {
-    m_bitmap = bitmap;
+    bitmap_ = bitmap;
     return (*this);
   }
-  const wxBitmap& GetBitmap() const { return m_bitmap; }
+  const wxBitmap& GetBitmap() const { return bitmap_; }
 
   wxSwitcherItem& SetRowPos(int pos) {
-    m_rowPos = pos;
+    row_pos_ = pos;
     return (*this);
   }
-  int GetRowPos() const { return m_rowPos; }
+  int GetRowPos() const { return row_pos_; }
 
   wxSwitcherItem& SetColPos(int pos) {
-    m_colPos = pos;
+    col_pos_ = pos;
     return (*this);
   }
-  int GetColPos() const { return m_colPos; }
+  int GetColPos() const { return col_pos_; }
 
   wxSwitcherItem& SetWindow(wxWindow* win) {
-    m_window = win;
+    window_ = win;
     return (*this);
   }
-  wxWindow* GetWindow() const { return m_window; }
+  wxWindow* GetWindow() const { return window_; }
 
  protected:
-  wxString m_title;
-  wxString m_name;
-  wxString m_description;
-  int m_id;
-  bool m_isGroup;
-  bool m_breakColumn;
-  wxRect m_rect;
-  wxBitmap m_bitmap;
-  wxColour m_textColour;
-  wxFont m_font;
-  int m_rowPos;
-  int m_colPos;
-  wxWindow* m_window;
+  wxString title_;
+  wxString name_;
+  wxString description_;
+  int id_;
+  bool is_group_;
+  bool break_column_;
+  wxRect rect_;
+  wxBitmap bitmap_;
+  wxColour text_color_;
+  wxFont font_;
+  int row_pos_;
+  int col_pos_;
+  wxWindow* window_;
 };
 
 typedef std::vector<wxSwitcherItem> wxSwitcherItemArray;
@@ -174,7 +174,7 @@ class wxSwitcherItems : public wxObject {
 
   void SetSelection(int sel);
   void SetSelection(const wxString& name);  // by name
-  int GetSelection() const { return m_selection; }
+  int GetSelection() const { return selection_; }
 
   // Find the index for the item associated with the current focus
   int GetIndexForFocus() const;
@@ -185,36 +185,34 @@ class wxSwitcherItems : public wxObject {
   const wxSwitcherItem& GetItem(int i) const;
   wxSwitcherItem& GetItem(int i);
 
-  int GetItemCount() const { return m_items.size(); }
+  int GetItemCount() const { return items_.size(); }
 
-  void SetRowCount(int rows) { m_rowCount = rows; }
-  int GetRowCount() const { return m_rowCount; }
+  void SetRowCount(int rows) { row_count_ = rows; }
+  int GetRowCount() const { return row_count_; }
 
-  void SetColumnCount(int cols) { m_columnCount = cols; }
-  int GetColumnCount() const { return m_columnCount; }
+  void SetColumnCount(int cols) { column_count_ = cols; }
+  int GetColumnCount() const { return column_count_; }
 
   void SetBackgroundColour(const wxColour& colour) {
-    m_backgroundColour = colour;
+    background_color_ = colour;
   }
-  const wxColour& GetBackgroundColour() const { return m_backgroundColour; }
+  const wxColour& GetBackgroundColour() const { return background_color_; }
 
-  void SetTextColour(const wxColour& colour) { m_textColour = colour; }
-  const wxColour& GetTextColour() const { return m_textColour; }
+  void SetTextColour(const wxColour& colour) { text_color_ = colour; }
+  const wxColour& GetTextColour() const { return text_color_; }
 
-  void SetSelectionColour(const wxColour& colour) {
-    m_selectionColour = colour;
-  }
-  const wxColour& GetSelectionColour() const { return m_selectionColour; }
+  void SetSelectionColour(const wxColour& colour) { selection_color_ = colour; }
+  const wxColour& GetSelectionColour() const { return selection_color_; }
 
   void SetSelectionOutlineColour(const wxColour& colour) {
-    m_selectionOutlineColour = colour;
+    selection_outline_color_ = colour;
   }
   const wxColour& GetSelectionOutlineColour() const {
-    return m_selectionOutlineColour;
+    return selection_outline_color_;
   }
 
-  void SetItemFont(const wxFont& font) { m_itemFont = font; }
-  const wxFont& GetItemFont() const { return m_itemFont; }
+  void SetItemFont(const wxFont& font) { item_font_ = font; }
+  const wxFont& GetItemFont() const { return item_font_; }
 
   // Implementation
 
@@ -222,17 +220,17 @@ class wxSwitcherItems : public wxObject {
   wxSize CalculateItemSize(wxDC& dc);        // NOLINT
 
  protected:
-  wxSwitcherItemArray m_items;
-  int m_selection;
-  int m_rowCount;
-  int m_columnCount;
+  wxSwitcherItemArray items_;
+  int selection_;
+  int row_count_;
+  int column_count_;
 
-  wxColour m_backgroundColour;
-  wxColour m_textColour;
-  wxColour m_selectionColour;
-  wxColour m_selectionOutlineColour;
+  wxColour background_color_;
+  wxColour text_color_;
+  wxColour selection_color_;
+  wxColour selection_outline_color_;
 
-  wxFont m_itemFont;
+  wxFont item_font_;
 };
 
 /*!
@@ -256,19 +254,19 @@ class wxMultiColumnListCtrl : public wxControl {
 
   // Public API
 
-  void SetItems(const wxSwitcherItems& items) { m_items = items; }
-  const wxSwitcherItems& GetItems() const { return m_items; }
-  wxSwitcherItems& GetItems() { return m_items; }
+  void SetItems(const wxSwitcherItems& items) { items_ = items; }
+  const wxSwitcherItems& GetItems() const { return items_; }
+  wxSwitcherItems& GetItems() { return items_; }
 
   // Set an extra key that can be used to cycle through items,
   // in case not using the Ctrl+Tab combination
-  void SetExtraNavigationKey(int keyCode) { m_extraNavigationKey = keyCode; }
-  int GetExtraNavigationKey() const { return m_extraNavigationKey; }
+  void SetExtraNavigationKey(int keyCode) { extra_navigation_key_ = keyCode; }
+  int GetExtraNavigationKey() const { return extra_navigation_key_; }
 
   // Set the modifier used to invoke the dialog, and therefore to test for
   // release
-  void SetModifierKey(int modifierKey) { m_modifierKey = modifierKey; }
-  int GetModifierKey() const { return m_modifierKey; }
+  void SetModifierKey(int modifierKey) { modifier_key_ = modifierKey; }
+  int GetModifierKey() const { return modifier_key_; }
 
   // Event handlers
 
@@ -286,7 +284,7 @@ class wxMultiColumnListCtrl : public wxControl {
   void CalculateLayout();
   void CalculateLayout(wxDC& dc);  // NOLINT
   void InvalidateLayout() {
-    m_items.SetColumnCount(0);
+    items_.SetColumnCount(0);
     Refresh();
   }
   void Init();
@@ -295,10 +293,10 @@ class wxMultiColumnListCtrl : public wxControl {
   void SendCloseEvent();
 
  protected:
-  wxSwitcherItems m_items;
-  wxSize m_overallSize;
-  int m_extraNavigationKey;
-  int m_modifierKey;
+  wxSwitcherItems items_;
+  wxSize overall_size_;
+  int extra_navigation_key_;
+  int modifier_key_;
 
   DECLARE_EVENT_TABLE()
 };
@@ -339,26 +337,26 @@ class wxSwitcherDialog : public wxDialog {
 
   void ShowDescription(int i);
 
-  void SetBorderColour(const wxColour& colour) { m_borderColour = colour; }
+  void SetBorderColour(const wxColour& colour) { border_color_ = colour; }
 
   // Set an extra key that can be used to cycle through items,
   // in case not using the Ctrl+Tab combination
   void SetExtraNavigationKey(int keyCode);
-  int GetExtraNavigationKey() const { return m_extraNavigationKey; }
+  int GetExtraNavigationKey() const { return extra_navigation_key_; }
 
   // Set the modifier used to invoke the dialog, and therefore to test for
   // release
   void SetModifierKey(int modifierKey);
-  int GetModifierKey() const { return m_modifierKey; }
+  int GetModifierKey() const { return modifier_key_; }
 
  private:
-  wxMultiColumnListCtrl* m_listCtrl;
-  wxHtmlWindow* m_descriptionCtrl;
-  bool m_closing;
-  long m_switcherBorderStyle;  // NOLINT
-  wxColour m_borderColour;
-  int m_extraNavigationKey;
-  int m_modifierKey;
+  wxMultiColumnListCtrl* list_ctrl_;
+  wxHtmlWindow* description_ctrl_;
+  bool is_closing_;
+  long switcher_border_style_;  // NOLINT
+  wxColour border_color_;
+  int extra_navigation_key_;
+  int modifier_key_;
 
   DECLARE_EVENT_TABLE()
 };
