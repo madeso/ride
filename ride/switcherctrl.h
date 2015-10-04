@@ -33,10 +33,7 @@ class SwitcherCtrl : public wxControl {
                const wxPoint& pos = wxDefaultPosition,
                const wxSize& size = wxDefaultSize,
                long style = 0);  // NOLINT
-  SwitcherCtrl() {
-    BindEvents();
-    Init();
-  }
+  SwitcherCtrl();
 
   bool Create(wxWindow* parent, wxWindowID id,
               const wxPoint& pos = wxDefaultPosition,
@@ -44,19 +41,19 @@ class SwitcherCtrl : public wxControl {
 
   // Public API
 
-  void set_items(const SwitcherItemList& items) { items_ = items; }
-  const SwitcherItemList& items() const { return items_; }
-  SwitcherItemList& items() { return items_; }
+  void set_items(const SwitcherItemList& items);
+  const SwitcherItemList& items() const;
+  SwitcherItemList& items();
 
   // Set an extra key that can be used to cycle through items,
   // in case not using the Ctrl+Tab combination
-  void set_extra_navigation_key(int keyCode) { extra_navigation_key_ = keyCode; }
-  int extra_navigation_key() const { return extra_navigation_key_; }
+  void set_extra_navigation_key(int keyCode);
+  int extra_navigation_key() const;
 
   // Set the modifier used to invoke the dialog, and therefore to test for
   // release
-  void set_modifier_key(int modifierKey) { modifier_key_ = modifierKey; }
-  int modifier_key() const { return modifier_key_; }
+  void set_modifier_key(int modifierKey);
+  int modifier_key() const;
 
   // Event handlers
 
@@ -73,10 +70,7 @@ class SwitcherCtrl : public wxControl {
 
   void CalculateLayout();
   void CalculateLayout(wxDC& dc);  // NOLINT
-  void InvalidateLayout() {
-    items_.set_column_count(0);
-    Refresh();
-  }
+  void InvalidateLayout();
   void Init();
   void BindEvents();
   void GenerateSelectionEvent();

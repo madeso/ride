@@ -20,39 +20,6 @@
 
 #define wxSWITCHER_USE_BUFFERED_PAINTING 1
 
-/*
- * A control for displaying several columns (not scrollable)
- */
-
-void SwitcherCtrl::BindEvents() {
-  Bind(wxEVT_LEFT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEFT_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEFT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MOTION, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEAVE_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_ENTER_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MOUSEWHEEL, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MAGNIFY, &SwitcherCtrl::OnMouseEvent, this);
-
-  Bind(wxEVT_PAINT, &SwitcherCtrl::OnPaint, this);
-  Bind(wxEVT_ERASE_BACKGROUND, &SwitcherCtrl::OnEraseBackground, this);
-  Bind(wxEVT_CHAR, &SwitcherCtrl::OnChar, this);
-  Bind(wxEVT_KEY_DOWN, &SwitcherCtrl::OnKey, this);
-  Bind(wxEVT_KEY_UP, &SwitcherCtrl::OnKey, this);
-}
-
 IMPLEMENT_CLASS(SwitcherCtrl, wxControl)
 
 SwitcherCtrl::SwitcherCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pos,
@@ -61,6 +28,11 @@ SwitcherCtrl::SwitcherCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   Init();
 
   Create(parent, id, pos, size, style);
+}
+
+SwitcherCtrl::SwitcherCtrl() {
+  BindEvents();
+  Init();
 }
 
 bool SwitcherCtrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
@@ -73,26 +45,25 @@ bool SwitcherCtrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
-// Overrides
-wxSize SwitcherCtrl::DoGetBestSize() const { return overall_size_; }
+// Public API
 
-void SwitcherCtrl::SendCloseEvent() {
-  wxWindow* topLevel = GetParent();
-  while (topLevel && !topLevel->IsTopLevel()) topLevel = topLevel->GetParent();
+void SwitcherCtrl::set_items(const SwitcherItemList& items) { items_ = items; }
+const SwitcherItemList& SwitcherCtrl::items() const { return items_; }
+SwitcherItemList& SwitcherCtrl::items() { return items_; }
 
-  if (topLevel) {
-    wxCloseEvent closeEvent(wxEVT_CLOSE_WINDOW, topLevel->GetId());
-    closeEvent.SetEventObject(topLevel);
-    closeEvent.SetCanVeto(false);
-
-    topLevel->GetEventHandler()->ProcessEvent(closeEvent);
-    return;
-  }
+// Set an extra key that can be used to cycle through items,
+// in case not using the Ctrl+Tab combination
+void SwitcherCtrl::set_extra_navigation_key(int keyCode) {
+  extra_navigation_key_ = keyCode;
 }
+int SwitcherCtrl::extra_navigation_key() const { return extra_navigation_key_; }
 
-void SwitcherCtrl::OnEraseBackground(wxEraseEvent& WXUNUSED(event)) {  // NOLINT
-  // Do nothing
+// Set the modifier used to invoke the dialog, and therefore to test for
+// release
+void SwitcherCtrl::set_modifier_key(int modifierKey) {
+  modifier_key_ = modifierKey;
 }
+int SwitcherCtrl::modifier_key() const { return modifier_key_; }
 
 void SwitcherCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 #if wxSWITCHER_USE_BUFFERED_PAINTING
@@ -247,36 +218,11 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
   }
 }
 
-// Advance to the next selectable item
-void SwitcherCtrl::AdvanceToNextSelectableItem(int direction) {
-  if (items_.GetItemCount() < 2) return;
-
-  if (items_.selection() == -1) items_.set_selection(0);
-
-  int oldSel = items_.selection();
-
-  while (true) {
-    if (items_.GetItem(items_.selection()).is_group()) {
-      items_.set_selection(items_.selection() + direction);
-      if (items_.selection() == -1)
-        items_.set_selection(items_.GetItemCount() - 1);
-      else if (items_.selection() == items_.GetItemCount())
-        items_.set_selection(0);
-
-      if (items_.selection() == oldSel) break;
-    } else {
-      break;
-    }
-  }
+void SwitcherCtrl::OnEraseBackground(wxEraseEvent& WXUNUSED(event)) {  // NOLINT
+  // Do nothing
 }
 
-void SwitcherCtrl::GenerateSelectionEvent() {
-  wxCommandEvent event(wxEVT_COMMAND_LISTBOX_SELECTED, GetId());
-  event.SetEventObject(this);
-  event.SetInt(items_.selection());
-
-  GetEventHandler()->ProcessEvent(event);
-}
+wxSize SwitcherCtrl::DoGetBestSize() const { return overall_size_; }
 
 void SwitcherCtrl::CalculateLayout() {
   wxClientDC dc(this);
@@ -350,9 +296,86 @@ void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
 
   InvalidateBestSize();
 }
+void SwitcherCtrl::InvalidateLayout() {
+  items_.set_column_count(0);
+  Refresh();
+}
 
 void SwitcherCtrl::Init() {
   overall_size_ = wxSize(200, 100);
   modifier_key_ = WXK_CONTROL;
   extra_navigation_key_ = 0;
+}
+
+void SwitcherCtrl::BindEvents() {
+  Bind(wxEVT_LEFT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_DOWN, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_UP, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MOTION, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEAVE_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_ENTER_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MOUSEWHEEL, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_MAGNIFY, &SwitcherCtrl::OnMouseEvent, this);
+
+  Bind(wxEVT_PAINT, &SwitcherCtrl::OnPaint, this);
+  Bind(wxEVT_ERASE_BACKGROUND, &SwitcherCtrl::OnEraseBackground, this);
+  Bind(wxEVT_CHAR, &SwitcherCtrl::OnChar, this);
+  Bind(wxEVT_KEY_DOWN, &SwitcherCtrl::OnKey, this);
+  Bind(wxEVT_KEY_UP, &SwitcherCtrl::OnKey, this);
+}
+void SwitcherCtrl::GenerateSelectionEvent() {
+  wxCommandEvent event(wxEVT_COMMAND_LISTBOX_SELECTED, GetId());
+  event.SetEventObject(this);
+  event.SetInt(items_.selection());
+
+  GetEventHandler()->ProcessEvent(event);
+}
+
+// Advance to the next selectable item
+void SwitcherCtrl::AdvanceToNextSelectableItem(int direction) {
+  if (items_.GetItemCount() < 2) return;
+
+  if (items_.selection() == -1) items_.set_selection(0);
+
+  int oldSel = items_.selection();
+
+  while (true) {
+    if (items_.GetItem(items_.selection()).is_group()) {
+      items_.set_selection(items_.selection() + direction);
+      if (items_.selection() == -1)
+        items_.set_selection(items_.GetItemCount() - 1);
+      else if (items_.selection() == items_.GetItemCount())
+        items_.set_selection(0);
+
+      if (items_.selection() == oldSel) break;
+    } else {
+      break;
+    }
+  }
+}
+
+void SwitcherCtrl::SendCloseEvent() {
+  wxWindow* topLevel = GetParent();
+  while (topLevel && !topLevel->IsTopLevel()) topLevel = topLevel->GetParent();
+
+  if (topLevel) {
+    wxCloseEvent closeEvent(wxEVT_CLOSE_WINDOW, topLevel->GetId());
+    closeEvent.SetEventObject(topLevel);
+    closeEvent.SetCanVeto(false);
+
+    topLevel->GetEventHandler()->ProcessEvent(closeEvent);
+    return;
+  }
 }
