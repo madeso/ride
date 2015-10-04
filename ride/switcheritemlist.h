@@ -28,8 +28,6 @@ class SwitcherItemList : public wxObject {
  public:
   SwitcherItemList();
 
-  // Public API
-
   SwitcherItem& AddItem(const wxString& title, const wxString& name, int id = 0,
                         const wxBitmap& bitmap = wxNullBitmap);
   SwitcherItem& AddItem(const SwitcherItem& item);
@@ -40,7 +38,7 @@ class SwitcherItemList : public wxObject {
   int FindItemById(int id) const;
 
   void set_selection(int sel);
-  void SelectByName(const wxString& name);  // by name
+  void SelectByName(const wxString& name);
   int selection() const;
 
   // Find the index for the item associated with the current focus
@@ -75,8 +73,6 @@ class SwitcherItemList : public wxObject {
   void set_item_font(const wxFont& font);
   const wxFont& item_font() const;
 
-  // Implementation
-
   void PaintItems(wxDC& dc, wxWindow* win);  // NOLINT
   wxSize CalculateItemSize(wxDC& dc);        // NOLINT
 
@@ -85,6 +81,9 @@ class SwitcherItemList : public wxObject {
   int selection_;
   int row_count_;
   int column_count_;
+
+  int text_margin_x_;
+  int text_margin_y_;
 
   wxColour background_color_;
   wxColour text_color_;

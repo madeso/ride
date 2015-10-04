@@ -14,11 +14,18 @@
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-#define wxSWITCHER_TEXT_MARGIN_X 4
-#define wxSWITCHER_TEXT_MARGIN_Y 2
-
 SwitcherItemList::SwitcherItemList()
-    : selection_(-1), row_count_(10), column_count_(0) {}
+    : selection_(-1),
+      row_count_(10),
+      column_count_(0),
+      text_margin_x_(4),
+      text_margin_y_(2),
+      background_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)),
+      text_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)),
+      selection_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT)),
+      selection_outline_color_(
+          wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)),
+      item_font_(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT)) {}
 
 SwitcherItem& SwitcherItemList::AddItem(const wxString& title,
                                         const wxString& name, int id,
@@ -34,7 +41,7 @@ SwitcherItem& SwitcherItemList::AddItem(const wxString& title,
 
 SwitcherItem& SwitcherItemList::AddItem(const SwitcherItem& item) {
   items_.push_back(item);
-  return items_[GetItemCount() - 1];
+  return *items_.rbegin();
 }
 
 SwitcherItem& SwitcherItemList::AddGroup(const wxString& title,
@@ -81,7 +88,7 @@ int SwitcherItemList::GetIndexForFocus() const {
     }
   }
 
-  return wxNOT_FOUND;
+  return -1;
 }
 
 int SwitcherItemList::HitTest(const wxPoint& pt) const {
@@ -90,7 +97,7 @@ int SwitcherItemList::HitTest(const wxPoint& pt) const {
     if (item.rect().Contains(pt)) return static_cast<int>(i);
   }
 
-  return wxNOT_FOUND;
+  return -1;
 }
 
 const SwitcherItem& SwitcherItemList::GetItem(int i) const { return items_[i]; }
@@ -135,50 +142,23 @@ void SwitcherItemList::set_item_font(const wxFont& font) { item_font_ = font; }
 const wxFont& SwitcherItemList::item_font() const { return item_font_; }
 
 void SwitcherItemList::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
-  wxColour backgroundColour = wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE);
-  wxColour standardTextColour =
-      wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
-  wxColour selectionColour =
-      wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT);
-  wxColour selectionOutlineColour =
-      wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT);
-  wxFont standardFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-  wxFont groupFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-  groupFont.SetWeight(wxBOLD);
-
-  if (background_color().Ok()) backgroundColour = background_color();
-
-  if (text_color().Ok()) standardTextColour = text_color();
-
-  if (selection_color().Ok()) selectionColour = selection_color();
-
-  if (selection_outline_color().Ok())
-    selectionOutlineColour = selection_outline_color();
-
-  if (item_font().Ok()) {
-    standardFont = item_font();
-    groupFont =
-        wxFont(standardFont.GetPointSize(), standardFont.GetFamily(),
-               standardFont.GetStyle(), wxBOLD, standardFont.GetUnderlined(),
-               standardFont.GetFaceName());
-  }
-
-  int textMarginX = wxSWITCHER_TEXT_MARGIN_X;
+  const wxFont groupFont(item_font_.GetPointSize(), item_font_.GetFamily(),
+                         item_font_.GetStyle(), wxBOLD,
+                         item_font_.GetUnderlined(), item_font_.GetFaceName());
 
   dc.SetLogicalFunction(wxCOPY);
-  dc.SetBrush(wxBrush(backgroundColour));
+  dc.SetBrush(wxBrush(background_color_));
   dc.SetPen(*wxTRANSPARENT_PEN);
   dc.DrawRectangle(win->GetClientRect());
   dc.SetBackgroundMode(wxTRANSPARENT);
 
-  size_t i;
-  for (i = 0; i < items_.size(); i++) {
+  for (size_t i = 0; i < items_.size(); i++) {
     SwitcherItem& item = items_[i];
     bool selected = (static_cast<int>(i) == selection_);
 
     if (selected) {
-      dc.SetPen(wxPen(selectionOutlineColour));
-      dc.SetBrush(wxBrush(selectionColour));
+      dc.SetPen(wxPen(selection_outline_color_));
+      dc.SetBrush(wxBrush(selection_color_));
       dc.DrawRectangle(item.rect());
     }
 
@@ -187,26 +167,14 @@ void SwitcherItemList::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
 
     dc.SetClippingRegion(clippingRect);
 
-    if (item.text_color().Ok())
-      dc.SetTextForeground(item.text_color());
-    else
-      dc.SetTextForeground(standardTextColour);
-
-    if (item.get_font().Ok()) {
-      dc.SetFont(item.get_font());
-    } else {
-      if (item.is_group())
-        dc.SetFont(groupFont);
-      else
-        dc.SetFont(standardFont);
-    }
+    dc.SetTextForeground(text_color_);
+    dc.SetFont(item.is_group() ? groupFont : item_font_);
 
     int w, h;
     dc.GetTextExtent(item.title(), &w, &h);
 
     int x = item.rect().x;
-
-    x += textMarginX;
+    x += text_margin_x_;
 
     if (!item.is_group()) {
       if (item.bitmap().Ok() && item.bitmap().GetWidth() <= 16 &&
@@ -219,7 +187,7 @@ void SwitcherItemList::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
 
       x += 16;
 
-      x += textMarginX;
+      x += text_margin_x_;
     }
 
     int y = item.rect().y + (item.rect().height - h) / 2;
@@ -232,29 +200,20 @@ void SwitcherItemList::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
 wxSize SwitcherItemList::CalculateItemSize(wxDC& dc) {  // NOLINT
   // Start off allowing for an icon
   wxSize sz(150, 16);
-  wxFont standardFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-  wxFont groupFont = wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT);
-  groupFont.SetWeight(wxBOLD);
+  const wxFont groupFont(item_font_.GetPointSize(), item_font_.GetFamily(),
+                         item_font_.GetStyle(), wxBOLD,
+                         item_font_.GetUnderlined(), item_font_.GetFaceName());
 
-  int textMarginX = wxSWITCHER_TEXT_MARGIN_X;
-  int textMarginY = wxSWITCHER_TEXT_MARGIN_Y;
-  int maxWidth = 300;
-  int maxHeight = 40;
-
-  if (item_font().Ok()) standardFont = item_font();
+  int textMarginX = text_margin_x_;
+  int textMarginY = text_margin_y_;
+  const int maxWidth = 300;
+  const int maxHeight = 40;
 
   size_t i;
   for (i = 0; i < items_.size(); i++) {
     SwitcherItem& item = items_[i];
 
-    if (item.get_font().Ok()) {
-      dc.SetFont(item.get_font());
-    } else {
-      if (item.is_group())
-        dc.SetFont(groupFont);
-      else
-        dc.SetFont(standardFont);
-    }
+    dc.SetFont(item.is_group() ? groupFont : item_font_);
 
     int w, h;
     dc.GetTextExtent(item.title(), &w, &h);
