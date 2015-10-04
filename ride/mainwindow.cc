@@ -82,7 +82,6 @@ enum {
   ID_VIEW_RESTORE_WINDOWS,
   ID_VIEW_SAVE_LAYOUT,
   ID_VIEW_LOAD_LAYOUT,
-  ID_VIEW_SWITCH_PANE,
   ID_VIEW_SHOW_FINDRESULT,
   ID_VIEW_SHOW_START,
   ID_VIEW_SHOW_PROJECT,
@@ -156,7 +155,6 @@ void MainWindow::BindEvents() {
   Bind(wxEVT_MENU, &MainWindow::OnViewShowBuild, this, ID_VIEW_SHOW_BUILD);
   Bind(wxEVT_MENU, &MainWindow::OnViewShowCompile, this, ID_VIEW_SHOW_COMPILE);
   Bind(wxEVT_MENU, &MainWindow::OnViewShowProject, this, ID_VIEW_SHOW_PROJECT);
-  Bind(wxEVT_MENU, &MainWindow::OnViewShitchPane, this, ID_VIEW_SWITCH_PANE);
 
   Bind(wxEVT_MENU, &MainWindow::OnAbout, this, wxID_ABOUT);
 
@@ -399,17 +397,6 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   AddMenuItem(menu_view, ID_VIEW_RESTORE_WINDOWS, "Restore window layout", "");
   AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
-
-#if defined(__WXMAC__)
-  wxString switcherAccel = wxT("Alt+Tab");
-#elif defined(__WXGTK__)
-  wxString switcherAccel = wxT("Ctrl+/");
-#else
-  wxString switcherAccel = wxT("Ctrl+Tab");
-#endif
-
-  AddMenuItem(menu_view, ID_VIEW_SWITCH_PANE,
-              wxString(_("S&witch Window...")) + wxT("\t") + switcherAccel, "");
   menu_view->AppendSeparator();
 
   // shortcuts stolen from qt creator:
@@ -653,12 +640,6 @@ void MainWindow::OnViewShowProject(wxCommandEvent& event) {
 }
 
 void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& e) {  // NOLINT
-  assert(this);
-  int i = 75;
-  ++i;
-}
-
-void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
   SwitcherItemList items;
   items.set_row_count(12);
 

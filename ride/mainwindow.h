@@ -133,7 +133,6 @@ class MainWindow : public wxFrame {
   void OnViewShowBuild(wxCommandEvent& event);
   void OnViewShowCompile(wxCommandEvent& event);
   void OnViewShowProject(wxCommandEvent& event);
-  void OnViewShitchPane(wxCommandEvent& event);
 
   void OnFileExit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
