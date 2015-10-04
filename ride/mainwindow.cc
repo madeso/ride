@@ -718,12 +718,12 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 // to treat / in the same was as tab (i.e. cycle through the names)
 
 #ifdef __WXGTK__
-  dlg.SetExtraNavigationKey(wxT('/'));
+  dlg.set_extra_navigation_key(wxT('/'));
 #endif
 
 #ifdef __WXMAC__
   dlg.SetBackgroundColour(*wxWHITE);
-  dlg.SetModifierKey(WXK_ALT);
+  dlg.set_modifier_key(WXK_ALT);
 #endif
 
   int ans = dlg.ShowModal();

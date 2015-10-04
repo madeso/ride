@@ -195,12 +195,12 @@ void SwitcherDialog::ShowDescription(int i) {
   description_ctrl_->SetPage(html);
 }
 
-void SwitcherDialog::SetExtraNavigationKey(int keyCode) {
+void SwitcherDialog::set_extra_navigation_key(int keyCode) {
   extra_navigation_key_ = keyCode;
   if (list_ctrl_) list_ctrl_->set_extra_navigation_key(keyCode);
 }
 
-void SwitcherDialog::SetModifierKey(int modifierKey) {
+void SwitcherDialog::set_modifier_key(int modifierKey) {
   modifier_key_ = modifierKey;
   if (list_ctrl_) list_ctrl_->set_modifier_key(modifierKey);
 }

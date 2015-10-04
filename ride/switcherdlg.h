@@ -60,17 +60,17 @@ class SwitcherDialog : public wxDialog {
 
   void ShowDescription(int i);
 
-  void SetBorderColour(const wxColour& colour) { border_color_ = colour; }
+  void set_border_color(const wxColour& colour) { border_color_ = colour; }
 
   // Set an extra key that can be used to cycle through items,
   // in case not using the Ctrl+Tab combination
-  void SetExtraNavigationKey(int keyCode);
-  int GetExtraNavigationKey() const { return extra_navigation_key_; }
+  void set_extra_navigation_key(int keyCode);
+  int extra_navigation_key() const { return extra_navigation_key_; }
 
   // Set the modifier used to invoke the dialog, and therefore to test for
   // release
-  void SetModifierKey(int modifierKey);
-  int GetModifierKey() const { return modifier_key_; }
+  void set_modifier_key(int modifierKey);
+  int modifier_key() const { return modifier_key_; }
 
  private:
   SwitcherCtrl* list_ctrl_;
