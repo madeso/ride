@@ -166,6 +166,8 @@ void MainWindow::BindEvents() {
   Bind(wxEVT_AUINOTEBOOK_PAGE_CHANGED, &MainWindow::OnNotebookPageChanged,
        this);
   Bind(wxEVT_MENU_OPEN, &MainWindow::OnMenuOpen, this);
+
+  Bind(wxEVT_NAVIGATION_KEY, &MainWindow::OnNotebookNavigation, this);
 }
 
 void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& event) {
@@ -648,6 +650,12 @@ void MainWindow::OnViewShowCompile(wxCommandEvent& event) {
 void MainWindow::OnViewShowProject(wxCommandEvent& event) {
   ShowHideAui(&aui_, PANE_PROJECT);
   UpdateMenuItemView();
+}
+
+void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& e) {  // NOLINT
+  assert(this);
+  int i = 75;
+  ++i;
 }
 
 void MainWindow::OnViewShitchPane(wxCommandEvent& event) {

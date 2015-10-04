@@ -146,6 +146,8 @@ class MainWindow : public wxFrame {
 
   void OnMenuOpen(wxMenuEvent& event);
 
+  void OnNotebookNavigation(wxNavigationKeyEvent&);
+
   void BindEvents();
 
  private:
