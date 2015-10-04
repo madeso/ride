@@ -14,10 +14,6 @@
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-#if defined(__WXMSW__) && wxUSE_UXTHEME
-// #include <wx/msw/uxtheme.h>
-#endif
-
 SwitcherDialog::SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
                                wxWindowID id, const wxString& title,
                                const wxPoint& position, const wxSize& size,
@@ -99,12 +95,6 @@ void SwitcherDialog::Init() {
   modifier_key_ = -1;
   extra_navigation_key_ = -1;
 
-#if defined(__WXMSW__) && wxUSE_UXTHEME
-/* if (wxUxThemeEngine::GetIfActive())
-m_borderColour = wxColour(49, 106, 197);
-else
-*/
-#endif
   border_color_ = *wxBLACK;
 }
 
