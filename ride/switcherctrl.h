@@ -26,13 +26,7 @@
  */
 
 class SwitcherCtrl : public wxControl {
-  DECLARE_CLASS(SwitcherCtrl)
-
  public:
-  SwitcherCtrl(wxWindow* parent, wxWindowID id,
-               const wxPoint& pos = wxDefaultPosition,
-               const wxSize& size = wxDefaultSize,
-               long style = 0);  // NOLINT
   SwitcherCtrl();
 
   bool Create(wxWindow* parent, wxWindowID id,

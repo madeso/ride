@@ -20,16 +20,6 @@
 
 #define wxSWITCHER_USE_BUFFERED_PAINTING 1
 
-IMPLEMENT_CLASS(SwitcherCtrl, wxControl)
-
-SwitcherCtrl::SwitcherCtrl(wxWindow* parent, wxWindowID id, const wxPoint& pos,
-                           const wxSize& size,
-                           long style) {  // NOLINT
-  Init();
-
-  Create(parent, id, pos, size, style);
-}
-
 SwitcherCtrl::SwitcherCtrl() {
   BindEvents();
   Init();
