@@ -23,46 +23,6 @@
 #define wxSWITCHER_USE_BUFFERED_PAINTING 1
 
 /*!
- * An object containing information about one item
- */
-
-IMPLEMENT_CLASS(SwitcherItem, wxObject)
-
-void SwitcherItem::Init() {
-  id_ = 0;
-  is_group_ = false;
-  break_column_ = false;
-  row_pos_ = 0;
-  col_pos_ = 0;
-  window_ = NULL;
-}
-
-void SwitcherItem::Copy(const SwitcherItem& item) {
-  id_ = item.id_;
-  name_ = item.name_;
-  title_ = item.title_;
-  is_group_ = item.is_group_;
-  break_column_ = item.break_column_;
-  rect_ = item.rect_;
-  font_ = item.font_;
-  text_color_ = item.text_color_;
-  bitmap_ = item.bitmap_;
-  description_ = item.description_;
-  row_pos_ = item.row_pos_;
-  col_pos_ = item.col_pos_;
-  window_ = item.window_;
-}
-
-bool SwitcherItem::operator==(const SwitcherItem& item) const {
-  return (id_ == item.id_ && name_ == item.name_ && title_ == item.title_ &&
-          description_ == item.description_ && is_group_ == item.is_group_ &&
-          break_column_ == item.break_column_ && rect_ == item.rect_ &&
-          font_ == item.font_ && text_color_ == item.text_color_ &&
-          col_pos_ == item.col_pos_ && row_pos_ == item.row_pos_ &&
-          window_ == item.window_);
-}
-
-/*!
  * wxSwitcherItems
  * An object containing switcher items
  */
