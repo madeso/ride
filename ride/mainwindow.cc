@@ -665,7 +665,7 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
     if (k == 0)
       items.AddGroup(_("Main Windows"), wxT("mainwindows"));
     else
-      items.AddGroup(_("Toolbars"), wxT("toolbars")).BreakColumn();
+      items.AddGroup(_("Toolbars"), wxT("toolbars")).set_break_column();
 
     for (i = 0; i < aui_.GetAllPanes().GetCount(); i++) {
       wxAuiPaneInfo& info = aui_.GetAllPanes()[i];
@@ -677,14 +677,14 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 
       if (!caption.IsEmpty() &&
           ((toolBar != NULL && k == 1) || (toolBar == NULL && k == 0))) {
-        items.AddItem(caption, name, -1).SetWindow(toolBar);
+        items.AddItem(caption, name, -1).set_window(toolBar);
       }
     }
   }
 
   // Now add the wxAuiNotebook pages
 
-  items.AddGroup(_("Notebook Pages"), wxT("pages")).BreakColumn();
+  items.AddGroup(_("Notebook Pages"), wxT("pages")).set_break_column();
 
   for (i = 0; i < aui_.GetAllPanes().GetCount(); i++) {
     wxAuiPaneInfo& info = aui_.GetAllPanes()[i];
@@ -696,7 +696,7 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
         wxString name = nb->GetPageText(j);
         wxWindow* win = nb->GetPage(j);
 
-        items.AddItem(name, name, j, nb->GetPageBitmap(j)).SetWindow(win);
+        items.AddItem(name, name, j, nb->GetPageBitmap(j)).set_window(win);
       }
     }
   }
@@ -731,17 +731,17 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
   if (ans == wxID_OK && dlg.GetSelection() != -1) {
     SwitcherItem& item = items.GetItem(dlg.GetSelection());
 
-    if (item.GetId() == -1) {
-      wxAuiPaneInfo& info = aui_.GetPane(item.GetName());
+    if (item.id() == -1) {
+      wxAuiPaneInfo& info = aui_.GetPane(item.name());
       info.Show();
       aui_.Update();
       info.window->SetFocus();
     } else {
       wxAuiNotebook* nb =
-          wxDynamicCast(item.GetWindow()->GetParent(), wxAuiNotebook);
-      wxWindow* win = item.GetWindow();
+          wxDynamicCast(item.window()->GetParent(), wxAuiNotebook);
+      wxWindow* win = item.window();
       if (nb) {
-        nb->SetSelection(item.GetId());
+        nb->SetSelection(item.id());
         win->SetFocus();
       }
     }

@@ -40,83 +40,83 @@ class SwitcherItem : public wxObject {
 
   void Copy(const SwitcherItem& item);
 
-  SwitcherItem& SetTitle(const wxString& title) {
+  SwitcherItem& set_title(const wxString& title) {
     title_ = title;
     return (*this);
   }
-  const wxString& GetTitle() const { return title_; }
+  const wxString& title() const { return title_; }
 
-  SwitcherItem& SetName(const wxString& name) {
+  SwitcherItem& set_name(const wxString& name) {
     name_ = name;
     return (*this);
   }
-  const wxString& GetName() const { return name_; }
+  const wxString& name() const { return name_; }
 
-  SwitcherItem& SetDescription(const wxString& descr) {
+  SwitcherItem& set_description(const wxString& descr) {
     description_ = descr;
     return (*this);
   }
-  const wxString& GetDescription() const { return description_; }
+  const wxString& description() const { return description_; }
 
-  SwitcherItem& SetId(int id) {
+  SwitcherItem& set_id(int id) {
     id_ = id;
     return (*this);
   }
-  int GetId() const { return id_; }
+  int id() const { return id_; }
 
-  SwitcherItem& SetIsGroup(bool isGroup) {
-    is_group_ = isGroup;
+  SwitcherItem& set_is_group(bool is_group) {
+    is_group_ = is_group;
     return (*this);
   }
-  bool GetIsGroup() const { return is_group_; }
+  bool is_group() const { return is_group_; }
 
-  SwitcherItem& BreakColumn(bool breakCol = true) {
-    break_column_ = breakCol;
+  SwitcherItem& set_break_column(bool break_column = true) {
+    break_column_ = break_column;
     return (*this);
   }
-  bool GetBreakColumn() const { return break_column_; }
+  bool break_column() const { return break_column_; }
 
-  SwitcherItem& SetRect(const wxRect& rect) {
+  SwitcherItem& set_rect(const wxRect& rect) {
     rect_ = rect;
     return (*this);
   }
-  const wxRect& GetRect() const { return rect_; }
+  const wxRect& rect() const { return rect_; }
 
-  SwitcherItem& SetTextColour(const wxColour& colour) {
+  SwitcherItem& set_text_color(const wxColour& colour) {
     text_color_ = colour;
     return (*this);
   }
-  const wxColour& GetTextColour() const { return text_color_; }
+  const wxColour& text_color() const { return text_color_; }
 
-  SwitcherItem& SetFont(const wxFont& font) {
+  SwitcherItem& set_font(const wxFont& font) {
     font_ = font;
     return (*this);
   }
-  const wxFont& GetFont() const { return font_; }
+  const wxFont& get_font() const { return font_; }
 
-  SwitcherItem& SetBitmap(const wxBitmap& bitmap) {
+  SwitcherItem& set_bitmap(const wxBitmap& bitmap) {
     bitmap_ = bitmap;
     return (*this);
   }
-  const wxBitmap& GetBitmap() const { return bitmap_; }
+  const wxBitmap& bitmap() const { return bitmap_; }
 
-  SwitcherItem& SetRowPos(int pos) {
+  SwitcherItem& set_row_pos(int pos) {
     row_pos_ = pos;
     return (*this);
   }
-  int GetRowPos() const { return row_pos_; }
+  int row_pos() const { return row_pos_; }
 
-  SwitcherItem& SetColPos(int pos) {
+  SwitcherItem& set_col_pos(int pos) {
     col_pos_ = pos;
     return (*this);
   }
-  int GetColPos() const { return col_pos_; }
+  int get_col_pos() const { return col_pos_; }
 
-  SwitcherItem& SetWindow(wxWindow* win) {
+  SwitcherItem& set_window(wxWindow* win) {
     window_ = win;
     return (*this);
   }
-  wxWindow* GetWindow() const { return window_; }
+  wxWindow* window() const { return window_; }
 
  protected:
   wxString title_;
