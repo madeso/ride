@@ -25,19 +25,8 @@
  */
 
 class SwitcherItemList : public wxObject {
-  DECLARE_CLASS(SwitcherItemList)
-
  public:
   SwitcherItemList();
-  SwitcherItemList(const SwitcherItemList& items);
-
-  bool operator==(const SwitcherItemList& items) const;
-
-  void operator=(const SwitcherItemList& items);
-
-  void Init();
-
-  void Copy(const SwitcherItemList& items);
 
   // Public API
 
@@ -46,8 +35,6 @@ class SwitcherItemList : public wxObject {
   SwitcherItem& AddItem(const SwitcherItem& item);
   SwitcherItem& AddGroup(const wxString& title, const wxString& name,
                          int id = 0, const wxBitmap& bitmap = wxNullBitmap);
-
-  void Clear();
 
   int FindItemByName(const wxString& name) const;
   int FindItemById(int id) const;

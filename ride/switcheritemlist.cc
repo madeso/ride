@@ -17,78 +17,8 @@
 #define wxSWITCHER_TEXT_MARGIN_X 4
 #define wxSWITCHER_TEXT_MARGIN_Y 2
 
-/*!
- * wxSwitcherItems
- * An object containing switcher items
- */
-
-IMPLEMENT_CLASS(SwitcherItemList, wxObject)
-
-SwitcherItemList::SwitcherItemList() { Init(); }
-
-SwitcherItemList::SwitcherItemList(const SwitcherItemList& items) {
-  Init();
-  Copy(items);
-}
-
-bool SwitcherItemList::operator==(const SwitcherItemList& items) const {
-  if (items_.size() != items.items_.size()) return false;
-
-  if (selection_ != items.selection_ || row_count_ != items.row_count_ ||
-      column_count_ != items.column_count_)
-    return false;
-
-  if (background_color_ != items.background_color_ ||
-      text_color_ != items.text_color_ ||
-      selection_color_ != items.selection_color_ ||
-      selection_outline_color_ != items.selection_outline_color_ ||
-      item_font_ != items.item_font_)
-    return false;
-
-  size_t i;
-  for (i = 0; i < items_.size(); i++) {
-    if (!(items_[i] == items.items_[i])) return false;
-  }
-
-  return true;
-}
-
-void SwitcherItemList::operator=(const SwitcherItemList& items) { Copy(items); }
-
-void SwitcherItemList::Init() {
-  selection_ = -1;
-  row_count_ = 10;
-  column_count_ = 0;
-
-#if defined(__WXMSW__) && wxUSE_UXTHEME
-// If on Windows XP/Vista, use more appropriate colours.
-/*
-if (wxUxThemeEngine::GetIfActive()) {
-SetSelectionOutlineColour(wxColour(49, 106, 197));
-SetSelectionColour(wxColour(193, 210, 238));
-}
-*/
-#endif
-}
-
-void SwitcherItemList::Copy(const SwitcherItemList& items) {
-  Clear();
-
-  size_t i;
-  for (i = 0; i < items.items_.size(); i++) {
-    items_.push_back(items.items_[i]);
-  }
-
-  selection_ = items.selection_;
-  row_count_ = items.row_count_;
-  column_count_ = items.column_count_;
-
-  background_color_ = items.background_color_;
-  text_color_ = items.text_color_;
-  selection_color_ = items.selection_color_;
-  selection_outline_color_ = items.selection_outline_color_;
-  item_font_ = items.item_font_;
-}
+SwitcherItemList::SwitcherItemList()
+    : selection_(-1), row_count_(10), column_count_(0) {}
 
 SwitcherItem& SwitcherItemList::AddItem(const wxString& title,
                                         const wxString& name, int id,
@@ -115,8 +45,6 @@ SwitcherItem& SwitcherItemList::AddGroup(const wxString& title,
 
   return item;
 }
-
-void SwitcherItemList::Clear() { items_.resize(0); }
 
 int SwitcherItemList::FindItemByName(const wxString& name) const {
   size_t i;
