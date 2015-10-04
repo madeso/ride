@@ -712,7 +712,7 @@ void MainWindow::OnViewShitchPane(wxCommandEvent& event) {
 
   // Show the switcher dialog
 
-  SwitcherDialog dlg(items, this);
+  SwitcherDlg dlg(items, this);
 
 // In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
 // to treat / in the same was as tab (i.e. cycle through the names)
@@ -783,9 +783,10 @@ void MainWindow::CreateNotebook() {
   wxSize client_size = GetClientSize();
 
   notebook_ = new wxAuiNotebook();
-  notebook_->Create(
-      this, wxID_ANY, wxPoint(client_size.x, client_size.y), wxSize(430, 200),
-      wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE | wxBORDER_NONE);
+  notebook_->Create(this, wxID_ANY, wxPoint(client_size.x, client_size.y),
+                    wxSize(430, 200),
+                    wxAUI_NB_DEFAULT_STYLE | wxAUI_NB_TAB_EXTERNAL_MOVE |
+                        wxBORDER_NONE | wxAUI_NB_WINDOWLIST_BUTTON);
 
   aui_.AddPane(notebook_, wxAuiPaneInfo()
                               .Name(wxT("notebook_content"))
