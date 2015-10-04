@@ -18,11 +18,10 @@
 // #include <wx/msw/uxtheme.h>
 #endif
 
-void SwitcherDialog::BindEvents() {
-  Bind(wxEVT_CLOSE_WINDOW, &SwitcherDialog::OnCloseWindow, this);
-  Bind(wxEVT_ACTIVATE, &SwitcherDialog::OnActivate, this);
-  Bind(wxEVT_LISTBOX, &SwitcherDialog::OnSelectItem, this, wxID_ANY);
-  Bind(wxEVT_PAINT, &SwitcherDialog::OnPaint, this);
+// constructors and destructors
+SwitcherDialog::SwitcherDialog() {
+  BindEvents();
+  Init();
 }
 
 SwitcherDialog::SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
@@ -108,11 +107,18 @@ void SwitcherDialog::Init() {
 
 #if defined(__WXMSW__) && wxUSE_UXTHEME
 /* if (wxUxThemeEngine::GetIfActive())
-  m_borderColour = wxColour(49, 106, 197);
+m_borderColour = wxColour(49, 106, 197);
 else
 */
 #endif
   border_color_ = *wxBLACK;
+}
+
+void SwitcherDialog::BindEvents() {
+  Bind(wxEVT_CLOSE_WINDOW, &SwitcherDialog::OnCloseWindow, this);
+  Bind(wxEVT_ACTIVATE, &SwitcherDialog::OnActivate, this);
+  Bind(wxEVT_LISTBOX, &SwitcherDialog::OnSelectItem, this, wxID_ANY);
+  Bind(wxEVT_PAINT, &SwitcherDialog::OnPaint, this);
 }
 
 void SwitcherDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
@@ -128,11 +134,6 @@ void SwitcherDialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
   }
 }
 
-// Get the selected item
-int SwitcherDialog::GetSelection() const {
-  return list_ctrl_->items().selection();
-}
-
 void SwitcherDialog::OnActivate(wxActivateEvent& event) {
   if (!event.GetActive()) {
     if (!is_closing_) {
@@ -140,6 +141,10 @@ void SwitcherDialog::OnActivate(wxActivateEvent& event) {
       EndModal(wxID_CANCEL);
     }
   }
+}
+
+void SwitcherDialog::OnSelectItem(wxCommandEvent& event) {
+  ShowDescription(event.GetSelection());
 }
 
 void SwitcherDialog::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
@@ -159,8 +164,9 @@ void SwitcherDialog::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
   }
 }
 
-void SwitcherDialog::OnSelectItem(wxCommandEvent& event) {
-  ShowDescription(event.GetSelection());
+// Get the selected item
+int SwitcherDialog::GetSelection() const {
+  return list_ctrl_->items().selection();
 }
 
 // Convert a colour to a 6-digit hex string
@@ -195,12 +201,25 @@ void SwitcherDialog::ShowDescription(int i) {
   description_ctrl_->SetPage(html);
 }
 
+void SwitcherDialog::set_border_color(const wxColour& colour) {
+  border_color_ = colour;
+}
+
+// Set an extra key that can be used to cycle through items,
+// in case not using the Ctrl+Tab combination
 void SwitcherDialog::set_extra_navigation_key(int keyCode) {
   extra_navigation_key_ = keyCode;
   if (list_ctrl_) list_ctrl_->set_extra_navigation_key(keyCode);
 }
+int SwitcherDialog::extra_navigation_key() const {
+  return extra_navigation_key_;
+}
 
+// Set the modifier used to invoke the dialog, and therefore to test for
+// release
 void SwitcherDialog::set_modifier_key(int modifierKey) {
   modifier_key_ = modifierKey;
   if (list_ctrl_) list_ctrl_->set_modifier_key(modifierKey);
 }
+
+int SwitcherDialog::modifier_key() const { return modifier_key_; }

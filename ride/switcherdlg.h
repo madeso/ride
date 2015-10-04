@@ -29,10 +29,7 @@
 class SwitcherDialog : public wxDialog {
  public:
   // constructors and destructors
-  SwitcherDialog() {
-    BindEvents();
-    Init();
-  }
+  SwitcherDialog();
   SwitcherDialog(const SwitcherItemList& items, wxWindow* parent,
                  wxWindowID id = -1, const wxString& title = _("Pane Switcher"),
                  const wxPoint& pos = wxDefaultPosition,
@@ -60,17 +57,17 @@ class SwitcherDialog : public wxDialog {
 
   void ShowDescription(int i);
 
-  void set_border_color(const wxColour& colour) { border_color_ = colour; }
+  void set_border_color(const wxColour& colour);
 
   // Set an extra key that can be used to cycle through items,
   // in case not using the Ctrl+Tab combination
   void set_extra_navigation_key(int keyCode);
-  int extra_navigation_key() const { return extra_navigation_key_; }
+  int extra_navigation_key() const;
 
   // Set the modifier used to invoke the dialog, and therefore to test for
   // release
   void set_modifier_key(int modifierKey);
-  int modifier_key() const { return modifier_key_; }
+  int modifier_key() const;
 
  private:
   SwitcherCtrl* list_ctrl_;
