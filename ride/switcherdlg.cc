@@ -50,11 +50,6 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
 
   if (modifier_key_ != -1) list_ctrl_->set_modifier_key(modifier_key_);
 
-  int borderStyle = wxBORDER_NONE;
-#if defined(__WXMSW__) && wxCHECK_VERSION(2, 8, 5)
-// borderStyle = wxBORDER_THEME;
-#endif
-
   title_ctrl_ = new wxStaticText(this, wxID_ANY, "");
   description_ctrl_ = new wxStaticText(this, wxID_ANY, "");
   wxFont font = title_ctrl_->GetFont();
