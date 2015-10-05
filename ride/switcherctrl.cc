@@ -20,6 +20,8 @@ SwitcherCtrl::SwitcherCtrl()
     : overall_size_(wxSize(200, 100)),
       modifier_key_(WXK_CONTROL),
       extra_navigation_key_(0) {
+
+  // TODO(Gustav): Remove unused events
   Bind(wxEVT_LEFT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
   Bind(wxEVT_LEFT_UP, &SwitcherCtrl::OnMouseEvent, this);
   Bind(wxEVT_LEFT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
@@ -39,7 +41,6 @@ SwitcherCtrl::SwitcherCtrl()
   Bind(wxEVT_LEAVE_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
   Bind(wxEVT_ENTER_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
   Bind(wxEVT_MOUSEWHEEL, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MAGNIFY, &SwitcherCtrl::OnMouseEvent, this);
 
   Bind(wxEVT_PAINT, &SwitcherCtrl::OnPaint, this);
   Bind(wxEVT_ERASE_BACKGROUND, &SwitcherCtrl::OnEraseBackground, this);
