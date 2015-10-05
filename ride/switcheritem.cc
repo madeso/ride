@@ -19,6 +19,18 @@ SwitcherItem::SwitcherItem()
       col_pos_(0),
       window_(NULL) {}
 
+SwitcherItem::SwitcherItem(const wxString& title, const wxString& name, int id,
+                           const wxBitmap& bitmap)
+    : title_(title),
+      name_(name),
+      id_(id),
+      is_group_(false),
+      break_column_(false),
+      bitmap_(bitmap),
+      row_pos_(0),
+      col_pos_(0),
+      window_(NULL) {}
+
 bool SwitcherItem::operator==(const SwitcherItem& rhs) const {
 #define EQUAL_CHECK(mem)        \
   do {                          \

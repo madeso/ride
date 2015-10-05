@@ -30,12 +30,7 @@ SwitcherItemList::SwitcherItemList()
 SwitcherItem& SwitcherItemList::AddItem(const wxString& title,
                                         const wxString& name, int id,
                                         const wxBitmap& bitmap) {
-  SwitcherItem item;
-  item.set_title(title);
-  item.set_name(name);
-  item.set_id(id);
-  item.set_bitmap(bitmap);
-
+  SwitcherItem item(title, name, id, bitmap);
   return AddItem(item);
 }
 

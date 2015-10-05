@@ -686,26 +686,40 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
   // We'll use the item 'id' to store the notebook selection, or -1 if not a
   // page
 
-  size_t i;
-  size_t k;
-  for (k = 0; k < 2; k++) {
-    if (k == 0)
-      items.AddGroup(_("Main Windows"), wxT("mainwindows"));
-    else
-      items.AddGroup(_("Toolbars"), wxT("toolbars")).set_break_column();
+  items.AddGroup(_("Main Windows"), wxT("mainwindows"));
+  for (size_t pane_index = 0; pane_index < aui_.GetAllPanes().GetCount();
+       pane_index++) {
+    wxAuiPaneInfo& info = aui_.GetAllPanes()[pane_index];
 
-    for (i = 0; i < aui_.GetAllPanes().GetCount(); i++) {
-      wxAuiPaneInfo& info = aui_.GetAllPanes()[i];
+    wxString name = info.name;
+    wxString caption = info.caption;
 
-      wxString name = info.name;
-      wxString caption = info.caption;
+    wxToolBar* toolBar = wxDynamicCast(info.window, wxToolBar);
 
-      wxToolBar* toolBar = wxDynamicCast(info.window, wxToolBar);
+    if (!caption.IsEmpty() && toolBar == NULL) {
+      items.AddItem(caption, name, -1);
+    }
+  }
 
-      if (!caption.IsEmpty() &&
-          ((toolBar != NULL && k == 1) || (toolBar == NULL && k == 0))) {
-        items.AddItem(caption, name, -1).set_window(toolBar);
-      }
+  std::vector<SwitcherItem> toolbars;
+  for (size_t pane_index = 0; pane_index < aui_.GetAllPanes().GetCount();
+       pane_index++) {
+    wxAuiPaneInfo& info = aui_.GetAllPanes()[pane_index];
+
+    wxString name = info.name;
+    wxString caption = info.caption;
+
+    wxToolBar* toolBar = wxDynamicCast(info.window, wxToolBar);
+
+    if (!caption.IsEmpty() && toolBar != NULL) {
+      toolbars.push_back(SwitcherItem(caption, name, -1).set_window(toolBar));
+    }
+  }
+
+  if (toolbars.empty() == false) {
+    items.AddGroup(_("Toolbars"), wxT("toolbars")).set_break_column();
+    for (auto item : toolbars) {
+      items.AddItem(item);
     }
   }
 

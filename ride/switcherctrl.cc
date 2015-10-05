@@ -20,7 +20,6 @@ SwitcherCtrl::SwitcherCtrl()
     : overall_size_(wxSize(200, 100)),
       modifier_key_(WXK_CONTROL),
       extra_navigation_key_(0) {
-
   // TODO(Gustav): Remove unused events
   Bind(wxEVT_LEFT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
   Bind(wxEVT_LEFT_UP, &SwitcherCtrl::OnMouseEvent, this);

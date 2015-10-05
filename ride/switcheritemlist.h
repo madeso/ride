@@ -24,7 +24,7 @@
  * An object containing switcher items
  */
 
-class SwitcherItemList : public wxObject {
+class SwitcherItemList {
  public:
   SwitcherItemList();
 

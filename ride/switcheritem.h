@@ -15,8 +15,6 @@
 #include <ride/wx.h>
 #include <wx/html/htmlwin.h>
 
-#include <vector>
-
 /*!
  * wxSwitcherItem
  * An object containing information about one item
@@ -25,6 +23,8 @@
 class SwitcherItem : public wxObject {
  public:
   SwitcherItem();
+  SwitcherItem(const wxString& title, const wxString& name, int id = 0,
+               const wxBitmap& bitmap = wxNullBitmap);
 
   bool operator==(const SwitcherItem& item) const;
 
