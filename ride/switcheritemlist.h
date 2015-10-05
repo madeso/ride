@@ -32,11 +32,10 @@ class SwitcherItemList {
   SwitcherItem& AddGroup(const wxString& title, const wxString& name,
                          int id = 0, const wxBitmap& bitmap = wxNullBitmap);
 
-  int FindItemByName(const wxString& name) const;
   int FindItemById(int id) const;
 
   void set_selection(int sel);
-  void SelectByName(const wxString& name);
+
   int selection() const;
 
   // Find the index for the item associated with the current focus
