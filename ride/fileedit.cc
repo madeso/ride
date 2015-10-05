@@ -353,8 +353,10 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
   sizer->Add(text_, 1, wxEXPAND);
   SetSizer(sizer);
 
-  notebook_->AddPage(this, wxT(""), true);
   UpdateFilename();
+
+  notebook_->AddPage(this, wxT(""), true);
+
   UpdateTitle();
 }
 
