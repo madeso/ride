@@ -66,13 +66,16 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
   path_ctrl_->SetStandardFonts(fontSize);
 #endif
 
-  wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  SetSizer(sizer);
+  wxBoxSizer* root = new wxBoxSizer(wxVERTICAL);
+  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+  root->Add(sizer, 1, wxALL | wxEXPAND, 8);
+  SetSizer(root);
 
-  sizer->Add(title_ctrl_, 0, wxALL | wxEXPAND, 10);
-  sizer->Add(description_ctrl_, 0, wxALL | wxEXPAND, 10);
-  sizer->Add(list_ctrl_, 1, wxALL | wxEXPAND, 10);
-  sizer->Add(path_ctrl_, 0, wxALL | wxEXPAND, 10);
+  const int border = 3;
+  sizer->Add(title_ctrl_, 0, wxALL | wxEXPAND, border);
+  sizer->Add(description_ctrl_, 0, wxALL | wxEXPAND, border);
+  sizer->Add(list_ctrl_, 1, wxALL | wxEXPAND, border);
+  sizer->Add(path_ctrl_, 0, wxALL | wxEXPAND, border);
 
   sizer->SetSizeHints(this);
 
