@@ -12,6 +12,7 @@
 #include <wx/stc/stc.h>
 
 #include <vector>
+#include <map>
 
 #include "ride/resources/icons.h"
 
@@ -34,6 +35,10 @@
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
+bool operator==(const OpenDocument& lhs, const OpenDocument& rhs) {
+  return lhs.id == rhs.id && lhs.path == rhs.path;
+}
+
 Tab* TabFromIndex(wxAuiNotebook* notebook, int tab_index) {
   wxWindow* window = notebook->GetPage(tab_index);
   void* data = window->GetClientData();
@@ -44,6 +49,28 @@ Tab* TabFromIndex(wxAuiNotebook* notebook, int tab_index) {
 FileEdit* NotebookFromIndexOrNull(wxAuiNotebook* notebook, int tab_index) {
   Tab* tab = TabFromIndex(notebook, tab_index);
   return tab->ToFileEdit();
+}
+
+Tab* GetSelectedTabOrNull(wxAuiNotebook* notebook) {
+  const int selected_tab_index = notebook->GetSelection();
+  if (selected_tab_index == -1) {
+    return NULL;
+  }
+  return TabFromIndex(notebook, selected_tab_index);
+}
+
+OpenDocument OpenDocumentFromTab(Tab* tab) {
+  StartPageTab* start = tab->ToStartPage();
+  if (start) {
+    return OpenDocument("start", "");
+  }
+
+  FileEdit* edit = tab->ToFileEdit();
+  if (edit) {
+    return OpenDocument(edit->filename(), edit->filename());
+  }
+
+  return OpenDocument("", "");
 }
 
 enum {
@@ -171,11 +198,22 @@ void MainWindow::BindEvents() {
 void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& event) {
   wxString file_name = wxEmptyString;
 
+  Tab* tab = GetSelectedTabOrNull(notebook_);
+
   FileEdit* selected_file = GetSelectedEditorNull();
   if (selected_file) {
     file_name = selected_file->filename();
     selected_file->SetFocus();
     selected_file->UpdateStatusText();
+  }
+
+  if (tab) {
+    OpenDocument file = OpenDocumentFromTab(tab);
+    auto found = std::find(mru_.begin(), mru_.end(), file);
+    if (found != mru_.end()) {
+      mru_.erase(found);
+    }
+    mru_.push_back(file);
   }
 
   project_explorer_->HighlightOpenFile(file_name);
@@ -673,20 +711,34 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& e) {  // NOLINT
 
   // Now add the wxAuiNotebook pages
 
-  items.AddGroup(_("Notebook Pages"), wxT("pages")).set_break_column();
+  items.AddGroup(_("Active Files"), wxT("pages")).set_break_column();
 
-  for (i = 0; i < aui_.GetAllPanes().GetCount(); i++) {
-    wxAuiPaneInfo& info = aui_.GetAllPanes()[i];
+  struct TabData {
+    wxString name;
+    wxWindow* win;
+    wxBitmap bitmap;
+    int index;
+  };
+  std::map<wxString, TabData> tabdata;
+  for (int page = 0; page < notebook_->GetPageCount(); ++page) {
+    Tab* tab = TabFromIndex(notebook_, page);
+    OpenDocument doc = OpenDocumentFromTab(tab);
+    TabData data;
+    data.name = notebook_->GetPageText(page);
+    data.win = notebook_->GetPage(page);
+    data.bitmap = notebook_->GetPageBitmap(page);
+    data.index = page;
+    tabdata.insert(std::make_pair(doc.id, data));
+  }
 
-    wxAuiNotebook* nb = wxDynamicCast(info.window, wxAuiNotebook);
-    if (nb) {
-      size_t j;
-      for (j = 0; j < nb->GetPageCount(); j++) {
-        wxString name = nb->GetPageText(j);
-        wxWindow* win = nb->GetPage(j);
-
-        items.AddItem(name, name, j, nb->GetPageBitmap(j)).set_window(win);
-      }
+  for (auto iter = mru_.rbegin(); iter != mru_.rend(); ++iter) {
+    const OpenDocument& document = *iter;
+    const auto found = tabdata.find(document.id);
+    if (found != tabdata.end()) {
+      const TabData& data = found->second;
+      items.AddItem(data.name, data.name, data.index, data.bitmap)
+          .set_window(data.win)
+          .set_description(document.path);
     }
   }
 

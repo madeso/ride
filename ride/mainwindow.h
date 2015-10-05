@@ -5,6 +5,8 @@
 
 #include <wx/aui/aui.h>
 
+#include <vector>
+
 #include "ride/language.h"
 #include "ride/settings.h"
 #include "ride/project.h"
@@ -41,6 +43,12 @@ enum StatusBarWidgets {
   STATUSBAR_CH,
   STATUSBAR_INS,
   STATUSBAR_MAXCOUNT
+};
+
+struct OpenDocument {
+  OpenDocument(const wxString& i, const wxString& p) : id(i), path(p) {}
+  wxString path;
+  wxString id;
 };
 
 class MainWindow : public wxFrame {
@@ -190,6 +198,7 @@ class MainWindow : public wxFrame {
   StatusBarGeneric* statusbar_;
 
   Languages languages_;
+  std::vector<OpenDocument> mru_;
 };
 
 #endif  // RIDE_MAINWINDOW_H_
