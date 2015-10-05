@@ -28,7 +28,6 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
   Bind(wxEVT_CLOSE_WINDOW, &SwitcherDlg::OnCloseWindow, this);
   Bind(wxEVT_ACTIVATE, &SwitcherDlg::OnActivate, this);
   Bind(wxEVT_LISTBOX, &SwitcherDlg::OnSelectItem, this, wxID_ANY);
-  Bind(wxEVT_PAINT, &SwitcherDlg::OnPaint, this);
 
   switcher_border_style_ = (style & wxBORDER_MASK);
   if (switcher_border_style_ == wxBORDER_NONE)
@@ -57,11 +56,6 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
   title_ctrl_->SetFont(font);
   path_ctrl_ = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition,
                                 wxDefaultSize, wxST_ELLIPSIZE_START);
-
-#ifdef __WXGTK20__
-  int fontSize = 11;
-  path_ctrl_->SetStandardFonts(fontSize);
-#endif
 
   wxBoxSizer* root = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
