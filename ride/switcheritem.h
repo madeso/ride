@@ -37,6 +37,9 @@ class SwitcherItem : public wxObject {
   SwitcherItem& set_description(const wxString& descr);
   const wxString& description() const;
 
+  SwitcherItem& set_path(const wxString& descr);
+  const wxString& path() const;
+
   SwitcherItem& set_id(int id);
   int id() const;
 
@@ -71,6 +74,7 @@ class SwitcherItem : public wxObject {
   wxString title_;
   wxString name_;
   wxString description_;
+  wxString path_;
   int id_;
   bool is_group_;
   bool break_column_;

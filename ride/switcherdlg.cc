@@ -19,7 +19,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
                          const wxPoint& position, const wxSize& size,
                          long style)  // NOLINT
     : list_ctrl_(NULL),
-      description_ctrl_(NULL),
+      path_ctrl_(NULL),
       is_closing_(false),
       switcher_border_style_(0),
       modifier_key_(-1),
@@ -56,21 +56,23 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
 #endif
 
   title_ctrl_ = new wxStaticText(this, wxID_ANY, "");
+  description_ctrl_ = new wxStaticText(this, wxID_ANY, "");
   // title_ctrl_->SetFont(title_ctrl_->GetFont().Set)
-  description_ctrl_ = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition,
-                                       wxDefaultSize, wxST_ELLIPSIZE_START);
+  path_ctrl_ = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition,
+                                wxDefaultSize, wxST_ELLIPSIZE_START);
 
 #ifdef __WXGTK20__
   int fontSize = 11;
-  description_ctrl_->SetStandardFonts(fontSize);
+  path_ctrl_->SetStandardFonts(fontSize);
 #endif
 
   wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   SetSizer(sizer);
 
   sizer->Add(title_ctrl_, 0, wxALL | wxEXPAND, 10);
-  sizer->Add(list_ctrl_, 1, wxALL | wxEXPAND, 10);
   sizer->Add(description_ctrl_, 0, wxALL | wxEXPAND, 10);
+  sizer->Add(list_ctrl_, 1, wxALL | wxEXPAND, 10);
+  sizer->Add(path_ctrl_, 0, wxALL | wxEXPAND, 10);
 
   sizer->SetSizeHints(this);
 
@@ -121,6 +123,7 @@ void SwitcherDlg::ShowDescription(int i) {
   SwitcherItem& item = list_ctrl_->items().GetItem(i);
   title_ctrl_->SetLabel(item.title());
   description_ctrl_->SetLabel(item.description());
+  path_ctrl_->SetLabel(item.path());
 }
 
 void SwitcherDlg::set_border_color(const wxColour& colour) {

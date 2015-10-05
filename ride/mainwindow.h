@@ -46,9 +46,11 @@ enum StatusBarWidgets {
 };
 
 struct OpenDocument {
-  OpenDocument(const wxString& i, const wxString& p) : id(i), path(p) {}
-  wxString path;
+  OpenDocument(const wxString& i, const wxString& p, const wxString& d)
+      : id(i), path(p), description(d) {}
   wxString id;
+  wxString path;
+  wxString description;
 };
 
 class MainWindow : public wxFrame {

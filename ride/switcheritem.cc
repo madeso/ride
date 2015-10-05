@@ -41,6 +41,7 @@ bool SwitcherItem::operator==(const SwitcherItem& rhs) const {
   EQUAL_CHECK(title_);
   EQUAL_CHECK(name_);
   EQUAL_CHECK(description_);
+  EQUAL_CHECK(path_);
   EQUAL_CHECK(id_);
   EQUAL_CHECK(is_group_);
   EQUAL_CHECK(break_column_);
@@ -74,6 +75,13 @@ SwitcherItem& SwitcherItem::set_description(const wxString& descr) {
 }
 
 const wxString& SwitcherItem::description() const { return description_; }
+
+SwitcherItem& SwitcherItem::set_path(const wxString& path) {
+  path_ = path;
+  return (*this);
+}
+
+const wxString& SwitcherItem::path() const { return path_; }
 
 SwitcherItem& SwitcherItem::set_id(int id) {
   id_ = id;

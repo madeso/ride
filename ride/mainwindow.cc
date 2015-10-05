@@ -62,15 +62,16 @@ Tab* GetSelectedTabOrNull(wxAuiNotebook* notebook) {
 OpenDocument OpenDocumentFromTab(Tab* tab) {
   StartPageTab* start = tab->ToStartPage();
   if (start) {
-    return OpenDocument("start", "");
+    return OpenDocument("start", "", "");
   }
 
   FileEdit* edit = tab->ToFileEdit();
   if (edit) {
-    return OpenDocument(edit->filename(), edit->filename());
+    return OpenDocument(edit->filename(), edit->filename(),
+                        edit->GetLanguageName());
   }
 
-  return OpenDocument("", "");
+  return OpenDocument("", "", "");
 }
 
 enum {
@@ -758,7 +759,8 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
       const TabData& data = found->second;
       items.AddItem(data.name, data.name, data.index, data.bitmap)
           .set_window(data.win)
-          .set_description(document.path);
+          .set_description(document.description)
+          .set_path(document.path);
     }
   }
 

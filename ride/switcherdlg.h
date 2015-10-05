@@ -66,8 +66,9 @@ class SwitcherDlg : public wxDialog {
 
  private:
   wxStaticText* title_ctrl_;
-  SwitcherCtrl* list_ctrl_;
   wxStaticText* description_ctrl_;
+  SwitcherCtrl* list_ctrl_;
+  wxStaticText* path_ctrl_;
   bool is_closing_;
   long switcher_border_style_;  // NOLINT
   wxColour border_color_;
