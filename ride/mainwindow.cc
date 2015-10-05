@@ -769,7 +769,7 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
   dlg.set_modifier_key(WXK_ALT);
 #endif
 
-  dlg.ctrl()->AdvanceToNextSelection(nav.GetDirection());
+  dlg.AdvanceToNextSelection(nav.GetDirection());
 
   int ans = dlg.ShowModal();
 

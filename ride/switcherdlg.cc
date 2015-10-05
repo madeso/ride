@@ -81,7 +81,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
 
   list_ctrl_->MakeSureGroupIsNotSelected(1);
 
-  ShowDescription(list_ctrl_->items().selection());
+  UpdateDescription();
 }
 
 void SwitcherDlg::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
@@ -182,4 +182,11 @@ void SwitcherDlg::set_modifier_key(int modifierKey) {
 
 int SwitcherDlg::modifier_key() const { return modifier_key_; }
 
-SwitcherCtrl* SwitcherDlg::ctrl() { return list_ctrl_; }
+void SwitcherDlg::AdvanceToNextSelection(bool forward) {
+  list_ctrl_->AdvanceToNextSelection(forward);
+  UpdateDescription();
+}
+
+void SwitcherDlg::UpdateDescription() {
+  ShowDescription(list_ctrl_->items().selection());
+}

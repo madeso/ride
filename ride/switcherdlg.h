@@ -57,7 +57,10 @@ class SwitcherDlg : public wxDialog {
   void set_modifier_key(int modifierKey);
   int modifier_key() const;
 
-  SwitcherCtrl* ctrl();
+  void AdvanceToNextSelection(bool forward);
+
+ private:
+  void UpdateDescription();
 
  private:
   SwitcherDlg();
