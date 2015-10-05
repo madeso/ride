@@ -41,15 +41,6 @@ SwitcherItem& SwitcherItemList::AddGroup(const wxString& title,
   return item;
 }
 
-int SwitcherItemList::FindItemById(int id) const {
-  size_t i;
-  for (i = 0; i < items_.size(); i++) {
-    if (items_[i].id() == id) return i;
-  }
-
-  return -1;
-}
-
 void SwitcherItemList::set_selection(int sel) { selection_ = sel; }
 
 int SwitcherItemList::selection() const { return selection_; }

@@ -32,8 +32,6 @@ class SwitcherItemList {
   SwitcherItem& AddGroup(const wxString& title, const wxString& name,
                          int id = 0, const wxBitmap& bitmap = wxNullBitmap);
 
-  int FindItemById(int id) const;
-
   void set_selection(int sel);
 
   int selection() const;
