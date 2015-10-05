@@ -55,9 +55,10 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
 // borderStyle = wxBORDER_THEME;
 #endif
 
-  description_ctrl_ = new wxHtmlWindow(this, wxID_ANY, wxDefaultPosition,
-                                       wxSize(-1, 100), borderStyle);
-  description_ctrl_->SetHTMLBackgroundColour(GetBackgroundColour());
+  title_ctrl_ = new wxStaticText(this, wxID_ANY, "");
+  // title_ctrl_->SetFont(title_ctrl_->GetFont().Set)
+  description_ctrl_ = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition,
+                                       wxDefaultSize, wxST_ELLIPSIZE_START);
 
 #ifdef __WXGTK20__
   int fontSize = 11;
@@ -67,6 +68,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
   wxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   SetSizer(sizer);
 
+  sizer->Add(title_ctrl_, 0, wxALL | wxEXPAND, 10);
   sizer->Add(list_ctrl_, 1, wxALL | wxEXPAND, 10);
   sizer->Add(description_ctrl_, 0, wxALL | wxEXPAND, 10);
 
@@ -110,58 +112,15 @@ void SwitcherDlg::OnSelectItem(wxCommandEvent& event) {
   ShowDescription(event.GetSelection());
 }
 
-void SwitcherDlg::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
-  wxPaintDC dc(this);
-
-  if (switcher_border_style_ == wxBORDER_SIMPLE) {
-    dc.SetPen(wxPen(border_color_));
-    dc.SetBrush(*wxTRANSPARENT_BRUSH);
-
-    wxRect rect(GetClientRect());
-    dc.DrawRectangle(rect);
-
-    // Draw border around the HTML control
-    rect = description_ctrl_->GetRect();
-    rect.Inflate(1, 1);
-    dc.DrawRectangle(rect);
-  }
-}
-
 // Get the selected item
 int SwitcherDlg::GetSelection() const {
   return list_ctrl_->items().selection();
 }
 
-// Convert a colour to a 6-digit hex string
-static wxString ColourToHexString(const wxColour& col) {
-  wxString hex;
-
-  hex += wxDecToHex(col.Red());
-  hex += wxDecToHex(col.Green());
-  hex += wxDecToHex(col.Blue());
-
-  return hex;
-}
-
 void SwitcherDlg::ShowDescription(int i) {
   SwitcherItem& item = list_ctrl_->items().GetItem(i);
-
-  wxColour colour = list_ctrl_->items().background_color();
-  if (!colour.Ok()) colour = GetBackgroundColour();
-
-  wxString backgroundColourHex = ColourToHexString(colour);
-
-  wxString html = wxT("<body bgcolor=\"#") + backgroundColourHex +
-                  wxT("\"><b>") + item.title() + wxT("</b>");
-
-  if (!item.description().IsEmpty()) {
-    html += wxT("<p>");
-    html += item.description();
-  }
-
-  html += wxT("</body>");
-
-  description_ctrl_->SetPage(html);
+  title_ctrl_->SetLabel(item.title());
+  description_ctrl_->SetLabel(item.description());
 }
 
 void SwitcherDlg::set_border_color(const wxColour& colour) {

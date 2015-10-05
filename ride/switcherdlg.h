@@ -38,7 +38,6 @@ class SwitcherDlg : public wxDialog {
   void OnCloseWindow(wxCloseEvent& event);
   void OnActivate(wxActivateEvent& event);
   void OnSelectItem(wxCommandEvent& event);
-  void OnPaint(wxPaintEvent& event);
 
   // Get the selected item
   int GetSelection() const;
@@ -66,8 +65,9 @@ class SwitcherDlg : public wxDialog {
   SwitcherDlg();
 
  private:
+  wxStaticText* title_ctrl_;
   SwitcherCtrl* list_ctrl_;
-  wxHtmlWindow* description_ctrl_;
+  wxStaticText* description_ctrl_;
   bool is_closing_;
   long switcher_border_style_;  // NOLINT
   wxColour border_color_;
