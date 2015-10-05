@@ -57,7 +57,9 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
 
   title_ctrl_ = new wxStaticText(this, wxID_ANY, "");
   description_ctrl_ = new wxStaticText(this, wxID_ANY, "");
-  // title_ctrl_->SetFont(title_ctrl_->GetFont().Set)
+  wxFont font = title_ctrl_->GetFont();
+  font.MakeBold();
+  title_ctrl_->SetFont(font);
   path_ctrl_ = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition,
                                 wxDefaultSize, wxST_ELLIPSIZE_START);
 
