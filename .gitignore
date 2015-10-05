@@ -34,3 +34,6 @@
 build/*
 doc/*
 samples/projects/*
+
+#temp files
+*.TMP
