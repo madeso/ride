@@ -27,13 +27,6 @@ SwitcherItemList::SwitcherItemList()
           wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)),
       item_font_(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT)) {}
 
-SwitcherItem& SwitcherItemList::AddItem(const wxString& title,
-                                        const wxString& name, int id,
-                                        const wxBitmap& bitmap) {
-  SwitcherItem item(title, name, id, bitmap);
-  return AddItem(item);
-}
-
 SwitcherItem& SwitcherItemList::AddItem(const SwitcherItem& item) {
   items_.push_back(item);
   return *items_.rbegin();
@@ -42,7 +35,7 @@ SwitcherItem& SwitcherItemList::AddItem(const SwitcherItem& item) {
 SwitcherItem& SwitcherItemList::AddGroup(const wxString& title,
                                          const wxString& name, int id,
                                          const wxBitmap& bitmap) {
-  SwitcherItem& item = AddItem(title, name, id, bitmap);
+  SwitcherItem& item = AddItem(SwitcherItem(title, name, id, bitmap));
   item.set_is_group(true);
 
   return item;

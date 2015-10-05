@@ -28,8 +28,6 @@ class SwitcherItemList {
  public:
   SwitcherItemList();
 
-  SwitcherItem& AddItem(const wxString& title, const wxString& name, int id = 0,
-                        const wxBitmap& bitmap = wxNullBitmap);
   SwitcherItem& AddItem(const SwitcherItem& item);
   SwitcherItem& AddGroup(const wxString& title, const wxString& name,
                          int id = 0, const wxBitmap& bitmap = wxNullBitmap);

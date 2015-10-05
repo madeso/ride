@@ -757,7 +757,7 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
     const auto found = tabdata.find(document.id);
     if (found != tabdata.end()) {
       const TabData& data = found->second;
-      items.AddItem(data.name, data.name, data.index, data.bitmap)
+      items.AddItem(SwitcherItem(data.name, data.name, data.index, data.bitmap))
           .set_window(data.win)
           .set_description(document.description)
           .set_path(document.path);
