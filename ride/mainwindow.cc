@@ -677,7 +677,7 @@ void MainWindow::OnViewShowProject(wxCommandEvent& event) {
   UpdateMenuItemView();
 }
 
-void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& e) {  // NOLINT
+void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
   SwitcherItemList items;
   items.set_row_count(12);
 
@@ -745,7 +745,9 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& e) {  // NOLINT
   // Select the focused window
 
   int idx = items.GetIndexForFocus();
-  if (idx != wxNOT_FOUND) items.set_selection(idx);
+  if (idx != wxNOT_FOUND) {
+    items.set_selection(idx);
+  }
 
 #ifdef __WXMAC__
   items.set_background_color(*wxWHITE);
@@ -766,6 +768,8 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& e) {  // NOLINT
   dlg.SetBackgroundColour(*wxWHITE);
   dlg.set_modifier_key(WXK_ALT);
 #endif
+
+  dlg.ctrl()->AdvanceToNextSelection(nav.GetDirection());
 
   int ans = dlg.ShowModal();
 

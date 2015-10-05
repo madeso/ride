@@ -57,6 +57,8 @@ class SwitcherDlg : public wxDialog {
   void set_modifier_key(int modifierKey);
   int modifier_key() const;
 
+  SwitcherCtrl* ctrl();
+
  private:
   SwitcherDlg();
 

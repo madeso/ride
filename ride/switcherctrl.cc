@@ -127,12 +127,12 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
       if (items_.selection() < 0)
         items_.set_selection(items_.GetItemCount() - 1);
 
-      AdvanceToNextSelectableItem(-1);
+      MakeSureGroupIsNotSelected(-1);
     } else {
       items_.set_selection(items_.selection() + 1);
       if (items_.selection() >= items_.GetItemCount()) items_.set_selection(0);
 
-      AdvanceToNextSelectableItem(1);
+      MakeSureGroupIsNotSelected(1);
     }
 
     GenerateSelectionEvent();
@@ -143,7 +143,7 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
     items_.set_selection(items_.selection() + 1);
     if (items_.selection() >= items_.GetItemCount()) items_.set_selection(0);
 
-    AdvanceToNextSelectableItem(1);
+    MakeSureGroupIsNotSelected(1);
 
     GenerateSelectionEvent();
 
@@ -153,7 +153,7 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
     items_.set_selection(items_.selection() - 1);
     if (items_.selection() < 0) items_.set_selection(items_.GetItemCount() - 1);
 
-    AdvanceToNextSelectableItem(-1);
+    MakeSureGroupIsNotSelected(-1);
 
     GenerateSelectionEvent();
 
@@ -162,7 +162,7 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
              event.GetKeyCode() == WXK_NUMPAD_HOME) {
     items_.set_selection(0);
 
-    AdvanceToNextSelectableItem(1);
+    MakeSureGroupIsNotSelected(1);
 
     GenerateSelectionEvent();
 
@@ -171,7 +171,7 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
              event.GetKeyCode() == WXK_NUMPAD_END) {
     items_.set_selection(items_.GetItemCount() - 1);
 
-    AdvanceToNextSelectableItem(-1);
+    MakeSureGroupIsNotSelected(-1);
 
     GenerateSelectionEvent();
 
@@ -195,7 +195,7 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
       }
     }
 
-    AdvanceToNextSelectableItem(-1);
+    MakeSureGroupIsNotSelected(-1);
 
     GenerateSelectionEvent();
 
@@ -219,7 +219,7 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
       }
     }
 
-    AdvanceToNextSelectableItem(1);
+    MakeSureGroupIsNotSelected(1);
 
     GenerateSelectionEvent();
 
@@ -320,7 +320,7 @@ void SwitcherCtrl::GenerateSelectionEvent() {
   GetEventHandler()->ProcessEvent(event);
 }
 
-void SwitcherCtrl::AdvanceToNextSelectableItem(int direction) {
+void SwitcherCtrl::MakeSureGroupIsNotSelected(int direction) {
   if (items_.GetItemCount() < 2) return;
 
   if (items_.selection() == -1) items_.set_selection(0);
@@ -353,5 +353,19 @@ void SwitcherCtrl::SendCloseEvent() {
 
     topLevel->GetEventHandler()->ProcessEvent(closeEvent);
     return;
+  }
+}
+
+void SwitcherCtrl::AdvanceToNextSelection(bool forward) {
+  if (forward == false) {
+    items_.set_selection(items_.selection() - 1);
+    if (items_.selection() < 0) items_.set_selection(items_.GetItemCount() - 1);
+
+    MakeSureGroupIsNotSelected(-1);
+  } else {
+    items_.set_selection(items_.selection() + 1);
+    if (items_.selection() >= items_.GetItemCount()) items_.set_selection(0);
+
+    MakeSureGroupIsNotSelected(1);
   }
 }

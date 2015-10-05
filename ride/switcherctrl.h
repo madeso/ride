@@ -66,8 +66,9 @@ class SwitcherCtrl : public wxControl {
   void CalculateLayout(wxDC& dc);  // NOLINT
   void InvalidateLayout();
   void GenerateSelectionEvent();
-  void AdvanceToNextSelectableItem(int direction);
+  void MakeSureGroupIsNotSelected(int direction);
   void SendCloseEvent();
+  void AdvanceToNextSelection(bool forward);
 
  protected:
   SwitcherItemList items_;

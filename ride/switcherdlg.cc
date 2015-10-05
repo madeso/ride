@@ -79,7 +79,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
   if (list_ctrl_->items().selection() == -1)
     list_ctrl_->items().set_selection(0);
 
-  list_ctrl_->AdvanceToNextSelectableItem(1);
+  list_ctrl_->MakeSureGroupIsNotSelected(1);
 
   ShowDescription(list_ctrl_->items().selection());
 }
@@ -181,3 +181,5 @@ void SwitcherDlg::set_modifier_key(int modifierKey) {
 }
 
 int SwitcherDlg::modifier_key() const { return modifier_key_; }
+
+SwitcherCtrl* SwitcherDlg::ctrl() { return list_ctrl_; }
