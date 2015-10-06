@@ -128,12 +128,20 @@ SwitcherIndex GoToNextItem(const SwitcherItemList& items, SwitcherIndex i,
   return GoToRelativeItem(items, i, local, 1);
 }
 
+SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
+                           int change) {
+  int group = StepGroup(items, i.first, change);
+  if (group == -1) return SWITCHER_NOT_FOUND;
+  int item = std::min(i.second, items.GetGroup(group).GetItemCount() - 1);
+  return SwitcherIndex(group, item);
+}
+
 SwitcherIndex GoToLeftItem(const SwitcherItemList& items, SwitcherIndex i) {
-  return SWITCHER_NOT_FOUND;
+  return GoHorizontal(items, i, -1);
 }
 
 SwitcherIndex GoToRightItem(const SwitcherItemList& items, SwitcherIndex i) {
-  return SWITCHER_NOT_FOUND;
+  return GoHorizontal(items, i, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
