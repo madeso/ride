@@ -36,6 +36,14 @@
 //////////////////////////////////////////////////////////////////////////
 // move theese
 
+bool IsValid(const SwitcherItemList& items, SwitcherIndex index) {
+  if (index.first < 0) return false;
+  if (index.first >= items.GetGroupCount()) return false;
+  if (index.second < 0) return false;
+  if (index.second >= items.GetGroup(index.first).GetItemCount()) return false;
+  return true;
+}
+
 SwitcherIndex GoToFirstItem(const SwitcherItemList& items) {
   for (size_t group_index = 0; group_index <= items.GetGroupCount();
        ++group_index) {
@@ -178,9 +186,9 @@ const SwitcherItemList& SwitcherCtrl::items() const { return items_; }
 
 SwitcherItemList& SwitcherCtrl::items() { return items_; }
 
-void SwitcherCtrl::SelectActiveOrFirst() {
-  selection_ = items_.GetIndexForFocus();
-  if (selection_ == SWITCHER_NOT_FOUND) {
+void SwitcherCtrl::SelectOrFirst(SwitcherIndex index) {
+  selection_ = index;
+  if (false == IsValid(items_, selection_)) {
     selection_ = GoToFirstItem(items_);
   }
 }

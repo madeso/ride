@@ -27,7 +27,7 @@ SwitcherIndex SwitcherItemList::GetIndexForFocus() const {
   for (size_t i = 0; i < items_.size(); i++) {
     int item = items_[i].GetIndexForFocus();
     if (item != -1) {
-      std::make_pair(i, item);
+      return SwitcherIndex(i, item);
     }
   }
 

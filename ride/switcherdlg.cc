@@ -14,8 +14,8 @@
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
-                         wxWindowID id, const wxString& title,
+SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
+                         wxWindow* parent, wxWindowID id, const wxString& title,
                          const wxPoint& position, const wxSize& size,
                          long style)  // NOLINT
     : list_ctrl_(NULL),
@@ -66,7 +66,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
 
   Centre(wxBOTH);
 
-  list_ctrl_->SelectActiveOrFirst();
+  list_ctrl_->SelectOrFirst(index);
 
   UpdateDescription();
 }

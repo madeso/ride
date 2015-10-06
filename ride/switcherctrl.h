@@ -39,7 +39,7 @@ class SwitcherCtrl : public wxControl {
   const SwitcherItemList& items() const;
   SwitcherItemList& items();
 
-  void SelectActiveOrFirst();
+  void SelectOrFirst(SwitcherIndex index);
 
   SwitcherIndex selection() const;
 

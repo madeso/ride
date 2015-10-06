@@ -759,7 +759,9 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
     }
   }
 
-  SwitcherDlg dlg(items, this);
+  const SwitcherIndex focus = items.GetIndexForFocus();
+
+  SwitcherDlg dlg(items, focus, this);
 
   dlg.AdvanceToNextSelection(nav.GetDirection());
 
