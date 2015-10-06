@@ -37,19 +37,87 @@
 // move theese
 
 SwitcherIndex GoToFirstItem(const SwitcherItemList& items) {
+  for (size_t group_index = 0; group_index <= items.GetGroupCount();
+       ++group_index) {
+    if (items.GetGroupCount() > 0) {
+      return SwitcherIndex(group_index, 0);
+    }
+  }
   return SWITCHER_NOT_FOUND;
 }
 
 SwitcherIndex GoToLastItem(const SwitcherItemList& items) {
+  for (size_t group_index = items.GetGroupCount() - 1; group_index >= 0;
+       --group_index) {
+    if (items.GetGroupCount() > 0) {
+      return SwitcherIndex(group_index, 0);
+    }
+  }
   return SWITCHER_NOT_FOUND;
 }
 
-SwitcherIndex GoToPreviousItem(const SwitcherItemList& items, SwitcherIndex i) {
-  return SWITCHER_NOT_FOUND;
+int Wrap(int i, int size) {
+  int r = i;
+  while (r < 0) {
+    r += size;
+  }
+  while (r >= size) {
+    r -= size;
+  }
+  return r;
 }
 
-SwitcherIndex GoToNextItem(const SwitcherItemList& items, SwitcherIndex i) {
-  return i;
+int StepGroup(const SwitcherItemList& items, int g, int change) {
+  int group = g;
+  do {
+    group = Wrap(group + change, items.GetGroupCount());
+    if (g == group) {
+      return -1;
+    }
+  } while (items.GetGroup(group).GetItemCount() <= 0);
+  return group;
+}
+
+SwitcherIndex GoToRelativeItem(const SwitcherItemList& items, SwitcherIndex i,
+                               bool local, int change) {
+  if (i == SWITCHER_NOT_FOUND) return SWITCHER_NOT_FOUND;
+
+  int group = i.first;
+  int index = i.second + change;
+  if (local) {
+    index = Wrap(index, items.GetGroup(group).GetItemCount());
+    return SwitcherIndex(group, index);
+  } else {
+    if (index < 0) {
+      group = StepGroup(items, group, -1);
+      if (group == -1) {
+        return SWITCHER_NOT_FOUND;
+      }
+      index = items.GetGroup(group).GetItemCount() - 1;
+      return SwitcherIndex(group, index);
+    }
+
+    if (index >= items.GetGroup(group).GetItemCount()) {
+      group = StepGroup(items, group, 1);
+      if (group == -1) {
+        return SWITCHER_NOT_FOUND;
+      }
+      index = 0;
+      return SwitcherIndex(group, index);
+    }
+
+    return SwitcherIndex(group, index);
+  }
+}
+
+SwitcherIndex GoToPreviousItem(const SwitcherItemList& items, SwitcherIndex i,
+                               bool local) {
+  return GoToRelativeItem(items, i, local, -1);
+}
+
+SwitcherIndex GoToNextItem(const SwitcherItemList& items, SwitcherIndex i,
+                           bool local) {
+  return GoToRelativeItem(items, i, local, 1);
 }
 
 SwitcherIndex GoToLeftItem(const SwitcherItemList& items, SwitcherIndex i) {
@@ -166,22 +234,22 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
   } else if (event.GetKeyCode() == WXK_TAB ||
              event.GetKeyCode() == EXTRA_NAVIGATION_KEY) {
     if (event.ShiftDown()) {
-      selection_ = GoToPreviousItem(items_, selection_);
+      selection_ = GoToPreviousItem(items_, selection_, true);
     } else {
-      selection_ = GoToNextItem(items_, selection_);
+      selection_ = GoToNextItem(items_, selection_, true);
     }
 
     GenerateSelectionEvent();
     Refresh();
   } else if (event.GetKeyCode() == WXK_DOWN ||
              event.GetKeyCode() == WXK_NUMPAD_DOWN) {
-    selection_ = GoToNextItem(items_, selection_);
+    selection_ = GoToNextItem(items_, selection_, false);
 
     GenerateSelectionEvent();
     Refresh();
   } else if (event.GetKeyCode() == WXK_UP ||
              event.GetKeyCode() == WXK_NUMPAD_UP) {
-    selection_ = GoToPreviousItem(items_, selection_);
+    selection_ = GoToPreviousItem(items_, selection_, false);
 
     GenerateSelectionEvent();
     Refresh();
@@ -348,8 +416,8 @@ void SwitcherCtrl::SendCloseEvent() {
 
 void SwitcherCtrl::AdvanceToNextSelection(bool forward) {
   if (forward == false) {
-    selection_ = GoToPreviousItem(items_, selection_);
+    selection_ = GoToPreviousItem(items_, selection_, true);
   } else {
-    selection_ = GoToNextItem(items_, selection_);
+    selection_ = GoToNextItem(items_, selection_, true);
   }
 }
