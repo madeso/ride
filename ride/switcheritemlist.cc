@@ -14,186 +14,102 @@
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-SwitcherItemList::SwitcherItemList()
-    : selection_(-1),
-      row_count_(10),
-      column_count_(0),
-      text_margin_x_(4),
-      text_margin_y_(2),
-      background_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)),
-      text_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)),
-      selection_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT)),
-      selection_outline_color_(
-          wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)),
-      item_font_(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT)) {}
+#include "ride/switcherstyle.h"
 
-SwitcherItem& SwitcherItemList::AddItem(const SwitcherItem& item) {
+SwitcherItemList::SwitcherItemList() : column_count_(0) {}
+
+SwitcherGroup& SwitcherItemList::AddGroup(const SwitcherGroup& item) {
   items_.push_back(item);
   return *items_.rbegin();
 }
 
-SwitcherItem& SwitcherItemList::AddGroup(const wxString& title,
-                                         const wxString& name, int id,
-                                         const wxBitmap& bitmap) {
-  SwitcherItem& item = AddItem(SwitcherItem(title, name, id, bitmap));
-  item.set_is_group(true);
-
-  return item;
-}
-
-void SwitcherItemList::set_selection(int sel) { selection_ = sel; }
-
-int SwitcherItemList::selection() const { return selection_; }
-
-int SwitcherItemList::GetIndexForFocus() const {
+SwitcherIndex SwitcherItemList::GetIndexForFocus() const {
   for (size_t i = 0; i < items_.size(); i++) {
-    const SwitcherItem& item = items_[i];
-    if (item.window()) {
-      if (wxFindFocusDescendant(item.window())) return i;
+    int item = items_[i].GetIndexForFocus();
+    if (item != -1) {
+      std::make_pair(i, item);
     }
   }
 
-  return -1;
+  return SWITCHER_NOT_FOUND;
 }
 
-int SwitcherItemList::HitTest(const wxPoint& pt) const {
+SwitcherIndex SwitcherItemList::HitTest(const wxPoint& pt) const {
   for (size_t i = 0; i < items_.size(); i++) {
-    const SwitcherItem& item = items_[i];
-    if (item.rect().Contains(pt)) return static_cast<int>(i);
+    int item = items_[i].HitTest(pt);
+    if (item != -1) {
+      std::make_pair(i, item);
+    }
   }
 
-  return -1;
+  return SWITCHER_NOT_FOUND;
 }
 
-const SwitcherItem& SwitcherItemList::GetItem(int i) const { return items_[i]; }
+#define GET_ITEM()                              \
+  do {                                          \
+    return GetGroup(i.first).GetItem(i.second); \
+  } while (false)
 
-SwitcherItem& SwitcherItemList::GetItem(int i) { return items_[i]; }
+const SwitcherItem& SwitcherItemList::GetItem(SwitcherIndex i) const {
+  GET_ITEM();
+}
 
-int SwitcherItemList::GetItemCount() const { return items_.size(); }
+SwitcherItem& SwitcherItemList::GetItem(SwitcherIndex i) { GET_ITEM(); }
 
-void SwitcherItemList::set_row_count(int rows) { row_count_ = rows; }
-int SwitcherItemList::row_count() const { return row_count_; }
+#undef GET_ITEM
+
+int SwitcherItemList::GetItemCount() const {
+  int count = 0;
+  for (const SwitcherGroup& group : items_) {
+    count += group.GetItemCount();
+  }
+  return count;
+}
+
+#define GET_GROUP()            \
+  do {                         \
+    assert(i >= 0);            \
+    assert(i < items_.size()); \
+    return items_[i];          \
+  } while (false)
+const SwitcherGroup& SwitcherItemList::GetGroup(int i) const { GET_GROUP(); }
+SwitcherGroup& SwitcherItemList::GetGroup(int i) { GET_GROUP(); }
+#undef GET_GROUP
+
+int SwitcherItemList::GetGroupCount() const { return items_.size(); }
 
 void SwitcherItemList::set_column_count(int cols) { column_count_ = cols; }
+
 int SwitcherItemList::column_count() const { return column_count_; }
 
-void SwitcherItemList::set_background_color(const wxColour& colour) {
-  background_color_ = colour;
-}
-const wxColour& SwitcherItemList::background_color() const {
-  return background_color_;
-}
-
-void SwitcherItemList::set_text_color(const wxColour& colour) {
-  text_color_ = colour;
-}
-const wxColour& SwitcherItemList::text_color() const { return text_color_; }
-
-void SwitcherItemList::set_selection_color(const wxColour& colour) {
-  selection_color_ = colour;
-}
-const wxColour& SwitcherItemList::selection_color() const {
-  return selection_color_;
-}
-
-void SwitcherItemList::set_selection_outline_color(const wxColour& colour) {
-  selection_outline_color_ = colour;
-}
-const wxColour& SwitcherItemList::selection_outline_color() const {
-  return selection_outline_color_;
-}
-
-void SwitcherItemList::set_item_font(const wxFont& font) { item_font_ = font; }
-const wxFont& SwitcherItemList::item_font() const { return item_font_; }
-
-void SwitcherItemList::PaintItems(wxDC& dc, wxWindow* win) {  // NOLINT
-  const wxFont groupFont(item_font_.GetPointSize(), item_font_.GetFamily(),
-                         item_font_.GetStyle(), wxBOLD,
-                         item_font_.GetUnderlined(), item_font_.GetFaceName());
-
-  dc.SetLogicalFunction(wxCOPY);
-  dc.SetBrush(wxBrush(background_color_));
-  dc.SetPen(*wxTRANSPARENT_PEN);
-  dc.DrawRectangle(win->GetClientRect());
-  dc.SetBackgroundMode(wxTRANSPARENT);
+void SwitcherItemList::PaintItems(wxDC* dc, const SwitcherStyle& style,
+                                  SwitcherIndex selection, wxWindow* win) {
+  dc->SetLogicalFunction(wxCOPY);
+  dc->SetBrush(wxBrush(style.background_color()));
+  dc->SetPen(*wxTRANSPARENT_PEN);
+  dc->DrawRectangle(win->GetClientRect());
+  dc->SetBackgroundMode(wxTRANSPARENT);
 
   for (size_t i = 0; i < items_.size(); i++) {
-    SwitcherItem& item = items_[i];
-    bool selected = (static_cast<int>(i) == selection_);
-
-    if (selected) {
-      dc.SetPen(wxPen(selection_outline_color_));
-      dc.SetBrush(wxBrush(selection_color_));
-      dc.DrawRectangle(item.rect());
-    }
-
-    wxRect clippingRect(item.rect());
-    clippingRect.Deflate(1, 1);
-
-    dc.SetClippingRegion(clippingRect);
-
-    dc.SetTextForeground(text_color_);
-    dc.SetFont(item.is_group() ? groupFont : item_font_);
-
-    int w, h;
-    dc.GetTextExtent(item.title(), &w, &h);
-
-    int x = item.rect().x;
-    x += text_margin_x_;
-
-    if (!item.is_group()) {
-      if (item.bitmap().Ok() && item.bitmap().GetWidth() <= 16 &&
-          item.bitmap().GetHeight() <= 16) {
-        dc.DrawBitmap(item.bitmap(), x,
-                      item.rect().y +
-                          (item.rect().height - item.bitmap().GetHeight()) / 2,
-                      true);
-      }
-
-      x += 16;
-
-      x += text_margin_x_;
-    }
-
-    int y = item.rect().y + (item.rect().height - h) / 2;
-    dc.DrawText(item.title(), x, y);
-
-    dc.DestroyClippingRegion();
+    items_[i].PaintItems(dc, style,
+                         i == selection.first ? selection.second : -1);
   }
 }
 
-wxSize SwitcherItemList::CalculateItemSize(wxDC& dc) {  // NOLINT
+wxSize SwitcherItemList::CalculateItemSize(wxDC* dc,
+                                           const SwitcherStyle& style) {
   // Start off allowing for an icon
   wxSize sz(150, 16);
-  const wxFont groupFont(item_font_.GetPointSize(), item_font_.GetFamily(),
-                         item_font_.GetStyle(), wxBOLD,
-                         item_font_.GetUnderlined(), item_font_.GetFaceName());
 
-  int textMarginX = text_margin_x_;
-  int textMarginY = text_margin_y_;
-  const int maxWidth = 300;
-  const int maxHeight = 40;
-
-  size_t i;
-  for (i = 0; i < items_.size(); i++) {
-    SwitcherItem& item = items_[i];
-
-    dc.SetFont(item.is_group() ? groupFont : item_font_);
-
-    int w, h;
-    dc.GetTextExtent(item.title(), &w, &h);
-
-    w += 16 + 2 * textMarginX;
-
-    if (w > sz.x) sz.x = wxMin(w, maxWidth);
-    if (h > sz.y) sz.y = wxMin(h, maxHeight);
+  for (SwitcherGroup& item : items_) {
+    item.CalculateItemSize(dc, style, &sz);
   }
 
   if (sz == wxSize(16, 16)) {
     sz = wxSize(100, 25);
   } else {
-    sz.x += textMarginX * 2;
-    sz.y += textMarginY * 2;
+    sz.x += style.text_margin_x() * 2;
+    sz.y += style.text_margin_y() * 2;
   }
 
   return sz;

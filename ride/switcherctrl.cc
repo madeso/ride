@@ -14,12 +14,58 @@
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
+#include <algorithm>
+
 #define wxSWITCHER_USE_BUFFERED_PAINTING 1
 
-SwitcherCtrl::SwitcherCtrl()
-    : overall_size_(wxSize(200, 100)),
-      modifier_key_(WXK_CONTROL),
-      extra_navigation_key_(0) {
+#define MODIFIER_KEY WXK_CONTROL
+#define EXTRA_NAVIGATION_KEY 0
+
+// In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
+// to treat / in the same was as tab (i.e. cycle through the names)
+#ifdef __WXGTK__
+#undef EXTRA_NAVIGATION_KEY
+#define EXTRA_NAVIGATION_KEY wxT('/');
+#endif
+
+#ifdef __WXMAC__
+#undef MODIFIER_KEY
+#define MODIFIER_KEY WXK_ALT;
+#endif
+
+//////////////////////////////////////////////////////////////////////////
+// move theese
+
+SwitcherIndex GoToFirstItem(const SwitcherItemList& items) {
+  return SWITCHER_NOT_FOUND;
+}
+
+SwitcherIndex GoToLastItem(const SwitcherItemList& items) {
+  return SWITCHER_NOT_FOUND;
+}
+
+SwitcherIndex GoToPreviousItem(const SwitcherItemList& items, SwitcherIndex i) {
+  return SWITCHER_NOT_FOUND;
+}
+
+SwitcherIndex GoToNextItem(const SwitcherItemList& items, SwitcherIndex i) {
+  return SWITCHER_NOT_FOUND;
+}
+
+SwitcherIndex GoToLeftItem(const SwitcherItemList& items, SwitcherIndex i) {
+  return SWITCHER_NOT_FOUND;
+}
+
+SwitcherIndex GoToRightItem(const SwitcherItemList& items, SwitcherIndex i) {
+  return SWITCHER_NOT_FOUND;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+SwitcherCtrl::SwitcherCtrl(const SwitcherItemList& items)
+    : items_(items),
+      selection_(SWITCHER_NOT_FOUND),
+      overall_size_(wxSize(200, 100)) {
   // TODO(Gustav): Remove unused events
   Bind(wxEVT_LEFT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
   Bind(wxEVT_LEFT_UP, &SwitcherCtrl::OnMouseEvent, this);
@@ -64,17 +110,14 @@ const SwitcherItemList& SwitcherCtrl::items() const { return items_; }
 
 SwitcherItemList& SwitcherCtrl::items() { return items_; }
 
-void SwitcherCtrl::set_extra_navigation_key(int keyCode) {
-  extra_navigation_key_ = keyCode;
+void SwitcherCtrl::SelectActiveOrFirst() {
+  selection_ = items_.GetIndexForFocus();
+  if (selection_ == SWITCHER_NOT_FOUND) {
+    selection_ = GoToFirstItem(items_);
+  }
 }
 
-int SwitcherCtrl::extra_navigation_key() const { return extra_navigation_key_; }
-
-void SwitcherCtrl::set_modifier_key(int modifierKey) {
-  modifier_key_ = modifierKey;
-}
-
-int SwitcherCtrl::modifier_key() const { return modifier_key_; }
+SwitcherIndex SwitcherCtrl::selection() const { return selection_; }
 
 void SwitcherCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 #if wxSWITCHER_USE_BUFFERED_PAINTING
@@ -89,16 +132,16 @@ void SwitcherCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 
   if (items_.column_count() == 0) return;
 
-  items_.PaintItems(dc, this);
+  items_.PaintItems(&dc, style_, selection_, this);
 }
 
 void SwitcherCtrl::OnMouseEvent(wxMouseEvent& event) {
   if (event.LeftDown()) {
     SetFocus();
 
-    int idx = items_.HitTest(event.GetPosition());
-    if (idx != wxNOT_FOUND) {
-      items_.set_selection(idx);
+    SwitcherIndex idx = items_.HitTest(event.GetPosition());
+    if (idx != SWITCHER_NOT_FOUND) {
+      selection_ = idx;
 
       SendCloseEvent();
     }
@@ -109,7 +152,7 @@ void SwitcherCtrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
 
 void SwitcherCtrl::OnKey(wxKeyEvent& event) {
   if (event.GetEventType() == wxEVT_KEY_UP) {
-    if (event.GetKeyCode() == modifier_key()) {
+    if (event.GetKeyCode() == MODIFIER_KEY) {
       SendCloseEvent();
     }
     event.Skip();
@@ -117,112 +160,54 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
   }
 
   if (event.GetKeyCode() == WXK_ESCAPE || event.GetKeyCode() == WXK_RETURN) {
-    if (event.GetKeyCode() == WXK_ESCAPE) items_.set_selection(-1);
+    if (event.GetKeyCode() == WXK_ESCAPE) selection_ = SWITCHER_NOT_FOUND;
 
     SendCloseEvent();
   } else if (event.GetKeyCode() == WXK_TAB ||
-             event.GetKeyCode() == extra_navigation_key()) {
+             event.GetKeyCode() == EXTRA_NAVIGATION_KEY) {
     if (event.ShiftDown()) {
-      items_.set_selection(items_.selection() - 1);
-      if (items_.selection() < 0)
-        items_.set_selection(items_.GetItemCount() - 1);
-
-      MakeSureGroupIsNotSelected(-1);
+      selection_ = GoToPreviousItem(items_, selection_);
     } else {
-      items_.set_selection(items_.selection() + 1);
-      if (items_.selection() >= items_.GetItemCount()) items_.set_selection(0);
-
-      MakeSureGroupIsNotSelected(1);
+      selection_ = GoToNextItem(items_, selection_);
     }
 
     GenerateSelectionEvent();
-
     Refresh();
   } else if (event.GetKeyCode() == WXK_DOWN ||
              event.GetKeyCode() == WXK_NUMPAD_DOWN) {
-    items_.set_selection(items_.selection() + 1);
-    if (items_.selection() >= items_.GetItemCount()) items_.set_selection(0);
-
-    MakeSureGroupIsNotSelected(1);
+    selection_ = GoToNextItem(items_, selection_);
 
     GenerateSelectionEvent();
-
     Refresh();
   } else if (event.GetKeyCode() == WXK_UP ||
              event.GetKeyCode() == WXK_NUMPAD_UP) {
-    items_.set_selection(items_.selection() - 1);
-    if (items_.selection() < 0) items_.set_selection(items_.GetItemCount() - 1);
-
-    MakeSureGroupIsNotSelected(-1);
+    selection_ = GoToPreviousItem(items_, selection_);
 
     GenerateSelectionEvent();
-
     Refresh();
   } else if (event.GetKeyCode() == WXK_HOME ||
              event.GetKeyCode() == WXK_NUMPAD_HOME) {
-    items_.set_selection(0);
-
-    MakeSureGroupIsNotSelected(1);
+    selection_ = GoToFirstItem(items_);
 
     GenerateSelectionEvent();
-
     Refresh();
   } else if (event.GetKeyCode() == WXK_END ||
              event.GetKeyCode() == WXK_NUMPAD_END) {
-    items_.set_selection(items_.GetItemCount() - 1);
-
-    MakeSureGroupIsNotSelected(-1);
+    selection_ = GoToLastItem(items_);
 
     GenerateSelectionEvent();
-
     Refresh();
   } else if (event.GetKeyCode() == WXK_LEFT ||
              event.GetKeyCode() == WXK_NUMPAD_LEFT) {
-    SwitcherItem& item = items_.GetItem(items_.selection());
-
-    int row = item.row_pos();
-    int newCol = item.get_col_pos() - 1;
-    if (newCol < 0) newCol = (items_.column_count() - 1);
-
-    // Find the first item from the end whose row matches and whose column is
-    // equal or lower
-    int i;
-    for (i = items_.GetItemCount() - 1; i >= 0; i--) {
-      SwitcherItem& item2 = items_.GetItem(i);
-      if (item2.get_col_pos() == newCol && item2.row_pos() <= row) {
-        items_.set_selection(i);
-        break;
-      }
-    }
-
-    MakeSureGroupIsNotSelected(-1);
+    selection_ = GoToLeftItem(items_, selection_);
 
     GenerateSelectionEvent();
-
     Refresh();
   } else if (event.GetKeyCode() == WXK_RIGHT ||
              event.GetKeyCode() == WXK_NUMPAD_RIGHT) {
-    SwitcherItem& item = items_.GetItem(items_.selection());
-
-    int row = item.row_pos();
-    int newCol = item.get_col_pos() + 1;
-    if (newCol >= items_.column_count()) newCol = 0;
-
-    // Find the first item from the end whose row matches and whose column is
-    // equal or lower
-    int i;
-    for (i = items_.GetItemCount() - 1; i >= 0; i--) {
-      SwitcherItem& item2 = items_.GetItem(i);
-      if (item2.get_col_pos() == newCol && item2.row_pos() <= row) {
-        items_.set_selection(i);
-        break;
-      }
-    }
-
-    MakeSureGroupIsNotSelected(1);
+    selection_ = GoToRightItem(items_, selection_);
 
     GenerateSelectionEvent();
-
     Refresh();
   } else {
     event.Skip();
@@ -240,73 +225,99 @@ void SwitcherCtrl::CalculateLayout() {
   CalculateLayout(dc);
 }
 
-void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
-  if (items_.selection() == -1) items_.set_selection(0);
+class LayoutCalculator {
+ public:
+  LayoutCalculator(wxSize is, const SwitcherStyle& style) : style_(style) {
+    columnCount = 1;
 
-  int columnCount = 1;
+    itemSize = is;
+    overall_size_ = wxSize(350, 200);
 
-  // Spacing between edge of window or between columns
-  int xMargin = 4;
-  int yMargin = 4;
-
-  // Inter-row spacing
-  int rowSpacing = 2;
-
-  wxSize itemSize = items_.CalculateItemSize(dc);
-  overall_size_ = wxSize(350, 200);
-
-  size_t i;
-  int currentRow = 0;
-  int x = xMargin;
-  int y = yMargin;
-
-  bool breaking = false;
-
-  for (i = 0; i < (size_t)items_.GetItemCount(); i++) {
-    wxSize oldOverallSize = overall_size_;
-
-    items_.GetItem(i).set_rect(wxRect(x, y, itemSize.x, itemSize.y));
-    items_.GetItem(i).set_col_pos(columnCount - 1);
-    items_.GetItem(i).set_row_pos(currentRow);
-
-    if (items_.GetItem(i).rect().GetBottom() > overall_size_.y)
-      overall_size_.y = items_.GetItem(i).rect().GetBottom() + yMargin;
-
-    if (items_.GetItem(i).rect().GetRight() > overall_size_.x)
-      overall_size_.x = items_.GetItem(i).rect().GetRight() + xMargin;
-
-    currentRow++;
-
-    y += (rowSpacing + itemSize.y);
-
-    bool stopBreaking = breaking;
-
-    if ((currentRow > items_.row_count()) ||
-        (items_.GetItem(i).break_column() && !breaking && (currentRow != 1))) {
-      currentRow = 0;
-      columnCount++;
-      x += (xMargin + itemSize.x);
-      y = yMargin;
-
-      // Make sure we don't orphan a group
-      if (items_.GetItem(i).is_group() ||
-          (items_.GetItem(i).break_column() && !breaking)) {
-        overall_size_ = oldOverallSize;
-
-        if (items_.GetItem(i).break_column()) breaking = true;
-
-        // Repeat the last item, in the next column
-        i--;
-      }
-    }
-
-    if (stopBreaking) breaking = false;
+    currentRow = 0;
+    x = style_.xMargin();
+    y = style_.yMargin();
   }
 
-  items_.set_column_count(columnCount);
+  wxRect rect() const { return wxRect(x, y, itemSize.x, itemSize.y); }
+
+  int col_pos() const { return columnCount - 1; }
+
+  int row_pos() const { return currentRow; }
+
+  void GoToNextCol() {
+    currentRow = 0;
+    columnCount++;
+    x += (style_.xMargin() + itemSize.x);
+    y = style_.yMargin();
+  }
+
+  void GoToNextRow() {
+    currentRow++;
+    y += (style_.rowSpacing() + itemSize.y);
+  }
+
+  void UpdateOverallSize() {
+    overall_size_.y =
+        std::max(overall_size_.y, rect().GetBottom() + style_.yMargin());
+    overall_size_.x =
+        std::max(overall_size_.x, rect().GetRight() + style_.xMargin());
+  }
+
+  int get_currentRow() const { return currentRow; }
+
+  int get_columnCount() const { return columnCount; }
+
+  const wxSize& overall_size() const { return overall_size_; }
+
+ private:
+  const SwitcherStyle& style_;
+  int columnCount;
+
+  wxSize itemSize;
+  wxSize overall_size_;
+
+  int currentRow;
+  int x;
+  int y;
+};
+
+void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
+  if (selection_ == SWITCHER_NOT_FOUND) selection_ = GoToFirstItem(items_);
+
+  LayoutCalculator calc(items_.CalculateItemSize(&dc, style_), style_);
+
+  for (size_t group_index = 0; group_index < items_.GetGroupCount();
+       ++group_index) {
+    SwitcherGroup& group = items_.GetGroup(group_index);
+
+    group.set_rect(calc.rect());
+    calc.UpdateOverallSize();
+    calc.GoToNextRow();
+
+    for (size_t item_index = 0; item_index < group.GetItemCount();
+         ++item_index) {
+      if (calc.get_currentRow() > style_.row_count()) {
+        calc.GoToNextCol();
+        calc.GoToNextRow();  // only groups are on first row
+      }
+
+      SwitcherItem item = group.GetItem(item_index);
+      item.set_rect(calc.rect());
+      item.set_col_pos(calc.col_pos());
+      item.set_row_pos(calc.row_pos());
+
+      calc.UpdateOverallSize();
+
+      calc.GoToNextRow();
+    }
+  }
+
+  items_.set_column_count(calc.get_columnCount());
+  overall_size_ = calc.overall_size();
 
   InvalidateBestSize();
 }
+
 void SwitcherCtrl::InvalidateLayout() {
   items_.set_column_count(0);
   Refresh();
@@ -315,31 +326,9 @@ void SwitcherCtrl::InvalidateLayout() {
 void SwitcherCtrl::GenerateSelectionEvent() {
   wxCommandEvent event(wxEVT_COMMAND_LISTBOX_SELECTED, GetId());
   event.SetEventObject(this);
-  event.SetInt(items_.selection());
+  event.SetInt(selection_.first);
 
   GetEventHandler()->ProcessEvent(event);
-}
-
-void SwitcherCtrl::MakeSureGroupIsNotSelected(int direction) {
-  if (items_.GetItemCount() < 2) return;
-
-  if (items_.selection() == -1) items_.set_selection(0);
-
-  int oldSel = items_.selection();
-
-  while (true) {
-    if (items_.GetItem(items_.selection()).is_group()) {
-      items_.set_selection(items_.selection() + direction);
-      if (items_.selection() == -1)
-        items_.set_selection(items_.GetItemCount() - 1);
-      else if (items_.selection() == items_.GetItemCount())
-        items_.set_selection(0);
-
-      if (items_.selection() == oldSel) break;
-    } else {
-      break;
-    }
-  }
 }
 
 void SwitcherCtrl::SendCloseEvent() {
@@ -358,14 +347,8 @@ void SwitcherCtrl::SendCloseEvent() {
 
 void SwitcherCtrl::AdvanceToNextSelection(bool forward) {
   if (forward == false) {
-    items_.set_selection(items_.selection() - 1);
-    if (items_.selection() < 0) items_.set_selection(items_.GetItemCount() - 1);
-
-    MakeSureGroupIsNotSelected(-1);
+    selection_ = GoToPreviousItem(items_, selection_);
   } else {
-    items_.set_selection(items_.selection() + 1);
-    if (items_.selection() >= items_.GetItemCount()) items_.set_selection(0);
-
-    MakeSureGroupIsNotSelected(1);
+    selection_ = GoToNextItem(items_, selection_);
   }
 }

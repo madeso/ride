@@ -12,20 +12,13 @@
 #include "ride/switcheritem.h"
 
 SwitcherItem::SwitcherItem()
-    : id_(0),
-      is_group_(false),
-      break_column_(false),
-      row_pos_(0),
-      col_pos_(0),
-      window_(NULL) {}
+    : id_(0), row_pos_(0), col_pos_(0), window_(NULL) {}
 
 SwitcherItem::SwitcherItem(const wxString& title, const wxString& name, int id,
                            const wxBitmap& bitmap)
     : title_(title),
       name_(name),
       id_(id),
-      is_group_(false),
-      break_column_(false),
       bitmap_(bitmap),
       row_pos_(0),
       col_pos_(0),
@@ -43,11 +36,7 @@ bool SwitcherItem::operator==(const SwitcherItem& rhs) const {
   EQUAL_CHECK(description_);
   EQUAL_CHECK(path_);
   EQUAL_CHECK(id_);
-  EQUAL_CHECK(is_group_);
-  EQUAL_CHECK(break_column_);
   EQUAL_CHECK(rect_);
-  EQUAL_CHECK(text_color_);
-  EQUAL_CHECK(font_);
   EQUAL_CHECK(row_pos_);
   EQUAL_CHECK(col_pos_);
   EQUAL_CHECK(window_);
@@ -90,40 +79,12 @@ SwitcherItem& SwitcherItem::set_id(int id) {
 
 int SwitcherItem::id() const { return id_; }
 
-SwitcherItem& SwitcherItem::set_is_group(bool is_group) {
-  is_group_ = is_group;
-  return (*this);
-}
-
-bool SwitcherItem::is_group() const { return is_group_; }
-
-SwitcherItem& SwitcherItem::set_break_column(bool break_column) {
-  break_column_ = break_column;
-  return (*this);
-}
-
-bool SwitcherItem::break_column() const { return break_column_; }
-
 SwitcherItem& SwitcherItem::set_rect(const wxRect& rect) {
   rect_ = rect;
   return (*this);
 }
 
 const wxRect& SwitcherItem::rect() const { return rect_; }
-
-SwitcherItem& SwitcherItem::set_text_color(const wxColour& colour) {
-  text_color_ = colour;
-  return (*this);
-}
-
-const wxColour& SwitcherItem::text_color() const { return text_color_; }
-
-SwitcherItem& SwitcherItem::set_font(const wxFont& font) {
-  font_ = font;
-  return (*this);
-}
-
-const wxFont& SwitcherItem::get_font() const { return font_; }
 
 SwitcherItem& SwitcherItem::set_bitmap(const wxBitmap& bitmap) {
   bitmap_ = bitmap;

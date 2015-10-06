@@ -40,21 +40,11 @@ class SwitcherDlg : public wxDialog {
   void OnSelectItem(wxCommandEvent& event);
 
   // Get the selected item
-  int GetSelection() const;
+  SwitcherIndex GetSelection() const;
 
-  void ShowDescription(int i);
+  void ShowDescription(const SwitcherItem& item);
 
   void set_border_color(const wxColour& colour);
-
-  // Set an extra key that can be used to cycle through items,
-  // in case not using the Ctrl+Tab combination
-  void set_extra_navigation_key(int keyCode);
-  int extra_navigation_key() const;
-
-  // Set the modifier used to invoke the dialog, and therefore to test for
-  // release
-  void set_modifier_key(int modifierKey);
-  int modifier_key() const;
 
   void AdvanceToNextSelection(bool forward);
 
@@ -72,8 +62,6 @@ class SwitcherDlg : public wxDialog {
   bool is_closing_;
   long switcher_border_style_;  // NOLINT
   wxColour border_color_;
-  int extra_navigation_key_;
-  int modifier_key_;
 };
 
 #endif  // RIDE_SWITCHERDLG_H_

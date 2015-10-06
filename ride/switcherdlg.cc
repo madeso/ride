@@ -22,8 +22,6 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
       path_ctrl_(NULL),
       is_closing_(false),
       switcher_border_style_(0),
-      modifier_key_(-1),
-      extra_navigation_key_(-1),
       border_color_(*wxBLACK) {
   Bind(wxEVT_CLOSE_WINDOW, &SwitcherDlg::OnCloseWindow, this);
   Bind(wxEVT_ACTIVATE, &SwitcherDlg::OnActivate, this);
@@ -38,16 +36,10 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
 
   wxDialog::Create(parent, id, title, position, size, style);
 
-  list_ctrl_ = new SwitcherCtrl();
-  list_ctrl_->set_items(items);
+  list_ctrl_ = new SwitcherCtrl(items);
   list_ctrl_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                      wxWANTS_CHARS | wxNO_BORDER);
   list_ctrl_->CalculateLayout();
-
-  if (extra_navigation_key_ != -1)
-    list_ctrl_->set_extra_navigation_key(extra_navigation_key_);
-
-  if (modifier_key_ != -1) list_ctrl_->set_modifier_key(modifier_key_);
 
   title_ctrl_ = new wxStaticText(this, wxID_ANY, "");
   description_ctrl_ = new wxStaticText(this, wxID_ANY, "");
@@ -74,10 +66,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, wxWindow* parent,
 
   Centre(wxBOTH);
 
-  if (list_ctrl_->items().selection() == -1)
-    list_ctrl_->items().set_selection(0);
-
-  list_ctrl_->MakeSureGroupIsNotSelected(1);
+  list_ctrl_->SelectActiveOrFirst();
 
   UpdateDescription();
 }
@@ -88,7 +77,7 @@ void SwitcherDlg::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
   if (IsModal()) {
     is_closing_ = true;
 
-    if (GetSelection() == -1)
+    if (GetSelection() == SWITCHER_NOT_FOUND)
       EndModal(wxID_CANCEL);
     else
       EndModal(wxID_OK);
@@ -104,17 +93,14 @@ void SwitcherDlg::OnActivate(wxActivateEvent& event) {
   }
 }
 
-void SwitcherDlg::OnSelectItem(wxCommandEvent& event) {
-  ShowDescription(event.GetSelection());
-}
+void SwitcherDlg::OnSelectItem(wxCommandEvent& event) { UpdateDescription(); }
 
 // Get the selected item
-int SwitcherDlg::GetSelection() const {
-  return list_ctrl_->items().selection();
+SwitcherIndex SwitcherDlg::GetSelection() const {
+  return list_ctrl_->selection();
 }
 
-void SwitcherDlg::ShowDescription(int i) {
-  SwitcherItem& item = list_ctrl_->items().GetItem(i);
+void SwitcherDlg::ShowDescription(const SwitcherItem& item) {
   title_ctrl_->SetLabel(item.title());
   description_ctrl_->SetLabel(item.description());
   path_ctrl_->SetLabel(item.path());
@@ -124,25 +110,14 @@ void SwitcherDlg::set_border_color(const wxColour& colour) {
   border_color_ = colour;
 }
 
-void SwitcherDlg::set_extra_navigation_key(int keyCode) {
-  extra_navigation_key_ = keyCode;
-  if (list_ctrl_) list_ctrl_->set_extra_navigation_key(keyCode);
-}
-
-int SwitcherDlg::extra_navigation_key() const { return extra_navigation_key_; }
-
-void SwitcherDlg::set_modifier_key(int modifierKey) {
-  modifier_key_ = modifierKey;
-  if (list_ctrl_) list_ctrl_->set_modifier_key(modifierKey);
-}
-
-int SwitcherDlg::modifier_key() const { return modifier_key_; }
-
 void SwitcherDlg::AdvanceToNextSelection(bool forward) {
   list_ctrl_->AdvanceToNextSelection(forward);
   UpdateDescription();
 }
 
 void SwitcherDlg::UpdateDescription() {
-  ShowDescription(list_ctrl_->items().selection());
+  SwitcherIndex selected = list_ctrl_->selection();
+  if (selected != SWITCHER_NOT_FOUND) {
+    ShowDescription(list_ctrl_->items().GetItem(selected));
+  }
 }

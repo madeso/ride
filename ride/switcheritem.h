@@ -43,20 +43,8 @@ class SwitcherItem : public wxObject {
   SwitcherItem& set_id(int id);
   int id() const;
 
-  SwitcherItem& set_is_group(bool is_group);
-  bool is_group() const;
-
-  SwitcherItem& set_break_column(bool break_column = true);
-  bool break_column() const;
-
   SwitcherItem& set_rect(const wxRect& rect);
   const wxRect& rect() const;
-
-  SwitcherItem& set_text_color(const wxColour& colour);
-  const wxColour& text_color() const;
-
-  SwitcherItem& set_font(const wxFont& font);
-  const wxFont& get_font() const;
 
   SwitcherItem& set_bitmap(const wxBitmap& bitmap);
   const wxBitmap& bitmap() const;
@@ -76,12 +64,8 @@ class SwitcherItem : public wxObject {
   wxString description_;
   wxString path_;
   int id_;
-  bool is_group_;
-  bool break_column_;
   wxRect rect_;
   wxBitmap bitmap_;
-  wxColour text_color_;
-  wxFont font_;
   int row_pos_;
   int col_pos_;
   wxWindow* window_;

@@ -19,6 +19,7 @@
 
 #include "ride/switcheritem.h"
 #include "ride/switcheritemlist.h"
+#include "ride/switcherstyle.h"
 
 /*!
  * wxMultiColumnListCtrl
@@ -27,27 +28,20 @@
 
 class SwitcherCtrl : public wxControl {
  public:
-  SwitcherCtrl();
+  explicit SwitcherCtrl(const SwitcherItemList& items);
 
   bool Create(wxWindow* parent, wxWindowID id,
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize, long style = 0);  // NOLINT
 
   // Public API
-
   void set_items(const SwitcherItemList& items);
   const SwitcherItemList& items() const;
   SwitcherItemList& items();
 
-  // Set an extra key that can be used to cycle through items,
-  // in case not using the Ctrl+Tab combination
-  void set_extra_navigation_key(int keyCode);
-  int extra_navigation_key() const;
+  void SelectActiveOrFirst();
 
-  // Set the modifier used to invoke the dialog, and therefore to test for
-  // release
-  void set_modifier_key(int modifierKey);
-  int modifier_key() const;
+  SwitcherIndex selection() const;
 
   // Event handlers
 
@@ -66,15 +60,14 @@ class SwitcherCtrl : public wxControl {
   void CalculateLayout(wxDC& dc);  // NOLINT
   void InvalidateLayout();
   void GenerateSelectionEvent();
-  void MakeSureGroupIsNotSelected(int direction);
   void SendCloseEvent();
   void AdvanceToNextSelection(bool forward);
 
  protected:
   SwitcherItemList items_;
+  SwitcherIndex selection_;
+  SwitcherStyle style_;
   wxSize overall_size_;
-  int extra_navigation_key_;
-  int modifier_key_;
 };
 
 #endif  // RIDE_SWITCHERCTRL_H_

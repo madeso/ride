@@ -708,31 +708,27 @@ struct NullToolbar {
 };
 
 void AddGroup(const std::vector<SwitcherItem>& toolbars,
-              SwitcherItemList* items, const wxString& title,
-              const wxString& name) {
+              SwitcherItemList* items, const wxString& title) {
   if (toolbars.empty() == false) {
-    items->AddGroup(title, name).set_break_column();
-    for (auto item : toolbars) {
-      items->AddItem(item);
-    }
+    items->AddGroup(SwitcherGroup(title, toolbars));
   }
 }
 
 void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
   SwitcherItemList items;
-  items.set_row_count(12);
+  // items.set_row_count(12);
 
   // Add the main windows and toolbars, in two separate columns
 
   const std::vector<SwitcherItem> windows = ListPanes<NullToolbar>(&aui_);
-  AddGroup(windows, &items, _("Main Windows"), wxT("mainwindows"));
+  AddGroup(windows, &items, _("Main Windows"));
 
   const std::vector<SwitcherItem> toolbars = ListPanes<NonNullToolbar>(&aui_);
-  AddGroup(toolbars, &items, _("Toolbars"), wxT("toolbars"));
+  AddGroup(toolbars, &items, _("Toolbars"));
 
   // Now add the wxAuiNotebook pages
 
-  items.AddGroup(_("Active Files"), wxT("pages")).set_break_column();
+  SwitcherGroup& files = items.AddGroup(SwitcherGroup(_("Active Files")));
 
   struct TabData {
     wxString name;
@@ -757,45 +753,20 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
     const auto found = tabdata.find(document.id);
     if (found != tabdata.end()) {
       const TabData& data = found->second;
-      items.AddItem(SwitcherItem(data.name, data.name, data.index, data.bitmap))
+      files.AddItem(SwitcherItem(data.name, data.name, data.index, data.bitmap))
           .set_window(data.win)
           .set_description(document.description)
           .set_path(document.path);
     }
   }
 
-  // Select the focused window
-
-  int idx = items.GetIndexForFocus();
-  if (idx != wxNOT_FOUND) {
-    items.set_selection(idx);
-  }
-
-#ifdef __WXMAC__
-  items.set_background_color(*wxWHITE);
-#endif
-
-  // Show the switcher dialog
-
   SwitcherDlg dlg(items, this);
-
-// In GTK+ we can't use Ctrl+Tab; we use Ctrl+/ instead and tell the switcher
-// to treat / in the same was as tab (i.e. cycle through the names)
-
-#ifdef __WXGTK__
-  dlg.set_extra_navigation_key(wxT('/'));
-#endif
-
-#ifdef __WXMAC__
-  dlg.SetBackgroundColour(*wxWHITE);
-  dlg.set_modifier_key(WXK_ALT);
-#endif
 
   dlg.AdvanceToNextSelection(nav.GetDirection());
 
   int ans = dlg.ShowModal();
 
-  if (ans == wxID_OK && dlg.GetSelection() != -1) {
+  if (ans == wxID_OK && dlg.GetSelection() != SWITCHER_NOT_FOUND) {
     SwitcherItem& item = items.GetItem(dlg.GetSelection());
 
     if (item.id() == -1) {
