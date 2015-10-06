@@ -15,7 +15,7 @@
 #include <wx/dcbuffer.h>
 
 SwitcherStyle::SwitcherStyle()
-    : row_count_(0),
+    : row_count_(12),
       text_margin_x_(4),
       text_margin_y_(2),
       background_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)),

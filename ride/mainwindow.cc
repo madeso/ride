@@ -716,7 +716,6 @@ void AddGroup(const std::vector<SwitcherItem>& toolbars,
 
 void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
   SwitcherItemList items;
-  // items.set_row_count(12);
 
   // Add the main windows and toolbars, in two separate columns
 

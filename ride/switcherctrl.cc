@@ -49,7 +49,7 @@ SwitcherIndex GoToPreviousItem(const SwitcherItemList& items, SwitcherIndex i) {
 }
 
 SwitcherIndex GoToNextItem(const SwitcherItemList& items, SwitcherIndex i) {
-  return SWITCHER_NOT_FOUND;
+  return i;
 }
 
 SwitcherIndex GoToLeftItem(const SwitcherItemList& items, SwitcherIndex i) {
@@ -301,7 +301,7 @@ void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
         calc.GoToNextRow();  // only groups are on first row
       }
 
-      SwitcherItem item = group.GetItem(item_index);
+      SwitcherItem& item = group.GetItem(item_index);
       item.set_rect(calc.rect());
       item.set_col_pos(calc.col_pos());
       item.set_row_pos(calc.row_pos());
@@ -310,6 +310,7 @@ void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
 
       calc.GoToNextRow();
     }
+    calc.GoToNextCol();
   }
 
   items_.set_column_count(calc.get_columnCount());
