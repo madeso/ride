@@ -52,7 +52,7 @@ class SwitcherCtrl : public wxControl {
   void OnEraseBackground(wxEraseEvent& event);
 
   // Overrides
-  virtual wxSize DoGetBestSize() const;
+  virtual wxSize DoGetBestClientSize() const;
 
   // Implementation
 

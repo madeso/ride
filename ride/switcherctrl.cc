@@ -215,7 +215,7 @@ void SwitcherCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
   if (items_.column_count() == 0) CalculateLayout(dc);
 
   if (items_.column_count() == 0) return;
-
+  wxRect rect = GetClientRect();
   items_.PaintItems(&dc, style_, selection_, this);
 }
 
@@ -302,7 +302,7 @@ void SwitcherCtrl::OnEraseBackground(wxEraseEvent& WXUNUSED(event)) {  // NOLINT
   // Do nothing
 }
 
-wxSize SwitcherCtrl::DoGetBestSize() const { return overall_size_; }
+wxSize SwitcherCtrl::DoGetBestClientSize() const { return overall_size_; }
 
 void SwitcherCtrl::CalculateLayout() {
   wxClientDC dc(this);
@@ -315,7 +315,7 @@ class LayoutCalculator {
     columnCount = 1;
 
     itemSize = is;
-    overall_size_ = wxSize(350, 200);
+    overall_size_ = wxSize(1, 1);
 
     currentRow = 0;
     x = style_.x_margin();

@@ -51,10 +51,13 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
 
   wxBoxSizer* root = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  root->Add(sizer, 1, wxALL | wxEXPAND, 8);
+  
+  const int mainborder = 0;
+  const int border = 3;
+
+  root->Add(sizer, 0, wxALL | wxEXPAND, mainborder);
   SetSizer(root);
 
-  const int border = 3;
   sizer->Add(title_ctrl_, 0, wxALL | wxEXPAND, border);
   sizer->Add(description_ctrl_, 0, wxALL | wxEXPAND, border);
   sizer->Add(list_ctrl_, 1, wxALL | wxEXPAND, border);

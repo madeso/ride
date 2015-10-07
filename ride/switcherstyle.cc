@@ -18,7 +18,7 @@ SwitcherStyle::SwitcherStyle()
     : row_count_(12),
       text_margin_x_(4),
       text_margin_y_(2),
-      background_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)),
+      background_color_(*wxRED),
       text_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)),
       selection_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT)),
       selection_outline_color_(
