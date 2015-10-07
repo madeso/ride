@@ -116,6 +116,9 @@ enum {
   ID_VIEW_SHOW_BUILD,
   ID_VIEW_SHOW_COMPILE,
 
+  ID_TAB_NEXT,
+  ID_TAB_PREV,
+
   ID_QUICK_OPEN
 };
 
@@ -194,6 +197,15 @@ void MainWindow::BindEvents() {
   Bind(wxEVT_MENU_OPEN, &MainWindow::OnMenuOpen, this);
 
   Bind(wxEVT_NAVIGATION_KEY, &MainWindow::OnNotebookNavigation, this);
+  Bind(wxEVT_MENU, &MainWindow::OnTabNext, this, ID_TAB_NEXT);
+  Bind(wxEVT_MENU, &MainWindow::OnTabPrev, this, ID_TAB_PREV);
+
+  std::vector<wxAcceleratorEntry> entries;
+  entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL, WXK_TAB, ID_TAB_NEXT));
+  entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL | wxACCEL_SHIFT,
+                                       WXK_TAB, ID_TAB_PREV));
+  wxAcceleratorTable acc(entries.size(), &entries[0]);
+  SetAcceleratorTable(acc);
 }
 
 void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& event) {
@@ -714,7 +726,7 @@ void AddGroup(const std::vector<SwitcherItem>& toolbars,
   }
 }
 
-void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
+void MainWindow::OnTab(bool forward) {
   SwitcherItemList items;
 
   // Add the main windows and toolbars, in two separate columns
@@ -764,7 +776,7 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
   SwitcherStyle style;
   SwitcherDlg dlg(items, focus, style, this);
 
-  dlg.AdvanceToNextSelection(nav.GetDirection());
+  dlg.AdvanceToNextSelection(forward);
 
   int ans = dlg.ShowModal();
 
@@ -787,6 +799,14 @@ void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
     }
   }
 }
+
+void MainWindow::OnNotebookNavigation(wxNavigationKeyEvent& nav) {  // NOLINT
+  OnTab(nav.GetDirection());
+}
+
+void MainWindow::OnTabNext(wxCommandEvent& event) { OnTab(true); }
+
+void MainWindow::OnTabPrev(wxCommandEvent& event) { OnTab(false); }
 
 void CreateNewFile(const wxString& project_root, MainWindow* main,
                    ProjectExplorer* project_explorer) {

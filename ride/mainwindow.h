@@ -155,7 +155,10 @@ class MainWindow : public wxFrame {
 
   void OnMenuOpen(wxMenuEvent& event);
 
+  void OnTab(bool forward);
   void OnNotebookNavigation(wxNavigationKeyEvent&);
+  void OnTabNext(wxCommandEvent& event);
+  void OnTabPrev(wxCommandEvent& event);
 
   void BindEvents();
 
