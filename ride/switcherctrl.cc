@@ -130,7 +130,8 @@ SwitcherIndex GoToNextItem(const SwitcherItemList& items, SwitcherIndex i,
 
 SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
                            const SwitcherStyle& style, int change) {
-  const int row_count = style.row_count() - 1; // -1 since we should ignore the group header item
+  const int row_count =
+      style.row_count() - 1;  // -1 since we should ignore the group header item
   // first, try to move withing the group
   const int internal_item = i.second + change * row_count;
   const int first_group_count = items.GetGroup(i.first).GetItemCount();
@@ -147,7 +148,7 @@ SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
       return SwitcherIndex(i.first, last_item);
     }
   }
-  
+
   // move to a second group
   int group = StepGroup(items, i.first, change);
   if (group == -1) return SWITCHER_NOT_FOUND;
@@ -162,25 +163,29 @@ SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
     }
 
     // use that index with our offset or the maximum index, whatever comes first
-    item = std::min(last_col_index + item_in_col, items.GetGroup(group).GetItemCount() - 1);
+    item = std::min(last_col_index + item_in_col,
+                    items.GetGroup(group).GetItemCount() - 1);
   }
 
   return SwitcherIndex(group, item);
 }
 
-SwitcherIndex GoToLeftItem(const SwitcherItemList& items, const SwitcherStyle& style, SwitcherIndex i) {
+SwitcherIndex GoToLeftItem(const SwitcherItemList& items,
+                           const SwitcherStyle& style, SwitcherIndex i) {
   return GoHorizontal(items, i, style, -1);
 }
 
-SwitcherIndex GoToRightItem(const SwitcherItemList& items, const SwitcherStyle& style, SwitcherIndex i) {
+SwitcherIndex GoToRightItem(const SwitcherItemList& items,
+                            const SwitcherStyle& style, SwitcherIndex i) {
   return GoHorizontal(items, i, style, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-SwitcherCtrl::SwitcherCtrl(const SwitcherItemList& items, const SwitcherStyle& style)
+SwitcherCtrl::SwitcherCtrl(const SwitcherItemList& items,
+                           const SwitcherStyle& style)
     : items_(items),
-    style_(style),
+      style_(style),
       selection_(SWITCHER_NOT_FOUND),
       overall_size_(wxSize(200, 100)) {
   // TODO(Gustav): Remove unused events

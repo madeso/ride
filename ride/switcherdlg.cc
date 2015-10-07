@@ -16,15 +16,17 @@
 
 #include "ride/switcherstyle.h"
 
-SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index, const SwitcherStyle& sstyle,
-                         wxWindow* parent, wxWindowID id, const wxString& title,
+SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
+                         const SwitcherStyle& sstyle, wxWindow* parent,
+                         wxWindowID id, const wxString& title,
                          const wxPoint& position, const wxSize& size,
                          long style)  // NOLINT
     : list_ctrl_(NULL),
       path_ctrl_(NULL),
       is_closing_(false),
       switcher_border_style_(0),
-      border_color_(sstyle.border_color()), style_(sstyle) {
+      border_color_(sstyle.border_color()),
+      style_(sstyle) {
   Bind(wxEVT_CLOSE_WINDOW, &SwitcherDlg::OnCloseWindow, this);
   Bind(wxEVT_ACTIVATE, &SwitcherDlg::OnActivate, this);
   Bind(wxEVT_LISTBOX, &SwitcherDlg::OnSelectItem, this, wxID_ANY);
@@ -53,7 +55,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index, con
 
   wxBoxSizer* root = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  
+
   const int mainborder = style_.dlg_main_border();
   const int border = style_.dlg_item_border();
 

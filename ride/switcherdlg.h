@@ -28,8 +28,8 @@
 
 class SwitcherDlg : public wxDialog {
  public:
-   SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index, const SwitcherStyle& sstyle,
-              wxWindow* parent, wxWindowID id = -1,
+  SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
+              const SwitcherStyle& sstyle, wxWindow* parent, wxWindowID id = -1,
               const wxString& title = _("Pane Switcher"),
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize,

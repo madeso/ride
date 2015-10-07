@@ -83,14 +83,8 @@ int SwitcherStyle::item_maxwidth() const { return 300; }
 
 int SwitcherStyle::item_maxheight() const { return 40; }
 
-int SwitcherStyle::dlg_main_border() const {
-  return 8;
-}
+int SwitcherStyle::dlg_main_border() const { return 8; }
 
-int SwitcherStyle::dlg_item_border() const {
-  return 3;
-}
+int SwitcherStyle::dlg_item_border() const { return 3; }
 
-wxColor SwitcherStyle::border_color() const {
-  return *wxBLACK;
-}
+wxColor SwitcherStyle::border_color() const { return *wxBLACK; }
