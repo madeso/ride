@@ -129,19 +129,51 @@ SwitcherIndex GoToNextItem(const SwitcherItemList& items, SwitcherIndex i,
 }
 
 SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
-                           int change) {
+                           const SwitcherStyle& style, int change) {
+  const int row_count = style.row_count() - 1; // -1 since we should ignore the group header item
+  // first, try to move withing the group
+  const int internal_item = i.second + change * row_count;
+  const int first_group_count = items.GetGroup(i.first).GetItemCount();
+  if ((internal_item >= 0) && internal_item < first_group_count) {
+    // this was ok, return it
+    return SwitcherIndex(i.first, internal_item);
+  }
+
+  if (internal_item >= first_group_count) {
+    const int last_item = first_group_count - 1;
+    const int col_index_before = i.second - (i.second % row_count);
+    const int col_index_end = last_item - (last_item % row_count);
+    if (col_index_before != col_index_end) {
+      return SwitcherIndex(i.first, last_item);
+    }
+  }
+  
+  // move to a second group
   int group = StepGroup(items, i.first, change);
   if (group == -1) return SWITCHER_NOT_FOUND;
-  int item = std::min(i.second, items.GetGroup(group).GetItemCount() - 1);
+  int item_in_col = i.second % row_count;
+  int item = item_in_col;
+
+  if (change < 0) {
+    // Get the starting index of the last/rightmost column
+    int last_col_index = 0;
+    while (last_col_index + row_count < items.GetGroup(group).GetItemCount()) {
+      last_col_index += row_count;
+    }
+
+    // use that index with our offset or the maximum index, whatever comes first
+    item = std::min(last_col_index + item_in_col, items.GetGroup(group).GetItemCount() - 1);
+  }
+
   return SwitcherIndex(group, item);
 }
 
-SwitcherIndex GoToLeftItem(const SwitcherItemList& items, SwitcherIndex i) {
-  return GoHorizontal(items, i, -1);
+SwitcherIndex GoToLeftItem(const SwitcherItemList& items, const SwitcherStyle& style, SwitcherIndex i) {
+  return GoHorizontal(items, i, style, -1);
 }
 
-SwitcherIndex GoToRightItem(const SwitcherItemList& items, SwitcherIndex i) {
-  return GoHorizontal(items, i, 1);
+SwitcherIndex GoToRightItem(const SwitcherItemList& items, const SwitcherStyle& style, SwitcherIndex i) {
+  return GoHorizontal(items, i, style, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -284,13 +316,13 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (event.GetKeyCode() == WXK_LEFT ||
              event.GetKeyCode() == WXK_NUMPAD_LEFT) {
-    selection_ = GoToLeftItem(items_, selection_);
+    selection_ = GoToLeftItem(items_, style_, selection_);
 
     GenerateSelectionEvent();
     Refresh();
   } else if (event.GetKeyCode() == WXK_RIGHT ||
              event.GetKeyCode() == WXK_NUMPAD_RIGHT) {
-    selection_ = GoToRightItem(items_, selection_);
+    selection_ = GoToRightItem(items_, style_, selection_);
 
     GenerateSelectionEvent();
     Refresh();
