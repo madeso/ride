@@ -70,3 +70,15 @@ const wxColour& SwitcherStyle::selection_outline_color() const {
 void SwitcherStyle::set_item_font(const wxFont& font) { item_font_ = font; }
 
 const wxFont& SwitcherStyle::item_font() const { return item_font_; }
+
+int SwitcherStyle::x_margin() const { return 0; }
+
+int SwitcherStyle::y_margin() const { return 0; }
+
+int SwitcherStyle::row_spacing() const { return 0; }
+
+int SwitcherStyle::col_spacing() const { return 0; }
+
+int SwitcherStyle::item_maxwidth() const { return 300; }
+
+int SwitcherStyle::item_maxheight() const { return 40; }

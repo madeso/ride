@@ -108,8 +108,8 @@ wxSize SwitcherItemList::CalculateItemSize(wxDC* dc,
   if (sz == wxSize(16, 16)) {
     sz = wxSize(100, 25);
   } else {
-    sz.x += style.text_margin_x() * 2;
-    sz.y += style.text_margin_y() * 2;
+    sz.x += style.col_spacing() * 2;
+    sz.y += style.row_spacing() * 2;
   }
 
   return sz;

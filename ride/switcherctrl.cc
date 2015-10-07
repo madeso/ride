@@ -183,7 +183,9 @@ bool SwitcherCtrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
                           long style) {  // NOLINT
   wxControl::Create(parent, id, pos, size, style);
 
-  SetInitialBestSize(size);
+  CalculateLayout();
+  SetInitialBestSize(overall_size_);
+  SetMinClientSize(overall_size_);
 
   return true;
 }
@@ -209,8 +211,6 @@ void SwitcherCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 #else
   wxPaintDC dc(this);
 #endif
-
-  wxRect rect = GetClientRect();
 
   if (items_.column_count() == 0) CalculateLayout(dc);
 
@@ -318,8 +318,8 @@ class LayoutCalculator {
     overall_size_ = wxSize(350, 200);
 
     currentRow = 0;
-    x = style_.xMargin();
-    y = style_.yMargin();
+    x = style_.x_margin();
+    y = style_.y_margin();
   }
 
   wxRect rect() const { return wxRect(x, y, itemSize.x, itemSize.y); }
@@ -331,20 +331,22 @@ class LayoutCalculator {
   void GoToNextCol() {
     currentRow = 0;
     columnCount++;
-    x += (style_.xMargin() + itemSize.x);
-    y = style_.yMargin();
+    x += (style_.col_spacing() + itemSize.x);
+    y = style_.y_margin();
   }
 
   void GoToNextRow() {
     currentRow++;
-    y += (style_.rowSpacing() + itemSize.y);
+    y += (style_.row_spacing() + itemSize.y);
   }
 
   void UpdateOverallSize() {
+    wxRect r = rect();
     overall_size_.y =
-        std::max(overall_size_.y, rect().GetBottom() + style_.yMargin());
+        std::max(overall_size_.y, r.GetBottom() + 1 + style_.y_margin());
     overall_size_.x =
-        std::max(overall_size_.x, rect().GetRight() + style_.xMargin());
+        std::max(overall_size_.x, r.GetRight() + 1 + style_.x_margin());
+    int i = 42;
   }
 
   int get_currentRow() const { return currentRow; }
@@ -368,7 +370,10 @@ class LayoutCalculator {
 void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
   if (selection_ == SWITCHER_NOT_FOUND) selection_ = GoToFirstItem(items_);
 
-  LayoutCalculator calc(items_.CalculateItemSize(&dc, style_), style_);
+  wxSize items_size = items_.CalculateItemSize(&dc, style_);
+  items_size.x = std::min(items_size.x, style_.item_maxwidth());
+  items_size.y = std::min(items_size.y, style_.item_maxheight());
+  LayoutCalculator calc(items_size, style_);
 
   for (size_t group_index = 0; group_index < items_.GetGroupCount();
        ++group_index) {
@@ -380,7 +385,7 @@ void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
 
     for (size_t item_index = 0; item_index < group.GetItemCount();
          ++item_index) {
-      if (calc.get_currentRow() > style_.row_count()) {
+      if (calc.get_currentRow() >= style_.row_count()) {
         calc.GoToNextCol();
         calc.GoToNextRow();  // only groups are on first row
       }

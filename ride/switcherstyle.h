@@ -55,9 +55,13 @@ class SwitcherStyle {
   void set_item_font(const wxFont& font);
   const wxFont& item_font() const;
 
-  int xMargin() const { return 4; }
-  int yMargin() const { return 4; }
-  int rowSpacing() const { return 2; }
+  int x_margin() const;
+  int y_margin() const;
+  int row_spacing() const;
+  int col_spacing() const;
+
+  int item_maxwidth() const;
+  int item_maxheight() const;
 
  protected:
   int row_count_;

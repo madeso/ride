@@ -128,9 +128,6 @@ void SwitcherGroup::PaintItems(wxDC* dc, const SwitcherStyle& style,
 
 void ExtendSize(wxDC* dc, wxFont font, wxString title,
                 const SwitcherStyle& style, wxSize* sz) {
-  const int maxWidth = 300;
-  const int maxHeight = 40;
-
   dc->SetFont(font);
 
   int w, h;
@@ -139,8 +136,8 @@ void ExtendSize(wxDC* dc, wxFont font, wxString title,
   // TODO(Gustav): should we care if this adds 16px to the group too?
   w += 16 + 2 * style.text_margin_x();
 
-  if (w > sz->x) sz->x = wxMin(w, maxWidth);
-  if (h > sz->y) sz->y = wxMin(h, maxHeight);
+  sz->x = wxMax(w, sz->x);
+  sz->y = wxMax(h, sz->y);
 }
 
 void SwitcherGroup::CalculateItemSize(wxDC* dc, const SwitcherStyle& style,
