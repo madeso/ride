@@ -63,6 +63,11 @@ class SwitcherStyle {
   int item_maxwidth() const;
   int item_maxheight() const;
 
+  int dlg_main_border() const;
+  int dlg_item_border() const;
+
+  wxColor border_color() const;
+
  protected:
   int row_count_;
   int text_margin_x_;

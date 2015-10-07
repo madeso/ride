@@ -146,8 +146,9 @@ SwitcherIndex GoToRightItem(const SwitcherItemList& items, SwitcherIndex i) {
 
 //////////////////////////////////////////////////////////////////////////
 
-SwitcherCtrl::SwitcherCtrl(const SwitcherItemList& items)
+SwitcherCtrl::SwitcherCtrl(const SwitcherItemList& items, const SwitcherStyle& style)
     : items_(items),
+    style_(style),
       selection_(SWITCHER_NOT_FOUND),
       overall_size_(wxSize(200, 100)) {
   // TODO(Gustav): Remove unused events
@@ -346,7 +347,6 @@ class LayoutCalculator {
         std::max(overall_size_.y, r.GetBottom() + 1 + style_.y_margin());
     overall_size_.x =
         std::max(overall_size_.x, r.GetRight() + 1 + style_.x_margin());
-    int i = 42;
   }
 
   int get_currentRow() const { return currentRow; }
@@ -403,7 +403,12 @@ void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
   }
 
   items_.set_column_count(calc.get_columnCount());
+
   overall_size_ = calc.overall_size();
+
+  // fix b/c margin isn't considered in client size with boxsizer
+  overall_size_.x += style_.dlg_main_border() * 2;
+  overall_size_.y += style_.dlg_main_border() * 2;
 
   InvalidateBestSize();
 }

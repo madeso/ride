@@ -28,7 +28,7 @@
 
 class SwitcherCtrl : public wxControl {
  public:
-  explicit SwitcherCtrl(const SwitcherItemList& items);
+   explicit SwitcherCtrl(const SwitcherItemList& items, const SwitcherStyle& style);
 
   bool Create(wxWindow* parent, wxWindowID id,
               const wxPoint& pos = wxDefaultPosition,

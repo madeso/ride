@@ -14,7 +14,9 @@
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
+#include "ride/switcherstyle.h"
+
+SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index, const SwitcherStyle& sstyle,
                          wxWindow* parent, wxWindowID id, const wxString& title,
                          const wxPoint& position, const wxSize& size,
                          long style)  // NOLINT
@@ -22,7 +24,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
       path_ctrl_(NULL),
       is_closing_(false),
       switcher_border_style_(0),
-      border_color_(*wxBLACK) {
+      border_color_(sstyle.border_color()), style_(sstyle) {
   Bind(wxEVT_CLOSE_WINDOW, &SwitcherDlg::OnCloseWindow, this);
   Bind(wxEVT_ACTIVATE, &SwitcherDlg::OnActivate, this);
   Bind(wxEVT_LISTBOX, &SwitcherDlg::OnSelectItem, this, wxID_ANY);
@@ -36,7 +38,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
 
   wxDialog::Create(parent, id, title, position, size, style);
 
-  list_ctrl_ = new SwitcherCtrl(items);
+  list_ctrl_ = new SwitcherCtrl(items, style_);
   list_ctrl_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                      wxWANTS_CHARS | wxNO_BORDER);
   list_ctrl_->CalculateLayout();
@@ -52,8 +54,8 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
   wxBoxSizer* root = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
   
-  const int mainborder = 0;
-  const int border = 3;
+  const int mainborder = style_.dlg_main_border();
+  const int border = style_.dlg_item_border();
 
   root->Add(sizer, 0, wxALL | wxEXPAND, mainborder);
   SetSizer(root);

@@ -28,7 +28,7 @@
 
 class SwitcherDlg : public wxDialog {
  public:
-  SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
+   SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index, const SwitcherStyle& sstyle,
               wxWindow* parent, wxWindowID id = -1,
               const wxString& title = _("Pane Switcher"),
               const wxPoint& pos = wxDefaultPosition,
@@ -63,6 +63,7 @@ class SwitcherDlg : public wxDialog {
   bool is_closing_;
   long switcher_border_style_;  // NOLINT
   wxColour border_color_;
+  SwitcherStyle style_;
 };
 
 #endif  // RIDE_SWITCHERDLG_H_
