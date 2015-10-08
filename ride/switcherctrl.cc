@@ -30,7 +30,7 @@
 
 #ifdef __WXMAC__
 #undef MODIFIER_KEY
-#define MODIFIER_KEY WXK_ALT
+#define MODIFIER_KEY wxACCEL_RAW_CTRL
 #endif
 
 //////////////////////////////////////////////////////////////////////////
