@@ -25,12 +25,12 @@
 // to treat / in the same was as tab (i.e. cycle through the names)
 #ifdef __WXGTK__
 #undef EXTRA_NAVIGATION_KEY
-#define EXTRA_NAVIGATION_KEY wxT('/');
+#define EXTRA_NAVIGATION_KEY wxT('/')
 #endif
 
 #ifdef __WXMAC__
 #undef MODIFIER_KEY
-#define MODIFIER_KEY WXK_ALT;
+#define MODIFIER_KEY WXK_ALT
 #endif
 
 //////////////////////////////////////////////////////////////////////////
