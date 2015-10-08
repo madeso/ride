@@ -242,16 +242,16 @@ void MainWindow::OnActivated(wxActivateEvent& event) {
   if (event.GetActive()) {
     ReloadFilesIfNeeded();
 
-    // last focus is here since alt-tab seems to really screw with the focusing
-    if (last_focus_) {
-      // store the last focus since a focus change
-      // might change the focus variable
-      wxWindow* focus = last_focus_;
-      focus->SetFocus();
-      focus->SetFocusFromKbd();
+    // this is here since alt-tab seems to really screw with the focusing
+    // so let's fix this by auto selecting the active notebook editor
+    Tab* tab = GetSelectedTabOrNull(notebook_);
+    if (tab) {
+      wxControl* focus = tab->ToControl();
+      if (focus) {
+        focus->SetFocus();
+        focus->SetFocusFromKbd();
+      }
     }
-  } else {
-    last_focus_ = FindFocus();
   }
   project_explorer_->UpdateFolderStructure();
 }
@@ -324,7 +324,6 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
       aui_(NULL, AUI_OPTIONS),
       findres_window_(NULL),
       app_name_(app_name),
-      last_focus_(NULL),
       statusbar_(NULL) {
   BindEvents();
   project_.reset(new Project(this, wxEmptyString));

@@ -5,6 +5,7 @@
 
 class StartPageTab;
 class FileEdit;
+class wxControl;
 
 class Tab {
  public:
@@ -14,6 +15,7 @@ class Tab {
 
   StartPageTab* ToStartPage();
   FileEdit* ToFileEdit();
+  wxControl* ToControl();
 
  private:
   FileEdit* edit_;

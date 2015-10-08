@@ -199,7 +199,6 @@ class MainWindow : public wxFrame {
   wxMenuItem* menuItemViewBuild_;
   wxMenuItem* menuItemViewCompile_;
 
-  wxWindow* last_focus_;
   StatusBarGeneric* statusbar_;
 
   Languages languages_;
