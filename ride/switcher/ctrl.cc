@@ -1,14 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        switcherdlg.h
-// Purpose:     Pane switcher dialog
-// Author:      Julian Smart
-// Modified by:
-// Created:     2007-08-19
-// RCS-ID:      $Id: switcherdlg.cpp,v 1.6 2007/08/20 17:38:24 anthemion Exp $
-// Copyright:   (c) Julian Smart
-// Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
-
 #include "ride/switcher/ctrl.h"
 
 #include <wx/settings.h>
@@ -34,7 +23,7 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
-// move theese
+// move these
 
 bool IsValid(const SwitcherItemList& items, SwitcherIndex index) {
   if (index.first < 0) return false;

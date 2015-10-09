@@ -1,14 +1,3 @@
-/////////////////////////////////////////////////////////////////////////////
-// Name:        switcherdlg.h
-// Purpose:     Pane switcher dialog
-// Author:      Julian Smart
-// Modified by:
-// Created:     2007-08-19
-// RCS-ID:      $Id: switcherdlg.cpp,v 1.6 2007/08/20 17:38:24 anthemion Exp $
-// Copyright:   (c) Julian Smart
-// Licence:     wxWidgets licence
-/////////////////////////////////////////////////////////////////////////////
-
 #include "ride/switcher/item.h"
 
 SwitcherItem::SwitcherItem()
