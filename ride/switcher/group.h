@@ -20,11 +20,6 @@
 
 class SwitcherStyle;
 
-/*!
- * wxSwitcherItems
- * An object containing switcher items
- */
-
 class SwitcherGroup {
  public:
   explicit SwitcherGroup(const wxString& title);

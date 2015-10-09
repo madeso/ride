@@ -20,11 +20,6 @@
 #include "ride/switcher/item.h"
 #include "ride/switcher/group.h"
 
-/*!
- * wxSwitcherItems
- * An object containing switcher items
- */
-
 class SwitcherStyle {
  public:
   SwitcherStyle();

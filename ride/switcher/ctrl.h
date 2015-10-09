@@ -21,11 +21,6 @@
 #include "ride/switcher/itemlist.h"
 #include "ride/switcher/style.h"
 
-/*!
- * wxMultiColumnListCtrl
- * A control for displaying several columns (not scrollable)
- */
-
 class SwitcherCtrl : public wxControl {
  public:
   explicit SwitcherCtrl(const SwitcherItemList& items,

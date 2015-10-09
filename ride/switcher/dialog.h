@@ -21,11 +21,6 @@
 #include "ride/switcher/itemlist.h"
 #include "ride/switcher/ctrl.h"
 
-/*!
- * wxSwitcherDialog shows a wxMultiColumnListCtrl with a list of panes
- * and tabs for the user to choose. Ctrl+Tab cycles through them.
- */
-
 class SwitcherDlg : public wxDialog {
  public:
   SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,

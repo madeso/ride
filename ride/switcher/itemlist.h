@@ -21,11 +21,6 @@
 #include "ride/switcher/item.h"
 #include "ride/switcher/group.h"
 
-/*!
- * wxSwitcherItems
- * An object containing switcher items
- */
-
 typedef std::pair<int, int> SwitcherIndex;
 #define SWITCHER_NOT_FOUND std::pair<int, int>(-1, -1)
 

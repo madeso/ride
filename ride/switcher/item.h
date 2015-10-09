@@ -15,11 +15,6 @@
 #include <ride/wx.h>
 #include <wx/html/htmlwin.h>
 
-/*!
- * wxSwitcherItem
- * An object containing information about one item
- */
-
 class SwitcherItem : public wxObject {
  public:
   SwitcherItem();
