@@ -67,7 +67,7 @@ target_link_libraries(
 if(BUILD_USE_CLANG_FORMAT)
 	add_custom_command(TARGET ${PROJECT_NAME}
 				   PRE_BUILD
-				   COMMAND ./call-clang-format.py ${CMAKE_CURRENT_SOURCE_DIR}/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+				   COMMAND ./call-clang-format.py ${CMAKE_CURRENT_SOURCE_DIR}/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/switcher/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/switcher/*.h
 				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 				   COMMENT "Running clang format" VERBATIM)
 endif(BUILD_USE_CLANG_FORMAT)
