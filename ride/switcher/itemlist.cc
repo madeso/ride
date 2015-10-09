@@ -9,12 +9,12 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-#include "ride/switcheritemlist.h"
+#include "ride/switcher/itemlist.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-#include "ride/switcherstyle.h"
+#include "ride/switcher/style.h"
 
 SwitcherItemList::SwitcherItemList() : column_count_(0) {}
 

@@ -17,9 +17,9 @@
 
 #include <vector>
 
-#include "ride/switcheritem.h"
-#include "ride/switcheritemlist.h"
-#include "ride/switcherstyle.h"
+#include "ride/switcher/item.h"
+#include "ride/switcher/itemlist.h"
+#include "ride/switcher/style.h"
 
 /*!
  * wxMultiColumnListCtrl

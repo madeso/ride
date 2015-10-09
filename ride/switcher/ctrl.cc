@@ -9,7 +9,7 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-#include "ride/switcherctrl.h"
+#include "ride/switcher/ctrl.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>

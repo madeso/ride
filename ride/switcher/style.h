@@ -17,8 +17,8 @@
 
 #include <vector>
 
-#include "ride/switcheritem.h"
-#include "ride/switchergroup.h"
+#include "ride/switcher/item.h"
+#include "ride/switcher/group.h"
 
 /*!
  * wxSwitcherItems

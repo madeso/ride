@@ -16,6 +16,8 @@
 
 #include "ride/resources/icons.h"
 
+#include "ride/switcher/dialog.h"
+
 #include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"
 #include "ride/createnewfiledlg.h"
@@ -31,7 +33,6 @@
 #include "ride/tab.h"
 #include "ride/wxutils.h"
 #include "ride/auix.h"
-#include "ride/switcherdlg.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 

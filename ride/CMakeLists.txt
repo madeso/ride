@@ -34,12 +34,28 @@ configure_file (
 set(src settings.proto resources/resources.rc ${src_glob} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
 set(generated_src generated/ui.cpp generated/ui.h)
 
+set(switcher_src
+	switcher/ctrl.cc
+	switcher/ctrl.h
+	switcher/dialog.cc
+	switcher/dialog.h
+	switcher/group.cc
+	switcher/group.h
+	switcher/item.cc
+	switcher/item.h
+	switcher/itemlist.cc
+	switcher/itemlist.h
+	switcher/style.cc
+	switcher/style.h
+	)
+
 source_group("" FILES ${src})
 source_group("generated" FILES ${generated_src} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
+source_group("switcher" FILES ${switcher_src})
 
 add_executable(
 	${PROJECT_NAME} WIN32 
-	${src} ${generated_src}
+	${src} ${generated_src} ${switcher_src}
 )
 
 target_link_libraries(

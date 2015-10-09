@@ -64,6 +64,7 @@ class Main:
             r'#include "ride_compiler_settings.h"',
             r'#include "ride/generated/[a-zA-Z]+\.h"',
             r'#include "ride/resources/[a-zA-Z]+\.h"',
+            r'#include "ride/switcher/[a-zA-Z]+\.h"',
             r'#include "ride/[a-zA-Z]+\.h"'
         ]
 

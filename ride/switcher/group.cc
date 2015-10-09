@@ -9,12 +9,12 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-#include "ride/switchergroup.h"
+#include "ride/switcher/group.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-#include "ride/switcherstyle.h"
+#include "ride/switcher/style.h"
 
 SwitcherGroup::SwitcherGroup(const wxString& title) : title_(title) {}
 

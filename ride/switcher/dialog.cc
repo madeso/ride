@@ -9,12 +9,12 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-#include "ride/switcherdlg.h"
+#include "ride/switcher/dialog.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-#include "ride/switcherstyle.h"
+#include "ride/switcher/style.h"
 
 SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
                          const SwitcherStyle& sstyle, wxWindow* parent,

@@ -9,7 +9,7 @@
 // Licence:     wxWidgets licence
 /////////////////////////////////////////////////////////////////////////////
 
-#include "ride/switcherstyle.h"
+#include "ride/switcher/style.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>

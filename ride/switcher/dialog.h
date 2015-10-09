@@ -17,9 +17,9 @@
 
 #include <vector>
 
-#include "ride/switcheritem.h"
-#include "ride/switcheritemlist.h"
-#include "ride/switcherctrl.h"
+#include "ride/switcher/item.h"
+#include "ride/switcher/itemlist.h"
+#include "ride/switcher/ctrl.h"
 
 /*!
  * wxSwitcherDialog shows a wxMultiColumnListCtrl with a list of panes
