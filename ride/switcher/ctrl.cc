@@ -210,12 +210,15 @@ Ctrl::Ctrl(const ItemList& items, const Style& style)
   Bind(wxEVT_CHAR, &Ctrl::OnChar, this);
   Bind(wxEVT_KEY_DOWN, &Ctrl::OnKey, this);
   Bind(wxEVT_KEY_UP, &Ctrl::OnKey, this);
+
+  Bind(wxEVT_NAVIGATION_KEY, &Ctrl::OnNavigation, this);
 }
 
 bool Ctrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
                   const wxSize& size,
                   long style) {  // NOLINT
-  wxControl::Create(parent, id, pos, size, style);
+  wxControl::Create(parent, id, pos, size,
+                    style | wxWANTS_CHARS | wxTAB_TRAVERSAL);
 
   CalculateLayout();
   SetInitialBestSize(overall_size_);
@@ -270,6 +273,17 @@ void Ctrl::OnMouseEvent(wxMouseEvent& event) {
 
 void Ctrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
 
+void Ctrl::OnNavigation(wxNavigationKeyEvent& event) {
+  if (event.GetDirection()) {
+    selection_ = GoToNextItem(items_, selection_, true);
+  } else {
+    selection_ = GoToPreviousItem(items_, selection_, true);
+  }
+
+  GenerateSelectionEvent();
+  Refresh();
+}
+
 void Ctrl::OnKey(wxKeyEvent& event) {
   const int key_code = event.GetKeyCode();
   if (event.GetEventType() == wxEVT_KEY_UP) {
@@ -284,15 +298,6 @@ void Ctrl::OnKey(wxKeyEvent& event) {
     if (key_code == WXK_ESCAPE) selection_ = SWITCHER_NOT_FOUND;
 
     SendCloseEvent();
-  } else if (key_code == WXK_TAB || key_code == EXTRA_NAVIGATION_KEY) {
-    if (event.ShiftDown()) {
-      selection_ = GoToPreviousItem(items_, selection_, true);
-    } else {
-      selection_ = GoToNextItem(items_, selection_, true);
-    }
-
-    GenerateSelectionEvent();
-    Refresh();
   } else if (
 #ifndef DONT_USE_ARROWKEYS
       key_code == WXK_DOWN ||

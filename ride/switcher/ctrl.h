@@ -34,6 +34,7 @@ class Ctrl : public wxControl {
   void OnPaint(wxPaintEvent& event);
   void OnMouseEvent(wxMouseEvent& event);
   void OnChar(wxKeyEvent& event);
+  void OnNavigation(wxNavigationKeyEvent& event);
   void OnKey(wxKeyEvent& event);
   void OnEraseBackground(wxEraseEvent& event);
 
