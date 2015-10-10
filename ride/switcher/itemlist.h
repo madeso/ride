@@ -19,7 +19,7 @@ class ItemList {
  public:
   ItemList();
 
-  Group& AddGroup(const Group& group);
+  Group& AddGroup(const Group& group, int* index = NULL);
 
   // Find the index for the item associated with the current focus
   Index GetIndexForFocus() const;

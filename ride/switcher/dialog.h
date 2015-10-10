@@ -14,8 +14,8 @@ namespace switcher {
 
 class Dialog : public wxDialog {
  public:
-  Dialog(const ItemList& items, Index index, const Style& sstyle,
-         wxWindow* parent, wxWindowID id = -1,
+  Dialog(const ItemList& items, Index index, int group, bool forward,
+         const Style& sstyle, wxWindow* parent, wxWindowID id = -1,
          const wxString& title = _("Pane Switcher"),
          const wxPoint& pos = wxDefaultPosition,
          const wxSize& size = wxDefaultSize,
@@ -32,8 +32,6 @@ class Dialog : public wxDialog {
   void ShowDescription(const Item& item);
 
   void set_border_color(const wxColour& colour);
-
-  void AdvanceToNextSelection(bool forward);
 
  private:
   void UpdateDescription();

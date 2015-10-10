@@ -742,7 +742,9 @@ void MainWindow::OnTab(bool forward) {
 
   // Now add the wxAuiNotebook pages
 
-  switcher::Group& files = items.AddGroup(switcher::Group(_("Active Files")));
+  int files_group_index = -1;
+  switcher::Group& files =
+      items.AddGroup(switcher::Group(_("Active Files")), &files_group_index);
 
   struct TabData {
     wxString name;
@@ -775,12 +777,15 @@ void MainWindow::OnTab(bool forward) {
     }
   }
 
-  const switcher::Index focus = items.GetIndexForFocus();
+  bool vs_focus = true;
+
+  const switcher::Index focus =
+      vs_focus ? switcher::Index(files_group_index, files.GetIndexForFocus())
+               : items.GetIndexForFocus();
+  int group = vs_focus ? files_group_index : 0;
 
   switcher::Style style;
-  switcher::Dialog dlg(items, focus, style, this);
-
-  dlg.AdvanceToNextSelection(forward);
+  switcher::Dialog dlg(items, focus, group, forward, style, this);
 
   int ans = dlg.ShowModal();
 

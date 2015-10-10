@@ -7,9 +7,10 @@
 
 namespace switcher {
 
-Dialog::Dialog(const ItemList& items, Index index, const Style& sstyle,
-               wxWindow* parent, wxWindowID id, const wxString& title,
-               const wxPoint& position, const wxSize& size,
+Dialog::Dialog(const ItemList& items, Index index, int group, bool forward,
+               const Style& sstyle, wxWindow* parent, wxWindowID id,
+               const wxString& title, const wxPoint& position,
+               const wxSize& size,
                long style)  // NOLINT
     : list_ctrl_(NULL),
       path_ctrl_(NULL),
@@ -63,7 +64,7 @@ Dialog::Dialog(const ItemList& items, Index index, const Style& sstyle,
 
   Centre(wxBOTH);
 
-  list_ctrl_->SelectOrFirst(index);
+  list_ctrl_->SelectOrFirst(index, group, forward);
 
   UpdateDescription();
 }
@@ -103,11 +104,6 @@ void Dialog::ShowDescription(const Item& item) {
 
 void Dialog::set_border_color(const wxColour& colour) {
   border_color_ = colour;
-}
-
-void Dialog::AdvanceToNextSelection(bool forward) {
-  list_ctrl_->AdvanceToNextSelection(forward);
-  UpdateDescription();
 }
 
 void Dialog::UpdateDescription() {

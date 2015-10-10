@@ -25,7 +25,7 @@ class Ctrl : public wxControl {
   const ItemList& items() const;
   ItemList& items();
 
-  void SelectOrFirst(Index index);
+  void SelectOrFirst(Index index, int group, bool forward);
 
   Index selection() const;
 

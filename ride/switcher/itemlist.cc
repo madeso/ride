@@ -9,8 +9,11 @@ namespace switcher {
 
 ItemList::ItemList() : column_count_(0) {}
 
-Group& ItemList::AddGroup(const Group& item) {
+Group& ItemList::AddGroup(const Group& item, int* index) {
   items_.push_back(item);
+  if (index != NULL) {
+    *index = items_.size() - 1;
+  }
   return *items_.rbegin();
 }
 

@@ -43,14 +43,18 @@ bool IsValid(const ItemList& items, Index index) {
   return true;
 }
 
-Index GoToFirstItem(const ItemList& items) {
-  for (size_t group_index = 0; group_index <= items.GetGroupCount();
+Index GoToFirstItem(const ItemList& items, int group = 0) {
+  for (size_t group_index = group; group_index <= items.GetGroupCount();
        ++group_index) {
     if (items.GetGroupCount() > 0) {
       return Index(group_index, 0);
     }
   }
-  return SWITCHER_NOT_FOUND;
+  if (group != 0) {
+    return GoToFirstItem(items, 0);
+  } else {
+    return SWITCHER_NOT_FOUND;
+  }
 }
 
 Index GoToLastItem(const ItemList& items) {
@@ -227,10 +231,12 @@ const ItemList& Ctrl::items() const { return items_; }
 
 ItemList& Ctrl::items() { return items_; }
 
-void Ctrl::SelectOrFirst(Index index) {
+void Ctrl::SelectOrFirst(Index index, int group, bool forward) {
   selection_ = index;
   if (false == IsValid(items_, selection_)) {
-    selection_ = GoToFirstItem(items_);
+    selection_ = GoToFirstItem(items_, group);
+  } else {
+    AdvanceToNextSelection(forward);
   }
 }
 
