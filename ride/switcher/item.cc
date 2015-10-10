@@ -2,11 +2,10 @@
 
 namespace switcher {
 
-Item::Item()
-    : id_(0), row_pos_(0), col_pos_(0), window_(NULL) {}
+Item::Item() : id_(0), row_pos_(0), col_pos_(0), window_(NULL) {}
 
 Item::Item(const wxString& title, const wxString& name, int id,
-                           const wxBitmap& bitmap)
+           const wxBitmap& bitmap)
     : title_(title),
       name_(name),
       id_(id),

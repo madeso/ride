@@ -9,8 +9,7 @@ namespace switcher {
 
 Group::Group(const wxString& title) : title_(title) {}
 
-Group::Group(const wxString& title,
-                             const std::vector<Item>& items)
+Group::Group(const wxString& title, const std::vector<Item>& items)
     : title_(title), items_(items) {}
 
 void Group::set_title(const wxString& title) { title_ = title; }
@@ -93,8 +92,7 @@ void PaintItem(const wxRect& rect, const wxString& title,
   dc->DestroyClippingRegion();
 }
 
-void Group::PaintItems(wxDC* dc, const Style& style,
-                               int selection) {
+void Group::PaintItems(wxDC* dc, const Style& style, int selection) {
   const wxFont groupFont(
       style.item_font().GetPointSize(), style.item_font().GetFamily(),
       style.item_font().GetStyle(), wxBOLD, style.item_font().GetUnderlined(),
@@ -117,8 +115,8 @@ void Group::PaintItems(wxDC* dc, const Style& style,
   }
 }
 
-void ExtendSize(wxDC* dc, wxFont font, wxString title,
-                const Style& style, wxSize* sz) {
+void ExtendSize(wxDC* dc, wxFont font, wxString title, const Style& style,
+                wxSize* sz) {
   dc->SetFont(font);
 
   int w, h;
@@ -132,7 +130,7 @@ void ExtendSize(wxDC* dc, wxFont font, wxString title,
 }
 
 void Group::CalculateItemSize(wxDC* dc, const Style& style,
-                                      wxSize* sz) {  // NOLINT
+                              wxSize* sz) {  // NOLINT
   const wxFont groupFont(
       style.item_font().GetPointSize(), style.item_font().GetFamily(),
       style.item_font().GetStyle(), wxBOLD, style.item_font().GetUnderlined(),

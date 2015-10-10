@@ -720,7 +720,7 @@ struct NullToolbar {
 };
 
 void AddGroup(const std::vector<switcher::Item>& toolbars,
-  switcher::ItemList* items, const wxString& title) {
+              switcher::ItemList* items, const wxString& title) {
   if (toolbars.empty() == false) {
     items->AddGroup(switcher::Group(title, toolbars));
   }
@@ -764,7 +764,8 @@ void MainWindow::OnTab(bool forward) {
     const auto found = tabdata.find(document.id);
     if (found != tabdata.end()) {
       const TabData& data = found->second;
-      files.AddItem(switcher::Item(data.name, data.name, data.index, data.bitmap))
+      files.AddItem(
+                switcher::Item(data.name, data.name, data.index, data.bitmap))
           .set_window(data.win)
           .set_description(document.description)
           .set_path(document.path);

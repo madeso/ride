@@ -14,13 +14,13 @@ namespace switcher {
 
 class Dialog : public wxDialog {
  public:
-  Dialog(const ItemList& items, Index index,
-              const Style& sstyle, wxWindow* parent, wxWindowID id = -1,
-              const wxString& title = _("Pane Switcher"),
-              const wxPoint& pos = wxDefaultPosition,
-              const wxSize& size = wxDefaultSize,
-              long style  // NOLINT
-              = wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxBORDER_SIMPLE);
+  Dialog(const ItemList& items, Index index, const Style& sstyle,
+         wxWindow* parent, wxWindowID id = -1,
+         const wxString& title = _("Pane Switcher"),
+         const wxPoint& pos = wxDefaultPosition,
+         const wxSize& size = wxDefaultSize,
+         long style  // NOLINT
+         = wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxBORDER_SIMPLE);
 
   void OnCloseWindow(wxCloseEvent& event);
   void OnActivate(wxActivateEvent& event);

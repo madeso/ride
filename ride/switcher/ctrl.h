@@ -13,13 +13,12 @@
 namespace switcher {
 
 class Ctrl : public wxControl {
-public:
-  explicit Ctrl(const ItemList& items,
-    const Style& style);
+ public:
+  explicit Ctrl(const ItemList& items, const Style& style);
 
   bool Create(wxWindow* parent, wxWindowID id,
-    const wxPoint& pos = wxDefaultPosition,
-    const wxSize& size = wxDefaultSize, long style = 0);  // NOLINT
+              const wxPoint& pos = wxDefaultPosition,
+              const wxSize& size = wxDefaultSize, long style = 0);  // NOLINT
 
   // Public API
   void set_items(const ItemList& items);
@@ -50,7 +49,7 @@ public:
   void SendCloseEvent();
   void AdvanceToNextSelection(bool forward);
 
-protected:
+ protected:
   ItemList items_;
   Index selection_;
   Style style_;

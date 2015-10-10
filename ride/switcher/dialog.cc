@@ -7,11 +7,10 @@
 
 namespace switcher {
 
-Dialog::Dialog(const ItemList& items, Index index,
-                         const Style& sstyle, wxWindow* parent,
-                         wxWindowID id, const wxString& title,
-                         const wxPoint& position, const wxSize& size,
-                         long style)  // NOLINT
+Dialog::Dialog(const ItemList& items, Index index, const Style& sstyle,
+               wxWindow* parent, wxWindowID id, const wxString& title,
+               const wxPoint& position, const wxSize& size,
+               long style)  // NOLINT
     : list_ctrl_(NULL),
       path_ctrl_(NULL),
       is_closing_(false),
@@ -94,9 +93,7 @@ void Dialog::OnActivate(wxActivateEvent& event) {
 void Dialog::OnSelectItem(wxCommandEvent& event) { UpdateDescription(); }
 
 // Get the selected item
-Index Dialog::GetSelection() const {
-  return list_ctrl_->selection();
-}
+Index Dialog::GetSelection() const { return list_ctrl_->selection(); }
 
 void Dialog::ShowDescription(const Item& item) {
   title_ctrl_->SetLabel(item.title());

@@ -32,13 +32,9 @@ void Style::set_background_color(const wxColour& colour) {
   background_color_ = colour;
 }
 
-const wxColour& Style::background_color() const {
-  return background_color_;
-}
+const wxColour& Style::background_color() const { return background_color_; }
 
-void Style::set_text_color(const wxColour& colour) {
-  text_color_ = colour;
-}
+void Style::set_text_color(const wxColour& colour) { text_color_ = colour; }
 
 const wxColour& Style::text_color() const { return text_color_; }
 
@@ -46,9 +42,7 @@ void Style::set_selection_color(const wxColour& colour) {
   selection_color_ = colour;
 }
 
-const wxColour& Style::selection_color() const {
-  return selection_color_;
-}
+const wxColour& Style::selection_color() const { return selection_color_; }
 
 void Style::set_selection_outline_color(const wxColour& colour) {
   selection_outline_color_ = colour;

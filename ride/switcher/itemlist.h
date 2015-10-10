@@ -39,8 +39,7 @@ class ItemList {
   void set_column_count(int cols);
   int column_count() const;
 
-  void PaintItems(wxDC* dc, const Style& style, Index selection,
-                  wxWindow* win);
+  void PaintItems(wxDC* dc, const Style& style, Index selection, wxWindow* win);
   wxSize CalculateItemSize(wxDC* dc, const Style& style);
 
  protected:

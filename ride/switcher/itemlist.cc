@@ -41,9 +41,7 @@ Index ItemList::HitTest(const wxPoint& pt) const {
     return GetGroup(i.first).GetItem(i.second); \
   } while (false)
 
-const Item& ItemList::GetItem(Index i) const {
-  GET_ITEM();
-}
+const Item& ItemList::GetItem(Index i) const { GET_ITEM(); }
 
 Item& ItemList::GetItem(Index i) { GET_ITEM(); }
 
@@ -73,8 +71,8 @@ void ItemList::set_column_count(int cols) { column_count_ = cols; }
 
 int ItemList::column_count() const { return column_count_; }
 
-void ItemList::PaintItems(wxDC* dc, const Style& style,
-                                  Index selection, wxWindow* win) {
+void ItemList::PaintItems(wxDC* dc, const Style& style, Index selection,
+                          wxWindow* win) {
   dc->SetLogicalFunction(wxCOPY);
   dc->SetBrush(wxBrush(style.background_color()));
   dc->SetPen(*wxTRANSPARENT_PEN);
@@ -87,8 +85,7 @@ void ItemList::PaintItems(wxDC* dc, const Style& style,
   }
 }
 
-wxSize ItemList::CalculateItemSize(wxDC* dc,
-                                           const Style& style) {
+wxSize ItemList::CalculateItemSize(wxDC* dc, const Style& style) {
   // Start off allowing for an icon
   wxSize sz(150, 16);
 

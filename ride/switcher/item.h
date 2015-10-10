@@ -10,7 +10,7 @@ class Item : public wxObject {
  public:
   Item();
   Item(const wxString& title, const wxString& name, int id = 0,
-               const wxBitmap& bitmap = wxNullBitmap);
+       const wxBitmap& bitmap = wxNullBitmap);
 
   bool operator==(const Item& item) const;
 

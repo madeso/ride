@@ -77,8 +77,7 @@ int StepGroup(const ItemList& items, int g, int change) {
   return group;
 }
 
-Index GoToRelativeItem(const ItemList& items, Index i,
-                               bool local, int change) {
+Index GoToRelativeItem(const ItemList& items, Index i, bool local, int change) {
   if (i == SWITCHER_NOT_FOUND) return SWITCHER_NOT_FOUND;
 
   int group = i.first;
@@ -109,18 +108,16 @@ Index GoToRelativeItem(const ItemList& items, Index i,
   }
 }
 
-Index GoToPreviousItem(const ItemList& items, Index i,
-                               bool local) {
+Index GoToPreviousItem(const ItemList& items, Index i, bool local) {
   return GoToRelativeItem(items, i, local, -1);
 }
 
-Index GoToNextItem(const ItemList& items, Index i,
-                           bool local) {
+Index GoToNextItem(const ItemList& items, Index i, bool local) {
   return GoToRelativeItem(items, i, local, 1);
 }
 
-Index GoHorizontal(const ItemList& items, Index i,
-                           const Style& style, int change) {
+Index GoHorizontal(const ItemList& items, Index i, const Style& style,
+                   int change) {
   const int row_count =
       style.row_count() - 1;  // -1 since we should ignore the group header item
   // first, try to move withing the group
@@ -161,20 +158,17 @@ Index GoHorizontal(const ItemList& items, Index i,
   return Index(group, item);
 }
 
-Index GoToLeftItem(const ItemList& items,
-                           const Style& style, Index i) {
+Index GoToLeftItem(const ItemList& items, const Style& style, Index i) {
   return GoHorizontal(items, i, style, -1);
 }
 
-Index GoToRightItem(const ItemList& items,
-                            const Style& style, Index i) {
+Index GoToRightItem(const ItemList& items, const Style& style, Index i) {
   return GoHorizontal(items, i, style, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-Ctrl::Ctrl(const ItemList& items,
-                           const Style& style)
+Ctrl::Ctrl(const ItemList& items, const Style& style)
     : items_(items),
       style_(style),
       selection_(SWITCHER_NOT_FOUND),
@@ -208,8 +202,8 @@ Ctrl::Ctrl(const ItemList& items,
 }
 
 bool Ctrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
-                          const wxSize& size,
-                          long style) {  // NOLINT
+                  const wxSize& size,
+                  long style) {  // NOLINT
   wxControl::Create(parent, id, pos, size, style);
 
   CalculateLayout();
@@ -328,7 +322,7 @@ void Ctrl::OnKey(wxKeyEvent& event) {
 }
 
 void Ctrl::OnEraseBackground(wxEraseEvent& WXUNUSED(event)) {  // NOLINT
-  // Do nothing
+                                                               // Do nothing
 }
 
 wxSize Ctrl::DoGetBestClientSize() const { return overall_size_; }
