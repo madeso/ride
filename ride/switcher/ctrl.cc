@@ -20,9 +20,8 @@ namespace switcher {
 #endif
 
 #ifdef __WXMAC__
-// ctrl key might not be rebound to the command key after all
-// #undef MODIFIER_KEY
-// #define MODIFIER_KEY WXK_CONTROL
+#undef MODIFIER_KEY
+#define MODIFIER_KEY WXK_RAW_CONTROL
 #define DONT_USE_LEFT_AND_RIGHT_ARROWKEYS
 #endif
 
