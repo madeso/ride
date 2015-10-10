@@ -1,4 +1,4 @@
-#include "ride/switcher/style.h"
+#include "style.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>

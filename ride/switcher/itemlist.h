@@ -7,8 +7,8 @@
 #include <vector>
 #include <utility>
 
-#include "ride/switcher/item.h"
-#include "ride/switcher/group.h"
+#include "item.h"
+#include "group.h"
 
 typedef std::pair<int, int> SwitcherIndex;
 #define SWITCHER_NOT_FOUND std::pair<int, int>(-1, -1)

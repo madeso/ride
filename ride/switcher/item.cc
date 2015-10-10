@@ -1,4 +1,4 @@
-#include "ride/switcher/item.h"
+#include "item.h"
 
 SwitcherItem::SwitcherItem()
     : id_(0), row_pos_(0), col_pos_(0), window_(NULL) {}

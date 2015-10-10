@@ -6,9 +6,9 @@
 
 #include <vector>
 
-#include "ride/switcher/item.h"
-#include "ride/switcher/itemlist.h"
-#include "ride/switcher/ctrl.h"
+#include "item.h"
+#include "itemlist.h"
+#include "ctrl.h"
 
 class SwitcherDlg : public wxDialog {
  public:

@@ -6,8 +6,8 @@
 
 #include <vector>
 
-#include "ride/switcher/item.h"
-#include "ride/switcher/group.h"
+#include "item.h"
+#include "group.h"
 
 class SwitcherStyle {
  public:

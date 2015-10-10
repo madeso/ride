@@ -1,9 +1,9 @@
-#include "ride/switcher/group.h"
+#include "group.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-#include "ride/switcher/style.h"
+#include "style.h"
 
 SwitcherGroup::SwitcherGroup(const wxString& title) : title_(title) {}
 

@@ -1,9 +1,9 @@
-#include "ride/switcher/dialog.h"
+#include "dialog.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-#include "ride/switcher/style.h"
+#include "style.h"
 
 SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
                          const SwitcherStyle& sstyle, wxWindow* parent,

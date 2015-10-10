@@ -1,9 +1,9 @@
-#include "ride/switcher/itemlist.h"
+#include "itemlist.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
-#include "ride/switcher/style.h"
+#include "style.h"
 
 SwitcherItemList::SwitcherItemList() : column_count_(0) {}
 

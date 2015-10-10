@@ -5,7 +5,7 @@
 
 #include <vector>
 
-#include "ride/switcher/item.h"
+#include "item.h"
 
 class SwitcherStyle;
 

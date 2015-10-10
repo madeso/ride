@@ -6,9 +6,9 @@
 
 #include <vector>
 
-#include "ride/switcher/item.h"
-#include "ride/switcher/itemlist.h"
-#include "ride/switcher/style.h"
+#include "item.h"
+#include "itemlist.h"
+#include "style.h"
 
 class SwitcherCtrl : public wxControl {
  public:

@@ -1,4 +1,4 @@
-#include "ride/switcher/ctrl.h"
+#include "ctrl.h"
 
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
