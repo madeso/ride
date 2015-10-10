@@ -2,10 +2,10 @@
 
 namespace switcher {
 
-SwitcherItem::SwitcherItem()
+Item::Item()
     : id_(0), row_pos_(0), col_pos_(0), window_(NULL) {}
 
-SwitcherItem::SwitcherItem(const wxString& title, const wxString& name, int id,
+Item::Item(const wxString& title, const wxString& name, int id,
                            const wxBitmap& bitmap)
     : title_(title),
       name_(name),
@@ -15,7 +15,7 @@ SwitcherItem::SwitcherItem(const wxString& title, const wxString& name, int id,
       col_pos_(0),
       window_(NULL) {}
 
-bool SwitcherItem::operator==(const SwitcherItem& rhs) const {
+bool Item::operator==(const Item& rhs) const {
 #define EQUAL_CHECK(mem)        \
   do {                          \
     if (this->mem != rhs.mem) { \
@@ -35,74 +35,74 @@ bool SwitcherItem::operator==(const SwitcherItem& rhs) const {
 #undef EQUAL_CHECK
 }
 
-SwitcherItem& SwitcherItem::set_title(const wxString& title) {
+Item& Item::set_title(const wxString& title) {
   title_ = title;
   return (*this);
 }
 
-const wxString& SwitcherItem::title() const { return title_; }
+const wxString& Item::title() const { return title_; }
 
-SwitcherItem& SwitcherItem::set_name(const wxString& name) {
+Item& Item::set_name(const wxString& name) {
   name_ = name;
   return (*this);
 }
 
-const wxString& SwitcherItem::name() const { return name_; }
+const wxString& Item::name() const { return name_; }
 
-SwitcherItem& SwitcherItem::set_description(const wxString& descr) {
+Item& Item::set_description(const wxString& descr) {
   description_ = descr;
   return (*this);
 }
 
-const wxString& SwitcherItem::description() const { return description_; }
+const wxString& Item::description() const { return description_; }
 
-SwitcherItem& SwitcherItem::set_path(const wxString& path) {
+Item& Item::set_path(const wxString& path) {
   path_ = path;
   return (*this);
 }
 
-const wxString& SwitcherItem::path() const { return path_; }
+const wxString& Item::path() const { return path_; }
 
-SwitcherItem& SwitcherItem::set_id(int id) {
+Item& Item::set_id(int id) {
   id_ = id;
   return (*this);
 }
 
-int SwitcherItem::id() const { return id_; }
+int Item::id() const { return id_; }
 
-SwitcherItem& SwitcherItem::set_rect(const wxRect& rect) {
+Item& Item::set_rect(const wxRect& rect) {
   rect_ = rect;
   return (*this);
 }
 
-const wxRect& SwitcherItem::rect() const { return rect_; }
+const wxRect& Item::rect() const { return rect_; }
 
-SwitcherItem& SwitcherItem::set_bitmap(const wxBitmap& bitmap) {
+Item& Item::set_bitmap(const wxBitmap& bitmap) {
   bitmap_ = bitmap;
   return (*this);
 }
 
-const wxBitmap& SwitcherItem::bitmap() const { return bitmap_; }
+const wxBitmap& Item::bitmap() const { return bitmap_; }
 
-SwitcherItem& SwitcherItem::set_row_pos(int pos) {
+Item& Item::set_row_pos(int pos) {
   row_pos_ = pos;
   return (*this);
 }
 
-int SwitcherItem::row_pos() const { return row_pos_; }
+int Item::row_pos() const { return row_pos_; }
 
-SwitcherItem& SwitcherItem::set_col_pos(int pos) {
+Item& Item::set_col_pos(int pos) {
   col_pos_ = pos;
   return (*this);
 }
 
-int SwitcherItem::get_col_pos() const { return col_pos_; }
+int Item::get_col_pos() const { return col_pos_; }
 
-SwitcherItem& SwitcherItem::set_window(wxWindow* win) {
+Item& Item::set_window(wxWindow* win) {
   window_ = win;
   return (*this);
 }
 
-wxWindow* SwitcherItem::window() const { return window_; }
+wxWindow* Item::window() const { return window_; }
 
 }  // switcher

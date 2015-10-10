@@ -7,8 +7,8 @@
 
 namespace switcher {
 
-SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
-                         const SwitcherStyle& sstyle, wxWindow* parent,
+Dialog::Dialog(const ItemList& items, Index index,
+                         const Style& sstyle, wxWindow* parent,
                          wxWindowID id, const wxString& title,
                          const wxPoint& position, const wxSize& size,
                          long style)  // NOLINT
@@ -18,9 +18,9 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
       switcher_border_style_(0),
       border_color_(sstyle.border_color()),
       style_(sstyle) {
-  Bind(wxEVT_CLOSE_WINDOW, &SwitcherDlg::OnCloseWindow, this);
-  Bind(wxEVT_ACTIVATE, &SwitcherDlg::OnActivate, this);
-  Bind(wxEVT_LISTBOX, &SwitcherDlg::OnSelectItem, this, wxID_ANY);
+  Bind(wxEVT_CLOSE_WINDOW, &Dialog::OnCloseWindow, this);
+  Bind(wxEVT_ACTIVATE, &Dialog::OnActivate, this);
+  Bind(wxEVT_LISTBOX, &Dialog::OnSelectItem, this, wxID_ANY);
 
   switcher_border_style_ = (style & wxBORDER_MASK);
   if (switcher_border_style_ == wxBORDER_NONE)
@@ -31,7 +31,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
 
   wxDialog::Create(parent, id, title, position, size, style);
 
-  list_ctrl_ = new SwitcherCtrl(items, style_);
+  list_ctrl_ = new Ctrl(items, style_);
   list_ctrl_->Create(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                      wxWANTS_CHARS | wxNO_BORDER);
   list_ctrl_->CalculateLayout();
@@ -69,7 +69,7 @@ SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
   UpdateDescription();
 }
 
-void SwitcherDlg::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
+void Dialog::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
   if (is_closing_) return;
 
   if (IsModal()) {
@@ -82,7 +82,7 @@ void SwitcherDlg::OnCloseWindow(wxCloseEvent& WXUNUSED(event)) {  // NOLINT
   }
 }
 
-void SwitcherDlg::OnActivate(wxActivateEvent& event) {
+void Dialog::OnActivate(wxActivateEvent& event) {
   if (!event.GetActive()) {
     if (!is_closing_) {
       is_closing_ = true;
@@ -91,30 +91,30 @@ void SwitcherDlg::OnActivate(wxActivateEvent& event) {
   }
 }
 
-void SwitcherDlg::OnSelectItem(wxCommandEvent& event) { UpdateDescription(); }
+void Dialog::OnSelectItem(wxCommandEvent& event) { UpdateDescription(); }
 
 // Get the selected item
-SwitcherIndex SwitcherDlg::GetSelection() const {
+Index Dialog::GetSelection() const {
   return list_ctrl_->selection();
 }
 
-void SwitcherDlg::ShowDescription(const SwitcherItem& item) {
+void Dialog::ShowDescription(const Item& item) {
   title_ctrl_->SetLabel(item.title());
   description_ctrl_->SetLabel(item.description());
   path_ctrl_->SetLabel(item.path());
 }
 
-void SwitcherDlg::set_border_color(const wxColour& colour) {
+void Dialog::set_border_color(const wxColour& colour) {
   border_color_ = colour;
 }
 
-void SwitcherDlg::AdvanceToNextSelection(bool forward) {
+void Dialog::AdvanceToNextSelection(bool forward) {
   list_ctrl_->AdvanceToNextSelection(forward);
   UpdateDescription();
 }
 
-void SwitcherDlg::UpdateDescription() {
-  SwitcherIndex selected = list_ctrl_->selection();
+void Dialog::UpdateDescription() {
+  Index selected = list_ctrl_->selection();
   if (selected != SWITCHER_NOT_FOUND) {
     ShowDescription(list_ctrl_->items().GetItem(selected));
   }

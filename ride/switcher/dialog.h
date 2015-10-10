@@ -12,10 +12,10 @@
 
 namespace switcher {
 
-class SwitcherDlg : public wxDialog {
+class Dialog : public wxDialog {
  public:
-  SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
-              const SwitcherStyle& sstyle, wxWindow* parent, wxWindowID id = -1,
+  Dialog(const ItemList& items, Index index,
+              const Style& sstyle, wxWindow* parent, wxWindowID id = -1,
               const wxString& title = _("Pane Switcher"),
               const wxPoint& pos = wxDefaultPosition,
               const wxSize& size = wxDefaultSize,
@@ -27,9 +27,9 @@ class SwitcherDlg : public wxDialog {
   void OnSelectItem(wxCommandEvent& event);
 
   // Get the selected item
-  SwitcherIndex GetSelection() const;
+  Index GetSelection() const;
 
-  void ShowDescription(const SwitcherItem& item);
+  void ShowDescription(const Item& item);
 
   void set_border_color(const wxColour& colour);
 
@@ -39,17 +39,17 @@ class SwitcherDlg : public wxDialog {
   void UpdateDescription();
 
  private:
-  SwitcherDlg();
+  Dialog();
 
  private:
   wxStaticText* title_ctrl_;
   wxStaticText* description_ctrl_;
-  SwitcherCtrl* list_ctrl_;
+  Ctrl* list_ctrl_;
   wxStaticText* path_ctrl_;
   bool is_closing_;
   long switcher_border_style_;  // NOLINT
   wxColour border_color_;
-  SwitcherStyle style_;
+  Style style_;
 };
 
 }  // switcher

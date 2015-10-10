@@ -11,9 +11,9 @@
 
 namespace switcher {
 
-class SwitcherStyle {
+class Style {
  public:
-  SwitcherStyle();
+  Style();
 
   void set_row_count(int rows);
   int row_count() const;

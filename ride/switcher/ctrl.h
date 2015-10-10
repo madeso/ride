@@ -12,23 +12,23 @@
 
 namespace switcher {
 
-class SwitcherCtrl : public wxControl {
+class Ctrl : public wxControl {
 public:
-  explicit SwitcherCtrl(const SwitcherItemList& items,
-    const SwitcherStyle& style);
+  explicit Ctrl(const ItemList& items,
+    const Style& style);
 
   bool Create(wxWindow* parent, wxWindowID id,
     const wxPoint& pos = wxDefaultPosition,
     const wxSize& size = wxDefaultSize, long style = 0);  // NOLINT
 
   // Public API
-  void set_items(const SwitcherItemList& items);
-  const SwitcherItemList& items() const;
-  SwitcherItemList& items();
+  void set_items(const ItemList& items);
+  const ItemList& items() const;
+  ItemList& items();
 
-  void SelectOrFirst(SwitcherIndex index);
+  void SelectOrFirst(Index index);
 
-  SwitcherIndex selection() const;
+  Index selection() const;
 
   // Event handlers
 
@@ -51,9 +51,9 @@ public:
   void AdvanceToNextSelection(bool forward);
 
 protected:
-  SwitcherItemList items_;
-  SwitcherIndex selection_;
-  SwitcherStyle style_;
+  ItemList items_;
+  Index selection_;
+  Style style_;
   wxSize overall_size_;
 };
 

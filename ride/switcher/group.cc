@@ -7,31 +7,31 @@
 
 namespace switcher {
 
-SwitcherGroup::SwitcherGroup(const wxString& title) : title_(title) {}
+Group::Group(const wxString& title) : title_(title) {}
 
-SwitcherGroup::SwitcherGroup(const wxString& title,
-                             const std::vector<SwitcherItem>& items)
+Group::Group(const wxString& title,
+                             const std::vector<Item>& items)
     : title_(title), items_(items) {}
 
-void SwitcherGroup::set_title(const wxString& title) { title_ = title; }
+void Group::set_title(const wxString& title) { title_ = title; }
 
-const wxString& SwitcherGroup::title() const { return title_; }
+const wxString& Group::title() const { return title_; }
 
-SwitcherGroup& SwitcherGroup::set_rect(const wxRect& rect) {
+Group& Group::set_rect(const wxRect& rect) {
   rect_ = rect;
   return (*this);
 }
 
-const wxRect& SwitcherGroup::rect() const { return rect_; }
+const wxRect& Group::rect() const { return rect_; }
 
-SwitcherItem& SwitcherGroup::AddItem(const SwitcherItem& item) {
+Item& Group::AddItem(const Item& item) {
   items_.push_back(item);
   return *items_.rbegin();
 }
 
-int SwitcherGroup::GetIndexForFocus() const {
+int Group::GetIndexForFocus() const {
   for (size_t i = 0; i < items_.size(); i++) {
-    const SwitcherItem& item = items_[i];
+    const Item& item = items_[i];
     if (item.window()) {
       if (wxFindFocusDescendant(item.window())) return i;
     }
@@ -40,27 +40,27 @@ int SwitcherGroup::GetIndexForFocus() const {
   return -1;
 }
 
-int SwitcherGroup::HitTest(const wxPoint& pt) const {
+int Group::HitTest(const wxPoint& pt) const {
   for (size_t i = 0; i < items_.size(); i++) {
-    const SwitcherItem& item = items_[i];
+    const Item& item = items_[i];
     if (item.rect().Contains(pt)) return static_cast<int>(i);
   }
 
   return -1;
 }
 
-const SwitcherItem& SwitcherGroup::GetItem(int i) const { return items_[i]; }
+const Item& Group::GetItem(int i) const { return items_[i]; }
 
-SwitcherItem& SwitcherGroup::GetItem(int i) {
+Item& Group::GetItem(int i) {
   assert(i >= 0);
   assert(i < items_.size());
   return items_[i];
 }
 
-int SwitcherGroup::GetItemCount() const { return items_.size(); }
+int Group::GetItemCount() const { return items_.size(); }
 
 void PaintItem(const wxRect& rect, const wxString& title,
-               const wxBitmap& bitmap, wxDC* dc, const SwitcherStyle& style,
+               const wxBitmap& bitmap, wxDC* dc, const Style& style,
                const wxFont& font, bool draw_image) {
   wxRect clippingRect(rect);
   clippingRect.Deflate(1, 1);
@@ -93,7 +93,7 @@ void PaintItem(const wxRect& rect, const wxString& title,
   dc->DestroyClippingRegion();
 }
 
-void SwitcherGroup::PaintItems(wxDC* dc, const SwitcherStyle& style,
+void Group::PaintItems(wxDC* dc, const Style& style,
                                int selection) {
   const wxFont groupFont(
       style.item_font().GetPointSize(), style.item_font().GetFamily(),
@@ -103,7 +103,7 @@ void SwitcherGroup::PaintItems(wxDC* dc, const SwitcherStyle& style,
   PaintItem(rect_, title_, wxNullBitmap, dc, style, groupFont, false);
 
   for (size_t i = 0; i < items_.size(); i++) {
-    SwitcherItem& item = items_[i];
+    Item& item = items_[i];
     const bool selected = (static_cast<int>(i) == selection);
 
     if (selected) {
@@ -118,7 +118,7 @@ void SwitcherGroup::PaintItems(wxDC* dc, const SwitcherStyle& style,
 }
 
 void ExtendSize(wxDC* dc, wxFont font, wxString title,
-                const SwitcherStyle& style, wxSize* sz) {
+                const Style& style, wxSize* sz) {
   dc->SetFont(font);
 
   int w, h;
@@ -131,7 +131,7 @@ void ExtendSize(wxDC* dc, wxFont font, wxString title,
   sz->y = wxMax(h, sz->y);
 }
 
-void SwitcherGroup::CalculateItemSize(wxDC* dc, const SwitcherStyle& style,
+void Group::CalculateItemSize(wxDC* dc, const Style& style,
                                       wxSize* sz) {  // NOLINT
   const wxFont groupFont(
       style.item_font().GetPointSize(), style.item_font().GetFamily(),
@@ -142,7 +142,7 @@ void SwitcherGroup::CalculateItemSize(wxDC* dc, const SwitcherStyle& style,
 
   size_t i;
   for (i = 0; i < items_.size(); i++) {
-    SwitcherItem& item = items_[i];
+    Item& item = items_[i];
 
     ExtendSize(dc, style.item_font(), item.title(), style, sz);
   }

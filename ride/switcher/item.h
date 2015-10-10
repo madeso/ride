@@ -6,42 +6,42 @@
 
 namespace switcher {
 
-class SwitcherItem : public wxObject {
+class Item : public wxObject {
  public:
-  SwitcherItem();
-  SwitcherItem(const wxString& title, const wxString& name, int id = 0,
+  Item();
+  Item(const wxString& title, const wxString& name, int id = 0,
                const wxBitmap& bitmap = wxNullBitmap);
 
-  bool operator==(const SwitcherItem& item) const;
+  bool operator==(const Item& item) const;
 
-  SwitcherItem& set_title(const wxString& title);
+  Item& set_title(const wxString& title);
   const wxString& title() const;
 
-  SwitcherItem& set_name(const wxString& name);
+  Item& set_name(const wxString& name);
   const wxString& name() const;
 
-  SwitcherItem& set_description(const wxString& descr);
+  Item& set_description(const wxString& descr);
   const wxString& description() const;
 
-  SwitcherItem& set_path(const wxString& descr);
+  Item& set_path(const wxString& descr);
   const wxString& path() const;
 
-  SwitcherItem& set_id(int id);
+  Item& set_id(int id);
   int id() const;
 
-  SwitcherItem& set_rect(const wxRect& rect);
+  Item& set_rect(const wxRect& rect);
   const wxRect& rect() const;
 
-  SwitcherItem& set_bitmap(const wxBitmap& bitmap);
+  Item& set_bitmap(const wxBitmap& bitmap);
   const wxBitmap& bitmap() const;
 
-  SwitcherItem& set_row_pos(int pos);
+  Item& set_row_pos(int pos);
   int row_pos() const;
 
-  SwitcherItem& set_col_pos(int pos);
+  Item& set_col_pos(int pos);
   int get_col_pos() const;
 
-  SwitcherItem& set_window(wxWindow* win);
+  Item& set_window(wxWindow* win);
   wxWindow* window() const;
 
  protected:

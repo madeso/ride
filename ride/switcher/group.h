@@ -9,20 +9,20 @@
 
 namespace switcher {
 
-class SwitcherStyle;
+class Style;
 
-class SwitcherGroup {
+class Group {
  public:
-  explicit SwitcherGroup(const wxString& title);
-  SwitcherGroup(const wxString& title, const std::vector<SwitcherItem>& items);
+  explicit Group(const wxString& title);
+  Group(const wxString& title, const std::vector<Item>& items);
 
   void set_title(const wxString& title);
   const wxString& title() const;
 
-  SwitcherGroup& set_rect(const wxRect& rect);
+  Group& set_rect(const wxRect& rect);
   const wxRect& rect() const;
 
-  SwitcherItem& AddItem(const SwitcherItem& item);
+  Item& AddItem(const Item& item);
 
   // Find the index for the item associated with the current focus
   int GetIndexForFocus() const;
@@ -30,16 +30,16 @@ class SwitcherGroup {
   // Hit test, returning an index or -1
   int HitTest(const wxPoint& pt) const;
 
-  const SwitcherItem& GetItem(int i) const;
-  SwitcherItem& GetItem(int i);
+  const Item& GetItem(int i) const;
+  Item& GetItem(int i);
 
   int GetItemCount() const;
 
-  void PaintItems(wxDC* dc, const SwitcherStyle& style, int selection);
-  void CalculateItemSize(wxDC* dc, const SwitcherStyle& style, wxSize* sz);
+  void PaintItems(wxDC* dc, const Style& style, int selection);
+  void CalculateItemSize(wxDC* dc, const Style& style, wxSize* sz);
 
  protected:
-  std::vector<SwitcherItem> items_;
+  std::vector<Item> items_;
   wxRect rect_;
   wxString title_;
 };

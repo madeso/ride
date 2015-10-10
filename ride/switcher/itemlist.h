@@ -12,39 +12,39 @@
 
 namespace switcher {
 
-typedef std::pair<int, int> SwitcherIndex;
+typedef std::pair<int, int> Index;
 #define SWITCHER_NOT_FOUND std::pair<int, int>(-1, -1)
 
-class SwitcherItemList {
+class ItemList {
  public:
-  SwitcherItemList();
+  ItemList();
 
-  SwitcherGroup& AddGroup(const SwitcherGroup& group);
+  Group& AddGroup(const Group& group);
 
   // Find the index for the item associated with the current focus
-  SwitcherIndex GetIndexForFocus() const;
+  Index GetIndexForFocus() const;
 
   // Hit test, returning an index or -1
-  SwitcherIndex HitTest(const wxPoint& pt) const;
+  Index HitTest(const wxPoint& pt) const;
 
-  const SwitcherItem& GetItem(SwitcherIndex i) const;
-  SwitcherItem& GetItem(SwitcherIndex i);
+  const Item& GetItem(Index i) const;
+  Item& GetItem(Index i);
 
   int GetItemCount() const;
 
-  const SwitcherGroup& GetGroup(int i) const;
-  SwitcherGroup& GetGroup(int i);
+  const Group& GetGroup(int i) const;
+  Group& GetGroup(int i);
   int GetGroupCount() const;
 
   void set_column_count(int cols);
   int column_count() const;
 
-  void PaintItems(wxDC* dc, const SwitcherStyle& style, SwitcherIndex selection,
+  void PaintItems(wxDC* dc, const Style& style, Index selection,
                   wxWindow* win);
-  wxSize CalculateItemSize(wxDC* dc, const SwitcherStyle& style);
+  wxSize CalculateItemSize(wxDC* dc, const Style& style);
 
  protected:
-  std::vector<SwitcherGroup> items_;
+  std::vector<Group> items_;
   int column_count_;
 };
 

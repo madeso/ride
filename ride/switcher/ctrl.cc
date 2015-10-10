@@ -27,7 +27,7 @@ namespace switcher {
 //////////////////////////////////////////////////////////////////////////
 // move these
 
-bool IsValid(const SwitcherItemList& items, SwitcherIndex index) {
+bool IsValid(const ItemList& items, Index index) {
   if (index.first < 0) return false;
   if (index.first >= items.GetGroupCount()) return false;
   if (index.second < 0) return false;
@@ -35,21 +35,21 @@ bool IsValid(const SwitcherItemList& items, SwitcherIndex index) {
   return true;
 }
 
-SwitcherIndex GoToFirstItem(const SwitcherItemList& items) {
+Index GoToFirstItem(const ItemList& items) {
   for (size_t group_index = 0; group_index <= items.GetGroupCount();
        ++group_index) {
     if (items.GetGroupCount() > 0) {
-      return SwitcherIndex(group_index, 0);
+      return Index(group_index, 0);
     }
   }
   return SWITCHER_NOT_FOUND;
 }
 
-SwitcherIndex GoToLastItem(const SwitcherItemList& items) {
+Index GoToLastItem(const ItemList& items) {
   for (size_t group_index = items.GetGroupCount() - 1; group_index >= 0;
        --group_index) {
     if (items.GetGroupCount() > 0) {
-      return SwitcherIndex(group_index, 0);
+      return Index(group_index, 0);
     }
   }
   return SWITCHER_NOT_FOUND;
@@ -66,7 +66,7 @@ int Wrap(int i, int size) {
   return r;
 }
 
-int StepGroup(const SwitcherItemList& items, int g, int change) {
+int StepGroup(const ItemList& items, int g, int change) {
   int group = g;
   do {
     group = Wrap(group + change, items.GetGroupCount());
@@ -77,7 +77,7 @@ int StepGroup(const SwitcherItemList& items, int g, int change) {
   return group;
 }
 
-SwitcherIndex GoToRelativeItem(const SwitcherItemList& items, SwitcherIndex i,
+Index GoToRelativeItem(const ItemList& items, Index i,
                                bool local, int change) {
   if (i == SWITCHER_NOT_FOUND) return SWITCHER_NOT_FOUND;
 
@@ -85,7 +85,7 @@ SwitcherIndex GoToRelativeItem(const SwitcherItemList& items, SwitcherIndex i,
   int index = i.second + change;
   if (local) {
     index = Wrap(index, items.GetGroup(group).GetItemCount());
-    return SwitcherIndex(group, index);
+    return Index(group, index);
   } else {
     if (index < 0) {
       group = StepGroup(items, group, -1);
@@ -93,7 +93,7 @@ SwitcherIndex GoToRelativeItem(const SwitcherItemList& items, SwitcherIndex i,
         return SWITCHER_NOT_FOUND;
       }
       index = items.GetGroup(group).GetItemCount() - 1;
-      return SwitcherIndex(group, index);
+      return Index(group, index);
     }
 
     if (index >= items.GetGroup(group).GetItemCount()) {
@@ -102,25 +102,25 @@ SwitcherIndex GoToRelativeItem(const SwitcherItemList& items, SwitcherIndex i,
         return SWITCHER_NOT_FOUND;
       }
       index = 0;
-      return SwitcherIndex(group, index);
+      return Index(group, index);
     }
 
-    return SwitcherIndex(group, index);
+    return Index(group, index);
   }
 }
 
-SwitcherIndex GoToPreviousItem(const SwitcherItemList& items, SwitcherIndex i,
+Index GoToPreviousItem(const ItemList& items, Index i,
                                bool local) {
   return GoToRelativeItem(items, i, local, -1);
 }
 
-SwitcherIndex GoToNextItem(const SwitcherItemList& items, SwitcherIndex i,
+Index GoToNextItem(const ItemList& items, Index i,
                            bool local) {
   return GoToRelativeItem(items, i, local, 1);
 }
 
-SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
-                           const SwitcherStyle& style, int change) {
+Index GoHorizontal(const ItemList& items, Index i,
+                           const Style& style, int change) {
   const int row_count =
       style.row_count() - 1;  // -1 since we should ignore the group header item
   // first, try to move withing the group
@@ -128,7 +128,7 @@ SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
   const int first_group_count = items.GetGroup(i.first).GetItemCount();
   if ((internal_item >= 0) && internal_item < first_group_count) {
     // this was ok, return it
-    return SwitcherIndex(i.first, internal_item);
+    return Index(i.first, internal_item);
   }
 
   if (internal_item >= first_group_count) {
@@ -136,7 +136,7 @@ SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
     const int col_index_before = i.second - (i.second % row_count);
     const int col_index_end = last_item - (last_item % row_count);
     if (col_index_before != col_index_end) {
-      return SwitcherIndex(i.first, last_item);
+      return Index(i.first, last_item);
     }
   }
 
@@ -158,56 +158,56 @@ SwitcherIndex GoHorizontal(const SwitcherItemList& items, SwitcherIndex i,
                     items.GetGroup(group).GetItemCount() - 1);
   }
 
-  return SwitcherIndex(group, item);
+  return Index(group, item);
 }
 
-SwitcherIndex GoToLeftItem(const SwitcherItemList& items,
-                           const SwitcherStyle& style, SwitcherIndex i) {
+Index GoToLeftItem(const ItemList& items,
+                           const Style& style, Index i) {
   return GoHorizontal(items, i, style, -1);
 }
 
-SwitcherIndex GoToRightItem(const SwitcherItemList& items,
-                            const SwitcherStyle& style, SwitcherIndex i) {
+Index GoToRightItem(const ItemList& items,
+                            const Style& style, Index i) {
   return GoHorizontal(items, i, style, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-SwitcherCtrl::SwitcherCtrl(const SwitcherItemList& items,
-                           const SwitcherStyle& style)
+Ctrl::Ctrl(const ItemList& items,
+                           const Style& style)
     : items_(items),
       style_(style),
       selection_(SWITCHER_NOT_FOUND),
       overall_size_(wxSize(200, 100)) {
   // TODO(Gustav): Remove unused events
-  Bind(wxEVT_LEFT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEFT_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEFT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MIDDLE_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_RIGHT_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX1_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_DOWN, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_UP, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_AUX2_DCLICK, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MOTION, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_LEAVE_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_ENTER_WINDOW, &SwitcherCtrl::OnMouseEvent, this);
-  Bind(wxEVT_MOUSEWHEEL, &SwitcherCtrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_DOWN, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_UP, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_LEFT_DCLICK, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_DOWN, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_UP, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_MIDDLE_DCLICK, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_DOWN, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_UP, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_RIGHT_DCLICK, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_DOWN, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_UP, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX1_DCLICK, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_DOWN, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_UP, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_AUX2_DCLICK, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_MOTION, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_LEAVE_WINDOW, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_ENTER_WINDOW, &Ctrl::OnMouseEvent, this);
+  Bind(wxEVT_MOUSEWHEEL, &Ctrl::OnMouseEvent, this);
 
-  Bind(wxEVT_PAINT, &SwitcherCtrl::OnPaint, this);
-  Bind(wxEVT_ERASE_BACKGROUND, &SwitcherCtrl::OnEraseBackground, this);
-  Bind(wxEVT_CHAR, &SwitcherCtrl::OnChar, this);
-  Bind(wxEVT_KEY_DOWN, &SwitcherCtrl::OnKey, this);
-  Bind(wxEVT_KEY_UP, &SwitcherCtrl::OnKey, this);
+  Bind(wxEVT_PAINT, &Ctrl::OnPaint, this);
+  Bind(wxEVT_ERASE_BACKGROUND, &Ctrl::OnEraseBackground, this);
+  Bind(wxEVT_CHAR, &Ctrl::OnChar, this);
+  Bind(wxEVT_KEY_DOWN, &Ctrl::OnKey, this);
+  Bind(wxEVT_KEY_UP, &Ctrl::OnKey, this);
 }
 
-bool SwitcherCtrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
+bool Ctrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
                           const wxSize& size,
                           long style) {  // NOLINT
   wxControl::Create(parent, id, pos, size, style);
@@ -219,22 +219,22 @@ bool SwitcherCtrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   return true;
 }
 
-void SwitcherCtrl::set_items(const SwitcherItemList& items) { items_ = items; }
+void Ctrl::set_items(const ItemList& items) { items_ = items; }
 
-const SwitcherItemList& SwitcherCtrl::items() const { return items_; }
+const ItemList& Ctrl::items() const { return items_; }
 
-SwitcherItemList& SwitcherCtrl::items() { return items_; }
+ItemList& Ctrl::items() { return items_; }
 
-void SwitcherCtrl::SelectOrFirst(SwitcherIndex index) {
+void Ctrl::SelectOrFirst(Index index) {
   selection_ = index;
   if (false == IsValid(items_, selection_)) {
     selection_ = GoToFirstItem(items_);
   }
 }
 
-SwitcherIndex SwitcherCtrl::selection() const { return selection_; }
+Index Ctrl::selection() const { return selection_; }
 
-void SwitcherCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
+void Ctrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
 #if wxSWITCHER_USE_BUFFERED_PAINTING
   wxBufferedPaintDC dc(this);
 #else
@@ -248,11 +248,11 @@ void SwitcherCtrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
   items_.PaintItems(&dc, style_, selection_, this);
 }
 
-void SwitcherCtrl::OnMouseEvent(wxMouseEvent& event) {
+void Ctrl::OnMouseEvent(wxMouseEvent& event) {
   if (event.LeftDown()) {
     SetFocus();
 
-    SwitcherIndex idx = items_.HitTest(event.GetPosition());
+    Index idx = items_.HitTest(event.GetPosition());
     if (idx != SWITCHER_NOT_FOUND) {
       selection_ = idx;
 
@@ -261,9 +261,9 @@ void SwitcherCtrl::OnMouseEvent(wxMouseEvent& event) {
   }
 }
 
-void SwitcherCtrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
+void Ctrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
 
-void SwitcherCtrl::OnKey(wxKeyEvent& event) {
+void Ctrl::OnKey(wxKeyEvent& event) {
   if (event.GetEventType() == wxEVT_KEY_UP) {
     if (event.GetKeyCode() == MODIFIER_KEY) {
       SendCloseEvent();
@@ -327,20 +327,20 @@ void SwitcherCtrl::OnKey(wxKeyEvent& event) {
   }
 }
 
-void SwitcherCtrl::OnEraseBackground(wxEraseEvent& WXUNUSED(event)) {  // NOLINT
+void Ctrl::OnEraseBackground(wxEraseEvent& WXUNUSED(event)) {  // NOLINT
   // Do nothing
 }
 
-wxSize SwitcherCtrl::DoGetBestClientSize() const { return overall_size_; }
+wxSize Ctrl::DoGetBestClientSize() const { return overall_size_; }
 
-void SwitcherCtrl::CalculateLayout() {
+void Ctrl::CalculateLayout() {
   wxClientDC dc(this);
   CalculateLayout(dc);
 }
 
 class LayoutCalculator {
  public:
-  LayoutCalculator(wxSize is, const SwitcherStyle& style) : style_(style) {
+  LayoutCalculator(wxSize is, const Style& style) : style_(style) {
     columnCount = 1;
 
     itemSize = is;
@@ -384,7 +384,7 @@ class LayoutCalculator {
   const wxSize& overall_size() const { return overall_size_; }
 
  private:
-  const SwitcherStyle& style_;
+  const Style& style_;
   int columnCount;
 
   wxSize itemSize;
@@ -395,7 +395,7 @@ class LayoutCalculator {
   int y;
 };
 
-void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
+void Ctrl::CalculateLayout(wxDC& dc) {  // NOLINT
   if (selection_ == SWITCHER_NOT_FOUND) selection_ = GoToFirstItem(items_);
 
   wxSize items_size = items_.CalculateItemSize(&dc, style_);
@@ -405,7 +405,7 @@ void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
 
   for (size_t group_index = 0; group_index < items_.GetGroupCount();
        ++group_index) {
-    SwitcherGroup& group = items_.GetGroup(group_index);
+    Group& group = items_.GetGroup(group_index);
 
     group.set_rect(calc.rect());
     calc.UpdateOverallSize();
@@ -418,7 +418,7 @@ void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
         calc.GoToNextRow();  // only groups are on first row
       }
 
-      SwitcherItem& item = group.GetItem(item_index);
+      Item& item = group.GetItem(item_index);
       item.set_rect(calc.rect());
       item.set_col_pos(calc.col_pos());
       item.set_row_pos(calc.row_pos());
@@ -441,12 +441,12 @@ void SwitcherCtrl::CalculateLayout(wxDC& dc) {  // NOLINT
   InvalidateBestSize();
 }
 
-void SwitcherCtrl::InvalidateLayout() {
+void Ctrl::InvalidateLayout() {
   items_.set_column_count(0);
   Refresh();
 }
 
-void SwitcherCtrl::GenerateSelectionEvent() {
+void Ctrl::GenerateSelectionEvent() {
   wxCommandEvent event(wxEVT_COMMAND_LISTBOX_SELECTED, GetId());
   event.SetEventObject(this);
   event.SetInt(selection_.first);
@@ -454,7 +454,7 @@ void SwitcherCtrl::GenerateSelectionEvent() {
   GetEventHandler()->ProcessEvent(event);
 }
 
-void SwitcherCtrl::SendCloseEvent() {
+void Ctrl::SendCloseEvent() {
   wxWindow* topLevel = GetParent();
   while (topLevel && !topLevel->IsTopLevel()) topLevel = topLevel->GetParent();
 
@@ -468,7 +468,7 @@ void SwitcherCtrl::SendCloseEvent() {
   }
 }
 
-void SwitcherCtrl::AdvanceToNextSelection(bool forward) {
+void Ctrl::AdvanceToNextSelection(bool forward) {
   if (forward == false) {
     selection_ = GoToPreviousItem(items_, selection_, true);
   } else {

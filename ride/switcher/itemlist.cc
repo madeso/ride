@@ -7,25 +7,25 @@
 
 namespace switcher {
 
-SwitcherItemList::SwitcherItemList() : column_count_(0) {}
+ItemList::ItemList() : column_count_(0) {}
 
-SwitcherGroup& SwitcherItemList::AddGroup(const SwitcherGroup& item) {
+Group& ItemList::AddGroup(const Group& item) {
   items_.push_back(item);
   return *items_.rbegin();
 }
 
-SwitcherIndex SwitcherItemList::GetIndexForFocus() const {
+Index ItemList::GetIndexForFocus() const {
   for (size_t i = 0; i < items_.size(); i++) {
     int item = items_[i].GetIndexForFocus();
     if (item != -1) {
-      return SwitcherIndex(i, item);
+      return Index(i, item);
     }
   }
 
   return SWITCHER_NOT_FOUND;
 }
 
-SwitcherIndex SwitcherItemList::HitTest(const wxPoint& pt) const {
+Index ItemList::HitTest(const wxPoint& pt) const {
   for (size_t i = 0; i < items_.size(); i++) {
     int item = items_[i].HitTest(pt);
     if (item != -1) {
@@ -41,17 +41,17 @@ SwitcherIndex SwitcherItemList::HitTest(const wxPoint& pt) const {
     return GetGroup(i.first).GetItem(i.second); \
   } while (false)
 
-const SwitcherItem& SwitcherItemList::GetItem(SwitcherIndex i) const {
+const Item& ItemList::GetItem(Index i) const {
   GET_ITEM();
 }
 
-SwitcherItem& SwitcherItemList::GetItem(SwitcherIndex i) { GET_ITEM(); }
+Item& ItemList::GetItem(Index i) { GET_ITEM(); }
 
 #undef GET_ITEM
 
-int SwitcherItemList::GetItemCount() const {
+int ItemList::GetItemCount() const {
   int count = 0;
-  for (const SwitcherGroup& group : items_) {
+  for (const Group& group : items_) {
     count += group.GetItemCount();
   }
   return count;
@@ -63,18 +63,18 @@ int SwitcherItemList::GetItemCount() const {
     assert(i < items_.size()); \
     return items_[i];          \
   } while (false)
-const SwitcherGroup& SwitcherItemList::GetGroup(int i) const { GET_GROUP(); }
-SwitcherGroup& SwitcherItemList::GetGroup(int i) { GET_GROUP(); }
+const Group& ItemList::GetGroup(int i) const { GET_GROUP(); }
+Group& ItemList::GetGroup(int i) { GET_GROUP(); }
 #undef GET_GROUP
 
-int SwitcherItemList::GetGroupCount() const { return items_.size(); }
+int ItemList::GetGroupCount() const { return items_.size(); }
 
-void SwitcherItemList::set_column_count(int cols) { column_count_ = cols; }
+void ItemList::set_column_count(int cols) { column_count_ = cols; }
 
-int SwitcherItemList::column_count() const { return column_count_; }
+int ItemList::column_count() const { return column_count_; }
 
-void SwitcherItemList::PaintItems(wxDC* dc, const SwitcherStyle& style,
-                                  SwitcherIndex selection, wxWindow* win) {
+void ItemList::PaintItems(wxDC* dc, const Style& style,
+                                  Index selection, wxWindow* win) {
   dc->SetLogicalFunction(wxCOPY);
   dc->SetBrush(wxBrush(style.background_color()));
   dc->SetPen(*wxTRANSPARENT_PEN);
@@ -87,12 +87,12 @@ void SwitcherItemList::PaintItems(wxDC* dc, const SwitcherStyle& style,
   }
 }
 
-wxSize SwitcherItemList::CalculateItemSize(wxDC* dc,
-                                           const SwitcherStyle& style) {
+wxSize ItemList::CalculateItemSize(wxDC* dc,
+                                           const Style& style) {
   // Start off allowing for an icon
   wxSize sz(150, 16);
 
-  for (SwitcherGroup& item : items_) {
+  for (Group& item : items_) {
     item.CalculateItemSize(dc, style, &sz);
   }
 
