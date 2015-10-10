@@ -312,20 +312,18 @@ void Ctrl::OnKey(wxKeyEvent& event) {
     Refresh();
   } else if (
 #ifndef DONT_USE_LEFT_AND_RIGHT_ARROWKEYS
-    key_code == WXK_LEFT || 
+      key_code == WXK_LEFT ||
 #endif
-    key_code == WXK_NUMPAD_LEFT ||
-             key_code == VIM_LEFT) {
+      key_code == WXK_NUMPAD_LEFT || key_code == VIM_LEFT) {
     selection_ = GoToLeftItem(items_, style_, selection_);
 
     GenerateSelectionEvent();
     Refresh();
   } else if (
 #ifndef DONT_USE_LEFT_AND_RIGHT_ARROWKEYS
-    key_code == WXK_RIGHT || 
+      key_code == WXK_RIGHT ||
 #endif
-    key_code == WXK_NUMPAD_RIGHT ||
-             key_code == VIM_RIGHT) {
+      key_code == WXK_NUMPAD_RIGHT || key_code == VIM_RIGHT) {
     selection_ = GoToRightItem(items_, style_, selection_);
 
     GenerateSelectionEvent();
