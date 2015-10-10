@@ -22,7 +22,7 @@ namespace switcher {
 #ifdef __WXMAC__
 #undef MODIFIER_KEY
 #define MODIFIER_KEY WXK_RAW_CONTROL
-#define DONT_USE_LEFT_AND_RIGHT_ARROWKEYS
+#define DONT_USE_ARROWKEYS
 #endif
 
 // vim style navigation
@@ -293,14 +293,20 @@ void Ctrl::OnKey(wxKeyEvent& event) {
 
     GenerateSelectionEvent();
     Refresh();
-  } else if (key_code == WXK_DOWN || key_code == WXK_NUMPAD_DOWN ||
-             key_code == VIM_DOWN) {
+  } else if (
+#ifndef DONT_USE_ARROWKEYS
+      key_code == WXK_DOWN ||
+#endif
+      key_code == WXK_NUMPAD_DOWN || key_code == VIM_DOWN) {
     selection_ = GoToNextItem(items_, selection_, false);
 
     GenerateSelectionEvent();
     Refresh();
-  } else if (key_code == WXK_UP || key_code == WXK_NUMPAD_UP ||
-             key_code == VIM_UP) {
+  } else if (
+#ifndef DONT_USE_ARROWKEYS
+      key_code == WXK_UP ||
+#endif
+      key_code == WXK_NUMPAD_UP || key_code == VIM_UP) {
     selection_ = GoToPreviousItem(items_, selection_, false);
 
     GenerateSelectionEvent();
@@ -316,7 +322,7 @@ void Ctrl::OnKey(wxKeyEvent& event) {
     GenerateSelectionEvent();
     Refresh();
   } else if (
-#ifndef DONT_USE_LEFT_AND_RIGHT_ARROWKEYS
+#ifndef DONT_USE_ARROWKEYS
       key_code == WXK_LEFT ||
 #endif
       key_code == WXK_NUMPAD_LEFT || key_code == VIM_LEFT) {
@@ -325,7 +331,7 @@ void Ctrl::OnKey(wxKeyEvent& event) {
     GenerateSelectionEvent();
     Refresh();
   } else if (
-#ifndef DONT_USE_LEFT_AND_RIGHT_ARROWKEYS
+#ifndef DONT_USE_ARROWKEYS
       key_code == WXK_RIGHT ||
 #endif
       key_code == WXK_NUMPAD_RIGHT || key_code == VIM_RIGHT) {
