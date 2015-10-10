@@ -24,6 +24,12 @@ namespace switcher {
 #define MODIFIER_KEY wxACCEL_RAW_CTRL
 #endif
 
+// vim style navigation
+#define VIM_LEFT 'H'
+#define VIM_DOWN 'J'
+#define VIM_UP 'K'
+#define VIM_RIGHT 'L'
+
 //////////////////////////////////////////////////////////////////////////
 // move these
 
@@ -258,20 +264,20 @@ void Ctrl::OnMouseEvent(wxMouseEvent& event) {
 void Ctrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
 
 void Ctrl::OnKey(wxKeyEvent& event) {
+  const int key_code = event.GetKeyCode();
   if (event.GetEventType() == wxEVT_KEY_UP) {
-    if (event.GetKeyCode() == MODIFIER_KEY) {
+    if (key_code == MODIFIER_KEY) {
       SendCloseEvent();
     }
     event.Skip();
     return;
   }
 
-  if (event.GetKeyCode() == WXK_ESCAPE || event.GetKeyCode() == WXK_RETURN) {
-    if (event.GetKeyCode() == WXK_ESCAPE) selection_ = SWITCHER_NOT_FOUND;
+  if (key_code == WXK_ESCAPE || key_code == WXK_RETURN) {
+    if (key_code == WXK_ESCAPE) selection_ = SWITCHER_NOT_FOUND;
 
     SendCloseEvent();
-  } else if (event.GetKeyCode() == WXK_TAB ||
-             event.GetKeyCode() == EXTRA_NAVIGATION_KEY) {
+  } else if (key_code == WXK_TAB || key_code == EXTRA_NAVIGATION_KEY) {
     if (event.ShiftDown()) {
       selection_ = GoToPreviousItem(items_, selection_, true);
     } else {
@@ -280,38 +286,36 @@ void Ctrl::OnKey(wxKeyEvent& event) {
 
     GenerateSelectionEvent();
     Refresh();
-  } else if (event.GetKeyCode() == WXK_DOWN ||
-             event.GetKeyCode() == WXK_NUMPAD_DOWN) {
+  } else if (key_code == WXK_DOWN || key_code == WXK_NUMPAD_DOWN ||
+             key_code == VIM_DOWN) {
     selection_ = GoToNextItem(items_, selection_, false);
 
     GenerateSelectionEvent();
     Refresh();
-  } else if (event.GetKeyCode() == WXK_UP ||
-             event.GetKeyCode() == WXK_NUMPAD_UP) {
+  } else if (key_code == WXK_UP || key_code == WXK_NUMPAD_UP ||
+             key_code == VIM_UP) {
     selection_ = GoToPreviousItem(items_, selection_, false);
 
     GenerateSelectionEvent();
     Refresh();
-  } else if (event.GetKeyCode() == WXK_HOME ||
-             event.GetKeyCode() == WXK_NUMPAD_HOME) {
+  } else if (key_code == WXK_HOME || key_code == WXK_NUMPAD_HOME) {
     selection_ = GoToFirstItem(items_);
 
     GenerateSelectionEvent();
     Refresh();
-  } else if (event.GetKeyCode() == WXK_END ||
-             event.GetKeyCode() == WXK_NUMPAD_END) {
+  } else if (key_code == WXK_END || key_code == WXK_NUMPAD_END) {
     selection_ = GoToLastItem(items_);
 
     GenerateSelectionEvent();
     Refresh();
-  } else if (event.GetKeyCode() == WXK_LEFT ||
-             event.GetKeyCode() == WXK_NUMPAD_LEFT) {
+  } else if (key_code == WXK_LEFT || key_code == WXK_NUMPAD_LEFT ||
+             key_code == VIM_LEFT) {
     selection_ = GoToLeftItem(items_, style_, selection_);
 
     GenerateSelectionEvent();
     Refresh();
-  } else if (event.GetKeyCode() == WXK_RIGHT ||
-             event.GetKeyCode() == WXK_NUMPAD_RIGHT) {
+  } else if (key_code == WXK_RIGHT || key_code == WXK_NUMPAD_RIGHT ||
+             key_code == VIM_RIGHT) {
     selection_ = GoToRightItem(items_, style_, selection_);
 
     GenerateSelectionEvent();
