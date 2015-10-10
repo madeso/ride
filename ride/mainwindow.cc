@@ -697,15 +697,18 @@ std::vector<switcher::Item> ListPanes(wxAuiManager* aui) {
        pane_index++) {
     wxAuiPaneInfo& info = aui->GetAllPanes()[pane_index];
 
-    wxString name = info.name;
-    wxString caption = info.caption;
+    if (info.IsShown()) {
+      wxString name = info.name;
+      wxString caption = info.caption;
 
-    wxToolBar* toolBar = wxDynamicCast(info.window, wxToolBar);
+      wxToolBar* toolBar = wxDynamicCast(info.window, wxToolBar);
 
-    if (!caption.IsEmpty() && ToolbarCheck::Check(toolBar)) {
-      // We'll use the item 'id' to store the notebook selection, or -1 if not a
-      // page
-      toolbars.push_back(switcher::Item(caption, name, -1).set_window(toolBar));
+      if (!caption.IsEmpty() && ToolbarCheck::Check(toolBar)) {
+        // We'll use the item 'id' to store the notebook selection,
+        // or -1 if not a page
+        toolbars.push_back(
+            switcher::Item(caption, name, -1).set_window(toolBar));
+      }
     }
   }
   return toolbars;
@@ -732,10 +735,10 @@ void MainWindow::OnTab(bool forward) {
   // Add the main windows and toolbars, in two separate columns
 
   const std::vector<switcher::Item> windows = ListPanes<NullToolbar>(&aui_);
-  AddGroup(windows, &items, _("Main Windows"));
+  AddGroup(windows, &items, _("Active Tool Windows"));
 
   const std::vector<switcher::Item> toolbars = ListPanes<NonNullToolbar>(&aui_);
-  AddGroup(toolbars, &items, _("Toolbars"));
+  AddGroup(toolbars, &items, _("Active Toolbars"));
 
   // Now add the wxAuiNotebook pages
 
