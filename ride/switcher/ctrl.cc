@@ -179,6 +179,8 @@ Index GoToRightItem(const ItemList& items, const Style& style, Index i) {
 
 //////////////////////////////////////////////////////////////////////////
 
+enum { ID_FIRST = wxID_HIGHEST, ID_TAB_PREV, ID_TAB_NEXT };
+
 Ctrl::Ctrl(const ItemList& items, const Style& style)
     : items_(items),
       style_(style),
@@ -212,6 +214,16 @@ Ctrl::Ctrl(const ItemList& items, const Style& style)
   Bind(wxEVT_KEY_UP, &Ctrl::OnKey, this);
 
   Bind(wxEVT_NAVIGATION_KEY, &Ctrl::OnNavigation, this);
+
+  Bind(wxEVT_MENU, &Ctrl::OnTabNext, this, ID_TAB_NEXT);
+  Bind(wxEVT_MENU, &Ctrl::OnTabPrev, this, ID_TAB_PREV);
+
+  std::vector<wxAcceleratorEntry> entries;
+  entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL, WXK_TAB, ID_TAB_NEXT));
+  entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL | wxACCEL_SHIFT,
+                                       WXK_TAB, ID_TAB_PREV));
+  wxAcceleratorTable acc(entries.size(), &entries[0]);
+  SetAcceleratorTable(acc);
 }
 
 bool Ctrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
@@ -274,7 +286,11 @@ void Ctrl::OnMouseEvent(wxMouseEvent& event) {
 void Ctrl::OnChar(wxKeyEvent& WXUNUSED(event)) {}  // NOLINT
 
 void Ctrl::OnNavigation(wxNavigationKeyEvent& event) {
-  if (event.GetDirection()) {
+  OnTab(event.GetDirection());
+}
+
+void Ctrl::OnTab(bool forward) {
+  if (forward) {
     selection_ = GoToNextItem(items_, selection_, true);
   } else {
     selection_ = GoToPreviousItem(items_, selection_, true);

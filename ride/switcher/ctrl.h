@@ -38,6 +38,10 @@ class Ctrl : public wxControl {
   void OnKey(wxKeyEvent& event);
   void OnEraseBackground(wxEraseEvent& event);
 
+  void OnTab(bool forward);
+  void OnTabNext(wxCommandEvent& event) { OnTab(true); }
+  void OnTabPrev(wxCommandEvent& event) { OnTab(false); }
+
   // Overrides
   virtual wxSize DoGetBestClientSize() const;
 
