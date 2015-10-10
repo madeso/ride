@@ -691,8 +691,8 @@ void MainWindow::OnViewShowProject(wxCommandEvent& event) {
 }
 
 template <typename ToolbarCheck>
-std::vector<SwitcherItem> ListPanes(wxAuiManager* aui) {
-  std::vector<SwitcherItem> toolbars;
+std::vector<switcher::SwitcherItem> ListPanes(wxAuiManager* aui) {
+  std::vector<switcher::SwitcherItem> toolbars;
   for (size_t pane_index = 0; pane_index < aui->GetAllPanes().GetCount();
        pane_index++) {
     wxAuiPaneInfo& info = aui->GetAllPanes()[pane_index];
@@ -705,7 +705,7 @@ std::vector<SwitcherItem> ListPanes(wxAuiManager* aui) {
     if (!caption.IsEmpty() && ToolbarCheck::Check(toolBar)) {
       // We'll use the item 'id' to store the notebook selection, or -1 if not a
       // page
-      toolbars.push_back(SwitcherItem(caption, name, -1).set_window(toolBar));
+      toolbars.push_back(switcher::SwitcherItem(caption, name, -1).set_window(toolBar));
     }
   }
   return toolbars;
@@ -719,27 +719,27 @@ struct NullToolbar {
   static bool Check(wxToolBar* toolbar) { return toolbar == NULL; }
 };
 
-void AddGroup(const std::vector<SwitcherItem>& toolbars,
-              SwitcherItemList* items, const wxString& title) {
+void AddGroup(const std::vector<switcher::SwitcherItem>& toolbars,
+  switcher::SwitcherItemList* items, const wxString& title) {
   if (toolbars.empty() == false) {
-    items->AddGroup(SwitcherGroup(title, toolbars));
+    items->AddGroup(switcher::SwitcherGroup(title, toolbars));
   }
 }
 
 void MainWindow::OnTab(bool forward) {
-  SwitcherItemList items;
+  switcher::SwitcherItemList items;
 
   // Add the main windows and toolbars, in two separate columns
 
-  const std::vector<SwitcherItem> windows = ListPanes<NullToolbar>(&aui_);
+  const std::vector<switcher::SwitcherItem> windows = ListPanes<NullToolbar>(&aui_);
   AddGroup(windows, &items, _("Main Windows"));
 
-  const std::vector<SwitcherItem> toolbars = ListPanes<NonNullToolbar>(&aui_);
+  const std::vector<switcher::SwitcherItem> toolbars = ListPanes<NonNullToolbar>(&aui_);
   AddGroup(toolbars, &items, _("Toolbars"));
 
   // Now add the wxAuiNotebook pages
 
-  SwitcherGroup& files = items.AddGroup(SwitcherGroup(_("Active Files")));
+  switcher::SwitcherGroup& files = items.AddGroup(switcher::SwitcherGroup(_("Active Files")));
 
   struct TabData {
     wxString name;
@@ -764,24 +764,24 @@ void MainWindow::OnTab(bool forward) {
     const auto found = tabdata.find(document.id);
     if (found != tabdata.end()) {
       const TabData& data = found->second;
-      files.AddItem(SwitcherItem(data.name, data.name, data.index, data.bitmap))
+      files.AddItem(switcher::SwitcherItem(data.name, data.name, data.index, data.bitmap))
           .set_window(data.win)
           .set_description(document.description)
           .set_path(document.path);
     }
   }
 
-  const SwitcherIndex focus = items.GetIndexForFocus();
+  const switcher::SwitcherIndex focus = items.GetIndexForFocus();
 
-  SwitcherStyle style;
-  SwitcherDlg dlg(items, focus, style, this);
+  switcher::SwitcherStyle style;
+  switcher::SwitcherDlg dlg(items, focus, style, this);
 
   dlg.AdvanceToNextSelection(forward);
 
   int ans = dlg.ShowModal();
 
   if (ans == wxID_OK && dlg.GetSelection() != SWITCHER_NOT_FOUND) {
-    SwitcherItem& item = items.GetItem(dlg.GetSelection());
+    switcher::SwitcherItem& item = items.GetItem(dlg.GetSelection());
 
     if (item.id() == -1) {
       wxAuiPaneInfo& info = aui_.GetPane(item.name());

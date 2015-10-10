@@ -10,6 +10,8 @@
 #include "item.h"
 #include "group.h"
 
+namespace switcher {
+
 typedef std::pair<int, int> SwitcherIndex;
 #define SWITCHER_NOT_FOUND std::pair<int, int>(-1, -1)
 
@@ -45,5 +47,7 @@ class SwitcherItemList {
   std::vector<SwitcherGroup> items_;
   int column_count_;
 };
+
+}  // switcher
 
 #endif  // RIDE_SWITCHERITEMLIST_H_

@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+namespace switcher {
+
 #define wxSWITCHER_USE_BUFFERED_PAINTING 1
 
 #define MODIFIER_KEY WXK_CONTROL
@@ -473,3 +475,5 @@ void SwitcherCtrl::AdvanceToNextSelection(bool forward) {
     selection_ = GoToNextItem(items_, selection_, true);
   }
 }
+
+}  // switcher

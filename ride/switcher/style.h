@@ -9,6 +9,8 @@
 #include "item.h"
 #include "group.h"
 
+namespace switcher {
+
 class SwitcherStyle {
  public:
   SwitcherStyle();
@@ -64,5 +66,7 @@ class SwitcherStyle {
 
   wxFont item_font_;
 };
+
+}  // switcher
 
 #endif  // RIDE_SWITCHERSTYLE_H_

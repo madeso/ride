@@ -7,6 +7,8 @@
 
 #include "item.h"
 
+namespace switcher {
+
 class SwitcherStyle;
 
 class SwitcherGroup {
@@ -41,5 +43,7 @@ class SwitcherGroup {
   wxRect rect_;
   wxString title_;
 };
+
+}  // switcher
 
 #endif  // RIDE_SWITCHERGROUP_H_

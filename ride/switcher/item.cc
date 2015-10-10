@@ -1,5 +1,7 @@
 #include "item.h"
 
+namespace switcher {
+
 SwitcherItem::SwitcherItem()
     : id_(0), row_pos_(0), col_pos_(0), window_(NULL) {}
 
@@ -102,3 +104,5 @@ SwitcherItem& SwitcherItem::set_window(wxWindow* win) {
 }
 
 wxWindow* SwitcherItem::window() const { return window_; }
+
+}  // switcher

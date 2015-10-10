@@ -4,6 +4,8 @@
 #include <ride/wx.h>
 #include <wx/html/htmlwin.h>
 
+namespace switcher {
+
 class SwitcherItem : public wxObject {
  public:
   SwitcherItem();
@@ -54,5 +56,7 @@ class SwitcherItem : public wxObject {
   int col_pos_;
   wxWindow* window_;
 };
+
+}  // switcher
 
 #endif  // RIDE_SWITCHERITEM_H_

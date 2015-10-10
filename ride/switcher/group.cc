@@ -5,6 +5,8 @@
 
 #include "style.h"
 
+namespace switcher {
+
 SwitcherGroup::SwitcherGroup(const wxString& title) : title_(title) {}
 
 SwitcherGroup::SwitcherGroup(const wxString& title,
@@ -145,3 +147,5 @@ void SwitcherGroup::CalculateItemSize(wxDC* dc, const SwitcherStyle& style,
     ExtendSize(dc, style.item_font(), item.title(), style, sz);
   }
 }
+
+}  // switcher

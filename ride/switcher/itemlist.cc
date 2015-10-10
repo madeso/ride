@@ -5,6 +5,8 @@
 
 #include "style.h"
 
+namespace switcher {
+
 SwitcherItemList::SwitcherItemList() : column_count_(0) {}
 
 SwitcherGroup& SwitcherItemList::AddGroup(const SwitcherGroup& item) {
@@ -103,3 +105,5 @@ wxSize SwitcherItemList::CalculateItemSize(wxDC* dc,
 
   return sz;
 }
+
+}  // switcher

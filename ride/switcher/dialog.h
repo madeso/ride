@@ -10,6 +10,8 @@
 #include "itemlist.h"
 #include "ctrl.h"
 
+namespace switcher {
+
 class SwitcherDlg : public wxDialog {
  public:
   SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
@@ -49,5 +51,7 @@ class SwitcherDlg : public wxDialog {
   wxColour border_color_;
   SwitcherStyle style_;
 };
+
+}  // switcher
 
 #endif  // RIDE_SWITCHERDLG_H_

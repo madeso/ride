@@ -3,6 +3,8 @@
 #include <wx/settings.h>
 #include <wx/dcbuffer.h>
 
+namespace switcher {
+
 SwitcherStyle::SwitcherStyle()
     : row_count_(12),
       text_margin_x_(4),
@@ -77,3 +79,5 @@ int SwitcherStyle::dlg_main_border() const { return 8; }
 int SwitcherStyle::dlg_item_border() const { return 3; }
 
 wxColor SwitcherStyle::border_color() const { return *wxBLACK; }
+
+}  // switcher

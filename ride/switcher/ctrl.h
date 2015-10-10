@@ -10,14 +10,16 @@
 #include "itemlist.h"
 #include "style.h"
 
+namespace switcher {
+
 class SwitcherCtrl : public wxControl {
- public:
+public:
   explicit SwitcherCtrl(const SwitcherItemList& items,
-                        const SwitcherStyle& style);
+    const SwitcherStyle& style);
 
   bool Create(wxWindow* parent, wxWindowID id,
-              const wxPoint& pos = wxDefaultPosition,
-              const wxSize& size = wxDefaultSize, long style = 0);  // NOLINT
+    const wxPoint& pos = wxDefaultPosition,
+    const wxSize& size = wxDefaultSize, long style = 0);  // NOLINT
 
   // Public API
   void set_items(const SwitcherItemList& items);
@@ -48,11 +50,13 @@ class SwitcherCtrl : public wxControl {
   void SendCloseEvent();
   void AdvanceToNextSelection(bool forward);
 
- protected:
+protected:
   SwitcherItemList items_;
   SwitcherIndex selection_;
   SwitcherStyle style_;
   wxSize overall_size_;
 };
+
+}  // switcher
 
 #endif  // RIDE_SWITCHERCTRL_H_

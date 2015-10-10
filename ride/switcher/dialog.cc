@@ -5,6 +5,8 @@
 
 #include "style.h"
 
+namespace switcher {
+
 SwitcherDlg::SwitcherDlg(const SwitcherItemList& items, SwitcherIndex index,
                          const SwitcherStyle& sstyle, wxWindow* parent,
                          wxWindowID id, const wxString& title,
@@ -117,3 +119,5 @@ void SwitcherDlg::UpdateDescription() {
     ShowDescription(list_ctrl_->items().GetItem(selected));
   }
 }
+
+}  // switcher
