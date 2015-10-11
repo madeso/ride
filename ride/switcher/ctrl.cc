@@ -187,26 +187,9 @@ Ctrl::Ctrl(const ItemList& items, const Style& style)
       style_(style),
       selection_(SWITCHER_NOT_FOUND),
       overall_size_(wxSize(200, 100)) {
-  // TODO(Gustav): Remove unused events
-  // Bind(wxEVT_LEFT_DOWN, &Ctrl::OnMouseEvent, this);
   Bind(wxEVT_LEFT_UP, &Ctrl::OnMouseClick, this);
-  // Bind(wxEVT_LEFT_DCLICK, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_MIDDLE_DOWN, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_MIDDLE_UP, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_MIDDLE_DCLICK, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_RIGHT_DOWN, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_RIGHT_UP, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_RIGHT_DCLICK, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_AUX1_DOWN, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_AUX1_UP, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_AUX1_DCLICK, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_AUX2_DOWN, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_AUX2_UP, &Ctrl::OnMouseEvent, this);
-  // Bind(wxEVT_AUX2_DCLICK, &Ctrl::OnMouseEvent, this);
   Bind(wxEVT_MOTION, &Ctrl::OnMouseMove, this);
-  // Bind(wxEVT_LEAVE_WINDOW, &Ctrl::OnMouseEvent, this);
   Bind(wxEVT_ENTER_WINDOW, &Ctrl::OnMouseMove, this);
-  // Bind(wxEVT_MOUSEWHEEL, &Ctrl::OnMouseEvent, this);
 
   Bind(wxEVT_PAINT, &Ctrl::OnPaint, this);
   Bind(wxEVT_ERASE_BACKGROUND, &Ctrl::OnEraseBackground, this);
