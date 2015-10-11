@@ -191,6 +191,42 @@ namespace ui
 			wxColourPickerCtrl* uiWindowStatusbarShadow;
 			wxStaticText* m_staticText76;
 			wxColourPickerCtrl* uiWindowStatusbarHighlight;
+			wxPanel* m_panel20;
+			wxStaticText* m_staticText94;
+			wxColourPickerCtrl* uiSwitcherItemBackground;
+			wxStaticText* m_staticText95;
+			wxColourPickerCtrl* uiSwitcherItemText;
+			wxStaticText* m_staticText82;
+			wxColourPickerCtrl* uiSwitcherSelection;
+			wxStaticText* m_staticText83;
+			wxColourPickerCtrl* uiSwitcherSelectionOutline;
+			wxStaticText* m_staticText84;
+			wxColourPickerCtrl* uiSwitcherBorder;
+			wxStaticText* m_staticText85;
+			wxColourPickerCtrl* uiSwitcherBackground;
+			wxStaticText* m_staticText80;
+			wxTextCtrl* uiSwitcherTextMarginX;
+			wxStaticText* m_staticText79;
+			wxTextCtrl* uiSwitcherTextMarginY;
+			wxStaticText* m_staticText81;
+			wxTextCtrl* uiSwitcherXMargin;
+			wxStaticText* m_staticText86;
+			wxTextCtrl* uiSwitcherYMargin;
+			wxStaticText* m_staticText87;
+			wxTextCtrl* uiSwitcherRowSpacing;
+			wxStaticText* m_staticText88;
+			wxTextCtrl* uiSwitcherColSpacing;
+			wxStaticText* m_staticText89;
+			wxTextCtrl* uiSwitcherMainBorder;
+			wxStaticText* m_staticText90;
+			wxTextCtrl* uiSwitcherItemBorder;
+			wxCheckBox* uiSwitcherVsFocus;
+			wxStaticText* m_staticText91;
+			wxTextCtrl* uiSwitcherItemsPerRow;
+			wxStaticText* m_staticText92;
+			wxTextCtrl* uiSwitcherItemMaxWidth;
+			wxStaticText* m_staticText93;
+			wxTextCtrl* uiSwitcherItemMaxHeight;
 			wxPanel* m_themes;
 			wxButton* m_button40;
 			wxButton* m_button42;
@@ -229,6 +265,8 @@ namespace ui
 			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnWindowColorChange( wxColourPickerEvent& event ) { event.Skip(); }
 			virtual void OnWindowComboChange( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnWindowText( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnWindowCheck( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnThemeApplySelected( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnThemeImport( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnThemeExportSelected( wxCommandEvent& event ) { event.Skip(); }

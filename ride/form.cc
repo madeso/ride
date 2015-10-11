@@ -53,7 +53,10 @@ google::protobuf::int32 ToData_I32(wxTextCtrl* gui) {
   if (true == value.ToLong(&ret)) {
     return ret;
   }
-  if (value.length() == 0) return -1;
+  if (value.length() == 0) {
+    return -1;
+  }
+
   assert(false && "Unable to get integer value");
   return -1;
 }

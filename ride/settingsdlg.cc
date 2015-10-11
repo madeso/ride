@@ -147,6 +147,8 @@ class SettingsDlg : public ui::Settings {
   // Window tab
   void OnWindowColorChange(wxColourPickerEvent& event);
   void OnWindowComboChange(wxCommandEvent& event);
+  void OnWindowText(wxCommandEvent& event);
+  void OnWindowCheck(wxCommandEvent& event);
 
   //////////////////////////////////////////////////////////////////////////
   // Theme tab
@@ -741,12 +743,15 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
   allow_send_style_to_main_ = false;
   allow_send_marker_to_main_ = false;
   allow_send_indicator_to_main_ = false;
+  allow_send_window_to_main_ = false;
 
   StyleToGui(true);
   MarkerToGui(true);
   ThemeToGui(true);
   WindowToGui(true);
   UpdateStyleEnable();
+
+  allow_send_window_to_main_ = true;
 }
 
 void SettingsDlg::StyleSaveSelectedIndex() {
@@ -929,6 +934,37 @@ void SettingsDlg::WindowToGui(bool togui) {
   optional StatusbarStyle statusbar_style	    = 1019 [
   */
 
+  DIALOG_DATA(current_settings_, switcher_vs_focus, uiSwitcherVsFocus, );
+  DIALOG_DATA(current_settings_, switcher_row_count, uiSwitcherItemsPerRow,
+              _I32);
+  DIALOG_DATA(current_settings_, switcher_item_maxwidth, uiSwitcherItemMaxWidth,
+              _I32);
+  DIALOG_DATA(current_settings_, switcher_item_maxheight,
+              uiSwitcherItemMaxHeight, _I32);
+  DIALOG_DATA(current_settings_, switcher_text_margin_x, uiSwitcherTextMarginX,
+              _I32);
+  DIALOG_DATA(current_settings_, switcher_text_margin_y, uiSwitcherTextMarginY,
+              _I32);
+  DIALOG_DATA(current_settings_, switcher_x_margin, uiSwitcherXMargin, _I32);
+  DIALOG_DATA(current_settings_, switcher_y_margin, uiSwitcherYMargin, _I32);
+  DIALOG_DATA(current_settings_, switcher_row_spacing, uiSwitcherRowSpacing,
+              _I32);
+  DIALOG_DATA(current_settings_, switcher_col_spacing, uiSwitcherColSpacing,
+              _I32);
+  DIALOG_DATA(current_settings_, switcher_dlg_main_border, uiSwitcherMainBorder,
+              _I32);
+  DIALOG_DATA(current_settings_, switcher_dlg_item_border, uiSwitcherItemBorder,
+              _I32);
+
+  DIALOG_DATAX(fonts_and_colors, switcher_background_color,
+               uiSwitcherItemBackground);
+  DIALOG_DATAX(fonts_and_colors, switcher_text_color, uiSwitcherItemText);
+  DIALOG_DATAX(fonts_and_colors, switcher_selection_color, uiSwitcherSelection);
+  DIALOG_DATAX(fonts_and_colors, switcher_selection_outline_color,
+               uiSwitcherSelectionOutline);
+  DIALOG_DATAX(fonts_and_colors, switcher_border_color, uiSwitcherBorder);
+  DIALOG_DATAX(fonts_and_colors, switcher_base_color, uiSwitcherBackground);
+
   if (togui == false) {
     current_settings_.set_allocated_fonts_and_colors(
         Allocate(fonts_and_colors));
@@ -939,6 +975,15 @@ void SettingsDlg::OnWindowColorChange(wxColourPickerEvent& event) {
   SendWindowToMain();
 }
 void SettingsDlg::OnWindowComboChange(wxCommandEvent& event) {
+  assert(this);
+  SendWindowToMain();
+}
+
+void SettingsDlg::OnWindowText(wxCommandEvent& event) {
+  assert(this);
+  SendWindowToMain();
+}
+void SettingsDlg::OnWindowCheck(wxCommandEvent& event) {
   assert(this);
   SendWindowToMain();
 }

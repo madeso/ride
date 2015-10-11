@@ -310,6 +310,13 @@ message FontsAndColors {
   optional Color statusbar_highlight	        = 1021;
   optional Color statusbar_foreground		    = 1022;
   optional Color statusbar_background		    = 1023;
+
+  optional Color switcher_background_color = 1304;
+  optional Color switcher_text_color = 1305;
+  optional Color switcher_selection_color = 1306;
+  optional Color switcher_selection_outline_color = 1307;
+  optional Color switcher_border_color = 1316;
+  optional Color switcher_base_color = 1317;
 }
 
 message Theme {
@@ -414,24 +421,18 @@ message Settings {
   // settings for ctrl-tab
 
   optional bool switcher_vs_focus = 300 [default=true];
-
   optional int32 switcher_row_count = 301 [default = 12];
+  optional int32 switcher_item_maxwidth = 312 [default = 300];
+  optional int32 switcher_item_maxheight = 313 [default = 40];
+
   optional int32 switcher_text_margin_x = 302 [default = 4];
   optional int32 switcher_text_margin_y = 303 [default = 2];
-  optional Color switcher_background_color = 304;
-  optional Color switcher_text_color = 305;
-  optional Color switcher_selection_color = 306;
-  optional Color switcher_selection_outline_color = 307;
   optional int32 switcher_x_margin = 308 [default = 3];
   optional int32 switcher_y_margin = 309 [default = 3];
   optional int32 switcher_row_spacing = 310 [default = 1];
   optional int32 switcher_col_spacing = 311 [default = 1];
-  optional int32 switcher_item_maxwidth = 312 [default = 300];
-  optional int32 switcher_item_maxheight = 313 [default = 40];
   optional int32 switcher_dlg_main_border = 314 [default = 8];
   optional int32 switcher_dlg_item_border = 315 [default = 3];
-  optional Color switcher_border_color = 316;
-  optional Color switcher_base_color = 317;
 }
 
 /* ******************************************************************************************* */

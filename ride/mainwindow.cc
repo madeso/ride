@@ -784,15 +784,17 @@ void MainWindow::OnTab(bool forward) {
                : items.GetIndexForFocus();
   int group = vs_focus ? files_group_index : 0;
 
+  const ride::FontsAndColors& colors = settings_.fonts_and_colors();
+
   switcher::Style style;
   style.set_row_count(settings_.switcher_row_count());
   style.set_text_margin_x(settings_.switcher_text_margin_x());
   style.set_text_margin_y(settings_.switcher_text_margin_y());
-  style.set_background_color(C(settings_.switcher_background_color()));
-  style.set_text_color(C(settings_.switcher_text_color()));
-  style.set_selection_color(C(settings_.switcher_selection_color()));
+  style.set_background_color(C(colors.switcher_background_color()));
+  style.set_text_color(C(colors.switcher_text_color()));
+  style.set_selection_color(C(colors.switcher_selection_color()));
   style.set_selection_outline_color(
-      C(settings_.switcher_selection_outline_color()));
+      C(colors.switcher_selection_outline_color()));
   style.set_x_margin(settings_.switcher_x_margin());
   style.set_y_margin(settings_.switcher_y_margin());
   style.set_row_spacing(settings_.switcher_row_spacing());
@@ -801,8 +803,8 @@ void MainWindow::OnTab(bool forward) {
   style.set_item_maxheight(settings_.switcher_item_maxheight());
   style.set_dlg_main_border(settings_.switcher_dlg_main_border());
   style.set_dlg_item_border(settings_.switcher_dlg_item_border());
-  style.set_border_color(C(settings_.switcher_border_color()));
-  style.set_base_color(C(settings_.switcher_base_color()));
+  style.set_border_color(C(colors.switcher_border_color()));
+  style.set_base_color(C(colors.switcher_base_color()));
 
   switcher::Dialog dlg(items, focus, group, forward, style, this);
 
