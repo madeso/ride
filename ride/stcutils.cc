@@ -317,13 +317,10 @@ void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl,
     text_ctrl->SetCaretLineBackAlpha(wxSTC_ALPHA_NOALPHA);
   }
   text_ctrl->SetCaretLineVisible(set.current_line_visible());
+
+  // text_ctrl->SetCaretLineVisibleAlways(true);
   // todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier
-  // to change settings
-
-  // and caret
-
-  int cp = text_ctrl->GetCaretPeriod();
-  int cw = text_ctrl->GetCaretWidth();
+  // to change settings and caret
 
   text_ctrl->SetCaretForeground(C(set.fonts_and_colors().caret_foreground()));
   text_ctrl->SetCaretPeriod(set.caret_period());
