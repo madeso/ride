@@ -59,8 +59,9 @@ Index GoToFirstItem(const ItemList& items, int group = 0) {
 Index GoToLastItem(const ItemList& items) {
   for (size_t group_index = items.GetGroupCount() - 1; group_index >= 0;
        --group_index) {
-    if (items.GetGroupCount() > 0) {
-      return Index(group_index, 0);
+    int count = items.GetGroup(group_index).GetItemCount();
+    if (count > 0) {
+      return Index(group_index, count - 1);
     }
   }
   return SWITCHER_NOT_FOUND;
