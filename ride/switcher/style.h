@@ -43,16 +43,31 @@ class Style {
 
   int x_margin() const;
   int y_margin() const;
+
+  void set_x_margin(int x);
+  void set_y_margin(int y);
+
   int row_spacing() const;
   int col_spacing() const;
+
+  void set_row_spacing(int spacing);
+  void set_col_spacing(int spacing);
 
   int item_maxwidth() const;
   int item_maxheight() const;
 
+  void set_item_maxwidth(int max);
+  void set_item_maxheight(int max);
+
   int dlg_main_border() const;
   int dlg_item_border() const;
 
+  void set_dlg_main_border(int border);
+  void set_dlg_item_border(int border);
+
   wxColor border_color() const;
+
+  void set_border_color(wxColor color);
 
  protected:
   int row_count_;
@@ -65,6 +80,20 @@ class Style {
   wxColour selection_outline_color_;
 
   wxFont item_font_;
+
+  int x_margin_;
+  int y_margin_;
+
+  int row_spacing_;
+  int col_spacing_;
+
+  int item_maxwidth_;
+  int item_maxheight_;
+
+  int dlg_main_border_;
+  int dlg_item_border_;
+
+  wxColor border_color_;
 };
 
 }  // switcher
