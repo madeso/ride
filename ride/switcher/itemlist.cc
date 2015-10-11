@@ -32,7 +32,7 @@ Index ItemList::HitTest(const wxPoint& pt) const {
   for (size_t i = 0; i < items_.size(); i++) {
     int item = items_[i].HitTest(pt);
     if (item != -1) {
-      std::make_pair(i, item);
+      return std::make_pair(i, item);
     }
   }
 

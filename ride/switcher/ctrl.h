@@ -32,7 +32,8 @@ class Ctrl : public wxControl {
   // Event handlers
 
   void OnPaint(wxPaintEvent& event);
-  void OnMouseEvent(wxMouseEvent& event);
+  void OnMouseClick(wxMouseEvent& event);
+  void OnMouseMove(wxMouseEvent& event);
   void OnChar(wxKeyEvent& event);
   void OnKey(wxKeyEvent& event);
   void OnEraseBackground(wxEraseEvent& event);
