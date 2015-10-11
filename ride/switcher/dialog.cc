@@ -66,6 +66,8 @@ Dialog::Dialog(const ItemList& items, Index index, int group, bool forward,
 
   list_ctrl_->SelectOrFirst(index, group, forward);
 
+  SetBackgroundColour(style_.base_color());
+
   UpdateDescription();
 }
 

@@ -410,6 +410,28 @@ message Settings {
   optional bool     fold_cpp_comment_explicit = 211 [default=true];       //  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
   optional bool     fold_cpp_explicit_anywhere = 212 [default=false];      //  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
   optional bool     fold_at_else = 213 [default=true];                    //  This option enables C++ folding on a "} else {" line of an if statement.
+
+  // settings for ctrl-tab
+
+  optional bool switcher_vs_focus = 300 [default=true];
+
+  optional int32 switcher_row_count = 301 [default = 12];
+  optional int32 switcher_text_margin_x = 302 [default = 4];
+  optional int32 switcher_text_margin_y = 303 [default = 2];
+  optional Color switcher_background_color = 304;
+  optional Color switcher_text_color = 305;
+  optional Color switcher_selection_color = 306;
+  optional Color switcher_selection_outline_color = 307;
+  optional int32 switcher_x_margin = 308 [default = 3];
+  optional int32 switcher_y_margin = 309 [default = 3];
+  optional int32 switcher_row_spacing = 310 [default = 1];
+  optional int32 switcher_col_spacing = 311 [default = 1];
+  optional int32 switcher_item_maxwidth = 312 [default = 300];
+  optional int32 switcher_item_maxheight = 313 [default = 40];
+  optional int32 switcher_dlg_main_border = 314 [default = 8];
+  optional int32 switcher_dlg_item_border = 315 [default = 3];
+  optional Color switcher_border_color = 316;
+  optional Color switcher_base_color = 317;
 }
 
 /* ******************************************************************************************* */

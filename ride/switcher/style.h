@@ -66,8 +66,10 @@ class Style {
   void set_dlg_item_border(int border);
 
   wxColor border_color() const;
-
   void set_border_color(wxColor color);
+
+  wxColor base_color() const;
+  void set_base_color(wxColor color);
 
  protected:
   int row_count_;
@@ -94,6 +96,7 @@ class Style {
   int dlg_item_border_;
 
   wxColor border_color_;
+  wxColor base_color_;
 };
 
 }  // switcher

@@ -9,7 +9,7 @@ Style::Style()
     : row_count_(12),
       text_margin_x_(4),
       text_margin_y_(2),
-      background_color_(*wxRED),
+      background_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE)),
       text_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)),
       selection_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_HIGHLIGHT)),
       selection_outline_color_(
@@ -92,5 +92,9 @@ void Style::set_dlg_item_border(int border) { dlg_item_border_ = border; }
 wxColor Style::border_color() const { return border_color_; }
 
 void Style::set_border_color(wxColor color) { border_color_ = color; }
+
+wxColor Style::base_color() const { return base_color_; }
+
+void Style::set_base_color(wxColor color) { base_color_ = color; }
 
 }  // switcher
