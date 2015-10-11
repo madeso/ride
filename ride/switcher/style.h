@@ -65,11 +65,17 @@ class Style {
   void set_dlg_main_border(int border);
   void set_dlg_item_border(int border);
 
-  wxColor border_color() const;
-  void set_border_color(wxColor color);
+  wxColor dialog_color() const;
+  void set_dialog_color(wxColor color);
 
   wxColor base_color() const;
   void set_base_color(wxColor color);
+
+  int min_width() const;
+  int min_height() const;
+
+  void set_min_width(int w);
+  void set_min_height(int h);
 
  protected:
   int row_count_;
@@ -95,8 +101,11 @@ class Style {
   int dlg_main_border_;
   int dlg_item_border_;
 
-  wxColor border_color_;
+  wxColor dialog_color_;
   wxColor base_color_;
+
+  int min_width_;
+  int min_height_;
 };
 
 }  // switcher

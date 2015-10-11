@@ -23,7 +23,7 @@ Style::Style()
       item_maxheight_(40),
       dlg_main_border_(8),
       dlg_item_border_(3),
-      border_color_(*wxBLACK) {}
+      dialog_color_(*wxBLACK) {}
 
 void Style::set_text_margin_x(int margin) { text_margin_x_ = margin; }
 
@@ -89,12 +89,18 @@ int Style::dlg_item_border() const { return dlg_item_border_; }
 void Style::set_dlg_main_border(int border) { dlg_main_border_ = border; }
 void Style::set_dlg_item_border(int border) { dlg_item_border_ = border; }
 
-wxColor Style::border_color() const { return border_color_; }
+wxColor Style::dialog_color() const { return dialog_color_; }
 
-void Style::set_border_color(wxColor color) { border_color_ = color; }
+void Style::set_dialog_color(wxColor color) { dialog_color_ = color; }
 
 wxColor Style::base_color() const { return base_color_; }
 
 void Style::set_base_color(wxColor color) { base_color_ = color; }
+
+int Style::min_width() const { return min_width_; }
+int Style::min_height() const { return min_height_; }
+
+void Style::set_min_width(int w) { min_width_ = w; }
+void Style::set_min_height(int h) { min_height_ = h; }
 
 }  // switcher

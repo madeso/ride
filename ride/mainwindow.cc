@@ -803,8 +803,11 @@ void MainWindow::OnTab(bool forward) {
   style.set_item_maxheight(settings_.switcher_item_maxheight());
   style.set_dlg_main_border(settings_.switcher_dlg_main_border());
   style.set_dlg_item_border(settings_.switcher_dlg_item_border());
-  style.set_border_color(C(colors.switcher_border_color()));
+  style.set_dialog_color(C(colors.switcher_dialog_color()));
   style.set_base_color(C(colors.switcher_base_color()));
+
+  style.set_min_width(settings_.switcher_min_width());
+  style.set_min_height(settings_.switcher_min_height());
 
   switcher::Dialog dlg(items, focus, group, forward, style, this);
 

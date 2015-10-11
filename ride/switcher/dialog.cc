@@ -16,7 +16,6 @@ Dialog::Dialog(const ItemList& items, Index index, int group, bool forward,
       path_ctrl_(NULL),
       is_closing_(false),
       switcher_border_style_(0),
-      border_color_(sstyle.border_color()),
       style_(sstyle) {
   Bind(wxEVT_CLOSE_WINDOW, &Dialog::OnCloseWindow, this);
   Bind(wxEVT_ACTIVATE, &Dialog::OnActivate, this);
@@ -67,6 +66,12 @@ Dialog::Dialog(const ItemList& items, Index index, int group, bool forward,
   list_ctrl_->SelectOrFirst(index, group, forward);
 
   SetBackgroundColour(style_.base_color());
+  const wxColor foreground = style_.dialog_color();
+  SetForegroundColour(foreground);
+
+  title_ctrl_->SetForegroundColour(foreground);
+  description_ctrl_->SetForegroundColour(foreground);
+  path_ctrl_->SetForegroundColour(foreground);
 
   UpdateDescription();
 }
@@ -102,10 +107,6 @@ void Dialog::ShowDescription(const Item& item) {
   title_ctrl_->SetLabel(item.title());
   description_ctrl_->SetLabel(item.description());
   path_ctrl_->SetLabel(item.path());
-}
-
-void Dialog::set_border_color(const wxColour& colour) {
-  border_color_ = colour;
 }
 
 void Dialog::UpdateDescription() {

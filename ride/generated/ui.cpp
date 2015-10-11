@@ -956,12 +956,12 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiSwitcherSelectionOutline = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer371->Add( uiSwitcherSelectionOutline, 0, wxALL, 5 );
 	
-	m_staticText84 = new wxStaticText( m_panel20, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText84 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText84->Wrap( -1 );
 	fgSizer371->Add( m_staticText84, 0, wxALL, 5 );
 	
-	uiSwitcherBorder = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer371->Add( uiSwitcherBorder, 0, wxALL, 5 );
+	uiSwitcherDialog = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer371->Add( uiSwitcherDialog, 0, wxALL, 5 );
 	
 	m_staticText85 = new wxStaticText( m_panel20, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText85->Wrap( -1 );
@@ -1082,6 +1082,20 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	uiSwitcherItemMaxHeight = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer391->Add( uiSwitcherItemMaxHeight, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText96 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog minimum width"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText96->Wrap( -1 );
+	fgSizer391->Add( m_staticText96, 0, wxALL, 5 );
+	
+	uiSwitcherMinWidth = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer391->Add( uiSwitcherMinWidth, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText97 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog minimum height"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText97->Wrap( -1 );
+	fgSizer391->Add( m_staticText97, 0, wxALL, 5 );
+	
+	uiSwitcherMinHeight = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer391->Add( uiSwitcherMinHeight, 0, wxALL|wxEXPAND, 5 );
 	
 	
 	sbSizer27->Add( fgSizer391, 1, wxEXPAND, 5 );
@@ -1279,7 +1293,7 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiSwitcherItemText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
 	uiSwitcherSelection->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
 	uiSwitcherSelectionOutline->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
+	uiSwitcherDialog->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
 	uiSwitcherBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
 	uiSwitcherTextMarginX->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
 	uiSwitcherTextMarginX->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
@@ -1304,6 +1318,10 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	uiSwitcherItemMaxWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
 	uiSwitcherItemMaxHeight->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
 	uiSwitcherItemMaxHeight->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
+	uiSwitcherMinWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMinWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
+	uiSwitcherMinHeight->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMinHeight->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
 	m_button40->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeApplySelected ), NULL, this );
 	m_button42->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeImport ), NULL, this );
 	m_button41->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeExportSelected ), NULL, this );
@@ -1410,7 +1428,7 @@ Settings::~Settings()
 	uiSwitcherItemText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
 	uiSwitcherSelection->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
 	uiSwitcherSelectionOutline->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
+	uiSwitcherDialog->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
 	uiSwitcherBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
 	uiSwitcherTextMarginX->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
 	uiSwitcherTextMarginX->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
@@ -1435,6 +1453,10 @@ Settings::~Settings()
 	uiSwitcherItemMaxWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
 	uiSwitcherItemMaxHeight->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
 	uiSwitcherItemMaxHeight->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
+	uiSwitcherMinWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMinWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
+	uiSwitcherMinHeight->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMinHeight->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
 	m_button40->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeApplySelected ), NULL, this );
 	m_button42->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeImport ), NULL, this );
 	m_button41->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeExportSelected ), NULL, this );

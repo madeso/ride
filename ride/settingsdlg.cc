@@ -955,6 +955,9 @@ void SettingsDlg::WindowToGui(bool togui) {
               _I32);
   DIALOG_DATA(current_settings_, switcher_dlg_item_border, uiSwitcherItemBorder,
               _I32);
+  DIALOG_DATA(current_settings_, switcher_min_width, uiSwitcherMinWidth, _I32);
+  DIALOG_DATA(current_settings_, switcher_min_height, uiSwitcherMinHeight,
+              _I32);
 
   DIALOG_DATAX(fonts_and_colors, switcher_background_color,
                uiSwitcherItemBackground);
@@ -962,7 +965,7 @@ void SettingsDlg::WindowToGui(bool togui) {
   DIALOG_DATAX(fonts_and_colors, switcher_selection_color, uiSwitcherSelection);
   DIALOG_DATAX(fonts_and_colors, switcher_selection_outline_color,
                uiSwitcherSelectionOutline);
-  DIALOG_DATAX(fonts_and_colors, switcher_border_color, uiSwitcherBorder);
+  DIALOG_DATAX(fonts_and_colors, switcher_dialog_color, uiSwitcherDialog);
   DIALOG_DATAX(fonts_and_colors, switcher_base_color, uiSwitcherBackground);
 
   if (togui == false) {

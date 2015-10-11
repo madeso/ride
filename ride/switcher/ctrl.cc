@@ -367,7 +367,7 @@ class LayoutCalculator {
     columnCount = 1;
 
     itemSize = is;
-    overall_size_ = wxSize(1, 1);
+    overall_size_ = wxSize(style.min_width(), style.min_height());
 
     currentRow = 0;
     x = style_.x_margin();

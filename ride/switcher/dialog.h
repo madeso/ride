@@ -31,8 +31,6 @@ class Dialog : public wxDialog {
 
   void ShowDescription(const Item& item);
 
-  void set_border_color(const wxColour& colour);
-
  private:
   void UpdateDescription();
 
@@ -46,7 +44,6 @@ class Dialog : public wxDialog {
   wxStaticText* path_ctrl_;
   bool is_closing_;
   long switcher_border_style_;  // NOLINT
-  wxColour border_color_;
   Style style_;
 };
 

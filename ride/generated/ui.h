@@ -201,7 +201,7 @@ namespace ui
 			wxStaticText* m_staticText83;
 			wxColourPickerCtrl* uiSwitcherSelectionOutline;
 			wxStaticText* m_staticText84;
-			wxColourPickerCtrl* uiSwitcherBorder;
+			wxColourPickerCtrl* uiSwitcherDialog;
 			wxStaticText* m_staticText85;
 			wxColourPickerCtrl* uiSwitcherBackground;
 			wxStaticText* m_staticText80;
@@ -227,6 +227,10 @@ namespace ui
 			wxTextCtrl* uiSwitcherItemMaxWidth;
 			wxStaticText* m_staticText93;
 			wxTextCtrl* uiSwitcherItemMaxHeight;
+			wxStaticText* m_staticText96;
+			wxTextCtrl* uiSwitcherMinWidth;
+			wxStaticText* m_staticText97;
+			wxTextCtrl* uiSwitcherMinHeight;
 			wxPanel* m_themes;
 			wxButton* m_button40;
 			wxButton* m_button42;
