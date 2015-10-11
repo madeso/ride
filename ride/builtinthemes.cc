@@ -136,6 +136,25 @@ class BasicThemeBuilder {
     return *this;
   }
 
+  BasicThemeBuilder& set_switcher_background(const ride::Color& c) {
+    switcher_background_ = c;
+    return *this;
+  }
+
+  BasicThemeBuilder& set_ui_background(const ride::Color& c) {
+    ui_background_ = c;
+    return *this;
+  }
+
+  BasicThemeBuilder& set_title_front(const ride::Color& c) {
+    title_front_ = c;
+    return *this;
+  }
+  BasicThemeBuilder& set_title_bkg(const ride::Color& c) {
+    title_bkg_ = c;
+    return *this;
+  }
+
   const ride::Color& selection_foreground() { return selection_foreground_; }
   const ride::Color& selection_background() { return selection_background_; }
   const ride::Color& front() { return front_; }
@@ -207,6 +226,38 @@ class BasicThemeBuilder {
     colors->set_allocated_edgecolor(New(edge_color_));
 
     colors->set_allocated_caret_foreground(New(caret_color_));
+
+    colors->set_allocated_switcher_background_color(New(switcher_background_));
+    colors->set_allocated_switcher_dialog_color(New(front_));
+    colors->set_allocated_switcher_base_color(New(switcher_background_));
+    colors->set_allocated_switcher_selection_color(New(selected_line_));
+    colors->set_allocated_switcher_selection_outline_color(New(selected_line_));
+    colors->set_allocated_switcher_text_color(New(front_));
+
+    colors->set_allocated_dock_background(New(ui_background_));
+    colors->set_allocated_dock_sash(New(ui_background_));
+    colors->set_allocated_dock_active_caption(New(title_bkg_));
+    colors->set_allocated_dock_active_caption_gradient(New(title_bkg_));
+    colors->set_allocated_dock_inactive_caption(New(title_bkg_));
+    colors->set_allocated_dock_inactive_caption_gradient(New(title_bkg_));
+    colors->set_allocated_dock_active_caption_text(New(title_front_));
+    colors->set_allocated_dock_inactive_caption_text(New(title_front_));
+    colors->set_allocated_dock_border(New(ui_background_));
+    colors->set_allocated_dock_gripper(New(ui_background_));
+    colors->set_allocated_tab_background(New(ui_background_));
+    colors->set_allocated_tab_border(New(ui_background_));
+    colors->set_allocated_tab_sash(New(front_));
+    colors->set_allocated_tab_active_tab(New(bkg_));
+    colors->set_allocated_tab_inactive_tab(New(bkg_));
+    colors->set_allocated_tab_active_border(New(front_));
+    colors->set_allocated_tab_inactive_border(New(front_));
+    colors->set_allocated_tab_active_text(New(front_));
+    colors->set_allocated_tab_inactive_text(New(front_));
+
+    colors->set_allocated_statusbar_shadow(New(ui_background_));
+    colors->set_allocated_statusbar_highlight(New(front_));
+    colors->set_allocated_statusbar_foreground(New(front_));
+    colors->set_allocated_statusbar_background(New(ui_background_));
   }
 
  private:
@@ -227,6 +278,10 @@ class BasicThemeBuilder {
   ride::Color select_hi_;
   ride::Color edge_color_;
   ride::Color caret_color_;
+  ride::Color switcher_background_;
+  ride::Color ui_background_;
+  ride::Color title_front_;
+  ride::Color title_bkg_;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -250,6 +305,10 @@ void SetupDefaultTheme(ride::FontsAndColors* colors) {
       .set_select_hi(Color(180))
       .set_edge_color(Color(0))
       .set_caret_color(Color(0))
+      .set_switcher_background(Color(200))
+      .set_ui_background(Color(180))
+      .set_title_front(Color(200))
+      .set_title_bkg(Color(100))
       .Setup(colors);
 }
 
@@ -286,8 +345,8 @@ void SetupSolarizedDarkTheme(ride::FontsAndColors* colors) {
       .set_fold_lo(base02)
       .set_selected_line(base02)
       .set_comment(base01)
-      .set_keyword(base1)
-      .set_error(red)
+      .set_keyword(red)
+      .set_error(base1)
       .set_error_front(base03)
       .set_warning(base00)
       .set_warning_front(base03)
@@ -295,6 +354,10 @@ void SetupSolarizedDarkTheme(ride::FontsAndColors* colors) {
       .set_select_hi(base02)
       .set_edge_color(base01)
       .set_caret_color(base00)
+      .set_switcher_background(base01)
+      .set_ui_background(base01)
+      .set_title_front(base03)
+      .set_title_bkg(base1)
       .Setup(colors);
 }
 
