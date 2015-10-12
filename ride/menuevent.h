@@ -53,14 +53,18 @@ enum {
   ID_GAMES_BOMBS,
 
   //////////////////////////////////////////////////////////////////////////
-  // Games
+  // Specific tab events
+
+  ID_SPECIAL_TAB_NO_EVENT,
 
   bombsID_NEW_GAME,
   bombsID_LEVEL,
   bombsID_EASY,
   bombsID_MEDIUM,
   bombsID_HARD,
-  bombsID_EASYCORNER
+  bombsID_EASYCORNER,
+
+  ID_SPECIAL_TAB_LAST_EVENT
 };
 
 #endif  // RIDE_MENUEVENT_H_

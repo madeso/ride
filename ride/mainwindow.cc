@@ -345,6 +345,11 @@ void MainWindow::BindEvents() {
 
   Bind(wxEVT_MENU, &MainWindow::OnGamesBombs, this, ID_GAMES_BOMBS);
 
+  for (int i = ID_SPECIAL_TAB_NO_EVENT + 1; i < ID_SPECIAL_TAB_LAST_EVENT;
+       ++i) {
+    Bind(wxEVT_MENU, &MainWindow::SendTabEventToTab, this, i);
+  }
+
   std::vector<wxAcceleratorEntry> entries;
   entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL, WXK_TAB, ID_TAB_NEXT));
   entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL | wxACCEL_SHIFT,
@@ -676,6 +681,14 @@ void MainWindow::OnViewShowProject(wxCommandEvent& event) {
 
 void MainWindow::OnGamesBombs(wxCommandEvent& event) {
   CreateBombGame(notebook_, this);
+}
+
+void MainWindow::SendTabEventToTab(wxCommandEvent& event) {
+  Tab* tab = GetSelectedTabOrNull(notebook_);
+  if (tab == NULL) return;
+  wxWindow* wind = tab->ToControl();
+  if (wind == NULL) return;
+  wind->ProcessWindowEvent(event);
 }
 
 template <typename ToolbarCheck>

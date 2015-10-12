@@ -146,6 +146,8 @@ class MainWindow : public wxFrame {
 
   void OnGamesBombs(wxCommandEvent& event);
 
+  void SendTabEventToTab(wxCommandEvent& event);
+
   void OnFileExit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
   void OnFileShowSettings(wxCommandEvent& event);
