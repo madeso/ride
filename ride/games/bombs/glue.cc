@@ -39,7 +39,9 @@ BombGameTab::BombGameTab(wxAuiNotebook* anotebook, MainWindow* parent)
   m_frame = new BombsFrame(this, &m_game);
 
   wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-  sizer->Add(m_frame, 1, wxEXPAND);
+  wxBoxSizer* sizer2 = new wxBoxSizer(wxHORIZONTAL);
+  sizer2->Add(m_frame, 1, wxALIGN_CENTER, 0, NULL);
+  sizer->Add(sizer2, 1, wxALIGN_CENTER, 0, NULL);
   SetSizer(sizer);
 
   notebook_->AddPage(this, wxT("Bombs"), true);

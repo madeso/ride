@@ -46,9 +46,9 @@ void BombsCanvas::DrawField(wxDC *dc, int xc1, int yc1, int xc2, int yc2)
     int x, y;
     int xMax = this->GetGridSizeInPixels().GetWidth();
     int yMax = this->GetGridSizeInPixels().GetHeight();
-    for(x=xc1; x<=xc2; x++)
+    for(x=xc1; x<=(xc2+1); x++)
         dc->DrawLine(x*m_cellWidth*X_UNIT, 0, x*m_cellWidth*X_UNIT, yMax);
-    for(y=xc1; y<=yc2; y++)
+    for(y=xc1; y<=(yc2+1); y++)
         dc->DrawLine(0, y*m_cellHeight*Y_UNIT, xMax, y*m_cellHeight*Y_UNIT);
 
 
@@ -179,13 +179,6 @@ void BombsCanvas::RefreshField(int xc1, int yc1, int xc2, int yc2)
 {
     wxClientDC dc(this);
     DrawField(& dc, xc1, yc1, xc2, yc2);
-    if (m_bmp)
-    {
-        wxMemoryDC memDC;
-        memDC.SelectObject(*m_bmp);
-        DrawField(&memDC, xc1, yc1, xc2, yc2);
-        memDC.SelectObject(wxNullBitmap);
-    }
 }
 
 // Called when uncovering a cell.

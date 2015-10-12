@@ -75,8 +75,6 @@ private:
 
     BombsGame *m_game;
 
-    wxBitmap *m_bmp;
-
     // Cell size in pixels
     int m_cellWidth;
     int m_cellHeight;

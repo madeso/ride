@@ -47,7 +47,7 @@ void SetupBombMenu(wxMenuBar *menuBar) {
 }
 
 BombsFrame::BombsFrame(wxWindow* parent, BombsGame *game)
-    : wxPanel(parent)
+  : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
     m_game = game;
     m_easyCorner = false;
@@ -185,7 +185,7 @@ BEGIN_EVENT_TABLE(BombsCanvas, wxPanel)
 END_EVENT_TABLE()
 
 BombsCanvas::BombsCanvas(BombsFrame *parent, BombsGame *game)
-    : wxPanel(parent, wxID_ANY)
+    : wxPanel(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
 {
     m_game = game;
     int sx, sy;
@@ -219,16 +219,10 @@ BombsCanvas::BombsCanvas(BombsFrame *parent, BombsGame *game)
     m_cellWidth = (sx+3+X_UNIT)/X_UNIT;
     m_cellHeight = (sy+3+Y_UNIT)/Y_UNIT;
     dc.SetMapMode(wxMM_TEXT);
-    m_bmp = NULL;
 }
 
 BombsCanvas::~BombsCanvas()
 {
-    if (m_bmp)
-    {
-        delete m_bmp;
-        m_bmp = NULL;
-    }
 }
 
 // Called when canvas needs to be repainted.
@@ -238,43 +232,12 @@ void BombsCanvas::OnPaint(wxPaintEvent& WXUNUSED(event))
 
     const int numHorzCells = m_game->GetWidth();
     const int numVertCells = m_game->GetHeight();
-    // Insert your drawing code here.
-    if (!m_bmp)
-    {
-        wxSize size = dc.GetSize();
-        m_bmp = new wxBitmap(size.GetWidth(), size.GetHeight());
-        if (m_bmp)
-        {
-            wxMemoryDC memDC;
-            memDC.SelectObject(*m_bmp);
-            DrawField(&memDC, 0, 0, numHorzCells-1, numVertCells-1);
-            memDC.SelectObject(wxNullBitmap);
-        }
-    }
 
-    if (m_bmp)
-    {
-        wxMemoryDC memDC;
-        memDC.SelectObject(*m_bmp);
-        wxSize size = dc.GetSize();
-        dc.Blit(0, 0, size.GetWidth(), size.GetHeight(),
-            &memDC, 0, 0, wxCOPY);
-      memDC.SelectObject(wxNullBitmap);
-    }
-    else
-    {
-        DrawField(&dc, 0, 0, numHorzCells-1, numVertCells-1);
-    }
+    DrawField(&dc, 0, 0, numHorzCells-1, numVertCells-1);
 }
 
 void BombsCanvas::UpdateGridSize()
 {
-
-    if (m_bmp)
-    {
-        delete m_bmp;
-        m_bmp = NULL;
-    }
     wxSize sz = GetGridSizeInPixels();
     SetSize(sz);
     SetMinClientSize(sz);
@@ -283,7 +246,7 @@ void BombsCanvas::UpdateGridSize()
 
 wxSize BombsCanvas::GetGridSizeInPixels() const
 {
-    return wxSize(m_cellWidth*X_UNIT*m_game->GetWidth(),
-        m_cellHeight*Y_UNIT*m_game->GetHeight());
+    return wxSize(m_cellWidth*X_UNIT*m_game->GetWidth()+1,
+        m_cellHeight*Y_UNIT*m_game->GetHeight()+1);
 }
 
