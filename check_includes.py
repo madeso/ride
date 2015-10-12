@@ -65,6 +65,7 @@ class Main:
             r'#include "ride/generated/[a-zA-Z]+\.h"',
             r'#include "ride/resources/[a-zA-Z]+\.h"',
             r'#include "ride/switcher/[a-zA-Z]+\.h"',
+            r'#include "ride/games/[a-zA-Z]+/glue\.h"',
             r'#include "ride/[a-zA-Z]+\.h"'
         ]
 

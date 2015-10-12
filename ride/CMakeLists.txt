@@ -49,13 +49,26 @@ set(switcher_src
 	switcher/style.h
 	)
 
+set(bombs_src
+	games/bombs/bombs.cpp
+	games/bombs/bombs.h
+	games/bombs/glue.cc
+	games/bombs/glue.h
+	games/bombs/bombscanvas.cpp
+	games/bombs/game.cpp
+	games/bombs/game.h
+	)
+
+set(games_src ${bombs_src})
+
 source_group("" FILES ${src})
 source_group("generated" FILES ${generated_src} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
 source_group("switcher" FILES ${switcher_src})
+source_group("games/bombs" FILES ${bombs_src})
 
 add_executable(
 	${PROJECT_NAME} WIN32 
-	${src} ${generated_src} ${switcher_src}
+	${src} ${generated_src} ${switcher_src} ${games_src}
 )
 
 target_link_libraries(

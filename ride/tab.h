@@ -7,10 +7,13 @@ class StartPageTab;
 class FileEdit;
 class wxControl;
 
+class TabData {};
+
 class Tab {
  public:
   explicit Tab(FileEdit* edit);
   explicit Tab(StartPageTab* start);
+  explicit Tab(TabData* data);
   ~Tab();
 
   StartPageTab* ToStartPage();
@@ -20,6 +23,7 @@ class Tab {
  private:
   FileEdit* edit_;
   StartPageTab* start_;
+  TabData* data_;
 };
 
 #endif  // RIDE_TAB_H_

@@ -18,6 +18,8 @@
 
 #include "ride/switcher/dialog.h"
 
+#include "ride/games/bombs/glue.h"
+
 #include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"
 #include "ride/createnewfiledlg.h"
@@ -120,7 +122,9 @@ enum {
   ID_TAB_NEXT,
   ID_TAB_PREV,
 
-  ID_QUICK_OPEN
+  ID_QUICK_OPEN,
+
+  ID_GAMES_BOMBS
 };
 
 void MainWindow::BindEvents() {
@@ -200,6 +204,8 @@ void MainWindow::BindEvents() {
   Bind(wxEVT_NAVIGATION_KEY, &MainWindow::OnNotebookNavigation, this);
   Bind(wxEVT_MENU, &MainWindow::OnTabNext, this, ID_TAB_NEXT);
   Bind(wxEVT_MENU, &MainWindow::OnTabPrev, this, ID_TAB_PREV);
+
+  Bind(wxEVT_MENU, &MainWindow::OnGamesBombs, this, ID_GAMES_BOMBS);
 
   std::vector<wxAcceleratorEntry> entries;
   entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL, WXK_TAB, ID_TAB_NEXT));
@@ -468,6 +474,9 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   wxMenu* menu_help = new wxMenu;
   menu_help->Append(wxID_ABOUT);
 
+  menu_help->AppendSeparator();
+  AddMenuItem(menu_help, ID_GAMES_BOMBS, "Play bombs!");
+
   //////////////////////////////////////////////////////////////////////////
   wxMenuBar* menu_bar = new wxMenuBar;
   menu_bar->Append(menu_file, "&File");
@@ -688,6 +697,10 @@ void MainWindow::OnViewShowCompile(wxCommandEvent& event) {
 void MainWindow::OnViewShowProject(wxCommandEvent& event) {
   ShowHideAui(&aui_, PANE_PROJECT);
   UpdateMenuItemView();
+}
+
+void MainWindow::OnGamesBombs(wxCommandEvent& event) {
+  CreateBombGame(notebook_, this);
 }
 
 template <typename ToolbarCheck>

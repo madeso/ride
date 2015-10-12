@@ -144,6 +144,8 @@ class MainWindow : public wxFrame {
   void OnViewShowCompile(wxCommandEvent& event);
   void OnViewShowProject(wxCommandEvent& event);
 
+  void OnGamesBombs(wxCommandEvent& event);
+
   void OnFileExit(wxCommandEvent& event);
   void OnAbout(wxCommandEvent& event);
   void OnFileShowSettings(wxCommandEvent& event);

@@ -8,9 +8,17 @@
 #include "ride/fileedit.h"
 #include "ride/startpage.h"
 
-Tab::Tab(FileEdit* edit) : edit_(edit), start_(NULL) { assert(edit); }
+Tab::Tab(FileEdit* edit) : edit_(edit), start_(NULL), data_(NULL) {
+  assert(edit);
+}
 
-Tab::Tab(StartPageTab* start) : edit_(NULL), start_(start) { assert(start); }
+Tab::Tab(StartPageTab* start) : edit_(NULL), start_(start), data_(NULL) {
+  assert(start);
+}
+
+Tab::Tab(TabData* data) : edit_(NULL), start_(NULL), data_(data) {
+  assert(data);
+}
 
 Tab::~Tab() {}
 
