@@ -77,6 +77,28 @@ OpenDocument OpenDocumentFromTab(Tab* tab) {
   return OpenDocument("", "", "");
 }
 
+struct AddMenuItem {
+  wxMenuItem* item;
+  operator wxMenuItem*() { return item; }
+
+  AddMenuItem(wxMenu* menu, int id, const wxString& title = wxEmptyString,
+              const wxString& help = wxEmptyString, const char** xpm = NULL) {
+    item = new wxMenuItem(NULL, id, title, help);
+    if (xpm) {
+      // it's important to set the icon before adding the item
+      // otherwise it will silently fail on some wxWidgets versions
+      wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
+      item->SetBitmap(bitmap);
+    }
+    menu->Append(item);
+  }
+
+  AddMenuItem& Checkable() {
+    item->SetCheckable(true);
+    return *this;
+  }
+};
+
 enum {
   ID_FIRST = wxID_HIGHEST,
   ID_FILE_RIDE_SETTINGS,
@@ -126,6 +148,165 @@ enum {
 
   ID_GAMES_BOMBS
 };
+
+void MainWindow::SetupMenu() {
+  //////////////////////////////////////////////////////////////////////////
+  wxMenu* menu_file = new wxMenu;
+  AddMenuItem(menu_file, wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
+  AddMenuItem(menu_file, wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
+  AddMenuItem(menu_file, wxID_SAVEAS, "Save &as...\tCtrl-Shift-S",
+              "Save the file as a new file");
+  menu_file->AppendSeparator();
+  AddMenuItem(menu_file, ID_FILE_RIDE_SETTINGS, "S&ettings...",
+              "Change the settings of RIDE", file_settings_xpm);
+  menu_file->AppendSeparator();
+  AddMenuItem(menu_file, wxID_EXIT, "", "", file_quit_xpm);
+
+  //////////////////////////////////////////////////////////////////////////
+  wxMenu* menu_edit = NULL;
+
+  Tab* tab = GetSelectedTabOrNull(notebook_);
+  if (tab && tab->ToFileEdit()) {
+    menu_edit = new wxMenu;
+    AddMenuItem(menu_edit, wxID_UNDO, "Undo\tCtrl-Z", "", edit_undo_xpm);
+    AddMenuItem(menu_edit, wxID_REDO, "Redo\tCtrl-Shift-Z", "", edit_redo_xpm);
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, wxID_CUT, "Cut\tCtrl-X", "", edit_cut_xpm);
+    AddMenuItem(menu_edit, wxID_COPY, "Copy\tCtrl-C", "", edit_copy_xpm);
+    AddMenuItem(menu_edit, wxID_PASTE, "Paste\tCtrl-V", "", edit_paste_xpm);
+    AddMenuItem(menu_edit, wxID_DUPLICATE,
+                "Duplicate selection or line\tCtrl-D", "");
+    AddMenuItem(menu_edit, wxID_DELETE, "Delete\tDel", "");
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, wxID_FIND, "Find\tCtrl-F", "");
+    // menu_edit, wxID_OPEN, "Find next\tF3", "");
+    AddMenuItem(menu_edit, wxID_REPLACE, "Replace\tCtrl-H", "");
+    // menu-edit, wxID_OPEN, "Replace again\tShift-F4", "");
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, ID_EDIT_MATCH_BRACE, "Match brace\tCtrl-M", "");
+    AddMenuItem(menu_edit, ID_EDIT_SELECT_BRACE,
+                "Select to matching brace\tCtrl-Shift-M", "");
+    AddMenuItem(menu_edit, ID_EDIT_GOTO_LINE, "Goto line\tCtrl-G", "");
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, wxID_INDENT, "Increase indent\tTab", "",
+                edit_tab_add_xpm);
+    AddMenuItem(menu_edit, wxID_UNINDENT, "Reduce indent\tShift-Tab", "",
+                edit_tab_remove_xpm);
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, wxID_SELECTALL, "Select all\tCtrl-A", "");
+    AddMenuItem(menu_edit, ID_EDIT_SELECT_LINE, "Select line\tCtrl-L", "");
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, ID_EDIT_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "",
+                edit_make_uppercase_xpm);
+    AddMenuItem(menu_edit, ID_EDIT_TOLOWER, "Make lowercase\tCtrl-U", "",
+                edit_make_lowercase_xpm);
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, ID_EDIT_MOVELINESUP,
+                "Move selected lines up\tAlt-Up", "");
+    AddMenuItem(menu_edit, ID_EDIT_MOVELINESDOWN,
+                "Move selected lines down\tAlt-Down", "");
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION,
+                "Open type in online documentation\tCtrl-'",
+                "");  // todo: get a better shortcut
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, ID_EDIT_SHOW_AUTOCOMPLETE,
+                "Auto complete\tCtrl-Space", "");
+    menu_edit->AppendSeparator();
+    AddMenuItem(menu_edit, ID_EDIT_SHOW_PROPERTIES,
+                "File properties\tAlt-Enter", "", edit_file_properties_xpm);
+  }
+
+  //////////////////////////////////////////////////////////////////////////
+
+  wxMenu* menu_project = new wxMenu;
+  AddMenuItem(menu_project, ID_PROJECT_NEW, "New project...",
+              "Create a new cargo project");
+  AddMenuItem(menu_project, ID_PROJECT_OPEN, "Open project...\tCtrl-Shift-O",
+              "Open a existing cargo or ride project");
+  AddMenuItem(menu_project, ID_PROJECT_SETTINGS, "Project settings...",
+              "Change the ride project settings", project_settings_xpm);
+  menu_project->AppendSeparator();
+  AddMenuItem(menu_project, ID_PROJECT_BUILD, "Build\tCtrl-B",
+              "Compile the current project", project_build_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_SELECT_ACTIVE_BUILD,
+              "Select active build...\tCtrl-Shift-B",
+              "Select the active build configuration");
+  AddMenuItem(menu_project, ID_PROJECT_CLEAN, "Clean",
+              "Remove the target directory", project_clean_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_REBUILD, "Rebuild", "Clean + Build",
+              project_rebuild_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_DOC, "Doc",
+              "Build this project's and its dependencies' documentation",
+              project_doc_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_RUN, "Run\tF5",
+              "Build and execute src/main.rs", project_run_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_SELECT_ACTIVE_RUN,
+              "Select active run...\tShift-F5",
+              "Select the active run configuration");
+  AddMenuItem(menu_project, ID_PROJECT_TEST, "Test", "Run the tests",
+              project_test_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_BENCH, "Bench", "Run the benchmarks",
+              project_bench_xpm);
+  AddMenuItem(menu_project, ID_PROJECT_UPDATE, "Update",
+              "Update dependencies listed in Cargo.lock", project_update_xpm);
+  menu_project->AppendSeparator();
+  AddMenuItem(menu_project, wxID_NEW, "", "", file_normal_xpm);
+  AddMenuItem(menu_project, ID_QUICK_OPEN,
+              "Open file in project...\tShift-Alt-O",
+              "Quickly open a file from the project");
+  AddMenuItem(menu_project, ID_FIND_IN_FILES, "Find in files...\tCtrl-Shift-F",
+              "Find in files");
+  AddMenuItem(menu_project, ID_REPLACE_IN_FILES,
+              "Replace in files...\tCtrl-Shift-H", "Replace in files");
+
+  //////////////////////////////////////////////////////////////////////////
+
+  wxMenu* menu_view = new wxMenu;
+  AddMenuItem(menu_view, ID_VIEW_RESTORE_WINDOWS, "Restore window layout", "");
+  AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
+  AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
+  menu_view->AppendSeparator();
+
+  // shortcuts stolen from qt creator:
+  // https://wiki.qt.io/Qt_Creator_Keyboard_Shortcuts
+  menuItemViewProject_ = AddMenuItem(menu_view, ID_VIEW_SHOW_PROJECT,
+                                     "&Project pane\tAlt-0", "").Checkable();
+  AddMenuItem(menu_view, ID_VIEW_SHOW_START, "&Start page", "");
+  // build issues
+  menuItemViewFind_ = AddMenuItem(menu_view, ID_VIEW_SHOW_FINDRESULT,
+                                  "Find &result pane\tAlt-2", "").Checkable();
+  // app output
+  menuItemViewBuild_ = AddMenuItem(menu_view, ID_VIEW_SHOW_BUILD,
+                                   "&Build pane\tAlt-4", "").Checkable();
+  menuItemViewCompile_ = AddMenuItem(menu_view, ID_VIEW_SHOW_COMPILE,
+                                     "&Compile pane", "").Checkable();
+
+  //////////////////////////////////////////////////////////////////////////
+  wxMenu* menu_help = new wxMenu;
+  menu_help->Append(wxID_ABOUT);
+
+  menu_help->AppendSeparator();
+  AddMenuItem(menu_help, ID_GAMES_BOMBS, "Play bombs!");
+
+  //////////////////////////////////////////////////////////////////////////
+  wxMenuBar* menu_bar = new wxMenuBar;
+  menu_bar->Append(menu_file, "&File");
+  if (menu_edit) {
+    menu_bar->Append(menu_edit, "&Edit");
+  }
+  menu_bar->Append(menu_view, "&View");
+  menu_bar->Append(menu_project, "&Project");
+  menu_bar->Append(menu_help, "&Help");
+
+  wxMenuBar* old_menu_bar = GetMenuBar();
+  SetMenuBar(menu_bar);
+
+  if (old_menu_bar) {
+    delete old_menu_bar;
+    old_menu_bar = NULL;
+  }
+}
 
 void MainWindow::BindEvents() {
   Bind(wxEVT_MENU, &MainWindow::OnFileOpen, this, wxID_OPEN);
@@ -236,6 +417,7 @@ void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& event) {
     mru_.push_back(file);
   }
 
+  SetupMenu();
   project_explorer_->HighlightOpenFile(file_name);
 }
 
@@ -269,28 +451,6 @@ const wxString PANE_FIND_1 = "pane_findres1";
 const wxString PANE_BUILD = "pane_output";
 const wxString PANE_COMPILE = "pane_compile";
 const wxString PANE_PROJECT = "pane_project";
-
-struct AddMenuItem {
-  wxMenuItem* item;
-  operator wxMenuItem*() { return item; }
-
-  AddMenuItem(wxMenu* menu, int id, const wxString& title = wxEmptyString,
-              const wxString& help = wxEmptyString, const char** xpm = NULL) {
-    item = new wxMenuItem(NULL, id, title, help);
-    if (xpm) {
-      // it's important to set the icon before adding the item
-      // otherwise it will silently fail on some wxWidgets versions
-      wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
-      item->SetBitmap(bitmap);
-    }
-    menu->Append(item);
-  }
-
-  AddMenuItem& Checkable() {
-    item->SetCheckable(true);
-    return *this;
-  }
-};
 
 void MainWindow::OnMenuOpen(wxMenuEvent& event) { UpdateMenuItemView(); }
 
@@ -332,6 +492,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
       findres_window_(NULL),
       app_name_(app_name),
       statusbar_(NULL) {
+  CreateNotebook();
   BindEvents();
   project_.reset(new Project(this, wxEmptyString));
 #ifdef _WIN32
@@ -343,148 +504,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
 
   LoadSettings(this, &settings_);
 
-  //////////////////////////////////////////////////////////////////////////
-  wxMenu* menu_file = new wxMenu;
-  AddMenuItem(menu_file, wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
-  AddMenuItem(menu_file, wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
-  AddMenuItem(menu_file, wxID_SAVEAS, "Save &as...\tCtrl-Shift-S",
-              "Save the file as a new file");
-  menu_file->AppendSeparator();
-  AddMenuItem(menu_file, ID_FILE_RIDE_SETTINGS, "S&ettings...",
-              "Change the settings of RIDE", file_settings_xpm);
-  menu_file->AppendSeparator();
-  AddMenuItem(menu_file, wxID_EXIT, "", "", file_quit_xpm);
-
-  //////////////////////////////////////////////////////////////////////////
-  wxMenu* menu_edit = new wxMenu;
-  AddMenuItem(menu_edit, wxID_UNDO, "Undo\tCtrl-Z", "", edit_undo_xpm);
-  AddMenuItem(menu_edit, wxID_REDO, "Redo\tCtrl-Shift-Z", "", edit_redo_xpm);
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, wxID_CUT, "Cut\tCtrl-X", "", edit_cut_xpm);
-  AddMenuItem(menu_edit, wxID_COPY, "Copy\tCtrl-C", "", edit_copy_xpm);
-  AddMenuItem(menu_edit, wxID_PASTE, "Paste\tCtrl-V", "", edit_paste_xpm);
-  AddMenuItem(menu_edit, wxID_DUPLICATE, "Duplicate selection or line\tCtrl-D",
-              "");
-  AddMenuItem(menu_edit, wxID_DELETE, "Delete\tDel", "");
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, wxID_FIND, "Find\tCtrl-F", "");
-  // menu_edit, wxID_OPEN, "Find next\tF3", "");
-  AddMenuItem(menu_edit, wxID_REPLACE, "Replace\tCtrl-H", "");
-  // menu-edit, wxID_OPEN, "Replace again\tShift-F4", "");
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, ID_EDIT_MATCH_BRACE, "Match brace\tCtrl-M", "");
-  AddMenuItem(menu_edit, ID_EDIT_SELECT_BRACE,
-              "Select to matching brace\tCtrl-Shift-M", "");
-  AddMenuItem(menu_edit, ID_EDIT_GOTO_LINE, "Goto line\tCtrl-G", "");
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, wxID_INDENT, "Increase indent\tTab", "",
-              edit_tab_add_xpm);
-  AddMenuItem(menu_edit, wxID_UNINDENT, "Reduce indent\tShift-Tab", "",
-              edit_tab_remove_xpm);
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, wxID_SELECTALL, "Select all\tCtrl-A", "");
-  AddMenuItem(menu_edit, ID_EDIT_SELECT_LINE, "Select line\tCtrl-L", "");
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, ID_EDIT_TOUPPER, "Make UPPERCASE\tCtrl-Shift-U", "",
-              edit_make_uppercase_xpm);
-  AddMenuItem(menu_edit, ID_EDIT_TOLOWER, "Make lowercase\tCtrl-U", "",
-              edit_make_lowercase_xpm);
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, ID_EDIT_MOVELINESUP, "Move selected lines up\tAlt-Up",
-              "");
-  AddMenuItem(menu_edit, ID_EDIT_MOVELINESDOWN,
-              "Move selected lines down\tAlt-Down", "");
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION,
-              "Open type in online documentation\tCtrl-'",
-              "");  // todo: get a better shortcut
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, ID_EDIT_SHOW_AUTOCOMPLETE, "Auto complete\tCtrl-Space",
-              "");
-  menu_edit->AppendSeparator();
-  AddMenuItem(menu_edit, ID_EDIT_SHOW_PROPERTIES, "File properties\tAlt-Enter",
-              "", edit_file_properties_xpm);
-
-  //////////////////////////////////////////////////////////////////////////
-
-  wxMenu* menu_project = new wxMenu;
-  AddMenuItem(menu_project, ID_PROJECT_NEW, "New project...",
-              "Create a new cargo project");
-  AddMenuItem(menu_project, ID_PROJECT_OPEN, "Open project...\tCtrl-Shift-O",
-              "Open a existing cargo or ride project");
-  AddMenuItem(menu_project, ID_PROJECT_SETTINGS, "Project settings...",
-              "Change the ride project settings", project_settings_xpm);
-  menu_project->AppendSeparator();
-  AddMenuItem(menu_project, ID_PROJECT_BUILD, "Build\tCtrl-B",
-              "Compile the current project", project_build_xpm);
-  AddMenuItem(menu_project, ID_PROJECT_SELECT_ACTIVE_BUILD,
-              "Select active build...\tCtrl-Shift-B",
-              "Select the active build configuration");
-  AddMenuItem(menu_project, ID_PROJECT_CLEAN, "Clean",
-              "Remove the target directory", project_clean_xpm);
-  AddMenuItem(menu_project, ID_PROJECT_REBUILD, "Rebuild", "Clean + Build",
-              project_rebuild_xpm);
-  AddMenuItem(menu_project, ID_PROJECT_DOC, "Doc",
-              "Build this project's and its dependencies' documentation",
-              project_doc_xpm);
-  AddMenuItem(menu_project, ID_PROJECT_RUN, "Run\tF5",
-              "Build and execute src/main.rs", project_run_xpm);
-  AddMenuItem(menu_project, ID_PROJECT_SELECT_ACTIVE_RUN,
-              "Select active run...\tShift-F5",
-              "Select the active run configuration");
-  AddMenuItem(menu_project, ID_PROJECT_TEST, "Test", "Run the tests",
-              project_test_xpm);
-  AddMenuItem(menu_project, ID_PROJECT_BENCH, "Bench", "Run the benchmarks",
-              project_bench_xpm);
-  AddMenuItem(menu_project, ID_PROJECT_UPDATE, "Update",
-              "Update dependencies listed in Cargo.lock", project_update_xpm);
-  menu_project->AppendSeparator();
-  AddMenuItem(menu_project, wxID_NEW, "", "", file_normal_xpm);
-  AddMenuItem(menu_project, ID_QUICK_OPEN,
-              "Open file in project...\tShift-Alt-O",
-              "Quickly open a file from the project");
-  AddMenuItem(menu_project, ID_FIND_IN_FILES, "Find in files...\tCtrl-Shift-F",
-              "Find in files");
-  AddMenuItem(menu_project, ID_REPLACE_IN_FILES,
-              "Replace in files...\tCtrl-Shift-H", "Replace in files");
-
-  //////////////////////////////////////////////////////////////////////////
-
-  wxMenu* menu_view = new wxMenu;
-  AddMenuItem(menu_view, ID_VIEW_RESTORE_WINDOWS, "Restore window layout", "");
-  AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
-  AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
-  menu_view->AppendSeparator();
-
-  // shortcuts stolen from qt creator:
-  // https://wiki.qt.io/Qt_Creator_Keyboard_Shortcuts
-  menuItemViewProject_ = AddMenuItem(menu_view, ID_VIEW_SHOW_PROJECT,
-                                     "&Project pane\tAlt-0", "").Checkable();
-  AddMenuItem(menu_view, ID_VIEW_SHOW_START, "&Start page", "");
-  // build issues
-  menuItemViewFind_ = AddMenuItem(menu_view, ID_VIEW_SHOW_FINDRESULT,
-                                  "Find &result pane\tAlt-2", "").Checkable();
-  // app output
-  menuItemViewBuild_ = AddMenuItem(menu_view, ID_VIEW_SHOW_BUILD,
-                                   "&Build pane\tAlt-4", "").Checkable();
-  menuItemViewCompile_ = AddMenuItem(menu_view, ID_VIEW_SHOW_COMPILE,
-                                     "&Compile pane", "").Checkable();
-
-  //////////////////////////////////////////////////////////////////////////
-  wxMenu* menu_help = new wxMenu;
-  menu_help->Append(wxID_ABOUT);
-
-  menu_help->AppendSeparator();
-  AddMenuItem(menu_help, ID_GAMES_BOMBS, "Play bombs!");
-
-  //////////////////////////////////////////////////////////////////////////
-  wxMenuBar* menu_bar = new wxMenuBar;
-  menu_bar->Append(menu_file, "&File");
-  menu_bar->Append(menu_edit, "&Edit");
-  menu_bar->Append(menu_view, "&View");
-  menu_bar->Append(menu_project, "&Project");
-  menu_bar->Append(menu_help, "&Help");
-  SetMenuBar(menu_bar);
+  SetupMenu();
 
   int sbstyle =
       wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
@@ -512,8 +532,6 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
     styles[i] = wxSB_NORMAL;
   }
   statusbar_->SetStatusStyles(STATUSBAR_MAXCOUNT, styles);
-
-  CreateNotebook();
 
   // output
   build_output_.Create(this, &aui_, PANE_BUILD, "Build");

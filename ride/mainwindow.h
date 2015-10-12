@@ -165,6 +165,7 @@ class MainWindow : public wxFrame {
   void BindEvents();
 
  private:
+  void SetupMenu();
   void ShowFindWindow();
   void ShowBuildWindow();
   void ShowCompileWindow();
