@@ -5,9 +5,12 @@
 
 class StartPageTab;
 class FileEdit;
-class wxControl;
+class wxWindow;
 
-class TabData {};
+class TabData {
+ public:
+  virtual wxWindow* ToControl() = 0;
+};
 
 class Tab {
  public:
@@ -18,7 +21,8 @@ class Tab {
 
   StartPageTab* ToStartPage();
   FileEdit* ToFileEdit();
-  wxControl* ToControl();
+  wxWindow* ToControl();
+  TabData* ToData();
 
  private:
   FileEdit* edit_;

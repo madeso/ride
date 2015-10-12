@@ -32,10 +32,17 @@ StartPageTab* Tab::ToStartPage() {
   return start_;
 }
 
-wxControl* Tab::ToControl() {
+TabData* Tab::ToData() {
+  assert(this);
+  return data_;
+}
+
+wxWindow* Tab::ToControl() {
   if (start_)
     return start_;
   else if (edit_)
     return edit_;
+  else if (data_)
+    return data_->ToControl();
   return NULL;
 }

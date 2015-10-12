@@ -12,6 +12,10 @@ public:
   BombGameTab(wxAuiNotebook* anotebook, MainWindow* parent);
   ~BombGameTab() {}
 
+  wxWindow* ToControl() {
+    return m_frame;
+  }
+
 private:
   Tab tab_;
   MainWindow* main_;

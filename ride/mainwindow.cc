@@ -253,7 +253,7 @@ void MainWindow::OnActivated(wxActivateEvent& event) {
     // so let's fix this by auto selecting the active notebook editor
     Tab* tab = GetSelectedTabOrNull(notebook_);
     if (tab) {
-      wxControl* focus = tab->ToControl();
+      wxWindow* focus = tab->ToControl();
       if (focus) {
         focus->SetFocus();
         focus->SetFocusFromKbd();
