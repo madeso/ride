@@ -35,6 +35,7 @@
 #include "ride/tab.h"
 #include "ride/wxutils.h"
 #include "ride/auix.h"
+#include "ride/menuevent.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -97,56 +98,6 @@ struct AddMenuItem {
     item->SetCheckable(true);
     return *this;
   }
-};
-
-enum {
-  ID_FIRST = wxID_HIGHEST,
-  ID_FILE_RIDE_SETTINGS,
-
-  ID_EDIT_MATCH_BRACE,
-  ID_EDIT_SELECT_BRACE,
-  ID_EDIT_GOTO_LINE,
-  ID_EDIT_SELECT_LINE,
-  ID_EDIT_TOUPPER,
-  ID_EDIT_TOLOWER,
-  ID_EDIT_MOVELINESUP,
-  ID_EDIT_MOVELINESDOWN,
-  ID_EDIT_SHOW_PROPERTIES,
-  ID_EDIT_OPEN_IN_ONLINE_DOCUMENTATION,
-  ID_EDIT_SHOW_AUTOCOMPLETE,
-
-  ID_PROJECT_NEW,
-  ID_PROJECT_OPEN,
-  ID_PROJECT_SETTINGS,
-  ID_PROJECT_BUILD,
-  ID_PROJECT_SELECT_ACTIVE_BUILD,
-  ID_PROJECT_CLEAN,
-  ID_PROJECT_REBUILD,
-  ID_PROJECT_DOC,
-  ID_PROJECT_RUN,
-  ID_PROJECT_SELECT_ACTIVE_RUN,
-  ID_PROJECT_TEST,
-  ID_PROJECT_BENCH,
-  ID_PROJECT_UPDATE,
-
-  ID_FIND_IN_FILES,
-  ID_REPLACE_IN_FILES,
-
-  ID_VIEW_RESTORE_WINDOWS,
-  ID_VIEW_SAVE_LAYOUT,
-  ID_VIEW_LOAD_LAYOUT,
-  ID_VIEW_SHOW_FINDRESULT,
-  ID_VIEW_SHOW_START,
-  ID_VIEW_SHOW_PROJECT,
-  ID_VIEW_SHOW_BUILD,
-  ID_VIEW_SHOW_COMPILE,
-
-  ID_TAB_NEXT,
-  ID_TAB_PREV,
-
-  ID_QUICK_OPEN,
-
-  ID_GAMES_BOMBS
 };
 
 void MainWindow::SetupMenu() {
@@ -294,6 +245,12 @@ void MainWindow::SetupMenu() {
   menu_bar->Append(menu_file, "&File");
   if (menu_edit) {
     menu_bar->Append(menu_edit, "&Edit");
+  }
+  if (tab) {
+    TabData* data = tab->ToData();
+    if (data) {
+      data->AppendToMenu(menu_bar);
+    }
   }
   menu_bar->Append(menu_view, "&View");
   menu_bar->Append(menu_project, "&Project");

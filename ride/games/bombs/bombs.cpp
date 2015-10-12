@@ -32,15 +32,19 @@
     STDAPI_(__int64) CeGetRandomSeed();
 #endif
 
-// BEGIN_EVENT_TABLE(BombsFrame, wxFrame)
-//     EVT_MENU(wxID_NEW,           BombsFrame::OnNewGame)
-//     EVT_MENU(bombsID_EASY,       BombsFrame::OnEasyGame)
-//     EVT_MENU(bombsID_MEDIUM,     BombsFrame::OnMediumGame)
-//     EVT_MENU(bombsID_HARD,       BombsFrame::OnHardGame)
-//     EVT_MENU(bombsID_EASYCORNER, BombsFrame::OnEasyCorner)
-//     EVT_MENU(wxID_EXIT,          BombsFrame::OnExit)
-//     EVT_MENU(wxID_ABOUT,         BombsFrame::OnAbout)
-// END_EVENT_TABLE()
+void SetupBombMenu(wxMenuBar *menuBar) {
+  wxMenu *menuFile = new wxMenu;
+  wxMenu *menuLevel = new wxMenu;
+  menuLevel->AppendRadioItem(bombsID_EASY, wxT("&Easy (10x10)"));
+  menuLevel->AppendRadioItem(bombsID_MEDIUM, wxT("&Medium (15x15)"));
+  menuLevel->AppendRadioItem(bombsID_HARD, wxT("&Hard (25x20)"));
+
+  menuFile->Append(bombsID_NEW_GAME, wxT("&New game"));
+  menuFile->Append(bombsID_LEVEL, wxT("&Level"), menuLevel, wxT("Starts a new game"));
+  menuFile->AppendCheckItem(bombsID_EASYCORNER, wxT("&Easy corner"));
+
+  menuBar->Append(menuFile, wxT("&Bombs"));
+}
 
 BombsFrame::BombsFrame(wxWindow* parent, BombsGame *game)
     : wxPanel(parent)
@@ -48,34 +52,6 @@ BombsFrame::BombsFrame(wxWindow* parent, BombsGame *game)
     m_game = game;
     m_easyCorner = false;
     m_lastLevel = bombsID_EASY;
-
-    // Create a menu bar for the frame
-    /*
-    wxMenuBar *menuBar = new wxMenuBar;
-    wxMenu *menuFile = new wxMenu;
-    wxMenu *menuLevel = new wxMenu;
-    menuLevel->AppendRadioItem(bombsID_EASY, wxT("&Easy (10x10)\tCtrl-1"));
-    menuLevel->AppendRadioItem(bombsID_MEDIUM, wxT("&Medium (15x15)\tCtrl-2"));
-    menuLevel->AppendRadioItem(bombsID_HARD, wxT("&Hard (25x20)\tCtrl-3"));
-
-    menuFile->Append(wxID_NEW, wxT("&New game\tCtrl-N"));
-    menuFile->Append(bombsID_LEVEL, wxT("&Level"),menuLevel, wxT("Starts a new game"));
-    menuFile->AppendCheckItem(bombsID_EASYCORNER, wxT("&Easy corner"));
-
-    menuFile->AppendSeparator();
-    menuFile->Append(wxID_EXIT, wxGetStockLabel(wxID_EXIT), wxT("Quits the application"));
-
-    menuBar->Append(menuFile, wxT("&File"));
-
-
-    wxMenu *menuHelp = new wxMenu;
-    menuHelp->Append(wxID_ABOUT, wxT("&About"),
-        wxT("Displays the program information") );
-
-    menuBar->Append(menuHelp, wxT("&Help"));
-
-    SetMenuBar(menuBar);
-    */
 
     // Create child subwindows.
     m_canvas = new BombsCanvas(this, m_game);
@@ -88,6 +64,17 @@ BombsFrame::BombsFrame(wxWindow* parent, BombsGame *game)
 
     // Show the frame.
     // Show();
+
+
+    // BEGIN_EVENT_TABLE(BombsFrame, wxFrame)
+    Bind(wxEVT_MENU, &BombsFrame::OnNewGame, this   , bombsID_NEW_GAME);           
+    Bind(wxEVT_MENU, &BombsFrame::OnEasyGame, this  , bombsID_EASY);       
+    Bind(wxEVT_MENU, &BombsFrame::OnMediumGame, this, bombsID_MEDIUM);     
+    Bind(wxEVT_MENU, &BombsFrame::OnHardGame, this  , bombsID_HARD);       
+    Bind(wxEVT_MENU, &BombsFrame::OnEasyCorner, this, bombsID_EASYCORNER); 
+    // Bind(wxEVT_MENU, &BombsFrame::OnExit, this      , wxID_EXIT);          
+    // Bind(wxEVT_MENU, &BombsFrame::OnAbout, this     , wxID_ABOUT);         
+    // END_EVENT_TABLE()
 
     NewGame(bombsID_EASY, false);
 }

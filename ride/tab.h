@@ -6,10 +6,12 @@
 class StartPageTab;
 class FileEdit;
 class wxWindow;
+class wxMenuBar;
 
 class TabData {
  public:
   virtual wxWindow* ToControl() = 0;
+  virtual void AppendToMenu(wxMenuBar* menu) = 0;
 };
 
 class Tab {

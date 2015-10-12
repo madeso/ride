@@ -12,8 +12,12 @@
 #define _WX_DEMOS_BOMBS_BOMBS_H_
 
 #include "game.h"
+#include "ride/menuevent.h"
 
 class BombsCanvas;
+class wxMenuBar;
+
+void SetupBombMenu(wxMenuBar* menu);
 
 class BombsFrame : public wxPanel
 {
@@ -44,16 +48,6 @@ private:
     BombsCanvas *m_canvas;
 
     // DECLARE_EVENT_TABLE()
-};
-
-// App specific menu identifiers
-enum
-{
-    bombsID_LEVEL = wxID_HIGHEST,
-    bombsID_EASY,
-    bombsID_MEDIUM,
-    bombsID_HARD,
-    bombsID_EASYCORNER
 };
 
 class BombsCanvas : public wxPanel

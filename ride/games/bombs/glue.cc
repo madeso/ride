@@ -16,6 +16,10 @@ public:
     return m_frame;
   }
 
+  virtual void AppendToMenu(wxMenuBar* menu) {
+    SetupBombMenu(menu);
+  }
+
 private:
   Tab tab_;
   MainWindow* main_;
