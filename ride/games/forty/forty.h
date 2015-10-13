@@ -38,6 +38,8 @@ public:
 
     FortyCanvas* GetCanvas() { return m_canvas; }
 
+    void SetupSize(bool large);
+
 private:
     wxMenuBar* m_menuBar;
     FortyCanvas* m_canvas;

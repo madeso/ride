@@ -96,11 +96,7 @@ FortyFrame::FortyFrame(wxWindow* frame) :
     if (largecards)
         Card::SetScale(1.3);
 
-    wxSize size(668, 510);
-
-    if (largecards) {
-      size = wxSize(1000, 750);
-    }
+    wxSize size(100, 100);
 
     m_canvas = new FortyCanvas(this, wxDefaultPosition, size);
 
@@ -120,7 +116,19 @@ FortyFrame::FortyFrame(wxWindow* frame) :
 
     topsizer->SetSizeHints( this );
 
+    SetupSize(largecards);
+
     GetCanvas()->ShowPlayerDialog();
+}
+
+void FortyFrame::SetupSize(bool largecards) {
+  wxSize size(668, 510);
+
+  if (largecards) {
+    size = wxSize(1000, 750);
+  }
+
+  this->SetMinClientSize(size);
 }
 
 void
@@ -191,6 +199,7 @@ FortyFrame::ToggleCardSize(wxCommandEvent& event)
         Card::SetScale(checked ? 1.3 : 1);
         m_canvas->LayoutGame();
         m_canvas->Refresh();
+        SetupSize(checked);
 }
 
 //----------------------------------------------------------------------------
