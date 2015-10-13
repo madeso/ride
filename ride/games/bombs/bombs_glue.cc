@@ -1,4 +1,4 @@
-#include "glue.h"
+#include "bombs_glue.h"
 
 #include <ride/wx.h>
 #include <wx/aui/aui.h>

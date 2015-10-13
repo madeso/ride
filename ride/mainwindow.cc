@@ -18,7 +18,8 @@
 
 #include "ride/switcher/dialog.h"
 
-#include "ride/games/bombs/glue.h"
+#include "ride/games/bombs/bombs_glue.h"
+#include "ride/games/forty/forty_glue.h"
 
 #include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"
@@ -238,7 +239,8 @@ void MainWindow::SetupMenu() {
   menu_help->Append(wxID_ABOUT);
 
   menu_help->AppendSeparator();
-  AddMenuItem(menu_help, ID_GAMES_BOMBS, "Play bombs!");
+  AddMenuItem(menu_help, ID_GAMES_BOMBS, "Play Bombs!");
+  AddMenuItem(menu_help, ID_GAMES_FORTY, "Play Forty Thieves!");
 
   //////////////////////////////////////////////////////////////////////////
   wxMenuBar* menu_bar = new wxMenuBar;
@@ -344,6 +346,7 @@ void MainWindow::BindEvents() {
   Bind(wxEVT_MENU, &MainWindow::OnTabPrev, this, ID_TAB_PREV);
 
   Bind(wxEVT_MENU, &MainWindow::OnGamesBombs, this, ID_GAMES_BOMBS);
+  Bind(wxEVT_MENU, &MainWindow::OnGamesForty, this, ID_GAMES_FORTY);
 
   for (int i = ID_SPECIAL_TAB_NO_EVENT + 1; i < ID_SPECIAL_TAB_LAST_EVENT;
        ++i) {
@@ -681,6 +684,10 @@ void MainWindow::OnViewShowProject(wxCommandEvent& event) {
 
 void MainWindow::OnGamesBombs(wxCommandEvent& event) {
   CreateBombGame(notebook_, this);
+}
+
+void MainWindow::OnGamesForty(wxCommandEvent& event) {
+  CreateFortyGame(notebook_, this);
 }
 
 void MainWindow::SendTabEventToTab(wxCommandEvent& event) {

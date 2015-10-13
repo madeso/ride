@@ -3,9 +3,9 @@
 
 if(${MSVC})
 # on windows and visual-studio it requires scintilla
-find_package(wxWidgets COMPONENTS core webview aui base stc adv scintilla REQUIRED)
+find_package(wxWidgets COMPONENTS core webview aui base stc adv scintilla html REQUIRED)
 else()
-find_package(wxWidgets COMPONENTS core webview aui base stc adv REQUIRED)
+find_package(wxWidgets COMPONENTS core webview aui base stc adv html REQUIRED)
 # on travis we get a linker errror
 # that wx_gtk2u_scintilla-3.0 is missing, but the log says it builds
 #      libwxscintilla-3.0.a   ..bug? lets hope wx-config solve the problem for us since we use stc
@@ -52,19 +52,39 @@ set(switcher_src
 set(bombs_src
 	games/bombs/bombs.cpp
 	games/bombs/bombs.h
-	games/bombs/glue.cc
-	games/bombs/glue.h
+	games/bombs/bombs_glue.cc
+	games/bombs/bombs_glue.h
 	games/bombs/bombscanvas.cpp
 	games/bombs/game.cpp
 	games/bombs/game.h
 	)
 
-set(games_src ${bombs_src})
+set(forty_src
+	games/forty/forty_glue.cc
+	games/forty/forty_glue.h
+	games/forty/canvas.cpp
+	games/forty/canvas.h
+	games/forty/card.cpp
+	games/forty/card.h
+	games/forty/forty.cpp
+	games/forty/forty.h
+	games/forty/game.cpp
+	games/forty/game.h
+	games/forty/pictures.xpm
+	games/forty/pile.cpp
+	games/forty/pile.h
+	games/forty/scorefil.cpp
+	games/forty/scorefil.h
+	games/forty/symbols.xpm
+	)
+
+set(games_src ${bombs_src} ${forty_src})
 
 source_group("" FILES ${src})
 source_group("generated" FILES ${generated_src} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
 source_group("switcher" FILES ${switcher_src})
 source_group("games/bombs" FILES ${bombs_src})
+source_group("games/forty" FILES ${forty_src})
 
 add_executable(
 	${PROJECT_NAME} WIN32 

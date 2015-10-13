@@ -145,6 +145,7 @@ class MainWindow : public wxFrame {
   void OnViewShowProject(wxCommandEvent& event);
 
   void OnGamesBombs(wxCommandEvent& event);
+  void OnGamesForty(wxCommandEvent& event);
 
   void SendTabEventToTab(wxCommandEvent& event);
 

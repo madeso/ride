@@ -51,18 +51,30 @@ enum {
   ID_QUICK_OPEN,
 
   ID_GAMES_BOMBS,
+  ID_GAMES_FORTY,
 
   //////////////////////////////////////////////////////////////////////////
   // Specific tab events
 
   ID_SPECIAL_TAB_NO_EVENT,
 
+  // bombs
   bombsID_NEW_GAME,
   bombsID_LEVEL,
   bombsID_EASY,
   bombsID_MEDIUM,
   bombsID_HARD,
   bombsID_EASYCORNER,
+
+  // forty thieves
+  RIGHT_BUTTON_UNDO,
+  HELPING_HAND,
+  LARGE_CARDS,
+  FORTY_NEW,
+  FORTY_ABOUT,
+  FORTY_UNDO,
+  FORTY_REDO,
+  FORTY_HELP_CONTENTS,
 
   ID_SPECIAL_TAB_LAST_EVENT
 };
