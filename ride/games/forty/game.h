@@ -24,7 +24,7 @@ const int MaxMoves = 800;
 //---------------------------------------//
 class Pack : public Pile {
 public:
-    Pack(Game* game, int x, int y);
+  Pack(FortyFrame* frame, Game* game, int x, int y);
     virtual ~Pack();
     void Redraw(wxDC& dc);
     void ResetPile() { m_topCard = NumCards - 1; }
@@ -39,7 +39,7 @@ public:
 //----------------------------------------------------------//
 class Base : public Pile {
 public:
-    Base(int x, int y);
+  Base(FortyFrame* frame, int x, int y);
     virtual ~Base(){}
     bool AcceptCard(Card* card);
 };
@@ -50,7 +50,7 @@ public:
 //----------------------------------------------------//
 class Foundation : public Pile {
 public:
-    Foundation(int x, int y);
+  Foundation(FortyFrame* frame, int x, int y);
     virtual ~Foundation(){}
     bool AcceptCard(Card* card);
 };
@@ -61,7 +61,7 @@ public:
 //--------------------------------------//
 class Discard : public Pile {
 public:
-    Discard(int x, int y);
+  Discard(FortyFrame* frame, int x, int y);
     virtual ~Discard(){}
     void Redraw(wxDC& dc);
     void GetTopCardPos(int& x, int& y);
@@ -71,7 +71,7 @@ public:
 
 class Game {
 public:
-    Game(int wins, int games, int score);
+  Game(FortyFrame* frame, int wins, int games, int score);
     virtual ~Game();
 
     wxBitmap* symbolBitmap();

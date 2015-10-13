@@ -34,13 +34,15 @@
 
 const int NumCards = 2 * PackSize;
 
+class FortyFrame;
+
 
 //----------------------------------------------------------------//
 // A class defining a pile of cards with a position on the screen //
 //----------------------------------------------------------------//
 class Pile {
 public:
-    Pile(int x, int y, int dx = 0, int dy = 0);
+  Pile(FortyFrame* frame, int x, int y, int dx = 0, int dy = 0);
     virtual ~Pile(){};
 
     // General functions
@@ -71,6 +73,7 @@ public:
         void SetPos(int x,int y) {m_x = x;m_y = y;};
 
 protected:
+  FortyFrame* frame_;
     int   m_x, m_y; // Position of the pile on the screen
     int   m_dx, m_dy; // Offset when drawing the pile
     Card* m_cards[NumCards]; // Array of cards in this pile

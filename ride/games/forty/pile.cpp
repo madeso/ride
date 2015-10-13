@@ -42,7 +42,8 @@
 //| Description:                                                |
 //| Initialise the pile to be empty of cards.                   |
 //+-------------------------------------------------------------+
-Pile::Pile(int x, int y, int dx, int dy)
+Pile::Pile(FortyFrame* frame, int x, int y, int dx, int dy)
+  : frame_(frame)
 {
     m_x = x;
     m_y = y;
@@ -56,6 +57,11 @@ Pile::Pile(int x, int y, int dx, int dy)
 }
 
 
+bool MyIsExposed(wxWindow* canvas, int x, int y, int w, int h) {
+  // return canvas->IsExposed(x, y, w, h);
+  return true;
+}
+
 //+-------------------------------------------------------------+
 //| Pile::Redraw()                                              |
 //+-------------------------------------------------------------+
@@ -68,7 +74,7 @@ Pile::Pile(int x, int y, int dx, int dy)
 //+-------------------------------------------------------------+
 void Pile::Redraw(wxDC& dc )
 {
-    FortyFrame *frame = (FortyFrame*) wxTheApp->GetTopWindow();
+    FortyFrame *frame = frame_;
     wxWindow *canvas = (wxWindow *) NULL;
     if (frame)
     {
@@ -79,7 +85,7 @@ void Pile::Redraw(wxDC& dc )
     {
         if (m_dx == 0 && m_dy == 0)
         {
-            if ((canvas) && (canvas->IsExposed(m_x,m_y,(int)(Card::GetScale()*60),(int)(Card::GetScale()*200))))
+            if ((canvas) && (MyIsExposed(canvas, m_x,m_y,(int)(Card::GetScale()*60),(int)(Card::GetScale()*200))))
                 m_cards[m_topCard]->Draw(dc, m_x, m_y);
         }
         else
@@ -88,7 +94,7 @@ void Pile::Redraw(wxDC& dc )
             int y = m_y;
             for (int i = 0; i <= m_topCard; i++)
             {
-                if ((canvas) && (canvas->IsExposed(x,y,(int)(Card::GetScale()*60),(int)(Card::GetScale()*200))))
+                if ((canvas) && (MyIsExposed(canvas, x,y,(int)(Card::GetScale()*60),(int)(Card::GetScale()*200))))
                     m_cards[i]->Draw(dc, x, y);
                               x += (int)Card::GetScale()*m_dx;
                               y += (int)Card::GetScale()*m_dy;
@@ -97,7 +103,7 @@ void Pile::Redraw(wxDC& dc )
     }
     else
     {
-        if ((canvas) && (canvas->IsExposed(m_x,m_y,(int)(Card::GetScale()*60),(int)(Card::GetScale()*200))))
+        if ((canvas) && (MyIsExposed(canvas, m_x,m_y,(int)(Card::GetScale()*60),(int)(Card::GetScale()*200))))
             Card::DrawNullCard(dc, m_x, m_y);
     }
 }

@@ -37,7 +37,7 @@ wxString GetName() {
   return name;
 }
 
-FortyCanvas::FortyCanvas(wxWindow* parent, const wxPoint& pos, const wxSize& size) :
+FortyCanvas::FortyCanvas(FortyFrame* parent, const wxPoint& pos, const wxSize& size) :
              wxScrolledWindow(parent, wxID_ANY, pos, size, 0),
              m_helpingHand(true),
              m_rightBtnUndo(true),
@@ -45,7 +45,7 @@ FortyCanvas::FortyCanvas(wxWindow* parent, const wxPoint& pos, const wxSize& siz
              m_handCursor(wxCURSOR_HAND),
             m_arrowCursor(wxCURSOR_ARROW),
             m_scoreFile(GetName()),
-            m_game(0, 0, 0)
+            m_game(parent, 0, 0, 0)
 {
     SetScrollbars(0, 0, 0, 0);
 

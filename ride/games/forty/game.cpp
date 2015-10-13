@@ -31,7 +31,7 @@
 #include "pictures.xpm"
 #include "symbols.xpm"
 
-Game::Game(int wins, int games, int score) :
+Game::Game(FortyFrame* frame, int wins, int games, int score) :
     m_inPlay(false),
     m_moveIndex(0),
     m_redoIndex(0),
@@ -52,22 +52,22 @@ Game::Game(int wins, int games, int score) :
 
     int i;
 
-    m_pack = new Pack(this, 2, 2 + 4 * (CardHeight + 2));
+    m_pack = new Pack(frame, this, 2, 2 + 4 * (CardHeight + 2));
     srand(time(0));
 
     for (i = 0; i < 5; i++) m_pack->Shuffle();
 
-    m_discard = new Discard(2, 2 + 5 * (CardHeight + 2));
+    m_discard = new Discard(frame, 2, 2 + 5 * (CardHeight + 2));
 
     for (i = 0; i < 8; i++)
     {
-        m_foundations[i] = new Foundation(2 + (i / 4) * (CardWidth + 2),
+        m_foundations[i] = new Foundation(frame, 2 + (i / 4) * (CardWidth + 2),
                     2 + (i % 4) * (CardHeight + 2));
     }
 
     for (i = 0; i < 10; i++)
     {
-        m_bases[i] = new Base(8 + (i + 2) * (CardWidth + 2), 2);
+        m_bases[i] = new Base(frame, 8 + (i + 2) * (CardWidth + 2), 2);
     }
     Deal();
     m_srcPile = 0;
@@ -757,7 +757,7 @@ void Game::MouseMove(wxDC& dc, int mx, int my)
 //----------------------------------------------//
 // The Pack class: holds the two decks of cards //
 //----------------------------------------------//
-Pack::Pack(Game* game, int x, int y) : Pile(x, y, 0, 0)
+Pack::Pack(FortyFrame* frame, Game* game, int x, int y) : Pile(frame, x, y, 0, 0)
 {
     for (m_topCard = 0; m_topCard < NumCards; m_topCard++)
     {
@@ -851,7 +851,7 @@ Pack::~Pack()
 //------------------------------------------------------//
 // The Base class: holds the initial pile of four cards //
 //------------------------------------------------------//
-Base::Base(int x, int y) : Pile(x, y, 0, 12)
+Base::Base(FortyFrame* frame, int x, int y) : Pile(frame, x, y, 0, 12)
 {
     m_topCard = -1;
 }
@@ -881,7 +881,7 @@ bool Base::AcceptCard(Card* card)
 //----------------------------------------------------------------//
 // The Foundation class: holds the cards built up from the ace... //
 //----------------------------------------------------------------//
-Foundation::Foundation(int x, int y) : Pile(x, y, 0, 0)
+Foundation::Foundation(FortyFrame* frame, int x, int y) : Pile(frame, x, y, 0, 0)
 {
     m_topCard = -1;
 }
@@ -910,7 +910,7 @@ bool Foundation::AcceptCard(Card* card)
 //----------------------------------------------------//
 // The Discard class: holds cards dealt from the m_pack //
 //----------------------------------------------------//
-Discard::Discard(int x, int y) : Pile(x, y, 19, 0)
+Discard::Discard(FortyFrame* frame, int x, int y) : Pile(frame, x, y, 19, 0)
 {
     m_topCard = -1;
 }

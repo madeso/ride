@@ -22,7 +22,7 @@ class PlayerSelectionDialog;
 class FortyCanvas: public wxScrolledWindow
 {
 public:
-    FortyCanvas(wxWindow* parent, const wxPoint& pos, const wxSize& size);
+  FortyCanvas(FortyFrame* parent, const wxPoint& pos, const wxSize& size);
     virtual ~FortyCanvas();
 
     virtual void OnDraw(wxDC& dc);
