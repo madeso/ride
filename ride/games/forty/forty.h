@@ -41,6 +41,7 @@ public:
     void SetupSize(bool large);
 
 private:
+  wxWindow* parent_;
     wxMenuBar* m_menuBar;
     FortyCanvas* m_canvas;
 };

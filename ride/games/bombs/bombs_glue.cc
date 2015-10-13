@@ -44,6 +44,9 @@ BombGameTab::BombGameTab(wxAuiNotebook* anotebook, MainWindow* parent)
   sizer->Add(sizer2, 1, wxALIGN_CENTER, 0, NULL);
   SetSizer(sizer);
 
+  SetBackgroundColour(*wxLIGHT_GREY);
+  SetForegroundColour(*wxLIGHT_GREY);
+
   notebook_->AddPage(this, wxT("Bombs"), true);
 }
 

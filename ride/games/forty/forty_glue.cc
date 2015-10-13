@@ -43,6 +43,9 @@ FortyGameTab::FortyGameTab(wxAuiNotebook* anotebook, MainWindow* parent)
   sizer->Add(sizer2, 1, wxALIGN_CENTER, 0, NULL);
   SetSizer(sizer);
 
+  SetBackgroundColour(BackgroundColour());
+  SetForegroundColour(BackgroundColour());
+
   notebook_->AddPage(this, wxT("Forty thieves"), true);
 }
 

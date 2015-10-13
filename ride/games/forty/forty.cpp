@@ -90,7 +90,7 @@ void FortyFrame::SetupFortyMenu(wxMenuBar* menuBar)
 
 // My frame constructor
 FortyFrame::FortyFrame(wxWindow* frame) :
-    wxPanel(frame, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER)
+wxPanel(frame, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER), parent_(frame)
 {
   const bool largecards = false;
     if (largecards)
@@ -129,6 +129,9 @@ void FortyFrame::SetupSize(bool largecards) {
   }
 
   this->SetMinClientSize(size);
+  if (parent_) {
+    parent_->Layout();
+  }
 }
 
 void
