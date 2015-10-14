@@ -109,7 +109,7 @@ void MainWindow::SetupMenu() {
   AddMenuItem(menu_file, wxID_SAVEAS, "Save &as...\tCtrl-Shift-S",
               "Save the file as a new file");
   menu_file->AppendSeparator();
-  AddMenuItem(menu_file, ID_FILE_RIDE_SETTINGS, "S&ettings...",
+  AddMenuItem(menu_file, wxID_PREFERENCES, "S&ettings...",
               "Change the settings of RIDE", file_settings_xpm);
   menu_file->AppendSeparator();
   AddMenuItem(menu_file, wxID_EXIT, "", "", file_quit_xpm);
@@ -270,8 +270,7 @@ void MainWindow::SetupMenu() {
 void MainWindow::BindEvents() {
   Bind(wxEVT_MENU, &MainWindow::OnFileOpen, this, wxID_OPEN);
   Bind(wxEVT_MENU, &MainWindow::OnFileExit, this, wxID_EXIT);
-  Bind(wxEVT_MENU, &MainWindow::OnFileShowSettings, this,
-       ID_FILE_RIDE_SETTINGS);
+  Bind(wxEVT_MENU, &MainWindow::OnFileShowSettings, this, wxID_PREFERENCES);
   Bind(wxEVT_MENU, &MainWindow::OnFileSave, this, wxID_SAVE);
   Bind(wxEVT_MENU, &MainWindow::OnFileSaveAs, this, wxID_SAVEAS);
   Bind(wxEVT_MENU, &MainWindow::OnEditUndo, this, wxID_UNDO);
