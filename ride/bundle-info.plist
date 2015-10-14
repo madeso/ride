@@ -46,5 +46,7 @@
 	<string></string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
+	<key>CFBundleName</key>
+	<string>Ride</string>
 </dict>
 </plist>
