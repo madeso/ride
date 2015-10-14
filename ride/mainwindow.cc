@@ -470,8 +470,6 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
 
   LoadSettings(this, &settings_);
 
-  SetupMenu();
-
   int sbstyle =
       wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
   statusbar_ = new StatusBarGeneric(this, wxID_ANY, sbstyle);
@@ -536,6 +534,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   UpdateMenuItemView();
 
   project_->SetMainStatusbarText();
+
+  SetupMenu();
 }
 
 void MainWindow::UpdateTheme() {
