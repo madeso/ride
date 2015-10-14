@@ -7,4 +7,6 @@
 
 #cmakedefine USE_CPP_AS_RUST
 
+#cmakedefine RIDE_OS_APPLE
+
 #endif  // RIDE_RIDE_COMPILER_SETTINGS_IN_H_

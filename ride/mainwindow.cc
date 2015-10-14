@@ -14,6 +14,8 @@
 #include <vector>
 #include <map>
 
+#include "ride_compiler_settings.h"  // NOLINT cmake generated file
+
 #include "ride/resources/icons.h"
 
 #include "ride/switcher/dialog.h"
@@ -456,7 +458,9 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
       findres_window_(NULL),
       app_name_(app_name),
       statusbar_(NULL) {
+#ifdef RIDE_OS_APPLE
   EnableFullScreenView();
+#endif
   CreateNotebook();
   BindEvents();
   project_.reset(new Project(this, wxEmptyString));
