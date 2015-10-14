@@ -48,5 +48,7 @@
 	<true/>
 	<key>CFBundleName</key>
 	<string>Ride</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
 </dict>
 </plist>
