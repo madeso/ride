@@ -87,10 +87,10 @@ source_group("games/bombs" FILES ${bombs_src})
 source_group("games/forty" FILES ${forty_src})
 
 if(APPLE)
-set(OSX_ICON_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/application.icns)
-set_source_files_properties(${OSX_ICON_FILES} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-source_group("resources" FILES ${OSX_ICON_FILES})
-set(generated_src ${generated_src} ${OSX_ICON_FILES})
+	set(OSX_ICON_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/application.icns)
+	set_source_files_properties(${OSX_ICON_FILES} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+	source_group("resources" FILES ${OSX_ICON_FILES})
+	set(generated_src ${generated_src} ${OSX_ICON_FILES})
 ENDIF()
 
 add_executable(
@@ -99,8 +99,8 @@ add_executable(
 )
 
 if(APPLE)
-set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "application")
-set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/bundle-info.plist")
+	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "application")
+	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/bundle-info.plist")
 ENDIF()
 
 target_link_libraries(
