@@ -3,17 +3,24 @@ cmake_minimum_required(VERSION 3.1.0)
 set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
 
 option(BUILD_USE_CLANG_FORMAT "Add clang format to the build" ON)
-option(BUILD_USE_CPPLINT "Add cpplint to the build" ON)
-option(BUILD_USE_DOXYGEN "Add doxygen to the build" ON)
-option(BUILD_USE_DOXYGEN_GLOBAL "Add doxygen as a seperate build" ON)
-option(BUILD_USE_CPPCHECK "run cppcheck on all source" ON)
-option(BUILD_USE_INCLUDECHECK "run custom script to include order problems" ON)
+option(BUILD_USE_CPPLINT "Add cpplint to the build" OFF)
+option(BUILD_USE_DOXYGEN "Add doxygen to the build" OFF)
+option(BUILD_USE_DOXYGEN_GLOBAL "Add doxygen as a seperate build" OFF)
+option(BUILD_USE_CPPCHECK "run cppcheck on all source" OFF)
+option(BUILD_USE_INCLUDECHECK "run custom script to include order problems" OFF)
+option(BUILD_USE_ALL_COMPILER_WARNINGS "enable all compiler warnings" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(${APPLE})
 	set(RIDE_OS_APPLE "1")
+	
+	if(NOT ${BUILD_USE_ALL_COMPILER_WARNINGS})
+		# disabling http://stackoverflow.com/questions/32626171/xcode-7-how-to-suppress-warning-overrides-a-member-function-but-is-not-marked
+		# that apple-clang spews out for wx headers
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-inconsistent-missing-override")
+	endif()
 endif()
 
 if(${MSVC})
@@ -21,11 +28,13 @@ if(${MSVC})
 	add_definitions("-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS")
 	message(STATUS "Adding _SCL_SECURE_NO_WARNINGS and _CRT_SECURE_NO_WARNINGS")
 	
-	# Force to always compile with W4
-	if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
-		string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-	else()
-		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+	if(${BUILD_USE_ALL_COMPILER_WARNINGS})
+		# Force to always compile with W4
+		if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
+			string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+		else()
+			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+		endif()
 	endif()
 	
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4100 /wd4018 /wd4389 /wd4125 /wd4127 /wd4512 /wd4244 /wd4996") # unref parameter, < signed/unsigned mismatch, == signed/unsigned mismatch, decimal digit termnates octal(protobuf warning), constant conditional (protobuf), assignment couldnt be generated(protobuf), possible loss of data(protobuf), deprecated (generated/ui.cpp)
