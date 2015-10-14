@@ -457,6 +457,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
       findres_window_(NULL),
       app_name_(app_name),
       statusbar_(NULL) {
+  EnableFullScreenView();
   CreateNotebook();
   BindEvents();
   project_.reset(new Project(this, wxEmptyString));
@@ -1279,6 +1280,7 @@ MEM_FUN(Update)
 #undef MEM_FUN
 
 ride::WindowState GetState(wxFrame* main) {
+  if (main->IsFullScreen()) return ride::WINDOWSTATE_FULLSCREEN;
   if (main->IsMaximized())
     return ride::WINDOWSTATE_MAXIMIZED;
   else if (main->IsIconized())
@@ -1290,6 +1292,9 @@ ride::WindowState GetState(wxFrame* main) {
 void MainWindow::SaveSession() {
   ride::Session session;
   const ride::WindowState state = GetState(this);
+  if (state == ride::WINDOWSTATE_FULLSCREEN) {
+    ShowFullScreen(false);
+  }
   if (state != ride::WINDOWSTATE_NORMAL) {
     Restore();
   }
@@ -1337,6 +1342,7 @@ void MainWindow::RestoreSession() {
   }
 
   if (session.state() == ride::WINDOWSTATE_MAXIMIZED) Maximize();
+  if (session.state() == ride::WINDOWSTATE_MAXIMIZED) ShowFullScreen(true);
 
   // if we quit in a iconized/minimized state... should we restore to the same
   // state
