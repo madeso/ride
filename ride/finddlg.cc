@@ -81,7 +81,7 @@ void FindDlg::ToData(ride::FindDlg* data) const {
   data->set_match_start(uiFindWordStart->GetValue());
   data->set_file_types(uiFileTypes->GetValue());
   data->set_target(
-      static_cast<::ride::FindDlgTarget>(uiFindTarget->GetSelection()));
+      static_cast<ride::FindDlgTarget>(uiFindTarget->GetSelection()));
 }
 
 void FindDlg::OnCancel(wxCommandEvent& event) { EndModal(wxID_CANCEL); }
