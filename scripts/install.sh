@@ -14,9 +14,9 @@ sh cmake-3.3.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
 # credit: https://github.com/beark/ftl/
 # install g++ 4.8, if tests are run with g++
 if [ "`echo $CXX`" == "g++" ]; then
-	add-apt-repository -y ppa:ubuntu-toolchain-r/test;
-	apt-get update;
-	apt-get install -qq g++-4.8;
+	add-apt-repository -y ppa:ubuntu-toolchain-r/test
+	apt-get update
+	apt-get install -qq g++-4.8
 	update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
 fi
 
