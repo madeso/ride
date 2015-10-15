@@ -4,5 +4,5 @@ compiler:
   - gcc
   - clang
 
-install: sudo -E ./scripts/install.sh
+install: sudo ./scripts/install.sh
 script: ./scripts/build.sh
