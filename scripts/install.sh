@@ -3,6 +3,7 @@ set -ev
 
 # what is the current compiler?
 echo $CXX
+echo $CC
 
 #are commands even run?
 ls
