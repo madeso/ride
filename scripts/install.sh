@@ -1,7 +1,11 @@
 #!/bin/bash
 set -ev
 
+# what is the current compiler?
 echo $CXX
+
+#are commands even run?
+ls
 
 #install ride dependencies
 sudo add-apt-repository -y ppa:chris-lea/protobuf
