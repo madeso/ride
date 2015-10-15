@@ -9,6 +9,7 @@ option(BUILD_USE_DOXYGEN_GLOBAL "Add doxygen as a seperate build" OFF)
 option(BUILD_USE_CPPCHECK "run cppcheck on all source" OFF)
 option(BUILD_USE_INCLUDECHECK "run custom script to include order problems" OFF)
 option(BUILD_USE_ALL_COMPILER_WARNINGS "enable all compiler warnings" OFF)
+option(BUILD_USE_CLOC "Update code stat files" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -52,3 +53,20 @@ endif(BUILD_USE_DOXYGEN_GLOBAL)
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/external/cpptoml/include)
 add_subdirectory(ride)
+
+IF(BUILD_USE_CLOC)
+	add_custom_target(codestat-everything ALL
+					   cloc ride CMakeLists.txt --quiet --out code-stat-everything.txt
+					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+					   COMMENT "Running cloc on everything" VERBATIM)
+					   
+	add_custom_target(codestat-everything-switcher ALL
+					   cloc ride/switcher --quiet --out code-stat-switcher.txt
+					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+					   COMMENT "Running cloc on switcher" VERBATIM)
+
+	# add_custom_target(codestat-switcher-only ALL
+	# 				   cloc --by-file ride/switcher/* --quiet --out code-stat-switcher.txt
+	# 				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+	# 				   COMMENT "Running cloc on switcher only" VERBATIM)
+ENDIF(BUILD_USE_CLOC)
