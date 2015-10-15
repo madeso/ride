@@ -61,13 +61,13 @@ fi
 
 # build wxWidgtets
 sudo -u $usr mkdir wx3
-sudo -u $usr cd wx3
+cd wx3
 sudo -u $usr wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz
 sudo -u $usr tar -xzf wx.tar.gz
 sudo -u $usr ls
-sudo -u $usr cd wxWidgets-WX_3_0_2
+cd wxWidgets-WX_3_0_2
 sudo -u $usr mkdir gtk-build
-sudo -u $usr cd gtk-build
+cd gtk-build
 sudo -u $usr ../configure --help
 sudo -u $usr ../configure --enable-webview --disable-compat28
 sudo -u $usr make
