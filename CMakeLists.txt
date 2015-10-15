@@ -58,12 +58,12 @@ add_subdirectory(ride)
 
 IF(BUILD_USE_CLOC)
 	add_custom_target(codestat-everything ALL
-					   cloc ride CMakeLists.txt --quiet --out code-stat-everything.txt
+					   run-cloc.py ride CMakeLists.txt --out code-stat-everything.txt
 					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 					   COMMENT "Running cloc on everything" VERBATIM)
 					   
 	add_custom_target(codestat-everything-switcher ALL
-					   cloc ride/switcher --quiet --out code-stat-switcher.txt
+					   run-cloc.py --out code-stat-switcher.txt ride/switcher
 					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 					   COMMENT "Running cloc on switcher" VERBATIM)
 

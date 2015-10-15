@@ -37,3 +37,6 @@ samples/projects/*
 
 #temp files
 *.TMP
+
+#pychar dev files
+.idea/
