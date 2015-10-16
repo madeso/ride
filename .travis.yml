@@ -23,7 +23,7 @@ addons:
     notification_email: sir.gustav.the.coder@gmail.com
     build_command_prepend: "sudo -E ./scripts/install.sh; ./scripts/prebuild.sh"
     build_command:   "make"
-    branch_pattern: coverity_scan
+    branch_pattern: master
 
 # don't run clang with coverity
 matrix:
