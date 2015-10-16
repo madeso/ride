@@ -5,7 +5,7 @@ compiler:
   - clang
 
 install: sudo -E ./scripts/install.sh
-before-script: ./scripts/prebuild.sh
+before_script: ./scripts/prebuild.sh
 script: make
 
 # coverity stuff:
