@@ -27,6 +27,6 @@ addons:
 
 # don't run clang with coverity
 matrix:
-    exclude:
-        - compiler: clang
-            env: COVERITY_SCAN_BRANCH=1
+  exclude:
+    - compiler: clang
+      env: COVERITY_SCAN_BRANCH=1
