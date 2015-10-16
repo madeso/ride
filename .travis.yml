@@ -6,7 +6,7 @@ compiler:
 
 install: sudo -E ./scripts/install.sh
 before-script: ./scripts/prebuild.sh
-script: make
+script: cd $TRAVIS_BUILD_DIR/build; make
 
 # coverity stuff:
 env:
@@ -22,7 +22,7 @@ addons:
       description: "Ride is a Rust IDE"
     notification_email: sir.gustav.the.coder@gmail.com
     build_command_prepend: "sudo -E ./scripts/install.sh; ./scripts/prebuild.sh"
-    build_command:   "make"
+    build_command:   "cd $TRAVIS_BUILD_DIR/build; make"
     branch_pattern: coverity_scan
 
 # don't run clang with coverity
