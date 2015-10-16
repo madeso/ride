@@ -24,3 +24,9 @@ addons:
     build_command:   "./scripts/build.sh"
 #todo, change this asap
     branch_pattern: master
+
+# don't run clang with coverity
+matrix:
+    exclude:
+    - compiler: clang
+        env: COVERITY_SCAN_BRANCH=1
