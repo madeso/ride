@@ -5,7 +5,8 @@ compiler:
   - clang
 
 install: sudo -E ./scripts/install.sh
-script: ./scripts/build.sh
+before-script: ./scripts/prebuild.sh
+script: make
 
 # coverity stuff:
 env:
@@ -20,10 +21,9 @@ addons:
       name: "madeso/ride"
       description: "Ride is a Rust IDE"
     notification_email: sir.gustav.the.coder@gmail.com
-    build_command_prepend: "sudo -E ./scripts/install.sh"
-    build_command:   "./scripts/build.sh"
-#todo, change this asap
-    branch_pattern: master
+    build_command_prepend: "sudo -E ./scripts/install.sh; ./scripts/prebuild.sh"
+    build_command:   "make"
+    branch_pattern: coverity_scan
 
 # don't run clang with coverity
 matrix:
