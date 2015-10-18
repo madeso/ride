@@ -539,6 +539,11 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   project_->SetMainStatusbarText();
 
   SetupMenu();
+#ifdef RIDE_OS_APPLE
+        // for some reason, osx nees two calls to SetupMenu for it to change...
+        // TODO(Gustav): Investigate why...
+  SetupMenu();
+#endif
 }
 
 void MainWindow::UpdateTheme() {
