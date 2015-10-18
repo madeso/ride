@@ -78,7 +78,6 @@ class RunConfigurationsDlg : public ui::Configurations {
   void OnDown(wxCommandEvent& event);
 
  private:
-  MainWindow* main_window_;
   Project* project_;
   ride::UserProject user_backup_;
   GuiList<ride::UserProject, ProjectRunFunctions> feature_list_;
@@ -97,7 +96,6 @@ RunConfigurationsDlg::RunConfigurationsDlg(wxWindow* parent,
                                            MainWindow* mainwindow,
                                            Project* project, int selected)
     : ::ui::Configurations(parent, wxID_ANY),
-      main_window_(mainwindow),
       project_(project),
       user_backup_(project->user()),
       feature_list_(uiList, this),

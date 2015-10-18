@@ -26,7 +26,6 @@
 StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
     : wxControl(parent, wxID_ANY),
       tab_(this),
-      main_(parent),
       notebook_(anotebook) {
   this->SetClientData(&tab_);
 

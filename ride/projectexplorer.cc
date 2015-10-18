@@ -248,8 +248,8 @@ enum {
 };
 
 void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event) {
-  const wxPoint mouse_point = GetContextEventPosition(event);
-  const wxPoint client_point = ScreenToClient(mouse_point);
+  // const wxPoint mouse_point = GetContextEventPosition(event);
+  // const wxPoint client_point = ScreenToClient(mouse_point);
 
   const auto selected = GetFocused(this);
 

@@ -10,7 +10,7 @@ namespace switcher {
 Group::Group(const wxString& title) : title_(title) {}
 
 Group::Group(const wxString& title, const std::vector<Item>& items)
-    : title_(title), items_(items) {}
+    : items_(items), title_(title) {}
 
 void Group::set_title(const wxString& title) { title_ = title; }
 

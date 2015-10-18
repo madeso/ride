@@ -57,6 +57,7 @@ Index GoToFirstItem(const ItemList& items, int group = 0) {
 }
 
 Index GoToLastItem(const ItemList& items) {
+  // TODO(Gustav): Loop condition always true, investigate this!!!
   for (size_t group_index = items.GetGroupCount() - 1; group_index >= 0;
        --group_index) {
     int count = items.GetGroup(group_index).GetItemCount();
@@ -184,8 +185,8 @@ enum { ID_FIRST = wxID_HIGHEST, ID_TAB_PREV, ID_TAB_NEXT };
 
 Ctrl::Ctrl(const ItemList& items, const Style& style)
     : items_(items),
-      style_(style),
       selection_(SWITCHER_NOT_FOUND),
+      style_(style),
       overall_size_(wxSize(200, 100)) {
   Bind(wxEVT_LEFT_UP, &Ctrl::OnMouseClick, this);
   Bind(wxEVT_MOTION, &Ctrl::OnMouseMove, this);
@@ -247,7 +248,7 @@ void Ctrl::OnPaint(wxPaintEvent& WXUNUSED(event)) {  // NOLINT
   if (items_.column_count() == 0) CalculateLayout(dc);
 
   if (items_.column_count() == 0) return;
-  wxRect rect = GetClientRect();
+  // wxRect rect = GetClientRect();
   items_.PaintItems(&dc, style_, selection_, this);
 }
 

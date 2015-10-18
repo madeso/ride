@@ -9,7 +9,7 @@
 #include "ride/outputcontrol.h"
 #include "ride/wxutils.h"
 
-OutputDirector::OutputDirector() : control_(NULL), main_(NULL) {}
+OutputDirector::OutputDirector() : main_(NULL), control_(NULL) {}
 
 void OutputDirector::Create(MainWindow* window, wxAuiManager* aui,
                             const wxString& name, const wxString& caption) {

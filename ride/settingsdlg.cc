@@ -708,8 +708,8 @@ int g_last_selected_font = 0;
 SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
     : ::ui::Settings(parent, wxID_ANY),
       main_window_(mainwindow),
-      allow_send_edit_to_main_(false),
       allow_send_style_to_main_(false),
+      allow_send_edit_to_main_(false),
       theme_list_(uiThemeList, this) {
   global_settings_ = main_window_->settings();
   current_settings_ = global_settings_;

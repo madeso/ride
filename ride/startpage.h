@@ -16,7 +16,6 @@ class StartPageTab : public wxControl {
 
  private:
   Tab tab_;
-  MainWindow* main_;
   wxAuiNotebook* notebook_;
 };
 

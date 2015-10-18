@@ -243,7 +243,7 @@ void QuickOpenDlg::UpdateFilters() {
 
 QuickOpenDlg::QuickOpenDlg(wxWindow* parent, const wxString& root,
                            const std::vector<wxString>& files)
-    : ui::QuickOpen(parent, wxID_ANY), files_(files), root_(root) {
+    : ui::QuickOpen(parent, wxID_ANY), root_(root), files_(files) {
   const WXID file_index = uiFileList->InsertColumn(0, "File");
   const WXID path_index = uiFileList->InsertColumn(1, "Path");
   const WXID count_index = uiFileList->InsertColumn(2, "Hits");

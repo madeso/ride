@@ -79,7 +79,6 @@ class BuildConfigurationsDlg : public ui::Configurations {
   void OnDown(wxCommandEvent& event);
 
  private:
-  MainWindow* main_window_;
   Project* project_;
   ride::Project project_backup_;
   GuiList<ride::Project, ProjectBuildFunctions> feature_list_;
@@ -98,7 +97,6 @@ BuildConfigurationsDlg::BuildConfigurationsDlg(wxWindow* parent,
                                                MainWindow* mainwindow,
                                                Project* project, int selected)
     : ::ui::Configurations(parent, wxID_ANY),
-      main_window_(mainwindow),
       project_(project),
       project_backup_(project->project()),
       feature_list_(uiList, this),
