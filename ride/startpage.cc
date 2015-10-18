@@ -24,9 +24,7 @@
 #include "ride/mainwindow.h"
 
 StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
-    : wxControl(parent, wxID_ANY),
-      tab_(this),
-      notebook_(anotebook) {
+    : wxControl(parent, wxID_ANY), tab_(this), notebook_(anotebook) {
   this->SetClientData(&tab_);
 
 #ifdef USE_WEBVIEW
