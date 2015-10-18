@@ -40,3 +40,7 @@ samples/projects/*
 
 #pychar dev files
 .idea/
+
+#vim swap files
+*.swp
+
