@@ -22,7 +22,6 @@ public:
 
 private:
   Tab tab_;
-  MainWindow* main_;
   wxAuiNotebook* notebook_;
 
   FortyFrame *m_frame;
@@ -31,7 +30,6 @@ private:
 FortyGameTab::FortyGameTab(wxAuiNotebook* anotebook, MainWindow* parent)
   : wxControl(parent, wxID_ANY),
   tab_(this),
-  main_(parent),
   notebook_(anotebook) {
   this->SetClientData(&tab_);
 
