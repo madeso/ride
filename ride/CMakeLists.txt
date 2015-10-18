@@ -98,6 +98,8 @@ add_executable(
 	${src} ${generated_src} ${switcher_src} ${games_src}
 )
 
+install(TARGETS ${PROJECT_NAME} DESTINATION ".")
+
 if(APPLE)
 	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "application")
 	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/bundle-info.plist")
