@@ -1,4 +1,4 @@
-![screenshot](logo/256text.png)
+![screenshot](gfx/logo/256text.png)
 Ride is a [Rust](http://www.rust-lang.org/) [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment). It's named after concatenating R from rust and IDE. It's currently not in a usable state.
 If you're looking for something more complete, perhaps [RustDT](http://rustdt.github.io/) for Eclipse, [SolidOak](https://github.com/oakes/SolidOak) or [Rust](https://github.com/rrandom/Brackets-Rust-IDE/) for [brackets](http://brackets.io/) is your thing.
 
@@ -20,8 +20,8 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 Some of the development is streamed [on twitch](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
 
 # Screenshots
-![screenshot](screenshots/3.png)
-![screenshot](screenshots/2.png)
+![screenshot](gfx/screenshots/3.png)
+![screenshot](gfx/screenshots/2.png)
 
 # Getting ride
 This isn't finished. Eventually there should be a installer here, but that isn't finished. [Issue #13](https://github.com/madeso/ride/issues/13) is looking to fix this. If you want to try it, you need to download the source and build it yourself.
