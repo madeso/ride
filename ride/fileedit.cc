@@ -326,6 +326,128 @@ wxDateTime GetFileDetectionTime(const wxString file) {
   return file_name.GetModificationTime();
 }
 
+class StyledTextCtrl : public wxStyledTextCtrl {
+ public:
+  explicit StyledTextCtrl(FileEdit* parent)
+      : wxStyledTextCtrl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+                         wxBORDER_NONE | wxVSCROLL),
+        parent_(parent) {
+    Bind(wxEVT_CHAR, &StyledTextCtrl::OnChar, this);
+    Bind(wxEVT_KEY_DOWN, &StyledTextCtrl::OnKeyDown, this);
+  }
+
+  // stolen from wx widgets, simplified and adapted for us
+
+  void OnChar(wxKeyEvent& evt) {  // NOLINT
+    bool lastKeyDownConsumed = m_lastKeyDownConsumed;
+
+    // On (some?) non-US PC keyboards the AltGr key is required to enter some
+    // common characters.  It comes to us as both Alt and Ctrl down so we need
+    // to let the char through in that case, otherwise if only ctrl or only
+    // alt let's skip it.
+    bool ctrl = evt.ControlDown();
+#ifdef __WXMAC__
+    // On the Mac the Alt key is just a modifier key (like Shift) so we need
+    // to allow the char events to be processed when Alt is pressed.
+    // todo  Should we check MetaDown instead in this case?
+    bool alt = false;
+#else
+    bool alt = evt.AltDown();
+#endif
+    bool skip = ((ctrl || alt) && !(ctrl && alt));
+
+    // apparently if we don't do this, Unicode keys pressed after non-char
+    // ASCII ones (e.g. Enter, Tab) are not taken into account (patch 1615989)
+    if (lastKeyDownConsumed && evt.GetUnicodeKey() > 255)
+      lastKeyDownConsumed = false;
+
+    if (!lastKeyDownConsumed && !skip) {
+      int key = evt.GetUnicodeKey();
+      bool keyOk = true;
+
+      // if the unicode key code is not really a unicode character (it may
+      // be a function key or etc., the platforms appear to always give us a
+      // small value in this case) then fallback to the ascii key code but
+      // don't do anything for function keys or etc.
+      if (key <= 127) {
+        key = evt.GetKeyCode();
+        keyOk = (key <= 127);
+      }
+      if (keyOk) {
+        ProcessCharEvent(evt);
+        return;
+      }
+    }
+
+    evt.Skip();
+  }
+
+  void ProcessCharEvent(wxKeyEvent& evt) {  // NOLINT
+    assert(parent_);
+    if (parent_->ProcessCharEvent(evt.GetUnicodeKey()) == false) {
+      wxStyledTextCtrl::OnChar(evt);
+    }
+  }
+
+  void OnKeyDown(wxKeyEvent& evt) {  // NOLINT
+    /*int processed = m_swx->DoKeyDown(evt, &lastKeyDownConsumed);
+    if (!processed && !lastKeyDownConsumed)*/
+    evt.Skip();
+  }
+
+ private:
+  FileEdit* parent_;
+};
+
+bool HandleParaEditCommon(bool ac_setting, wxChar c, wxStyledTextCtrl* text,
+                          wxChar begin, wxChar end) {
+  // TODO(Gustav): Add more advanced ac_setting instead of on and of...
+  if (ac_setting == false) return false;
+
+  const int caret = text->GetCurrentPos();
+
+  if (c == begin) {
+    text->InsertText(caret, wxString(begin) + wxString(end));
+    const int next_position = caret + 1;
+    text->SetCurrentPos(next_position);
+    text->SetSelection(next_position, next_position);
+    return true;
+  }
+
+  if (c == end) {
+    const int last_index = text->GetLength();
+    int found = text->FindText(caret, last_index, wxString(c));
+    if (found == -1) {
+      return true;
+    }
+    ++found;  // move past the end
+    found = std::min(found, last_index);
+    text->SetCurrentPos(found);
+    text->SetSelection(found, found);
+    return true;
+  }
+
+  return false;
+}
+
+bool FileEdit::ProcessCharEvent(wxChar c) {
+  assert(this);
+
+  if (HandleParaEditCommon(main_->settings().autocomplete_parentheses(), c,
+                           text_, '(', ')'))
+    return true;
+  if (HandleParaEditCommon(main_->settings().autocomplete_curly_braces(), c,
+                           text_, '{', '}'))
+    return true;
+  if (HandleParaEditCommon(main_->settings().autocomplete_brackets(), c, text_,
+                           '[', ']'))
+    return true;
+
+  // TODO(Gustav): Add special case for quotes
+
+  return false;
+}
+
 FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
                    const wxString& file, Languages* languages)
     : wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize,
@@ -343,8 +465,7 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
   assert(false == file.IsEmpty());
   this->SetClientData(&tab_);
   BindEvents();
-  text_ = new wxStyledTextCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-                               wxBORDER_NONE | wxVSCROLL);
+  text_ = new StyledTextCtrl(this);
 
   filename_ = file;
   LoadFile();
@@ -589,6 +710,7 @@ int CalculateIndentationChange(const wxString& str) {
 void FileEdit::OnCharAdded(wxStyledTextEvent& event) {
   int entered_character =
       event.GetKey();  // the key seems to be the char that was added
+  event.Skip();
 
   const wxString character_before_entered = text_->GetTextRange(
       text_->GetCurrentPos() - 2, text_->GetCurrentPos() - 1);
@@ -601,21 +723,7 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event) {
                force ? ShowAutoCompleteAction::FORCE_SIMPLE
                      : ShowAutoCompleteAction::NO_FORCE);
 
-  if (entered_character == '{') {
-    if (main_->settings().autocomplete_curly_braces()) {
-      text_->InsertText(text_->GetCurrentPos(), "}");
-    }
-  } else if (entered_character == '(') {
-    // todo: make completion of () smarter
-    if (main_->settings().autocomplete_parentheses()) {
-      text_->InsertText(text_->GetCurrentPos(), ")");
-    }
-  } else if (entered_character == '[') {
-    // todo: make completion of [] smarter
-    if (main_->settings().autocomplete_brackets()) {
-      text_->InsertText(text_->GetCurrentPos(), "]");
-    }
-  } else if (entered_character == '\n' || entered_character == '\r') {
+  if (entered_character == '\n' || entered_character == '\r') {
     // fixing the line margin width since we may need to expand it
     // going from line 99 to 100
     SetupLineMargin(text_, main_->settings());
@@ -780,6 +888,7 @@ void FileEdit::OnSelectionUpdated(wxCommandEvent& event) {
 }
 
 void FileEdit::OnChanged(wxStyledTextEvent& event) {
+  int key = event.GetKey();
   UpdateTitle();
   HighlightCurrentWord();
   UpdateBraceMatching();

@@ -86,6 +86,8 @@ class FileEdit : public wxControl {
   void OnChanged(wxStyledTextEvent& event);
   void OnSelectionUpdated(wxCommandEvent& event);
 
+  bool ProcessCharEvent(wxChar c);
+
   ~FileEdit();
 
  private:
