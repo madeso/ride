@@ -16,6 +16,7 @@
 #include <cassert>
 #include <set>
 #include <vector>
+#include <string>
 
 #include "ride/resources/icons.h"
 
@@ -399,6 +400,11 @@ class StyledTextCtrl : public wxStyledTextCtrl {
   FileEdit* parent_;
 };
 
+void SetTextPosition(wxStyledTextCtrl* text, int next_position) {
+  text->SetCurrentPos(next_position);
+  text->SetSelection(next_position, next_position);
+}
+
 bool HandleParaEditCommon(bool ac_setting, wxChar c, wxStyledTextCtrl* text,
                           wxChar begin, wxChar end) {
   // TODO(Gustav): Add more advanced ac_setting instead of on and of...
@@ -408,9 +414,7 @@ bool HandleParaEditCommon(bool ac_setting, wxChar c, wxStyledTextCtrl* text,
 
   if (c == begin) {
     text->InsertText(caret, wxString(begin) + wxString(end));
-    const int next_position = caret + 1;
-    text->SetCurrentPos(next_position);
-    text->SetSelection(next_position, next_position);
+    SetTextPosition(text, caret + 1);
     return true;
   }
 
@@ -422,16 +426,54 @@ bool HandleParaEditCommon(bool ac_setting, wxChar c, wxStyledTextCtrl* text,
     }
     ++found;  // move past the end
     found = std::min(found, last_index);
-    text->SetCurrentPos(found);
-    text->SetSelection(found, found);
+    SetTextPosition(text, found);
     return true;
   }
 
   return false;
 }
 
+enum class StringType { NONE, DOUBLE_QUOTE, SINGLE_QUOTE };
+
+StringType IsStringAt(wxStyledTextCtrl* text, int pos,
+                      bool* support_language = NULL) {
+  const int lexer = text->GetLexer();
+  const int style = text->GetStyleAt(pos);
+
+  switch (lexer) {
+    case wxSTC_LEX_CPP:
+      if (support_language) *support_language = true;
+      switch (style) {
+        case wxSTC_C_STRING:
+          return StringType::DOUBLE_QUOTE;
+        case wxSTC_C_CHARACTER:
+          return StringType::SINGLE_QUOTE;
+      }
+      break;
+#ifdef wxSTC_LEX_RUST
+    case wxSTC_LEX_RUST:
+      if (support_language) *support_language = true;
+      switch (style) {
+        case wxSTC_RUST_STRING:
+          return StringType::DOUBLE_QUOTE;
+        case wxSTC_RUST_STRINGR:
+          // TODO(Gustav): Fix raw string literals
+          return StringType::DOUBLE_QUOTE;
+        case wxSTC_RUST_CHARACTER:
+          return StringType::SINGLE_QUOTE;
+      }
+      break;
+#endif
+  }
+
+  return StringType::NONE;
+}
+
 bool FileEdit::ProcessCharEvent(wxChar c) {
   assert(this);
+
+  const wxChar SINGLE_QUOTE = '\'';
+  const wxChar DOUBLE_QUOTE = '\"';
 
   if (HandleParaEditCommon(main_->settings().autocomplete_parentheses(), c,
                            text_, '(', ')'))
@@ -443,7 +485,38 @@ bool FileEdit::ProcessCharEvent(wxChar c) {
                            '[', ']'))
     return true;
 
-  // TODO(Gustav): Add special case for quotes
+  // TODO(Gustav): only do this if the setting is true
+  if (c == SINGLE_QUOTE || c == DOUBLE_QUOTE) {
+    const int caret = text_->GetCurrentPos();
+    bool support_language = false;
+    const StringType string = IsStringAt(text_, caret, &support_language);
+    if (support_language == false) {
+      // if we don't support the language, abort the string process
+      return false;
+    }
+    if (string == StringType::NONE) {
+      // add string and move one forward
+      text_->InsertText(caret, wxString(2, c));
+      SetTextPosition(text_, caret + 1);
+      return true;
+    }
+    if ((string == StringType::DOUBLE_QUOTE && c == DOUBLE_QUOTE) ||
+        (string == StringType::SINGLE_QUOTE && c == SINGLE_QUOTE)) {
+      // move past end delim if at the end, otherwise escape the char
+      if (string == IsStringAt(text_, caret + 1)) {
+        // still the same string type, so add an escape and step 2
+        text_->InsertText(caret, wxString('\\') + wxString(c));
+        SetTextPosition(text_, caret + 2);
+        return true;
+      } else {
+        // move past the character
+        const wxString character = text_->GetTextRange(caret, caret + 1);
+        assert(character[0] == c);
+        SetTextPosition(text_, caret + 1);
+        return true;
+      }
+    }
+  }
 
   return false;
 }
