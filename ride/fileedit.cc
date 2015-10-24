@@ -401,33 +401,76 @@ class StyledTextCtrl : public wxStyledTextCtrl {
 };
 
 void SetTextPosition(wxStyledTextCtrl* text, int next_position) {
-  text->SetCurrentPos(next_position);
+  // text->SetCurrentPos(next_position);
   text->SetSelection(next_position, next_position);
+  // BUG: the virtual horizontal position is kept, not reset to next_position
 }
+
+class UndoActionRaii {
+ public:
+  explicit UndoActionRaii(wxStyledTextCtrl* text) : text_(text) {
+    text_->BeginUndoAction();
+  }
+
+  ~UndoActionRaii() { text_->EndUndoAction(); }
+
+ private:
+  wxStyledTextCtrl* text_;
+};
 
 bool HandleParaEditCommon(bool ac_setting, wxChar c, wxStyledTextCtrl* text,
                           wxChar begin, wxChar end) {
   // TODO(Gustav): Add more advanced ac_setting instead of on and of...
   if (ac_setting == false) return false;
 
-  const int caret = text->GetCurrentPos();
+  long selection_from = -1;  // NOLINT
+  long selection_to = -1;    // NOLINT
+  text->GetSelection(&selection_from, &selection_to);
+  const bool has_selection = selection_to != -1;
+
+  // const int caret = text->GetCurrentPos();
+  const int caret = selection_from;
+
+  // TODO(Gustav): Selections are not handled.
 
   if (c == begin) {
-    text->InsertText(caret, wxString(begin) + wxString(end));
+    if (has_selection) {
+      // Selection: When typing begin, replace selection with begin+end as
+      // normal
+      text->ReplaceSelection(wxString(begin) + wxString(end));
+    } else {
+      text->InsertText(caret, wxString(begin) + wxString(end));
+    }
     SetTextPosition(text, caret + 1);
     return true;
   }
 
   if (c == end) {
-    const int last_index = text->GetLength();
-    int found = text->FindText(caret, last_index, wxString(c));
-    if (found == -1) {
+    if (has_selection) {
+      // Selection: when typing end, encapsulate the selection with
+      // begin+selection+end and keep selection
+      UndoActionRaii undo_action(text);
+      long position = selection_from;    // NOLINT
+      long end_position = selection_to;  // NOLINT
+      text->InsertText(caret, wxString(begin));
+      position += 1;
+      end_position += 1;
+      // TODO(Gustav): If } add newlines and cleanup indentation
+      text->InsertText(end_position, wxString(end));
+      SetTextPosition(text, end_position + 1);
+      text->SetSelection(selection_from + 1, end_position);
+      return true;
+    } else {
+      const int last_index = text->GetLength();
+      int found = text->FindText(caret, last_index, wxString(c));
+      if (found == -1) {
+        return true;
+      }
+      ++found;  // move past the end
+      found = std::min(found, last_index);
+      SetTextPosition(text, found);
       return true;
     }
-    ++found;  // move past the end
-    found = std::min(found, last_index);
-    SetTextPosition(text, found);
-    return true;
   }
 
   return false;
