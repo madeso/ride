@@ -418,7 +418,9 @@ class UndoActionRaii {
   wxStyledTextCtrl* text_;
 };
 
-bool HandleParaEditCommon(bool ac_setting, wxChar c, wxStyledTextCtrl* text,
+bool HandleParaEditCommon(int tab_width, bool ac_setting, wxChar c,
+                          wxStyledTextCtrl* text,
+                          bool add_newlines_on_selection_encapsulation,
                           wxChar begin, wxChar end) {
   // TODO(Gustav): Add more advanced ac_setting instead of on and of...
   if (ac_setting == false) return false;
@@ -426,17 +428,15 @@ bool HandleParaEditCommon(bool ac_setting, wxChar c, wxStyledTextCtrl* text,
   long selection_from = -1;  // NOLINT
   long selection_to = -1;    // NOLINT
   text->GetSelection(&selection_from, &selection_to);
-  const bool has_selection = selection_to != -1;
+  const bool has_selection = selection_from != selection_to;
 
   // const int caret = text->GetCurrentPos();
   const int caret = selection_from;
 
-  // TODO(Gustav): Selections are not handled.
-
   if (c == begin) {
     if (has_selection) {
-      // Selection: When typing begin, replace selection with begin+end as
-      // normal
+      // Selection: When typing begin, replace selection with begin+end
+      // as normal
       text->ReplaceSelection(wxString(begin) + wxString(end));
     } else {
       text->InsertText(caret, wxString(begin) + wxString(end));
@@ -450,15 +450,47 @@ bool HandleParaEditCommon(bool ac_setting, wxChar c, wxStyledTextCtrl* text,
       // Selection: when typing end, encapsulate the selection with
       // begin+selection+end and keep selection
       UndoActionRaii undo_action(text);
-      long position = selection_from;    // NOLINT
-      long end_position = selection_to;  // NOLINT
-      text->InsertText(caret, wxString(begin));
+      auto line_start = text->LineFromPosition(selection_from);
+      auto line_end = text->LineFromPosition(selection_to);
+
+      auto position = selection_from;
+      auto end_position = selection_to;
+      text->InsertText(position, wxString(begin));
       position += 1;
       end_position += 1;
-      // TODO(Gustav): If } add newlines and cleanup indentation
+
+      auto final_start = selection_from + 1;
+      auto final_end = end_position;
+
+      if (add_newlines_on_selection_encapsulation) {
+        if (line_start != line_end) {
+          const wxString newline = "\n";
+          text->InsertText(position, newline);
+          const auto first_line_indent = text->GetLineIndentation(line_start);
+          text->SetLineIndentation(line_start + 1, first_line_indent);
+          end_position += first_line_indent + newline.length();
+          for (auto line = line_start + 1; line <= line_end + 1; ++line) {
+            const auto debug_line = text->GetLine(line);
+            const auto indent = text->GetLineIndentation(line);
+            text->SetLineIndentation(line, indent + tab_width);
+            end_position += tab_width;
+          }
+          text->InsertText(end_position, newline);
+          const auto debug_line0 = text->GetLine(line_end);
+          const auto debug_line1 = text->GetLine(line_end + 1);
+          const auto debug_line2 = text->GetLine(line_end + 2);
+          text->SetLineIndentation(line_end + 2, first_line_indent);
+          const auto debug_line22 = text->GetLine(line_end + 2);
+          end_position += first_line_indent + newline.length();
+
+          final_start += first_line_indent + tab_width + newline.length();
+          final_end = end_position - (first_line_indent + newline.length());
+        }
+      }
       text->InsertText(end_position, wxString(end));
-      SetTextPosition(text, end_position + 1);
-      text->SetSelection(selection_from + 1, end_position);
+      const auto lline = text->LineFromPosition(end_position);
+      const auto sstr = text->GetLine(lline);
+      text->SetSelection(final_start, final_end);
       return true;
     } else {
       const int last_index = text->GetLength();
@@ -515,21 +547,30 @@ StringType IsStringAt(wxStyledTextCtrl* text, int pos,
 bool FileEdit::ProcessCharEvent(wxChar c) {
   assert(this);
 
+  // TODO(Gustav): Add a disable-all-auto-completion-temporarily shortcut
+  // suggestion: ctrl-shift-a
+
   const wxChar SINGLE_QUOTE = '\'';
   const wxChar DOUBLE_QUOTE = '\"';
 
-  if (HandleParaEditCommon(main_->settings().autocomplete_parentheses(), c,
-                           text_, '(', ')'))
+  const int tab_width = main_->project()->tabwidth();
+
+  if (HandleParaEditCommon(tab_width,
+                           main_->settings().autocomplete_parentheses(), c,
+                           text_, false, '(', ')'))
     return true;
-  if (HandleParaEditCommon(main_->settings().autocomplete_curly_braces(), c,
-                           text_, '{', '}'))
+  if (HandleParaEditCommon(tab_width,
+                           main_->settings().autocomplete_curly_braces(), c,
+                           text_, true, '{', '}'))
     return true;
-  if (HandleParaEditCommon(main_->settings().autocomplete_brackets(), c, text_,
-                           '[', ']'))
+  if (HandleParaEditCommon(tab_width, main_->settings().autocomplete_brackets(),
+                           c, text_, false, '[', ']'))
     return true;
 
   // TODO(Gustav): only do this if the setting is true
   if (c == SINGLE_QUOTE || c == DOUBLE_QUOTE) {
+    // TODO(Gustav): if there is a selection, encapsulate add concat and select
+    // the content
     const int caret = text_->GetCurrentPos();
     bool support_language = false;
     const StringType string = IsStringAt(text_, caret, &support_language);
