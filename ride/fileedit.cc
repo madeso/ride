@@ -418,12 +418,11 @@ class UndoActionRaii {
   wxStyledTextCtrl* text_;
 };
 
-bool HandleParaEditCommon(int tab_width, bool ac_setting, wxChar c,
-                          wxStyledTextCtrl* text,
+bool HandleParaEditCommon(int tab_width, ride::AutoComplete ac_setting,
+                          wxChar c, wxStyledTextCtrl* text,
                           bool add_newlines_on_selection_encapsulation,
                           wxChar begin, wxChar end) {
-  // TODO(Gustav): Add more advanced ac_setting instead of on and of...
-  if (ac_setting == false) return false;
+  if (ac_setting != ride::AUTOCOMPLETE_PARA) return false;
 
   long selection_from = -1;  // NOLINT
   long selection_to = -1;    // NOLINT
@@ -567,6 +566,7 @@ bool FileEdit::ProcessCharEvent(wxChar c) {
                            c, text_, false, '[', ']'))
     return true;
 
+  // TODO(Gustav): move this to a single function instead
   // TODO(Gustav): only do this if the setting is true
   if (c == SINGLE_QUOTE || c == DOUBLE_QUOTE) {
     // TODO(Gustav): if there is a selection, encapsulate add concat and select

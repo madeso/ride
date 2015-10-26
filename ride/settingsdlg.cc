@@ -66,6 +66,13 @@ ride::IndicatorStyle ToData_IS(wxComboBox* gui) {
   RETURN_COMBOBOX_VALUE(IndicatorStyle, gui->GetSelection());
 }
 
+void ToGui(ride::AutoComplete data, wxComboBox* gui) {
+  gui->SetSelection(static_cast<int>(data));
+}
+ride::AutoComplete ToData_AC(wxComboBox* gui) {
+  RETURN_COMBOBOX_VALUE(AutoComplete, gui->GetSelection());
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 struct ThemeFunctions {
@@ -715,6 +722,14 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
   current_settings_ = global_settings_;
   theme_list_.Setup(uiThemeListAdd, uiThemeListRemove, uiThemeListChange,
                     uiThemeListUp, uiThemeListDown);
+
+  const std::vector<wxString> ac_names = {"None", "Para"};
+  uiEditAutocompleteCurlyBraces->Append(ac_names);
+  uiEditAutocompleteParentheses->Append(ac_names);
+  uiEditAutocompleteBrackets->Append(ac_names);
+  uiEditAutocompleteSingleQuote->Append(ac_names);
+  uiEditAutocompleteDoubleQuote->Append(ac_names);
+
   EditToGui(true);
   allow_send_edit_to_main_ = true;
   allow_send_marker_to_main_ = true;
@@ -864,11 +879,15 @@ void SettingsDlg::EditToGui(bool togui) {
               uiEditHighlightKeyword, );
 
   DIALOG_DATA(current_settings_, autocomplete_curly_braces,
-              uiEditAutocompleteCurlyBraces, );
+              uiEditAutocompleteCurlyBraces, _AC);
   DIALOG_DATA(current_settings_, autocomplete_parentheses,
-              uiEditAutocompleteParentheses, );
+              uiEditAutocompleteParentheses, _AC);
   DIALOG_DATA(current_settings_, autocomplete_brackets,
-              uiEditAutocompleteBrackets, );
+              uiEditAutocompleteBrackets, _AC);
+  DIALOG_DATA(current_settings_, autocomplete_singlequote,
+              uiEditAutocompleteSingleQuote, _AC);
+  DIALOG_DATA(current_settings_, autocomplete_doublequote,
+              uiEditAutocompleteDoubleQuote, _AC);
 
   DIALOG_DATA(current_settings_, show_multiline_indicators,
               uiEditShowMultilineIndicators, );

@@ -334,6 +334,11 @@ message WrapVisualFlags {
 	optional bool margin = 3 [default=false]; // Visual flag in line number margin.
 }
 
+enum AutoComplete {
+	AUTOCOMPLETE_NONE = 0;
+	AUTOCOMPLETE_PARA = 1;
+}
+
 message Settings {
   optional bool lineNumberEnable = 1 [default=true];
   optional bool foldEnable = 2 [default=true];
@@ -381,9 +386,11 @@ message Settings {
   optional MarkerSymbol folder = 34 [default=MARKERSYMBOL_EMPTY];
   optional MarkerSymbol folderopen = 35 [default=MARKERSYMBOL_EMPTY];
 
-  optional bool autocomplete_curly_braces = 36 [default=true];
-  optional bool autocomplete_parentheses = 37 [default=false];
-  optional bool autocomplete_brackets = 38 [default=false];
+  optional AutoComplete autocomplete_curly_braces = 401 [default=AUTOCOMPLETE_PARA];
+  optional AutoComplete autocomplete_parentheses = 402 [default=AUTOCOMPLETE_PARA];
+  optional AutoComplete autocomplete_brackets = 403 [default=AUTOCOMPLETE_PARA];
+  optional AutoComplete autocomplete_doublequote = 404 [default=AUTOCOMPLETE_PARA];
+  optional AutoComplete autocomplete_singlequote = 405 [default=AUTOCOMPLETE_PARA];
 
   optional bool show_multiline_indicators = 39 [default=false];
 

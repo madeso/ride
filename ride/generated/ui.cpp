@@ -384,14 +384,48 @@ Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxStaticBoxSizer* sbSizerAutocomplete;
 	sbSizerAutocomplete = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Auto completion") ), wxVERTICAL );
 	
-	uiEditAutocompleteCurlyBraces = new wxCheckBox( m_panel10, wxID_ANY, wxT("Curly braces"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerAutocomplete->Add( uiEditAutocompleteCurlyBraces, 0, wxALL, 5 );
+	wxFlexGridSizer* fgSizer401;
+	fgSizer401 = new wxFlexGridSizer( 0, 4, 0, 0 );
+	fgSizer401->SetFlexibleDirection( wxBOTH );
+	fgSizer401->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	uiEditAutocompleteParentheses = new wxCheckBox( m_panel10, wxID_ANY, wxT("Parentheses"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerAutocomplete->Add( uiEditAutocompleteParentheses, 0, wxALL, 5 );
+	m_staticText98 = new wxStaticText( m_panel10, wxID_ANY, wxT("{curly braces}"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText98->Wrap( -1 );
+	fgSizer401->Add( m_staticText98, 0, wxALL, 5 );
 	
-	uiEditAutocompleteBrackets = new wxCheckBox( m_panel10, wxID_ANY, wxT("Brackets"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerAutocomplete->Add( uiEditAutocompleteBrackets, 0, wxALL, 5 );
+	uiEditAutocompleteCurlyBraces = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteCurlyBraces, 0, wxALL, 5 );
+	
+	m_staticText99 = new wxStaticText( m_panel10, wxID_ANY, wxT("(partheses)"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText99->Wrap( -1 );
+	fgSizer401->Add( m_staticText99, 0, wxALL, 5 );
+	
+	uiEditAutocompleteParentheses  = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteParentheses , 0, wxALL, 5 );
+	
+	m_staticText100 = new wxStaticText( m_panel10, wxID_ANY, wxT("[brackets]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText100->Wrap( -1 );
+	fgSizer401->Add( m_staticText100, 0, wxALL, 5 );
+	
+	uiEditAutocompleteBrackets = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteBrackets, 0, wxALL, 5 );
+	
+	m_staticText101 = new wxStaticText( m_panel10, wxID_ANY, wxT("'single quote'"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText101->Wrap( -1 );
+	fgSizer401->Add( m_staticText101, 0, wxALL, 5 );
+	
+	uiEditAutocompleteSingleQuote = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteSingleQuote, 0, wxALL, 5 );
+	
+	m_staticText102 = new wxStaticText( m_panel10, wxID_ANY, wxT("\"double quote\""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText102->Wrap( -1 );
+	fgSizer401->Add( m_staticText102, 0, wxALL, 5 );
+	
+	uiEditAutocompleteDoubleQuote = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteDoubleQuote, 0, wxALL, 5 );
+	
+	
+	sbSizerAutocomplete->Add( fgSizer401, 1, wxEXPAND, 5 );
 	
 	
 	fgSizer4->Add( sbSizerAutocomplete, 1, wxEXPAND, 5 );

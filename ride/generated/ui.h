@@ -107,9 +107,16 @@ namespace ui
 			wxColourPickerCtrl* uiEditCurrentLineColor;
 			wxStaticText* m_staticText40;
 			wxTextCtrl* uiEditCurrentLineAlpha;
-			wxCheckBox* uiEditAutocompleteCurlyBraces;
-			wxCheckBox* uiEditAutocompleteParentheses;
-			wxCheckBox* uiEditAutocompleteBrackets;
+			wxStaticText* m_staticText98;
+			wxComboBox* uiEditAutocompleteCurlyBraces;
+			wxStaticText* m_staticText99;
+			wxComboBox* uiEditAutocompleteParentheses ;
+			wxStaticText* m_staticText100;
+			wxComboBox* uiEditAutocompleteBrackets;
+			wxStaticText* m_staticText101;
+			wxComboBox* uiEditAutocompleteSingleQuote;
+			wxStaticText* m_staticText102;
+			wxComboBox* uiEditAutocompleteDoubleQuote;
 			wxCheckBox* uiEditUseSelectionForeground;
 			wxColourPickerCtrl* uiEditSelectionForeground;
 			wxCheckBox* uiEditUseSelectionBackground;
@@ -286,7 +293,7 @@ namespace ui
 		
 		public:
 			
-			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 648,789 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
+			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 722,789 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~Settings();
 		
 	};
