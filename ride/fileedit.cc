@@ -532,11 +532,17 @@ bool HandleParaEditCommon(int tab_width, ride::AutoComplete ac_setting,
       return true;
     } else {
       const int last_index = text->GetLength();
-      int found = text->FindText(caret, last_index, wxString(c));
-      if (found == -1) {
-        return true;
-      }
-      ++found;  // move past the end
+      int found = caret;
+      do {
+        int last = found;
+        found = text->FindText(found, last_index, wxString(c));
+        if (found == -1) {
+          return true;
+        }
+        ++found;  // move past the end
+
+        // don't stop inside a string
+      } while (IsStringAt(text, found - 1) != StringType::NONE);
       found = std::min(found, last_index);
       SetTextPosition(text, found);
       return true;
