@@ -418,6 +418,42 @@ class UndoActionRaii {
   wxStyledTextCtrl* text_;
 };
 
+enum class StringType { NONE, DOUBLE_QUOTE, SINGLE_QUOTE };
+
+StringType IsStringAt(wxStyledTextCtrl* text, int pos,
+                      bool* support_language = NULL) {
+  const int lexer = text->GetLexer();
+  const int style = text->GetStyleAt(pos);
+
+  switch (lexer) {
+    case wxSTC_LEX_CPP:
+      if (support_language) *support_language = true;
+      switch (style) {
+        case wxSTC_C_STRING:
+          return StringType::DOUBLE_QUOTE;
+        case wxSTC_C_CHARACTER:
+          return StringType::SINGLE_QUOTE;
+      }
+      break;
+#ifdef wxSTC_LEX_RUST
+    case wxSTC_LEX_RUST:
+      if (support_language) *support_language = true;
+      switch (style) {
+        case wxSTC_RUST_STRING:
+          return StringType::DOUBLE_QUOTE;
+        case wxSTC_RUST_STRINGR:
+          // TODO(Gustav): Fix raw string literals
+          return StringType::DOUBLE_QUOTE;
+        case wxSTC_RUST_CHARACTER:
+          return StringType::SINGLE_QUOTE;
+      }
+      break;
+#endif
+  }
+
+  return StringType::NONE;
+}
+
 bool HandleParaEditCommon(int tab_width, ride::AutoComplete ac_setting,
                           wxChar c, wxStyledTextCtrl* text,
                           bool add_newlines_on_selection_encapsulation,
@@ -431,6 +467,9 @@ bool HandleParaEditCommon(int tab_width, ride::AutoComplete ac_setting,
 
   // const int caret = text->GetCurrentPos();
   const int caret = selection_from;
+
+  // if the character is inside a string, abort the ac
+  if (IsStringAt(text, caret) != StringType::NONE) return false;
 
   if (c == begin) {
     if (has_selection) {
@@ -507,73 +546,38 @@ bool HandleParaEditCommon(int tab_width, ride::AutoComplete ac_setting,
   return false;
 }
 
-enum class StringType { NONE, DOUBLE_QUOTE, SINGLE_QUOTE };
+bool HandleParaEditQuote(char c, ride::AutoComplete ac, wxStyledTextCtrl* text,
+                         char quote_character, StringType string_type) {
+  if (ac != ride::AutoComplete::AUTOCOMPLETE_PARA) return false;
 
-StringType IsStringAt(wxStyledTextCtrl* text, int pos,
-                      bool* support_language = NULL) {
-  const int lexer = text->GetLexer();
-  const int style = text->GetStyleAt(pos);
-
-  switch (lexer) {
-    case wxSTC_LEX_CPP:
-      if (support_language) *support_language = true;
-      switch (style) {
-        case wxSTC_C_STRING:
-          return StringType::DOUBLE_QUOTE;
-        case wxSTC_C_CHARACTER:
-          return StringType::SINGLE_QUOTE;
-      }
-      break;
-#ifdef wxSTC_LEX_RUST
-    case wxSTC_LEX_RUST:
-      if (support_language) *support_language = true;
-      switch (style) {
-        case wxSTC_RUST_STRING:
-          return StringType::DOUBLE_QUOTE;
-        case wxSTC_RUST_STRINGR:
-          // TODO(Gustav): Fix raw string literals
-          return StringType::DOUBLE_QUOTE;
-        case wxSTC_RUST_CHARACTER:
-          return StringType::SINGLE_QUOTE;
-      }
-      break;
-#endif
-  }
-
-  return StringType::NONE;
-}
-
-bool HandleParaEditQuote(char c, wxStyledTextCtrl* text_, char quote,
-                         StringType st) {
-  // TODO(Gustav): only do this if the setting is true
-  if (c == quote) {
+  if (c == quote_character) {
     // TODO(Gustav): if there is a selection, encapsulate add concat and select
     // the content
-    const int caret = text_->GetCurrentPos();
+    const int caret = text->GetCurrentPos();
     bool support_language = false;
-    const StringType string = IsStringAt(text_, caret, &support_language);
+    const StringType string = IsStringAt(text, caret, &support_language);
     if (support_language == false) {
       // if we don't support the language, abort the string process
       return false;
     }
     if (string == StringType::NONE) {
       // add string and move one forward
-      text_->InsertText(caret, wxString(2, c));
-      SetTextPosition(text_, caret + 1);
+      text->InsertText(caret, wxString(2, c));
+      SetTextPosition(text, caret + 1);
       return true;
     }
-    if (string == st && c == quote) {
+    if (string == string_type && c == quote_character) {
       // move past end delim if at the end, otherwise escape the char
-      if (string == IsStringAt(text_, caret + 1)) {
+      if (string == IsStringAt(text, caret + 1)) {
         // still the same string type, so add an escape and step 2
-        text_->InsertText(caret, wxString('\\') + wxString(c));
-        SetTextPosition(text_, caret + 2);
+        text->InsertText(caret, wxString('\\') + wxString(c));
+        SetTextPosition(text, caret + 2);
         return true;
       } else {
         // move past the character
-        const wxString character = text_->GetTextRange(caret, caret + 1);
+        const wxString character = text->GetTextRange(caret, caret + 1);
         assert(character[0] == c);
-        SetTextPosition(text_, caret + 1);
+        SetTextPosition(text, caret + 1);
         return true;
       }
     }
@@ -605,10 +609,12 @@ bool FileEdit::ProcessCharEvent(wxChar c) {
                            c, text_, false, '[', ']'))
     return true;
 
-  if (HandleParaEditQuote(c, text_, SINGLE_QUOTE, StringType::SINGLE_QUOTE))
+  if (HandleParaEditQuote(c, main_->settings().autocomplete_singlequote(),
+                          text_, SINGLE_QUOTE, StringType::SINGLE_QUOTE))
     return true;
 
-  if (HandleParaEditQuote(c, text_, DOUBLE_QUOTE, StringType::DOUBLE_QUOTE))
+  if (HandleParaEditQuote(c, main_->settings().autocomplete_doublequote(),
+                          text_, DOUBLE_QUOTE, StringType::DOUBLE_QUOTE))
     return true;
 
   return false;
