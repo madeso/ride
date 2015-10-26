@@ -543,6 +543,45 @@ StringType IsStringAt(wxStyledTextCtrl* text, int pos,
   return StringType::NONE;
 }
 
+bool HandleParaEditQuote(char c, wxStyledTextCtrl* text_, char quote,
+                         StringType st) {
+  // TODO(Gustav): only do this if the setting is true
+  if (c == quote) {
+    // TODO(Gustav): if there is a selection, encapsulate add concat and select
+    // the content
+    const int caret = text_->GetCurrentPos();
+    bool support_language = false;
+    const StringType string = IsStringAt(text_, caret, &support_language);
+    if (support_language == false) {
+      // if we don't support the language, abort the string process
+      return false;
+    }
+    if (string == StringType::NONE) {
+      // add string and move one forward
+      text_->InsertText(caret, wxString(2, c));
+      SetTextPosition(text_, caret + 1);
+      return true;
+    }
+    if (string == st && c == quote) {
+      // move past end delim if at the end, otherwise escape the char
+      if (string == IsStringAt(text_, caret + 1)) {
+        // still the same string type, so add an escape and step 2
+        text_->InsertText(caret, wxString('\\') + wxString(c));
+        SetTextPosition(text_, caret + 2);
+        return true;
+      } else {
+        // move past the character
+        const wxString character = text_->GetTextRange(caret, caret + 1);
+        assert(character[0] == c);
+        SetTextPosition(text_, caret + 1);
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 bool FileEdit::ProcessCharEvent(wxChar c) {
   assert(this);
 
@@ -566,41 +605,11 @@ bool FileEdit::ProcessCharEvent(wxChar c) {
                            c, text_, false, '[', ']'))
     return true;
 
-  // TODO(Gustav): move this to a single function instead
-  // TODO(Gustav): only do this if the setting is true
-  if (c == SINGLE_QUOTE || c == DOUBLE_QUOTE) {
-    // TODO(Gustav): if there is a selection, encapsulate add concat and select
-    // the content
-    const int caret = text_->GetCurrentPos();
-    bool support_language = false;
-    const StringType string = IsStringAt(text_, caret, &support_language);
-    if (support_language == false) {
-      // if we don't support the language, abort the string process
-      return false;
-    }
-    if (string == StringType::NONE) {
-      // add string and move one forward
-      text_->InsertText(caret, wxString(2, c));
-      SetTextPosition(text_, caret + 1);
-      return true;
-    }
-    if ((string == StringType::DOUBLE_QUOTE && c == DOUBLE_QUOTE) ||
-        (string == StringType::SINGLE_QUOTE && c == SINGLE_QUOTE)) {
-      // move past end delim if at the end, otherwise escape the char
-      if (string == IsStringAt(text_, caret + 1)) {
-        // still the same string type, so add an escape and step 2
-        text_->InsertText(caret, wxString('\\') + wxString(c));
-        SetTextPosition(text_, caret + 2);
-        return true;
-      } else {
-        // move past the character
-        const wxString character = text_->GetTextRange(caret, caret + 1);
-        assert(character[0] == c);
-        SetTextPosition(text_, caret + 1);
-        return true;
-      }
-    }
-  }
+  if (HandleParaEditQuote(c, text_, SINGLE_QUOTE, StringType::SINGLE_QUOTE))
+    return true;
+
+  if (HandleParaEditQuote(c, text_, DOUBLE_QUOTE, StringType::DOUBLE_QUOTE))
+    return true;
 
   return false;
 }
