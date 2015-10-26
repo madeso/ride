@@ -723,12 +723,14 @@ SettingsDlg::SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
   theme_list_.Setup(uiThemeListAdd, uiThemeListRemove, uiThemeListChange,
                     uiThemeListUp, uiThemeListDown);
 
-  const std::vector<wxString> ac_names = {"None", "Para"};
-  uiEditAutocompleteCurlyBraces->Append(ac_names);
-  uiEditAutocompleteParentheses->Append(ac_names);
-  uiEditAutocompleteBrackets->Append(ac_names);
-  uiEditAutocompleteSingleQuote->Append(ac_names);
-  uiEditAutocompleteDoubleQuote->Append(ac_names);
+  const std::vector<wxString> ac_names = {"None", "Paredit"};
+  for (const wxString& ac_name : ac_names) {
+    uiEditAutocompleteCurlyBraces->Append(ac_name);
+    uiEditAutocompleteParentheses->Append(ac_name);
+    uiEditAutocompleteBrackets->Append(ac_name);
+    uiEditAutocompleteSingleQuote->Append(ac_name);
+    uiEditAutocompleteDoubleQuote->Append(ac_name);
+  }
 
   EditToGui(true);
   allow_send_edit_to_main_ = true;
