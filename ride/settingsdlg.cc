@@ -18,6 +18,7 @@
 #include "ride/proto.h"
 #include "ride/settingscommon.h"
 #include "ride/settingsfontstab.h"
+#include "ride/settingsindicatortab.h"
 
 void AddItem(wxListCtrl* list, int id, const wxString& display, wxPanel* data) {
   wxListItem item;
@@ -35,7 +36,7 @@ class SettingsDlg : public wxDialog {
   wxListCtrl* nootebook_ctrl;
   wxPanel* m_null;
   SettingsFontsTab* m_fonts;
-  wxPanel* m_indicators;
+  SettingsIndicatorTab* m_indicators;
   wxPanel* m_markers;
   wxPanel* m_editor;
   wxPanel* m_window;
@@ -63,7 +64,7 @@ class SettingsDlg : public wxDialog {
     notebook = new wxSimplebook(this, wxID_ANY);
     m_null = new wxPanel(notebook);
     m_fonts = new SettingsFontsTab(notebook, &common_);
-    m_indicators = new ui::SettingsIndicatorsPanel(notebook);
+    m_indicators = new SettingsIndicatorTab(notebook, &common_);
     m_markers = new ui::SettingsMarkersPanel(notebook);
     m_editor = new ui::SettingsEditorPanel(notebook);
     m_window = new ui::SettingsWindowPanel(notebook);
@@ -127,6 +128,7 @@ class SettingsDlg : public wxDialog {
     m_fonts->StyleToGui(togui);
     // MarkerToGui(false);
     // WindowToGui(false);
+    m_indicators->IndicatorToGui(togui);
   }
 
   void OnApply(wxCommandEvent& event) {
