@@ -3,6 +3,7 @@
 #include "ride/form.h"
 #include <ride/wx.h>
 #include <wx/editlbox.h>
+#include <wx/clrpicker.h>
 
 #include "ride/wxid.h"
 
@@ -116,3 +117,9 @@ std::vector<wxString> ToData_Content(wxListBox* gui) {
   }
   return ret;
 }
+
+void ToGui(ride::Color data, wxColourPickerCtrl* gui) {
+  gui->SetColour(C(data));
+}
+
+ride::Color ToData(wxColourPickerCtrl* gui) { return C(gui->GetColour()); }

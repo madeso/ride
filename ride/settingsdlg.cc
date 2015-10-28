@@ -4,6 +4,8 @@
 
 #include <ride/wx.h>
 
+#include <wx/simplebook.h>
+
 #include <vector>
 #include <algorithm>
 
@@ -11,11 +13,168 @@
 
 #include "ride/form.h"
 #include "ride/mainwindow.h"
-#include "ride/settings.h"
 #include "ride/wxutils.h"
 #include "ride/guilist.h"
 #include "ride/proto.h"
+#include "ride/settingscommon.h"
+#include "ride/settingsfontstab.h"
 
+void AddItem(wxListCtrl* list, int id, const wxString& display, wxPanel* data) {
+  wxListItem item;
+  item.SetData(data);
+  item.SetImage(id);
+  item.SetText(display);
+  item.SetId(id);
+  list->InsertItem(item);
+}
+
+class SettingsDlg : public wxDialog {
+ public:
+  SettingsCommon common_;
+  wxSimplebook* notebook;
+  wxListCtrl* nootebook_ctrl;
+  wxPanel* m_null;
+  SettingsFontsTab* m_fonts;
+  wxPanel* m_indicators;
+  wxPanel* m_markers;
+  wxPanel* m_editor;
+  wxPanel* m_window;
+  wxPanel* m_themes;
+  wxStaticText* selection_info;
+
+  SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
+      : wxDialog(parent, wxID_ANY, "Settings", wxDefaultPosition, wxDefaultSize,
+                 wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
+        common_(mainwindow) {
+    this->SetSizeHints(wxSize(500, 500), wxDefaultSize);
+
+    wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
+    wxFlexGridSizer* notebook_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+    notebook_sizer->AddGrowableCol(1);
+    notebook_sizer->AddGrowableRow(1);
+    notebook_sizer->SetFlexibleDirection(wxBOTH);
+    notebook_sizer->SetNonFlexibleGrowMode(wxFLEX_GROWMODE_SPECIFIED);
+
+    selection_info = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition,
+                                      wxDefaultSize, 0);
+    selection_info->SetFont(wxFont(10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL,
+                                   wxFONTWEIGHT_BOLD));
+
+    notebook = new wxSimplebook(this, wxID_ANY);
+    m_null = new wxPanel(notebook);
+    m_fonts = new SettingsFontsTab(notebook, &common_);
+    m_indicators = new ui::SettingsIndicatorsPanel(notebook);
+    m_markers = new ui::SettingsMarkersPanel(notebook);
+    m_editor = new ui::SettingsEditorPanel(notebook);
+    m_window = new ui::SettingsWindowPanel(notebook);
+    m_themes = new ui::SettingsThemesPanel(notebook);
+
+    notebook->AddPage(m_fonts, "");
+    notebook->AddPage(m_indicators, "");
+    notebook->AddPage(m_markers, "");
+    notebook->AddPage(m_editor, "");
+    notebook->AddPage(m_window, "");
+    notebook->AddPage(m_themes, "");
+
+    nootebook_ctrl = new wxListCtrl(
+        this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+        wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT | wxLC_NO_HEADER | wxLC_LIST);
+    AddItem(nootebook_ctrl, 0, "Fonts", m_fonts);
+    AddItem(nootebook_ctrl, 1, "Indicators", m_indicators);
+    AddItem(nootebook_ctrl, 2, "Markers", m_markers);
+    AddItem(nootebook_ctrl, 3, "Editor", m_editor);
+    AddItem(nootebook_ctrl, 4, "Window", m_window);
+    AddItem(nootebook_ctrl, 5, "Themes", m_themes);
+
+    notebook_sizer->AddStretchSpacer();  // find ctrl
+    notebook_sizer->Add(selection_info);
+    notebook_sizer->Add(nootebook_ctrl, 0, wxALL | wxEXPAND, 3);
+    notebook_sizer->Add(notebook, 1, wxEXPAND | wxALL, 3);
+
+    main_sizer->Add(notebook_sizer, 1, wxEXPAND | wxALL, 5);
+
+    wxButton* ok_button = new wxButton(this, wxID_OK);
+    wxButton* apply_button = new wxButton(this, wxID_APPLY);
+    wxButton* cancel_buytton = new wxButton(this, wxID_CANCEL);
+
+    wxStdDialogButtonSizer* button_sizer = new wxStdDialogButtonSizer();
+
+    button_sizer->AddButton(ok_button);
+    button_sizer->AddButton(apply_button);
+    button_sizer->AddButton(cancel_buytton);
+    button_sizer->Realize();
+    button_sizer->SetMinSize(wxSize(-1, 50));
+
+    main_sizer->Add(button_sizer, 0, wxEXPAND | wxFIXED_MINSIZE, 5);
+
+    this->SetSizer(main_sizer);
+    this->Layout();
+
+    this->Centre(wxBOTH);
+
+    nootebook_ctrl->Bind(wxEVT_LIST_ITEM_SELECTED,
+                         &SettingsDlg::SelectionChanged, this);
+
+    apply_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsDlg::OnApply,
+                       this);
+    cancel_buytton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsDlg::OnCancel,
+                         this);
+    ok_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsDlg::OnOk, this);
+  }
+
+  void ToGui(bool togui) {
+    // EditToGui(false);
+    m_fonts->StyleToGui(togui);
+    // MarkerToGui(false);
+    // WindowToGui(false);
+  }
+
+  void OnApply(wxCommandEvent& event) {
+    // StyleSaveSelectedIndex();
+    common_.UpdateMain();
+  }
+
+  void OnCancel(wxCommandEvent& event) {
+    common_.Revert();
+    common_.UpdateMain();
+    // StyleSaveSelectedIndex();
+    EndModal(wxCANCEL);
+  }
+
+  void OnOk(wxCommandEvent& event) {
+    // StyleSaveSelectedIndex();
+    ToGui(false);
+    common_.Apply(this);
+    EndModal(wxOK);
+  }
+
+  void SelectionChanged(wxListEvent& event) {
+    wxPanel* panel = m_null;
+    wxString text = "";
+
+    const auto selection = GetSelection(nootebook_ctrl);
+
+    if (!selection.empty() && selection.size() == 1) {
+      panel =
+          reinterpret_cast<wxPanel*>(nootebook_ctrl->GetItemData(selection[0]));
+      assert(panel);
+      text = nootebook_ctrl->GetItemText(selection[0]);
+    }
+
+    int index = notebook->FindPage(panel);
+    if (index != -1) {
+      notebook->SetSelection(index);
+      selection_info->SetLabelText(text);
+    }
+  }
+};
+
+void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow) {
+  SettingsDlg dlg(parent, mainwindow);
+  dlg.ShowModal();
+}
+
+#if 0
 //////////////////////////////////////////////////////////////////////////
 // custom form functions
 
@@ -1113,3 +1272,5 @@ void SettingsDlg::OnDown(wxCommandEvent& event) {
 void SettingsDlg::OnlyAllowNumberChars(wxKeyEvent& event) {
   ::OnlyAllowNumberChars(event);
 }
+
+#endif

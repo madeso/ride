@@ -12,1499 +12,6 @@
 ///////////////////////////////////////////////////////////////////////////
 using namespace ui;
 
-Settings::Settings( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
-{
-	this->SetSizeHints( wxSize( 500,500 ), wxDefaultSize );
-	
-	wxBoxSizer* bSizer3;
-	bSizer3 = new wxBoxSizer( wxVERTICAL );
-	
-	m_notebook1 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNB_TOP );
-	m_fonts = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer6;
-	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer6->AddGrowableCol( 0 );
-	fgSizer6->AddGrowableCol( 1 );
-	fgSizer6->AddGrowableRow( 0 );
-	fgSizer6->SetFlexibleDirection( wxBOTH );
-	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_panel9 = new wxPanel( m_fonts, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer5;
-	bSizer5 = new wxBoxSizer( wxVERTICAL );
-	
-	wxStaticBoxSizer* sbSizer3;
-	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( m_panel9, wxID_ANY, wxT("Styles") ), wxVERTICAL );
-	
-	uiFontStyles = new wxListBox( m_panel9, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	sbSizer3->Add( uiFontStyles, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer5->Add( sbSizer3, 1, wxEXPAND, 5 );
-	
-	
-	m_panel9->SetSizer( bSizer5 );
-	m_panel9->Layout();
-	bSizer5->Fit( m_panel9 );
-	fgSizer6->Add( m_panel9, 1, wxEXPAND | wxALL, 5 );
-	
-	m_panel7 = new wxPanel( m_fonts, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxGridBagSizer* gbSizer2;
-	gbSizer2 = new wxGridBagSizer( 0, 0 );
-	gbSizer2->SetFlexibleDirection( wxBOTH );
-	gbSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
-	
-	wxStaticBoxSizer* sbSizer2;
-	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( m_panel7, wxID_ANY, wxT("Typefaces") ), wxVERTICAL );
-	
-	uiStyleUseTypeface = new wxCheckBox( m_panel7, wxID_ANY, wxT("Use typeface?"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizer2->Add( uiStyleUseTypeface, 0, wxALL, 5 );
-	
-	uiStyleOnlyFixedSize = new wxCheckBox( m_panel7, wxID_ANY, wxT("Only fixed sizes"), wxDefaultPosition, wxDefaultSize, 0 );
-	uiStyleOnlyFixedSize->SetValue(true); 
-	sbSizer2->Add( uiStyleOnlyFixedSize, 0, wxALL, 5 );
-	
-	uiStyleTypeface = new wxListBox( m_panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	sbSizer2->Add( uiStyleTypeface, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	gbSizer2->Add( sbSizer2, wxGBPosition( 0, 0 ), wxGBSpan( 1, 2 ), wxEXPAND, 5 );
-	
-	uiStyleBold = new wxCheckBox( m_panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleBold, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 5 );
-	
-	uiStyleUseBold = new wxCheckBox( m_panel7, wxID_ANY, wxT("Bold:"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleUseBold, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
-	
-	uiStyleItalic = new wxCheckBox( m_panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleItalic, wxGBPosition( 2, 1 ), wxGBSpan( 1, 1 ), wxALIGN_LEFT|wxALL, 5 );
-	
-	uiStyleUseItalic = new wxCheckBox( m_panel7, wxID_ANY, wxT("Italic"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleUseItalic, wxGBPosition( 2, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
-	
-	uiStyleUnderline = new wxCheckBox( m_panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleUnderline, wxGBPosition( 3, 1 ), wxGBSpan( 1, 1 ), wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 5 );
-	
-	uiStyleUseUnderline = new wxCheckBox( m_panel7, wxID_ANY, wxT("Underline:"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleUseUnderline, wxGBPosition( 3, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
-	
-	uiStyleSize = new wxTextCtrl( m_panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleSize, wxGBPosition( 4, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
-	
-	uiStyleUseSize = new wxCheckBox( m_panel7, wxID_ANY, wxT("Font size:"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleUseSize, wxGBPosition( 4, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
-	
-	uiStyleForeground = new wxColourPickerCtrl( m_panel7, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	gbSizer2->Add( uiStyleForeground, wxGBPosition( 5, 1 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND, 5 );
-	
-	uiStyleUseForeground = new wxCheckBox( m_panel7, wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleUseForeground, wxGBPosition( 5, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
-	
-	uiStyleBackground = new wxColourPickerCtrl( m_panel7, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	gbSizer2->Add( uiStyleBackground, wxGBPosition( 6, 1 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND, 5 );
-	
-	uiStyleUseBackground = new wxCheckBox( m_panel7, wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleUseBackground, wxGBPosition( 6, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
-	
-	uiStyleExample = new wxTextCtrl( m_panel7, wxID_ANY, wxT("Sample text"), wxDefaultPosition, wxDefaultSize, 0 );
-	gbSizer2->Add( uiStyleExample, wxGBPosition( 7, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
-	
-	
-	gbSizer2->AddGrowableCol( 0 );
-	gbSizer2->AddGrowableRow( 0 );
-	
-	m_panel7->SetSizer( gbSizer2 );
-	m_panel7->Layout();
-	gbSizer2->Fit( m_panel7 );
-	fgSizer6->Add( m_panel7, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	m_fonts->SetSizer( fgSizer6 );
-	m_fonts->Layout();
-	fgSizer6->Fit( m_fonts );
-	m_notebook1->AddPage( m_fonts, wxT("Fonts && Colors"), false );
-	m_indicators = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer7;
-	fgSizer7 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer7->AddGrowableCol( 0 );
-	fgSizer7->AddGrowableRow( 0 );
-	fgSizer7->SetFlexibleDirection( wxBOTH );
-	fgSizer7->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	wxBoxSizer* bSizer6;
-	bSizer6 = new wxBoxSizer( wxVERTICAL );
-	
-	uiIndicatorList = new wxListBox( m_indicators, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer6->Add( uiIndicatorList, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	fgSizer7->Add( bSizer6, 1, wxEXPAND, 5 );
-	
-	wxFlexGridSizer* fgSizer8;
-	fgSizer8 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer8->SetFlexibleDirection( wxBOTH );
-	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	uiIndicatorStyleLabel = new wxStaticText( m_indicators, wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
-	uiIndicatorStyleLabel->Wrap( -1 );
-	fgSizer8->Add( uiIndicatorStyleLabel, 0, wxALL, 5 );
-	
-	uiIndicatorStyle = new wxComboBox( m_indicators, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiIndicatorStyle->Append( wxT("Plain") );
-	uiIndicatorStyle->Append( wxT("Squiggle") );
-	uiIndicatorStyle->Append( wxT("TT") );
-	uiIndicatorStyle->Append( wxT("Diagonal") );
-	uiIndicatorStyle->Append( wxT("Strike") );
-	uiIndicatorStyle->Append( wxT("Hidden") );
-	uiIndicatorStyle->Append( wxT("Box") );
-	uiIndicatorStyle->Append( wxT("Roundbox") );
-	uiIndicatorStyle->Append( wxT("Straight box") );
-	uiIndicatorStyle->Append( wxT("Dash") );
-	uiIndicatorStyle->Append( wxT("Dots") );
-	uiIndicatorStyle->Append( wxT("Squiggle low") );
-	uiIndicatorStyle->Append( wxT("Dotbox") );
-	uiIndicatorStyle->Append( wxEmptyString );
-	uiIndicatorStyle->Append( wxEmptyString );
-	uiIndicatorStyle->Append( wxEmptyString );
-	uiIndicatorStyle->Append( wxEmptyString );
-	uiIndicatorStyle->Append( wxEmptyString );
-	fgSizer8->Add( uiIndicatorStyle, 0, wxALL, 5 );
-	
-	m_staticText11 = new wxStaticText( m_indicators, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText11->Wrap( -1 );
-	fgSizer8->Add( m_staticText11, 0, wxALL, 5 );
-	
-	uiIndicatorColor = new wxColourPickerCtrl( m_indicators, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer8->Add( uiIndicatorColor, 0, wxALL, 5 );
-	
-	
-	fgSizer8->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	uiIndicatorUnder = new wxCheckBox( m_indicators, wxID_ANY, wxT("Under?"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer8->Add( uiIndicatorUnder, 0, wxALL, 5 );
-	
-	m_staticText12 = new wxStaticText( m_indicators, wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText12->Wrap( -1 );
-	fgSizer8->Add( m_staticText12, 0, wxALL, 5 );
-	
-	uiIndicatorAlpha = new wxTextCtrl( m_indicators, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer8->Add( uiIndicatorAlpha, 0, wxALL, 5 );
-	
-	m_staticText13 = new wxStaticText( m_indicators, wxID_ANY, wxT("Outline alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText13->Wrap( -1 );
-	fgSizer8->Add( m_staticText13, 0, wxALL, 5 );
-	
-	uiIndicatorOutlineAlpha = new wxTextCtrl( m_indicators, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer8->Add( uiIndicatorOutlineAlpha, 0, wxALL, 5 );
-	
-	
-	fgSizer7->Add( fgSizer8, 1, wxEXPAND, 5 );
-	
-	
-	m_indicators->SetSizer( fgSizer7 );
-	m_indicators->Layout();
-	fgSizer7->Fit( m_indicators );
-	m_notebook1->AddPage( m_indicators, wxT("Indicators"), false );
-	m_markers = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer51;
-	fgSizer51 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer51->AddGrowableCol( 0 );
-	fgSizer51->AddGrowableRow( 0 );
-	fgSizer51->SetFlexibleDirection( wxBOTH );
-	fgSizer51->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
-	
-	wxStaticBoxSizer* sbSizer8;
-	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( m_markers, wxID_ANY, wxT("Markers") ), wxVERTICAL );
-	
-	uiMarkerList = new wxListBox( m_markers, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	sbSizer8->Add( uiMarkerList, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	fgSizer51->Add( sbSizer8, 1, wxEXPAND, 5 );
-	
-	wxFlexGridSizer* fgSizer61;
-	fgSizer61 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer61->SetFlexibleDirection( wxBOTH );
-	fgSizer61->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText7 = new wxStaticText( m_markers, wxID_ANY, wxT("Symbol:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText7->Wrap( -1 );
-	fgSizer61->Add( m_staticText7, 0, wxALL, 5 );
-	
-	uiMarkerSymbol = new wxComboBox( m_markers, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiMarkerSymbol->Append( wxT("Circle") );
-	uiMarkerSymbol->Append( wxT("Roundrect ") );
-	uiMarkerSymbol->Append( wxT("Arrow") );
-	uiMarkerSymbol->Append( wxT("Smallrect ") );
-	uiMarkerSymbol->Append( wxT("Shortarrow") );
-	uiMarkerSymbol->Append( wxT("Empty") );
-	uiMarkerSymbol->Append( wxT("Arrowdown ") );
-	uiMarkerSymbol->Append( wxT("Minus") );
-	uiMarkerSymbol->Append( wxT("Plus") );
-	uiMarkerSymbol->Append( wxEmptyString );
-	uiMarkerSymbol->Append( wxEmptyString );
-	fgSizer61->Add( uiMarkerSymbol, 0, wxALL, 5 );
-	
-	m_staticText9 = new wxStaticText( m_markers, wxID_ANY, wxT("Foreground color:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText9->Wrap( -1 );
-	fgSizer61->Add( m_staticText9, 0, wxALL, 5 );
-	
-	uiMarkerForegroundColor = new wxColourPickerCtrl( m_markers, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer61->Add( uiMarkerForegroundColor, 0, wxALL, 5 );
-	
-	m_staticText8 = new wxStaticText( m_markers, wxID_ANY, wxT("Background color:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText8->Wrap( -1 );
-	fgSizer61->Add( m_staticText8, 0, wxALL, 5 );
-	
-	uiMarkerBackgroundColor = new wxColourPickerCtrl( m_markers, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer61->Add( uiMarkerBackgroundColor, 0, wxALL, 5 );
-	
-	
-	fgSizer51->Add( fgSizer61, 1, wxEXPAND, 5 );
-	
-	
-	m_markers->SetSizer( fgSizer51 );
-	m_markers->Layout();
-	fgSizer51->Fit( m_markers );
-	m_notebook1->AddPage( m_markers, wxT("Markers"), false );
-	m_editor = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer2;
-	bSizer2 = new wxBoxSizer( wxVERTICAL );
-	
-	m_notebook2 = new wxNotebook( m_editor, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	m_panel10 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer4;
-	fgSizer4 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer4->SetFlexibleDirection( wxBOTH );
-	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	wxStaticBoxSizer* sbSizerFolding;
-	sbSizerFolding = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Folding") ), wxVERTICAL );
-	
-	wxBoxSizer* bSizer32;
-	bSizer32 = new wxBoxSizer( wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer5;
-	fgSizer5 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer5->SetFlexibleDirection( wxBOTH );
-	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	uiAllowFolding = new wxCheckBox( m_panel10, wxID_ANY, wxT("Allow folding"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( uiAllowFolding, 0, wxALL, 5 );
-	
-	uiFoldLevelNumbers = new wxCheckBox( m_panel10, wxID_ANY, wxT("Level numbers"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( uiFoldLevelNumbers, 0, wxALL, 5 );
-	
-	uiFoldLineBeforeExpanded = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line before (expanded)"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( uiFoldLineBeforeExpanded, 0, wxALL, 5 );
-	
-	uiFoldLineBeforeContracted = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line before (contracted)"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( uiFoldLineBeforeContracted, 0, wxALL, 5 );
-	
-	uiFoldLineAfterExpanded = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line after (expanded)"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( uiFoldLineAfterExpanded, 0, wxALL, 5 );
-	
-	uiFoldLineAfterContracted = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line After (contracted)"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer5->Add( uiFoldLineAfterContracted, 0, wxALL, 5 );
-	
-	
-	bSizer32->Add( fgSizer5, 1, wxEXPAND, 5 );
-	
-	wxFlexGridSizer* fgSizer22;
-	fgSizer22 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer22->AddGrowableCol( 1 );
-	fgSizer22->SetFlexibleDirection( wxBOTH );
-	fgSizer22->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText42 = new wxStaticText( m_panel10, wxID_ANY, wxT("High Color:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText42->Wrap( -1 );
-	fgSizer22->Add( m_staticText42, 0, wxALL, 5 );
-	
-	uiEditFoldHi = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer22->Add( uiEditFoldHi, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText43 = new wxStaticText( m_panel10, wxID_ANY, wxT("Low color:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText43->Wrap( -1 );
-	fgSizer22->Add( m_staticText43, 0, wxALL, 5 );
-	
-	uiEditFoldLow = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer22->Add( uiEditFoldLow, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	bSizer32->Add( fgSizer22, 1, wxEXPAND, 5 );
-	
-	
-	sbSizerFolding->Add( bSizer32, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer4->Add( sbSizerFolding, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerCurrentLine;
-	sbSizerCurrentLine = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Current line") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer20;
-	fgSizer20 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer20->AddGrowableCol( 1 );
-	fgSizer20->SetFlexibleDirection( wxBOTH );
-	fgSizer20->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	
-	fgSizer20->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	uiCurrentLineVisible = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show current line?"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer20->Add( uiCurrentLineVisible, 0, wxALL, 5 );
-	
-	
-	fgSizer20->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	uiEditCurrentLineOverdraw = new wxCheckBox( m_panel10, wxID_ANY, wxT("Overdraw?"), wxDefaultPosition, wxDefaultSize, 0 );
-	uiEditCurrentLineOverdraw->SetValue(true); 
-	fgSizer20->Add( uiEditCurrentLineOverdraw, 0, wxALL, 5 );
-	
-	m_staticText39 = new wxStaticText( m_panel10, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText39->Wrap( -1 );
-	fgSizer20->Add( m_staticText39, 0, wxALL, 5 );
-	
-	uiEditCurrentLineColor = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer20->Add( uiEditCurrentLineColor, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText40 = new wxStaticText( m_panel10, wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText40->Wrap( -1 );
-	fgSizer20->Add( m_staticText40, 0, wxALL, 5 );
-	
-	uiEditCurrentLineAlpha = new wxTextCtrl( m_panel10, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer20->Add( uiEditCurrentLineAlpha, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	sbSizerCurrentLine->Add( fgSizer20, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer4->Add( sbSizerCurrentLine, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerAutocomplete;
-	sbSizerAutocomplete = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Auto completion") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer401;
-	fgSizer401 = new wxFlexGridSizer( 0, 4, 0, 0 );
-	fgSizer401->SetFlexibleDirection( wxBOTH );
-	fgSizer401->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText98 = new wxStaticText( m_panel10, wxID_ANY, wxT("{curly braces}"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText98->Wrap( -1 );
-	fgSizer401->Add( m_staticText98, 0, wxALL, 5 );
-	
-	uiEditAutocompleteCurlyBraces = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteCurlyBraces, 0, wxALL, 5 );
-	
-	m_staticText99 = new wxStaticText( m_panel10, wxID_ANY, wxT("(partheses)"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText99->Wrap( -1 );
-	fgSizer401->Add( m_staticText99, 0, wxALL, 5 );
-	
-	uiEditAutocompleteParentheses  = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteParentheses , 0, wxALL, 5 );
-	
-	m_staticText100 = new wxStaticText( m_panel10, wxID_ANY, wxT("[brackets]"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText100->Wrap( -1 );
-	fgSizer401->Add( m_staticText100, 0, wxALL, 5 );
-	
-	uiEditAutocompleteBrackets = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteBrackets, 0, wxALL, 5 );
-	
-	m_staticText101 = new wxStaticText( m_panel10, wxID_ANY, wxT("'single quote'"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText101->Wrap( -1 );
-	fgSizer401->Add( m_staticText101, 0, wxALL, 5 );
-	
-	uiEditAutocompleteSingleQuote = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteSingleQuote, 0, wxALL, 5 );
-	
-	m_staticText102 = new wxStaticText( m_panel10, wxID_ANY, wxT("\"double quote\""), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText102->Wrap( -1 );
-	fgSizer401->Add( m_staticText102, 0, wxALL, 5 );
-	
-	uiEditAutocompleteDoubleQuote = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteDoubleQuote, 0, wxALL, 5 );
-	
-	
-	sbSizerAutocomplete->Add( fgSizer401, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer4->Add( sbSizerAutocomplete, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerSelection;
-	sbSizerSelection = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Selection") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer9;
-	fgSizer9 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer9->SetFlexibleDirection( wxBOTH );
-	fgSizer9->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	uiEditUseSelectionForeground = new wxCheckBox( m_panel10, wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( uiEditUseSelectionForeground, 0, wxALL, 5 );
-	
-	uiEditSelectionForeground = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer9->Add( uiEditSelectionForeground, 0, wxALL, 5 );
-	
-	uiEditUseSelectionBackground = new wxCheckBox( m_panel10, wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer9->Add( uiEditUseSelectionBackground, 0, wxALL, 5 );
-	
-	uiEditSelectionBackground = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer9->Add( uiEditSelectionBackground, 0, wxALL, 5 );
-	
-	
-	sbSizerSelection->Add( fgSizer9, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer4->Add( sbSizerSelection, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerProjectDefault;
-	sbSizerProjectDefault = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Project defaults") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer21;
-	fgSizer21 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer21->SetFlexibleDirection( wxBOTH );
-	fgSizer21->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	
-	fgSizer21->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	uiUseTabs = new wxCheckBox( m_panel10, wxID_ANY, wxT("Use tabs"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer21->Add( uiUseTabs, 0, wxALL, 5 );
-	
-	m_staticText41 = new wxStaticText( m_panel10, wxID_ANY, wxT("Tab width:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText41->Wrap( -1 );
-	fgSizer21->Add( m_staticText41, 0, wxALL, 5 );
-	
-	uiTabWidth = new wxTextCtrl( m_panel10, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer21->Add( uiTabWidth, 0, wxALL, 5 );
-	
-	
-	sbSizerProjectDefault->Add( fgSizer21, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer4->Add( sbSizerProjectDefault, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerEdges;
-	sbSizerEdges = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Edge") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer25;
-	fgSizer25 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer25->AddGrowableCol( 1 );
-	fgSizer25->SetFlexibleDirection( wxBOTH );
-	fgSizer25->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText47 = new wxStaticText( m_panel10, wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText47->Wrap( -1 );
-	fgSizer25->Add( m_staticText47, 0, wxALL, 5 );
-	
-	uiEdgeStyle = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiEdgeStyle->Append( wxT("None") );
-	uiEdgeStyle->Append( wxT("Line") );
-	uiEdgeStyle->Append( wxT("Background") );
-	fgSizer25->Add( uiEdgeStyle, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText48 = new wxStaticText( m_panel10, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText48->Wrap( -1 );
-	fgSizer25->Add( m_staticText48, 0, wxALL, 5 );
-	
-	uiEdgeColor = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer25->Add( uiEdgeColor, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText49 = new wxStaticText( m_panel10, wxID_ANY, wxT("Column:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText49->Wrap( -1 );
-	fgSizer25->Add( m_staticText49, 0, wxALL, 5 );
-	
-	uiEdgeColumn = new wxTextCtrl( m_panel10, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer25->Add( uiEdgeColumn, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	sbSizerEdges->Add( fgSizer25, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer4->Add( sbSizerEdges, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerEditorFeel;
-	sbSizerEditorFeel = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Feel") ), wxVERTICAL );
-	
-	uiTabIndents = new wxCheckBox( m_panel10, wxID_ANY, wxT("Tab indents"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerEditorFeel->Add( uiTabIndents, 0, wxALL, 5 );
-	
-	uiBackspaceUnindents = new wxCheckBox( m_panel10, wxID_ANY, wxT("Bacspace unindents"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerEditorFeel->Add( uiBackspaceUnindents, 0, wxALL, 5 );
-	
-	
-	fgSizer4->Add( sbSizerEditorFeel, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerIndent;
-	sbSizerIndent = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Indenting") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer23;
-	fgSizer23 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer23->AddGrowableCol( 1 );
-	fgSizer23->SetFlexibleDirection( wxBOTH );
-	fgSizer23->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	
-	fgSizer23->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	uiIndentGuide = new wxCheckBox( m_panel10, wxID_ANY, wxT("Display indent guide"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer23->Add( uiIndentGuide, 0, wxALL, 5 );
-	
-	m_staticText44 = new wxStaticText( m_panel10, wxID_ANY, wxT("Indent type:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText44->Wrap( -1 );
-	fgSizer23->Add( m_staticText44, 0, wxALL, 5 );
-	
-	uiEditIndentation = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiEditIndentation->Append( wxT("None") );
-	uiEditIndentation->Append( wxT("Keep") );
-	uiEditIndentation->Append( wxT("Smart") );
-	fgSizer23->Add( uiEditIndentation, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	sbSizerIndent->Add( fgSizer23, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer4->Add( sbSizerIndent, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerWhitespace;
-	sbSizerWhitespace = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Whitespace") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer24;
-	fgSizer24 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer24->AddGrowableCol( 1 );
-	fgSizer24->SetFlexibleDirection( wxBOTH );
-	fgSizer24->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	
-	fgSizer24->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	uiDisplayEOL = new wxCheckBox( m_panel10, wxID_ANY, wxT("Display EOL"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer24->Add( uiDisplayEOL, 0, wxALL, 5 );
-	
-	m_staticText45 = new wxStaticText( m_panel10, wxID_ANY, wxT("View whitespace:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText45->Wrap( -1 );
-	fgSizer24->Add( m_staticText45, 0, wxALL, 5 );
-	
-	uiViewWhitespace = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiViewWhitespace->Append( wxT("Hidden") );
-	uiViewWhitespace->Append( wxT("Always") );
-	uiViewWhitespace->Append( wxT("AfterIdent") );
-	fgSizer24->Add( uiViewWhitespace, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText46 = new wxStaticText( m_panel10, wxID_ANY, wxT("Word wrap:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText46->Wrap( -1 );
-	fgSizer24->Add( m_staticText46, 0, wxALL, 5 );
-	
-	uiWordwrap = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiWordwrap->Append( wxT("None") );
-	uiWordwrap->Append( wxT("Char") );
-	uiWordwrap->Append( wxT("Word") );
-	fgSizer24->Add( uiWordwrap, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	sbSizerWhitespace->Add( fgSizer24, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer4->Add( sbSizerWhitespace, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizerGeneral;
-	sbSizerGeneral = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("General") ), wxVERTICAL );
-	
-	uiEditShowCompilerAnnotations = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show warning/errors as annotations"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerGeneral->Add( uiEditShowCompilerAnnotations, 0, wxALL, 5 );
-	
-	uiEditShowMultilineIndicators = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show multiline warning/errors"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerGeneral->Add( uiEditShowMultilineIndicators, 0, wxALL, 5 );
-	
-	uiEditHighlightKeyword = new wxCheckBox( m_panel10, wxID_ANY, wxT("Auto highlight keywords"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerGeneral->Add( uiEditHighlightKeyword, 0, wxALL, 5 );
-	
-	uiShowLineNumbers = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show line numbers"), wxDefaultPosition, wxDefaultSize, 0 );
-	sbSizerGeneral->Add( uiShowLineNumbers, 0, wxALL, 5 );
-	
-	
-	fgSizer4->Add( sbSizerGeneral, 1, wxEXPAND, 5 );
-	
-	
-	m_panel10->SetSizer( fgSizer4 );
-	m_panel10->Layout();
-	fgSizer4->Fit( m_panel10 );
-	m_notebook2->AddPage( m_panel10, wxT("General"), true );
-	m_panel11 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	m_notebook2->AddPage( m_panel11, wxT("C++"), false );
-	
-	bSizer2->Add( m_notebook2, 1, wxEXPAND | wxALL, 5 );
-	
-	
-	m_editor->SetSizer( bSizer2 );
-	m_editor->Layout();
-	bSizer2->Fit( m_editor );
-	m_notebook1->AddPage( m_editor, wxT("Editor && Feel"), false );
-	m_window = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer35;
-	bSizer35 = new wxBoxSizer( wxVERTICAL );
-	
-	m_notebook4 = new wxNotebook( m_window, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	m_panel17 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer32;
-	fgSizer32 = new wxFlexGridSizer( 0, 2, 6, 6 );
-	fgSizer32->AddGrowableCol( 0 );
-	fgSizer32->AddGrowableCol( 1 );
-	fgSizer32->SetFlexibleDirection( wxBOTH );
-	fgSizer32->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	wxStaticBoxSizer* sbSizer23;
-	sbSizer23 = new wxStaticBoxSizer( new wxStaticBox( m_panel17, wxID_ANY, wxT("Common") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer281;
-	fgSizer281 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer281->AddGrowableCol( 1 );
-	fgSizer281->SetFlexibleDirection( wxBOTH );
-	fgSizer281->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText55 = new wxStaticText( m_panel17, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText55->Wrap( -1 );
-	fgSizer281->Add( m_staticText55, 0, wxALL, 5 );
-	
-	uiWindowDockCommonBackground = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer281->Add( uiWindowDockCommonBackground, 0, wxALL, 5 );
-	
-	m_staticText56 = new wxStaticText( m_panel17, wxID_ANY, wxT("Sash"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText56->Wrap( -1 );
-	fgSizer281->Add( m_staticText56, 0, wxALL, 5 );
-	
-	uiWindowDockCommonSash = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer281->Add( uiWindowDockCommonSash, 0, wxALL, 5 );
-	
-	m_staticText57 = new wxStaticText( m_panel17, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText57->Wrap( -1 );
-	fgSizer281->Add( m_staticText57, 0, wxALL, 5 );
-	
-	uiWindowDockCommonBorder = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer281->Add( uiWindowDockCommonBorder, 0, wxALL, 5 );
-	
-	m_staticText58 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gripper"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText58->Wrap( -1 );
-	fgSizer281->Add( m_staticText58, 0, wxALL, 5 );
-	
-	uiWindowDockCommonGripper = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer281->Add( uiWindowDockCommonGripper, 0, wxALL, 5 );
-	
-	
-	sbSizer23->Add( fgSizer281, 0, wxEXPAND, 5 );
-	
-	
-	fgSizer32->Add( sbSizer23, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer32->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer19;
-	sbSizer19 = new wxStaticBoxSizer( new wxStaticBox( m_panel17, wxID_ANY, wxT("Active") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer29;
-	fgSizer29 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer29->SetFlexibleDirection( wxBOTH );
-	fgSizer29->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText59 = new wxStaticText( m_panel17, wxID_ANY, wxT("Caption"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText59->Wrap( -1 );
-	fgSizer29->Add( m_staticText59, 0, wxALL, 5 );
-	
-	uiWindowDockActiveCaption = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer29->Add( uiWindowDockActiveCaption, 0, wxALL, 5 );
-	
-	m_staticText60 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gradient"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText60->Wrap( -1 );
-	fgSizer29->Add( m_staticText60, 0, wxALL, 5 );
-	
-	uiWindowDockActiveGradient = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer29->Add( uiWindowDockActiveGradient, 0, wxALL, 5 );
-	
-	m_staticText61 = new wxStaticText( m_panel17, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText61->Wrap( -1 );
-	fgSizer29->Add( m_staticText61, 0, wxALL, 5 );
-	
-	uiWindowDockActiveText = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer29->Add( uiWindowDockActiveText, 0, wxALL, 5 );
-	
-	
-	sbSizer19->Add( fgSizer29, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer32->Add( sbSizer19, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer20;
-	sbSizer20 = new wxStaticBoxSizer( new wxStaticBox( m_panel17, wxID_ANY, wxT("Inactive") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer30;
-	fgSizer30 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer30->SetFlexibleDirection( wxBOTH );
-	fgSizer30->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText62 = new wxStaticText( m_panel17, wxID_ANY, wxT("Caption"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText62->Wrap( -1 );
-	fgSizer30->Add( m_staticText62, 0, wxALL, 5 );
-	
-	uiWindowDockInactiveCaption = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer30->Add( uiWindowDockInactiveCaption, 0, wxALL, 5 );
-	
-	m_staticText63 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gradient"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText63->Wrap( -1 );
-	fgSizer30->Add( m_staticText63, 0, wxALL, 5 );
-	
-	uiWindowDockInactiveGradient = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer30->Add( uiWindowDockInactiveGradient, 0, wxALL, 5 );
-	
-	m_staticText64 = new wxStaticText( m_panel17, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText64->Wrap( -1 );
-	fgSizer30->Add( m_staticText64, 0, wxALL, 5 );
-	
-	uiWindowDockInactiveText = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer30->Add( uiWindowDockInactiveText, 0, wxALL, 5 );
-	
-	
-	sbSizer20->Add( fgSizer30, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer32->Add( sbSizer20, 1, wxEXPAND, 5 );
-	
-	
-	m_panel17->SetSizer( fgSizer32 );
-	m_panel17->Layout();
-	fgSizer32->Fit( m_panel17 );
-	m_notebook4->AddPage( m_panel17, wxT("Dock colors"), false );
-	m_panel18 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer37;
-	fgSizer37 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer37->AddGrowableCol( 0 );
-	fgSizer37->AddGrowableCol( 1 );
-	fgSizer37->SetFlexibleDirection( wxBOTH );
-	fgSizer37->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	wxStaticBoxSizer* sbSizer24;
-	sbSizer24 = new wxStaticBoxSizer( new wxStaticBox( m_panel18, wxID_ANY, wxT("Common") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer38;
-	fgSizer38 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer38->SetFlexibleDirection( wxBOTH );
-	fgSizer38->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText65 = new wxStaticText( m_panel18, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText65->Wrap( -1 );
-	fgSizer38->Add( m_staticText65, 0, wxALL, 5 );
-	
-	uiWindowTabCommonBackground = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer38->Add( uiWindowTabCommonBackground, 0, wxALL, 5 );
-	
-	m_staticText77 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText77->Wrap( -1 );
-	fgSizer38->Add( m_staticText77, 0, wxALL, 5 );
-	
-	uiWindowTabCommonBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer38->Add( uiWindowTabCommonBorder, 0, wxALL, 5 );
-	
-	m_staticText78 = new wxStaticText( m_panel18, wxID_ANY, wxT("Sash"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText78->Wrap( -1 );
-	fgSizer38->Add( m_staticText78, 0, wxALL, 5 );
-	
-	uiWindowTabCommonSash = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer38->Add( uiWindowTabCommonSash, 0, wxALL, 5 );
-	
-	
-	sbSizer24->Add( fgSizer38, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer37->Add( sbSizer24, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer37->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer25;
-	sbSizer25 = new wxStaticBoxSizer( new wxStaticBox( m_panel18, wxID_ANY, wxT("Active") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer39;
-	fgSizer39 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer39->SetFlexibleDirection( wxBOTH );
-	fgSizer39->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText66 = new wxStaticText( m_panel18, wxID_ANY, wxT("Tab"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText66->Wrap( -1 );
-	fgSizer39->Add( m_staticText66, 0, wxALL, 5 );
-	
-	uiWindowTabActiveTab = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer39->Add( uiWindowTabActiveTab, 0, wxALL, 5 );
-	
-	m_staticText67 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText67->Wrap( -1 );
-	fgSizer39->Add( m_staticText67, 0, wxALL, 5 );
-	
-	uiWindowTabActiveBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer39->Add( uiWindowTabActiveBorder, 0, wxALL, 5 );
-	
-	m_staticText68 = new wxStaticText( m_panel18, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText68->Wrap( -1 );
-	fgSizer39->Add( m_staticText68, 0, wxALL, 5 );
-	
-	uiWindowTabActiveText = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer39->Add( uiWindowTabActiveText, 0, wxALL, 5 );
-	
-	
-	sbSizer25->Add( fgSizer39, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer37->Add( sbSizer25, 1, wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer26;
-	sbSizer26 = new wxStaticBoxSizer( new wxStaticBox( m_panel18, wxID_ANY, wxT("Inactive") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer40;
-	fgSizer40 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer40->SetFlexibleDirection( wxBOTH );
-	fgSizer40->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText69 = new wxStaticText( m_panel18, wxID_ANY, wxT("Tab"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText69->Wrap( -1 );
-	fgSizer40->Add( m_staticText69, 0, wxALL, 5 );
-	
-	uiWindowTabInactiveTab = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer40->Add( uiWindowTabInactiveTab, 0, wxALL, 5 );
-	
-	m_staticText70 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText70->Wrap( -1 );
-	fgSizer40->Add( m_staticText70, 0, wxALL, 5 );
-	
-	uiWindowTabInactiveBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer40->Add( uiWindowTabInactiveBorder, 0, wxALL, 5 );
-	
-	m_staticText71 = new wxStaticText( m_panel18, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText71->Wrap( -1 );
-	fgSizer40->Add( m_staticText71, 0, wxALL, 5 );
-	
-	uiWindowTabInactiveText = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer40->Add( uiWindowTabInactiveText, 0, wxALL, 5 );
-	
-	
-	sbSizer26->Add( fgSizer40, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer37->Add( sbSizer26, 1, wxEXPAND, 5 );
-	
-	
-	m_panel18->SetSizer( fgSizer37 );
-	m_panel18->Layout();
-	fgSizer37->Fit( m_panel18 );
-	m_notebook4->AddPage( m_panel18, wxT("Tab colors"), false );
-	m_panel19 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer41;
-	fgSizer41 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer41->SetFlexibleDirection( wxBOTH );
-	fgSizer41->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText72 = new wxStaticText( m_panel19, wxID_ANY, wxT("Style"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText72->Wrap( -1 );
-	fgSizer41->Add( m_staticText72, 0, wxALL, 5 );
-	
-	uiWindowStatusbarStyle = new wxComboBox( m_panel19, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN ); 
-	fgSizer41->Add( uiWindowStatusbarStyle, 0, wxALL, 5 );
-	
-	m_staticText73 = new wxStaticText( m_panel19, wxID_ANY, wxT("Foreground"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText73->Wrap( -1 );
-	fgSizer41->Add( m_staticText73, 0, wxALL, 5 );
-	
-	uiWindowStatusbarForeground = new wxColourPickerCtrl( m_panel19, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer41->Add( uiWindowStatusbarForeground, 0, wxALL, 5 );
-	
-	m_staticText74 = new wxStaticText( m_panel19, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText74->Wrap( -1 );
-	fgSizer41->Add( m_staticText74, 0, wxALL, 5 );
-	
-	uiWindowStatusbarBackground = new wxColourPickerCtrl( m_panel19, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer41->Add( uiWindowStatusbarBackground, 0, wxALL, 5 );
-	
-	m_staticText75 = new wxStaticText( m_panel19, wxID_ANY, wxT("Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText75->Wrap( -1 );
-	fgSizer41->Add( m_staticText75, 0, wxALL, 5 );
-	
-	uiWindowStatusbarShadow = new wxColourPickerCtrl( m_panel19, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer41->Add( uiWindowStatusbarShadow, 0, wxALL, 5 );
-	
-	m_staticText76 = new wxStaticText( m_panel19, wxID_ANY, wxT("Highlight"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText76->Wrap( -1 );
-	fgSizer41->Add( m_staticText76, 0, wxALL, 5 );
-	
-	uiWindowStatusbarHighlight = new wxColourPickerCtrl( m_panel19, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer41->Add( uiWindowStatusbarHighlight, 0, wxALL, 5 );
-	
-	wxFlexGridSizer* fgSizer36;
-	fgSizer36 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer36->SetFlexibleDirection( wxBOTH );
-	fgSizer36->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	
-	fgSizer41->Add( fgSizer36, 1, wxEXPAND, 5 );
-	
-	
-	m_panel19->SetSizer( fgSizer41 );
-	m_panel19->Layout();
-	fgSizer41->Fit( m_panel19 );
-	m_notebook4->AddPage( m_panel19, wxT("Statusbar"), false );
-	m_panel20 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxGridBagSizer* gbSizer3;
-	gbSizer3 = new wxGridBagSizer( 0, 0 );
-	gbSizer3->SetFlexibleDirection( wxBOTH );
-	gbSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	wxStaticBoxSizer* sbSizer251;
-	sbSizer251 = new wxStaticBoxSizer( new wxStaticBox( m_panel20, wxID_ANY, wxT("Colors") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer371;
-	fgSizer371 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer371->SetFlexibleDirection( wxBOTH );
-	fgSizer371->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText94 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item background"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText94->Wrap( -1 );
-	fgSizer371->Add( m_staticText94, 0, wxALL, 5 );
-	
-	uiSwitcherItemBackground = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer371->Add( uiSwitcherItemBackground, 0, wxALL, 5 );
-	
-	m_staticText95 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item text"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText95->Wrap( -1 );
-	fgSizer371->Add( m_staticText95, 0, wxALL, 5 );
-	
-	uiSwitcherItemText = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer371->Add( uiSwitcherItemText, 0, wxALL, 5 );
-	
-	m_staticText82 = new wxStaticText( m_panel20, wxID_ANY, wxT("Selection"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText82->Wrap( -1 );
-	fgSizer371->Add( m_staticText82, 0, wxALL, 5 );
-	
-	uiSwitcherSelection = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer371->Add( uiSwitcherSelection, 0, wxALL, 5 );
-	
-	m_staticText83 = new wxStaticText( m_panel20, wxID_ANY, wxT("Selection outline"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText83->Wrap( -1 );
-	fgSizer371->Add( m_staticText83, 0, wxALL, 5 );
-	
-	uiSwitcherSelectionOutline = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer371->Add( uiSwitcherSelectionOutline, 0, wxALL, 5 );
-	
-	m_staticText84 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText84->Wrap( -1 );
-	fgSizer371->Add( m_staticText84, 0, wxALL, 5 );
-	
-	uiSwitcherDialog = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer371->Add( uiSwitcherDialog, 0, wxALL, 5 );
-	
-	m_staticText85 = new wxStaticText( m_panel20, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText85->Wrap( -1 );
-	fgSizer371->Add( m_staticText85, 0, wxALL, 5 );
-	
-	uiSwitcherBackground = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
-	fgSizer371->Add( uiSwitcherBackground, 0, wxALL, 5 );
-	
-	
-	sbSizer251->Add( fgSizer371, 1, wxEXPAND, 5 );
-	
-	
-	gbSizer3->Add( sbSizer251, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer261;
-	sbSizer261 = new wxStaticBoxSizer( new wxStaticBox( m_panel20, wxID_ANY, wxT("Spacing") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer381;
-	fgSizer381 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer381->SetFlexibleDirection( wxBOTH );
-	fgSizer381->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText80 = new wxStaticText( m_panel20, wxID_ANY, wxT("Text margin X"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText80->Wrap( -1 );
-	fgSizer381->Add( m_staticText80, 0, wxALL, 5 );
-	
-	uiSwitcherTextMarginX = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer381->Add( uiSwitcherTextMarginX, 0, wxALL, 5 );
-	
-	m_staticText79 = new wxStaticText( m_panel20, wxID_ANY, wxT("Text margin Y"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText79->Wrap( -1 );
-	fgSizer381->Add( m_staticText79, 0, wxALL, 5 );
-	
-	uiSwitcherTextMarginY = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer381->Add( uiSwitcherTextMarginY, 0, wxALL, 5 );
-	
-	m_staticText81 = new wxStaticText( m_panel20, wxID_ANY, wxT("X margin"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText81->Wrap( -1 );
-	fgSizer381->Add( m_staticText81, 0, wxALL, 5 );
-	
-	uiSwitcherXMargin = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer381->Add( uiSwitcherXMargin, 0, wxALL, 5 );
-	
-	m_staticText86 = new wxStaticText( m_panel20, wxID_ANY, wxT("Y margin"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText86->Wrap( -1 );
-	fgSizer381->Add( m_staticText86, 0, wxALL, 5 );
-	
-	uiSwitcherYMargin = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer381->Add( uiSwitcherYMargin, 0, wxALL, 5 );
-	
-	m_staticText87 = new wxStaticText( m_panel20, wxID_ANY, wxT("Row spacing"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText87->Wrap( -1 );
-	fgSizer381->Add( m_staticText87, 0, wxALL, 5 );
-	
-	uiSwitcherRowSpacing = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer381->Add( uiSwitcherRowSpacing, 0, wxALL, 5 );
-	
-	m_staticText88 = new wxStaticText( m_panel20, wxID_ANY, wxT("Col spacing"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText88->Wrap( -1 );
-	fgSizer381->Add( m_staticText88, 0, wxALL, 5 );
-	
-	uiSwitcherColSpacing = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer381->Add( uiSwitcherColSpacing, 0, wxALL, 5 );
-	
-	m_staticText89 = new wxStaticText( m_panel20, wxID_ANY, wxT("Main border"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText89->Wrap( -1 );
-	fgSizer381->Add( m_staticText89, 0, wxALL, 5 );
-	
-	uiSwitcherMainBorder = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer381->Add( uiSwitcherMainBorder, 0, wxALL, 5 );
-	
-	m_staticText90 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item border"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText90->Wrap( -1 );
-	fgSizer381->Add( m_staticText90, 0, wxALL, 5 );
-	
-	uiSwitcherItemBorder = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer381->Add( uiSwitcherItemBorder, 0, wxALL, 5 );
-	
-	
-	sbSizer261->Add( fgSizer381, 1, wxEXPAND, 5 );
-	
-	
-	gbSizer3->Add( sbSizer261, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxEXPAND, 5 );
-	
-	wxStaticBoxSizer* sbSizer27;
-	sbSizer27 = new wxStaticBoxSizer( new wxStaticBox( m_panel20, wxID_ANY, wxT("General") ), wxVERTICAL );
-	
-	wxFlexGridSizer* fgSizer391;
-	fgSizer391 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer391->AddGrowableCol( 1 );
-	fgSizer391->SetFlexibleDirection( wxBOTH );
-	fgSizer391->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	
-	fgSizer391->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	uiSwitcherVsFocus = new wxCheckBox( m_panel20, wxID_ANY, wxT("Autofocus files"), wxDefaultPosition, wxDefaultSize, 0 );
-	uiSwitcherVsFocus->SetValue(true); 
-	fgSizer391->Add( uiSwitcherVsFocus, 0, wxALL, 5 );
-	
-	m_staticText91 = new wxStaticText( m_panel20, wxID_ANY, wxT("Items/row"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText91->Wrap( -1 );
-	fgSizer391->Add( m_staticText91, 0, wxALL, 5 );
-	
-	uiSwitcherItemsPerRow = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer391->Add( uiSwitcherItemsPerRow, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText92 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item width"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText92->Wrap( -1 );
-	fgSizer391->Add( m_staticText92, 0, wxALL, 5 );
-	
-	uiSwitcherItemMaxWidth = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer391->Add( uiSwitcherItemMaxWidth, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText93 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item height"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText93->Wrap( -1 );
-	fgSizer391->Add( m_staticText93, 0, wxALL, 5 );
-	
-	uiSwitcherItemMaxHeight = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer391->Add( uiSwitcherItemMaxHeight, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText96 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog minimum width"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText96->Wrap( -1 );
-	fgSizer391->Add( m_staticText96, 0, wxALL, 5 );
-	
-	uiSwitcherMinWidth = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer391->Add( uiSwitcherMinWidth, 0, wxALL|wxEXPAND, 5 );
-	
-	m_staticText97 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog minimum height"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText97->Wrap( -1 );
-	fgSizer391->Add( m_staticText97, 0, wxALL, 5 );
-	
-	uiSwitcherMinHeight = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer391->Add( uiSwitcherMinHeight, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	sbSizer27->Add( fgSizer391, 1, wxEXPAND, 5 );
-	
-	
-	gbSizer3->Add( sbSizer27, wxGBPosition( 0, 0 ), wxGBSpan( 1, 2 ), wxEXPAND, 5 );
-	
-	
-	m_panel20->SetSizer( gbSizer3 );
-	m_panel20->Layout();
-	gbSizer3->Fit( m_panel20 );
-	m_notebook4->AddPage( m_panel20, wxT("Tab switcher"), true );
-	
-	bSizer35->Add( m_notebook4, 1, wxEXPAND | wxALL, 5 );
-	
-	
-	m_window->SetSizer( bSizer35 );
-	m_window->Layout();
-	bSizer35->Fit( m_window );
-	m_notebook1->AddPage( m_window, wxT("Window"), true );
-	m_themes = new wxPanel( m_notebook1, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer28;
-	fgSizer28 = new wxFlexGridSizer( 0, 1, 0, 0 );
-	fgSizer28->AddGrowableCol( 0 );
-	fgSizer28->AddGrowableRow( 1 );
-	fgSizer28->SetFlexibleDirection( wxBOTH );
-	fgSizer28->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	wxFlexGridSizer* fgSizer31;
-	fgSizer31 = new wxFlexGridSizer( 0, 1, 0, 0 );
-	fgSizer31->AddGrowableCol( 0 );
-	fgSizer31->SetFlexibleDirection( wxBOTH );
-	fgSizer31->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_button40 = new wxButton( m_themes, wxID_ANY, wxT("Use selected theme"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_button40, 0, wxALL|wxEXPAND, 5 );
-	
-	m_button42 = new wxButton( m_themes, wxID_ANY, wxT("Import theme"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_button42, 0, wxALL|wxEXPAND, 5 );
-	
-	m_button41 = new wxButton( m_themes, wxID_ANY, wxT("Export selected theme"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer31->Add( m_button41, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	fgSizer28->Add( fgSizer31, 1, wxEXPAND, 5 );
-	
-	wxFlexGridSizer* fgSizer221;
-	fgSizer221 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer221->AddGrowableCol( 0 );
-	fgSizer221->AddGrowableRow( 0 );
-	fgSizer221->SetFlexibleDirection( wxBOTH );
-	fgSizer221->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	uiThemeList = new wxListBox( m_themes, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	fgSizer221->Add( uiThemeList, 0, wxALL|wxEXPAND, 5 );
-	
-	wxBoxSizer* bSizer28;
-	bSizer28 = new wxBoxSizer( wxVERTICAL );
-	
-	uiThemeListAdd = new wxButton( m_themes, wxID_ANY, wxT("+"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	bSizer28->Add( uiThemeListAdd, 0, wxALL, 5 );
-	
-	 uiThemeListChange = new wxButton( m_themes, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	bSizer28->Add(  uiThemeListChange, 0, wxALL, 5 );
-	
-	uiThemeListRemove = new wxButton( m_themes, wxID_ANY, wxT("-"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	bSizer28->Add( uiThemeListRemove, 0, wxALL, 5 );
-	
-	uiThemeListUp = new wxButton( m_themes, wxID_ANY, wxT("/\\"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	bSizer28->Add( uiThemeListUp, 0, wxALL, 5 );
-	
-	uiThemeListDown = new wxButton( m_themes, wxID_ANY, wxT("\\/"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
-	bSizer28->Add( uiThemeListDown, 0, wxALL, 5 );
-	
-	
-	fgSizer221->Add( bSizer28, 1, wxEXPAND, 5 );
-	
-	
-	fgSizer28->Add( fgSizer221, 1, wxEXPAND, 5 );
-	
-	
-	m_themes->SetSizer( fgSizer28 );
-	m_themes->Layout();
-	fgSizer28->Fit( m_themes );
-	m_notebook1->AddPage( m_themes, wxT("Themes"), false );
-	
-	bSizer3->Add( m_notebook1, 1, wxEXPAND | wxALL, 5 );
-	
-	m_sdbSizer1 = new wxStdDialogButtonSizer();
-	m_sdbSizer1OK = new wxButton( this, wxID_OK );
-	m_sdbSizer1->AddButton( m_sdbSizer1OK );
-	m_sdbSizer1Apply = new wxButton( this, wxID_APPLY );
-	m_sdbSizer1->AddButton( m_sdbSizer1Apply );
-	m_sdbSizer1Cancel = new wxButton( this, wxID_CANCEL );
-	m_sdbSizer1->AddButton( m_sdbSizer1Cancel );
-	m_sdbSizer1->Realize();
-	m_sdbSizer1->SetMinSize( wxSize( -1,50 ) ); 
-	
-	bSizer3->Add( m_sdbSizer1, 0, wxEXPAND|wxFIXED_MINSIZE, 5 );
-	
-	
-	this->SetSizer( bSizer3 );
-	this->Layout();
-	
-	this->Centre( wxBOTH );
-	
-	// Connect Events
-	uiFontStyles->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnSelectedStyleChanged ), NULL, this );
-	uiStyleUseTypeface->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleOnlyFixedSize->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnOnlyFixedSysChanged ), NULL, this );
-	uiStyleTypeface->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnStyleFontChanged ), NULL, this );
-	uiStyleBold->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleUseBold->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleItalic->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleUseItalic->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleUnderline->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleUseUnderline->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleSize->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiStyleSize->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnStyleTextChanged ), NULL, this );
-	uiStyleUseSize->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnStyleColorChanged ), NULL, this );
-	uiStyleUseForeground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnStyleColorChanged ), NULL, this );
-	uiStyleUseBackground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiIndicatorList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnIndicatorListChanged ), NULL, this );
-	uiIndicatorStyle->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnIndicatorCombobox ), NULL, this );
-	uiIndicatorColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnIndicatorColor ), NULL, this );
-	uiIndicatorUnder->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnIndicatorCheckbox ), NULL, this );
-	uiIndicatorAlpha->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiIndicatorAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnIndicatorText ), NULL, this );
-	uiIndicatorOutlineAlpha->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiIndicatorOutlineAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnIndicatorText ), NULL, this );
-	uiMarkerList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnMarkerListChanged ), NULL, this );
-	uiMarkerSymbol->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnMarkerComboChanged ), NULL, this );
-	uiMarkerForegroundColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnMarkerColorChanged ), NULL, this );
-	uiMarkerBackgroundColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnMarkerComboChanged ), NULL, this );
-	uiAllowFolding->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLevelNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLineBeforeExpanded->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLineBeforeContracted->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLineAfterExpanded->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLineAfterContracted->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditFoldHi->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiEditFoldLow->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiCurrentLineVisible->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditCurrentLineOverdraw->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditCurrentLineColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiEditCurrentLineAlpha->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiEditCurrentLineAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnEditChanged ), NULL, this );
-	uiEditUseSelectionForeground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditSelectionForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiEditUseSelectionBackground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditSelectionBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiUseTabs->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiTabWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiTabWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnEditChanged ), NULL, this );
-	uiEdgeStyle->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
-	uiEdgeColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiEdgeColumn->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiEdgeColumn->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnEditChanged ), NULL, this );
-	uiTabIndents->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiBackspaceUnindents->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiIndentGuide->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditIndentation->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
-	uiDisplayEOL->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiViewWhitespace->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
-	uiWordwrap->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
-	uiEditHighlightKeyword->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiShowLineNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiWindowDockCommonBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockCommonSash->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockCommonBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockCommonGripper->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockActiveCaption->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockActiveGradient->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockActiveText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockInactiveCaption->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockInactiveGradient->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockInactiveText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabCommonBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabCommonBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabCommonSash->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabActiveTab->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabActiveBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabActiveText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabInactiveTab->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabInactiveBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabInactiveText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowStatusbarStyle->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnWindowComboChange ), NULL, this );
-	uiWindowStatusbarForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowStatusbarBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowStatusbarShadow->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowStatusbarHighlight->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherItemBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherItemText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherSelection->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherSelectionOutline->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherDialog->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherTextMarginX->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherTextMarginX->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherTextMarginY->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherTextMarginY->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherXMargin->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherXMargin->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherYMargin->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherYMargin->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherRowSpacing->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherRowSpacing->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherColSpacing->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherColSpacing->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherMainBorder->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherMainBorder->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherItemBorder->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherItemBorder->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherVsFocus->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnWindowCheck ), NULL, this );
-	uiSwitcherItemsPerRow->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherItemsPerRow->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherItemMaxWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherItemMaxWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherItemMaxHeight->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherItemMaxHeight->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherMinWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherMinWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherMinHeight->Connect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherMinHeight->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	m_button40->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeApplySelected ), NULL, this );
-	m_button42->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeImport ), NULL, this );
-	m_button41->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeExportSelected ), NULL, this );
-	uiThemeListAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnAdd ), NULL, this );
-	 uiThemeListChange->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnEdit ), NULL, this );
-	uiThemeListRemove->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnRemove ), NULL, this );
-	uiThemeListUp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnUp ), NULL, this );
-	uiThemeListDown->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnDown ), NULL, this );
-	m_sdbSizer1Apply->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
-	m_sdbSizer1Cancel->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
-	m_sdbSizer1OK->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
-}
-
-Settings::~Settings()
-{
-	// Disconnect Events
-	uiFontStyles->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnSelectedStyleChanged ), NULL, this );
-	uiStyleUseTypeface->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleOnlyFixedSize->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnOnlyFixedSysChanged ), NULL, this );
-	uiStyleTypeface->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnStyleFontChanged ), NULL, this );
-	uiStyleBold->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleUseBold->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleItalic->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleUseItalic->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleUnderline->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleUseUnderline->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleSize->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiStyleSize->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnStyleTextChanged ), NULL, this );
-	uiStyleUseSize->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnStyleColorChanged ), NULL, this );
-	uiStyleUseForeground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiStyleBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnStyleColorChanged ), NULL, this );
-	uiStyleUseBackground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnStyleCheckChanged ), NULL, this );
-	uiIndicatorList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnIndicatorListChanged ), NULL, this );
-	uiIndicatorStyle->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnIndicatorCombobox ), NULL, this );
-	uiIndicatorColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnIndicatorColor ), NULL, this );
-	uiIndicatorUnder->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnIndicatorCheckbox ), NULL, this );
-	uiIndicatorAlpha->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiIndicatorAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnIndicatorText ), NULL, this );
-	uiIndicatorOutlineAlpha->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiIndicatorOutlineAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnIndicatorText ), NULL, this );
-	uiMarkerList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( Settings::OnMarkerListChanged ), NULL, this );
-	uiMarkerSymbol->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnMarkerComboChanged ), NULL, this );
-	uiMarkerForegroundColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnMarkerColorChanged ), NULL, this );
-	uiMarkerBackgroundColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnMarkerComboChanged ), NULL, this );
-	uiAllowFolding->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLevelNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLineBeforeExpanded->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLineBeforeContracted->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLineAfterExpanded->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiFoldLineAfterContracted->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditFoldHi->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiEditFoldLow->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiCurrentLineVisible->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditCurrentLineOverdraw->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditCurrentLineColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiEditCurrentLineAlpha->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiEditCurrentLineAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnEditChanged ), NULL, this );
-	uiEditUseSelectionForeground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditSelectionForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiEditUseSelectionBackground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditSelectionBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiUseTabs->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiTabWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiTabWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnEditChanged ), NULL, this );
-	uiEdgeStyle->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
-	uiEdgeColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnColorChanged ), NULL, this );
-	uiEdgeColumn->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiEdgeColumn->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnEditChanged ), NULL, this );
-	uiTabIndents->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiBackspaceUnindents->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiIndentGuide->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiEditIndentation->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
-	uiDisplayEOL->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiViewWhitespace->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
-	uiWordwrap->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnComboboxChanged ), NULL, this );
-	uiEditHighlightKeyword->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiShowLineNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnCheckboxChanged ), NULL, this );
-	uiWindowDockCommonBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockCommonSash->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockCommonBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockCommonGripper->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockActiveCaption->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockActiveGradient->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockActiveText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockInactiveCaption->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockInactiveGradient->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowDockInactiveText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabCommonBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabCommonBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabCommonSash->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabActiveTab->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabActiveBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabActiveText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabInactiveTab->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabInactiveBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowTabInactiveText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowStatusbarStyle->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( Settings::OnWindowComboChange ), NULL, this );
-	uiWindowStatusbarForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowStatusbarBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowStatusbarShadow->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiWindowStatusbarHighlight->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherItemBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherItemText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherSelection->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherSelectionOutline->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherDialog->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( Settings::OnWindowColorChange ), NULL, this );
-	uiSwitcherTextMarginX->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherTextMarginX->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherTextMarginY->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherTextMarginY->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherXMargin->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherXMargin->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherYMargin->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherYMargin->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherRowSpacing->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherRowSpacing->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherColSpacing->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherColSpacing->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherMainBorder->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherMainBorder->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherItemBorder->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherItemBorder->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherVsFocus->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( Settings::OnWindowCheck ), NULL, this );
-	uiSwitcherItemsPerRow->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherItemsPerRow->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherItemMaxWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherItemMaxWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherItemMaxHeight->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherItemMaxHeight->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherMinWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherMinWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	uiSwitcherMinHeight->Disconnect( wxEVT_CHAR, wxKeyEventHandler( Settings::OnlyAllowNumberChars ), NULL, this );
-	uiSwitcherMinHeight->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( Settings::OnWindowText ), NULL, this );
-	m_button40->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeApplySelected ), NULL, this );
-	m_button42->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeImport ), NULL, this );
-	m_button41->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnThemeExportSelected ), NULL, this );
-	uiThemeListAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnAdd ), NULL, this );
-	 uiThemeListChange->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnEdit ), NULL, this );
-	uiThemeListRemove->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnRemove ), NULL, this );
-	uiThemeListUp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnUp ), NULL, this );
-	uiThemeListDown->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnDown ), NULL, this );
-	m_sdbSizer1Apply->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnApply ), NULL, this );
-	m_sdbSizer1Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnCancel ), NULL, this );
-	m_sdbSizer1OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( Settings::OnOk ), NULL, this );
-	
-}
-
 FileProperties::FileProperties( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
@@ -2630,5 +1137,1508 @@ VariableEditor::~VariableEditor()
 	uiCustomVariables->Disconnect( wxEVT_COMMAND_LISTBOX_DOUBLECLICKED, wxCommandEventHandler( VariableEditor::OnCustomDoubleClick ), NULL, this );
 	m_sdbSizer10Cancel->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnCancel ), NULL, this );
 	m_sdbSizer10OK->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( VariableEditor::OnOk ), NULL, this );
+	
+}
+
+SettingsFontsPanel::SettingsFontsPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxFlexGridSizer* fgSizer6;
+	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer6->AddGrowableCol( 0 );
+	fgSizer6->AddGrowableCol( 1 );
+	fgSizer6->AddGrowableRow( 0 );
+	fgSizer6->SetFlexibleDirection( wxBOTH );
+	fgSizer6->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_panel9 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxVERTICAL );
+	
+	wxStaticBoxSizer* sbSizer3;
+	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( m_panel9, wxID_ANY, wxT("Styles") ), wxVERTICAL );
+	
+	uiFontStyles = new wxListBox( m_panel9, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	sbSizer3->Add( uiFontStyles, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer5->Add( sbSizer3, 1, wxEXPAND, 5 );
+	
+	
+	m_panel9->SetSizer( bSizer5 );
+	m_panel9->Layout();
+	bSizer5->Fit( m_panel9 );
+	fgSizer6->Add( m_panel9, 1, wxEXPAND | wxALL, 5 );
+	
+	m_panel7 = new wxPanel( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxGridBagSizer* gbSizer2;
+	gbSizer2 = new wxGridBagSizer( 0, 0 );
+	gbSizer2->SetFlexibleDirection( wxBOTH );
+	gbSizer2->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
+	
+	wxStaticBoxSizer* sbSizer2;
+	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( m_panel7, wxID_ANY, wxT("Typefaces") ), wxVERTICAL );
+	
+	uiStyleUseTypeface = new wxCheckBox( m_panel7, wxID_ANY, wxT("Use typeface?"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizer2->Add( uiStyleUseTypeface, 0, wxALL, 5 );
+	
+	uiStyleOnlyFixedSize = new wxCheckBox( m_panel7, wxID_ANY, wxT("Only fixed sizes"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiStyleOnlyFixedSize->SetValue(true); 
+	sbSizer2->Add( uiStyleOnlyFixedSize, 0, wxALL, 5 );
+	
+	uiStyleTypeface = new wxListBox( m_panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	sbSizer2->Add( uiStyleTypeface, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	gbSizer2->Add( sbSizer2, wxGBPosition( 0, 0 ), wxGBSpan( 1, 2 ), wxEXPAND, 5 );
+	
+	uiStyleBold = new wxCheckBox( m_panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleBold, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 5 );
+	
+	uiStyleUseBold = new wxCheckBox( m_panel7, wxID_ANY, wxT("Bold:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleUseBold, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	
+	uiStyleItalic = new wxCheckBox( m_panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleItalic, wxGBPosition( 2, 1 ), wxGBSpan( 1, 1 ), wxALIGN_LEFT|wxALL, 5 );
+	
+	uiStyleUseItalic = new wxCheckBox( m_panel7, wxID_ANY, wxT("Italic"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleUseItalic, wxGBPosition( 2, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	
+	uiStyleUnderline = new wxCheckBox( m_panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleUnderline, wxGBPosition( 3, 1 ), wxGBSpan( 1, 1 ), wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL, 5 );
+	
+	uiStyleUseUnderline = new wxCheckBox( m_panel7, wxID_ANY, wxT("Underline:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleUseUnderline, wxGBPosition( 3, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	
+	uiStyleSize = new wxTextCtrl( m_panel7, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleSize, wxGBPosition( 4, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
+	
+	uiStyleUseSize = new wxCheckBox( m_panel7, wxID_ANY, wxT("Font size:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleUseSize, wxGBPosition( 4, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	
+	uiStyleForeground = new wxColourPickerCtrl( m_panel7, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	gbSizer2->Add( uiStyleForeground, wxGBPosition( 5, 1 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND, 5 );
+	
+	uiStyleUseForeground = new wxCheckBox( m_panel7, wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleUseForeground, wxGBPosition( 5, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	
+	uiStyleBackground = new wxColourPickerCtrl( m_panel7, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	gbSizer2->Add( uiStyleBackground, wxGBPosition( 6, 1 ), wxGBSpan( 1, 1 ), wxALL|wxEXPAND, 5 );
+	
+	uiStyleUseBackground = new wxCheckBox( m_panel7, wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleUseBackground, wxGBPosition( 6, 0 ), wxGBSpan( 1, 1 ), wxALIGN_RIGHT|wxALL, 5 );
+	
+	uiStyleExample = new wxTextCtrl( m_panel7, wxID_ANY, wxT("Sample text"), wxDefaultPosition, wxDefaultSize, 0 );
+	gbSizer2->Add( uiStyleExample, wxGBPosition( 7, 1 ), wxGBSpan( 1, 1 ), wxALL, 5 );
+	
+	
+	gbSizer2->AddGrowableCol( 0 );
+	gbSizer2->AddGrowableRow( 0 );
+	
+	m_panel7->SetSizer( gbSizer2 );
+	m_panel7->Layout();
+	gbSizer2->Fit( m_panel7 );
+	fgSizer6->Add( m_panel7, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	this->SetSizer( fgSizer6 );
+	this->Layout();
+	
+	// Connect Events
+	uiFontStyles->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( SettingsFontsPanel::OnSelectedStyleChanged ), NULL, this );
+	uiStyleUseTypeface->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleOnlyFixedSize->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnOnlyFixedSysChanged ), NULL, this );
+	uiStyleTypeface->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( SettingsFontsPanel::OnStyleFontChanged ), NULL, this );
+	uiStyleBold->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleUseBold->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleItalic->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleUseItalic->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleUnderline->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleUseUnderline->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleSize->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsFontsPanel::OnlyAllowNumberChars ), NULL, this );
+	uiStyleSize->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsFontsPanel::OnStyleTextChanged ), NULL, this );
+	uiStyleUseSize->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsFontsPanel::OnStyleColorChanged ), NULL, this );
+	uiStyleUseForeground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsFontsPanel::OnStyleColorChanged ), NULL, this );
+	uiStyleUseBackground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+}
+
+SettingsFontsPanel::~SettingsFontsPanel()
+{
+	// Disconnect Events
+	uiFontStyles->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( SettingsFontsPanel::OnSelectedStyleChanged ), NULL, this );
+	uiStyleUseTypeface->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleOnlyFixedSize->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnOnlyFixedSysChanged ), NULL, this );
+	uiStyleTypeface->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( SettingsFontsPanel::OnStyleFontChanged ), NULL, this );
+	uiStyleBold->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleUseBold->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleItalic->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleUseItalic->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleUnderline->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleUseUnderline->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleSize->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsFontsPanel::OnlyAllowNumberChars ), NULL, this );
+	uiStyleSize->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsFontsPanel::OnStyleTextChanged ), NULL, this );
+	uiStyleUseSize->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsFontsPanel::OnStyleColorChanged ), NULL, this );
+	uiStyleUseForeground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	uiStyleBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsFontsPanel::OnStyleColorChanged ), NULL, this );
+	uiStyleUseBackground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsFontsPanel::OnStyleCheckChanged ), NULL, this );
+	
+}
+
+SettingsIndicatorsPanel::SettingsIndicatorsPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxFlexGridSizer* fgSizer7;
+	fgSizer7 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer7->AddGrowableCol( 0 );
+	fgSizer7->AddGrowableRow( 0 );
+	fgSizer7->SetFlexibleDirection( wxBOTH );
+	fgSizer7->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxBoxSizer* bSizer6;
+	bSizer6 = new wxBoxSizer( wxVERTICAL );
+	
+	uiIndicatorList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer6->Add( uiIndicatorList, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer7->Add( bSizer6, 1, wxEXPAND, 5 );
+	
+	wxFlexGridSizer* fgSizer8;
+	fgSizer8 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer8->SetFlexibleDirection( wxBOTH );
+	fgSizer8->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiIndicatorStyleLabel = new wxStaticText( this, wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiIndicatorStyleLabel->Wrap( -1 );
+	fgSizer8->Add( uiIndicatorStyleLabel, 0, wxALL, 5 );
+	
+	uiIndicatorStyle = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiIndicatorStyle->Append( wxT("Plain") );
+	uiIndicatorStyle->Append( wxT("Squiggle") );
+	uiIndicatorStyle->Append( wxT("TT") );
+	uiIndicatorStyle->Append( wxT("Diagonal") );
+	uiIndicatorStyle->Append( wxT("Strike") );
+	uiIndicatorStyle->Append( wxT("Hidden") );
+	uiIndicatorStyle->Append( wxT("Box") );
+	uiIndicatorStyle->Append( wxT("Roundbox") );
+	uiIndicatorStyle->Append( wxT("Straight box") );
+	uiIndicatorStyle->Append( wxT("Dash") );
+	uiIndicatorStyle->Append( wxT("Dots") );
+	uiIndicatorStyle->Append( wxT("Squiggle low") );
+	uiIndicatorStyle->Append( wxT("Dotbox") );
+	uiIndicatorStyle->Append( wxEmptyString );
+	uiIndicatorStyle->Append( wxEmptyString );
+	uiIndicatorStyle->Append( wxEmptyString );
+	uiIndicatorStyle->Append( wxEmptyString );
+	uiIndicatorStyle->Append( wxEmptyString );
+	fgSizer8->Add( uiIndicatorStyle, 0, wxALL, 5 );
+	
+	m_staticText11 = new wxStaticText( this, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText11->Wrap( -1 );
+	fgSizer8->Add( m_staticText11, 0, wxALL, 5 );
+	
+	uiIndicatorColor = new wxColourPickerCtrl( this, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer8->Add( uiIndicatorColor, 0, wxALL, 5 );
+	
+	
+	fgSizer8->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiIndicatorUnder = new wxCheckBox( this, wxID_ANY, wxT("Under?"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer8->Add( uiIndicatorUnder, 0, wxALL, 5 );
+	
+	m_staticText12 = new wxStaticText( this, wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText12->Wrap( -1 );
+	fgSizer8->Add( m_staticText12, 0, wxALL, 5 );
+	
+	uiIndicatorAlpha = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer8->Add( uiIndicatorAlpha, 0, wxALL, 5 );
+	
+	m_staticText13 = new wxStaticText( this, wxID_ANY, wxT("Outline alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText13->Wrap( -1 );
+	fgSizer8->Add( m_staticText13, 0, wxALL, 5 );
+	
+	uiIndicatorOutlineAlpha = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer8->Add( uiIndicatorOutlineAlpha, 0, wxALL, 5 );
+	
+	
+	fgSizer7->Add( fgSizer8, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( fgSizer7 );
+	this->Layout();
+	
+	// Connect Events
+	uiIndicatorList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorListChanged ), NULL, this );
+	uiIndicatorStyle->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorCombobox ), NULL, this );
+	uiIndicatorColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsIndicatorsPanel::OnIndicatorColor ), NULL, this );
+	uiIndicatorUnder->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorCheckbox ), NULL, this );
+	uiIndicatorAlpha->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsIndicatorsPanel::OnlyAllowNumberChars ), NULL, this );
+	uiIndicatorAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorText ), NULL, this );
+	uiIndicatorOutlineAlpha->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsIndicatorsPanel::OnlyAllowNumberChars ), NULL, this );
+	uiIndicatorOutlineAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorText ), NULL, this );
+}
+
+SettingsIndicatorsPanel::~SettingsIndicatorsPanel()
+{
+	// Disconnect Events
+	uiIndicatorList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorListChanged ), NULL, this );
+	uiIndicatorStyle->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorCombobox ), NULL, this );
+	uiIndicatorColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsIndicatorsPanel::OnIndicatorColor ), NULL, this );
+	uiIndicatorUnder->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorCheckbox ), NULL, this );
+	uiIndicatorAlpha->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsIndicatorsPanel::OnlyAllowNumberChars ), NULL, this );
+	uiIndicatorAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorText ), NULL, this );
+	uiIndicatorOutlineAlpha->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsIndicatorsPanel::OnlyAllowNumberChars ), NULL, this );
+	uiIndicatorOutlineAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsIndicatorsPanel::OnIndicatorText ), NULL, this );
+	
+}
+
+SettingsMarkersPanel::SettingsMarkersPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxFlexGridSizer* fgSizer51;
+	fgSizer51 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer51->AddGrowableCol( 0 );
+	fgSizer51->AddGrowableRow( 0 );
+	fgSizer51->SetFlexibleDirection( wxBOTH );
+	fgSizer51->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
+	
+	wxStaticBoxSizer* sbSizer8;
+	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Markers") ), wxVERTICAL );
+	
+	uiMarkerList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	sbSizer8->Add( uiMarkerList, 1, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer51->Add( sbSizer8, 1, wxEXPAND, 5 );
+	
+	wxFlexGridSizer* fgSizer61;
+	fgSizer61 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer61->SetFlexibleDirection( wxBOTH );
+	fgSizer61->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText7 = new wxStaticText( this, wxID_ANY, wxT("Symbol:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText7->Wrap( -1 );
+	fgSizer61->Add( m_staticText7, 0, wxALL, 5 );
+	
+	uiMarkerSymbol = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiMarkerSymbol->Append( wxT("Circle") );
+	uiMarkerSymbol->Append( wxT("Roundrect ") );
+	uiMarkerSymbol->Append( wxT("Arrow") );
+	uiMarkerSymbol->Append( wxT("Smallrect ") );
+	uiMarkerSymbol->Append( wxT("Shortarrow") );
+	uiMarkerSymbol->Append( wxT("Empty") );
+	uiMarkerSymbol->Append( wxT("Arrowdown ") );
+	uiMarkerSymbol->Append( wxT("Minus") );
+	uiMarkerSymbol->Append( wxT("Plus") );
+	uiMarkerSymbol->Append( wxEmptyString );
+	uiMarkerSymbol->Append( wxEmptyString );
+	fgSizer61->Add( uiMarkerSymbol, 0, wxALL, 5 );
+	
+	m_staticText9 = new wxStaticText( this, wxID_ANY, wxT("Foreground color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText9->Wrap( -1 );
+	fgSizer61->Add( m_staticText9, 0, wxALL, 5 );
+	
+	uiMarkerForegroundColor = new wxColourPickerCtrl( this, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer61->Add( uiMarkerForegroundColor, 0, wxALL, 5 );
+	
+	m_staticText8 = new wxStaticText( this, wxID_ANY, wxT("Background color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText8->Wrap( -1 );
+	fgSizer61->Add( m_staticText8, 0, wxALL, 5 );
+	
+	uiMarkerBackgroundColor = new wxColourPickerCtrl( this, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer61->Add( uiMarkerBackgroundColor, 0, wxALL, 5 );
+	
+	
+	fgSizer51->Add( fgSizer61, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( fgSizer51 );
+	this->Layout();
+	
+	// Connect Events
+	uiMarkerList->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( SettingsMarkersPanel::OnMarkerListChanged ), NULL, this );
+	uiMarkerSymbol->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsMarkersPanel::OnMarkerComboChanged ), NULL, this );
+	uiMarkerForegroundColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsMarkersPanel::OnMarkerColorChanged ), NULL, this );
+	uiMarkerBackgroundColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsMarkersPanel::OnMarkerComboChanged ), NULL, this );
+}
+
+SettingsMarkersPanel::~SettingsMarkersPanel()
+{
+	// Disconnect Events
+	uiMarkerList->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( SettingsMarkersPanel::OnMarkerListChanged ), NULL, this );
+	uiMarkerSymbol->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsMarkersPanel::OnMarkerComboChanged ), NULL, this );
+	uiMarkerForegroundColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsMarkersPanel::OnMarkerColorChanged ), NULL, this );
+	uiMarkerBackgroundColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsMarkersPanel::OnMarkerComboChanged ), NULL, this );
+	
+}
+
+SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer2;
+	bSizer2 = new wxBoxSizer( wxVERTICAL );
+	
+	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel10 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer4;
+	fgSizer4 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer4->SetFlexibleDirection( wxBOTH );
+	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticBoxSizer* sbSizerFolding;
+	sbSizerFolding = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Folding") ), wxVERTICAL );
+	
+	wxBoxSizer* bSizer32;
+	bSizer32 = new wxBoxSizer( wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer5;
+	fgSizer5 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer5->SetFlexibleDirection( wxBOTH );
+	fgSizer5->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiAllowFolding = new wxCheckBox( m_panel10, wxID_ANY, wxT("Allow folding"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( uiAllowFolding, 0, wxALL, 5 );
+	
+	uiFoldLevelNumbers = new wxCheckBox( m_panel10, wxID_ANY, wxT("Level numbers"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( uiFoldLevelNumbers, 0, wxALL, 5 );
+	
+	uiFoldLineBeforeExpanded = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line before (expanded)"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( uiFoldLineBeforeExpanded, 0, wxALL, 5 );
+	
+	uiFoldLineBeforeContracted = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line before (contracted)"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( uiFoldLineBeforeContracted, 0, wxALL, 5 );
+	
+	uiFoldLineAfterExpanded = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line after (expanded)"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( uiFoldLineAfterExpanded, 0, wxALL, 5 );
+	
+	uiFoldLineAfterContracted = new wxCheckBox( m_panel10, wxID_ANY, wxT("Line After (contracted)"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer5->Add( uiFoldLineAfterContracted, 0, wxALL, 5 );
+	
+	
+	bSizer32->Add( fgSizer5, 1, wxEXPAND, 5 );
+	
+	wxFlexGridSizer* fgSizer22;
+	fgSizer22 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer22->AddGrowableCol( 1 );
+	fgSizer22->SetFlexibleDirection( wxBOTH );
+	fgSizer22->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText42 = new wxStaticText( m_panel10, wxID_ANY, wxT("High Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText42->Wrap( -1 );
+	fgSizer22->Add( m_staticText42, 0, wxALL, 5 );
+	
+	uiEditFoldHi = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer22->Add( uiEditFoldHi, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText43 = new wxStaticText( m_panel10, wxID_ANY, wxT("Low color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText43->Wrap( -1 );
+	fgSizer22->Add( m_staticText43, 0, wxALL, 5 );
+	
+	uiEditFoldLow = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer22->Add( uiEditFoldLow, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer32->Add( fgSizer22, 1, wxEXPAND, 5 );
+	
+	
+	sbSizerFolding->Add( bSizer32, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizerFolding, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerCurrentLine;
+	sbSizerCurrentLine = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Current line") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer20;
+	fgSizer20 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer20->AddGrowableCol( 1 );
+	fgSizer20->SetFlexibleDirection( wxBOTH );
+	fgSizer20->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer20->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiCurrentLineVisible = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show current line?"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer20->Add( uiCurrentLineVisible, 0, wxALL, 5 );
+	
+	
+	fgSizer20->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiEditCurrentLineOverdraw = new wxCheckBox( m_panel10, wxID_ANY, wxT("Overdraw?"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiEditCurrentLineOverdraw->SetValue(true); 
+	fgSizer20->Add( uiEditCurrentLineOverdraw, 0, wxALL, 5 );
+	
+	m_staticText39 = new wxStaticText( m_panel10, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText39->Wrap( -1 );
+	fgSizer20->Add( m_staticText39, 0, wxALL, 5 );
+	
+	uiEditCurrentLineColor = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer20->Add( uiEditCurrentLineColor, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText40 = new wxStaticText( m_panel10, wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText40->Wrap( -1 );
+	fgSizer20->Add( m_staticText40, 0, wxALL, 5 );
+	
+	uiEditCurrentLineAlpha = new wxTextCtrl( m_panel10, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer20->Add( uiEditCurrentLineAlpha, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	sbSizerCurrentLine->Add( fgSizer20, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizerCurrentLine, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerAutocomplete;
+	sbSizerAutocomplete = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Auto completion") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer401;
+	fgSizer401 = new wxFlexGridSizer( 0, 4, 0, 0 );
+	fgSizer401->SetFlexibleDirection( wxBOTH );
+	fgSizer401->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText98 = new wxStaticText( m_panel10, wxID_ANY, wxT("{curly braces}"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText98->Wrap( -1 );
+	fgSizer401->Add( m_staticText98, 0, wxALL, 5 );
+	
+	uiEditAutocompleteCurlyBraces = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteCurlyBraces, 0, wxALL, 5 );
+	
+	m_staticText99 = new wxStaticText( m_panel10, wxID_ANY, wxT("(partheses)"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText99->Wrap( -1 );
+	fgSizer401->Add( m_staticText99, 0, wxALL, 5 );
+	
+	uiEditAutocompleteParentheses  = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteParentheses , 0, wxALL, 5 );
+	
+	m_staticText100 = new wxStaticText( m_panel10, wxID_ANY, wxT("[brackets]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText100->Wrap( -1 );
+	fgSizer401->Add( m_staticText100, 0, wxALL, 5 );
+	
+	uiEditAutocompleteBrackets = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteBrackets, 0, wxALL, 5 );
+	
+	m_staticText101 = new wxStaticText( m_panel10, wxID_ANY, wxT("'single quote'"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText101->Wrap( -1 );
+	fgSizer401->Add( m_staticText101, 0, wxALL, 5 );
+	
+	uiEditAutocompleteSingleQuote = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteSingleQuote, 0, wxALL, 5 );
+	
+	m_staticText102 = new wxStaticText( m_panel10, wxID_ANY, wxT("\"double quote\""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText102->Wrap( -1 );
+	fgSizer401->Add( m_staticText102, 0, wxALL, 5 );
+	
+	uiEditAutocompleteDoubleQuote = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteDoubleQuote, 0, wxALL, 5 );
+	
+	
+	sbSizerAutocomplete->Add( fgSizer401, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizerAutocomplete, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerSelection;
+	sbSizerSelection = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Selection") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer9;
+	fgSizer9 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer9->SetFlexibleDirection( wxBOTH );
+	fgSizer9->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiEditUseSelectionForeground = new wxCheckBox( m_panel10, wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer9->Add( uiEditUseSelectionForeground, 0, wxALL, 5 );
+	
+	uiEditSelectionForeground = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer9->Add( uiEditSelectionForeground, 0, wxALL, 5 );
+	
+	uiEditUseSelectionBackground = new wxCheckBox( m_panel10, wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer9->Add( uiEditUseSelectionBackground, 0, wxALL, 5 );
+	
+	uiEditSelectionBackground = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer9->Add( uiEditSelectionBackground, 0, wxALL, 5 );
+	
+	
+	sbSizerSelection->Add( fgSizer9, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizerSelection, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerProjectDefault;
+	sbSizerProjectDefault = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Project defaults") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer21;
+	fgSizer21 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer21->SetFlexibleDirection( wxBOTH );
+	fgSizer21->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer21->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiUseTabs = new wxCheckBox( m_panel10, wxID_ANY, wxT("Use tabs"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer21->Add( uiUseTabs, 0, wxALL, 5 );
+	
+	m_staticText41 = new wxStaticText( m_panel10, wxID_ANY, wxT("Tab width:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText41->Wrap( -1 );
+	fgSizer21->Add( m_staticText41, 0, wxALL, 5 );
+	
+	uiTabWidth = new wxTextCtrl( m_panel10, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer21->Add( uiTabWidth, 0, wxALL, 5 );
+	
+	
+	sbSizerProjectDefault->Add( fgSizer21, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizerProjectDefault, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerEdges;
+	sbSizerEdges = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Edge") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer25;
+	fgSizer25 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer25->AddGrowableCol( 1 );
+	fgSizer25->SetFlexibleDirection( wxBOTH );
+	fgSizer25->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText47 = new wxStaticText( m_panel10, wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText47->Wrap( -1 );
+	fgSizer25->Add( m_staticText47, 0, wxALL, 5 );
+	
+	uiEdgeStyle = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiEdgeStyle->Append( wxT("None") );
+	uiEdgeStyle->Append( wxT("Line") );
+	uiEdgeStyle->Append( wxT("Background") );
+	fgSizer25->Add( uiEdgeStyle, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText48 = new wxStaticText( m_panel10, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48->Wrap( -1 );
+	fgSizer25->Add( m_staticText48, 0, wxALL, 5 );
+	
+	uiEdgeColor = new wxColourPickerCtrl( m_panel10, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer25->Add( uiEdgeColor, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText49 = new wxStaticText( m_panel10, wxID_ANY, wxT("Column:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText49->Wrap( -1 );
+	fgSizer25->Add( m_staticText49, 0, wxALL, 5 );
+	
+	uiEdgeColumn = new wxTextCtrl( m_panel10, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer25->Add( uiEdgeColumn, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	sbSizerEdges->Add( fgSizer25, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizerEdges, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerEditorFeel;
+	sbSizerEditorFeel = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Feel") ), wxVERTICAL );
+	
+	uiTabIndents = new wxCheckBox( m_panel10, wxID_ANY, wxT("Tab indents"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerEditorFeel->Add( uiTabIndents, 0, wxALL, 5 );
+	
+	uiBackspaceUnindents = new wxCheckBox( m_panel10, wxID_ANY, wxT("Bacspace unindents"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerEditorFeel->Add( uiBackspaceUnindents, 0, wxALL, 5 );
+	
+	
+	fgSizer4->Add( sbSizerEditorFeel, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerIndent;
+	sbSizerIndent = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Indenting") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer23;
+	fgSizer23 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer23->AddGrowableCol( 1 );
+	fgSizer23->SetFlexibleDirection( wxBOTH );
+	fgSizer23->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer23->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiIndentGuide = new wxCheckBox( m_panel10, wxID_ANY, wxT("Display indent guide"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer23->Add( uiIndentGuide, 0, wxALL, 5 );
+	
+	m_staticText44 = new wxStaticText( m_panel10, wxID_ANY, wxT("Indent type:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText44->Wrap( -1 );
+	fgSizer23->Add( m_staticText44, 0, wxALL, 5 );
+	
+	uiEditIndentation = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiEditIndentation->Append( wxT("None") );
+	uiEditIndentation->Append( wxT("Keep") );
+	uiEditIndentation->Append( wxT("Smart") );
+	fgSizer23->Add( uiEditIndentation, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	sbSizerIndent->Add( fgSizer23, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizerIndent, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerWhitespace;
+	sbSizerWhitespace = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("Whitespace") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer24;
+	fgSizer24 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer24->AddGrowableCol( 1 );
+	fgSizer24->SetFlexibleDirection( wxBOTH );
+	fgSizer24->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer24->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiDisplayEOL = new wxCheckBox( m_panel10, wxID_ANY, wxT("Display EOL"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer24->Add( uiDisplayEOL, 0, wxALL, 5 );
+	
+	m_staticText45 = new wxStaticText( m_panel10, wxID_ANY, wxT("View whitespace:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText45->Wrap( -1 );
+	fgSizer24->Add( m_staticText45, 0, wxALL, 5 );
+	
+	uiViewWhitespace = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiViewWhitespace->Append( wxT("Hidden") );
+	uiViewWhitespace->Append( wxT("Always") );
+	uiViewWhitespace->Append( wxT("AfterIdent") );
+	fgSizer24->Add( uiViewWhitespace, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText46 = new wxStaticText( m_panel10, wxID_ANY, wxT("Word wrap:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText46->Wrap( -1 );
+	fgSizer24->Add( m_staticText46, 0, wxALL, 5 );
+	
+	uiWordwrap = new wxComboBox( m_panel10, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiWordwrap->Append( wxT("None") );
+	uiWordwrap->Append( wxT("Char") );
+	uiWordwrap->Append( wxT("Word") );
+	fgSizer24->Add( uiWordwrap, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	sbSizerWhitespace->Add( fgSizer24, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer4->Add( sbSizerWhitespace, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizerGeneral;
+	sbSizerGeneral = new wxStaticBoxSizer( new wxStaticBox( m_panel10, wxID_ANY, wxT("General") ), wxVERTICAL );
+	
+	uiEditShowCompilerAnnotations = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show warning/errors as annotations"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerGeneral->Add( uiEditShowCompilerAnnotations, 0, wxALL, 5 );
+	
+	uiEditShowMultilineIndicators = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show multiline warning/errors"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerGeneral->Add( uiEditShowMultilineIndicators, 0, wxALL, 5 );
+	
+	uiEditHighlightKeyword = new wxCheckBox( m_panel10, wxID_ANY, wxT("Auto highlight keywords"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerGeneral->Add( uiEditHighlightKeyword, 0, wxALL, 5 );
+	
+	uiShowLineNumbers = new wxCheckBox( m_panel10, wxID_ANY, wxT("Show line numbers"), wxDefaultPosition, wxDefaultSize, 0 );
+	sbSizerGeneral->Add( uiShowLineNumbers, 0, wxALL, 5 );
+	
+	
+	fgSizer4->Add( sbSizerGeneral, 1, wxEXPAND, 5 );
+	
+	
+	m_panel10->SetSizer( fgSizer4 );
+	m_panel10->Layout();
+	fgSizer4->Fit( m_panel10 );
+	m_notebook2->AddPage( m_panel10, wxT("General"), true );
+	m_panel11 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	m_notebook2->AddPage( m_panel11, wxT("C++"), false );
+	
+	bSizer2->Add( m_notebook2, 1, wxEXPAND | wxALL, 5 );
+	
+	
+	this->SetSizer( bSizer2 );
+	this->Layout();
+	
+	// Connect Events
+	uiAllowFolding->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLevelNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLineBeforeExpanded->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLineBeforeContracted->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLineAfterExpanded->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLineAfterContracted->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditFoldHi->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiEditFoldLow->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiCurrentLineVisible->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditCurrentLineOverdraw->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditCurrentLineColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiEditCurrentLineAlpha->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
+	uiEditCurrentLineAlpha->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
+	uiEditUseSelectionForeground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditSelectionForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiEditUseSelectionBackground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditSelectionBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiUseTabs->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiTabWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
+	uiTabWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
+	uiEdgeStyle->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiEdgeColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiEdgeColumn->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
+	uiEdgeColumn->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
+	uiTabIndents->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiBackspaceUnindents->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiIndentGuide->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditIndentation->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiDisplayEOL->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiViewWhitespace->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiWordwrap->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiEditHighlightKeyword->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiShowLineNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+}
+
+SettingsEditorPanel::~SettingsEditorPanel()
+{
+	// Disconnect Events
+	uiAllowFolding->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLevelNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLineBeforeExpanded->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLineBeforeContracted->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLineAfterExpanded->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiFoldLineAfterContracted->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditFoldHi->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiEditFoldLow->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiCurrentLineVisible->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditCurrentLineOverdraw->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditCurrentLineColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiEditCurrentLineAlpha->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
+	uiEditCurrentLineAlpha->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
+	uiEditUseSelectionForeground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditSelectionForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiEditUseSelectionBackground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditSelectionBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiUseTabs->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiTabWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
+	uiTabWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
+	uiEdgeStyle->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiEdgeColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
+	uiEdgeColumn->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
+	uiEdgeColumn->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
+	uiTabIndents->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiBackspaceUnindents->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiIndentGuide->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditIndentation->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiDisplayEOL->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiViewWhitespace->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiWordwrap->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiEditHighlightKeyword->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiShowLineNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	
+}
+
+SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxBoxSizer* bSizer35;
+	bSizer35 = new wxBoxSizer( wxVERTICAL );
+	
+	m_notebook4 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel17 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer32;
+	fgSizer32 = new wxFlexGridSizer( 0, 2, 6, 6 );
+	fgSizer32->AddGrowableCol( 0 );
+	fgSizer32->AddGrowableCol( 1 );
+	fgSizer32->SetFlexibleDirection( wxBOTH );
+	fgSizer32->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticBoxSizer* sbSizer23;
+	sbSizer23 = new wxStaticBoxSizer( new wxStaticBox( m_panel17, wxID_ANY, wxT("Common") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer281;
+	fgSizer281 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer281->AddGrowableCol( 1 );
+	fgSizer281->SetFlexibleDirection( wxBOTH );
+	fgSizer281->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText55 = new wxStaticText( m_panel17, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText55->Wrap( -1 );
+	fgSizer281->Add( m_staticText55, 0, wxALL, 5 );
+	
+	uiWindowDockCommonBackground = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer281->Add( uiWindowDockCommonBackground, 0, wxALL, 5 );
+	
+	m_staticText56 = new wxStaticText( m_panel17, wxID_ANY, wxT("Sash"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText56->Wrap( -1 );
+	fgSizer281->Add( m_staticText56, 0, wxALL, 5 );
+	
+	uiWindowDockCommonSash = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer281->Add( uiWindowDockCommonSash, 0, wxALL, 5 );
+	
+	m_staticText57 = new wxStaticText( m_panel17, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText57->Wrap( -1 );
+	fgSizer281->Add( m_staticText57, 0, wxALL, 5 );
+	
+	uiWindowDockCommonBorder = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer281->Add( uiWindowDockCommonBorder, 0, wxALL, 5 );
+	
+	m_staticText58 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gripper"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText58->Wrap( -1 );
+	fgSizer281->Add( m_staticText58, 0, wxALL, 5 );
+	
+	uiWindowDockCommonGripper = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer281->Add( uiWindowDockCommonGripper, 0, wxALL, 5 );
+	
+	
+	sbSizer23->Add( fgSizer281, 0, wxEXPAND, 5 );
+	
+	
+	fgSizer32->Add( sbSizer23, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer32->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer19;
+	sbSizer19 = new wxStaticBoxSizer( new wxStaticBox( m_panel17, wxID_ANY, wxT("Active") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer29;
+	fgSizer29 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer29->SetFlexibleDirection( wxBOTH );
+	fgSizer29->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText59 = new wxStaticText( m_panel17, wxID_ANY, wxT("Caption"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText59->Wrap( -1 );
+	fgSizer29->Add( m_staticText59, 0, wxALL, 5 );
+	
+	uiWindowDockActiveCaption = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer29->Add( uiWindowDockActiveCaption, 0, wxALL, 5 );
+	
+	m_staticText60 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gradient"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText60->Wrap( -1 );
+	fgSizer29->Add( m_staticText60, 0, wxALL, 5 );
+	
+	uiWindowDockActiveGradient = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer29->Add( uiWindowDockActiveGradient, 0, wxALL, 5 );
+	
+	m_staticText61 = new wxStaticText( m_panel17, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText61->Wrap( -1 );
+	fgSizer29->Add( m_staticText61, 0, wxALL, 5 );
+	
+	uiWindowDockActiveText = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer29->Add( uiWindowDockActiveText, 0, wxALL, 5 );
+	
+	
+	sbSizer19->Add( fgSizer29, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer32->Add( sbSizer19, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer20;
+	sbSizer20 = new wxStaticBoxSizer( new wxStaticBox( m_panel17, wxID_ANY, wxT("Inactive") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer30;
+	fgSizer30 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer30->SetFlexibleDirection( wxBOTH );
+	fgSizer30->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText62 = new wxStaticText( m_panel17, wxID_ANY, wxT("Caption"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText62->Wrap( -1 );
+	fgSizer30->Add( m_staticText62, 0, wxALL, 5 );
+	
+	uiWindowDockInactiveCaption = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer30->Add( uiWindowDockInactiveCaption, 0, wxALL, 5 );
+	
+	m_staticText63 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gradient"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText63->Wrap( -1 );
+	fgSizer30->Add( m_staticText63, 0, wxALL, 5 );
+	
+	uiWindowDockInactiveGradient = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer30->Add( uiWindowDockInactiveGradient, 0, wxALL, 5 );
+	
+	m_staticText64 = new wxStaticText( m_panel17, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText64->Wrap( -1 );
+	fgSizer30->Add( m_staticText64, 0, wxALL, 5 );
+	
+	uiWindowDockInactiveText = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer30->Add( uiWindowDockInactiveText, 0, wxALL, 5 );
+	
+	
+	sbSizer20->Add( fgSizer30, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer32->Add( sbSizer20, 1, wxEXPAND, 5 );
+	
+	
+	m_panel17->SetSizer( fgSizer32 );
+	m_panel17->Layout();
+	fgSizer32->Fit( m_panel17 );
+	m_notebook4->AddPage( m_panel17, wxT("Dock colors"), false );
+	m_panel18 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer37;
+	fgSizer37 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer37->AddGrowableCol( 0 );
+	fgSizer37->AddGrowableCol( 1 );
+	fgSizer37->SetFlexibleDirection( wxBOTH );
+	fgSizer37->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticBoxSizer* sbSizer24;
+	sbSizer24 = new wxStaticBoxSizer( new wxStaticBox( m_panel18, wxID_ANY, wxT("Common") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer38;
+	fgSizer38 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer38->SetFlexibleDirection( wxBOTH );
+	fgSizer38->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText65 = new wxStaticText( m_panel18, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText65->Wrap( -1 );
+	fgSizer38->Add( m_staticText65, 0, wxALL, 5 );
+	
+	uiWindowTabCommonBackground = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer38->Add( uiWindowTabCommonBackground, 0, wxALL, 5 );
+	
+	m_staticText77 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText77->Wrap( -1 );
+	fgSizer38->Add( m_staticText77, 0, wxALL, 5 );
+	
+	uiWindowTabCommonBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer38->Add( uiWindowTabCommonBorder, 0, wxALL, 5 );
+	
+	m_staticText78 = new wxStaticText( m_panel18, wxID_ANY, wxT("Sash"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText78->Wrap( -1 );
+	fgSizer38->Add( m_staticText78, 0, wxALL, 5 );
+	
+	uiWindowTabCommonSash = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer38->Add( uiWindowTabCommonSash, 0, wxALL, 5 );
+	
+	
+	sbSizer24->Add( fgSizer38, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer37->Add( sbSizer24, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer37->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer25;
+	sbSizer25 = new wxStaticBoxSizer( new wxStaticBox( m_panel18, wxID_ANY, wxT("Active") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer39;
+	fgSizer39 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer39->SetFlexibleDirection( wxBOTH );
+	fgSizer39->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText66 = new wxStaticText( m_panel18, wxID_ANY, wxT("Tab"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText66->Wrap( -1 );
+	fgSizer39->Add( m_staticText66, 0, wxALL, 5 );
+	
+	uiWindowTabActiveTab = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer39->Add( uiWindowTabActiveTab, 0, wxALL, 5 );
+	
+	m_staticText67 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText67->Wrap( -1 );
+	fgSizer39->Add( m_staticText67, 0, wxALL, 5 );
+	
+	uiWindowTabActiveBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer39->Add( uiWindowTabActiveBorder, 0, wxALL, 5 );
+	
+	m_staticText68 = new wxStaticText( m_panel18, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText68->Wrap( -1 );
+	fgSizer39->Add( m_staticText68, 0, wxALL, 5 );
+	
+	uiWindowTabActiveText = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer39->Add( uiWindowTabActiveText, 0, wxALL, 5 );
+	
+	
+	sbSizer25->Add( fgSizer39, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer37->Add( sbSizer25, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer26;
+	sbSizer26 = new wxStaticBoxSizer( new wxStaticBox( m_panel18, wxID_ANY, wxT("Inactive") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer40;
+	fgSizer40 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer40->SetFlexibleDirection( wxBOTH );
+	fgSizer40->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText69 = new wxStaticText( m_panel18, wxID_ANY, wxT("Tab"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText69->Wrap( -1 );
+	fgSizer40->Add( m_staticText69, 0, wxALL, 5 );
+	
+	uiWindowTabInactiveTab = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer40->Add( uiWindowTabInactiveTab, 0, wxALL, 5 );
+	
+	m_staticText70 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText70->Wrap( -1 );
+	fgSizer40->Add( m_staticText70, 0, wxALL, 5 );
+	
+	uiWindowTabInactiveBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer40->Add( uiWindowTabInactiveBorder, 0, wxALL, 5 );
+	
+	m_staticText71 = new wxStaticText( m_panel18, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText71->Wrap( -1 );
+	fgSizer40->Add( m_staticText71, 0, wxALL, 5 );
+	
+	uiWindowTabInactiveText = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer40->Add( uiWindowTabInactiveText, 0, wxALL, 5 );
+	
+	
+	sbSizer26->Add( fgSizer40, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer37->Add( sbSizer26, 1, wxEXPAND, 5 );
+	
+	
+	m_panel18->SetSizer( fgSizer37 );
+	m_panel18->Layout();
+	fgSizer37->Fit( m_panel18 );
+	m_notebook4->AddPage( m_panel18, wxT("Tab colors"), false );
+	m_panel19 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer41;
+	fgSizer41 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer41->SetFlexibleDirection( wxBOTH );
+	fgSizer41->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText72 = new wxStaticText( m_panel19, wxID_ANY, wxT("Style"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText72->Wrap( -1 );
+	fgSizer41->Add( m_staticText72, 0, wxALL, 5 );
+	
+	uiWindowStatusbarStyle = new wxComboBox( m_panel19, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN ); 
+	fgSizer41->Add( uiWindowStatusbarStyle, 0, wxALL, 5 );
+	
+	m_staticText73 = new wxStaticText( m_panel19, wxID_ANY, wxT("Foreground"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText73->Wrap( -1 );
+	fgSizer41->Add( m_staticText73, 0, wxALL, 5 );
+	
+	uiWindowStatusbarForeground = new wxColourPickerCtrl( m_panel19, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer41->Add( uiWindowStatusbarForeground, 0, wxALL, 5 );
+	
+	m_staticText74 = new wxStaticText( m_panel19, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText74->Wrap( -1 );
+	fgSizer41->Add( m_staticText74, 0, wxALL, 5 );
+	
+	uiWindowStatusbarBackground = new wxColourPickerCtrl( m_panel19, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer41->Add( uiWindowStatusbarBackground, 0, wxALL, 5 );
+	
+	m_staticText75 = new wxStaticText( m_panel19, wxID_ANY, wxT("Shadow"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText75->Wrap( -1 );
+	fgSizer41->Add( m_staticText75, 0, wxALL, 5 );
+	
+	uiWindowStatusbarShadow = new wxColourPickerCtrl( m_panel19, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer41->Add( uiWindowStatusbarShadow, 0, wxALL, 5 );
+	
+	m_staticText76 = new wxStaticText( m_panel19, wxID_ANY, wxT("Highlight"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText76->Wrap( -1 );
+	fgSizer41->Add( m_staticText76, 0, wxALL, 5 );
+	
+	uiWindowStatusbarHighlight = new wxColourPickerCtrl( m_panel19, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer41->Add( uiWindowStatusbarHighlight, 0, wxALL, 5 );
+	
+	wxFlexGridSizer* fgSizer36;
+	fgSizer36 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer36->SetFlexibleDirection( wxBOTH );
+	fgSizer36->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer41->Add( fgSizer36, 1, wxEXPAND, 5 );
+	
+	
+	m_panel19->SetSizer( fgSizer41 );
+	m_panel19->Layout();
+	fgSizer41->Fit( m_panel19 );
+	m_notebook4->AddPage( m_panel19, wxT("Statusbar"), false );
+	m_panel20 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxGridBagSizer* gbSizer3;
+	gbSizer3 = new wxGridBagSizer( 0, 0 );
+	gbSizer3->SetFlexibleDirection( wxBOTH );
+	gbSizer3->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticBoxSizer* sbSizer251;
+	sbSizer251 = new wxStaticBoxSizer( new wxStaticBox( m_panel20, wxID_ANY, wxT("Colors") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer371;
+	fgSizer371 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer371->SetFlexibleDirection( wxBOTH );
+	fgSizer371->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText94 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText94->Wrap( -1 );
+	fgSizer371->Add( m_staticText94, 0, wxALL, 5 );
+	
+	uiSwitcherItemBackground = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer371->Add( uiSwitcherItemBackground, 0, wxALL, 5 );
+	
+	m_staticText95 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText95->Wrap( -1 );
+	fgSizer371->Add( m_staticText95, 0, wxALL, 5 );
+	
+	uiSwitcherItemText = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer371->Add( uiSwitcherItemText, 0, wxALL, 5 );
+	
+	m_staticText82 = new wxStaticText( m_panel20, wxID_ANY, wxT("Selection"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText82->Wrap( -1 );
+	fgSizer371->Add( m_staticText82, 0, wxALL, 5 );
+	
+	uiSwitcherSelection = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer371->Add( uiSwitcherSelection, 0, wxALL, 5 );
+	
+	m_staticText83 = new wxStaticText( m_panel20, wxID_ANY, wxT("Selection outline"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText83->Wrap( -1 );
+	fgSizer371->Add( m_staticText83, 0, wxALL, 5 );
+	
+	uiSwitcherSelectionOutline = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer371->Add( uiSwitcherSelectionOutline, 0, wxALL, 5 );
+	
+	m_staticText84 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText84->Wrap( -1 );
+	fgSizer371->Add( m_staticText84, 0, wxALL, 5 );
+	
+	uiSwitcherDialog = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer371->Add( uiSwitcherDialog, 0, wxALL, 5 );
+	
+	m_staticText85 = new wxStaticText( m_panel20, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText85->Wrap( -1 );
+	fgSizer371->Add( m_staticText85, 0, wxALL, 5 );
+	
+	uiSwitcherBackground = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer371->Add( uiSwitcherBackground, 0, wxALL, 5 );
+	
+	
+	sbSizer251->Add( fgSizer371, 1, wxEXPAND, 5 );
+	
+	
+	gbSizer3->Add( sbSizer251, wxGBPosition( 1, 0 ), wxGBSpan( 1, 1 ), wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer261;
+	sbSizer261 = new wxStaticBoxSizer( new wxStaticBox( m_panel20, wxID_ANY, wxT("Spacing") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer381;
+	fgSizer381 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer381->SetFlexibleDirection( wxBOTH );
+	fgSizer381->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText80 = new wxStaticText( m_panel20, wxID_ANY, wxT("Text margin X"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText80->Wrap( -1 );
+	fgSizer381->Add( m_staticText80, 0, wxALL, 5 );
+	
+	uiSwitcherTextMarginX = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer381->Add( uiSwitcherTextMarginX, 0, wxALL, 5 );
+	
+	m_staticText79 = new wxStaticText( m_panel20, wxID_ANY, wxT("Text margin Y"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText79->Wrap( -1 );
+	fgSizer381->Add( m_staticText79, 0, wxALL, 5 );
+	
+	uiSwitcherTextMarginY = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer381->Add( uiSwitcherTextMarginY, 0, wxALL, 5 );
+	
+	m_staticText81 = new wxStaticText( m_panel20, wxID_ANY, wxT("X margin"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText81->Wrap( -1 );
+	fgSizer381->Add( m_staticText81, 0, wxALL, 5 );
+	
+	uiSwitcherXMargin = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer381->Add( uiSwitcherXMargin, 0, wxALL, 5 );
+	
+	m_staticText86 = new wxStaticText( m_panel20, wxID_ANY, wxT("Y margin"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText86->Wrap( -1 );
+	fgSizer381->Add( m_staticText86, 0, wxALL, 5 );
+	
+	uiSwitcherYMargin = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer381->Add( uiSwitcherYMargin, 0, wxALL, 5 );
+	
+	m_staticText87 = new wxStaticText( m_panel20, wxID_ANY, wxT("Row spacing"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText87->Wrap( -1 );
+	fgSizer381->Add( m_staticText87, 0, wxALL, 5 );
+	
+	uiSwitcherRowSpacing = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer381->Add( uiSwitcherRowSpacing, 0, wxALL, 5 );
+	
+	m_staticText88 = new wxStaticText( m_panel20, wxID_ANY, wxT("Col spacing"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText88->Wrap( -1 );
+	fgSizer381->Add( m_staticText88, 0, wxALL, 5 );
+	
+	uiSwitcherColSpacing = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer381->Add( uiSwitcherColSpacing, 0, wxALL, 5 );
+	
+	m_staticText89 = new wxStaticText( m_panel20, wxID_ANY, wxT("Main border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText89->Wrap( -1 );
+	fgSizer381->Add( m_staticText89, 0, wxALL, 5 );
+	
+	uiSwitcherMainBorder = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer381->Add( uiSwitcherMainBorder, 0, wxALL, 5 );
+	
+	m_staticText90 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText90->Wrap( -1 );
+	fgSizer381->Add( m_staticText90, 0, wxALL, 5 );
+	
+	uiSwitcherItemBorder = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer381->Add( uiSwitcherItemBorder, 0, wxALL, 5 );
+	
+	
+	sbSizer261->Add( fgSizer381, 1, wxEXPAND, 5 );
+	
+	
+	gbSizer3->Add( sbSizer261, wxGBPosition( 1, 1 ), wxGBSpan( 1, 1 ), wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer27;
+	sbSizer27 = new wxStaticBoxSizer( new wxStaticBox( m_panel20, wxID_ANY, wxT("General") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer391;
+	fgSizer391 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer391->AddGrowableCol( 1 );
+	fgSizer391->SetFlexibleDirection( wxBOTH );
+	fgSizer391->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer391->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiSwitcherVsFocus = new wxCheckBox( m_panel20, wxID_ANY, wxT("Autofocus files"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherVsFocus->SetValue(true); 
+	fgSizer391->Add( uiSwitcherVsFocus, 0, wxALL, 5 );
+	
+	m_staticText91 = new wxStaticText( m_panel20, wxID_ANY, wxT("Items/row"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText91->Wrap( -1 );
+	fgSizer391->Add( m_staticText91, 0, wxALL, 5 );
+	
+	uiSwitcherItemsPerRow = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer391->Add( uiSwitcherItemsPerRow, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText92 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item width"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText92->Wrap( -1 );
+	fgSizer391->Add( m_staticText92, 0, wxALL, 5 );
+	
+	uiSwitcherItemMaxWidth = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer391->Add( uiSwitcherItemMaxWidth, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText93 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item height"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText93->Wrap( -1 );
+	fgSizer391->Add( m_staticText93, 0, wxALL, 5 );
+	
+	uiSwitcherItemMaxHeight = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer391->Add( uiSwitcherItemMaxHeight, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText96 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog minimum width"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText96->Wrap( -1 );
+	fgSizer391->Add( m_staticText96, 0, wxALL, 5 );
+	
+	uiSwitcherMinWidth = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer391->Add( uiSwitcherMinWidth, 0, wxALL|wxEXPAND, 5 );
+	
+	m_staticText97 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog minimum height"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText97->Wrap( -1 );
+	fgSizer391->Add( m_staticText97, 0, wxALL, 5 );
+	
+	uiSwitcherMinHeight = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer391->Add( uiSwitcherMinHeight, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	sbSizer27->Add( fgSizer391, 1, wxEXPAND, 5 );
+	
+	
+	gbSizer3->Add( sbSizer27, wxGBPosition( 0, 0 ), wxGBSpan( 1, 2 ), wxEXPAND, 5 );
+	
+	
+	m_panel20->SetSizer( gbSizer3 );
+	m_panel20->Layout();
+	gbSizer3->Fit( m_panel20 );
+	m_notebook4->AddPage( m_panel20, wxT("Tab switcher"), true );
+	
+	bSizer35->Add( m_notebook4, 1, wxEXPAND | wxALL, 5 );
+	
+	
+	this->SetSizer( bSizer35 );
+	this->Layout();
+	
+	// Connect Events
+	uiWindowDockCommonBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockCommonSash->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockCommonBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockCommonGripper->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockActiveCaption->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockActiveGradient->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockActiveText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockInactiveCaption->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockInactiveGradient->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockInactiveText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabCommonBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabCommonBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabCommonSash->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabActiveTab->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabActiveBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabActiveText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabInactiveTab->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabInactiveBorder->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabInactiveText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowStatusbarStyle->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsWindowPanel::OnWindowComboChange ), NULL, this );
+	uiWindowStatusbarForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowStatusbarBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowStatusbarShadow->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowStatusbarHighlight->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherItemBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherItemText->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherSelection->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherSelectionOutline->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherDialog->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherTextMarginX->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherTextMarginX->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherTextMarginY->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherTextMarginY->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherXMargin->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherXMargin->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherYMargin->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherYMargin->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherRowSpacing->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherRowSpacing->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherColSpacing->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherColSpacing->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherMainBorder->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMainBorder->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherItemBorder->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherItemBorder->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherVsFocus->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsWindowPanel::OnWindowCheck ), NULL, this );
+	uiSwitcherItemsPerRow->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherItemsPerRow->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherItemMaxWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherItemMaxWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherItemMaxHeight->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherItemMaxHeight->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherMinWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMinWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherMinHeight->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMinHeight->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+}
+
+SettingsWindowPanel::~SettingsWindowPanel()
+{
+	// Disconnect Events
+	uiWindowDockCommonBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockCommonSash->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockCommonBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockCommonGripper->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockActiveCaption->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockActiveGradient->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockActiveText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockInactiveCaption->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockInactiveGradient->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowDockInactiveText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabCommonBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabCommonBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabCommonSash->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabActiveTab->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabActiveBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabActiveText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabInactiveTab->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabInactiveBorder->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowTabInactiveText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowStatusbarStyle->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsWindowPanel::OnWindowComboChange ), NULL, this );
+	uiWindowStatusbarForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowStatusbarBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowStatusbarShadow->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiWindowStatusbarHighlight->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherItemBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherItemText->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherSelection->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherSelectionOutline->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherDialog->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsWindowPanel::OnWindowColorChange ), NULL, this );
+	uiSwitcherTextMarginX->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherTextMarginX->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherTextMarginY->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherTextMarginY->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherXMargin->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherXMargin->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherYMargin->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherYMargin->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherRowSpacing->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherRowSpacing->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherColSpacing->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherColSpacing->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherMainBorder->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMainBorder->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherItemBorder->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherItemBorder->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherVsFocus->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsWindowPanel::OnWindowCheck ), NULL, this );
+	uiSwitcherItemsPerRow->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherItemsPerRow->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherItemMaxWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherItemMaxWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherItemMaxHeight->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherItemMaxHeight->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherMinWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMinWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	uiSwitcherMinHeight->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsWindowPanel::OnlyAllowNumberChars ), NULL, this );
+	uiSwitcherMinHeight->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsWindowPanel::OnWindowText ), NULL, this );
+	
+}
+
+SettingsThemesPanel::SettingsThemesPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxFlexGridSizer* fgSizer28;
+	fgSizer28 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer28->AddGrowableCol( 0 );
+	fgSizer28->AddGrowableRow( 1 );
+	fgSizer28->SetFlexibleDirection( wxBOTH );
+	fgSizer28->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxFlexGridSizer* fgSizer31;
+	fgSizer31 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer31->AddGrowableCol( 0 );
+	fgSizer31->SetFlexibleDirection( wxBOTH );
+	fgSizer31->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_button40 = new wxButton( this, wxID_ANY, wxT("Use selected theme"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_button40, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button42 = new wxButton( this, wxID_ANY, wxT("Import theme"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_button42, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button41 = new wxButton( this, wxID_ANY, wxT("Export selected theme"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer31->Add( m_button41, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer28->Add( fgSizer31, 1, wxEXPAND, 5 );
+	
+	wxFlexGridSizer* fgSizer221;
+	fgSizer221 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer221->AddGrowableCol( 0 );
+	fgSizer221->AddGrowableRow( 0 );
+	fgSizer221->SetFlexibleDirection( wxBOTH );
+	fgSizer221->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	uiThemeList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	fgSizer221->Add( uiThemeList, 0, wxALL|wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer28;
+	bSizer28 = new wxBoxSizer( wxVERTICAL );
+	
+	uiThemeListAdd = new wxButton( this, wxID_ANY, wxT("+"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiThemeListAdd, 0, wxALL, 5 );
+	
+	 uiThemeListChange = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add(  uiThemeListChange, 0, wxALL, 5 );
+	
+	uiThemeListRemove = new wxButton( this, wxID_ANY, wxT("-"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiThemeListRemove, 0, wxALL, 5 );
+	
+	uiThemeListUp = new wxButton( this, wxID_ANY, wxT("/\\"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiThemeListUp, 0, wxALL, 5 );
+	
+	uiThemeListDown = new wxButton( this, wxID_ANY, wxT("\\/"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	bSizer28->Add( uiThemeListDown, 0, wxALL, 5 );
+	
+	
+	fgSizer221->Add( bSizer28, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer28->Add( fgSizer221, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( fgSizer28 );
+	this->Layout();
+	
+	// Connect Events
+	m_button40->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnThemeApplySelected ), NULL, this );
+	m_button42->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnThemeImport ), NULL, this );
+	m_button41->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnThemeExportSelected ), NULL, this );
+	uiThemeListAdd->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnAdd ), NULL, this );
+	 uiThemeListChange->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnEdit ), NULL, this );
+	uiThemeListRemove->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnRemove ), NULL, this );
+	uiThemeListUp->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnUp ), NULL, this );
+	uiThemeListDown->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnDown ), NULL, this );
+}
+
+SettingsThemesPanel::~SettingsThemesPanel()
+{
+	// Disconnect Events
+	m_button40->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnThemeApplySelected ), NULL, this );
+	m_button42->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnThemeImport ), NULL, this );
+	m_button41->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnThemeExportSelected ), NULL, this );
+	uiThemeListAdd->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnAdd ), NULL, this );
+	 uiThemeListChange->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnEdit ), NULL, this );
+	uiThemeListRemove->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnRemove ), NULL, this );
+	uiThemeListUp->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnUp ), NULL, this );
+	uiThemeListDown->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsThemesPanel::OnDown ), NULL, this );
 	
 }

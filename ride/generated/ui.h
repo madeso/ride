@@ -11,293 +11,35 @@
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/string.h>
-#include <wx/listbox.h>
+#include <wx/stattext.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
 #include <wx/colour.h>
 #include <wx/settings.h>
+#include <wx/button.h>
 #include <wx/sizer.h>
-#include <wx/statbox.h>
-#include <wx/panel.h>
-#include <wx/checkbox.h>
-#include <wx/textctrl.h>
-#include <wx/valtext.h>
-#include <wx/clrpicker.h>
 #include <wx/gbsizer.h>
+#include <wx/dialog.h>
+#include <wx/listctrl.h>
+#include <wx/textctrl.h>
+#include <wx/combobox.h>
+#include <wx/checkbox.h>
+#include <wx/stc/stc.h>
+#include <wx/statbox.h>
+#include <wx/listbox.h>
+#include <wx/panel.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
-#include <wx/stattext.h>
-#include <wx/combobox.h>
 #include <wx/valgen.h>
 #include <wx/notebook.h>
-#include <wx/button.h>
-#include <wx/dialog.h>
-#include <wx/listctrl.h>
-#include <wx/stc/stc.h>
+#include <wx/valtext.h>
+#include <wx/clrpicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
 namespace ui
 {
-	///////////////////////////////////////////////////////////////////////////////
-	/// Class Settings
-	///////////////////////////////////////////////////////////////////////////////
-	class Settings : public wxDialog 
-	{
-		private:
-		
-		protected:
-			wxNotebook* m_notebook1;
-			wxPanel* m_fonts;
-			wxPanel* m_panel9;
-			wxListBox* uiFontStyles;
-			wxPanel* m_panel7;
-			wxCheckBox* uiStyleUseTypeface;
-			wxCheckBox* uiStyleOnlyFixedSize;
-			wxListBox* uiStyleTypeface;
-			wxCheckBox* uiStyleBold;
-			wxCheckBox* uiStyleUseBold;
-			wxCheckBox* uiStyleItalic;
-			wxCheckBox* uiStyleUseItalic;
-			wxCheckBox* uiStyleUnderline;
-			wxCheckBox* uiStyleUseUnderline;
-			wxTextCtrl* uiStyleSize;
-			wxCheckBox* uiStyleUseSize;
-			wxColourPickerCtrl* uiStyleForeground;
-			wxCheckBox* uiStyleUseForeground;
-			wxColourPickerCtrl* uiStyleBackground;
-			wxCheckBox* uiStyleUseBackground;
-			wxTextCtrl* uiStyleExample;
-			wxPanel* m_indicators;
-			wxListBox* uiIndicatorList;
-			wxStaticText* uiIndicatorStyleLabel;
-			wxComboBox* uiIndicatorStyle;
-			wxStaticText* m_staticText11;
-			wxColourPickerCtrl* uiIndicatorColor;
-			wxCheckBox* uiIndicatorUnder;
-			wxStaticText* m_staticText12;
-			wxTextCtrl* uiIndicatorAlpha;
-			wxStaticText* m_staticText13;
-			wxTextCtrl* uiIndicatorOutlineAlpha;
-			wxPanel* m_markers;
-			wxListBox* uiMarkerList;
-			wxStaticText* m_staticText7;
-			wxComboBox* uiMarkerSymbol;
-			wxStaticText* m_staticText9;
-			wxColourPickerCtrl* uiMarkerForegroundColor;
-			wxStaticText* m_staticText8;
-			wxColourPickerCtrl* uiMarkerBackgroundColor;
-			wxPanel* m_editor;
-			wxNotebook* m_notebook2;
-			wxPanel* m_panel10;
-			wxCheckBox* uiAllowFolding;
-			wxCheckBox* uiFoldLevelNumbers;
-			wxCheckBox* uiFoldLineBeforeExpanded;
-			wxCheckBox* uiFoldLineBeforeContracted;
-			wxCheckBox* uiFoldLineAfterExpanded;
-			wxCheckBox* uiFoldLineAfterContracted;
-			wxStaticText* m_staticText42;
-			wxColourPickerCtrl* uiEditFoldHi;
-			wxStaticText* m_staticText43;
-			wxColourPickerCtrl* uiEditFoldLow;
-			wxCheckBox* uiCurrentLineVisible;
-			wxCheckBox* uiEditCurrentLineOverdraw;
-			wxStaticText* m_staticText39;
-			wxColourPickerCtrl* uiEditCurrentLineColor;
-			wxStaticText* m_staticText40;
-			wxTextCtrl* uiEditCurrentLineAlpha;
-			wxStaticText* m_staticText98;
-			wxComboBox* uiEditAutocompleteCurlyBraces;
-			wxStaticText* m_staticText99;
-			wxComboBox* uiEditAutocompleteParentheses ;
-			wxStaticText* m_staticText100;
-			wxComboBox* uiEditAutocompleteBrackets;
-			wxStaticText* m_staticText101;
-			wxComboBox* uiEditAutocompleteSingleQuote;
-			wxStaticText* m_staticText102;
-			wxComboBox* uiEditAutocompleteDoubleQuote;
-			wxCheckBox* uiEditUseSelectionForeground;
-			wxColourPickerCtrl* uiEditSelectionForeground;
-			wxCheckBox* uiEditUseSelectionBackground;
-			wxColourPickerCtrl* uiEditSelectionBackground;
-			wxCheckBox* uiUseTabs;
-			wxStaticText* m_staticText41;
-			wxTextCtrl* uiTabWidth;
-			wxStaticText* m_staticText47;
-			wxComboBox* uiEdgeStyle;
-			wxStaticText* m_staticText48;
-			wxColourPickerCtrl* uiEdgeColor;
-			wxStaticText* m_staticText49;
-			wxTextCtrl* uiEdgeColumn;
-			wxCheckBox* uiTabIndents;
-			wxCheckBox* uiBackspaceUnindents;
-			wxCheckBox* uiIndentGuide;
-			wxStaticText* m_staticText44;
-			wxComboBox* uiEditIndentation;
-			wxCheckBox* uiDisplayEOL;
-			wxStaticText* m_staticText45;
-			wxComboBox* uiViewWhitespace;
-			wxStaticText* m_staticText46;
-			wxComboBox* uiWordwrap;
-			wxCheckBox* uiEditShowCompilerAnnotations;
-			wxCheckBox* uiEditShowMultilineIndicators;
-			wxCheckBox* uiEditHighlightKeyword;
-			wxCheckBox* uiShowLineNumbers;
-			wxPanel* m_panel11;
-			wxPanel* m_window;
-			wxNotebook* m_notebook4;
-			wxPanel* m_panel17;
-			wxStaticText* m_staticText55;
-			wxColourPickerCtrl* uiWindowDockCommonBackground;
-			wxStaticText* m_staticText56;
-			wxColourPickerCtrl* uiWindowDockCommonSash;
-			wxStaticText* m_staticText57;
-			wxColourPickerCtrl* uiWindowDockCommonBorder;
-			wxStaticText* m_staticText58;
-			wxColourPickerCtrl* uiWindowDockCommonGripper;
-			wxStaticText* m_staticText59;
-			wxColourPickerCtrl* uiWindowDockActiveCaption;
-			wxStaticText* m_staticText60;
-			wxColourPickerCtrl* uiWindowDockActiveGradient;
-			wxStaticText* m_staticText61;
-			wxColourPickerCtrl* uiWindowDockActiveText;
-			wxStaticText* m_staticText62;
-			wxColourPickerCtrl* uiWindowDockInactiveCaption;
-			wxStaticText* m_staticText63;
-			wxColourPickerCtrl* uiWindowDockInactiveGradient;
-			wxStaticText* m_staticText64;
-			wxColourPickerCtrl* uiWindowDockInactiveText;
-			wxPanel* m_panel18;
-			wxStaticText* m_staticText65;
-			wxColourPickerCtrl* uiWindowTabCommonBackground;
-			wxStaticText* m_staticText77;
-			wxColourPickerCtrl* uiWindowTabCommonBorder;
-			wxStaticText* m_staticText78;
-			wxColourPickerCtrl* uiWindowTabCommonSash;
-			wxStaticText* m_staticText66;
-			wxColourPickerCtrl* uiWindowTabActiveTab;
-			wxStaticText* m_staticText67;
-			wxColourPickerCtrl* uiWindowTabActiveBorder;
-			wxStaticText* m_staticText68;
-			wxColourPickerCtrl* uiWindowTabActiveText;
-			wxStaticText* m_staticText69;
-			wxColourPickerCtrl* uiWindowTabInactiveTab;
-			wxStaticText* m_staticText70;
-			wxColourPickerCtrl* uiWindowTabInactiveBorder;
-			wxStaticText* m_staticText71;
-			wxColourPickerCtrl* uiWindowTabInactiveText;
-			wxPanel* m_panel19;
-			wxStaticText* m_staticText72;
-			wxComboBox* uiWindowStatusbarStyle;
-			wxStaticText* m_staticText73;
-			wxColourPickerCtrl* uiWindowStatusbarForeground;
-			wxStaticText* m_staticText74;
-			wxColourPickerCtrl* uiWindowStatusbarBackground;
-			wxStaticText* m_staticText75;
-			wxColourPickerCtrl* uiWindowStatusbarShadow;
-			wxStaticText* m_staticText76;
-			wxColourPickerCtrl* uiWindowStatusbarHighlight;
-			wxPanel* m_panel20;
-			wxStaticText* m_staticText94;
-			wxColourPickerCtrl* uiSwitcherItemBackground;
-			wxStaticText* m_staticText95;
-			wxColourPickerCtrl* uiSwitcherItemText;
-			wxStaticText* m_staticText82;
-			wxColourPickerCtrl* uiSwitcherSelection;
-			wxStaticText* m_staticText83;
-			wxColourPickerCtrl* uiSwitcherSelectionOutline;
-			wxStaticText* m_staticText84;
-			wxColourPickerCtrl* uiSwitcherDialog;
-			wxStaticText* m_staticText85;
-			wxColourPickerCtrl* uiSwitcherBackground;
-			wxStaticText* m_staticText80;
-			wxTextCtrl* uiSwitcherTextMarginX;
-			wxStaticText* m_staticText79;
-			wxTextCtrl* uiSwitcherTextMarginY;
-			wxStaticText* m_staticText81;
-			wxTextCtrl* uiSwitcherXMargin;
-			wxStaticText* m_staticText86;
-			wxTextCtrl* uiSwitcherYMargin;
-			wxStaticText* m_staticText87;
-			wxTextCtrl* uiSwitcherRowSpacing;
-			wxStaticText* m_staticText88;
-			wxTextCtrl* uiSwitcherColSpacing;
-			wxStaticText* m_staticText89;
-			wxTextCtrl* uiSwitcherMainBorder;
-			wxStaticText* m_staticText90;
-			wxTextCtrl* uiSwitcherItemBorder;
-			wxCheckBox* uiSwitcherVsFocus;
-			wxStaticText* m_staticText91;
-			wxTextCtrl* uiSwitcherItemsPerRow;
-			wxStaticText* m_staticText92;
-			wxTextCtrl* uiSwitcherItemMaxWidth;
-			wxStaticText* m_staticText93;
-			wxTextCtrl* uiSwitcherItemMaxHeight;
-			wxStaticText* m_staticText96;
-			wxTextCtrl* uiSwitcherMinWidth;
-			wxStaticText* m_staticText97;
-			wxTextCtrl* uiSwitcherMinHeight;
-			wxPanel* m_themes;
-			wxButton* m_button40;
-			wxButton* m_button42;
-			wxButton* m_button41;
-			wxListBox* uiThemeList;
-			wxButton* uiThemeListAdd;
-			wxButton*  uiThemeListChange;
-			wxButton* uiThemeListRemove;
-			wxButton* uiThemeListUp;
-			wxButton* uiThemeListDown;
-			wxStdDialogButtonSizer* m_sdbSizer1;
-			wxButton* m_sdbSizer1OK;
-			wxButton* m_sdbSizer1Apply;
-			wxButton* m_sdbSizer1Cancel;
-			
-			// Virtual event handlers, overide them in your derived class
-			virtual void OnSelectedStyleChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnStyleCheckChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnOnlyFixedSysChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnStyleFontChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
-			virtual void OnStyleTextChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnStyleColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
-			virtual void OnIndicatorListChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnIndicatorCombobox( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnIndicatorColor( wxColourPickerEvent& event ) { event.Skip(); }
-			virtual void OnIndicatorCheckbox( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnIndicatorText( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnMarkerListChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnMarkerComboChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnMarkerColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
-			virtual void OnMarkerComboChanged( wxColourPickerEvent& event ) { event.Skip(); }
-			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
-			virtual void OnEditChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnWindowColorChange( wxColourPickerEvent& event ) { event.Skip(); }
-			virtual void OnWindowComboChange( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnWindowText( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnWindowCheck( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnThemeApplySelected( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnThemeImport( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnThemeExportSelected( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnAdd( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnEdit( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnRemove( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnUp( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnDown( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnApply( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnCancel( wxCommandEvent& event ) { event.Skip(); }
-			virtual void OnOk( wxCommandEvent& event ) { event.Skip(); }
-			
-		
-		public:
-			
-			Settings( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 722,789 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
-			~Settings();
-		
-	};
-	
 	///////////////////////////////////////////////////////////////////////////////
 	/// Class FileProperties
 	///////////////////////////////////////////////////////////////////////////////
@@ -672,6 +414,348 @@ namespace ui
 			
 			VariableEditor( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 434,250 ), long style = wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER ); 
 			~VariableEditor();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class SettingsFontsPanel
+	///////////////////////////////////////////////////////////////////////////////
+	class SettingsFontsPanel : public wxPanel 
+	{
+		private:
+		
+		protected:
+			wxPanel* m_panel9;
+			wxListBox* uiFontStyles;
+			wxPanel* m_panel7;
+			wxCheckBox* uiStyleUseTypeface;
+			wxCheckBox* uiStyleOnlyFixedSize;
+			wxListBox* uiStyleTypeface;
+			wxCheckBox* uiStyleBold;
+			wxCheckBox* uiStyleUseBold;
+			wxCheckBox* uiStyleItalic;
+			wxCheckBox* uiStyleUseItalic;
+			wxCheckBox* uiStyleUnderline;
+			wxCheckBox* uiStyleUseUnderline;
+			wxTextCtrl* uiStyleSize;
+			wxCheckBox* uiStyleUseSize;
+			wxColourPickerCtrl* uiStyleForeground;
+			wxCheckBox* uiStyleUseForeground;
+			wxColourPickerCtrl* uiStyleBackground;
+			wxCheckBox* uiStyleUseBackground;
+			wxTextCtrl* uiStyleExample;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnSelectedStyleChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnStyleCheckChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnOnlyFixedSysChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnStyleFontChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
+			virtual void OnStyleTextChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnStyleColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			SettingsFontsPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+			~SettingsFontsPanel();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class SettingsIndicatorsPanel
+	///////////////////////////////////////////////////////////////////////////////
+	class SettingsIndicatorsPanel : public wxPanel 
+	{
+		private:
+		
+		protected:
+			wxListBox* uiIndicatorList;
+			wxStaticText* uiIndicatorStyleLabel;
+			wxComboBox* uiIndicatorStyle;
+			wxStaticText* m_staticText11;
+			wxColourPickerCtrl* uiIndicatorColor;
+			wxCheckBox* uiIndicatorUnder;
+			wxStaticText* m_staticText12;
+			wxTextCtrl* uiIndicatorAlpha;
+			wxStaticText* m_staticText13;
+			wxTextCtrl* uiIndicatorOutlineAlpha;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnIndicatorListChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorCombobox( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorColor( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorCheckbox( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
+			virtual void OnIndicatorText( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			SettingsIndicatorsPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+			~SettingsIndicatorsPanel();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class SettingsMarkersPanel
+	///////////////////////////////////////////////////////////////////////////////
+	class SettingsMarkersPanel : public wxPanel 
+	{
+		private:
+		
+		protected:
+			wxListBox* uiMarkerList;
+			wxStaticText* m_staticText7;
+			wxComboBox* uiMarkerSymbol;
+			wxStaticText* m_staticText9;
+			wxColourPickerCtrl* uiMarkerForegroundColor;
+			wxStaticText* m_staticText8;
+			wxColourPickerCtrl* uiMarkerBackgroundColor;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnMarkerListChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnMarkerComboChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnMarkerColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnMarkerComboChanged( wxColourPickerEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			SettingsMarkersPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+			~SettingsMarkersPanel();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class SettingsEditorPanel
+	///////////////////////////////////////////////////////////////////////////////
+	class SettingsEditorPanel : public wxPanel 
+	{
+		private:
+		
+		protected:
+			wxNotebook* m_notebook2;
+			wxPanel* m_panel10;
+			wxCheckBox* uiAllowFolding;
+			wxCheckBox* uiFoldLevelNumbers;
+			wxCheckBox* uiFoldLineBeforeExpanded;
+			wxCheckBox* uiFoldLineBeforeContracted;
+			wxCheckBox* uiFoldLineAfterExpanded;
+			wxCheckBox* uiFoldLineAfterContracted;
+			wxStaticText* m_staticText42;
+			wxColourPickerCtrl* uiEditFoldHi;
+			wxStaticText* m_staticText43;
+			wxColourPickerCtrl* uiEditFoldLow;
+			wxCheckBox* uiCurrentLineVisible;
+			wxCheckBox* uiEditCurrentLineOverdraw;
+			wxStaticText* m_staticText39;
+			wxColourPickerCtrl* uiEditCurrentLineColor;
+			wxStaticText* m_staticText40;
+			wxTextCtrl* uiEditCurrentLineAlpha;
+			wxStaticText* m_staticText98;
+			wxComboBox* uiEditAutocompleteCurlyBraces;
+			wxStaticText* m_staticText99;
+			wxComboBox* uiEditAutocompleteParentheses ;
+			wxStaticText* m_staticText100;
+			wxComboBox* uiEditAutocompleteBrackets;
+			wxStaticText* m_staticText101;
+			wxComboBox* uiEditAutocompleteSingleQuote;
+			wxStaticText* m_staticText102;
+			wxComboBox* uiEditAutocompleteDoubleQuote;
+			wxCheckBox* uiEditUseSelectionForeground;
+			wxColourPickerCtrl* uiEditSelectionForeground;
+			wxCheckBox* uiEditUseSelectionBackground;
+			wxColourPickerCtrl* uiEditSelectionBackground;
+			wxCheckBox* uiUseTabs;
+			wxStaticText* m_staticText41;
+			wxTextCtrl* uiTabWidth;
+			wxStaticText* m_staticText47;
+			wxComboBox* uiEdgeStyle;
+			wxStaticText* m_staticText48;
+			wxColourPickerCtrl* uiEdgeColor;
+			wxStaticText* m_staticText49;
+			wxTextCtrl* uiEdgeColumn;
+			wxCheckBox* uiTabIndents;
+			wxCheckBox* uiBackspaceUnindents;
+			wxCheckBox* uiIndentGuide;
+			wxStaticText* m_staticText44;
+			wxComboBox* uiEditIndentation;
+			wxCheckBox* uiDisplayEOL;
+			wxStaticText* m_staticText45;
+			wxComboBox* uiViewWhitespace;
+			wxStaticText* m_staticText46;
+			wxComboBox* uiWordwrap;
+			wxCheckBox* uiEditShowCompilerAnnotations;
+			wxCheckBox* uiEditShowMultilineIndicators;
+			wxCheckBox* uiEditHighlightKeyword;
+			wxCheckBox* uiShowLineNumbers;
+			wxPanel* m_panel11;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnCheckboxChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnColorChanged( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
+			virtual void OnEditChanged( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnComboboxChanged( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			SettingsEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+			~SettingsEditorPanel();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class SettingsWindowPanel
+	///////////////////////////////////////////////////////////////////////////////
+	class SettingsWindowPanel : public wxPanel 
+	{
+		private:
+		
+		protected:
+			wxNotebook* m_notebook4;
+			wxPanel* m_panel17;
+			wxStaticText* m_staticText55;
+			wxColourPickerCtrl* uiWindowDockCommonBackground;
+			wxStaticText* m_staticText56;
+			wxColourPickerCtrl* uiWindowDockCommonSash;
+			wxStaticText* m_staticText57;
+			wxColourPickerCtrl* uiWindowDockCommonBorder;
+			wxStaticText* m_staticText58;
+			wxColourPickerCtrl* uiWindowDockCommonGripper;
+			wxStaticText* m_staticText59;
+			wxColourPickerCtrl* uiWindowDockActiveCaption;
+			wxStaticText* m_staticText60;
+			wxColourPickerCtrl* uiWindowDockActiveGradient;
+			wxStaticText* m_staticText61;
+			wxColourPickerCtrl* uiWindowDockActiveText;
+			wxStaticText* m_staticText62;
+			wxColourPickerCtrl* uiWindowDockInactiveCaption;
+			wxStaticText* m_staticText63;
+			wxColourPickerCtrl* uiWindowDockInactiveGradient;
+			wxStaticText* m_staticText64;
+			wxColourPickerCtrl* uiWindowDockInactiveText;
+			wxPanel* m_panel18;
+			wxStaticText* m_staticText65;
+			wxColourPickerCtrl* uiWindowTabCommonBackground;
+			wxStaticText* m_staticText77;
+			wxColourPickerCtrl* uiWindowTabCommonBorder;
+			wxStaticText* m_staticText78;
+			wxColourPickerCtrl* uiWindowTabCommonSash;
+			wxStaticText* m_staticText66;
+			wxColourPickerCtrl* uiWindowTabActiveTab;
+			wxStaticText* m_staticText67;
+			wxColourPickerCtrl* uiWindowTabActiveBorder;
+			wxStaticText* m_staticText68;
+			wxColourPickerCtrl* uiWindowTabActiveText;
+			wxStaticText* m_staticText69;
+			wxColourPickerCtrl* uiWindowTabInactiveTab;
+			wxStaticText* m_staticText70;
+			wxColourPickerCtrl* uiWindowTabInactiveBorder;
+			wxStaticText* m_staticText71;
+			wxColourPickerCtrl* uiWindowTabInactiveText;
+			wxPanel* m_panel19;
+			wxStaticText* m_staticText72;
+			wxComboBox* uiWindowStatusbarStyle;
+			wxStaticText* m_staticText73;
+			wxColourPickerCtrl* uiWindowStatusbarForeground;
+			wxStaticText* m_staticText74;
+			wxColourPickerCtrl* uiWindowStatusbarBackground;
+			wxStaticText* m_staticText75;
+			wxColourPickerCtrl* uiWindowStatusbarShadow;
+			wxStaticText* m_staticText76;
+			wxColourPickerCtrl* uiWindowStatusbarHighlight;
+			wxPanel* m_panel20;
+			wxStaticText* m_staticText94;
+			wxColourPickerCtrl* uiSwitcherItemBackground;
+			wxStaticText* m_staticText95;
+			wxColourPickerCtrl* uiSwitcherItemText;
+			wxStaticText* m_staticText82;
+			wxColourPickerCtrl* uiSwitcherSelection;
+			wxStaticText* m_staticText83;
+			wxColourPickerCtrl* uiSwitcherSelectionOutline;
+			wxStaticText* m_staticText84;
+			wxColourPickerCtrl* uiSwitcherDialog;
+			wxStaticText* m_staticText85;
+			wxColourPickerCtrl* uiSwitcherBackground;
+			wxStaticText* m_staticText80;
+			wxTextCtrl* uiSwitcherTextMarginX;
+			wxStaticText* m_staticText79;
+			wxTextCtrl* uiSwitcherTextMarginY;
+			wxStaticText* m_staticText81;
+			wxTextCtrl* uiSwitcherXMargin;
+			wxStaticText* m_staticText86;
+			wxTextCtrl* uiSwitcherYMargin;
+			wxStaticText* m_staticText87;
+			wxTextCtrl* uiSwitcherRowSpacing;
+			wxStaticText* m_staticText88;
+			wxTextCtrl* uiSwitcherColSpacing;
+			wxStaticText* m_staticText89;
+			wxTextCtrl* uiSwitcherMainBorder;
+			wxStaticText* m_staticText90;
+			wxTextCtrl* uiSwitcherItemBorder;
+			wxCheckBox* uiSwitcherVsFocus;
+			wxStaticText* m_staticText91;
+			wxTextCtrl* uiSwitcherItemsPerRow;
+			wxStaticText* m_staticText92;
+			wxTextCtrl* uiSwitcherItemMaxWidth;
+			wxStaticText* m_staticText93;
+			wxTextCtrl* uiSwitcherItemMaxHeight;
+			wxStaticText* m_staticText96;
+			wxTextCtrl* uiSwitcherMinWidth;
+			wxStaticText* m_staticText97;
+			wxTextCtrl* uiSwitcherMinHeight;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnWindowColorChange( wxColourPickerEvent& event ) { event.Skip(); }
+			virtual void OnWindowComboChange( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnlyAllowNumberChars( wxKeyEvent& event ) { event.Skip(); }
+			virtual void OnWindowText( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnWindowCheck( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			SettingsWindowPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+			~SettingsWindowPanel();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Class SettingsThemesPanel
+	///////////////////////////////////////////////////////////////////////////////
+	class SettingsThemesPanel : public wxPanel 
+	{
+		private:
+		
+		protected:
+			wxButton* m_button40;
+			wxButton* m_button42;
+			wxButton* m_button41;
+			wxListBox* uiThemeList;
+			wxButton* uiThemeListAdd;
+			wxButton*  uiThemeListChange;
+			wxButton* uiThemeListRemove;
+			wxButton* uiThemeListUp;
+			wxButton* uiThemeListDown;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnThemeApplySelected( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnThemeImport( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnThemeExportSelected( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnAdd( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnEdit( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRemove( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnUp( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnDown( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			SettingsThemesPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+			~SettingsThemesPanel();
 		
 	};
 	

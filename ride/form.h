@@ -6,10 +6,15 @@
 #include <google/protobuf/stubs/common.h>
 
 #include <ride/wx.h>
+
 #include <wx/artprov.h>
 #include <string>
 #include <vector>
+
+#include "ride/settings.h"
+
 class wxEditableListBox;
+class wxColourPickerCtrl;
 
 //////////////////////////////////////////////////////////////////////////
 // entry data
@@ -68,5 +73,8 @@ std::vector<wxString> ToData(wxEditableListBox* gui);
 
 void ToGui(const std::vector<wxString>& data, wxListBox* gui);
 std::vector<wxString> ToData_Content(wxListBox* gui);
+
+void ToGui(ride::Color data, wxColourPickerCtrl* gui);
+ride::Color ToData(wxColourPickerCtrl* gui);
 
 #endif  // RIDE_FORM_H_
