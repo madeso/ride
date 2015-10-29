@@ -21,6 +21,7 @@
 #include "ride/settingsindicatortab.h"
 #include "ride/settingsmarkerstab.h"
 #include "ride/settingseditortab.h"
+#include "ride/settingswindowtab.h"
 
 void AddItem(wxListCtrl* list, int id, const wxString& display, wxPanel* data) {
   wxListItem item;
@@ -43,7 +44,7 @@ class SettingsDlg : public wxDialog {
   SettingsIndicatorTab* m_indicators;
   SettingsMarkersTab* m_markers;
   SettingsEditorTab* m_editor;
-  wxPanel* m_window;
+  SettingsWindowTab* m_window;
   wxPanel* m_themes;
   wxStaticText* selection_info;
 
@@ -71,7 +72,7 @@ class SettingsDlg : public wxDialog {
     m_indicators = new SettingsIndicatorTab(notebook, &common_);
     m_markers = new SettingsMarkersTab(notebook, &common_);
     m_editor = new SettingsEditorTab(notebook, &common_);
-    m_window = new ui::SettingsWindowPanel(notebook);
+    m_window = new SettingsWindowTab(notebook, &common_);
     m_themes = new ui::SettingsThemesPanel(notebook);
 
     notebook->AddPage(m_fonts, "");
@@ -133,7 +134,7 @@ class SettingsDlg : public wxDialog {
     m_editor->EditToGui(false);
     m_fonts->StyleToGui(togui);
     m_markers->MarkerToGui(false);
-    // WindowToGui(false);
+    m_window->WindowToGui(false);
     m_indicators->IndicatorToGui(togui);
   }
 
