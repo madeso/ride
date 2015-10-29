@@ -31,6 +31,8 @@ void AddItem(wxListCtrl* list, int id, const wxString& display, wxPanel* data) {
   list->InsertItem(item);
 }
 
+WXID g_last_selection_ = 0;
+
 class SettingsDlg : public wxDialog {
  public:
   SettingsCommon common_;
@@ -123,6 +125,8 @@ class SettingsDlg : public wxDialog {
     cancel_buytton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsDlg::OnCancel,
                          this);
     ok_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsDlg::OnOk, this);
+
+    SetSelection(g_last_selection_);
   }
 
   void ToGui(bool togui) {
@@ -153,16 +157,27 @@ class SettingsDlg : public wxDialog {
   }
 
   void SelectionChanged(wxListEvent& event) {
-    wxPanel* panel = m_null;
-    wxString text = "";
-
     const auto selection = GetSelection(nootebook_ctrl);
 
     if (!selection.empty() && selection.size() == 1) {
+      SetSelection(selection[0]);
+    } else {
+      SetSelection(-1);
+    }
+  }
+
+  void SetSelection(WXID selection) {
+    // remember selection
+    g_last_selection_ = selection;
+
+    wxPanel* panel = m_null;
+    wxString text = "";
+
+    if (selection != -1) {
       panel =
-          reinterpret_cast<wxPanel*>(nootebook_ctrl->GetItemData(selection[0]));
+          reinterpret_cast<wxPanel*>(nootebook_ctrl->GetItemData(selection));
       assert(panel);
-      text = nootebook_ctrl->GetItemText(selection[0]);
+      text = nootebook_ctrl->GetItemText(selection);
     }
 
     int index = notebook->FindPage(panel);
