@@ -1,0 +1,4153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<resource xmlns="http://www.wxwindows.org/wxxrc" version="2.3.0.1">
+	<object class="wxDialog" name="FileProperties">
+		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<size>455,197</size>
+		<title>File properties</title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxFlexGridSizer">
+							<rows>0</rows>
+							<cols>2</cols>
+							<vgap>0</vgap>
+							<hgap>0</hgap>
+							<growablecols>1</growablecols>
+							<growablerows></growablerows>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_RIGHT|wxALL</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="m_staticText1">
+									<label>Filename:</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="uiFileName">
+									<label>&lt;C:\\Some\\Long\\Folder\\path\\to\\file.cpp&gt;</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALIGN_RIGHT|wxALL</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="m_staticText3">
+									<label>Language:</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="uiLanguage">
+									<label>&lt;C++&gt;</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="m_button1">
+									<label>Line ending...</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="uiLineEndings">
+									<label>CLRF (Windows)</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="m_button2">
+									<label>Endoding...</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="uiEncoding">
+									<label>UTF-8</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxGridBagSizer">
+							<vgap>0</vgap>
+							<hgap>0</hgap>
+							<growablecols></growablecols>
+							<growablerows></growablerows>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>&amp;OK</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxDialog" name="CreateNewProject">
+		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<size>540,349</size>
+		<title>Create new project</title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxFlexGridSizer">
+					<rows>0</rows>
+					<cols>2</cols>
+					<vgap>0</vgap>
+					<hgap>0</hgap>
+					<growablecols>1</growablecols>
+					<growablerows>0</growablerows>
+					<object class="spacer">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<size>0,0</size>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxALL|wxEXPAND|wxFIXED_MINSIZE</flag>
+						<border>5</border>
+						<object class="wxListCtrl" name="uiTemplates">
+							<style>wxLC_NO_HEADER|wxLC_REPORT|wxLC_SINGLE_SEL</style>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="lblProjectName">
+							<label>Project name:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxTextCtrl" name="uiProjectName">
+							<style>wxTE_PROCESS_ENTER</style>
+							<value></value>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="lblProjectFolder">
+							<label>Project folder:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxBoxSizer">
+							<orient>wxHORIZONTAL</orient>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxTextCtrl" name="uiProjectfolder">
+									<value></value>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiBrowseProjectFolder">
+									<style>wxBU_EXACTFIT</style>
+									<label>...</label>
+									<default>0</default>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="spacer">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<size>0,0</size>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxBoxSizer">
+							<orient>wxHORIZONTAL</orient>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxComboBox" name="uiVcs">
+									<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+									<value>Combo!</value>
+									<content>
+										<item>No VCS</item>
+										<item>Git</item>
+										<item>Hg</item>
+									</content>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxCheckBox" name="uiTravis">
+									<label>Add travis.yml</label>
+									<checked>0</checked>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="lblTargetFolder">
+							<label>Will be created as:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="uiTargetFolder">
+							<label>C:/myfolder/myprojects/test/Cargo.toml</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>&amp;OK</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_CANCEL">
+							<label>&amp;Cancel</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxDialog" name="CreateNewFile">
+		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<size>548,351</size>
+		<title>Create new file...</title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxFlexGridSizer">
+					<rows>0</rows>
+					<cols>1</cols>
+					<vgap>0</vgap>
+					<hgap>0</hgap>
+					<growablecols>0</growablecols>
+					<growablerows>0</growablerows>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxListCtrl" name="uiTemplates">
+							<style>wxLC_REPORT</style>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxFlexGridSizer">
+							<rows>0</rows>
+							<cols>2</cols>
+							<vgap>0</vgap>
+							<hgap>0</hgap>
+							<growablecols>1</growablecols>
+							<growablerows></growablerows>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="m_staticText18">
+									<label>Name:</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxTextCtrl" name="uiName">
+									<style>wxTE_PROCESS_ENTER</style>
+									<value></value>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="m_staticText19">
+									<label>Path:</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxTextCtrl" name="uiPath">
+									<value></value>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxBoxSizer">
+							<orient>wxHORIZONTAL</orient>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxComboBox" name="uiReplaceAction">
+									<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+									<value>Combo!</value>
+									<content />
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxCheckBox" name="uiLowerCase">
+									<label>Lower case filenames</label>
+									<checked>1</checked>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxBoxSizer">
+							<orient>wxHORIZONTAL</orient>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="m_staticText21">
+									<label>Will create file at:</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>1</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="uiSuggestedFilePath">
+									<label>C:/path/to/my/myproject/src/hello-world.rs</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>&amp;OK</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_CANCEL">
+							<label>&amp;Cancel</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxDialog" name="DeleteFolder">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<title>Delete folder?</title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxStaticText" name="uiRemoveFileDescription">
+					<label>Do you want to remove the folder?</label>
+					<wrap>-1</wrap>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxCheckBox" name="uiFull">
+					<label>Full</label>
+					<checked>0</checked>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxCheckBox" name="uiRecursive">
+					<label>Recursive</label>
+					<checked>0</checked>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_YES">
+							<label>&amp;Yes</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_NO">
+							<label>&amp;No</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxDialog" name="QuickOpen">
+		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<size>616,394</size>
+		<title>Open file in project...</title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxListCtrl" name="uiFileList">
+							<style>wxLC_REPORT</style>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxTextCtrl" name="uiFilterName">
+							<style>wxTE_PROCESS_ENTER</style>
+							<value></value>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxCheckBox" name="uiCaseSensitive">
+							<label>Case sensitivity</label>
+							<checked>1</checked>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>&amp;OK</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_CANCEL">
+							<label>&amp;Cancel</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxDialog" name="Find">
+		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<size>326,492</size>
+		<title>Find...</title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxStaticText" name="m_staticText23">
+					<label>Find what:</label>
+					<wrap>-1</wrap>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxTextCtrl" name="uiFindText">
+					<style>wxTE_PROCESS_ENTER</style>
+					<value></value>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxStaticText" name="uiReplaceStatic">
+					<label>Replace with:</label>
+					<wrap>-1</wrap>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxTextCtrl" name="uiReplaceText">
+					<value></value>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxStaticText" name="m_staticText24">
+					<label>Look in:</label>
+					<wrap>-1</wrap>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxComboBox" name="uiLookIn">
+					<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+					<value>Combo!</value>
+					<content />
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxCheckBox" name="uiIncludeSubFolders">
+					<label>Include sub-folders</label>
+					<checked>0</checked>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxCheckBox" name="uiKeepFilesOpen">
+					<label>Keep files open</label>
+					<checked>0</checked>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStaticBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<label>Find options</label>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxBoxSizer">
+							<orient>wxVERTICAL</orient>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxCheckBox" name="uiMatchCase">
+									<label>Match case</label>
+									<checked>0</checked>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxCheckBox" name="uiMatchWholeWord">
+									<label>Match whole word</label>
+									<checked>0</checked>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxCheckBox" name="uiFindWordStart">
+									<label>Must be start of the word</label>
+									<checked>0</checked>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxComboBox" name="uiFindTarget">
+									<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+									<value>Combo!</value>
+									<content />
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxStaticText" name="m_staticText25">
+									<label>Look at theese file types:</label>
+									<wrap>-1</wrap>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>5</border>
+								<object class="wxTextCtrl" name="uiFileTypes">
+									<style>wxTE_PROCESS_ENTER</style>
+									<value></value>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="unknown" name="m_scintilla1" />
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>&amp;OK</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_CANCEL">
+							<label>&amp;Cancel</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxDialog" name="ProjectSettings">
+		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<size>666,535</size>
+		<title>Project settings</title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND | wxALL</flag>
+				<border>5</border>
+				<object class="wxNotebook" name="m_notebook3">
+					<object class="notebookpage">
+						<label>_Cargo</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_cargoPanel">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>0</rows>
+								<cols>2</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols>1</growablecols>
+								<growablerows>2</growablerows>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText27">
+										<label>Name:</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="uiCargoName">
+										<value></value>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText28">
+										<label>Version:</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="uiCargoVersion">
+										<value></value>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText29">
+										<label>Authors:</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxListBox" name="uiCargoAuthors">
+										<style>wxLB_ALWAYS_SB</style>
+										<content />
+									</object>
+								</object>
+								<object class="spacer">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<size>0,0</size>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="uiCargoLoadError">
+										<font>
+											<style>normal</style>
+											<weight>bold</weight>
+											<underlined>0</underlined>
+										</font>
+										<label>Error message!</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Cargo _Dependencies</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_dependenciesPanel">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxListBox" name="uiCargoDependencies">
+										<style>wxLB_ALWAYS_SB</style>
+										<content />
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Cargo _Features</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_featuresPanel">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxListBox" name="uiCargoFeatures">
+										<style>wxLB_ALWAYS_SB</style>
+										<content />
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>_Editor</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_editorPanel">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>0</rows>
+								<cols>2</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols>1</growablecols>
+								<growablerows></growablerows>
+								<object class="spacer">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<size>0,0</size>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText32">
+										<label>Theese settings control the editor for the current project\nand are saved next to Cargo.toml in a file called project.ride</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText31">
+										<label>Tab width:</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name=" uiEditorTabWidth">
+										<value></value>
+									</object>
+								</object>
+								<object class="spacer">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<size>0,0</size>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiEditorUseTabs">
+										<label>Use tabs</label>
+										<checked>0</checked>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>_Build</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="   m_buildPanel">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxBoxSizer">
+										<orient>wxHORIZONTAL</orient>
+										<object class="spacer">
+											<option>0</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<size>100,0</size>
+										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL|wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxStaticText" name="m_staticText33">
+												<style>wxALIGN_RIGHT</style>
+												<label>Configuration:</label>
+												<wrap>-1</wrap>
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxComboBox" name="uiBuildConfiguration">
+												<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+												<value>Combo!</value>
+												<content />
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxButton" name="uiBuildManageConfigurations">
+												<style>wxBU_EXACTFIT</style>
+												<label>...</label>
+												<default>0</default>
+											</object>
+										</object>
+										<object class="spacer">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<size>0,0</size>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>label</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>3</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols>1</growablecols>
+												<growablerows>5</growablerows>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiBuildConfigurationRelease">
+														<label>Release</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiBuildConfigurationDefaultFeatures">
+														<label>Add default features</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name=" uiBuildConfigurationVerbose">
+														<label>Verbose</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText37">
+														<label>Target:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiBuildConfigurationTarget">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="uiBuildConfigurationTargetHelp">
+														<style>wxBU_EXACTFIT</style>
+														<label>?</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText34">
+														<label>Custom args:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiBuildConfigurationCustomArgs">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="uiBuildConfigurationCustomArgsHelp">
+														<style>wxBU_EXACTFIT</style>
+														<label>?</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText38">
+														<label>Features:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxListBox" name="uiBuildFeatures">
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag></flag>
+													<border>5</border>
+													<object class="wxBoxSizer">
+														<orient>wxVERTICAL</orient>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxButton" name="uiBuildFeatureAdd">
+																<style>wxBU_EXACTFIT</style>
+																<label>+</label>
+																<default>0</default>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxButton" name="uiBuildFeatureEdit">
+																<style>wxBU_EXACTFIT</style>
+																<label>...</label>
+																<default>0</default>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxButton" name="uiBuildFeatureRemove">
+																<style>wxBU_EXACTFIT</style>
+																<label>-</label>
+																<default>0</default>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxButton" name="uiBuildFeatureUp">
+																<style>wxBU_EXACTFIT</style>
+																<label>/\\</label>
+																<default>0</default>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxButton" name="uiBuildFeatureDown">
+																<style>wxBU_EXACTFIT</style>
+																<label>\\/</label>
+																<default>0</default>
+															</object>
+														</object>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText48">
+														<label>Build command:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiBuildCommandLine">
+														<style>wxTE_READONLY</style>
+														<value></value>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>_Run</label>
+						<selected>1</selected>
+						<object class="wxPanel" name="m_runPanel">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxBoxSizer">
+												<orient>wxHORIZONTAL</orient>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText49">
+														<label>Run:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiRunConfigurations">
+														<style>wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="uiRunManageConfigurations">
+														<style>wxBU_EXACTFIT</style>
+														<label>...</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>label</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>3</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols>1</growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText50">
+														<label>Application to launch:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiRunApplication">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="uiRunApplicationCmd">
+														<style>wxBU_EXACTFIT</style>
+														<label>...</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText51">
+														<label>Arguments to app:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiRunArguments">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="uiRunArgumentsCmd">
+														<style>wxBU_EXACTFIT</style>
+														<label>...</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText52">
+														<label>Startup folder:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiRunFolder">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="uiRunFolderCmd">
+														<style>wxBU_EXACTFIT</style>
+														<label>...</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText53">
+														<label>Cmd before launch</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiCmdBeforeLaunch">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxButton" name="uiCmdBeforeLaunchCmd">
+														<style>wxBU_EXACTFIT</style>
+														<label>...</label>
+														<default>0</default>
+													</object>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiRunWaitForExit">
+														<label>Wait for application exit</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>&amp;OK</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_APPLY">
+							<label>&amp;Apply</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_CANCEL">
+							<label>&amp;Cancel</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxDialog" name="Configurations">
+		<style>wxDEFAULT_DIALOG_STYLE</style>
+		<size>463,349</size>
+		<title>Configurations</title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxFlexGridSizer">
+					<rows>0</rows>
+					<cols>2</cols>
+					<vgap>0</vgap>
+					<hgap>0</hgap>
+					<growablecols>0</growablecols>
+					<growablerows>0</growablerows>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxListBox" name="uiList">
+							<content />
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxBoxSizer">
+							<orient>wxVERTICAL</orient>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiListAdd">
+									<style>wxBU_EXACTFIT</style>
+									<label>+</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name=" uiListChange">
+									<style>wxBU_EXACTFIT</style>
+									<label>...</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiListRemove">
+									<style>wxBU_EXACTFIT</style>
+									<label>-</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiListUp">
+									<style>wxBU_EXACTFIT</style>
+									<label>/\\</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiListDown">
+									<style>wxBU_EXACTFIT</style>
+									<label>\\/</label>
+									<default>0</default>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>&amp;OK</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_APPLY">
+							<label>&amp;Apply</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_CANCEL">
+							<label>&amp;Cancel</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxDialog" name="VariableEditor">
+		<style>wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER</style>
+		<size>434,250</size>
+		<title></title>
+		<centered>1</centered>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxTextCtrl" name="uiText">
+					<value></value>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxBoxSizer">
+					<orient>wxHORIZONTAL</orient>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALIGN_CENTER_VERTICAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="m_staticText54">
+							<label>Add:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="m_button22">
+							<label>File...</label>
+							<default>0</default>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="m_button23">
+							<label>Folder...</label>
+							<default>0</default>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStaticBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<label>Custom variables</label>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxListBox" name="uiCustomVariables">
+							<content />
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStdDialogButtonSizer">
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_OK">
+							<label>&amp;OK</label>
+						</object>
+					</object>
+					<object class="button">
+						<flag>wxALIGN_CENTER_HORIZONTAL|wxALL</flag>
+						<border>5</border>
+						<object class="wxButton" name="wxID_CANCEL">
+							<label>&amp;Cancel</label>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxPanel" name="SettingsFontsPanel">
+		<style>wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+		<object class="wxFlexGridSizer">
+			<rows>0</rows>
+			<cols>2</cols>
+			<vgap>0</vgap>
+			<hgap>0</hgap>
+			<growablecols>0,1</growablecols>
+			<growablerows>0</growablerows>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND | wxALL</flag>
+				<border>5</border>
+				<object class="wxPanel" name="m_panel9">
+					<style>wxTAB_TRAVERSAL</style>
+					<object class="wxBoxSizer">
+						<orient>wxVERTICAL</orient>
+						<object class="sizeritem">
+							<option>1</option>
+							<flag>wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<label>Styles</label>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxListBox" name="uiFontStyles">
+										<content />
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxPanel" name="m_panel7">
+					<style>wxTAB_TRAVERSAL</style>
+					<object class="wxGridBagSizer">
+						<vgap>0</vgap>
+						<hgap>0</hgap>
+						<growablecols>0</growablecols>
+						<growablerows>0</growablerows>
+						<object class="sizeritem">
+							<cellpos>0,0</cellpos>
+							<cellspan>1,2</cellspan>
+							<flag>wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxStaticBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<label>Typefaces</label>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiStyleUseTypeface">
+										<label>Use typeface?</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiStyleOnlyFixedSize">
+										<label>Only fixed sizes</label>
+										<checked>1</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxListBox" name="uiStyleTypeface">
+										<content />
+									</object>
+								</object>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>1,1</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleBold">
+								<label></label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>1,0</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_RIGHT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleUseBold">
+								<label>Bold:</label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>2,1</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_LEFT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleItalic">
+								<label></label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>2,0</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_RIGHT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleUseItalic">
+								<label>Italic</label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>3,1</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_CENTER_VERTICAL|wxALIGN_LEFT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleUnderline">
+								<label></label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>3,0</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_RIGHT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleUseUnderline">
+								<label>Underline:</label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>4,1</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="uiStyleSize">
+								<value></value>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>4,0</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_RIGHT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleUseSize">
+								<label>Font size:</label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>5,1</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxColourPickerCtrl" name="uiStyleForeground">
+								<value>#000000</value>
+								<style>wxCLRP_DEFAULT_STYLE</style>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>5,0</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_RIGHT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleUseForeground">
+								<label>Foreground:</label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>6,1</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALL|wxEXPAND</flag>
+							<border>5</border>
+							<object class="wxColourPickerCtrl" name="uiStyleBackground">
+								<value>#000000</value>
+								<style>wxCLRP_DEFAULT_STYLE</style>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>6,0</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALIGN_RIGHT|wxALL</flag>
+							<border>5</border>
+							<object class="wxCheckBox" name="uiStyleUseBackground">
+								<label>Background:</label>
+								<checked>0</checked>
+							</object>
+						</object>
+						<object class="sizeritem">
+							<cellpos>7,1</cellpos>
+							<cellspan>1,1</cellspan>
+							<flag>wxALL</flag>
+							<border>5</border>
+							<object class="wxTextCtrl" name="uiStyleExample">
+								<value>Sample text</value>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxPanel" name="SettingsIndicatorsPanel">
+		<style>wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+		<object class="wxFlexGridSizer">
+			<rows>0</rows>
+			<cols>2</cols>
+			<vgap>0</vgap>
+			<hgap>0</hgap>
+			<growablecols>0</growablecols>
+			<growablerows>0</growablerows>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxListBox" name="uiIndicatorList">
+							<content />
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxFlexGridSizer">
+					<rows>0</rows>
+					<cols>2</cols>
+					<vgap>0</vgap>
+					<hgap>0</hgap>
+					<growablecols></growablecols>
+					<growablerows></growablerows>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="uiIndicatorStyleLabel">
+							<label>Style:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxComboBox" name="uiIndicatorStyle">
+							<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+							<value>Combo!</value>
+							<content>
+								<item>Plain</item>
+								<item>Squiggle</item>
+								<item>TT</item>
+								<item>Diagonal</item>
+								<item>Strike</item>
+								<item>Hidden</item>
+								<item>Box</item>
+								<item>Roundbox</item>
+								<item>Straight box</item>
+								<item>Dash</item>
+								<item>Dots</item>
+								<item>Squiggle low</item>
+								<item>Dotbox</item>
+								<item></item>
+								<item></item>
+								<item></item>
+								<item></item>
+								<item></item>
+							</content>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="m_staticText11">
+							<label>Color:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxColourPickerCtrl" name="uiIndicatorColor">
+							<value>#000000</value>
+							<style>wxCLRP_DEFAULT_STYLE</style>
+						</object>
+					</object>
+					<object class="spacer">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<size>0,0</size>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxCheckBox" name="uiIndicatorUnder">
+							<label>Under?</label>
+							<checked>0</checked>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="m_staticText12">
+							<label>Alpha:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxTextCtrl" name="uiIndicatorAlpha">
+							<value></value>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="m_staticText13">
+							<label>Outline alpha:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxTextCtrl" name="uiIndicatorOutlineAlpha">
+							<value></value>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxPanel" name="SettingsMarkersPanel">
+		<style>wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+		<object class="wxFlexGridSizer">
+			<rows>0</rows>
+			<cols>2</cols>
+			<vgap>0</vgap>
+			<hgap>0</hgap>
+			<growablecols>0</growablecols>
+			<growablerows>0</growablerows>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxStaticBoxSizer">
+					<orient>wxVERTICAL</orient>
+					<label>Markers</label>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxListBox" name="uiMarkerList">
+							<content />
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxFlexGridSizer">
+					<rows>0</rows>
+					<cols>2</cols>
+					<vgap>0</vgap>
+					<hgap>0</hgap>
+					<growablecols></growablecols>
+					<growablerows></growablerows>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="m_staticText7">
+							<label>Symbol:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxComboBox" name="uiMarkerSymbol">
+							<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+							<value>Combo!</value>
+							<content>
+								<item>Circle</item>
+								<item>Roundrect </item>
+								<item>Arrow</item>
+								<item>Smallrect </item>
+								<item>Shortarrow</item>
+								<item>Empty</item>
+								<item>Arrowdown </item>
+								<item>Minus</item>
+								<item>Plus</item>
+								<item></item>
+								<item></item>
+							</content>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="m_staticText9">
+							<label>Foreground color:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxColourPickerCtrl" name="uiMarkerForegroundColor">
+							<value>#000000</value>
+							<style>wxCLRP_DEFAULT_STYLE</style>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxStaticText" name="m_staticText8">
+							<label>Background color:</label>
+							<wrap>-1</wrap>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL</flag>
+						<border>5</border>
+						<object class="wxColourPickerCtrl" name="uiMarkerBackgroundColor">
+							<value>#000000</value>
+							<style>wxCLRP_DEFAULT_STYLE</style>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxPanel" name="SettingsEditorPanel">
+		<style>wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND | wxALL</flag>
+				<border>5</border>
+				<object class="wxNotebook" name="m_notebook2">
+					<object class="notebookpage">
+						<label>General</label>
+						<selected>1</selected>
+						<object class="wxPanel" name="m_panel10">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>0</rows>
+								<cols>2</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Folding</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxBoxSizer">
+												<orient>wxVERTICAL</orient>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxFlexGridSizer">
+														<rows>0</rows>
+														<cols>2</cols>
+														<vgap>0</vgap>
+														<hgap>0</hgap>
+														<growablecols></growablecols>
+														<growablerows></growablerows>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxCheckBox" name="uiAllowFolding">
+																<label>Allow folding</label>
+																<checked>0</checked>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxCheckBox" name="uiFoldLevelNumbers">
+																<label>Level numbers</label>
+																<checked>0</checked>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxCheckBox" name="uiFoldLineBeforeExpanded">
+																<label>Line before (expanded)</label>
+																<checked>0</checked>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxCheckBox" name="uiFoldLineBeforeContracted">
+																<label>Line before (contracted)</label>
+																<checked>0</checked>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxCheckBox" name="uiFoldLineAfterExpanded">
+																<label>Line after (expanded)</label>
+																<checked>0</checked>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxCheckBox" name="uiFoldLineAfterContracted">
+																<label>Line After (contracted)</label>
+																<checked>0</checked>
+															</object>
+														</object>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxFlexGridSizer">
+														<rows>0</rows>
+														<cols>2</cols>
+														<vgap>0</vgap>
+														<hgap>0</hgap>
+														<growablecols>1</growablecols>
+														<growablerows></growablerows>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxStaticText" name="m_staticText42">
+																<label>High Color:</label>
+																<wrap>-1</wrap>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL|wxEXPAND</flag>
+															<border>5</border>
+															<object class="wxColourPickerCtrl" name="uiEditFoldHi">
+																<value>#000000</value>
+																<style>wxCLRP_DEFAULT_STYLE</style>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL</flag>
+															<border>5</border>
+															<object class="wxStaticText" name="m_staticText43">
+																<label>Low color:</label>
+																<wrap>-1</wrap>
+															</object>
+														</object>
+														<object class="sizeritem">
+															<option>0</option>
+															<flag>wxALL|wxEXPAND</flag>
+															<border>5</border>
+															<object class="wxColourPickerCtrl" name="uiEditFoldLow">
+																<value>#000000</value>
+																<style>wxCLRP_DEFAULT_STYLE</style>
+															</object>
+														</object>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Current line</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols>1</growablecols>
+												<growablerows></growablerows>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiCurrentLineVisible">
+														<label>Show current line?</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiEditCurrentLineOverdraw">
+														<label>Overdraw?</label>
+														<checked>1</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText39">
+														<label>Color:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiEditCurrentLineColor">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText40">
+														<label>Alpha:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiEditCurrentLineAlpha">
+														<value></value>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Auto completion</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>4</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText98">
+														<label>{curly braces}</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteCurlyBraces">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText99">
+														<label>(partheses)</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteParentheses ">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText100">
+														<label>[brackets]</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteBrackets">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText101">
+														<label>&apos;single quote&apos;</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteSingleQuote">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText102">
+														<label>&quot;double quote&quot;</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteDoubleQuote">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Selection</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiEditUseSelectionForeground">
+														<label>Foreground:</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiEditSelectionForeground">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiEditUseSelectionBackground">
+														<label>Background:</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiEditSelectionBackground">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Project defaults</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiUseTabs">
+														<label>Use tabs</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText41">
+														<label>Tab width:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiTabWidth">
+														<value></value>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Edge</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols>1</growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText47">
+														<label>Style:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEdgeStyle">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content>
+															<item>None</item>
+															<item>Line</item>
+															<item>Background</item>
+														</content>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText48">
+														<label>Color:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiEdgeColor">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText49">
+														<label>Column:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiEdgeColumn">
+														<value></value>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Feel</label>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxCheckBox" name="uiTabIndents">
+												<label>Tab indents</label>
+												<checked>0</checked>
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxCheckBox" name="uiBackspaceUnindents">
+												<label>Bacspace unindents</label>
+												<checked>0</checked>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Indenting</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols>1</growablecols>
+												<growablerows></growablerows>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiIndentGuide">
+														<label>Display indent guide</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText44">
+														<label>Indent type:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditIndentation">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content>
+															<item>None</item>
+															<item>Keep</item>
+															<item>Smart</item>
+														</content>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Whitespace</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols>1</growablecols>
+												<growablerows></growablerows>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiDisplayEOL">
+														<label>Display EOL</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText45">
+														<label>View whitespace:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiViewWhitespace">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content>
+															<item>Hidden</item>
+															<item>Always</item>
+															<item>AfterIdent</item>
+														</content>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText46">
+														<label>Word wrap:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiWordwrap">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content>
+															<item>None</item>
+															<item>Char</item>
+															<item>Word</item>
+														</content>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>General</label>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxCheckBox" name="uiEditShowCompilerAnnotations">
+												<label>Show warning/errors as annotations</label>
+												<checked>0</checked>
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxCheckBox" name="uiEditShowMultilineIndicators">
+												<label>Show multiline warning/errors</label>
+												<checked>0</checked>
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxCheckBox" name="uiEditHighlightKeyword">
+												<label>Auto highlight keywords</label>
+												<checked>0</checked>
+											</object>
+										</object>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxALL</flag>
+											<border>5</border>
+											<object class="wxCheckBox" name="uiShowLineNumbers">
+												<label>Show line numbers</label>
+												<checked>0</checked>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>C++</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel11">
+							<style>wxTAB_TRAVERSAL</style>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxPanel" name="SettingsWindowPanel">
+		<style>wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+		<object class="wxBoxSizer">
+			<orient>wxVERTICAL</orient>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND | wxALL</flag>
+				<border>5</border>
+				<object class="wxNotebook" name="m_notebook4">
+					<object class="notebookpage">
+						<label>Dock colors</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel17">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>0</rows>
+								<cols>2</cols>
+								<vgap>6</vgap>
+								<hgap>6</hgap>
+								<growablecols>0,1</growablecols>
+								<growablerows></growablerows>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Common</label>
+										<object class="sizeritem">
+											<option>0</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols>1</growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText55">
+														<label>Background</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockCommonBackground">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText56">
+														<label>Sash</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockCommonSash">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText57">
+														<label>Border</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockCommonBorder">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText58">
+														<label>Gripper</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockCommonGripper">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="spacer">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<size>0,0</size>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Active</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText59">
+														<label>Caption</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockActiveCaption">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText60">
+														<label>Gradient</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockActiveGradient">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText61">
+														<label>Text</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockActiveText">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Inactive</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText62">
+														<label>Caption</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockInactiveCaption">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText63">
+														<label>Gradient</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockInactiveGradient">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText64">
+														<label>Text</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowDockInactiveText">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Tab colors</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel18">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>0</rows>
+								<cols>2</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols>0,1</growablecols>
+								<growablerows></growablerows>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Common</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText65">
+														<label>Background</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabCommonBackground">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText77">
+														<label>Border</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabCommonBorder">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText78">
+														<label>Sash</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabCommonSash">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="spacer">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<size>0,0</size>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Active</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText66">
+														<label>Tab</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabActiveTab">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText67">
+														<label>Border</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabActiveBorder">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText68">
+														<label>Text</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabActiveText">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Inactive</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText69">
+														<label>Tab</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabInactiveTab">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText70">
+														<label>Border</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabInactiveBorder">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText71">
+														<label>Text</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiWindowTabInactiveText">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Statusbar</label>
+						<selected>1</selected>
+						<object class="wxPanel" name="m_panel19">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>0</rows>
+								<cols>2</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText72">
+										<label>Style</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxComboBox" name="uiWindowStatusbarStyle">
+										<style>wxCB_DROPDOWN</style>
+										<value>Combo!</value>
+										<content />
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText73">
+										<label>Foreground</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxColourPickerCtrl" name="uiWindowStatusbarForeground">
+										<value>#000000</value>
+										<style>wxCLRP_DEFAULT_STYLE</style>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText74">
+										<label>Background</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxColourPickerCtrl" name="uiWindowStatusbarBackground">
+										<value>#000000</value>
+										<style>wxCLRP_DEFAULT_STYLE</style>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText75">
+										<label>Shadow</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxColourPickerCtrl" name="uiWindowStatusbarShadow">
+										<value>#000000</value>
+										<style>wxCLRP_DEFAULT_STYLE</style>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText76">
+										<label>Highlight</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxColourPickerCtrl" name="uiWindowStatusbarHighlight">
+										<value>#000000</value>
+										<style>wxCLRP_DEFAULT_STYLE</style>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxFlexGridSizer">
+										<rows>0</rows>
+										<cols>2</cols>
+										<vgap>0</vgap>
+										<hgap>0</hgap>
+										<growablecols></growablecols>
+										<growablerows></growablerows>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Tab switcher</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel20">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxGridBagSizer">
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
+								<object class="sizeritem">
+									<cellpos>1,0</cellpos>
+									<cellspan>1,1</cellspan>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Colors</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText94">
+														<label>Item background</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiSwitcherItemBackground">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText95">
+														<label>Item text</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiSwitcherItemText">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText82">
+														<label>Selection</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiSwitcherSelection">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText83">
+														<label>Selection outline</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiSwitcherSelectionOutline">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText84">
+														<label>Dialog</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiSwitcherDialog">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText85">
+														<label>Background</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiSwitcherBackground">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<cellpos>1,1</cellpos>
+									<cellspan>1,1</cellspan>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Spacing</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText80">
+														<label>Text margin X</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherTextMarginX">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText79">
+														<label>Text margin Y</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherTextMarginY">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText81">
+														<label>X margin</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherXMargin">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText86">
+														<label>Y margin</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherYMargin">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText87">
+														<label>Row spacing</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherRowSpacing">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText88">
+														<label>Col spacing</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherColSpacing">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText89">
+														<label>Main border</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherMainBorder">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText90">
+														<label>Item border</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherItemBorder">
+														<value></value>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<cellpos>0,0</cellpos>
+									<cellspan>1,2</cellspan>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>General</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols>1</growablecols>
+												<growablerows></growablerows>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiSwitcherVsFocus">
+														<label>Autofocus files</label>
+														<checked>1</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText91">
+														<label>Items/row</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherItemsPerRow">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText92">
+														<label>Item width</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherItemMaxWidth">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText93">
+														<label>Item height</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherItemMaxHeight">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText96">
+														<label>Dialog minimum width</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherMinWidth">
+														<value></value>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText97">
+														<label>Dialog minimum height</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiSwitcherMinHeight">
+														<value></value>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+	<object class="wxPanel" name="SettingsThemesPanel">
+		<style>wxTAB_TRAVERSAL</style>
+		<size>500,300</size>
+		<object class="wxFlexGridSizer">
+			<rows>0</rows>
+			<cols>1</cols>
+			<vgap>0</vgap>
+			<hgap>0</hgap>
+			<growablecols>0</growablecols>
+			<growablerows>1</growablerows>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxFlexGridSizer">
+					<rows>0</rows>
+					<cols>1</cols>
+					<vgap>0</vgap>
+					<hgap>0</hgap>
+					<growablecols>0</growablecols>
+					<growablerows></growablerows>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxButton" name="m_button40">
+							<label>Use selected theme</label>
+							<default>0</default>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxButton" name="m_button42">
+							<label>Import theme</label>
+							<default>0</default>
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxButton" name="m_button41">
+							<label>Export selected theme</label>
+							<default>0</default>
+						</object>
+					</object>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxFlexGridSizer">
+					<rows>0</rows>
+					<cols>2</cols>
+					<vgap>0</vgap>
+					<hgap>0</hgap>
+					<growablecols>0</growablecols>
+					<growablerows>0</growablerows>
+					<object class="sizeritem">
+						<option>0</option>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxListBox" name="uiThemeList">
+							<content />
+						</object>
+					</object>
+					<object class="sizeritem">
+						<option>1</option>
+						<flag>wxEXPAND</flag>
+						<border>5</border>
+						<object class="wxBoxSizer">
+							<orient>wxVERTICAL</orient>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiThemeListAdd">
+									<style>wxBU_EXACTFIT</style>
+									<label>+</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name=" uiThemeListChange">
+									<style>wxBU_EXACTFIT</style>
+									<label>...</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiThemeListRemove">
+									<style>wxBU_EXACTFIT</style>
+									<label>-</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiThemeListUp">
+									<style>wxBU_EXACTFIT</style>
+									<label>/\\</label>
+									<default>0</default>
+								</object>
+							</object>
+							<object class="sizeritem">
+								<option>0</option>
+								<flag>wxALL</flag>
+								<border>5</border>
+								<object class="wxButton" name="uiThemeListDown">
+									<style>wxBU_EXACTFIT</style>
+									<label>\\/</label>
+									<default>0</default>
+								</object>
+							</object>
+						</object>
+					</object>
+				</object>
+			</object>
+		</object>
+	</object>
+</resource>

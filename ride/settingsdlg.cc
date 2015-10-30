@@ -22,6 +22,8 @@
 #include "ride/settingsmarkerstab.h"
 #include "ride/settingseditortab.h"
 #include "ride/settingswindowtab.h"
+#include "ride/settingsthemestab.h"
+#include "ride/togui.h"
 
 void AddItem(wxListCtrl* list, int id, const wxString& display, wxPanel* data) {
   wxListItem item;
@@ -34,7 +36,7 @@ void AddItem(wxListCtrl* list, int id, const wxString& display, wxPanel* data) {
 
 WXID g_last_selection_ = 0;
 
-class SettingsDlg : public wxDialog {
+class SettingsDlg : public wxDialog, ToGuiSender {
  public:
   SettingsCommon common_;
   wxSimplebook* notebook;
@@ -45,7 +47,7 @@ class SettingsDlg : public wxDialog {
   SettingsMarkersTab* m_markers;
   SettingsEditorTab* m_editor;
   SettingsWindowTab* m_window;
-  wxPanel* m_themes;
+  SettingsThemesTab* m_themes;
   wxStaticText* selection_info;
 
   SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
@@ -73,7 +75,7 @@ class SettingsDlg : public wxDialog {
     m_markers = new SettingsMarkersTab(notebook, &common_);
     m_editor = new SettingsEditorTab(notebook, &common_);
     m_window = new SettingsWindowTab(notebook, &common_);
-    m_themes = new ui::SettingsThemesPanel(notebook);
+    m_themes = new SettingsThemesTab(notebook, &common_, this);
 
     notebook->AddPage(m_fonts, "");
     notebook->AddPage(m_indicators, "");
@@ -130,12 +132,13 @@ class SettingsDlg : public wxDialog {
     SetSelection(g_last_selection_);
   }
 
-  void ToGui(bool togui) {
+  void SendToGui(bool togui) {
     m_editor->EditToGui(false);
     m_fonts->StyleToGui(togui);
     m_markers->MarkerToGui(false);
     m_window->WindowToGui(false);
     m_indicators->IndicatorToGui(togui);
+    m_themes->ThemeToGui(togui);
   }
 
   void OnApply(wxCommandEvent& event) {
@@ -152,7 +155,7 @@ class SettingsDlg : public wxDialog {
 
   void OnOk(wxCommandEvent& event) {
     // StyleSaveSelectedIndex();
-    ToGui(false);
+    SendToGui(false);
     common_.Apply(this);
     EndModal(wxOK);
   }

@@ -2228,7 +2228,7 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	m_panel19->SetSizer( fgSizer41 );
 	m_panel19->Layout();
 	fgSizer41->Fit( m_panel19 );
-	m_notebook4->AddPage( m_panel19, wxT("Statusbar"), false );
+	m_notebook4->AddPage( m_panel19, wxT("Statusbar"), true );
 	m_panel20 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxGridBagSizer* gbSizer3;
 	gbSizer3 = new wxGridBagSizer( 0, 0 );
@@ -2422,7 +2422,7 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	m_panel20->SetSizer( gbSizer3 );
 	m_panel20->Layout();
 	gbSizer3->Fit( m_panel20 );
-	m_notebook4->AddPage( m_panel20, wxT("Tab switcher"), true );
+	m_notebook4->AddPage( m_panel20, wxT("Tab switcher"), false );
 	
 	bSizer35->Add( m_notebook4, 1, wxEXPAND | wxALL, 5 );
 	
