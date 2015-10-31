@@ -47,7 +47,9 @@ class RideListBox : public wxVListBox {
         selection_outline_color_(
             wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT)),
         item_font_(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT)),
-        height_(32) {
+        height_(32),
+        spacing_(3),
+        img_size_(32) {
     this->SetMinClientSize(wxSize(120, 120));
   }
 
@@ -67,6 +69,7 @@ class RideListBox : public wxVListBox {
     dc.GetTextExtent(items[n].title, &w, &h);
     wxPoint p = rect.GetTopLeft();
     p.y += std::max(0, (height_ - h) / 2);
+    p.x += img_size_ + spacing_ * 2;
     dc.DrawText(items[n].title, p);
   }
 
@@ -87,6 +90,8 @@ class RideListBox : public wxVListBox {
   wxColor selection_outline_color_;
   wxFont item_font_;
   int height_;
+  int spacing_;
+  int img_size_;
 };
 
 std::vector<int> GetSelection(RideListBox* box) {
