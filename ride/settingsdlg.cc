@@ -46,7 +46,8 @@ class RideListBox : public wxVListBox {
             wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOXHIGHLIGHTTEXT)),
         selection_outline_color_(
             wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT)),
-        item_font_(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT)) {
+        item_font_(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT)),
+        height_(32) {
     this->SetMinClientSize(wxSize(120, 120));
   }
 
@@ -61,10 +62,15 @@ class RideListBox : public wxVListBox {
       dc.SetPen(wxPen(selection_outline_color_));
     else
       dc.SetPen(wxPen(text_color_));
-    dc.DrawText(items[n].title, rect.GetTopLeft());
+    dc.SetFont(item_font_);
+    int w, h;
+    dc.GetTextExtent(items[n].title, &w, &h);
+    wxPoint p = rect.GetTopLeft();
+    p.y += std::max(0, (height_ - h) / 2);
+    dc.DrawText(items[n].title, p);
   }
 
-  wxCoord OnMeasureItem(size_t n) const { return 32; }
+  wxCoord OnMeasureItem(size_t n) const { return height_; }
 
   void InsertItem(const RideListBoxItem& item) {
     items.push_back(item);
@@ -80,6 +86,7 @@ class RideListBox : public wxVListBox {
   wxColor selection_color_;
   wxColor selection_outline_color_;
   wxFont item_font_;
+  int height_;
 };
 
 std::vector<int> GetSelection(RideListBox* box) {
