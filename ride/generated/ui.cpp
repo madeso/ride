@@ -1402,14 +1402,8 @@ SettingsMarkersPanel::SettingsMarkersPanel( wxWindow* parent, wxWindowID id, con
 	fgSizer51->SetFlexibleDirection( wxBOTH );
 	fgSizer51->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_ALL );
 	
-	wxStaticBoxSizer* sbSizer8;
-	sbSizer8 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Markers") ), wxVERTICAL );
-	
 	uiMarkerList = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	sbSizer8->Add( uiMarkerList, 1, wxALL|wxEXPAND, 5 );
-	
-	
-	fgSizer51->Add( sbSizer8, 1, wxEXPAND, 5 );
+	fgSizer51->Add( uiMarkerList, 1, wxALL|wxEXPAND, 5 );
 	
 	wxFlexGridSizer* fgSizer61;
 	fgSizer61 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -1478,6 +1472,147 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
 	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel28 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer37;
+	bSizer37 = new wxBoxSizer( wxVERTICAL );
+	
+	uiEditShowCompilerAnnotations = new wxCheckBox( m_panel28, wxID_ANY, wxT("Show warning/errors as annotations"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer37->Add( uiEditShowCompilerAnnotations, 0, wxALL, 5 );
+	
+	uiEditShowMultilineIndicators = new wxCheckBox( m_panel28, wxID_ANY, wxT("Show multiline warning/errors"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer37->Add( uiEditShowMultilineIndicators, 0, wxALL, 5 );
+	
+	uiEditHighlightKeyword = new wxCheckBox( m_panel28, wxID_ANY, wxT("Auto highlight keywords"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer37->Add( uiEditHighlightKeyword, 0, wxALL, 5 );
+	
+	uiShowLineNumbers = new wxCheckBox( m_panel28, wxID_ANY, wxT("Show line numbers"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer37->Add( uiShowLineNumbers, 0, wxALL, 5 );
+	
+	uiTabIndents = new wxCheckBox( m_panel28, wxID_ANY, wxT("Tab indents"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer37->Add( uiTabIndents, 0, wxALL, 5 );
+	
+	uiBackspaceUnindents = new wxCheckBox( m_panel28, wxID_ANY, wxT("Bacspace unindents"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer37->Add( uiBackspaceUnindents, 0, wxALL, 5 );
+	
+	
+	m_panel28->SetSizer( bSizer37 );
+	m_panel28->Layout();
+	bSizer37->Fit( m_panel28 );
+	m_notebook2->AddPage( m_panel28, wxT("General"), false );
+	m_panel26 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer54;
+	fgSizer54 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer54->SetFlexibleDirection( wxBOTH );
+	fgSizer54->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticBoxSizer* sbSizer27;
+	sbSizer27 = new wxStaticBoxSizer( new wxStaticBox( m_panel26, wxID_ANY, wxT("Automatic insert") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer401;
+	fgSizer401 = new wxFlexGridSizer( 0, 4, 0, 0 );
+	fgSizer401->SetFlexibleDirection( wxBOTH );
+	fgSizer401->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText98 = new wxStaticText( m_panel26, wxID_ANY, wxT("{curly braces}"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText98->Wrap( -1 );
+	fgSizer401->Add( m_staticText98, 0, wxALL, 5 );
+	
+	uiEditAutocompleteCurlyBraces = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteCurlyBraces, 0, wxALL, 5 );
+	
+	m_staticText99 = new wxStaticText( m_panel26, wxID_ANY, wxT("(partheses)"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText99->Wrap( -1 );
+	fgSizer401->Add( m_staticText99, 0, wxALL, 5 );
+	
+	uiEditAutocompleteParentheses  = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteParentheses , 0, wxALL, 5 );
+	
+	m_staticText100 = new wxStaticText( m_panel26, wxID_ANY, wxT("[brackets]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText100->Wrap( -1 );
+	fgSizer401->Add( m_staticText100, 0, wxALL, 5 );
+	
+	uiEditAutocompleteBrackets = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteBrackets, 0, wxALL, 5 );
+	
+	m_staticText101 = new wxStaticText( m_panel26, wxID_ANY, wxT("'single quote'"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText101->Wrap( -1 );
+	fgSizer401->Add( m_staticText101, 0, wxALL, 5 );
+	
+	uiEditAutocompleteSingleQuote = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteSingleQuote, 0, wxALL, 5 );
+	
+	m_staticText102 = new wxStaticText( m_panel26, wxID_ANY, wxT("\"double quote\""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText102->Wrap( -1 );
+	fgSizer401->Add( m_staticText102, 0, wxALL, 5 );
+	
+	uiEditAutocompleteDoubleQuote = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	fgSizer401->Add( uiEditAutocompleteDoubleQuote, 0, wxALL, 5 );
+	
+	
+	sbSizer27->Add( fgSizer401, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer54->Add( sbSizer27, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer28;
+	sbSizer28 = new wxStaticBoxSizer( new wxStaticBox( m_panel26, wxID_ANY, wxT("Indent") ), wxVERTICAL );
+	
+	wxFlexGridSizer* fgSizer23;
+	fgSizer23 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer23->SetFlexibleDirection( wxBOTH );
+	fgSizer23->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer23->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiIndentGuide = new wxCheckBox( m_panel26, wxID_ANY, wxT("Display indent guide"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer23->Add( uiIndentGuide, 0, wxALL, 5 );
+	
+	m_staticText44 = new wxStaticText( m_panel26, wxID_ANY, wxT("Indent type:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText44->Wrap( -1 );
+	fgSizer23->Add( m_staticText44, 0, wxALL, 5 );
+	
+	uiEditIndentation = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiEditIndentation->Append( wxT("None") );
+	uiEditIndentation->Append( wxT("Keep") );
+	uiEditIndentation->Append( wxT("Smart") );
+	fgSizer23->Add( uiEditIndentation, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	sbSizer28->Add( fgSizer23, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer54->Add( sbSizer28, 1, wxEXPAND, 5 );
+	
+	
+	m_panel26->SetSizer( fgSizer54 );
+	m_panel26->Layout();
+	fgSizer54->Fit( m_panel26 );
+	m_notebook2->AddPage( m_panel26, wxT("Smart type"), false );
+	m_panel23 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer21;
+	fgSizer21 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer21->SetFlexibleDirection( wxBOTH );
+	fgSizer21->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	
+	fgSizer21->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiUseTabs = new wxCheckBox( m_panel23, wxID_ANY, wxT("Use tabs"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer21->Add( uiUseTabs, 0, wxALL, 5 );
+	
+	m_staticText41 = new wxStaticText( m_panel23, wxID_ANY, wxT("Tab width:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText41->Wrap( -1 );
+	fgSizer21->Add( m_staticText41, 0, wxALL, 5 );
+	
+	uiTabWidth = new wxTextCtrl( m_panel23, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer21->Add( uiTabWidth, 0, wxALL, 5 );
+	
+	
+	m_panel23->SetSizer( fgSizer21 );
+	m_panel23->Layout();
+	fgSizer21->Fit( m_panel23 );
+	m_notebook2->AddPage( m_panel23, wxT("Project defaults"), false );
 	m_panel10 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer4;
 	fgSizer4 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -1543,8 +1678,16 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	m_panel10->SetSizer( fgSizer4 );
 	m_panel10->Layout();
 	fgSizer4->Fit( m_panel10 );
-	m_notebook2->AddPage( m_panel10, wxT("Folding"), true );
+	m_notebook2->AddPage( m_panel10, wxT("Folding"), false );
 	m_panel11 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxFlexGridSizer* fgSizer56;
+	fgSizer56 = new wxFlexGridSizer( 0, 1, 0, 0 );
+	fgSizer56->SetFlexibleDirection( wxBOTH );
+	fgSizer56->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	wxStaticBoxSizer* sbSizer29;
+	sbSizer29 = new wxStaticBoxSizer( new wxStaticBox( m_panel11, wxID_ANY, wxT("Current line") ), wxVERTICAL );
+	
 	wxFlexGridSizer* fgSizer20;
 	fgSizer20 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer20->SetFlexibleDirection( wxBOTH );
@@ -1578,180 +1721,80 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer20->Add( uiEditCurrentLineAlpha, 0, wxALL|wxEXPAND, 5 );
 	
 	
-	m_panel11->SetSizer( fgSizer20 );
-	m_panel11->Layout();
-	fgSizer20->Fit( m_panel11 );
-	m_notebook2->AddPage( m_panel11, wxT("Current line"), false );
-	m_panel21 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer401;
-	fgSizer401 = new wxFlexGridSizer( 0, 4, 0, 0 );
-	fgSizer401->SetFlexibleDirection( wxBOTH );
-	fgSizer401->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
-	
-	m_staticText98 = new wxStaticText( m_panel21, wxID_ANY, wxT("{curly braces}"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText98->Wrap( -1 );
-	fgSizer401->Add( m_staticText98, 0, wxALL, 5 );
-	
-	uiEditAutocompleteCurlyBraces = new wxComboBox( m_panel21, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteCurlyBraces, 0, wxALL, 5 );
-	
-	m_staticText99 = new wxStaticText( m_panel21, wxID_ANY, wxT("(partheses)"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText99->Wrap( -1 );
-	fgSizer401->Add( m_staticText99, 0, wxALL, 5 );
-	
-	uiEditAutocompleteParentheses  = new wxComboBox( m_panel21, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteParentheses , 0, wxALL, 5 );
-	
-	m_staticText100 = new wxStaticText( m_panel21, wxID_ANY, wxT("[brackets]"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText100->Wrap( -1 );
-	fgSizer401->Add( m_staticText100, 0, wxALL, 5 );
-	
-	uiEditAutocompleteBrackets = new wxComboBox( m_panel21, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteBrackets, 0, wxALL, 5 );
-	
-	m_staticText101 = new wxStaticText( m_panel21, wxID_ANY, wxT("'single quote'"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText101->Wrap( -1 );
-	fgSizer401->Add( m_staticText101, 0, wxALL, 5 );
-	
-	uiEditAutocompleteSingleQuote = new wxComboBox( m_panel21, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteSingleQuote, 0, wxALL, 5 );
-	
-	m_staticText102 = new wxStaticText( m_panel21, wxID_ANY, wxT("\"double quote\""), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText102->Wrap( -1 );
-	fgSizer401->Add( m_staticText102, 0, wxALL, 5 );
-	
-	uiEditAutocompleteDoubleQuote = new wxComboBox( m_panel21, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
-	fgSizer401->Add( uiEditAutocompleteDoubleQuote, 0, wxALL, 5 );
+	sbSizer29->Add( fgSizer20, 1, wxEXPAND, 5 );
 	
 	
-	m_panel21->SetSizer( fgSizer401 );
-	m_panel21->Layout();
-	fgSizer401->Fit( m_panel21 );
-	m_notebook2->AddPage( m_panel21, wxT("Autocompletion"), false );
-	m_panel22 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	fgSizer56->Add( sbSizer29, 1, wxEXPAND, 5 );
+	
+	wxStaticBoxSizer* sbSizer30;
+	sbSizer30 = new wxStaticBoxSizer( new wxStaticBox( m_panel11, wxID_ANY, wxT("Selection") ), wxVERTICAL );
+	
 	wxFlexGridSizer* fgSizer9;
 	fgSizer9 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer9->SetFlexibleDirection( wxBOTH );
 	fgSizer9->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	uiEditUseSelectionForeground = new wxCheckBox( m_panel22, wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiEditUseSelectionForeground = new wxCheckBox( m_panel11, wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer9->Add( uiEditUseSelectionForeground, 0, wxALL, 5 );
 	
-	uiEditSelectionForeground = new wxColourPickerCtrl( m_panel22, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiEditSelectionForeground = new wxColourPickerCtrl( m_panel11, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer9->Add( uiEditSelectionForeground, 0, wxALL, 5 );
 	
-	uiEditUseSelectionBackground = new wxCheckBox( m_panel22, wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiEditUseSelectionBackground = new wxCheckBox( m_panel11, wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer9->Add( uiEditUseSelectionBackground, 0, wxALL, 5 );
 	
-	uiEditSelectionBackground = new wxColourPickerCtrl( m_panel22, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiEditSelectionBackground = new wxColourPickerCtrl( m_panel11, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer9->Add( uiEditSelectionBackground, 0, wxALL, 5 );
 	
 	
-	m_panel22->SetSizer( fgSizer9 );
-	m_panel22->Layout();
-	fgSizer9->Fit( m_panel22 );
-	m_notebook2->AddPage( m_panel22, wxT("Selection"), false );
-	m_panel23 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer21;
-	fgSizer21 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer21->SetFlexibleDirection( wxBOTH );
-	fgSizer21->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	sbSizer30->Add( fgSizer9, 1, wxEXPAND, 5 );
 	
 	
-	fgSizer21->Add( 0, 0, 1, wxEXPAND, 5 );
+	fgSizer56->Add( sbSizer30, 1, wxEXPAND, 5 );
 	
-	uiUseTabs = new wxCheckBox( m_panel23, wxID_ANY, wxT("Use tabs"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer21->Add( uiUseTabs, 0, wxALL, 5 );
+	wxStaticBoxSizer* sbSizer31;
+	sbSizer31 = new wxStaticBoxSizer( new wxStaticBox( m_panel11, wxID_ANY, wxT("Edge") ), wxVERTICAL );
 	
-	m_staticText41 = new wxStaticText( m_panel23, wxID_ANY, wxT("Tab width:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText41->Wrap( -1 );
-	fgSizer21->Add( m_staticText41, 0, wxALL, 5 );
-	
-	uiTabWidth = new wxTextCtrl( m_panel23, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer21->Add( uiTabWidth, 0, wxALL, 5 );
-	
-	
-	m_panel23->SetSizer( fgSizer21 );
-	m_panel23->Layout();
-	fgSizer21->Fit( m_panel23 );
-	m_notebook2->AddPage( m_panel23, wxT("Project defaults"), false );
-	m_panel24 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer25;
 	fgSizer25 = new wxFlexGridSizer( 0, 2, 0, 0 );
 	fgSizer25->SetFlexibleDirection( wxBOTH );
 	fgSizer25->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText47 = new wxStaticText( m_panel24, wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText47 = new wxStaticText( m_panel11, wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText47->Wrap( -1 );
 	fgSizer25->Add( m_staticText47, 0, wxALL, 5 );
 	
-	uiEdgeStyle = new wxComboBox( m_panel24, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiEdgeStyle = new wxComboBox( m_panel11, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
 	uiEdgeStyle->Append( wxT("None") );
 	uiEdgeStyle->Append( wxT("Line") );
 	uiEdgeStyle->Append( wxT("Background") );
 	fgSizer25->Add( uiEdgeStyle, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText48 = new wxStaticText( m_panel24, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48 = new wxStaticText( m_panel11, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText48->Wrap( -1 );
 	fgSizer25->Add( m_staticText48, 0, wxALL, 5 );
 	
-	uiEdgeColor = new wxColourPickerCtrl( m_panel24, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiEdgeColor = new wxColourPickerCtrl( m_panel11, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer25->Add( uiEdgeColor, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText49 = new wxStaticText( m_panel24, wxID_ANY, wxT("Column:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText49 = new wxStaticText( m_panel11, wxID_ANY, wxT("Column:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText49->Wrap( -1 );
 	fgSizer25->Add( m_staticText49, 0, wxALL, 5 );
 	
-	uiEdgeColumn = new wxTextCtrl( m_panel24, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiEdgeColumn = new wxTextCtrl( m_panel11, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer25->Add( uiEdgeColumn, 0, wxALL|wxEXPAND, 5 );
 	
 	
-	m_panel24->SetSizer( fgSizer25 );
-	m_panel24->Layout();
-	fgSizer25->Fit( m_panel24 );
-	m_notebook2->AddPage( m_panel24, wxT("Edge"), false );
-	m_panel25 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer36;
-	bSizer36 = new wxBoxSizer( wxVERTICAL );
-	
-	uiTabIndents = new wxCheckBox( m_panel25, wxID_ANY, wxT("Tab indents"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer36->Add( uiTabIndents, 0, wxALL, 5 );
-	
-	uiBackspaceUnindents = new wxCheckBox( m_panel25, wxID_ANY, wxT("Bacspace unindents"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer36->Add( uiBackspaceUnindents, 0, wxALL, 5 );
+	sbSizer31->Add( fgSizer25, 1, wxEXPAND, 5 );
 	
 	
-	m_panel25->SetSizer( bSizer36 );
-	m_panel25->Layout();
-	bSizer36->Fit( m_panel25 );
-	m_notebook2->AddPage( m_panel25, wxT("Feeling"), false );
-	m_panel26 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxFlexGridSizer* fgSizer23;
-	fgSizer23 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer23->SetFlexibleDirection( wxBOTH );
-	fgSizer23->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	fgSizer56->Add( sbSizer31, 1, wxEXPAND, 5 );
 	
 	
-	fgSizer23->Add( 0, 0, 1, wxEXPAND, 5 );
-	
-	uiIndentGuide = new wxCheckBox( m_panel26, wxID_ANY, wxT("Display indent guide"), wxDefaultPosition, wxDefaultSize, 0 );
-	fgSizer23->Add( uiIndentGuide, 0, wxALL, 5 );
-	
-	m_staticText44 = new wxStaticText( m_panel26, wxID_ANY, wxT("Indent type:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText44->Wrap( -1 );
-	fgSizer23->Add( m_staticText44, 0, wxALL, 5 );
-	
-	uiEditIndentation = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
-	uiEditIndentation->Append( wxT("None") );
-	uiEditIndentation->Append( wxT("Keep") );
-	uiEditIndentation->Append( wxT("Smart") );
-	fgSizer23->Add( uiEditIndentation, 0, wxALL|wxEXPAND, 5 );
-	
-	
-	m_panel26->SetSizer( fgSizer23 );
-	m_panel26->Layout();
-	fgSizer23->Fit( m_panel26 );
-	m_notebook2->AddPage( m_panel26, wxT("Indenting"), false );
+	m_panel11->SetSizer( fgSizer56 );
+	m_panel11->Layout();
+	fgSizer56->Fit( m_panel11 );
+	m_notebook2->AddPage( m_panel11, wxT("Visual"), false );
 	m_panel27 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer24;
 	fgSizer24 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -1789,27 +1832,6 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	m_panel27->Layout();
 	fgSizer24->Fit( m_panel27 );
 	m_notebook2->AddPage( m_panel27, wxT("Whitespace"), false );
-	m_panel28 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
-	wxBoxSizer* bSizer37;
-	bSizer37 = new wxBoxSizer( wxVERTICAL );
-	
-	uiEditShowCompilerAnnotations = new wxCheckBox( m_panel28, wxID_ANY, wxT("Show warning/errors as annotations"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer37->Add( uiEditShowCompilerAnnotations, 0, wxALL, 5 );
-	
-	uiEditShowMultilineIndicators = new wxCheckBox( m_panel28, wxID_ANY, wxT("Show multiline warning/errors"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer37->Add( uiEditShowMultilineIndicators, 0, wxALL, 5 );
-	
-	uiEditHighlightKeyword = new wxCheckBox( m_panel28, wxID_ANY, wxT("Auto highlight keywords"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer37->Add( uiEditHighlightKeyword, 0, wxALL, 5 );
-	
-	uiShowLineNumbers = new wxCheckBox( m_panel28, wxID_ANY, wxT("Show line numbers"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer37->Add( uiShowLineNumbers, 0, wxALL, 5 );
-	
-	
-	m_panel28->SetSizer( bSizer37 );
-	m_panel28->Layout();
-	bSizer37->Fit( m_panel28 );
-	m_notebook2->AddPage( m_panel28, wxT("General"), false );
 	
 	bSizer2->Add( m_notebook2, 1, wxEXPAND | wxALL, 5 );
 	
@@ -1818,6 +1840,15 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	this->Layout();
 	
 	// Connect Events
+	uiEditHighlightKeyword->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiShowLineNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiTabIndents->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiBackspaceUnindents->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiIndentGuide->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditIndentation->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiUseTabs->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiTabWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
+	uiTabWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
 	uiAllowFolding->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	uiFoldLevelNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	uiFoldLineBeforeExpanded->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
@@ -1835,27 +1866,27 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	uiEditSelectionForeground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
 	uiEditUseSelectionBackground->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	uiEditSelectionBackground->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
-	uiUseTabs->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiTabWidth->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
-	uiTabWidth->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
 	uiEdgeStyle->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
 	uiEdgeColor->Connect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
 	uiEdgeColumn->Connect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
 	uiEdgeColumn->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
-	uiTabIndents->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiBackspaceUnindents->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiIndentGuide->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiEditIndentation->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
 	uiDisplayEOL->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	uiViewWhitespace->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
 	uiWordwrap->Connect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
-	uiEditHighlightKeyword->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiShowLineNumbers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 }
 
 SettingsEditorPanel::~SettingsEditorPanel()
 {
 	// Disconnect Events
+	uiEditHighlightKeyword->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiShowLineNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiTabIndents->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiBackspaceUnindents->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiIndentGuide->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiEditIndentation->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
+	uiUseTabs->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
+	uiTabWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
+	uiTabWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
 	uiAllowFolding->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	uiFoldLevelNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	uiFoldLineBeforeExpanded->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
@@ -1873,22 +1904,13 @@ SettingsEditorPanel::~SettingsEditorPanel()
 	uiEditSelectionForeground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
 	uiEditUseSelectionBackground->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	uiEditSelectionBackground->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
-	uiUseTabs->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiTabWidth->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
-	uiTabWidth->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
 	uiEdgeStyle->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
 	uiEdgeColor->Disconnect( wxEVT_COMMAND_COLOURPICKER_CHANGED, wxColourPickerEventHandler( SettingsEditorPanel::OnColorChanged ), NULL, this );
 	uiEdgeColumn->Disconnect( wxEVT_CHAR, wxKeyEventHandler( SettingsEditorPanel::OnlyAllowNumberChars ), NULL, this );
 	uiEdgeColumn->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEditorPanel::OnEditChanged ), NULL, this );
-	uiTabIndents->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiBackspaceUnindents->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiIndentGuide->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiEditIndentation->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
 	uiDisplayEOL->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	uiViewWhitespace->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
 	uiWordwrap->Disconnect( wxEVT_COMMAND_COMBOBOX_SELECTED, wxCommandEventHandler( SettingsEditorPanel::OnComboboxChanged ), NULL, this );
-	uiEditHighlightKeyword->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
-	uiShowLineNumbers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SettingsEditorPanel::OnCheckboxChanged ), NULL, this );
 	
 }
 

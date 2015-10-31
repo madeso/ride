@@ -2067,19 +2067,10 @@
 			<growablerows>0</growablerows>
 			<object class="sizeritem">
 				<option>1</option>
-				<flag>wxEXPAND</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
-				<object class="wxStaticBoxSizer">
-					<orient>wxVERTICAL</orient>
-					<label>Markers</label>
-					<object class="sizeritem">
-						<option>1</option>
-						<flag>wxALL|wxEXPAND</flag>
-						<border>5</border>
-						<object class="wxListBox" name="uiMarkerList">
-							<content />
-						</object>
-					</object>
+				<object class="wxListBox" name="uiMarkerList">
+					<content />
 				</object>
 			</object>
 			<object class="sizeritem">
@@ -2175,8 +2166,311 @@
 				<border>5</border>
 				<object class="wxNotebook" name="m_notebook2">
 					<object class="notebookpage">
+						<label>General</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel28">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxBoxSizer">
+								<orient>wxVERTICAL</orient>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiEditShowCompilerAnnotations">
+										<label>Show warning/errors as annotations</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiEditShowMultilineIndicators">
+										<label>Show multiline warning/errors</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiEditHighlightKeyword">
+										<label>Auto highlight keywords</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiShowLineNumbers">
+										<label>Show line numbers</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiTabIndents">
+										<label>Tab indents</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiBackspaceUnindents">
+										<label>Bacspace unindents</label>
+										<checked>0</checked>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Smart type</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel26">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>0</rows>
+								<cols>1</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Automatic insert</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>4</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText98">
+														<label>{curly braces}</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteCurlyBraces">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText99">
+														<label>(partheses)</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteParentheses ">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText100">
+														<label>[brackets]</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteBrackets">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText101">
+														<label>&apos;single quote&apos;</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteSingleQuote">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText102">
+														<label>&quot;double quote&quot;</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditAutocompleteDoubleQuote">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content />
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Indent</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiIndentGuide">
+														<label>Display indent guide</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText44">
+														<label>Indent type:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEditIndentation">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content>
+															<item>None</item>
+															<item>Keep</item>
+															<item>Smart</item>
+														</content>
+													</object>
+												</object>
+											</object>
+										</object>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
+						<label>Project defaults</label>
+						<selected>0</selected>
+						<object class="wxPanel" name="m_panel23">
+							<style>wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer">
+								<rows>0</rows>
+								<cols>2</cols>
+								<vgap>0</vgap>
+								<hgap>0</hgap>
+								<growablecols></growablecols>
+								<growablerows></growablerows>
+								<object class="spacer">
+									<option>1</option>
+									<flag>wxEXPAND</flag>
+									<border>5</border>
+									<size>0,0</size>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxCheckBox" name="uiUseTabs">
+										<label>Use tabs</label>
+										<checked>0</checked>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxStaticText" name="m_staticText41">
+										<label>Tab width:</label>
+										<wrap>-1</wrap>
+									</object>
+								</object>
+								<object class="sizeritem">
+									<option>0</option>
+									<flag>wxALL</flag>
+									<border>5</border>
+									<object class="wxTextCtrl" name="uiTabWidth">
+										<value></value>
+									</object>
+								</object>
+							</object>
+						</object>
+					</object>
+					<object class="notebookpage">
 						<label>Folding</label>
-						<selected>1</selected>
+						<selected>0</selected>
 						<object class="wxPanel" name="m_panel10">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxFlexGridSizer">
@@ -2314,442 +2608,240 @@
 						</object>
 					</object>
 					<object class="notebookpage">
-						<label>Current line</label>
+						<label>Visual</label>
 						<selected>0</selected>
 						<object class="wxPanel" name="m_panel11">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxFlexGridSizer">
 								<rows>0</rows>
-								<cols>2</cols>
+								<cols>1</cols>
 								<vgap>0</vgap>
 								<hgap>0</hgap>
 								<growablecols></growablecols>
 								<growablerows></growablerows>
-								<object class="spacer">
+								<object class="sizeritem">
 									<option>1</option>
 									<flag>wxEXPAND</flag>
 									<border>5</border>
-									<size>0,0</size>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiCurrentLineVisible">
-										<label>Show current line?</label>
-										<checked>0</checked>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Current line</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiCurrentLineVisible">
+														<label>Show current line?</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="spacer">
+													<option>1</option>
+													<flag>wxEXPAND</flag>
+													<border>5</border>
+													<size>0,0</size>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiEditCurrentLineOverdraw">
+														<label>Overdraw?</label>
+														<checked>1</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText39">
+														<label>Color:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiEditCurrentLineColor">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText40">
+														<label>Alpha:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiEditCurrentLineAlpha">
+														<value></value>
+													</object>
+												</object>
+											</object>
+										</object>
 									</object>
 								</object>
-								<object class="spacer">
+								<object class="sizeritem">
 									<option>1</option>
 									<flag>wxEXPAND</flag>
 									<border>5</border>
-									<size>0,0</size>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiEditCurrentLineOverdraw">
-										<label>Overdraw?</label>
-										<checked>1</checked>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Selection</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiEditUseSelectionForeground">
+														<label>Foreground:</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiEditSelectionForeground">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxCheckBox" name="uiEditUseSelectionBackground">
+														<label>Background:</label>
+														<checked>0</checked>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiEditSelectionBackground">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+											</object>
+										</object>
 									</object>
 								</object>
 								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText39">
-										<label>Color:</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL|wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxColourPickerCtrl" name="uiEditCurrentLineColor">
-										<value>#000000</value>
-										<style>wxCLRP_DEFAULT_STYLE</style>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText40">
-										<label>Alpha:</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL|wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxTextCtrl" name="uiEditCurrentLineAlpha">
-										<value></value>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>Autocompletion</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel21">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxFlexGridSizer">
-								<rows>0</rows>
-								<cols>4</cols>
-								<vgap>0</vgap>
-								<hgap>0</hgap>
-								<growablecols></growablecols>
-								<growablerows></growablerows>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText98">
-										<label>{curly braces}</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxComboBox" name="uiEditAutocompleteCurlyBraces">
-										<style>wxCB_DROPDOWN|wxCB_READONLY</style>
-										<value>Combo!</value>
-										<content />
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText99">
-										<label>(partheses)</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxComboBox" name="uiEditAutocompleteParentheses ">
-										<style>wxCB_DROPDOWN|wxCB_READONLY</style>
-										<value>Combo!</value>
-										<content />
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText100">
-										<label>[brackets]</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxComboBox" name="uiEditAutocompleteBrackets">
-										<style>wxCB_DROPDOWN|wxCB_READONLY</style>
-										<value>Combo!</value>
-										<content />
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText101">
-										<label>&apos;single quote&apos;</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxComboBox" name="uiEditAutocompleteSingleQuote">
-										<style>wxCB_DROPDOWN|wxCB_READONLY</style>
-										<value>Combo!</value>
-										<content />
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText102">
-										<label>&quot;double quote&quot;</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxComboBox" name="uiEditAutocompleteDoubleQuote">
-										<style>wxCB_DROPDOWN|wxCB_READONLY</style>
-										<value>Combo!</value>
-										<content />
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>Selection</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel22">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxFlexGridSizer">
-								<rows>0</rows>
-								<cols>2</cols>
-								<vgap>0</vgap>
-								<hgap>0</hgap>
-								<growablecols></growablecols>
-								<growablerows></growablerows>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiEditUseSelectionForeground">
-										<label>Foreground:</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxColourPickerCtrl" name="uiEditSelectionForeground">
-										<value>#000000</value>
-										<style>wxCLRP_DEFAULT_STYLE</style>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiEditUseSelectionBackground">
-										<label>Background:</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxColourPickerCtrl" name="uiEditSelectionBackground">
-										<value>#000000</value>
-										<style>wxCLRP_DEFAULT_STYLE</style>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>Project defaults</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel23">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxFlexGridSizer">
-								<rows>0</rows>
-								<cols>2</cols>
-								<vgap>0</vgap>
-								<hgap>0</hgap>
-								<growablecols></growablecols>
-								<growablerows></growablerows>
-								<object class="spacer">
 									<option>1</option>
 									<flag>wxEXPAND</flag>
 									<border>5</border>
-									<size>0,0</size>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiUseTabs">
-										<label>Use tabs</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText41">
-										<label>Tab width:</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxTextCtrl" name="uiTabWidth">
-										<value></value>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>Edge</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel24">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxFlexGridSizer">
-								<rows>0</rows>
-								<cols>2</cols>
-								<vgap>0</vgap>
-								<hgap>0</hgap>
-								<growablecols></growablecols>
-								<growablerows></growablerows>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText47">
-										<label>Style:</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL|wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxComboBox" name="uiEdgeStyle">
-										<style>wxCB_DROPDOWN|wxCB_READONLY</style>
-										<value>Combo!</value>
-										<content>
-											<item>None</item>
-											<item>Line</item>
-											<item>Background</item>
-										</content>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText48">
-										<label>Color:</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL|wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxColourPickerCtrl" name="uiEdgeColor">
-										<value>#000000</value>
-										<style>wxCLRP_DEFAULT_STYLE</style>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText49">
-										<label>Column:</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL|wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxTextCtrl" name="uiEdgeColumn">
-										<value></value>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>Feeling</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel25">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxBoxSizer">
-								<orient>wxVERTICAL</orient>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiTabIndents">
-										<label>Tab indents</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiBackspaceUnindents">
-										<label>Bacspace unindents</label>
-										<checked>0</checked>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>Indenting</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel26">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxFlexGridSizer">
-								<rows>0</rows>
-								<cols>2</cols>
-								<vgap>0</vgap>
-								<hgap>0</hgap>
-								<growablecols></growablecols>
-								<growablerows></growablerows>
-								<object class="spacer">
-									<option>1</option>
-									<flag>wxEXPAND</flag>
-									<border>5</border>
-									<size>0,0</size>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiIndentGuide">
-										<label>Display indent guide</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxStaticText" name="m_staticText44">
-										<label>Indent type:</label>
-										<wrap>-1</wrap>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL|wxEXPAND</flag>
-									<border>5</border>
-									<object class="wxComboBox" name="uiEditIndentation">
-										<style>wxCB_DROPDOWN|wxCB_READONLY</style>
-										<value>Combo!</value>
-										<content>
-											<item>None</item>
-											<item>Keep</item>
-											<item>Smart</item>
-										</content>
+									<object class="wxStaticBoxSizer">
+										<orient>wxVERTICAL</orient>
+										<label>Edge</label>
+										<object class="sizeritem">
+											<option>1</option>
+											<flag>wxEXPAND</flag>
+											<border>5</border>
+											<object class="wxFlexGridSizer">
+												<rows>0</rows>
+												<cols>2</cols>
+												<vgap>0</vgap>
+												<hgap>0</hgap>
+												<growablecols></growablecols>
+												<growablerows></growablerows>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText47">
+														<label>Style:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxComboBox" name="uiEdgeStyle">
+														<style>wxCB_DROPDOWN|wxCB_READONLY</style>
+														<value>Combo!</value>
+														<content>
+															<item>None</item>
+															<item>Line</item>
+															<item>Background</item>
+														</content>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText48">
+														<label>Color:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxColourPickerCtrl" name="uiEdgeColor">
+														<value>#000000</value>
+														<style>wxCLRP_DEFAULT_STYLE</style>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL</flag>
+													<border>5</border>
+													<object class="wxStaticText" name="m_staticText49">
+														<label>Column:</label>
+														<wrap>-1</wrap>
+													</object>
+												</object>
+												<object class="sizeritem">
+													<option>0</option>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>5</border>
+													<object class="wxTextCtrl" name="uiEdgeColumn">
+														<value></value>
+													</object>
+												</object>
+											</object>
+										</object>
 									</object>
 								</object>
 							</object>
@@ -2826,52 +2918,6 @@
 											<item>Char</item>
 											<item>Word</item>
 										</content>
-									</object>
-								</object>
-							</object>
-						</object>
-					</object>
-					<object class="notebookpage">
-						<label>General</label>
-						<selected>0</selected>
-						<object class="wxPanel" name="m_panel28">
-							<style>wxTAB_TRAVERSAL</style>
-							<object class="wxBoxSizer">
-								<orient>wxVERTICAL</orient>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiEditShowCompilerAnnotations">
-										<label>Show warning/errors as annotations</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiEditShowMultilineIndicators">
-										<label>Show multiline warning/errors</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiEditHighlightKeyword">
-										<label>Auto highlight keywords</label>
-										<checked>0</checked>
-									</object>
-								</object>
-								<object class="sizeritem">
-									<option>0</option>
-									<flag>wxALL</flag>
-									<border>5</border>
-									<object class="wxCheckBox" name="uiShowLineNumbers">
-										<label>Show line numbers</label>
-										<checked>0</checked>
 									</object>
 								</object>
 							</object>
