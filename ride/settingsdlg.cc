@@ -5,6 +5,7 @@
 #include <ride/wx.h>
 
 #include <wx/simplebook.h>
+#include <wx/vlbox.h>
 
 #include <vector>
 #include <algorithm>
@@ -25,6 +26,46 @@
 #include "ride/settingsthemestab.h"
 #include "ride/togui.h"
 
+struct RideListBoxItem {
+ public:
+  wxString title;
+  wxPanel* data;
+};
+
+class RideListBox : public wxVListBox {
+ private:
+  std::vector<RideListBoxItem> items;
+
+ public:
+  explicit RideListBox(wxWindow* parent) : wxVListBox(parent) {
+    this->SetMinClientSize(wxSize(120, 120));
+  }
+
+  void OnDrawItem(wxDC& dc, const wxRect& rect, size_t n) const {
+    dc.SetPen(*wxBLACK_PEN);
+    dc.DrawText(items[n].title, rect.GetTopLeft());
+  }
+
+  wxCoord OnMeasureItem(size_t n) const { return 32; }
+
+  void InsertItem(const RideListBoxItem& item) {
+    items.push_back(item);
+    SetItemCount(items.size());
+  }
+
+  wxPanel* GetClientData(int n) { return items[n].data; }
+
+  wxString GetItemText(int n) { return items[n].title; }
+};
+
+std::vector<int> GetSelection(RideListBox* box) {
+  std::vector<int> ret;
+  ret.push_back(box->GetSelection());
+  return ret;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 void AddItem(wxListCtrl* list, int id, const wxString& display, wxPanel* data) {
   wxListItem item;
   item.SetData(data);
@@ -34,13 +75,21 @@ void AddItem(wxListCtrl* list, int id, const wxString& display, wxPanel* data) {
   list->InsertItem(item);
 }
 
+void AddItem(RideListBox* list, int id, const wxString& display,
+             wxPanel* data) {
+  RideListBoxItem item;
+  item.data = data;
+  item.title = display;
+  list->InsertItem(item);
+}
+
 WXID g_last_selection_ = 0;
 
 class SettingsDlg : public wxDialog, ToGuiSender {
  public:
   SettingsCommon common_;
   wxSimplebook* notebook;
-  wxListCtrl* nootebook_ctrl;
+  RideListBox* nootebook_ctrl;
   wxPanel* m_null;
   SettingsFontsTab* m_fonts;
   SettingsIndicatorTab* m_indicators;
@@ -84,9 +133,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     notebook->AddPage(m_window, "");
     notebook->AddPage(m_themes, "");
 
-    nootebook_ctrl = new wxListCtrl(
-        this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-        wxLC_SINGLE_SEL | wxLC_ALIGN_LEFT | wxLC_NO_HEADER | wxLC_LIST);
+    nootebook_ctrl = new RideListBox(this);
     AddItem(nootebook_ctrl, 0, "Fonts", m_fonts);
     AddItem(nootebook_ctrl, 1, "Indicators", m_indicators);
     AddItem(nootebook_ctrl, 2, "Markers", m_markers);
@@ -122,6 +169,8 @@ class SettingsDlg : public wxDialog, ToGuiSender {
 
     nootebook_ctrl->Bind(wxEVT_LIST_ITEM_SELECTED,
                          &SettingsDlg::SelectionChanged, this);
+    nootebook_ctrl->Bind(wxEVT_LISTBOX, &SettingsDlg::SelectionChangedCommand,
+                         this);
 
     apply_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsDlg::OnApply,
                        this);
@@ -160,6 +209,16 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     EndModal(wxOK);
   }
 
+  void SelectionChangedCommand(wxCommandEvent& event) {
+    const auto selection = GetSelection(nootebook_ctrl);
+
+    if (!selection.empty() && selection.size() == 1) {
+      SetSelection(selection[0]);
+    } else {
+      SetSelection(-1);
+    }
+  }
+
   void SelectionChanged(wxListEvent& event) {
     const auto selection = GetSelection(nootebook_ctrl);
 
@@ -179,7 +238,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
 
     if (selection != -1) {
       panel =
-          reinterpret_cast<wxPanel*>(nootebook_ctrl->GetItemData(selection));
+          reinterpret_cast<wxPanel*>(nootebook_ctrl->GetClientData(selection));
       assert(panel);
       text = nootebook_ctrl->GetItemText(selection);
     }
