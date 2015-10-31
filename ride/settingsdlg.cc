@@ -6,6 +6,7 @@
 
 #include <wx/simplebook.h>
 #include <wx/vlbox.h>
+#include <wx/settings.h>
 
 #include <vector>
 #include <algorithm>
@@ -37,12 +38,29 @@ class RideListBox : public wxVListBox {
   std::vector<RideListBoxItem> items;
 
  public:
-  explicit RideListBox(wxWindow* parent) : wxVListBox(parent) {
+  explicit RideListBox(wxWindow* parent)
+      : wxVListBox(parent),
+        background_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX)),
+        text_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOXTEXT)),
+        selection_color_(
+            wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOXHIGHLIGHTTEXT)),
+        selection_outline_color_(
+            wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT)),
+        item_font_(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT)) {
     this->SetMinClientSize(wxSize(120, 120));
   }
 
   void OnDrawItem(wxDC& dc, const wxRect& rect, size_t n) const {
-    dc.SetPen(*wxBLACK_PEN);
+    if (IsSelected(n))
+      dc.SetBrush(wxBrush(selection_outline_color_));
+    else
+      dc.SetBrush(wxBrush(background_color_));
+    dc.DrawRectangle(rect);
+
+    if (IsSelected(n))
+      dc.SetPen(wxPen(selection_outline_color_));
+    else
+      dc.SetPen(wxPen(text_color_));
     dc.DrawText(items[n].title, rect.GetTopLeft());
   }
 
@@ -54,8 +72,14 @@ class RideListBox : public wxVListBox {
   }
 
   wxPanel* GetClientData(int n) { return items[n].data; }
-
   wxString GetItemText(int n) { return items[n].title; }
+
+ private:
+  wxColor background_color_;
+  wxColor text_color_;
+  wxColor selection_color_;
+  wxColor selection_outline_color_;
+  wxFont item_font_;
 };
 
 std::vector<int> GetSelection(RideListBox* box) {
