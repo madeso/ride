@@ -6,6 +6,8 @@
 #include <ride/wx.h>
 #include "ride/resources/commonimages.h"
 
+#include "ride/form.h"
+
 template <typename TContainer, typename TContainerFunctions>
 class GuiList {
  public:
