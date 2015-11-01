@@ -39,31 +39,38 @@ class RideListBox : public wxVListBox {
 
  public:
   explicit RideListBox(wxWindow* parent)
-      : wxVListBox(parent),
-        background_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOX)),
-        text_color_(wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOXTEXT)),
-        selection_color_(
-            wxSystemSettings::GetColour(wxSYS_COLOUR_LISTBOXHIGHLIGHTTEXT)),
-        selection_outline_color_(
-            wxSystemSettings::GetColour(wxSYS_COLOUR_MENUHILIGHT)),
+      : wxVListBox(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0),
+        background_(255, 255, 255),
+        text_(0, 0, 0),
+        selected_background_(137, 175, 223),
+        selected_text_(255, 255, 255),
         item_font_(wxSystemSettings::GetFont(wxSYS_DEFAULT_GUI_FONT)),
         height_(32),
         spacing_(3),
         img_size_(32) {
     this->SetMinClientSize(wxSize(120, 120));
+    this->SetBackgroundColour(background_);
+    this->SetOwnBackgroundColour(background_);
+
+    wxColor b(255, 0, 0);
+    this->SetForegroundColour(b);
+    this->SetOwnForegroundColour(b);
   }
 
   void OnDrawItem(wxDC& dc, const wxRect& rect, size_t n) const {
     if (IsSelected(n))
-      dc.SetBrush(wxBrush(selection_outline_color_));
+      dc.SetBrush(wxBrush(selected_background_));
     else
-      dc.SetBrush(wxBrush(background_color_));
+      dc.SetBrush(wxBrush(background_));
     dc.DrawRectangle(rect);
 
-    if (IsSelected(n))
-      dc.SetPen(wxPen(selection_outline_color_));
-    else
-      dc.SetPen(wxPen(text_color_));
+    if (IsSelected(n)) {
+      dc.SetPen(wxPen(selected_text_));
+      dc.SetBrush(wxBrush(selected_text_));
+    } else {
+      dc.SetPen(wxPen(text_));
+      dc.SetBrush(wxBrush(text_));
+    }
     dc.SetFont(item_font_);
     int w, h;
     dc.GetTextExtent(items[n].title, &w, &h);
@@ -84,10 +91,10 @@ class RideListBox : public wxVListBox {
   wxString GetItemText(int n) { return items[n].title; }
 
  private:
-  wxColor background_color_;
-  wxColor text_color_;
-  wxColor selection_color_;
-  wxColor selection_outline_color_;
+  wxColor background_;
+  wxColor text_;
+  wxColor selected_background_;
+  wxColor selected_text_;
   wxFont item_font_;
   int height_;
   int spacing_;
