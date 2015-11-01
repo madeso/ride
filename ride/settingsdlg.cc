@@ -52,16 +52,20 @@ class RideListBox : public wxVListBox {
     this->SetBackgroundColour(background_);
     this->SetOwnBackgroundColour(background_);
 
-    wxColor b(255, 0, 0);
-    this->SetForegroundColour(b);
-    this->SetOwnForegroundColour(b);
+    // wxColor b(255, 0, 0);
+    // this->SetForegroundColour(b);
+    // this->SetOwnForegroundColour(b);
   }
 
   void OnDrawItem(wxDC& dc, const wxRect& rect, size_t n) const {
-    if (IsSelected(n))
+    if (IsSelected(n)) {
       dc.SetBrush(wxBrush(selected_background_));
-    else
+      dc.SetPen(wxPen(selected_background_));
+    } else {
       dc.SetBrush(wxBrush(background_));
+      dc.SetPen(wxPen(background_));
+    }
+    int size = 1;
     dc.DrawRectangle(rect);
 
     if (IsSelected(n)) {
