@@ -24,7 +24,7 @@ class CreateNewProjectDlg : public ui::CreateNewProject {
   const wxString project_name() const;
 
   wxString GetTarget() const;
-  wxString GenerateCargoCommandline() const;
+  wxString GenerateCargoCommandline(const ride::MachineSettings& machine) const;
 
  protected:
   virtual void OnProjectNameEnter(wxCommandEvent& event);
@@ -45,14 +45,15 @@ class CreateNewProjectDlg : public ui::CreateNewProject {
 CreateNewProjectDlgHandler::CreateNewProjectDlgHandler(wxWindow* parent)
     : parent_(parent) {}
 
-bool CreateNewProjectDlgHandler::ShowModal() {
+bool CreateNewProjectDlgHandler::ShowModal(
+    const ride::MachineSettings& machine) {
   CreateNewProjectDlg dlg(parent_);
   const bool ret = wxID_OK == dlg.ShowModal();
   if (ret) {
     project_folder_ = dlg.project_folder();
     project_name_ = dlg.project_name();
     target_ = dlg.GetTarget();
-    cargo_command_line_ = dlg.GenerateCargoCommandline();
+    cargo_command_line_ = dlg.GenerateCargoCommandline(machine);
   }
   return ret;
 }
@@ -196,11 +197,12 @@ wxString CreateNewProjectDlg::GetVcsName() const {
   }
 }
 
-wxString CreateNewProjectDlg::GenerateCargoCommandline() const {
+wxString CreateNewProjectDlg::GenerateCargoCommandline(
+    const ride::MachineSettings& machine) const {
   const wxString template_cmd =
       GetPtt(uiTemplates) == PTT_BINARY ? "--bin " : "";
   const wxString travis_cmd = uiTravis->GetValue() ? "--travis " : "";
   const wxString vcs_name = GetVcsName();
-  return wxString::Format("cargo new --vcs %s %s%s%s", vcs_name, template_cmd,
-                          travis_cmd, project_name());
+  return wxString::Format((machine.cargo() + " new --vcs %s %s%s%s").c_str(),
+                          vcs_name, template_cmd, travis_cmd, project_name());
 }

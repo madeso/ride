@@ -4,12 +4,13 @@
 #define RIDE_CREATENEWPROJECTDLG_H_
 
 #include <ride/wx.h>
+#include "ride/settings.h"
 
 class CreateNewProjectDlgHandler {
  public:
   explicit CreateNewProjectDlgHandler(wxWindow* parent);
 
-  bool ShowModal();
+  bool ShowModal(const ride::MachineSettings& machine);
 
   const wxString project_folder() const;
   const wxString project_name() const;

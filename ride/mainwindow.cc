@@ -1191,7 +1191,7 @@ void MainWindow::UpdateTitle() {
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // todo: implement creation of new project
   CreateNewProjectDlgHandler dlg(this);
-  if (false == dlg.ShowModal()) {
+  if (false == dlg.ShowModal(project_->machine())) {
     return;
   }
   // run cargo new
