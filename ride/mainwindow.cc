@@ -13,6 +13,7 @@
 
 #include <vector>
 #include <map>
+#include <string>
 
 #include "ride_compiler_settings.h"  // NOLINT cmake generated file
 
@@ -450,6 +451,56 @@ void MainWindow::SetStatusBarText(const wxString& text,
   statusbar_->SetStatusText(text, widget);
 }
 
+wxString RunTest(const std::string& app, const wxString& cmd) {
+  wxString output;
+  if (CmdRunner::Run("", app.c_str() + cmd, &output) == false) {
+    return "";
+  }
+
+  // TODO(Gustav): Only return the first row
+  return output.Trim(false);
+}
+
+class PathTester {
+ public:
+  explicit PathTester(const ride::MachineSettings& machine)
+      : cargo_(RunTest(machine.cargo(), " --version")),
+        rustc_(RunTest(machine.rustc(), " --version")),
+        racer_(RunTest(machine.racer(), " complete std::io::B")),
+        protoc_(RunTest(machine.protoc(), " --version")) {}
+
+  const wxString cargo() const { return cargo_; }
+  const wxString rustc() const { return rustc_; }
+  const wxString racer() const { return racer_; }
+  const wxString protoc() const { return protoc_; }
+
+ private:
+  wxString cargo_;
+  wxString rustc_;
+  wxString racer_;
+  wxString protoc_;
+};
+
+void TestPaths(wxWindow* main, const ride::MachineSettings& machine) {
+  // TODO(Gustav): Provide option to disable startup test
+  PathTester pt(machine);
+  if (pt.cargo().IsEmpty())
+    ShowWarning(main, "Unable to run cargo, please check settings",
+                "Configuration error!");
+  if (pt.rustc().IsEmpty())
+    ShowWarning(main, "Unable to run rustc, please check settings",
+                "Configuration error!");
+  if (pt.racer().IsEmpty())
+    ShowWarning(main, "Unable to run racer, please check settings",
+                "Configuration error!");
+
+  /*
+  if (pt.protoc().IsEmpty())
+    ShowWarning(main, "Unable to run protoc, please check settings",
+                "Configuration error!");
+  */
+}
+
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
                        const wxSize& size)
     : wxFrame(NULL, wxID_ANY, app_name, pos, size),
@@ -544,6 +595,8 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   // TODO(Gustav): Investigate why...
   SetupMenu();
 #endif
+
+  TestPaths(this, project_->machine());
 }
 
 void MainWindow::UpdateTheme() {
