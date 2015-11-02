@@ -31,6 +31,8 @@ class Project : public MultiRunner {
   ride::UserProject* user_ptr();
   void set_user(const ride::UserProject& user);
 
+  const ride::MachineSettings& machine() const;
+
   const wxString GetCargoFile() const;
   const wxString GetProjectFile() const;
   const wxString GetUserFile() const;
@@ -72,8 +74,10 @@ class Project : public MultiRunner {
 
   ride::Project project_;
   ride::UserProject user_;
+  ride::MachineSettings machine_;
 };
 
-wxString BuildCommandLine(const ride::BuildSetting& build);
+wxString BuildCommandLine(const ride::MachineSettings& machine,
+                          const ride::BuildSetting& build);
 
 #endif  // RIDE_PROJECT_H_

@@ -457,7 +457,7 @@ namespace ui
 		
 		public:
 			
-			SettingsFontsPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 631,447 ), long style = wxTAB_TRAVERSAL ); 
+			SettingsFontsPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 476,363 ), long style = wxTAB_TRAVERSAL ); 
 			~SettingsFontsPanel();
 		
 	};
@@ -606,7 +606,7 @@ namespace ui
 		
 		public:
 			
-			SettingsEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 688,691 ), long style = wxTAB_TRAVERSAL ); 
+			SettingsEditorPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 460,411 ), long style = wxTAB_TRAVERSAL ); 
 			~SettingsEditorPanel();
 		
 	};
@@ -722,7 +722,7 @@ namespace ui
 		
 		public:
 			
-			SettingsWindowPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 534,382 ), long style = wxTAB_TRAVERSAL ); 
+			SettingsWindowPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 486,554 ), long style = wxTAB_TRAVERSAL ); 
 			~SettingsWindowPanel();
 		
 	};

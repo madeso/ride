@@ -31,13 +31,15 @@ void AddAllOutput(const wxString& result, const CompilerMessage::Source source,
   }
 }
 
-void CompileProtoFile(const wxString& full_path, MainWindow* main_window) {
+void CompileProtoFile(const ride::MachineSettings& machine,
+                      const wxString& full_path, MainWindow* main_window) {
   if (full_path.EndsWith(".proto") == false) return;
 
   const size_t index = full_path.find_last_of(wxFileName::GetPathSeparators());
   const wxString folder = full_path.SubString(0, index);
   const wxString file = full_path.substr(index + 1);
-  const wxString cmd = wxString::Format("protoc --rust_out . %s", file);
+  const wxString cmd =
+      wxString::Format((machine.protoc() + " --rust_out . %s").c_str(), file);
   wxString result;
   const bool proto_compile_successful = CmdRunner::Run(folder, cmd, &result);
 

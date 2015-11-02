@@ -4,6 +4,9 @@
 #define RIDE_AUTOCOMPLETE_H_
 
 #include <ride/wx.h>
+
+#include "ride/settings.h"
+
 class Language;
 
 enum class ShowAutoCompleteAction {
@@ -18,8 +21,9 @@ enum class ShowAutoCompleteAction {
 class wxStyledTextCtrl;
 
 void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* stc);
-void Autocomplete(wxStyledTextCtrl* text, Language* current_language,
-                  const wxString& filename, const wxString& root_folder,
-                  wxWindow* self, ShowAutoCompleteAction action);
+void Autocomplete(const ride::MachineSettings& settings, wxStyledTextCtrl* text,
+                  Language* current_language, const wxString& filename,
+                  const wxString& root_folder, wxWindow* self,
+                  ShowAutoCompleteAction action);
 
 #endif  // RIDE_AUTOCOMPLETE_H_

@@ -1693,13 +1693,13 @@
 	</object>
 	<object class="wxPanel" name="SettingsFontsPanel">
 		<style>wxTAB_TRAVERSAL</style>
-		<size>631,447</size>
+		<size>476,363</size>
 		<object class="wxFlexGridSizer">
 			<rows>0</rows>
 			<cols>2</cols>
 			<vgap>0</vgap>
 			<hgap>0</hgap>
-			<growablecols>0,1</growablecols>
+			<growablecols>1</growablecols>
 			<growablerows>0</growablerows>
 			<object class="sizeritem">
 				<option>1</option>
@@ -2157,7 +2157,7 @@
 	</object>
 	<object class="wxPanel" name="SettingsEditorPanel">
 		<style>wxTAB_TRAVERSAL</style>
-		<size>688,691</size>
+		<size>460,411</size>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
 			<object class="sizeritem">
@@ -2423,7 +2423,7 @@
 					</object>
 					<object class="notebookpage">
 						<label>Project defaults</label>
-						<selected>0</selected>
+						<selected>1</selected>
 						<object class="wxPanel" name="m_panel23">
 							<style>wxTAB_TRAVERSAL</style>
 							<object class="wxFlexGridSizer">
@@ -2929,7 +2929,7 @@
 	</object>
 	<object class="wxPanel" name="SettingsWindowPanel">
 		<style>wxTAB_TRAVERSAL</style>
-		<size>534,382</size>
+		<size>486,554</size>
 		<object class="wxBoxSizer">
 			<orient>wxVERTICAL</orient>
 			<object class="sizeritem">
@@ -2947,7 +2947,7 @@
 								<cols>2</cols>
 								<vgap>6</vgap>
 								<hgap>6</hgap>
-								<growablecols>0,1</growablecols>
+								<growablecols></growablecols>
 								<growablerows></growablerows>
 								<object class="sizeritem">
 									<option>1</option>
@@ -2965,7 +2965,7 @@
 												<cols>2</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
-												<growablecols>1</growablecols>
+												<growablecols>0</growablecols>
 												<growablerows></growablerows>
 												<object class="sizeritem">
 													<option>0</option>
@@ -3065,7 +3065,7 @@
 												<cols>2</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
-												<growablecols></growablecols>
+												<growablecols>0</growablecols>
 												<growablerows></growablerows>
 												<object class="sizeritem">
 													<option>0</option>
@@ -3141,7 +3141,7 @@
 												<cols>2</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
-												<growablecols></growablecols>
+												<growablecols>0</growablecols>
 												<growablerows></growablerows>
 												<object class="sizeritem">
 													<option>0</option>
@@ -3214,7 +3214,7 @@
 								<cols>2</cols>
 								<vgap>0</vgap>
 								<hgap>0</hgap>
-								<growablecols>0,1</growablecols>
+								<growablecols></growablecols>
 								<growablerows></growablerows>
 								<object class="sizeritem">
 									<option>1</option>
@@ -3232,7 +3232,7 @@
 												<cols>2</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
-												<growablecols></growablecols>
+												<growablecols>0</growablecols>
 												<growablerows></growablerows>
 												<object class="sizeritem">
 													<option>0</option>
@@ -3314,7 +3314,7 @@
 												<cols>2</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
-												<growablecols></growablecols>
+												<growablecols>0</growablecols>
 												<growablerows></growablerows>
 												<object class="sizeritem">
 													<option>0</option>
@@ -3390,7 +3390,7 @@
 												<cols>2</cols>
 												<vgap>0</vgap>
 												<hgap>0</hgap>
-												<growablecols></growablecols>
+												<growablecols>0</growablecols>
 												<growablerows></growablerows>
 												<object class="sizeritem">
 													<option>0</option>

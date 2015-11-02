@@ -51,10 +51,6 @@ class RideListBox : public wxVListBox {
     this->SetMinClientSize(wxSize(120, 120));
     this->SetBackgroundColour(background_);
     this->SetOwnBackgroundColour(background_);
-
-    // wxColor b(255, 0, 0);
-    // this->SetForegroundColour(b);
-    // this->SetOwnForegroundColour(b);
   }
 
   void OnDrawItem(wxDC& dc, const wxRect& rect, size_t n) const {

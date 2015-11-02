@@ -74,6 +74,8 @@ ride::UserProject* Project::user_ptr() { return &user_; }
 
 void Project::set_user(const ride::UserProject& user) { user_ = user; }
 
+const ride::MachineSettings& Project::machine() const { return machine_; }
+
 const wxString Project::GetCargoFile() const {
   if (root_folder_.IsEmpty()) return "";
   wxFileName cargo(root_folder_, "cargo.toml");
@@ -141,8 +143,9 @@ void Project::SaveAllFiles() {
   Save();
 }
 
-wxString BuildCommandLine(const ride::BuildSetting& build) {
-  wxString cmd = "cargo build";
+wxString BuildCommandLine(const ride::MachineSettings& machine,
+                          const ride::BuildSetting& build) {
+  wxString cmd = machine.cargo() + " build";
 
   if (build.release()) {
     cmd += " --release";
@@ -181,7 +184,7 @@ void Project::Build(bool origin_main) {
   }
 
   const ride::BuildSetting& build = GetCurrentBuildSetting();
-  const wxString cmd = BuildCommandLine(build);
+  const wxString cmd = BuildCommandLine(machine_, build);
 
   RunCmd(cmd);
 }
@@ -193,7 +196,7 @@ void Project::Clean(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd("cargo clean");
+  RunCmd(machine_.cargo() + " clean");
 }
 
 void Project::Rebuild(bool origin_main) {
@@ -212,7 +215,7 @@ void Project::Doc(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd("cargo doc");
+  RunCmd(machine_.cargo() + " doc");
 }
 
 void Project::Run(bool origin_main) {
@@ -232,7 +235,7 @@ void Project::Test(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd("cargo test");
+  RunCmd(machine_.cargo() + " test");
 }
 
 void Project::Bench(bool origin_main) {
@@ -242,7 +245,7 @@ void Project::Bench(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd("cargo bench");
+  RunCmd(machine_.cargo() + " bench");
 }
 
 void Project::Update(bool origin_main) {
@@ -252,7 +255,7 @@ void Project::Update(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd("cargo update");
+  RunCmd(machine_.cargo() + " update");
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -108,13 +108,34 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
   PopupMenu(&menu);
 }
 
+const wxString ReplaceCmd(const ride::MachineSettings& machine,
+                          const wxString& cmd) {
+  if (cmd.StartsWith("rustc")) {
+    return machine.rustc() +
+           cmd.Right(cmd.Length() - wxString("rustc").length());
+  }
+
+  if (cmd.StartsWith("cargo")) {
+    return machine.cargo() +
+           cmd.Right(cmd.Length() - wxString("cargo").length());
+  }
+
+  if (cmd.StartsWith("protoc")) {
+    return machine.protoc() +
+           cmd.Right(cmd.Length() - wxString("protoc").length());
+  }
+
+  return cmd;
+}
+
 void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event) {
   const wxString line_content = GetContextLineContent();
 
   CompilerMessage message;
   if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC,
                              main_->root_folder(), line_content, &message)) {
-    const wxString cmd = GetCommandLine(message);
+    const wxString cmd =
+        ReplaceCmd(main_->project()->machine(), GetCommandLine(message));
     wxString output;
     CmdRunner::Run(main_->root_folder(), cmd, &output);
     ShowInfo(this, output, "Command result");

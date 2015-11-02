@@ -533,3 +533,13 @@ message UserProject {
 	optional int32 run_setting = 2 [default=-1];
 	repeated RunSetting run = 3;
 }
+
+
+/* ****************************************************************************************** */
+
+message MachineSettings {
+	optional string cargo = 1 [default="cargo"];
+	optional string rustc = 2 [default="rustc"];
+	optional string protoc = 3 [default="protoc"];
+	optional string racer = 4 [default="racer"];
+}

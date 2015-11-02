@@ -305,7 +305,9 @@ void ProjectSettingsDlg::BuildToGui(bool togui) {
   feature_list_.ToGui(&setting, togui);
 
   if (togui == false) {
-    uiBuildCommandLine->SetValue(BuildCommandLine(setting));
+    // since this is for display only, use the default shorter path
+    uiBuildCommandLine->SetValue(
+        BuildCommandLine(ride::MachineSettings(), setting));
   }
 }
 

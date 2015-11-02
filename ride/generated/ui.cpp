@@ -1142,9 +1142,10 @@ VariableEditor::~VariableEditor()
 
 SettingsFontsPanel::SettingsFontsPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
+	this->SetMinSize( wxSize( 476,363 ) );
+	
 	wxFlexGridSizer* fgSizer6;
 	fgSizer6 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer6->AddGrowableCol( 0 );
 	fgSizer6->AddGrowableCol( 1 );
 	fgSizer6->AddGrowableRow( 0 );
 	fgSizer6->SetFlexibleDirection( wxBOTH );
@@ -1468,6 +1469,8 @@ SettingsMarkersPanel::~SettingsMarkersPanel()
 
 SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
+	this->SetMinSize( wxSize( 460,411 ) );
+	
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
@@ -1612,7 +1615,7 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	m_panel23->SetSizer( fgSizer21 );
 	m_panel23->Layout();
 	fgSizer21->Fit( m_panel23 );
-	m_notebook2->AddPage( m_panel23, wxT("Project defaults"), false );
+	m_notebook2->AddPage( m_panel23, wxT("Project defaults"), true );
 	m_panel10 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer4;
 	fgSizer4 = new wxFlexGridSizer( 0, 2, 0, 0 );
@@ -1916,6 +1919,8 @@ SettingsEditorPanel::~SettingsEditorPanel()
 
 SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
+	this->SetMinSize( wxSize( 486,554 ) );
+	
 	wxBoxSizer* bSizer35;
 	bSizer35 = new wxBoxSizer( wxVERTICAL );
 	
@@ -1923,8 +1928,6 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	m_panel17 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer32;
 	fgSizer32 = new wxFlexGridSizer( 0, 2, 6, 6 );
-	fgSizer32->AddGrowableCol( 0 );
-	fgSizer32->AddGrowableCol( 1 );
 	fgSizer32->SetFlexibleDirection( wxBOTH );
 	fgSizer32->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -1933,7 +1936,7 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	
 	wxFlexGridSizer* fgSizer281;
 	fgSizer281 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer281->AddGrowableCol( 1 );
+	fgSizer281->AddGrowableCol( 0 );
 	fgSizer281->SetFlexibleDirection( wxBOTH );
 	fgSizer281->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -1979,6 +1982,7 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	
 	wxFlexGridSizer* fgSizer29;
 	fgSizer29 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer29->AddGrowableCol( 0 );
 	fgSizer29->SetFlexibleDirection( wxBOTH );
 	fgSizer29->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -2014,6 +2018,7 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	
 	wxFlexGridSizer* fgSizer30;
 	fgSizer30 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer30->AddGrowableCol( 0 );
 	fgSizer30->SetFlexibleDirection( wxBOTH );
 	fgSizer30->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -2052,8 +2057,6 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	m_panel18 = new wxPanel( m_notebook4, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxFlexGridSizer* fgSizer37;
 	fgSizer37 = new wxFlexGridSizer( 0, 2, 0, 0 );
-	fgSizer37->AddGrowableCol( 0 );
-	fgSizer37->AddGrowableCol( 1 );
 	fgSizer37->SetFlexibleDirection( wxBOTH );
 	fgSizer37->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -2062,6 +2065,7 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	
 	wxFlexGridSizer* fgSizer38;
 	fgSizer38 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer38->AddGrowableCol( 0 );
 	fgSizer38->SetFlexibleDirection( wxBOTH );
 	fgSizer38->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -2100,6 +2104,7 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	
 	wxFlexGridSizer* fgSizer39;
 	fgSizer39 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer39->AddGrowableCol( 0 );
 	fgSizer39->SetFlexibleDirection( wxBOTH );
 	fgSizer39->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -2135,6 +2140,7 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	
 	wxFlexGridSizer* fgSizer40;
 	fgSizer40 = new wxFlexGridSizer( 0, 2, 0, 0 );
+	fgSizer40->AddGrowableCol( 0 );
 	fgSizer40->SetFlexibleDirection( wxBOTH );
 	fgSizer40->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	

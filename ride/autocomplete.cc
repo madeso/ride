@@ -225,8 +225,9 @@ AutoIcon ParseRacerType(const wxString& aname) {
   return AI_None;
 }
 
-wxString RunRacer(WordEntryList& wordlist, const wxString& filename_,
-                  wxStyledTextCtrl* text_, const wxString& root_folder) {
+wxString RunRacer(const ride::MachineSettings& machine, WordEntryList& wordlist,
+                  const wxString& filename_, wxStyledTextCtrl* text_,
+                  const wxString& root_folder) {
   // save temp file
   wxFileName target(filename_);
   target.SetExt("racertmp");
@@ -241,7 +242,8 @@ wxString RunRacer(WordEntryList& wordlist, const wxString& filename_,
   const int charnum =
       text_->GetCurrentPos() - text_->PositionFromLine(text_->GetCurrentLine());
   const wxString cmd =
-      wxString::Format("racer complete %d %d \"%s\"", linenum, charnum, path);
+      wxString::Format((machine.racer() + " complete %d %d \"%s\"").c_str(),
+                       linenum, charnum, path);
   CmdRunner::Run(root_folder, cmd, &output);
   // parse output
   const std::vector<wxString> o = Split(output, "\n");
@@ -258,9 +260,10 @@ wxString RunRacer(WordEntryList& wordlist, const wxString& filename_,
   return output;
 }
 
-void Autocomplete(wxStyledTextCtrl* text, Language* current_language,
-                  const wxString& filename, const wxString& root_folder,
-                  wxWindow* self, ShowAutoCompleteAction action) {
+void Autocomplete(const ride::MachineSettings& machine, wxStyledTextCtrl* text,
+                  Language* current_language, const wxString& filename,
+                  const wxString& root_folder, wxWindow* self,
+                  ShowAutoCompleteAction action) {
   const bool ignore_case = true;
   const int word_wait_chars = 3;
   const bool racer = true;
@@ -315,7 +318,7 @@ void Autocomplete(wxStyledTextCtrl* text, Language* current_language,
 
     wxString racer_output;
     if (racer) {
-      racer_output = RunRacer(wordlist, filename, text, root_folder);
+      racer_output = RunRacer(machine, wordlist, filename, text, root_folder);
     }
 
     // setting it here instead of when spawning eats the entered '.' but
