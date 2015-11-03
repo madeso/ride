@@ -40,6 +40,7 @@
 #include "ride/wxutils.h"
 #include "ride/auix.h"
 #include "ride/menuevent.h"
+#include "ride/pathtester.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -450,36 +451,6 @@ void MainWindow::SetStatusBarText(const wxString& text,
   assert(statusbar_);
   statusbar_->SetStatusText(text, widget);
 }
-
-wxString RunTest(const std::string& app, const wxString& cmd) {
-  wxString output;
-  if (CmdRunner::Run("", app.c_str() + cmd, &output) == false) {
-    return "";
-  }
-
-  // TODO(Gustav): Only return the first row
-  return output.Trim(false);
-}
-
-class PathTester {
- public:
-  explicit PathTester(const ride::MachineSettings& machine)
-      : cargo_(RunTest(machine.cargo(), " --version")),
-        rustc_(RunTest(machine.rustc(), " --version")),
-        racer_(RunTest(machine.racer(), " complete std::io::B")),
-        protoc_(RunTest(machine.protoc(), " --version")) {}
-
-  const wxString cargo() const { return cargo_; }
-  const wxString rustc() const { return rustc_; }
-  const wxString racer() const { return racer_; }
-  const wxString protoc() const { return protoc_; }
-
- private:
-  wxString cargo_;
-  wxString rustc_;
-  wxString racer_;
-  wxString protoc_;
-};
 
 void TestPaths(wxWindow* main, const ride::MachineSettings& machine) {
   // TODO(Gustav): Provide option to disable startup test
