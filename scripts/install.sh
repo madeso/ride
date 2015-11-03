@@ -25,7 +25,7 @@ apt-get install -qq --assume-yes libgtk2.0-dev libprotobuf-dev protobuf-compiler
 
 # update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
 apt-get install libc6-i386
-sudo -u $usr wget http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.sh
+sudo -u $usr wget --no-check-certificate http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.sh
 sh cmake-3.3.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
 
 # credit: https://github.com/beark/ftl/
