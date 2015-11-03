@@ -61,6 +61,8 @@ class MainWindow : public wxFrame {
   const ride::Settings& settings() const;
   void set_settings(const ride::Settings& settings);
 
+  const ride::MachineSettings& machine() const;
+
   void UpdateTheme();
 
   void SetStatusBarText(const wxString& text, StatusBarWidgets widget);
@@ -195,6 +197,7 @@ class MainWindow : public wxFrame {
   ProjectExplorer* project_explorer_;
 
   ride::Settings settings_;
+  ride::MachineSettings machine_;
   std::unique_ptr<Project> project_;
   wxString app_name_;
 

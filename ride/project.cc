@@ -74,8 +74,6 @@ ride::UserProject* Project::user_ptr() { return &user_; }
 
 void Project::set_user(const ride::UserProject& user) { user_ = user; }
 
-const ride::MachineSettings& Project::machine() const { return machine_; }
-
 const wxString Project::GetCargoFile() const {
   if (root_folder_.IsEmpty()) return "";
   wxFileName cargo(root_folder_, "cargo.toml");
@@ -184,7 +182,7 @@ void Project::Build(bool origin_main) {
   }
 
   const ride::BuildSetting& build = GetCurrentBuildSetting();
-  const wxString cmd = BuildCommandLine(machine_, build);
+  const wxString cmd = BuildCommandLine(main_->machine(), build);
 
   RunCmd(cmd);
 }
@@ -196,7 +194,7 @@ void Project::Clean(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(machine_.cargo() + " clean");
+  RunCmd(main_->machine().cargo() + " clean");
 }
 
 void Project::Rebuild(bool origin_main) {
@@ -215,7 +213,7 @@ void Project::Doc(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(machine_.cargo() + " doc");
+  RunCmd(main_->machine().cargo() + " doc");
 }
 
 void Project::Run(bool origin_main) {
@@ -235,7 +233,7 @@ void Project::Test(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(machine_.cargo() + " test");
+  RunCmd(main_->machine().cargo() + " test");
 }
 
 void Project::Bench(bool origin_main) {
@@ -245,7 +243,7 @@ void Project::Bench(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(machine_.cargo() + " bench");
+  RunCmd(main_->machine().cargo() + " bench");
 }
 
 void Project::Update(bool origin_main) {
@@ -255,7 +253,7 @@ void Project::Update(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(machine_.cargo() + " update");
+  RunCmd(main_->machine().cargo() + " update");
 }
 
 //////////////////////////////////////////////////////////////////////////

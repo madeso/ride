@@ -596,7 +596,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   SetupMenu();
 #endif
 
-  TestPaths(this, project_->machine());
+  TestPaths(this, machine_);
 }
 
 void MainWindow::UpdateTheme() {
@@ -1141,6 +1141,8 @@ void MainWindow::set_settings(const ride::Settings& settings) {
   project_explorer_->UpdateColors();
 }
 
+const ride::MachineSettings& MainWindow::machine() const { return machine_; }
+
 void MainWindow::ProjectSettingsHasChanged() { UpdateAllEdits(); }
 
 void MainWindow::UpdateAllEdits() {
@@ -1244,7 +1246,7 @@ void MainWindow::UpdateTitle() {
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // todo: implement creation of new project
   CreateNewProjectDlgHandler dlg(this);
-  if (false == dlg.ShowModal(project_->machine())) {
+  if (false == dlg.ShowModal(machine_)) {
     return;
   }
   // run cargo new

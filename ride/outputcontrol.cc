@@ -134,8 +134,7 @@ void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event) {
   CompilerMessage message;
   if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC,
                              main_->root_folder(), line_content, &message)) {
-    const wxString cmd =
-        ReplaceCmd(main_->project()->machine(), GetCommandLine(message));
+    const wxString cmd = ReplaceCmd(main_->machine(), GetCommandLine(message));
     wxString output;
     CmdRunner::Run(main_->root_folder(), cmd, &output);
     ShowInfo(this, output, "Command result");

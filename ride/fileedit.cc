@@ -735,7 +735,7 @@ bool FileEdit::Save() {
   if (save_successful) {
     // if we managed to successfully save a protobuf file, then
     // run the protobuf compiler automatically
-    CompileProtoFile(main_->project()->machine(), filename_, main_);
+    CompileProtoFile(main_->machine(), filename_, main_);
   }
   return save_successful;
 }
@@ -776,7 +776,7 @@ wxString FileEdit::CalculateDocumentName() const {
 }
 
 void FileEdit::ShowAutocomplete() {
-  Autocomplete(main_->project()->machine(), text_, current_language_, filename_,
+  Autocomplete(main_->machine(), text_, current_language_, filename_,
                main_->root_folder(), this, ShowAutoCompleteAction::FORCE_KEEP);
 }
 
@@ -897,7 +897,7 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event) {
       (character_before_entered == ":" && entered_character == ':') ||
       (character_before_entered != "." && entered_character == '.');
 
-  Autocomplete(main_->project()->machine(), text_, current_language_, filename_,
+  Autocomplete(main_->machine(), text_, current_language_, filename_,
                main_->root_folder(), this,
                force ? ShowAutoCompleteAction::FORCE_SIMPLE
                      : ShowAutoCompleteAction::NO_FORCE);
