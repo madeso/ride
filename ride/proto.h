@@ -8,8 +8,8 @@
 #include <ride/wx.h>
 #include <wx/filename.h>
 
-bool LoadProto(google::protobuf::Message* t, const wxString& path);
-bool SaveProto(google::protobuf::Message* t, const wxString& path);
+bool LoadProto(google::protobuf::Message* t, const wxFileName& path);
+bool SaveProto(const google::protobuf::Message& t, const wxFileName& path);
 
 bool LoadProtoBinary(google::protobuf::Message* message,
                      const wxFileName& file_name);

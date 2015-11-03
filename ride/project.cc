@@ -53,7 +53,7 @@ const wxString& Project::root_folder() const { return root_folder_; }
 
 bool Project::Save() {
   if (root_folder_.IsEmpty()) return false;
-  bool project_saved = SaveProto(&project_, GetProjectFile());
+  bool project_saved = SaveProto(project_, GetProjectFile());
   bool user_saved = SaveUser();
   return project_saved && user_saved;
 }
@@ -272,7 +272,7 @@ void Project::RunCmd(const wxString& cmd) {
   MultiRunner::RunCmd(Command(root_folder_, cmd));
 }
 
-bool Project::SaveUser() { return SaveProto(&user_, GetUserFile()); }
+bool Project::SaveUser() { return SaveProto(user_, GetUserFile()); }
 
 int Project::GetSelectedBuildIndex() {
   if (project_.build_settings_size() <= 0) return -1;

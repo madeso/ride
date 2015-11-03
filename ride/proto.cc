@@ -10,8 +10,14 @@
 #include <fstream>  // NOLINT this is how we use protobuf
 #include <string>
 
-bool LoadProto(google::protobuf::Message* t, const wxString& path) {
+bool LoadProto(google::protobuf::Message* t, const wxFileName& file_name) {
   assert(t);
+
+  if (file_name.IsFileReadable() == false) {
+    return true;
+  }
+  const wxString path = file_name.GetFullPath();
+
   std::ifstream output(path.char_str());
   if (!output) return false;
   std::string data((std::istreambuf_iterator<char>(output)),
@@ -21,13 +27,19 @@ bool LoadProto(google::protobuf::Message* t, const wxString& path) {
   return true;
 }
 
-bool SaveProto(google::protobuf::Message* t, const wxString& path) {
-  assert(t);
+bool SaveProto(const google::protobuf::Message& t,
+               const wxFileName& file_name) {
+  file_name.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+  if (file_name.FileExists() && file_name.IsFileWritable() == false) {
+    // abort if the file exist and isn't writable
+    return false;
+  }
+  const wxString path = file_name.GetFullPath();
+
   std::ofstream output(path.char_str());
   std::string data;
-  if (false == google::protobuf::TextFormat::PrintToString(*t, &data))
+  if (false == google::protobuf::TextFormat::PrintToString(t, &data))
     return false;
-  if (data.empty()) return false;
   output << data;
   return true;
 }

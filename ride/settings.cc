@@ -26,35 +26,42 @@ wxFileName GetMachineFile() {
   return wxFileName(GetConfigFolder(), "machine", "data");
 }
 
-void LoadSettings(wxWindow* main, ::ride::MachineSettings* settings) {
-  if (false == LoadProtoBinary(settings, GetMachineFile())) {
-    ShowWarning(main, "Unable to parse machine settings file!", "Error");
+void LoadProtoTextOrBinary(google::protobuf::Message* message,
+                           const wxFileName& file, wxWindow* main,
+                           const wxString& error) {
+  if (false == LoadProto(message, file)) {
+    if (false == LoadProtoBinary(message, file)) {
+      ShowWarning(main, error, "Error");
+    }
   }
+}
+
+void LoadSettings(wxWindow* main, ::ride::MachineSettings* settings) {
+  LoadProtoTextOrBinary(settings, GetMachineFile(), main,
+                        "Unable to parse machine settings file!");
 }
 
 bool SaveSettings(wxWindow*, const ::ride::MachineSettings& settings) {
-  return SaveProtoBinary(settings, GetMachineFile());
+  return SaveProto(settings, GetMachineFile());
 }
 
 void LoadSettings(wxWindow* main, ::ride::Settings* settings) {
-  if (false == LoadProtoBinary(settings, GetConfigFile())) {
-    ShowWarning(main, "Unable to parse settings file!", "Error");
-  }
+  LoadProtoTextOrBinary(settings, GetConfigFile(), main,
+                        "Unable to parse settings file!");
   AddBuiltInThemes(settings);
 }
 
 bool SaveSettings(wxWindow*, const ::ride::Settings& settings) {
-  return SaveProtoBinary(settings, GetConfigFile());
+  return SaveProto(settings, GetConfigFile());
 }
 
 void LoadSession(wxWindow* main, ::ride::Session* settings) {
-  if (false == LoadProtoBinary(settings, GetSessionFile())) {
-    ShowWarning(main, "Unable to parse session file!", "Error");
-  }
+  LoadProtoTextOrBinary(settings, GetSessionFile(), main,
+                        "Unable to parse session file!");
 }
 
 bool SaveSession(wxWindow*, const ::ride::Session& settings) {
-  return SaveProtoBinary(settings, GetSessionFile());
+  return SaveProto(settings, GetSessionFile());
 }
 
 wxColor C(const ride::Color& c) { return wxColor(c.r(), c.g(), c.b()); }
