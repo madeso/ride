@@ -93,7 +93,7 @@ namespace {
 template <typename T>
 std::vector<T> Split(const T& str, const T& delimiters, bool remove_empties) {
   std::vector<T> v;
-  T::size_type start = 0;
+  std::size_t start = 0;
   auto pos = str.find_first_of(delimiters, start);
   while (pos != T::npos) {
     if (pos == start && remove_empties) {
