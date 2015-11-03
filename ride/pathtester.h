@@ -15,6 +15,11 @@ class PathTester {
   const wxString racer() const;
   const wxString protoc() const;
 
+  bool CargoIsValid() const;
+  bool RustcIsValid() const;
+  bool RacerIsValid() const;
+  bool ProtocIsValid() const;
+
  private:
   wxString cargo_;
   wxString rustc_;

@@ -455,13 +455,13 @@ void MainWindow::SetStatusBarText(const wxString& text,
 void TestPaths(wxWindow* main, const ride::MachineSettings& machine) {
   // TODO(Gustav): Provide option to disable startup test
   PathTester pt(machine);
-  if (pt.cargo().IsEmpty())
+  if (pt.CargoIsValid() == false)
     ShowWarning(main, "Unable to run cargo, please check settings",
                 "Configuration error!");
-  if (pt.rustc().IsEmpty())
+  if (pt.RustcIsValid() == false)
     ShowWarning(main, "Unable to run rustc, please check settings",
                 "Configuration error!");
-  if (pt.racer().IsEmpty())
+  if (pt.RacerIsValid() == false)
     ShowWarning(main, "Unable to run racer, please check settings",
                 "Configuration error!");
 
