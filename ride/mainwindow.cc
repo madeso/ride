@@ -1114,6 +1114,10 @@ void MainWindow::set_settings(const ride::Settings& settings) {
 
 const ride::MachineSettings& MainWindow::machine() const { return machine_; }
 
+void MainWindow::set_machine(const ride::MachineSettings& machine) {
+  machine_ = machine;
+}
+
 void MainWindow::ProjectSettingsHasChanged() { UpdateAllEdits(); }
 
 void MainWindow::UpdateAllEdits() {

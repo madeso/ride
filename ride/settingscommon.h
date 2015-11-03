@@ -14,6 +14,9 @@ class SettingsCommon {
   const ride::Settings& current_settings() const;
   ride::Settings* current_settings_mod();
 
+  const ride::MachineSettings& current_machine() const;
+  ride::MachineSettings* current_machine_mod();
+
   void UpdateMain();
   void Revert();
   void Apply(wxWindow* main);
@@ -22,6 +25,9 @@ class SettingsCommon {
   MainWindow* main_window_;
   ride::Settings global_settings_;
   ride::Settings current_settings_;
+
+  ride::MachineSettings global_machine_;
+  ride::MachineSettings current_machine_;
 };
 
 #endif  // RIDE_SETTINGSCOMMON_H_

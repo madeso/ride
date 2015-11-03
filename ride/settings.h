@@ -9,6 +9,9 @@
 
 class wxWindow;
 
+void LoadSettings(wxWindow* main, ::ride::MachineSettings* settings);
+bool SaveSettings(wxWindow* main, const ::ride::MachineSettings& settings);
+
 void LoadSettings(wxWindow* main, ::ride::Settings* settings);
 bool SaveSettings(wxWindow* main, const ::ride::Settings& settings);
 

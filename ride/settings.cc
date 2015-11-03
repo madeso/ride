@@ -22,6 +22,20 @@ wxFileName GetSessionFile() {
   return wxFileName(GetConfigFolder(), "session", "data");
 }
 
+wxFileName GetMachineFile() {
+  return wxFileName(GetConfigFolder(), "machine", "data");
+}
+
+void LoadSettings(wxWindow* main, ::ride::MachineSettings* settings) {
+  if (false == LoadProtoBinary(settings, GetMachineFile())) {
+    ShowWarning(main, "Unable to parse machine settings file!", "Error");
+  }
+}
+
+bool SaveSettings(wxWindow*, const ::ride::MachineSettings& settings) {
+  return SaveProtoBinary(settings, GetMachineFile());
+}
+
 void LoadSettings(wxWindow* main, ::ride::Settings* settings) {
   if (false == LoadProtoBinary(settings, GetConfigFile())) {
     ShowWarning(main, "Unable to parse settings file!", "Error");

@@ -463,6 +463,47 @@ namespace ui
 	};
 	
 	///////////////////////////////////////////////////////////////////////////////
+	/// Class SettingsEnviromentPanel
+	///////////////////////////////////////////////////////////////////////////////
+	class SettingsEnviromentPanel : public wxPanel 
+	{
+		private:
+		
+		protected:
+			wxStaticText* m_staticText103;
+			wxTextCtrl* uiCargoPath;
+			wxButton* m_button32;
+			wxStaticText* uiCargoStatus;
+			wxStaticText* m_staticText104;
+			wxTextCtrl* uiRustcPath;
+			wxButton* m_button33;
+			wxStaticText* uiRustcStatus;
+			wxStaticText* m_staticText105;
+			wxTextCtrl* uiRacerPath;
+			wxButton* m_button34;
+			wxStaticText* uiRacerStatus;
+			wxStaticText* m_staticText106;
+			wxTextCtrl* uiProtocPath;
+			wxButton* m_button35;
+			wxStaticText* uiProtocStatus;
+			wxButton* m_button36;
+			
+			// Virtual event handlers, overide them in your derived class
+			virtual void OnCargo( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRustc( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRacer( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnProtoc( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRefresh( wxCommandEvent& event ) { event.Skip(); }
+			
+		
+		public:
+			
+			SettingsEnviromentPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+			~SettingsEnviromentPanel();
+		
+	};
+	
+	///////////////////////////////////////////////////////////////////////////////
 	/// Class SettingsIndicatorsPanel
 	///////////////////////////////////////////////////////////////////////////////
 	class SettingsIndicatorsPanel : public wxPanel 

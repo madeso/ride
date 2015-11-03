@@ -62,6 +62,7 @@ class MainWindow : public wxFrame {
   void set_settings(const ride::Settings& settings);
 
   const ride::MachineSettings& machine() const;
+  void set_machine(const ride::MachineSettings& machine);
 
   void UpdateTheme();
 

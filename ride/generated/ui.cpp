@@ -1287,6 +1287,123 @@ SettingsFontsPanel::~SettingsFontsPanel()
 	
 }
 
+SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	wxFlexGridSizer* fgSizer43;
+	fgSizer43 = new wxFlexGridSizer( 0, 3, 0, 0 );
+	fgSizer43->AddGrowableCol( 1 );
+	fgSizer43->SetFlexibleDirection( wxBOTH );
+	fgSizer43->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText103 = new wxStaticText( this, wxID_ANY, wxT("cargo"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText103->Wrap( -1 );
+	fgSizer43->Add( m_staticText103, 0, wxALL, 5 );
+	
+	uiCargoPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer43->Add( uiCargoPath, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button32 = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer43->Add( m_button32, 0, wxALL, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiCargoStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiCargoStatus->Wrap( -1 );
+	fgSizer43->Add( uiCargoStatus, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText104 = new wxStaticText( this, wxID_ANY, wxT("rustc"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText104->Wrap( -1 );
+	fgSizer43->Add( m_staticText104, 0, wxALL, 5 );
+	
+	uiRustcPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer43->Add( uiRustcPath, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button33 = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer43->Add( m_button33, 0, wxALL, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiRustcStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiRustcStatus->Wrap( -1 );
+	fgSizer43->Add( uiRustcStatus, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText105 = new wxStaticText( this, wxID_ANY, wxT("racer"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText105->Wrap( -1 );
+	fgSizer43->Add( m_staticText105, 0, wxALL, 5 );
+	
+	uiRacerPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer43->Add( uiRacerPath, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button34 = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer43->Add( m_button34, 0, wxALL, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiRacerStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiRacerStatus->Wrap( -1 );
+	fgSizer43->Add( uiRacerStatus, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText106 = new wxStaticText( this, wxID_ANY, wxT("protoc"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText106->Wrap( -1 );
+	fgSizer43->Add( m_staticText106, 0, wxALL, 5 );
+	
+	uiProtocPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer43->Add( uiProtocPath, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button35 = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer43->Add( m_button35, 0, wxALL, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiProtocStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiProtocStatus->Wrap( -1 );
+	fgSizer43->Add( uiProtocStatus, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_button36 = new wxButton( this, wxID_ANY, wxT("Refresh"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer43->Add( m_button36, 0, wxALL, 5 );
+	
+	
+	this->SetSizer( fgSizer43 );
+	this->Layout();
+	
+	// Connect Events
+	m_button32->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnCargo ), NULL, this );
+	m_button33->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRustc ), NULL, this );
+	m_button34->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRacer ), NULL, this );
+	m_button35->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnProtoc ), NULL, this );
+	m_button36->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRefresh ), NULL, this );
+}
+
+SettingsEnviromentPanel::~SettingsEnviromentPanel()
+{
+	// Disconnect Events
+	m_button32->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnCargo ), NULL, this );
+	m_button33->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRustc ), NULL, this );
+	m_button34->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRacer ), NULL, this );
+	m_button35->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnProtoc ), NULL, this );
+	m_button36->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRefresh ), NULL, this );
+	
+}
+
 SettingsIndicatorsPanel::SettingsIndicatorsPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
 {
 	wxFlexGridSizer* fgSizer7;

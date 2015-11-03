@@ -25,6 +25,7 @@
 #include "ride/settingseditortab.h"
 #include "ride/settingswindowtab.h"
 #include "ride/settingsthemestab.h"
+#include "ride/settingsenviromenttab.h"
 #include "ride/togui.h"
 
 struct RideListBoxItem {
@@ -140,6 +141,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
   SettingsEditorTab* m_editor;
   SettingsWindowTab* m_window;
   SettingsThemesTab* m_themes;
+  SettingsEnviromentTab* m_enviroment;
   wxStaticText* selection_info;
 
   SettingsDlg(wxWindow* parent, MainWindow* mainwindow)
@@ -168,6 +170,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     m_editor = new SettingsEditorTab(notebook, &common_);
     m_window = new SettingsWindowTab(notebook, &common_);
     m_themes = new SettingsThemesTab(notebook, &common_, this);
+    m_enviroment = new SettingsEnviromentTab(notebook, &common_);
 
     notebook->AddPage(m_fonts, "");
     notebook->AddPage(m_indicators, "");
@@ -175,6 +178,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     notebook->AddPage(m_editor, "");
     notebook->AddPage(m_window, "");
     notebook->AddPage(m_themes, "");
+    notebook->AddPage(m_enviroment, "");
 
     nootebook_ctrl = new RideListBox(this);
     AddItem(nootebook_ctrl, 0, "Fonts", m_fonts);
@@ -183,6 +187,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     AddItem(nootebook_ctrl, 3, "Editor", m_editor);
     AddItem(nootebook_ctrl, 4, "Window", m_window);
     AddItem(nootebook_ctrl, 5, "Themes", m_themes);
+    AddItem(nootebook_ctrl, 6, "Enviroment", m_enviroment);
 
     notebook_sizer->AddStretchSpacer();  // find ctrl
     notebook_sizer->Add(selection_info);
@@ -231,6 +236,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     m_window->WindowToGui(false);
     m_indicators->IndicatorToGui(togui);
     m_themes->ThemeToGui(togui);
+    m_enviroment->SettingsToGui(togui);
   }
 
   void OnApply(wxCommandEvent& event) {
