@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Jun  5 2014)
+// C++ code generated with wxFormBuilder (version Jun 17 2015)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -457,27 +457,27 @@ Find::Find( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoin
 	wxBoxSizer* bSizer17;
 	bSizer17 = new wxBoxSizer( wxVERTICAL );
 	
-	uiMatchCase = new wxCheckBox( this, wxID_ANY, wxT("Match case"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiMatchCase = new wxCheckBox( sbSizer9->GetStaticBox(), wxID_ANY, wxT("Match case"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer17->Add( uiMatchCase, 0, wxALL, 5 );
 	
-	uiMatchWholeWord = new wxCheckBox( this, wxID_ANY, wxT("Match whole word"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiMatchWholeWord = new wxCheckBox( sbSizer9->GetStaticBox(), wxID_ANY, wxT("Match whole word"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer17->Add( uiMatchWholeWord, 0, wxALL, 5 );
 	
-	uiFindWordStart = new wxCheckBox( this, wxID_ANY, wxT("Must be start of the word"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiFindWordStart = new wxCheckBox( sbSizer9->GetStaticBox(), wxID_ANY, wxT("Must be start of the word"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer17->Add( uiFindWordStart, 0, wxALL, 5 );
 	
-	uiFindTarget = new wxComboBox( this, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiFindTarget = new wxComboBox( sbSizer9->GetStaticBox(), wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
 	uiFindTarget->SetSelection( 0 );
 	bSizer17->Add( uiFindTarget, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText25 = new wxStaticText( this, wxID_ANY, wxT("Look at theese file types:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText25 = new wxStaticText( sbSizer9->GetStaticBox(), wxID_ANY, wxT("Look at theese file types:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText25->Wrap( -1 );
 	bSizer17->Add( m_staticText25, 0, wxALL, 5 );
 	
-	uiFileTypes = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
+	uiFileTypes = new wxTextCtrl( sbSizer9->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer17->Add( uiFileTypes, 0, wxALL|wxEXPAND, 5 );
 	
-	m_scintilla1 = new wxStyledTextCtrl( this, wxID_ANY, wxDefaultPosition, wxSize( 0,0 ), 0, wxEmptyString );
+	m_scintilla1 = new wxStyledTextCtrl( sbSizer9->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxSize( 0,0 ), 0, wxEmptyString );
 	m_scintilla1->SetUseTabs( true );
 	m_scintilla1->SetTabWidth( 4 );
 	m_scintilla1->SetIndent( 4 );
@@ -702,7 +702,7 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiBuildConfigurationRelease = new wxCheckBox(    m_buildPanel, wxID_ANY, wxT("Release"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiBuildConfigurationRelease = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, wxT("Release"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer18->Add( uiBuildConfigurationRelease, 0, wxALL, 5 );
 	
 	
@@ -711,7 +711,7 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiBuildConfigurationDefaultFeatures = new wxCheckBox(    m_buildPanel, wxID_ANY, wxT("Add default features"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiBuildConfigurationDefaultFeatures = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, wxT("Add default features"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer18->Add( uiBuildConfigurationDefaultFeatures, 0, wxALL, 5 );
 	
 	
@@ -720,65 +720,65 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	 uiBuildConfigurationVerbose = new wxCheckBox(    m_buildPanel, wxID_ANY, wxT("Verbose"), wxDefaultPosition, wxDefaultSize, 0 );
+	 uiBuildConfigurationVerbose = new wxCheckBox( sbSizer11->GetStaticBox(), wxID_ANY, wxT("Verbose"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer18->Add(  uiBuildConfigurationVerbose, 0, wxALL, 5 );
 	
 	
 	fgSizer18->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	m_staticText37 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Target:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText37 = new wxStaticText( sbSizer11->GetStaticBox(), wxID_ANY, wxT("Target:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText37->Wrap( -1 );
 	fgSizer18->Add( m_staticText37, 0, wxALL, 5 );
 	
-	uiBuildConfigurationTarget = new wxTextCtrl(    m_buildPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiBuildConfigurationTarget = new wxTextCtrl( sbSizer11->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer18->Add( uiBuildConfigurationTarget, 0, wxALL|wxEXPAND, 5 );
 	
-	uiBuildConfigurationTargetHelp = new wxButton(    m_buildPanel, wxID_ANY, wxT("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiBuildConfigurationTargetHelp = new wxButton( sbSizer11->GetStaticBox(), wxID_ANY, wxT("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	fgSizer18->Add( uiBuildConfigurationTargetHelp, 0, wxALL, 5 );
 	
-	m_staticText34 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Custom args:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText34 = new wxStaticText( sbSizer11->GetStaticBox(), wxID_ANY, wxT("Custom args:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText34->Wrap( -1 );
 	fgSizer18->Add( m_staticText34, 0, wxALL, 5 );
 	
-	uiBuildConfigurationCustomArgs = new wxTextCtrl(    m_buildPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiBuildConfigurationCustomArgs = new wxTextCtrl( sbSizer11->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer18->Add( uiBuildConfigurationCustomArgs, 0, wxALL|wxEXPAND, 5 );
 	
-	uiBuildConfigurationCustomArgsHelp = new wxButton(    m_buildPanel, wxID_ANY, wxT("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiBuildConfigurationCustomArgsHelp = new wxButton( sbSizer11->GetStaticBox(), wxID_ANY, wxT("?"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	fgSizer18->Add( uiBuildConfigurationCustomArgsHelp, 0, wxALL, 5 );
 	
-	m_staticText38 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Features:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText38 = new wxStaticText( sbSizer11->GetStaticBox(), wxID_ANY, wxT("Features:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText38->Wrap( -1 );
 	fgSizer18->Add( m_staticText38, 0, wxALL, 5 );
 	
-	uiBuildFeatures = new wxListBox(    m_buildPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	uiBuildFeatures = new wxListBox( sbSizer11->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	fgSizer18->Add( uiBuildFeatures, 1, wxALL|wxEXPAND, 5 );
 	
 	wxBoxSizer* bSizer28;
 	bSizer28 = new wxBoxSizer( wxVERTICAL );
 	
-	uiBuildFeatureAdd = new wxButton(    m_buildPanel, wxID_ANY, wxT("+"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiBuildFeatureAdd = new wxButton( sbSizer11->GetStaticBox(), wxID_ANY, wxT("+"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	bSizer28->Add( uiBuildFeatureAdd, 0, wxALL, 5 );
 	
-	uiBuildFeatureEdit = new wxButton(    m_buildPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiBuildFeatureEdit = new wxButton( sbSizer11->GetStaticBox(), wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	bSizer28->Add( uiBuildFeatureEdit, 0, wxALL, 5 );
 	
-	uiBuildFeatureRemove = new wxButton(    m_buildPanel, wxID_ANY, wxT("-"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiBuildFeatureRemove = new wxButton( sbSizer11->GetStaticBox(), wxID_ANY, wxT("-"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	bSizer28->Add( uiBuildFeatureRemove, 0, wxALL, 5 );
 	
-	uiBuildFeatureUp = new wxButton(    m_buildPanel, wxID_ANY, wxT("/\\"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiBuildFeatureUp = new wxButton( sbSizer11->GetStaticBox(), wxID_ANY, wxT("/\\"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	bSizer28->Add( uiBuildFeatureUp, 0, wxALL, 5 );
 	
-	uiBuildFeatureDown = new wxButton(    m_buildPanel, wxID_ANY, wxT("\\/"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiBuildFeatureDown = new wxButton( sbSizer11->GetStaticBox(), wxID_ANY, wxT("\\/"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	bSizer28->Add( uiBuildFeatureDown, 0, wxALL, 5 );
 	
 	
 	fgSizer18->Add( bSizer28, 0, 0, 5 );
 	
-	m_staticText48 = new wxStaticText(    m_buildPanel, wxID_ANY, wxT("Build command:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48 = new wxStaticText( sbSizer11->GetStaticBox(), wxID_ANY, wxT("Build command:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText48->Wrap( -1 );
 	fgSizer18->Add( m_staticText48, 0, wxALL, 5 );
 	
-	uiBuildCommandLine = new wxTextCtrl(    m_buildPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
+	uiBuildCommandLine = new wxTextCtrl( sbSizer11->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_READONLY );
 	fgSizer18->Add( uiBuildCommandLine, 0, wxALL|wxEXPAND, 5 );
 	
 	
@@ -835,50 +835,50 @@ ProjectSettings::ProjectSettings( wxWindow* parent, wxWindowID id, const wxStrin
 	fgSizer23->SetFlexibleDirection( wxBOTH );
 	fgSizer23->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText50 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Application to launch:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText50 = new wxStaticText( sbSizer16->GetStaticBox(), wxID_ANY, wxT("Application to launch:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText50->Wrap( -1 );
 	fgSizer23->Add( m_staticText50, 0, wxALL, 5 );
 	
-	uiRunApplication = new wxTextCtrl( m_runPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiRunApplication = new wxTextCtrl( sbSizer16->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer23->Add( uiRunApplication, 0, wxALL|wxEXPAND, 5 );
 	
-	uiRunApplicationCmd = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiRunApplicationCmd = new wxButton( sbSizer16->GetStaticBox(), wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	fgSizer23->Add( uiRunApplicationCmd, 0, wxALL, 5 );
 	
-	m_staticText51 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Arguments to app:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText51 = new wxStaticText( sbSizer16->GetStaticBox(), wxID_ANY, wxT("Arguments to app:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText51->Wrap( -1 );
 	fgSizer23->Add( m_staticText51, 0, wxALL, 5 );
 	
-	uiRunArguments = new wxTextCtrl( m_runPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiRunArguments = new wxTextCtrl( sbSizer16->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer23->Add( uiRunArguments, 0, wxALL|wxEXPAND, 5 );
 	
-	uiRunArgumentsCmd = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiRunArgumentsCmd = new wxButton( sbSizer16->GetStaticBox(), wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	fgSizer23->Add( uiRunArgumentsCmd, 0, wxALL, 5 );
 	
-	m_staticText52 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Startup folder:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText52 = new wxStaticText( sbSizer16->GetStaticBox(), wxID_ANY, wxT("Startup folder:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText52->Wrap( -1 );
 	fgSizer23->Add( m_staticText52, 0, wxALL, 5 );
 	
-	uiRunFolder = new wxTextCtrl( m_runPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiRunFolder = new wxTextCtrl( sbSizer16->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer23->Add( uiRunFolder, 0, wxALL|wxEXPAND, 5 );
 	
-	uiRunFolderCmd = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiRunFolderCmd = new wxButton( sbSizer16->GetStaticBox(), wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	fgSizer23->Add( uiRunFolderCmd, 0, wxALL, 5 );
 	
-	m_staticText53 = new wxStaticText( m_runPanel, wxID_ANY, wxT("Cmd before launch"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText53 = new wxStaticText( sbSizer16->GetStaticBox(), wxID_ANY, wxT("Cmd before launch"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText53->Wrap( -1 );
 	fgSizer23->Add( m_staticText53, 0, wxALL, 5 );
 	
-	uiCmdBeforeLaunch = new wxTextCtrl( m_runPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiCmdBeforeLaunch = new wxTextCtrl( sbSizer16->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer23->Add( uiCmdBeforeLaunch, 0, wxALL|wxEXPAND, 5 );
 	
-	uiCmdBeforeLaunchCmd = new wxButton( m_runPanel, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	uiCmdBeforeLaunchCmd = new wxButton( sbSizer16->GetStaticBox(), wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
 	fgSizer23->Add( uiCmdBeforeLaunchCmd, 0, wxALL, 5 );
 	
 	
 	fgSizer23->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiRunWaitForExit = new wxCheckBox( m_runPanel, wxID_ANY, wxT("Wait for application exit"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiRunWaitForExit = new wxCheckBox( sbSizer16->GetStaticBox(), wxID_ANY, wxT("Wait for application exit"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer23->Add( uiRunWaitForExit, 0, wxALL, 5 );
 	
 	
@@ -1098,7 +1098,7 @@ VariableEditor::VariableEditor( wxWindow* parent, wxWindowID id, const wxString&
 	wxStaticBoxSizer* sbSizer17;
 	sbSizer17 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, wxT("Custom variables") ), wxVERTICAL );
 	
-	uiCustomVariables = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	uiCustomVariables = new wxListBox( sbSizer17->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	sbSizer17->Add( uiCustomVariables, 1, wxALL|wxEXPAND, 5 );
 	
 	
@@ -1158,7 +1158,7 @@ SettingsFontsPanel::SettingsFontsPanel( wxWindow* parent, wxWindowID id, const w
 	wxStaticBoxSizer* sbSizer3;
 	sbSizer3 = new wxStaticBoxSizer( new wxStaticBox( m_panel9, wxID_ANY, wxT("Styles") ), wxVERTICAL );
 	
-	uiFontStyles = new wxListBox( m_panel9, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	uiFontStyles = new wxListBox( sbSizer3->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	sbSizer3->Add( uiFontStyles, 1, wxALL|wxEXPAND, 5 );
 	
 	
@@ -1179,14 +1179,14 @@ SettingsFontsPanel::SettingsFontsPanel( wxWindow* parent, wxWindowID id, const w
 	wxStaticBoxSizer* sbSizer2;
 	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( m_panel7, wxID_ANY, wxT("Typefaces") ), wxVERTICAL );
 	
-	uiStyleUseTypeface = new wxCheckBox( m_panel7, wxID_ANY, wxT("Use typeface?"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiStyleUseTypeface = new wxCheckBox( sbSizer2->GetStaticBox(), wxID_ANY, wxT("Use typeface?"), wxDefaultPosition, wxDefaultSize, 0 );
 	sbSizer2->Add( uiStyleUseTypeface, 0, wxALL, 5 );
 	
-	uiStyleOnlyFixedSize = new wxCheckBox( m_panel7, wxID_ANY, wxT("Only fixed sizes"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiStyleOnlyFixedSize = new wxCheckBox( sbSizer2->GetStaticBox(), wxID_ANY, wxT("Only fixed sizes"), wxDefaultPosition, wxDefaultSize, 0 );
 	uiStyleOnlyFixedSize->SetValue(true); 
 	sbSizer2->Add( uiStyleOnlyFixedSize, 0, wxALL, 5 );
 	
-	uiStyleTypeface = new wxListBox( m_panel7, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	uiStyleTypeface = new wxListBox( sbSizer2->GetStaticBox(), wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
 	sbSizer2->Add( uiStyleTypeface, 1, wxALL|wxEXPAND, 5 );
 	
 	
@@ -1310,7 +1310,10 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	
 	uiCargoStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
 	uiCargoStatus->Wrap( -1 );
-	fgSizer43->Add( uiCargoStatus, 0, wxALL|wxEXPAND, 5 );
+	uiCargoStatus->SetFont( wxFont( wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+	uiCargoStatus->SetMaxSize( wxSize( 100,-1 ) );
+	
+	fgSizer43->Add( uiCargoStatus, 0, wxALL|wxEXPAND, 0 );
 	
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -1330,7 +1333,7 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	
 	uiRustcStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
 	uiRustcStatus->Wrap( -1 );
-	fgSizer43->Add( uiRustcStatus, 0, wxALL|wxEXPAND, 5 );
+	fgSizer43->Add( uiRustcStatus, 0, wxALL|wxEXPAND, 0 );
 	
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -1348,8 +1351,10 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiRacerStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiRacerStatus = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
 	uiRacerStatus->Wrap( -1 );
+	uiRacerStatus->SetMaxSize( wxSize( 100,-1 ) );
+	
 	fgSizer43->Add( uiRacerStatus, 0, wxALL|wxEXPAND, 5 );
 	
 	
@@ -1368,9 +1373,9 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiProtocStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiProtocStatus = new wxStaticText( this, wxID_ANY, wxT("My Label"), wxDefaultPosition, wxDefaultSize, 0 );
 	uiProtocStatus->Wrap( -1 );
-	fgSizer43->Add( uiProtocStatus, 0, wxALL|wxEXPAND, 5 );
+	fgSizer43->Add( uiProtocStatus, 0, wxALL, 0 );
 	
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -1380,6 +1385,9 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	
 	m_button36 = new wxButton( this, wxID_ANY, wxT("Refresh"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer43->Add( m_button36, 0, wxALL, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	
 	this->SetSizer( fgSizer43 );
@@ -1633,39 +1641,39 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer401->SetFlexibleDirection( wxBOTH );
 	fgSizer401->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText98 = new wxStaticText( m_panel26, wxID_ANY, wxT("{curly braces}"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText98 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("{curly braces}"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText98->Wrap( -1 );
 	fgSizer401->Add( m_staticText98, 0, wxALL, 5 );
 	
-	uiEditAutocompleteCurlyBraces = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiEditAutocompleteCurlyBraces = new wxComboBox( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
 	fgSizer401->Add( uiEditAutocompleteCurlyBraces, 0, wxALL, 5 );
 	
-	m_staticText99 = new wxStaticText( m_panel26, wxID_ANY, wxT("(partheses)"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText99 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("(partheses)"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText99->Wrap( -1 );
 	fgSizer401->Add( m_staticText99, 0, wxALL, 5 );
 	
-	uiEditAutocompleteParentheses  = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiEditAutocompleteParentheses  = new wxComboBox( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
 	fgSizer401->Add( uiEditAutocompleteParentheses , 0, wxALL, 5 );
 	
-	m_staticText100 = new wxStaticText( m_panel26, wxID_ANY, wxT("[brackets]"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText100 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("[brackets]"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText100->Wrap( -1 );
 	fgSizer401->Add( m_staticText100, 0, wxALL, 5 );
 	
-	uiEditAutocompleteBrackets = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiEditAutocompleteBrackets = new wxComboBox( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
 	fgSizer401->Add( uiEditAutocompleteBrackets, 0, wxALL, 5 );
 	
-	m_staticText101 = new wxStaticText( m_panel26, wxID_ANY, wxT("'single quote'"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText101 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("'single quote'"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText101->Wrap( -1 );
 	fgSizer401->Add( m_staticText101, 0, wxALL, 5 );
 	
-	uiEditAutocompleteSingleQuote = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiEditAutocompleteSingleQuote = new wxComboBox( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
 	fgSizer401->Add( uiEditAutocompleteSingleQuote, 0, wxALL, 5 );
 	
-	m_staticText102 = new wxStaticText( m_panel26, wxID_ANY, wxT("\"double quote\""), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText102 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("\"double quote\""), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText102->Wrap( -1 );
 	fgSizer401->Add( m_staticText102, 0, wxALL, 5 );
 	
-	uiEditAutocompleteDoubleQuote = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
+	uiEditAutocompleteDoubleQuote = new wxComboBox( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY ); 
 	fgSizer401->Add( uiEditAutocompleteDoubleQuote, 0, wxALL, 5 );
 	
 	
@@ -1685,14 +1693,14 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	
 	fgSizer23->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiIndentGuide = new wxCheckBox( m_panel26, wxID_ANY, wxT("Display indent guide"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiIndentGuide = new wxCheckBox( sbSizer28->GetStaticBox(), wxID_ANY, wxT("Display indent guide"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer23->Add( uiIndentGuide, 0, wxALL, 5 );
 	
-	m_staticText44 = new wxStaticText( m_panel26, wxID_ANY, wxT("Indent type:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText44 = new wxStaticText( sbSizer28->GetStaticBox(), wxID_ANY, wxT("Indent type:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText44->Wrap( -1 );
 	fgSizer23->Add( m_staticText44, 0, wxALL, 5 );
 	
-	uiEditIndentation = new wxComboBox( m_panel26, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiEditIndentation = new wxComboBox( sbSizer28->GetStaticBox(), wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
 	uiEditIndentation->Append( wxT("None") );
 	uiEditIndentation->Append( wxT("Keep") );
 	uiEditIndentation->Append( wxT("Smart") );
@@ -1816,28 +1824,28 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	
 	fgSizer20->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiCurrentLineVisible = new wxCheckBox( m_panel11, wxID_ANY, wxT("Show current line?"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiCurrentLineVisible = new wxCheckBox( sbSizer29->GetStaticBox(), wxID_ANY, wxT("Show current line?"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer20->Add( uiCurrentLineVisible, 0, wxALL, 5 );
 	
 	
 	fgSizer20->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiEditCurrentLineOverdraw = new wxCheckBox( m_panel11, wxID_ANY, wxT("Overdraw?"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiEditCurrentLineOverdraw = new wxCheckBox( sbSizer29->GetStaticBox(), wxID_ANY, wxT("Overdraw?"), wxDefaultPosition, wxDefaultSize, 0 );
 	uiEditCurrentLineOverdraw->SetValue(true); 
 	fgSizer20->Add( uiEditCurrentLineOverdraw, 0, wxALL, 5 );
 	
-	m_staticText39 = new wxStaticText( m_panel11, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText39 = new wxStaticText( sbSizer29->GetStaticBox(), wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText39->Wrap( -1 );
 	fgSizer20->Add( m_staticText39, 0, wxALL, 5 );
 	
-	uiEditCurrentLineColor = new wxColourPickerCtrl( m_panel11, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiEditCurrentLineColor = new wxColourPickerCtrl( sbSizer29->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer20->Add( uiEditCurrentLineColor, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText40 = new wxStaticText( m_panel11, wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText40 = new wxStaticText( sbSizer29->GetStaticBox(), wxID_ANY, wxT("Alpha:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText40->Wrap( -1 );
 	fgSizer20->Add( m_staticText40, 0, wxALL, 5 );
 	
-	uiEditCurrentLineAlpha = new wxTextCtrl( m_panel11, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiEditCurrentLineAlpha = new wxTextCtrl( sbSizer29->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer20->Add( uiEditCurrentLineAlpha, 0, wxALL|wxEXPAND, 5 );
 	
 	
@@ -1854,16 +1862,16 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer9->SetFlexibleDirection( wxBOTH );
 	fgSizer9->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	uiEditUseSelectionForeground = new wxCheckBox( m_panel11, wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiEditUseSelectionForeground = new wxCheckBox( sbSizer30->GetStaticBox(), wxID_ANY, wxT("Foreground:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer9->Add( uiEditUseSelectionForeground, 0, wxALL, 5 );
 	
-	uiEditSelectionForeground = new wxColourPickerCtrl( m_panel11, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiEditSelectionForeground = new wxColourPickerCtrl( sbSizer30->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer9->Add( uiEditSelectionForeground, 0, wxALL, 5 );
 	
-	uiEditUseSelectionBackground = new wxCheckBox( m_panel11, wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiEditUseSelectionBackground = new wxCheckBox( sbSizer30->GetStaticBox(), wxID_ANY, wxT("Background:"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer9->Add( uiEditUseSelectionBackground, 0, wxALL, 5 );
 	
-	uiEditSelectionBackground = new wxColourPickerCtrl( m_panel11, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiEditSelectionBackground = new wxColourPickerCtrl( sbSizer30->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer9->Add( uiEditSelectionBackground, 0, wxALL, 5 );
 	
 	
@@ -1880,28 +1888,28 @@ SettingsEditorPanel::SettingsEditorPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer25->SetFlexibleDirection( wxBOTH );
 	fgSizer25->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText47 = new wxStaticText( m_panel11, wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText47 = new wxStaticText( sbSizer31->GetStaticBox(), wxID_ANY, wxT("Style:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText47->Wrap( -1 );
 	fgSizer25->Add( m_staticText47, 0, wxALL, 5 );
 	
-	uiEdgeStyle = new wxComboBox( m_panel11, wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
+	uiEdgeStyle = new wxComboBox( sbSizer31->GetStaticBox(), wxID_ANY, wxT("Combo!"), wxDefaultPosition, wxDefaultSize, 0, NULL, wxCB_DROPDOWN|wxCB_READONLY );
 	uiEdgeStyle->Append( wxT("None") );
 	uiEdgeStyle->Append( wxT("Line") );
 	uiEdgeStyle->Append( wxT("Background") );
 	fgSizer25->Add( uiEdgeStyle, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText48 = new wxStaticText( m_panel11, wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText48 = new wxStaticText( sbSizer31->GetStaticBox(), wxID_ANY, wxT("Color:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText48->Wrap( -1 );
 	fgSizer25->Add( m_staticText48, 0, wxALL, 5 );
 	
-	uiEdgeColor = new wxColourPickerCtrl( m_panel11, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiEdgeColor = new wxColourPickerCtrl( sbSizer31->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer25->Add( uiEdgeColor, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText49 = new wxStaticText( m_panel11, wxID_ANY, wxT("Column:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText49 = new wxStaticText( sbSizer31->GetStaticBox(), wxID_ANY, wxT("Column:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText49->Wrap( -1 );
 	fgSizer25->Add( m_staticText49, 0, wxALL, 5 );
 	
-	uiEdgeColumn = new wxTextCtrl( m_panel11, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiEdgeColumn = new wxTextCtrl( sbSizer31->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer25->Add( uiEdgeColumn, 0, wxALL|wxEXPAND, 5 );
 	
 	
@@ -2057,32 +2065,32 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer281->SetFlexibleDirection( wxBOTH );
 	fgSizer281->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText55 = new wxStaticText( m_panel17, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText55 = new wxStaticText( sbSizer23->GetStaticBox(), wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText55->Wrap( -1 );
 	fgSizer281->Add( m_staticText55, 0, wxALL, 5 );
 	
-	uiWindowDockCommonBackground = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockCommonBackground = new wxColourPickerCtrl( sbSizer23->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer281->Add( uiWindowDockCommonBackground, 0, wxALL, 5 );
 	
-	m_staticText56 = new wxStaticText( m_panel17, wxID_ANY, wxT("Sash"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText56 = new wxStaticText( sbSizer23->GetStaticBox(), wxID_ANY, wxT("Sash"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText56->Wrap( -1 );
 	fgSizer281->Add( m_staticText56, 0, wxALL, 5 );
 	
-	uiWindowDockCommonSash = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockCommonSash = new wxColourPickerCtrl( sbSizer23->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer281->Add( uiWindowDockCommonSash, 0, wxALL, 5 );
 	
-	m_staticText57 = new wxStaticText( m_panel17, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText57 = new wxStaticText( sbSizer23->GetStaticBox(), wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText57->Wrap( -1 );
 	fgSizer281->Add( m_staticText57, 0, wxALL, 5 );
 	
-	uiWindowDockCommonBorder = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockCommonBorder = new wxColourPickerCtrl( sbSizer23->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer281->Add( uiWindowDockCommonBorder, 0, wxALL, 5 );
 	
-	m_staticText58 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gripper"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText58 = new wxStaticText( sbSizer23->GetStaticBox(), wxID_ANY, wxT("Gripper"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText58->Wrap( -1 );
 	fgSizer281->Add( m_staticText58, 0, wxALL, 5 );
 	
-	uiWindowDockCommonGripper = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockCommonGripper = new wxColourPickerCtrl( sbSizer23->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer281->Add( uiWindowDockCommonGripper, 0, wxALL, 5 );
 	
 	
@@ -2103,25 +2111,25 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer29->SetFlexibleDirection( wxBOTH );
 	fgSizer29->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText59 = new wxStaticText( m_panel17, wxID_ANY, wxT("Caption"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText59 = new wxStaticText( sbSizer19->GetStaticBox(), wxID_ANY, wxT("Caption"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText59->Wrap( -1 );
 	fgSizer29->Add( m_staticText59, 0, wxALL, 5 );
 	
-	uiWindowDockActiveCaption = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockActiveCaption = new wxColourPickerCtrl( sbSizer19->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer29->Add( uiWindowDockActiveCaption, 0, wxALL, 5 );
 	
-	m_staticText60 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gradient"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText60 = new wxStaticText( sbSizer19->GetStaticBox(), wxID_ANY, wxT("Gradient"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText60->Wrap( -1 );
 	fgSizer29->Add( m_staticText60, 0, wxALL, 5 );
 	
-	uiWindowDockActiveGradient = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockActiveGradient = new wxColourPickerCtrl( sbSizer19->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer29->Add( uiWindowDockActiveGradient, 0, wxALL, 5 );
 	
-	m_staticText61 = new wxStaticText( m_panel17, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText61 = new wxStaticText( sbSizer19->GetStaticBox(), wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText61->Wrap( -1 );
 	fgSizer29->Add( m_staticText61, 0, wxALL, 5 );
 	
-	uiWindowDockActiveText = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockActiveText = new wxColourPickerCtrl( sbSizer19->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer29->Add( uiWindowDockActiveText, 0, wxALL, 5 );
 	
 	
@@ -2139,25 +2147,25 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer30->SetFlexibleDirection( wxBOTH );
 	fgSizer30->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText62 = new wxStaticText( m_panel17, wxID_ANY, wxT("Caption"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText62 = new wxStaticText( sbSizer20->GetStaticBox(), wxID_ANY, wxT("Caption"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText62->Wrap( -1 );
 	fgSizer30->Add( m_staticText62, 0, wxALL, 5 );
 	
-	uiWindowDockInactiveCaption = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockInactiveCaption = new wxColourPickerCtrl( sbSizer20->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer30->Add( uiWindowDockInactiveCaption, 0, wxALL, 5 );
 	
-	m_staticText63 = new wxStaticText( m_panel17, wxID_ANY, wxT("Gradient"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText63 = new wxStaticText( sbSizer20->GetStaticBox(), wxID_ANY, wxT("Gradient"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText63->Wrap( -1 );
 	fgSizer30->Add( m_staticText63, 0, wxALL, 5 );
 	
-	uiWindowDockInactiveGradient = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockInactiveGradient = new wxColourPickerCtrl( sbSizer20->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer30->Add( uiWindowDockInactiveGradient, 0, wxALL, 5 );
 	
-	m_staticText64 = new wxStaticText( m_panel17, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText64 = new wxStaticText( sbSizer20->GetStaticBox(), wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText64->Wrap( -1 );
 	fgSizer30->Add( m_staticText64, 0, wxALL, 5 );
 	
-	uiWindowDockInactiveText = new wxColourPickerCtrl( m_panel17, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowDockInactiveText = new wxColourPickerCtrl( sbSizer20->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer30->Add( uiWindowDockInactiveText, 0, wxALL, 5 );
 	
 	
@@ -2186,25 +2194,25 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer38->SetFlexibleDirection( wxBOTH );
 	fgSizer38->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText65 = new wxStaticText( m_panel18, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText65 = new wxStaticText( sbSizer24->GetStaticBox(), wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText65->Wrap( -1 );
 	fgSizer38->Add( m_staticText65, 0, wxALL, 5 );
 	
-	uiWindowTabCommonBackground = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabCommonBackground = new wxColourPickerCtrl( sbSizer24->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer38->Add( uiWindowTabCommonBackground, 0, wxALL, 5 );
 	
-	m_staticText77 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText77 = new wxStaticText( sbSizer24->GetStaticBox(), wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText77->Wrap( -1 );
 	fgSizer38->Add( m_staticText77, 0, wxALL, 5 );
 	
-	uiWindowTabCommonBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabCommonBorder = new wxColourPickerCtrl( sbSizer24->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer38->Add( uiWindowTabCommonBorder, 0, wxALL, 5 );
 	
-	m_staticText78 = new wxStaticText( m_panel18, wxID_ANY, wxT("Sash"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText78 = new wxStaticText( sbSizer24->GetStaticBox(), wxID_ANY, wxT("Sash"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText78->Wrap( -1 );
 	fgSizer38->Add( m_staticText78, 0, wxALL, 5 );
 	
-	uiWindowTabCommonSash = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabCommonSash = new wxColourPickerCtrl( sbSizer24->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer38->Add( uiWindowTabCommonSash, 0, wxALL, 5 );
 	
 	
@@ -2225,25 +2233,25 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer39->SetFlexibleDirection( wxBOTH );
 	fgSizer39->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText66 = new wxStaticText( m_panel18, wxID_ANY, wxT("Tab"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText66 = new wxStaticText( sbSizer25->GetStaticBox(), wxID_ANY, wxT("Tab"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText66->Wrap( -1 );
 	fgSizer39->Add( m_staticText66, 0, wxALL, 5 );
 	
-	uiWindowTabActiveTab = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabActiveTab = new wxColourPickerCtrl( sbSizer25->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer39->Add( uiWindowTabActiveTab, 0, wxALL, 5 );
 	
-	m_staticText67 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText67 = new wxStaticText( sbSizer25->GetStaticBox(), wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText67->Wrap( -1 );
 	fgSizer39->Add( m_staticText67, 0, wxALL, 5 );
 	
-	uiWindowTabActiveBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabActiveBorder = new wxColourPickerCtrl( sbSizer25->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer39->Add( uiWindowTabActiveBorder, 0, wxALL, 5 );
 	
-	m_staticText68 = new wxStaticText( m_panel18, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText68 = new wxStaticText( sbSizer25->GetStaticBox(), wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText68->Wrap( -1 );
 	fgSizer39->Add( m_staticText68, 0, wxALL, 5 );
 	
-	uiWindowTabActiveText = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabActiveText = new wxColourPickerCtrl( sbSizer25->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer39->Add( uiWindowTabActiveText, 0, wxALL, 5 );
 	
 	
@@ -2261,25 +2269,25 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer40->SetFlexibleDirection( wxBOTH );
 	fgSizer40->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText69 = new wxStaticText( m_panel18, wxID_ANY, wxT("Tab"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText69 = new wxStaticText( sbSizer26->GetStaticBox(), wxID_ANY, wxT("Tab"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText69->Wrap( -1 );
 	fgSizer40->Add( m_staticText69, 0, wxALL, 5 );
 	
-	uiWindowTabInactiveTab = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabInactiveTab = new wxColourPickerCtrl( sbSizer26->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer40->Add( uiWindowTabInactiveTab, 0, wxALL, 5 );
 	
-	m_staticText70 = new wxStaticText( m_panel18, wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText70 = new wxStaticText( sbSizer26->GetStaticBox(), wxID_ANY, wxT("Border"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText70->Wrap( -1 );
 	fgSizer40->Add( m_staticText70, 0, wxALL, 5 );
 	
-	uiWindowTabInactiveBorder = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabInactiveBorder = new wxColourPickerCtrl( sbSizer26->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer40->Add( uiWindowTabInactiveBorder, 0, wxALL, 5 );
 	
-	m_staticText71 = new wxStaticText( m_panel18, wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText71 = new wxStaticText( sbSizer26->GetStaticBox(), wxID_ANY, wxT("Text"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText71->Wrap( -1 );
 	fgSizer40->Add( m_staticText71, 0, wxALL, 5 );
 	
-	uiWindowTabInactiveText = new wxColourPickerCtrl( m_panel18, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiWindowTabInactiveText = new wxColourPickerCtrl( sbSizer26->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer40->Add( uiWindowTabInactiveText, 0, wxALL, 5 );
 	
 	
@@ -2361,46 +2369,46 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer371->SetFlexibleDirection( wxBOTH );
 	fgSizer371->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText94 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText94 = new wxStaticText( sbSizer251->GetStaticBox(), wxID_ANY, wxT("Item background"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText94->Wrap( -1 );
 	fgSizer371->Add( m_staticText94, 0, wxALL, 5 );
 	
-	uiSwitcherItemBackground = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiSwitcherItemBackground = new wxColourPickerCtrl( sbSizer251->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer371->Add( uiSwitcherItemBackground, 0, wxALL, 5 );
 	
-	m_staticText95 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item text"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText95 = new wxStaticText( sbSizer251->GetStaticBox(), wxID_ANY, wxT("Item text"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText95->Wrap( -1 );
 	fgSizer371->Add( m_staticText95, 0, wxALL, 5 );
 	
-	uiSwitcherItemText = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiSwitcherItemText = new wxColourPickerCtrl( sbSizer251->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer371->Add( uiSwitcherItemText, 0, wxALL, 5 );
 	
-	m_staticText82 = new wxStaticText( m_panel20, wxID_ANY, wxT("Selection"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText82 = new wxStaticText( sbSizer251->GetStaticBox(), wxID_ANY, wxT("Selection"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText82->Wrap( -1 );
 	fgSizer371->Add( m_staticText82, 0, wxALL, 5 );
 	
-	uiSwitcherSelection = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiSwitcherSelection = new wxColourPickerCtrl( sbSizer251->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer371->Add( uiSwitcherSelection, 0, wxALL, 5 );
 	
-	m_staticText83 = new wxStaticText( m_panel20, wxID_ANY, wxT("Selection outline"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText83 = new wxStaticText( sbSizer251->GetStaticBox(), wxID_ANY, wxT("Selection outline"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText83->Wrap( -1 );
 	fgSizer371->Add( m_staticText83, 0, wxALL, 5 );
 	
-	uiSwitcherSelectionOutline = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiSwitcherSelectionOutline = new wxColourPickerCtrl( sbSizer251->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer371->Add( uiSwitcherSelectionOutline, 0, wxALL, 5 );
 	
-	m_staticText84 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText84 = new wxStaticText( sbSizer251->GetStaticBox(), wxID_ANY, wxT("Dialog"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText84->Wrap( -1 );
 	fgSizer371->Add( m_staticText84, 0, wxALL, 5 );
 	
-	uiSwitcherDialog = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiSwitcherDialog = new wxColourPickerCtrl( sbSizer251->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer371->Add( uiSwitcherDialog, 0, wxALL, 5 );
 	
-	m_staticText85 = new wxStaticText( m_panel20, wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText85 = new wxStaticText( sbSizer251->GetStaticBox(), wxID_ANY, wxT("Background"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText85->Wrap( -1 );
 	fgSizer371->Add( m_staticText85, 0, wxALL, 5 );
 	
-	uiSwitcherBackground = new wxColourPickerCtrl( m_panel20, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	uiSwitcherBackground = new wxColourPickerCtrl( sbSizer251->GetStaticBox(), wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer371->Add( uiSwitcherBackground, 0, wxALL, 5 );
 	
 	
@@ -2417,60 +2425,60 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	fgSizer381->SetFlexibleDirection( wxBOTH );
 	fgSizer381->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText80 = new wxStaticText( m_panel20, wxID_ANY, wxT("Text margin X"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText80 = new wxStaticText( sbSizer261->GetStaticBox(), wxID_ANY, wxT("Text margin X"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText80->Wrap( -1 );
 	fgSizer381->Add( m_staticText80, 0, wxALL, 5 );
 	
-	uiSwitcherTextMarginX = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherTextMarginX = new wxTextCtrl( sbSizer261->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer381->Add( uiSwitcherTextMarginX, 0, wxALL, 5 );
 	
-	m_staticText79 = new wxStaticText( m_panel20, wxID_ANY, wxT("Text margin Y"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText79 = new wxStaticText( sbSizer261->GetStaticBox(), wxID_ANY, wxT("Text margin Y"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText79->Wrap( -1 );
 	fgSizer381->Add( m_staticText79, 0, wxALL, 5 );
 	
-	uiSwitcherTextMarginY = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherTextMarginY = new wxTextCtrl( sbSizer261->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer381->Add( uiSwitcherTextMarginY, 0, wxALL, 5 );
 	
-	m_staticText81 = new wxStaticText( m_panel20, wxID_ANY, wxT("X margin"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText81 = new wxStaticText( sbSizer261->GetStaticBox(), wxID_ANY, wxT("X margin"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText81->Wrap( -1 );
 	fgSizer381->Add( m_staticText81, 0, wxALL, 5 );
 	
-	uiSwitcherXMargin = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherXMargin = new wxTextCtrl( sbSizer261->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer381->Add( uiSwitcherXMargin, 0, wxALL, 5 );
 	
-	m_staticText86 = new wxStaticText( m_panel20, wxID_ANY, wxT("Y margin"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText86 = new wxStaticText( sbSizer261->GetStaticBox(), wxID_ANY, wxT("Y margin"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText86->Wrap( -1 );
 	fgSizer381->Add( m_staticText86, 0, wxALL, 5 );
 	
-	uiSwitcherYMargin = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherYMargin = new wxTextCtrl( sbSizer261->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer381->Add( uiSwitcherYMargin, 0, wxALL, 5 );
 	
-	m_staticText87 = new wxStaticText( m_panel20, wxID_ANY, wxT("Row spacing"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText87 = new wxStaticText( sbSizer261->GetStaticBox(), wxID_ANY, wxT("Row spacing"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText87->Wrap( -1 );
 	fgSizer381->Add( m_staticText87, 0, wxALL, 5 );
 	
-	uiSwitcherRowSpacing = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherRowSpacing = new wxTextCtrl( sbSizer261->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer381->Add( uiSwitcherRowSpacing, 0, wxALL, 5 );
 	
-	m_staticText88 = new wxStaticText( m_panel20, wxID_ANY, wxT("Col spacing"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText88 = new wxStaticText( sbSizer261->GetStaticBox(), wxID_ANY, wxT("Col spacing"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText88->Wrap( -1 );
 	fgSizer381->Add( m_staticText88, 0, wxALL, 5 );
 	
-	uiSwitcherColSpacing = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherColSpacing = new wxTextCtrl( sbSizer261->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer381->Add( uiSwitcherColSpacing, 0, wxALL, 5 );
 	
-	m_staticText89 = new wxStaticText( m_panel20, wxID_ANY, wxT("Main border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText89 = new wxStaticText( sbSizer261->GetStaticBox(), wxID_ANY, wxT("Main border"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText89->Wrap( -1 );
 	fgSizer381->Add( m_staticText89, 0, wxALL, 5 );
 	
-	uiSwitcherMainBorder = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherMainBorder = new wxTextCtrl( sbSizer261->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer381->Add( uiSwitcherMainBorder, 0, wxALL, 5 );
 	
-	m_staticText90 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText90 = new wxStaticText( sbSizer261->GetStaticBox(), wxID_ANY, wxT("Item border"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText90->Wrap( -1 );
 	fgSizer381->Add( m_staticText90, 0, wxALL, 5 );
 	
-	uiSwitcherItemBorder = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherItemBorder = new wxTextCtrl( sbSizer261->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer381->Add( uiSwitcherItemBorder, 0, wxALL, 5 );
 	
 	
@@ -2491,43 +2499,43 @@ SettingsWindowPanel::SettingsWindowPanel( wxWindow* parent, wxWindowID id, const
 	
 	fgSizer391->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	uiSwitcherVsFocus = new wxCheckBox( m_panel20, wxID_ANY, wxT("Autofocus files"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherVsFocus = new wxCheckBox( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Autofocus files"), wxDefaultPosition, wxDefaultSize, 0 );
 	uiSwitcherVsFocus->SetValue(true); 
 	fgSizer391->Add( uiSwitcherVsFocus, 0, wxALL, 5 );
 	
-	m_staticText91 = new wxStaticText( m_panel20, wxID_ANY, wxT("Items/row"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText91 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Items/row"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText91->Wrap( -1 );
 	fgSizer391->Add( m_staticText91, 0, wxALL, 5 );
 	
-	uiSwitcherItemsPerRow = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherItemsPerRow = new wxTextCtrl( sbSizer27->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer391->Add( uiSwitcherItemsPerRow, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText92 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item width"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText92 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Item width"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText92->Wrap( -1 );
 	fgSizer391->Add( m_staticText92, 0, wxALL, 5 );
 	
-	uiSwitcherItemMaxWidth = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherItemMaxWidth = new wxTextCtrl( sbSizer27->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer391->Add( uiSwitcherItemMaxWidth, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText93 = new wxStaticText( m_panel20, wxID_ANY, wxT("Item height"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText93 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Item height"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText93->Wrap( -1 );
 	fgSizer391->Add( m_staticText93, 0, wxALL, 5 );
 	
-	uiSwitcherItemMaxHeight = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherItemMaxHeight = new wxTextCtrl( sbSizer27->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer391->Add( uiSwitcherItemMaxHeight, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText96 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog minimum width"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText96 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Dialog minimum width"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText96->Wrap( -1 );
 	fgSizer391->Add( m_staticText96, 0, wxALL, 5 );
 	
-	uiSwitcherMinWidth = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherMinWidth = new wxTextCtrl( sbSizer27->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer391->Add( uiSwitcherMinWidth, 0, wxALL|wxEXPAND, 5 );
 	
-	m_staticText97 = new wxStaticText( m_panel20, wxID_ANY, wxT("Dialog minimum height"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText97 = new wxStaticText( sbSizer27->GetStaticBox(), wxID_ANY, wxT("Dialog minimum height"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText97->Wrap( -1 );
 	fgSizer391->Add( m_staticText97, 0, wxALL, 5 );
 	
-	uiSwitcherMinHeight = new wxTextCtrl( m_panel20, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	uiSwitcherMinHeight = new wxTextCtrl( sbSizer27->GetStaticBox(), wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer391->Add( uiSwitcherMinHeight, 0, wxALL|wxEXPAND, 5 );
 	
 	
