@@ -22,8 +22,11 @@ class SettingsEnviromentTab : public ui::SettingsEnviromentPanel {
   void OnProtoc(wxCommandEvent& event);
   void OnRefresh(wxCommandEvent& event);
 
+  void OnText(wxCommandEvent& event);
+
  private:
   SettingsCommon* common_;
+  bool update_settings_;
 };
 
 #endif  // RIDE_SETTINGSENVIROMENTTAB_H_

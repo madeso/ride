@@ -489,6 +489,7 @@ namespace ui
 			wxButton* m_button36;
 			
 			// Virtual event handlers, overide them in your derived class
+			virtual void OnText( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnCargo( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnRustc( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnRacer( wxCommandEvent& event ) { event.Skip(); }

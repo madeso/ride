@@ -1394,9 +1394,13 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	this->Layout();
 	
 	// Connect Events
+	uiCargoPath->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button32->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnCargo ), NULL, this );
+	uiRustcPath->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button33->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRustc ), NULL, this );
+	uiRacerPath->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button34->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRacer ), NULL, this );
+	uiProtocPath->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button35->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnProtoc ), NULL, this );
 	m_button36->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRefresh ), NULL, this );
 }
@@ -1404,9 +1408,13 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 SettingsEnviromentPanel::~SettingsEnviromentPanel()
 {
 	// Disconnect Events
+	uiCargoPath->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button32->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnCargo ), NULL, this );
+	uiRustcPath->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button33->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRustc ), NULL, this );
+	uiRacerPath->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button34->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRacer ), NULL, this );
+	uiProtocPath->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button35->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnProtoc ), NULL, this );
 	m_button36->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRefresh ), NULL, this );
 	
