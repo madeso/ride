@@ -5,6 +5,8 @@
 #include <wx/process.h>
 #include <wx/txtstrm.h>
 
+#include <sstream>  // NOLINT
+
 #include "ride/mainwindow.h"
 #include "ride/wxid.h"
 
@@ -163,12 +165,27 @@ void SingleRunner::Pimpl::Notify() {
   }
 }
 
+wxString ListEnviroment(const wxEnvVariableHashMap& e) {
+  std::ostringstream ss;
+  for (auto x : e) {
+    ss << x.first << " = " << x.second << "\n";
+  }
+  return ss.str().c_str();
+}
+
 bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   Process* process = new Process(this, c.cmd);
   Append("> " + c.cmd);
 
   wxExecuteEnv env;
   env.cwd = c.root;
+
+  wxString before = ListEnviroment(env.env);
+
+  bool got_env = wxGetEnvMap(&env.env);
+  // discard this...
+
+  wxString after = ListEnviroment(env.env);
 
   const int flags = wxEXEC_ASYNC | RUNNER_CONSOLE_OPTION;
 
