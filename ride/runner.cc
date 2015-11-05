@@ -10,6 +10,8 @@
 #include "ride/mainwindow.h"
 #include "ride/wxid.h"
 
+#include "ride_compiler_settings.h" // NOLINT
+
 class PipedProcess;
 class Process;
 
@@ -185,6 +187,17 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   bool got_env = wxGetEnvMap(&env.env);
   // discard this...
 
+#ifdef RIDE_OS_APPLE
+  // for some reason, usr/local/bin isn't on the path on my machine
+  // and rust is installed to usr/local/bin, so let's add it if
+  // it doesn't exist
+  wxString path = env.env["PATH"];
+  const wxString opath = path;
+  if( path.Contains("/usr/local/bin") == false) {
+    path += ":/usr/local/bin";
+    env.env["PATH"] = path;
+  }
+#endif
   wxString after = ListEnviroment(env.env);
 
   const int flags = wxEXEC_ASYNC | RUNNER_CONSOLE_OPTION;
@@ -222,8 +235,11 @@ bool SingleRunner::RunCmd(const Command& cmd) {
 bool SingleRunner::IsRunning() const {
   const bool has_process = pimpl->processes_ != NULL;
   if (has_process == false) return false;
-  // const bool exists = wxProcess::Exists(pimpl->processes_->GetPid());
-  pimpl->processes_->HasInput();
+  // for some reason, calling/assinging theese on osx, keeps osx from waiting
+  // forever for a response... weird. there might be some horrible
+  // threading issue at work here :(
+  const bool exists = wxProcess::Exists(pimpl->processes_->GetPid());
+  bool has_input = pimpl->processes_->HasInput();
   return !pimpl->has_exit_code();
 }
 
