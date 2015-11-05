@@ -7,10 +7,10 @@
 
 #include <sstream>  // NOLINT
 
+#include "ride_compiler_settings.h"  // NOLINT
+
 #include "ride/mainwindow.h"
 #include "ride/wxid.h"
-
-#include "ride_compiler_settings.h" // NOLINT
 
 class PipedProcess;
 class Process;
@@ -185,7 +185,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   wxString before = ListEnviroment(env.env);
 
   bool got_env = wxGetEnvMap(&env.env);
-  // discard this...
+// discard this...
 
 #ifdef RIDE_OS_APPLE
   // for some reason, usr/local/bin isn't on the path on my machine
@@ -193,7 +193,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   // it doesn't exist
   wxString path = env.env["PATH"];
   const wxString opath = path;
-  if( path.Contains("/usr/local/bin") == false) {
+  if (path.Contains("/usr/local/bin") == false) {
     path += ":/usr/local/bin";
     env.env["PATH"] = path;
   }
