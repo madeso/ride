@@ -494,6 +494,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   aui_.SetManagedWindow(this);
 
   LoadSettings(this, &settings_);
+  LoadSettings(this, &machine_);
 
   int sbstyle =
       wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
