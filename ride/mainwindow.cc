@@ -619,7 +619,7 @@ void MainWindow::UpdateTheme() {
   statusbar_->InitColours();
 
   this->SetForegroundColour(wxColor(255, 0, 0));
-  this->SetBackgroundColour(wxColor(255, 0, 0));
+  this->SetBackgroundColour(C(c.dock_background()));
 
   aui_.Update();    // we changed the tab art, update all the sizes
   this->Refresh();  // and then force a repaint
