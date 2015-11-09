@@ -128,6 +128,8 @@ void AddItem(RideListBox* list, int id, const wxString& display,
 }
 
 WXID g_last_selection_ = 0;
+int g_last_width = 623;
+int g_last_height = 665;
 
 class SettingsDlg : public wxDialog, ToGuiSender {
  public:
@@ -148,7 +150,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
       : wxDialog(parent, wxID_ANY, "Settings", wxDefaultPosition, wxDefaultSize,
                  wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER),
         common_(mainwindow) {
-    this->SetSizeHints(wxSize(500, 500), wxDefaultSize);
+    this->SetSizeHints(wxSize(623, 665), wxDefaultSize);
 
     wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
     wxFlexGridSizer* notebook_sizer = new wxFlexGridSizer(0, 2, 0, 0);
@@ -187,7 +189,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     AddItem(nootebook_ctrl, 3, "Editor", m_editor);
     AddItem(nootebook_ctrl, 4, "Window", m_window);
     AddItem(nootebook_ctrl, 5, "Themes", m_themes);
-    AddItem(nootebook_ctrl, 6, "Enviroment", m_enviroment);
+    AddItem(nootebook_ctrl, 6, "Environment", m_enviroment);
 
     notebook_sizer->AddStretchSpacer();  // find ctrl
     notebook_sizer->Add(selection_info);
@@ -213,6 +215,8 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     this->SetSizer(main_sizer);
     this->Layout();
 
+    this->SetSize(g_last_width, g_last_height);
+
     this->Centre(wxBOTH);
 
     nootebook_ctrl->Bind(wxEVT_LIST_ITEM_SELECTED,
@@ -226,7 +230,16 @@ class SettingsDlg : public wxDialog, ToGuiSender {
                          this);
     ok_button->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &SettingsDlg::OnOk, this);
 
+    this->Bind(wxEVT_SIZE, &SettingsDlg::OnSize, this);
+
     SetSelection(g_last_selection_);
+  }
+
+  void OnSize(wxSizeEvent& event) {
+    wxDialog::OnSize(event);
+    const wxSize s = event.GetSize();
+    g_last_width = s.GetWidth();
+    g_last_height = s.GetHeight();
   }
 
   void SendToGui(bool togui) {
