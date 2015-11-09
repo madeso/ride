@@ -1244,7 +1244,7 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
 
 void MainWindow::OnProjectOpen(wxCommandEvent& event) {
   wxFileDialog open_project_dialog(this, _("Open project"), "", "",
-                                   "Cargo files|Cargo.toml",
+                                   "Cargo files|*.toml",
                                    wxFD_OPEN | wxFD_FILE_MUST_EXIST);
   if (open_project_dialog.ShowModal() == wxID_CANCEL) return;
   wxFileName cargo_file(open_project_dialog.GetPath());
