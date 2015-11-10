@@ -14,7 +14,9 @@ enum {
   ID_FIRST = wxID_HIGHEST,
 
   ID_COPY_THIS_COMPILER_MESSAGE,
-  ID_CLEAR_COMPILER_OUTPUT
+  ID_CLEAR_COMPILER_OUTPUT,
+  ID_COMPILER_COPY,
+  ID_COMPILER_SELECT_ALL
 };
 
 FindResultsControl::FindResultsControl(MainWindow* main)
@@ -38,8 +40,8 @@ void FindResultsControl::BindEvents() {
        ID_COPY_THIS_COMPILER_MESSAGE);
   Bind(wxEVT_MENU, &FindResultsControl::OnClearCompilerOuput, this,
        ID_CLEAR_COMPILER_OUTPUT);
-  Bind(wxEVT_MENU, &FindResultsControl::OnSelectAll, this, wxID_SELECTALL);
-  Bind(wxEVT_MENU, &FindResultsControl::OnCopy, this, wxID_COPY);
+  Bind(wxEVT_MENU, &FindResultsControl::OnSelectAll, this, ID_COMPILER_SELECT_ALL);
+  Bind(wxEVT_MENU, &FindResultsControl::OnCopy, this, ID_COMPILER_COPY);
 }
 
 void FindResultsControl::UpdateStyle() {
@@ -68,8 +70,8 @@ void FindResultsControl::OnContextMenu(wxContextMenuEvent& event) {
                                : "<none>";
 
   wxMenu menu;
-  AppendEnabled(menu, wxID_COPY, "Copy", has_selected);
-  AppendEnabled(menu, wxID_SELECTALL, "Select all", true);
+  AppendEnabled(menu, ID_COMPILER_COPY, "Copy", has_selected);
+  AppendEnabled(menu, ID_COMPILER_SELECT_ALL, "Select all", true);
   menu.AppendSeparator();
   AppendEnabled(menu, ID_COPY_THIS_COMPILER_MESSAGE,
                 wxString::Format("Copy \"%s\" to clipboard", message),

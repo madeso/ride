@@ -21,7 +21,9 @@ enum {
   ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
   ID_COPY_THIS_COMPILER_MESSAGE,
   ID_CLEAR_COMPILER_OUTPUT,
-  ID_QUICK_OPEN
+  ID_QUICK_OPEN,
+  ID_SELECTALL,
+  ID_COPY
 };
 
 namespace regex {
@@ -88,8 +90,8 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
       has_compiler_message ? GetCommandLine(compiler_message) : "";
 
   wxMenu menu;
-  AppendEnabled(menu, wxID_COPY, "Copy", has_selected);
-  AppendEnabled(menu, wxID_SELECTALL, "Select all", true);
+  AppendEnabled(menu, ID_COPY, "Copy", has_selected);
+  AppendEnabled(menu, ID_SELECTALL, "Select all", true);
   menu.AppendSeparator();
   AppendEnabled(
       menu, ID_RUN_THIS_COMPILER_MESSAGE,
@@ -222,6 +224,6 @@ void OutputControl::BindEvents() {
        ID_COPY_THIS_COMPILER_MESSAGE);
   Bind(wxEVT_MENU, &OutputControl::OnClearCompilerOuput, this,
        ID_CLEAR_COMPILER_OUTPUT);
-  Bind(wxEVT_MENU, &OutputControl::OnSelectAll, this, wxID_SELECTALL);
-  Bind(wxEVT_MENU, &OutputControl::OnCopy, this, wxID_COPY);
+  Bind(wxEVT_MENU, &OutputControl::OnSelectAll, this, ID_SELECTALL);
+  Bind(wxEVT_MENU, &OutputControl::OnCopy, this, ID_COPY);
 }
