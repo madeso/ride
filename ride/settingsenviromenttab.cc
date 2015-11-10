@@ -58,7 +58,7 @@ void SettingsEnviromentTab::SettingsToGui(bool togui) {
   uiProtocStatus->SetLabelText(InfoBool(p.ProtocIsValid()) + p.protoc());
 
   const wxString path = m.rust_src_path() != ""
-                            ? m.rust_src_path().c_str()
+                            ? wxString(m.rust_src_path().c_str())
                             : GetEnv("RUST_SRC_PATH", "No path available");
   uiRustSrcStatus->SetLabelText(path);
 
