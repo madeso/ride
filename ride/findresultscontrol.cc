@@ -40,7 +40,8 @@ void FindResultsControl::BindEvents() {
        ID_COPY_THIS_COMPILER_MESSAGE);
   Bind(wxEVT_MENU, &FindResultsControl::OnClearCompilerOuput, this,
        ID_CLEAR_COMPILER_OUTPUT);
-  Bind(wxEVT_MENU, &FindResultsControl::OnSelectAll, this, ID_COMPILER_SELECT_ALL);
+  Bind(wxEVT_MENU, &FindResultsControl::OnSelectAll, this,
+       ID_COMPILER_SELECT_ALL);
   Bind(wxEVT_MENU, &FindResultsControl::OnCopy, this, ID_COMPILER_COPY);
 }
 
