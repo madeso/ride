@@ -23,6 +23,14 @@ wxString InfoBool(bool b) {
     return "Invalid. ";
 }
 
+wxString GetEnv(const wxString& var, const wxString& def) {
+  wxString val;
+  if (wxGetEnv(var, &val))
+    return val;
+  else
+    return def;
+}
+
 void SettingsEnviromentTab::SettingsToGui(bool togui) {
   if (update_settings_) return;
   update_settings_ = true;
@@ -33,6 +41,7 @@ void SettingsEnviromentTab::SettingsToGui(bool togui) {
   DIALOG_DATA(m, cargo, uiCargoPath, _Str);
   DIALOG_DATA(m, racer, uiRacerPath, _Str);
   DIALOG_DATA(m, protoc, uiProtocPath, _Str);
+  DIALOG_DATA(m, rust_src_path, uiRustSrc, _Str);
 
   if (togui == false) {
     *common_->current_machine_mod() = m;
@@ -47,6 +56,11 @@ void SettingsEnviromentTab::SettingsToGui(bool togui) {
   uiCargoStatus->SetLabelText(InfoBool(p.CargoIsValid()) + p.cargo());
   uiRacerStatus->SetLabelText(InfoBool(p.RacerIsValid()) + p.racer());
   uiProtocStatus->SetLabelText(InfoBool(p.ProtocIsValid()) + p.protoc());
+
+  const wxString path = m.rust_src_path() != ""
+                            ? m.rust_src_path().c_str()
+                            : GetEnv("RUST_SRC_PATH", "No path available");
+  uiRustSrcStatus->SetLabelText(path);
 
   update_settings_ = false;
 }
@@ -76,6 +90,15 @@ void SettingsEnviromentTab::OnProtoc(wxCommandEvent& event) {
   wxFileDialog fd(this, "Choose protoc");
   if (wxID_CANCEL == fd.ShowModal()) return;
   common_->current_machine_mod()->set_protoc(fd.GetPath().c_str().AsChar());
+  SettingsToGui(true);
+}
+
+void SettingsEnviromentTab::OnRustSrc(wxCommandEvent& event) {
+  wxDirDialog fd(this, "Choose RUST_SRC_PATH", "",
+                 wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
+  if (wxID_CANCEL == fd.ShowModal()) return;
+  common_->current_machine_mod()->set_rust_src_path(
+      fd.GetPath().c_str().AsChar());
   SettingsToGui(true);
 }
 

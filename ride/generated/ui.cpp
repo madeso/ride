@@ -1295,9 +1295,9 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	fgSizer43->SetFlexibleDirection( wxBOTH );
 	fgSizer43->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText103 = new wxStaticText( this, wxID_ANY, wxT("cargo"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText103 = new wxStaticText( this, wxID_ANY, wxT("cargo"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText103->Wrap( -1 );
-	fgSizer43->Add( m_staticText103, 0, wxALL, 5 );
+	fgSizer43->Add( m_staticText103, 0, wxALL|wxEXPAND, 5 );
 	
 	uiCargoPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer43->Add( uiCargoPath, 0, wxALL|wxEXPAND, 5 );
@@ -1318,9 +1318,9 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	m_staticText104 = new wxStaticText( this, wxID_ANY, wxT("rustc"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText104 = new wxStaticText( this, wxID_ANY, wxT("rustc"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText104->Wrap( -1 );
-	fgSizer43->Add( m_staticText104, 0, wxALL, 5 );
+	fgSizer43->Add( m_staticText104, 0, wxALL|wxEXPAND, 5 );
 	
 	uiRustcPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer43->Add( uiRustcPath, 0, wxALL|wxEXPAND, 5 );
@@ -1338,9 +1338,9 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	m_staticText105 = new wxStaticText( this, wxID_ANY, wxT("racer"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText105 = new wxStaticText( this, wxID_ANY, wxT("racer"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText105->Wrap( -1 );
-	fgSizer43->Add( m_staticText105, 0, wxALL, 5 );
+	fgSizer43->Add( m_staticText105, 0, wxALL|wxEXPAND, 5 );
 	
 	uiRacerPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer43->Add( uiRacerPath, 0, wxALL|wxEXPAND, 5 );
@@ -1360,9 +1360,9 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	m_staticText106 = new wxStaticText( this, wxID_ANY, wxT("protoc"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText106 = new wxStaticText( this, wxID_ANY, wxT("protoc"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
 	m_staticText106->Wrap( -1 );
-	fgSizer43->Add( m_staticText106, 0, wxALL, 5 );
+	fgSizer43->Add( m_staticText106, 0, wxALL|wxEXPAND, 5 );
 	
 	uiProtocPath = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer43->Add( uiProtocPath, 0, wxALL|wxEXPAND, 5 );
@@ -1376,6 +1376,32 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	uiProtocStatus = new wxStaticText( this, wxID_ANY, wxT("My Label"), wxDefaultPosition, wxDefaultSize, 0 );
 	uiProtocStatus->Wrap( -1 );
 	fgSizer43->Add( uiProtocStatus, 0, wxALL, 0 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText111 = new wxStaticText( this, wxID_ANY, wxT("RUST_SRC_PATH"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT );
+	m_staticText111->Wrap( -1 );
+	fgSizer43->Add( m_staticText111, 0, wxALL, 5 );
+	
+	uiRustSrc = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer43->Add( uiRustSrc, 0, wxALL|wxEXPAND, 5 );
+	
+	m_button37 = new wxButton( this, wxID_ANY, wxT("..."), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT );
+	fgSizer43->Add( m_button37, 0, wxALL, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	uiRustSrcStatus = new wxStaticText( this, wxID_ANY, wxT("MyLabel"), wxDefaultPosition, wxDefaultSize, 0 );
+	uiRustSrcStatus->Wrap( -1 );
+	fgSizer43->Add( uiRustSrcStatus, 0, wxALL, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	
 	fgSizer43->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -1402,6 +1428,7 @@ SettingsEnviromentPanel::SettingsEnviromentPanel( wxWindow* parent, wxWindowID i
 	m_button34->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRacer ), NULL, this );
 	uiProtocPath->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button35->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnProtoc ), NULL, this );
+	m_button37->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRustSrc ), NULL, this );
 	m_button36->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRefresh ), NULL, this );
 }
 
@@ -1416,6 +1443,7 @@ SettingsEnviromentPanel::~SettingsEnviromentPanel()
 	m_button34->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRacer ), NULL, this );
 	uiProtocPath->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SettingsEnviromentPanel::OnText ), NULL, this );
 	m_button35->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnProtoc ), NULL, this );
+	m_button37->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRustSrc ), NULL, this );
 	m_button36->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsEnviromentPanel::OnRefresh ), NULL, this );
 	
 }

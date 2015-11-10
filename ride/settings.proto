@@ -542,4 +542,5 @@ message MachineSettings {
 	optional string rustc = 2 [default="rustc"];
 	optional string protoc = 3 [default="protoc"];
 	optional string racer = 4 [default="racer"];
+	optional string rust_src_path = 5 [default=""];
 }

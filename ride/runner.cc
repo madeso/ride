@@ -20,7 +20,9 @@ const int RUNNER_CONSOLE_OPTION = wxEXEC_HIDE_CONSOLE;
 
 //////////////////////////////////////////////////////////////////////////
 
-Command::Command(const wxString& r, const wxString& c) : root(r), cmd(c) {}
+Command::Command(const wxString& r, const wxString& c,
+                 const std::map<wxString, wxString>& env)
+    : root(r), cmd(c), enviroment(env) {}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -185,7 +187,11 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   wxString before = ListEnviroment(env.env);
 
   bool got_env = wxGetEnvMap(&env.env);
-// discard this...
+  // discard this...
+
+  for (const auto& e : c.enviroment) {
+    env.env[e.first] = e.second;
+  }
 
 #ifdef RIDE_OS_APPLE
   // for some reason, usr/local/bin isn't on the path on my machine

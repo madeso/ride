@@ -12,6 +12,7 @@
 #include "ride/compilermessage.h"
 #include "ride/mainwindow.h"
 #include "ride/wxutils.h"
+#include "ride/enviroment.h"
 
 void AddAllOutput(const wxString& result, const CompilerMessage::Source source,
                   const wxString folder, MainWindow* main_window) {
@@ -41,7 +42,8 @@ void CompileProtoFile(const ride::MachineSettings& machine,
   const wxString cmd =
       wxString::Format((machine.protoc() + " --rust_out . %s").c_str(), file);
   wxString result;
-  const bool proto_compile_successful = CmdRunner::Run(folder, cmd, &result);
+  const bool proto_compile_successful = CmdRunner::Run(
+      folder, cmd, CollectRideSpecificEnviroment(machine), &result);
 
   AddAllOutput(result, CompilerMessage::SOURCE_PROTOC, folder, main_window);
 

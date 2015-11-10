@@ -41,6 +41,7 @@
 #include "ride/auix.h"
 #include "ride/menuevent.h"
 #include "ride/pathtester.h"
+#include "ride/enviroment.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, NULL);
 
@@ -1228,8 +1229,9 @@ void MainWindow::OnProjectNew(wxCommandEvent& event) {
   // run cargo new
 
   wxString output;
-  if (CmdRunner::Run(dlg.project_folder(), dlg.cargo_command_line(), &output) ==
-      false) {
+  if (CmdRunner::Run(dlg.project_folder(), dlg.cargo_command_line(),
+                     CollectRideSpecificEnviroment(machine_),
+                     &output) == false) {
     ShowError(this, output, "Unable to create project!");
     return;
   }

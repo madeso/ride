@@ -26,6 +26,7 @@
 #include "ride/mainwindow.h"
 #include "ride/stcutils.h"
 #include "ride/wxutils.h"
+#include "ride/enviroment.h"
 
 enum AutoIcon {
   AI_None = -1,
@@ -244,7 +245,8 @@ wxString RunRacer(const ride::MachineSettings& machine, WordEntryList& wordlist,
   const wxString cmd =
       wxString::Format((machine.racer() + " complete %d %d \"%s\"").c_str(),
                        linenum, charnum, path);
-  CmdRunner::Run(root_folder, cmd, &output);
+  CmdRunner::Run(root_folder, cmd, CollectRideSpecificEnviroment(machine),
+                 &output);
   // parse output
   const std::vector<wxString> o = Split(output, "\n");
   for (const wxString& l : o) {

@@ -1911,7 +1911,7 @@
 	</object>
 	<object class="wxPanel" name="SettingsEnviromentPanel">
 		<style>wxTAB_TRAVERSAL</style>
-		<size>500,300</size>
+		<size>500,360</size>
 		<object class="wxFlexGridSizer">
 			<rows>0</rows>
 			<cols>3</cols>
@@ -1921,9 +1921,10 @@
 			<growablerows></growablerows>
 			<object class="sizeritem">
 				<option>0</option>
-				<flag>wxALL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<object class="wxStaticText" name="m_staticText103">
+					<style>wxALIGN_RIGHT</style>
 					<label>cargo</label>
 					<wrap>-1</wrap>
 				</object>
@@ -1974,9 +1975,10 @@
 			</object>
 			<object class="sizeritem">
 				<option>0</option>
-				<flag>wxALL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<object class="wxStaticText" name="m_staticText104">
+					<style>wxALIGN_RIGHT</style>
 					<label>rustc</label>
 					<wrap>-1</wrap>
 				</object>
@@ -2022,9 +2024,10 @@
 			</object>
 			<object class="sizeritem">
 				<option>0</option>
-				<flag>wxALL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<object class="wxStaticText" name="m_staticText105">
+					<style>wxALIGN_RIGHT</style>
 					<label>racer</label>
 					<wrap>-1</wrap>
 				</object>
@@ -2067,9 +2070,10 @@
 			</object>
 			<object class="sizeritem">
 				<option>0</option>
-				<flag>wxALL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<object class="wxStaticText" name="m_staticText106">
+					<style>wxALIGN_RIGHT</style>
 					<label>protoc</label>
 					<wrap>-1</wrap>
 				</object>
@@ -2106,6 +2110,67 @@
 					<label>My Label</label>
 					<wrap>-1</wrap>
 				</object>
+			</object>
+			<object class="spacer">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<size>0,0</size>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxStaticText" name="m_staticText111">
+					<style>wxALIGN_RIGHT</style>
+					<label>RUST__SRC__PATH</label>
+					<wrap>-1</wrap>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>5</border>
+				<object class="wxTextCtrl" name="uiRustSrc">
+					<value></value>
+				</object>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxButton" name="m_button37">
+					<style>wxBU_EXACTFIT</style>
+					<label>...</label>
+					<default>0</default>
+				</object>
+			</object>
+			<object class="spacer">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<size>0,0</size>
+			</object>
+			<object class="sizeritem">
+				<option>0</option>
+				<flag>wxALL</flag>
+				<border>5</border>
+				<object class="wxStaticText" name="uiRustSrcStatus">
+					<label>MyLabel</label>
+					<wrap>-1</wrap>
+				</object>
+			</object>
+			<object class="spacer">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<size>0,0</size>
+			</object>
+			<object class="spacer">
+				<option>1</option>
+				<flag>wxEXPAND</flag>
+				<border>5</border>
+				<size>0,0</size>
 			</object>
 			<object class="spacer">
 				<option>1</option>

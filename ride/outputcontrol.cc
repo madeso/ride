@@ -13,6 +13,7 @@
 #include "ride/mainwindow.h"
 #include "ride/stcutils.h"
 #include "ride/wxutils.h"
+#include "ride/enviroment.h"
 
 enum {
   ID_FIRST = wxID_HIGHEST,
@@ -138,7 +139,8 @@ void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event) {
                              main_->root_folder(), line_content, &message)) {
     const wxString cmd = ReplaceCmd(main_->machine(), GetCommandLine(message));
     wxString output;
-    CmdRunner::Run(main_->root_folder(), cmd, &output);
+    CmdRunner::Run(main_->root_folder(), cmd,
+                   CollectRideSpecificEnviroment(main_->machine()), &output);
     ShowInfo(this, output, "Command result");
   }
 }

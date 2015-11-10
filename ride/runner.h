@@ -7,16 +7,19 @@
 
 #include <vector>
 #include <memory>
+#include <map>
 
 class MultiRunner;
 
 /// a command to run
 class Command {
  public:
-  Command(const wxString& root, const wxString& cmd);
+  Command(const wxString& root, const wxString& cmd,
+          const std::map<wxString, wxString>& env);
 
   wxString root;
   wxString cmd;
+  std::map<wxString, wxString> enviroment;
 };
 
 /// only runs a single command

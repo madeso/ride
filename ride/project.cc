@@ -17,6 +17,7 @@
 #include "ride/mainwindow.h"
 #include "ride/proto.h"
 #include "ride/projectsettingsdlg.h"
+#include "ride/enviroment.h"
 
 Project::Project(MainWindow* output, const wxString& root_folder)
     : main_(output), root_folder_(root_folder) {
@@ -269,7 +270,8 @@ void Project::RunCmd(const wxString& cmd) {
     return;
   }
 
-  MultiRunner::RunCmd(Command(root_folder_, cmd));
+  MultiRunner::RunCmd(Command(root_folder_, cmd,
+                              CollectRideSpecificEnviroment(main_->machine())));
 }
 
 bool Project::SaveUser() { return SaveProto(user_, GetUserFile()); }

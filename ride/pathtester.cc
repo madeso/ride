@@ -6,10 +6,14 @@
 
 #include "ride/cmdrunner.h"
 #include "ride/stringutils.h"
+#include "ride/enviroment.h"
 
-wxString RunTest(const std::string& app, const wxString& cmd) {
+wxString RunTest(const ride::MachineSettings& machine, const std::string& app,
+                 const wxString& cmd) {
   wxString output;
-  if (CmdRunner::Run("", app.c_str() + cmd, &output) == false) {
+  if (CmdRunner::Run("", app.c_str() + cmd,
+                     CollectRideSpecificEnviroment(machine),
+                     &output) == false) {
     return "";
   }
 
@@ -23,10 +27,10 @@ wxString RunTest(const std::string& app, const wxString& cmd) {
 }
 
 PathTester::PathTester(const ride::MachineSettings& machine)
-    : cargo_(RunTest(machine.cargo(), " --version")),
-      rustc_(RunTest(machine.rustc(), " --version")),
-      racer_(RunTest(machine.racer(), " complete std::io::B")),
-      protoc_(RunTest(machine.protoc(), " --version")) {}
+    : cargo_(RunTest(machine, machine.cargo(), " --version")),
+      rustc_(RunTest(machine, machine.rustc(), " --version")),
+      racer_(RunTest(machine, machine.racer(), " complete std::io::B")),
+      protoc_(RunTest(machine, machine.protoc(), " --version")) {}
 
 const wxString PathTester::cargo() const { return cargo_; }
 const wxString PathTester::rustc() const { return rustc_; }

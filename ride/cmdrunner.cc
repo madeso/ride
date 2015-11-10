@@ -2,15 +2,18 @@
 
 #include "ride/cmdrunner.h"
 
+#include <map>
+
 CmdRunner::CmdRunner() {}
 
 void CmdRunner::Append(const wxString& str) { output += "\n" + str; }
 
 const bool CmdRunner::Run(const wxString& root, const wxString& cmd,
+                          const std::map<wxString, wxString>& enviroment,
                           wxString* out) {
   assert(out);
   CmdRunner runner;
-  if (false == runner.RunCmd(Command(root, cmd))) {
+  if (false == runner.RunCmd(Command(root, cmd, enviroment))) {
     *out = "Unable to start";
     return false;
   }

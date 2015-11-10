@@ -486,6 +486,10 @@ namespace ui
 			wxTextCtrl* uiProtocPath;
 			wxButton* m_button35;
 			wxStaticText* uiProtocStatus;
+			wxStaticText* m_staticText111;
+			wxTextCtrl* uiRustSrc;
+			wxButton* m_button37;
+			wxStaticText* uiRustSrcStatus;
 			wxButton* m_button36;
 			
 			// Virtual event handlers, overide them in your derived class
@@ -494,12 +498,13 @@ namespace ui
 			virtual void OnRustc( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnRacer( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnProtoc( wxCommandEvent& event ) { event.Skip(); }
+			virtual void OnRustSrc( wxCommandEvent& event ) { event.Skip(); }
 			virtual void OnRefresh( wxCommandEvent& event ) { event.Skip(); }
 			
 		
 		public:
 			
-			SettingsEnviromentPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,300 ), long style = wxTAB_TRAVERSAL ); 
+			SettingsEnviromentPanel( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 500,360 ), long style = wxTAB_TRAVERSAL ); 
 			~SettingsEnviromentPanel();
 		
 	};

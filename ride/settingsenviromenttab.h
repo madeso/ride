@@ -20,6 +20,7 @@ class SettingsEnviromentTab : public ui::SettingsEnviromentPanel {
   void OnRustc(wxCommandEvent& event);
   void OnRacer(wxCommandEvent& event);
   void OnProtoc(wxCommandEvent& event);
+  void OnRustSrc(wxCommandEvent& event);
   void OnRefresh(wxCommandEvent& event);
 
   void OnText(wxCommandEvent& event);
