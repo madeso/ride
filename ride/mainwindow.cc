@@ -168,7 +168,7 @@ void MainWindow::SetupMenu() {
                 "");  // todo: get a better shortcut
     menu_edit->AppendSeparator();
     AddMenuItem(menu_edit, ID_EDIT_SHOW_AUTOCOMPLETE,
-                "Auto complete\tCtrl-Space", "");
+                "Auto complete\tRawCtrl-Space", "");
     menu_edit->AppendSeparator();
     AddMenuItem(menu_edit, ID_EDIT_SHOW_PROPERTIES,
                 "File properties\tAlt-Enter", "", edit_file_properties_xpm);
