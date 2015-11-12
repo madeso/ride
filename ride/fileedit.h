@@ -87,6 +87,7 @@ class FileEdit : public wxControl {
   void OnSelectionUpdated(wxCommandEvent& event);
 
   bool ProcessCharEvent(wxChar c);
+  bool ProcessKey(wxKeyCode key, wxKeyModifier mod);
 
   ~FileEdit();
 

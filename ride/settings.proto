@@ -339,6 +339,16 @@ enum AutoComplete {
 	AUTOCOMPLETE_PARA = 1;
 }
 
+enum HomeEndStyle {
+	HES_BASIC = 1;
+	HES_DISPLAY = 2;
+	HES_WRAP = 3;
+	HES_VCBASIC = 4;
+	HES_VCDISPLAY = 5;
+	HES_VCWRAP = 6;
+	HES_SCROLL = 7;
+}
+
 message Settings {
   optional bool lineNumberEnable = 1 [default=true];
   optional bool foldEnable = 2 [default=true];
@@ -402,6 +412,8 @@ message Settings {
   optional int32 caret_width = 43 [default=1];
   optional CaretSticky caret_sticky = 44 [default=CARETSTICKY_ON];
   optional CaretStyle caret_style = 45 [default=CARETSTYLE_LINE];
+
+  optional HomeEndStyle home_end_style = 46 [default=HES_VCWRAP];
 
   // indicators
   optional IndicatorStyle indicator_error = 100 [default=INDICATORSTYLE_SQUIGGLE];

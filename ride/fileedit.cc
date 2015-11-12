@@ -391,9 +391,13 @@ class StyledTextCtrl : public wxStyledTextCtrl {
   }
 
   void OnKeyDown(wxKeyEvent& evt) {  // NOLINT
-    /*int processed = m_swx->DoKeyDown(evt, &lastKeyDownConsumed);
-    if (!processed && !lastKeyDownConsumed)*/
-    evt.Skip();
+    assert(parent_);
+    if (parent_->ProcessKey(static_cast<wxKeyCode>(evt.GetKeyCode()),
+                            static_cast<wxKeyModifier>(evt.GetModifiers())) ==
+        false) {
+      // wxStyledTextCtrl::OnKeyDown(evt);
+      evt.Skip();
+    }
   }
 
  private:
@@ -622,6 +626,317 @@ bool FileEdit::ProcessCharEvent(wxChar c) {
   if (HandleParaEditQuote(c, main_->settings().autocomplete_doublequote(),
                           text_, DOUBLE_QUOTE, StringType::DOUBLE_QUOTE))
     return true;
+
+  return false;
+}
+
+enum class SelectionState { NONE, STREAM, RECT };
+
+void GoHomeEnd(wxStyledTextCtrl* text_, bool right,
+               ride::HomeEndStyle home_end_style,
+               SelectionState selection_state) {
+  // toggle between the first char on the line and the first non/whitespace or
+  // go to the last char on the line
+  switch (home_end_style) {
+    case ride::HES_BASIC:
+      if (right) {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->LineEnd();
+            break;
+          case SelectionState::STREAM:
+            text_->LineEndExtend();
+            break;
+          case SelectionState::RECT:
+            text_->LineEndRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      } else {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->Home();
+            break;
+          case SelectionState::STREAM:
+            text_->HomeExtend();
+            break;
+          case SelectionState::RECT:
+            text_->HomeRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      }
+      break;
+    case ride::HES_DISPLAY:
+      if (right) {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->LineEndDisplay();
+            break;
+          case SelectionState::STREAM:
+            text_->LineEndDisplayExtend();
+            break;
+          case SelectionState::RECT:
+            text_->LineEndRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      } else {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->HomeDisplay();
+            break;
+          case SelectionState::STREAM:
+            text_->HomeDisplayExtend();
+            break;
+          case SelectionState::RECT:
+            text_->HomeRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      }
+      break;
+    case ride::HES_WRAP:
+      if (right) {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->LineEndWrap();
+            break;
+          case SelectionState::STREAM:
+            text_->LineEndWrapExtend();
+            break;
+          case SelectionState::RECT:
+            text_->LineEndRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      } else {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->HomeWrap();
+            break;
+          case SelectionState::STREAM:
+            text_->HomeWrapExtend();
+            break;
+          case SelectionState::RECT:
+            text_->HomeRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      }
+      break;
+    case ride::HES_VCBASIC:
+      if (right) {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->LineEnd();
+            break;
+          case SelectionState::STREAM:
+            text_->LineEndExtend();
+            break;
+          case SelectionState::RECT:
+            text_->LineEndRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      } else {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->VCHome();
+            break;
+          case SelectionState::STREAM:
+            text_->VCHomeExtend();
+            break;
+          case SelectionState::RECT:
+            text_->VCHomeRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      }
+      break;
+    case ride::HES_VCDISPLAY:
+      if (right) {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->LineEndDisplay();
+            break;
+          case SelectionState::STREAM:
+            text_->LineEndDisplayExtend();
+            break;
+          case SelectionState::RECT:
+            text_->LineEndRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      } else {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->VCHomeDisplay();
+            break;
+          case SelectionState::STREAM:
+            text_->VCHomeDisplayExtend();
+            break;
+          case SelectionState::RECT:
+            text_->VCHomeRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      }
+      break;
+    case ride::HES_VCWRAP:
+      if (right) {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->LineEndWrap();
+            break;
+          case SelectionState::STREAM:
+            text_->LineEndWrapExtend();
+            break;
+          case SelectionState::RECT:
+            text_->LineEndRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      } else {
+        switch (selection_state) {
+          case SelectionState::NONE:
+            text_->VCHomeWrap();
+            break;
+          case SelectionState::STREAM:
+            text_->VCHomeWrapExtend();
+            break;
+          case SelectionState::RECT:
+            text_->VCHomeRectExtend();
+            break;
+          default:
+            assert(false && "Unhandled selection state");
+        }
+      }
+      break;
+    case ride::HES_SCROLL:
+      if (right) {
+        text_->ScrollToEnd();
+      } else {
+        text_->ScrollToStart();
+      }
+      break;
+  }
+}
+
+bool FileEdit::ProcessKey(wxKeyCode key, wxKeyModifier mod) {
+  // standard left/right handled automagically
+
+  const bool left_or_right = key == WXK_LEFT || key == WXK_RIGHT;
+  const wxKeyModifier without_shift =
+      static_cast<wxKeyModifier>(mod & ~wxMOD_SHIFT);
+  const bool is_shift_down = (mod & wxMOD_SHIFT) == wxMOD_SHIFT;
+
+  const SelectionState selection_state =
+      is_shift_down ? (text_->SelectionIsRectangle() ? SelectionState::RECT
+                                                     : SelectionState::STREAM)
+                    : SelectionState::NONE;
+
+  if (
+#ifndef RIDE_OS_APPLE
+      // win: ctrl + left/right
+      without_shift == wxMOD_CONTROL && left_or_right
+#else
+      // osx: alt + left/right
+      without_shift == wxMOD_ALT && left_or_right
+#endif
+      ) {
+    // move one word, left or right
+    const bool right = key == WXK_RIGHT;
+    if (right) {
+      switch (selection_state) {
+        case SelectionState::NONE:
+          text_->WordRight();
+          break;
+        case SelectionState::STREAM:
+        case SelectionState::RECT:
+          text_->WordRightExtend();
+          break;
+        default:
+          assert(false && "Unhandled selection state");
+      }
+    } else {
+      switch (selection_state) {
+        case SelectionState::NONE:
+          text_->WordLeft();
+          break;
+        case SelectionState::STREAM:
+        case SelectionState::RECT:
+          text_->WordLeftExtend();
+          break;
+        default:
+          assert(false && "Unhandled selection state");
+      }
+    }
+    return true;
+  }
+
+#ifndef RIDE_OS_APPLE
+  // win: alt + left/right
+  if (without_shift == wxMOD_ALT && left_or_right) {
+    const bool right = key == WXK_RIGHT;
+    // single step
+    if (right) {
+      switch (selection_state) {
+        case SelectionState::NONE:
+          text_->WordPartRight();
+          break;
+        case SelectionState::STREAM:
+        case SelectionState::RECT:
+          text_->WordPartRightExtend();
+          break;
+        default:
+          assert(false && "Unhandled selection state");
+      }
+    } else {
+      switch (selection_state) {
+        case SelectionState::NONE:
+          text_->WordPartLeft();
+          break;
+        case SelectionState::STREAM:
+        case SelectionState::RECT:
+          text_->WordPartLeftExtend();
+          break;
+        default:
+          assert(false && "Unhandled selection state");
+      }
+    }
+    return true;
+  }
+#endif
+  // osx: fn + left/right
+  // meta?
+
+  if (
+#ifndef RIDE_OS_APPLE
+      // win: home/end
+      key == WXK_HOME || key == WXK_END
+#else
+      // osx: cmd + left/right
+      without_shift == wxMOD_CMD && left_or_right
+#endif
+      ) {
+    const bool right = key == WXK_RIGHT || key == WXK_END;
+    // TODO(Gustav): Expose home/end style in the gui
+    GoHomeEnd(text_, right, main_->settings().home_end_style(),
+              selection_state);
+    return true;
+  }
 
   return false;
 }
