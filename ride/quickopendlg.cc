@@ -33,6 +33,9 @@ class QuickOpenDlg : public ui::QuickOpen {
   void OnTextUpdated();
   void OnTextEnter();
 
+ private:
+  void ChangeSelection(const wxKeyEvent& event, int change);
+
  protected:
   void OnKeyUp(wxKeyEvent& event);
   void OnUpdated(wxCommandEvent& event);
@@ -51,37 +54,29 @@ class QuickOpenDlg : public ui::QuickOpen {
 
 //////////////////////////////////////////////////////////////////////////
 
+void QuickOpenDlg::ChangeSelection(const wxKeyEvent& event, int change) {
+  auto selected = ::GetSelection(uiFileList);
+  if (selected.empty()) {
+    ::SetSelection(uiFileList, 0, true);
+  } else {
+    WXID last = last_selected_;
+    if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
+    WXID next = last + change;
+    ::SetSelection(uiFileList, next, true);
+    if (last_selected_ == last) {
+      last_selected_ = next;
+      ::SetSelection(uiFileList, last, false);
+    }
+  }
+}
+
 void QuickOpenDlg::OnKeyUp(wxKeyEvent& event) {
   if (uiFileList == NULL) return;
 
   if (event.GetKeyCode() == WXK_UP) {
-    auto selected = ::GetSelection(uiFileList);
-    if (selected.empty()) {
-      ::SetSelection(uiFileList, 0, true);
-    } else {
-      WXID last = last_selected_;  //  *selected.begin();
-      if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
-      WXID next = last - 1;
-      ::SetSelection(uiFileList, next, true);
-      if (last_selected_ == last) {
-        last_selected_ = next;
-        ::SetSelection(uiFileList, last, false);
-      }
-    }
+    ChangeSelection(event, -1);
   } else if (event.GetKeyCode() == WXK_DOWN) {
-    auto selected = ::GetSelection(uiFileList);
-    if (selected.empty()) {
-      ::SetSelection(uiFileList, 0, true);
-    } else {
-      WXID last = last_selected_;  // *selected.rbegin();
-      if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
-      WXID next = last + 1;
-      ::SetSelection(uiFileList, next, true);
-      if (last_selected_ == last) {
-        last_selected_ = next;
-        ::SetSelection(uiFileList, last, false);
-      }
-    }
+    ChangeSelection(event, 1);
   } else {
     event.Skip();
   }
