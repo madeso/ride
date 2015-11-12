@@ -12,6 +12,7 @@ option(BUILD_USE_CPPCHECK "run cppcheck on all source" OFF)
 option(BUILD_USE_INCLUDECHECK "run custom script to include order problems" OFF)
 option(BUILD_USE_ALL_COMPILER_WARNINGS "enable all compiler warnings" OFF)
 option(BUILD_USE_CLOC "Update code stat files" OFF)
+option(BUILD_USE_SIMIAN "Create simian project" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -75,3 +76,11 @@ IF(BUILD_USE_CLOC)
 	# 				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	# 				   COMMENT "Running cloc on switcher only" VERBATIM)
 ENDIF(BUILD_USE_CLOC)
+
+IF(BUILD_USE_SIMIAN)
+	# http://www.harukizaemon.com/simian/
+	add_custom_target(simian-everything ALL
+					   simian-2.4.0.exe -formatter=vs -language=cpp -threshold=4 ${CMAKE_SOURCE_DIR}/ride/*.cc
+					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+					   COMMENT "Running simian" VERBATIM)
+ENDIF(BUILD_USE_SIMIAN)
