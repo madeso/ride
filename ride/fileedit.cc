@@ -18,6 +18,8 @@
 #include <vector>
 #include <string>
 
+#include "ride_compiler_settings.h"  // NOLINT
+
 #include "ride/resources/icons.h"
 
 #include "ride/autocomplete.h"
@@ -780,10 +782,18 @@ void GoHomeEnd(wxStyledTextCtrl* text_, bool right,
       } else {
         switch (selection_state) {
           case SelectionState::NONE:
+#ifdef RIDE_WXWIDGETS_USE_NEW_GO_HOME_END
             text_->VCHomeDisplay();
+#else
+            text_->HomeDisplay();
+#endif
             break;
           case SelectionState::STREAM:
+#ifdef RIDE_WXWIDGETS_USE_NEW_GO_HOME_END
             text_->VCHomeDisplayExtend();
+#else
+            text_->HomeDisplayExtend();
+#endif
             break;
           case SelectionState::RECT:
             text_->VCHomeRectExtend();

@@ -9,4 +9,6 @@
 
 #cmakedefine RIDE_OS_APPLE
 
+#cmakedefine RIDE_WXWIDGETS_USE_NEW_GO_HOME_END
+
 #endif  // RIDE_RIDE_COMPILER_SETTINGS_IN_H_
