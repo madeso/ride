@@ -1,6 +1,7 @@
 project(ride)
 cmake_minimum_required(VERSION 3.1.0)
 set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 include(cpack-config.cmake)
 
@@ -77,6 +78,13 @@ IF(BUILD_USE_CLOC)
 	# 				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 	# 				   COMMENT "Running cloc on switcher only" VERBATIM)
 ENDIF(BUILD_USE_CLOC)
+
+if(BUILD_USE_CLANG_TIDY)
+	add_custom_target(run-clang-tidy ALL
+				   ./call-clang-tidy.py -build ${CMAKE_CURRENT_BINARY_DIR} ride/*.cc ride/*.h ride/switcher/*.cc ride/switcher/*.h
+				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+				   COMMENT "Running clang-tidy" VERBATIM)
+endif(BUILD_USE_CLANG_TIDY)
 
 IF(BUILD_USE_SIMIAN)
 	# http://www.harukizaemon.com/simian/

@@ -8,6 +8,7 @@ from subprocess import call
 
 parser = argparse.ArgumentParser(description="Run clang-format with globbing support and less arguments")
 parser.add_argument('files', metavar ='FILE', nargs='+', help='A file, may contain wildcards to modify with clang-format')
+parser.add_argument('-build', help='The build folders where to find the compilation database')
 args = parser.parse_args()
 
 clangformat = "clang-tidy"
@@ -19,6 +20,8 @@ if platform.system() == 'Darwin':
 print "clang-tidy: ", clangformat
 print os.path.exists(clangformat)
 
+print args.build
+
 error_count = 0
 
 lastcmd = []
@@ -29,8 +32,7 @@ try:
 		for fname in glob.glob(dir):
 			filename = os.path.abspath(fname)
 			count += 1
-			print "Working ", filename
-			lastcmd = [clangformat, filename]
+			lastcmd = [clangformat, filename, '--']
 			retcode = call(lastcmd)
 			if retcode <> 0:
 				error_count += 1
