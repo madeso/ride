@@ -22,30 +22,38 @@ print os.path.exists(clangformat)
 
 print args.build
 
-error_count = 0
+build = args.build
+if build is None:
+	build = ""
 
-lastcmd = []
+db = os.path.join(build, 'compile_commands.json')
+if os.path.exists(db):
+	error_count = 0
 
-try:
-	for dir in args.files:
-		count = 0
-		for fname in glob.glob(dir):
-			filename = os.path.abspath(fname)
-			count += 1
-			lastcmd = [clangformat, filename, '--']
-			retcode = call(lastcmd)
-			if retcode <> 0:
+	lastcmd = []
+
+	try:
+		for dir in args.files:
+			count = 0
+			for fname in glob.glob(dir):
+				filename = os.path.abspath(fname)
+				count += 1
+				lastcmd = [clangformat, '-p', build, filename]
+				retcode = call(lastcmd)
+				if retcode <> 0:
+					error_count += 1
+					sys.stderr.write(filename + ' failed to clang-tidy\n')
+				# clang-format ARGS -i -style=Google ${game_src}
+			if count == 0:
 				error_count += 1
-				sys.stderr.write(filename + ' failed to clang-tidy\n')
-			# clang-format ARGS -i -style=Google ${game_src}
-		if count == 0:
-			error_count += 1
-			sys.stderr.write(dir + ' didnt yield any files\n')
-except OSError, e:
-	sys.stderr.write("""Failed to call clang-tidy!
-		Command: %s
-		Error %s - %s
-		In %s
-		""" % (str(lastcmd), str(e.errno), e.strerror, e.filename) )
+				sys.stderr.write(dir + ' didnt yield any files\n')
+	except OSError, e:
+		sys.stderr.write("""Failed to call clang-tidy!
+			Command: %s
+			Error %s - %s
+			In %s
+			""" % (str(lastcmd), str(e.errno), e.strerror, e.filename) )
 
-sys.exit(error_count > 0)
+	sys.exit(error_count > 0)
+else:
+	print "No compile-commands.json found, aborting..."
