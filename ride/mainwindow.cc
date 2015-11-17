@@ -227,17 +227,21 @@ void MainWindow::SetupMenu() {
 
   // shortcuts stolen from qt creator:
   // https://wiki.qt.io/Qt_Creator_Keyboard_Shortcuts
-  menuItemViewProject_ = AddMenuItem(menu_view, ID_VIEW_SHOW_PROJECT,
-                                     "&Project pane\tAlt-0", "").Checkable();
+  menuItemViewProject_ =
+      AddMenuItem(menu_view, ID_VIEW_SHOW_PROJECT, "&Project pane\tAlt-0", "")
+          .Checkable();
   AddMenuItem(menu_view, ID_VIEW_SHOW_START, "&Start page", "");
   // build issues
   menuItemViewFind_ = AddMenuItem(menu_view, ID_VIEW_SHOW_FINDRESULT,
-                                  "Find &result pane\tAlt-2", "").Checkable();
+                                  "Find &result pane\tAlt-2", "")
+                          .Checkable();
   // app output
-  menuItemViewBuild_ = AddMenuItem(menu_view, ID_VIEW_SHOW_BUILD,
-                                   "&Build pane\tAlt-4", "").Checkable();
-  menuItemViewCompile_ = AddMenuItem(menu_view, ID_VIEW_SHOW_COMPILE,
-                                     "&Compile pane", "").Checkable();
+  menuItemViewBuild_ =
+      AddMenuItem(menu_view, ID_VIEW_SHOW_BUILD, "&Build pane\tAlt-4", "")
+          .Checkable();
+  menuItemViewCompile_ =
+      AddMenuItem(menu_view, ID_VIEW_SHOW_COMPILE, "&Compile pane", "")
+          .Checkable();
 
   //////////////////////////////////////////////////////////////////////////
   wxMenu* menu_help = new wxMenu;
@@ -813,7 +817,7 @@ void MainWindow::OnTab(bool forward) {
     if (found != tabdata.end()) {
       const TabData& data = found->second;
       files.AddItem(
-                switcher::Item(data.name, data.name, data.index, data.bitmap))
+               switcher::Item(data.name, data.name, data.index, data.bitmap))
           .set_window(data.win)
           .set_description(document.description)
           .set_path(document.path);
