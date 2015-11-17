@@ -120,6 +120,14 @@ if(BUILD_USE_CLANG_FORMAT)
 				   COMMENT "Running clang format" VERBATIM)
 endif(BUILD_USE_CLANG_FORMAT)
 
+if(BUILD_USE_CLANG_TIDY)
+	add_custom_command(TARGET ${PROJECT_NAME}
+				   PRE_BUILD
+				   COMMAND ./call-clang-tidy.py ${CMAKE_CURRENT_SOURCE_DIR}/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/*.h ${CMAKE_CURRENT_SOURCE_DIR}/switcher/*.cc ${CMAKE_CURRENT_SOURCE_DIR}/switcher/*.h
+				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+				   COMMENT "Running clang tidy" VERBATIM)
+endif(BUILD_USE_CLANG_TIDY)
+
 if(BUILD_USE_INCLUDECHECK)
 	add_custom_command(TARGET ${PROJECT_NAME}
 				   PRE_BUILD
