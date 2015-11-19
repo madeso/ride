@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "settings.pb.h"  // NOLINT this is how we include it
 
