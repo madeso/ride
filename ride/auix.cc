@@ -406,9 +406,6 @@ void AuiGenericTabArt::DrawTab(wxDC& dc, wxWindow* wnd,  // NOLINT
 
     text_offset = bitmap_offset + page.bitmap.GetWidth();
     text_offset += 3;  // bitmap padding
-
-  } else {
-    text_offset = tab_x + 8;
   }
 
   wxString draw_text = wxAuiChopText(

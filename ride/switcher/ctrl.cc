@@ -57,8 +57,7 @@ Index GoToFirstItem(const ItemList& items, int group = 0) {
 }
 
 Index GoToLastItem(const ItemList& items) {
-  // TODO(Gustav): Loop condition always true, investigate this!!!
-  for (size_t group_index = items.GetGroupCount() - 1; group_index >= 0;
+  for (int group_index = items.GetGroupCount() - 1; group_index >= 0;
        --group_index) {
     int count = items.GetGroup(group_index).GetItemCount();
     if (count > 0) {

@@ -540,7 +540,6 @@ bool HandleParaEditCommon(int tab_width, ride::AutoComplete ac_setting,
       const int last_index = text->GetLength();
       int found = caret;
       do {
-        int last = found;
         found = text->FindText(found, last_index, wxString(c));
         if (found == -1) {
           return true;
@@ -1392,7 +1391,6 @@ void FileEdit::OnSelectionUpdated(wxCommandEvent& event) {
 }
 
 void FileEdit::OnChanged(wxStyledTextEvent& event) {
-  int key = event.GetKey();
   UpdateTitle();
   HighlightCurrentWord();
   UpdateBraceMatching();

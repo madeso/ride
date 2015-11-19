@@ -187,7 +187,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
   wxString before = ListEnviroment(env.env);
 
   bool got_env = wxGetEnvMap(&env.env);
-  // discard this...
+  assert(got_env);
 
   for (const auto& e : c.enviroment) {
     env.env[e.first] = e.second;
@@ -244,8 +244,8 @@ bool SingleRunner::IsRunning() const {
   // for some reason, calling/assinging theese on osx, keeps osx from waiting
   // forever for a response... weird. there might be some horrible
   // threading issue at work here :(
-  const bool exists = wxProcess::Exists(pimpl->processes_->GetPid());
-  bool has_input = pimpl->processes_->HasInput();
+  /*const bool exists = */ wxProcess::Exists(pimpl->processes_->GetPid());
+  /*bool has_input = */ pimpl->processes_->HasInput();
   return !pimpl->has_exit_code();
 }
 
