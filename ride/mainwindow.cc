@@ -14,6 +14,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <algorithm>
 
 #include "ride_compiler_settings.h"  // NOLINT cmake generated file
 
