@@ -44,3 +44,6 @@ samples/projects/*
 #vim swap files
 *.swp
 
+#another temporary/swap files
+*~
+
