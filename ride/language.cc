@@ -244,7 +244,8 @@ class CppLanguage : public Language {
     primary_keywords_ = temp.ToString();
   }
   wxString primary_keywords_;
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
     SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style(),
              true);
     SetStyle(text, wxSTC_C_COMMENT,
@@ -404,7 +405,8 @@ class RustLanguage : public Language {
   }
   wxString primary_keywords_;
 
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
 #ifndef USE_CPP_AS_RUST
     SetStyle(text, wxSTC_RUST_DEFAULT,
              settings.fonts_and_colors().default_style(), true);
@@ -585,7 +587,8 @@ class ProtobufLanguage : public Language {
     AddExtension(".proto");
   }
 
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
     SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style(),
              true);
     SetStyle(text, wxSTC_C_COMMENT,
@@ -702,7 +705,8 @@ class MarkdownLanguage : public Language {
   MarkdownLanguage() : Language(_("Markdown"), wxSTC_LEX_MARKDOWN) {
     AddExtension(".md");
   }
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
     SetStyle(text, wxSTC_MARKDOWN_DEFAULT,
              settings.fonts_and_colors().default_style(), true);
     SetStyle(text, wxSTC_MARKDOWN_LINE_BEGIN,
@@ -757,7 +761,8 @@ class PropertiesLanguage : public Language {
     AddExtension(".toml");  // properties are kinda like toml
                             // todo: implement a proper toml lexer/language
   }
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_PROPS_DEFAULT,
@@ -777,7 +782,8 @@ class PropertiesLanguage : public Language {
 class XmlLanguage : public Language {
  public:
   XmlLanguage() : Language(_("XML"), wxSTC_LEX_XML) { AddExtension(".xml"); }
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_H_DEFAULT, settings.fonts_and_colors().default_style(),
@@ -826,7 +832,8 @@ class CmakeLanguage : public Language {
     AddExtension(".cmake");
     AddExtension("CMakeLists.txt");
   }
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_CMAKE_DEFAULT,
@@ -894,7 +901,8 @@ class CmakeLanguage : public Language {
 class LuaLanguage : public Language {
  public:
   LuaLanguage() : Language(_("Lua"), wxSTC_LEX_LUA) { AddExtension(".lua"); }
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_LUA_DEFAULT,
@@ -951,7 +959,8 @@ class YamlLanguage : public Language {
   YamlLanguage() : Language(_("YAML"), wxSTC_LEX_YAML) {
     AddExtension(".yaml");
   }
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {
     wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_TELETYPE));
 
     SetStyle(text, wxSTC_YAML_DEFAULT,
@@ -980,8 +989,8 @@ class YamlLanguage : public Language {
 class NullLanguage : public Language {
  public:
   NullLanguage() : Language(_("NULL"), wxSTC_LEX_NULL) {}
-  void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override {
-  }
+  void DoStyleDocument(wxStyledTextCtrl* text,
+                       const ride::Settings& settings) override {}
 };
 
 struct Languages::LanguagesPimpl {
