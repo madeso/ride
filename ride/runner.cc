@@ -129,7 +129,7 @@ class Process : public wxProcess {
         buf.AppendByte(c);
       } while (IsInputAvailable());
 
-      wxString line((const char*)buf.GetData(), wxConvUTF8,
+      wxString line(reinterpret_cast<const char*>(buf.GetData()), wxConvUTF8,
                     buf.GetDataLen());  // Convert the line to utf8
       runner_->Append(line);
       hasInput = true;
@@ -145,7 +145,7 @@ class Process : public wxProcess {
         buf.AppendByte(c);
       } while (IsErrorAvailable());
 
-      wxString line((const char*)buf.GetData(), wxConvUTF8, buf.GetDataLen());
+      wxString line(reinterpret_cast<const char*>(buf.GetData()), wxConvUTF8, buf.GetDataLen());
       runner_->Append(line);
       hasInput = true;
     }

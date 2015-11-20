@@ -13,7 +13,7 @@ namespace {
 // masked bitmap from raw bits (XBM format)
 wxBitmap wxAuiBitmapFromBits(const unsigned char bits[], int w, int h,
                              const wxColour& color) {
-  wxImage img = wxBitmap((const char*)bits, w, h).ConvertToImage();
+  wxImage img = wxBitmap(reinterpret_cast<const char*>(bits), w, h).ConvertToImage();
   img.Replace(0, 0, 0, 123, 123, 123);
   img.Replace(255, 255, 255, color.Red(), color.Green(), color.Blue());
   img.SetMaskColour(123, 123, 123);
@@ -803,7 +803,7 @@ void StatusBarGeneric::DrawFieldText(wxDC& dc, const wxRect& rect, int i,
 
   // eventually ellipsize the text so that it fits the field width
 
-  wxEllipsizeMode ellmode = (wxEllipsizeMode)-1;
+  wxEllipsizeMode ellmode = static_cast<wxEllipsizeMode>(-1);
   if (HasFlag(wxSTB_ELLIPSIZE_START))
     ellmode = wxELLIPSIZE_START;
   else if (HasFlag(wxSTB_ELLIPSIZE_MIDDLE))
@@ -811,7 +811,7 @@ void StatusBarGeneric::DrawFieldText(wxDC& dc, const wxRect& rect, int i,
   else if (HasFlag(wxSTB_ELLIPSIZE_END))
     ellmode = wxELLIPSIZE_END;
 
-  if (ellmode == (wxEllipsizeMode)-1) {
+  if (ellmode == static_cast<wxEllipsizeMode>(-1)) {
     // if we have the wxSTB_SHOW_TIPS we must set the ellipsized flag even if
     // we don't ellipsize the text but just truncate it
     if (HasFlag(wxSTB_SHOW_TIPS))
@@ -837,5 +837,5 @@ void StatusBarGeneric::DrawFieldText(wxDC& dc, const wxRect& rect, int i,
   // draw the text
   dc.DrawText(text, xpos, ypos);
 
-  if (ellmode == (wxEllipsizeMode)-1) dc.DestroyClippingRegion();
+  if (ellmode == static_cast<wxEllipsizeMode>(-1)) dc.DestroyClippingRegion();
 }
