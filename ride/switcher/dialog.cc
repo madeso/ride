@@ -116,4 +116,5 @@ void Dialog::UpdateDescription() {
   }
 }
 
-}  // switcher
+} // namespace switcher
+

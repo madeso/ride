@@ -31,7 +31,7 @@ namespace regex {
 // src\main.rs:42:32: 42:58 help: run `rustc --explain E0243` to see a detailed
 // explanation
 const wxString GET_COMMAND_LINE = "run `(.*?)`";
-}
+} // namespace regex
 
 const wxRegEx& GetCommandLineRegex() {
   static wxRegEx ret(regex::GET_COMMAND_LINE, wxRE_ADVANCED);

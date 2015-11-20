@@ -499,4 +499,5 @@ void Ctrl::AdvanceToNextSelection(bool forward) {
   }
 }
 
-}  // switcher
+} // namespace switcher
+

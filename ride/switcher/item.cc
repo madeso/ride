@@ -104,4 +104,5 @@ Item& Item::set_window(wxWindow* win) {
 
 wxWindow* Item::window() const { return window_; }
 
-}  // switcher
+} // namespace switcher
+

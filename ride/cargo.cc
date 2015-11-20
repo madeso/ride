@@ -107,7 +107,7 @@ const std::string VERSION = "version";
 const std::string AUTHORS = "authors";
 const std::string DEPENDENCIES = "dependencies";
 const std::string FEATURES = "features";
-}
+} // namespace cargo
 
 //////////////////////////////////////////////////////////////////////////
 

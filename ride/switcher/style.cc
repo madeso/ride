@@ -103,4 +103,5 @@ int Style::min_height() const { return min_height_; }
 void Style::set_min_width(int w) { min_width_ = w; }
 void Style::set_min_height(int h) { min_height_ = h; }
 
-}  // switcher
+} // namespace switcher
+
