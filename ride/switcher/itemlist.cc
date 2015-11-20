@@ -106,5 +106,4 @@ wxSize ItemList::CalculateItemSize(wxDC* dc, const Style& style) {
   return sz;
 }
 
-} // namespace switcher
-
+}  // namespace switcher

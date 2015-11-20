@@ -146,5 +146,4 @@ void Group::CalculateItemSize(wxDC* dc, const Style& style,
   }
 }
 
-} // namespace switcher
-
+}  // namespace switcher

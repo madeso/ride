@@ -24,7 +24,7 @@ class DeleteFolderDlg : public ui::DeleteFolder {
 namespace {
 static bool DefaultFull = true;
 static bool DefaultRecursive = true;
-} // namespace
+}  // namespace
 
 DeleteFolderDlg::DeleteFolderDlg(wxWindow* parent, const wxString& message,
                                  const wxString& title)

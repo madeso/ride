@@ -145,7 +145,8 @@ class Process : public wxProcess {
         buf.AppendByte(c);
       } while (IsErrorAvailable());
 
-      wxString line(reinterpret_cast<const char*>(buf.GetData()), wxConvUTF8, buf.GetDataLen());
+      wxString line(reinterpret_cast<const char*>(buf.GetData()), wxConvUTF8,
+                    buf.GetDataLen());
       runner_->Append(line);
       hasInput = true;
     }
