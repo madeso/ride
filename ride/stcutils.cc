@@ -280,7 +280,6 @@ int C(ride::CaretStyle st) {
     default:
       assert(0 && "Unknown caret sticky");
       return wxSTC_CARETSTYLE_LINE;
-      break;
   }
 }
 
@@ -295,7 +294,6 @@ int C(ride::CaretSticky st) {
     default:
       assert(0 && "Unknown caret sticky");
       return wxSTC_CARETSTICKY_ON;
-      break;
   }
 }
 
