@@ -177,7 +177,7 @@ int FindStcText(wxStyledTextCtrl* stc, int minPos, int maxPos,
 class FontLister : public wxFontEnumerator {
  public:
   std::vector<wxString> fonts;
-  virtual bool OnFacename(const wxString& font) {
+  bool OnFacename(const wxString& font) override {
     // The version of the font with the '@' is a version optimized for writing
     // in the vertical direction.
     // https://groups.google.com/forum/#!topic/wx-users/3hjrhPlSULI

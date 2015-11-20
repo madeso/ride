@@ -23,10 +23,10 @@ class QuickOpenDlg : public ui::QuickOpen {
   void UpdateFilters();
 
  protected:
-  void OnCancel(wxCommandEvent& event);
-  void OnOk(wxCommandEvent& event);
-  void OnActivate(wxActivateEvent& event);
-  void OnContextSensitive(wxCommandEvent& event);
+  void OnCancel(wxCommandEvent& event) override;
+  void OnOk(wxCommandEvent& event) override;
+  void OnActivate(wxActivateEvent& event) override;
+  void OnContextSensitive(wxCommandEvent& event) override;
   // virtual void OnFileDeselected(wxListEvent& event) { event.Skip(); }
   // virtual void OnFileSelected(wxListEvent& event) { event.Skip(); }
 

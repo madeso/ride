@@ -15,12 +15,12 @@ class VariableEditorDlg : public ui::VariableEditor {
   VariableEditorDlg(wxWindow* parent, std::string* data);
 
  protected:
-  void OnTextChanged(wxCommandEvent& event);
-  void OnFile(wxCommandEvent& event);
-  void OnFolder(wxCommandEvent& event);
-  void OnCustomDoubleClick(wxCommandEvent& event);
-  void OnCancel(wxCommandEvent& event);
-  void OnOk(wxCommandEvent& event);
+  void OnTextChanged(wxCommandEvent& event) override;
+  void OnFile(wxCommandEvent& event) override;
+  void OnFolder(wxCommandEvent& event) override;
+  void OnCustomDoubleClick(wxCommandEvent& event) override;
+  void OnCancel(wxCommandEvent& event) override;
+  void OnOk(wxCommandEvent& event) override;
 
  protected:
   void AddText(const wxString& text);

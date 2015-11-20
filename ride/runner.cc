@@ -31,7 +31,7 @@ Command::Command(const wxString& r, const wxString& c,
 class IdleTimer : public wxTimer {
  public:
   explicit IdleTimer(SingleRunner::Pimpl* p) : pimpl_(p) {}
-  void Notify();
+  void Notify() override;
 
   SingleRunner::Pimpl* pimpl_;
 };
@@ -92,7 +92,7 @@ class Process : public wxProcess {
     Redirect();
   }
 
-  virtual void OnTerminate(int pid, int status) {
+  void OnTerminate(int pid, int status) override {
     assert(runner_);
     assert(runner_->pid_ == pid);
 
@@ -265,11 +265,11 @@ class MultiRunner::Runner : public SingleRunner {
  public:
   explicit Runner(MultiRunner* r) : runner_(r) { assert(runner_); }
 
-  virtual void Append(const wxString& str) {
+  void Append(const wxString& str) override {
     assert(runner_);
     runner_->Append(str);
   }
-  virtual void Completed() {
+  void Completed() override {
     assert(runner_);
     runner_->RunNext(GetExitCode());
   }

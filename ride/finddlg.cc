@@ -41,9 +41,9 @@ class FindDlg : public ui::Find {
   bool KeepFilesOpen() const { return uiKeepFilesOpen->GetValue(); }
 
  protected:
-  void OnCancel(wxCommandEvent& event);
-  void OnOk(wxCommandEvent& event);
-  void OnEnter(wxCommandEvent& event) { OnOk(event); }
+  void OnCancel(wxCommandEvent& event) override;
+  void OnOk(wxCommandEvent& event) override;
+  void OnEnter(wxCommandEvent& event) override { OnOk(event); }
 };
 
 FindDlg::FindDlg(wxWindow* parent, const wxString& find,

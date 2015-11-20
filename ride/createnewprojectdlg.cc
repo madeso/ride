@@ -27,13 +27,13 @@ class CreateNewProjectDlg : public ui::CreateNewProject {
   wxString GenerateCargoCommandline(const ride::MachineSettings& machine) const;
 
  protected:
-  virtual void OnProjectNameEnter(wxCommandEvent& event);
+  void OnProjectNameEnter(wxCommandEvent& event) override;
 
-  virtual void OnProjectNameChanged(wxCommandEvent& event);
-  virtual void OnProjectFolderChanged(wxCommandEvent& event);
-  virtual void OnBrowseProjectFolder(wxCommandEvent& event);
-  virtual void OnCancel(wxCommandEvent& event);
-  virtual void OnOk(wxCommandEvent& event);
+  void OnProjectNameChanged(wxCommandEvent& event) override;
+  void OnProjectFolderChanged(wxCommandEvent& event) override;
+  void OnBrowseProjectFolder(wxCommandEvent& event) override;
+  void OnCancel(wxCommandEvent& event) override;
+  void OnOk(wxCommandEvent& event) override;
 
  private:
   wxString GetVcsName() const;

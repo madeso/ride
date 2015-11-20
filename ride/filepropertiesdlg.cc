@@ -19,8 +19,8 @@ class FilePropertiesDlg : public ui::FileProperties {
   FilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl);
 
  protected:
-  void OnChangeEncoding(wxCommandEvent& event);
-  void OnChangeLineEnding(wxCommandEvent& event);
+  void OnChangeEncoding(wxCommandEvent& event) override;
+  void OnChangeLineEnding(wxCommandEvent& event) override;
 
  private:
   void UpdateGui();

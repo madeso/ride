@@ -54,7 +54,7 @@ class RideListBox : public wxVListBox {
     this->SetOwnBackgroundColour(background_);
   }
 
-  void OnDrawItem(wxDC& dc, const wxRect& rect, size_t n) const {
+  void OnDrawItem(wxDC& dc, const wxRect& rect, size_t n) const override {
     if (IsSelected(n)) {
       dc.SetBrush(wxBrush(selected_background_));
       dc.SetPen(wxPen(selected_background_));
@@ -81,7 +81,7 @@ class RideListBox : public wxVListBox {
     dc.DrawText(items[n].title, p);
   }
 
-  wxCoord OnMeasureItem(size_t n) const { return height_; }
+  wxCoord OnMeasureItem(size_t n) const override { return height_; }
 
   void InsertItem(const RideListBoxItem& item) {
     items.push_back(item);
@@ -242,7 +242,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     g_last_height = s.GetHeight();
   }
 
-  void SendToGui(bool togui) {
+  void SendToGui(bool togui) override {
     m_editor->EditToGui(false);
     m_fonts->StyleToGui(togui);
     m_markers->MarkerToGui(false);

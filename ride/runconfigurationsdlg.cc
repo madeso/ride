@@ -62,20 +62,20 @@ class RunConfigurationsDlg : public ui::Configurations {
   bool has_applied() const { return has_applied_; }
 
  protected:
-  void OnApply(wxCommandEvent& event);
-  void OnCancel(wxCommandEvent& event);
-  void OnOk(wxCommandEvent& event);
+  void OnApply(wxCommandEvent& event) override;
+  void OnCancel(wxCommandEvent& event) override;
+  void OnOk(wxCommandEvent& event) override;
 
  protected:
   bool Apply();
   void AllToGui(bool togui);
 
  protected:
-  void OnAdd(wxCommandEvent& event);
-  void OnEdit(wxCommandEvent& event);
-  void OnRemove(wxCommandEvent& event);
-  void OnUp(wxCommandEvent& event);
-  void OnDown(wxCommandEvent& event);
+  void OnAdd(wxCommandEvent& event) override;
+  void OnEdit(wxCommandEvent& event) override;
+  void OnRemove(wxCommandEvent& event) override;
+  void OnUp(wxCommandEvent& event) override;
+  void OnDown(wxCommandEvent& event) override;
 
  private:
   Project* project_;

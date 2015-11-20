@@ -64,9 +64,9 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
                      Project* project);
 
  protected:
-  void OnApply(wxCommandEvent& event);
-  void OnCancel(wxCommandEvent& event);
-  void OnOk(wxCommandEvent& event);
+  void OnApply(wxCommandEvent& event) override;
+  void OnCancel(wxCommandEvent& event) override;
+  void OnOk(wxCommandEvent& event) override;
 
  protected:
   bool Apply();
@@ -80,31 +80,31 @@ class ProjectSettingsDlg : public ui::ProjectSettings {
   ride::RunSetting* GetSelectedRunSetting();
 
  protected:
-  void OnlyAllowNumberChars(wxKeyEvent& event);
-  void OnTabWdithChanged(wxCommandEvent& event);
-  void OnEditorUseTabsClicked(wxCommandEvent& event);
+  void OnlyAllowNumberChars(wxKeyEvent& event) override;
+  void OnTabWdithChanged(wxCommandEvent& event) override;
+  void OnEditorUseTabsClicked(wxCommandEvent& event) override;
 
-  void OnBuildConfiguration(wxCommandEvent& event);
-  void OnBuildConfigurationModify(wxCommandEvent& event);
-  void OnBuildCheckbox(wxCommandEvent& event);
-  void OnBuildText(wxCommandEvent& event);
-  void OnBuildTargetHelp(wxCommandEvent& event);
-  void OnBuildCustomArgHelp(wxCommandEvent& event);
+  void OnBuildConfiguration(wxCommandEvent& event) override;
+  void OnBuildConfigurationModify(wxCommandEvent& event) override;
+  void OnBuildCheckbox(wxCommandEvent& event) override;
+  void OnBuildText(wxCommandEvent& event) override;
+  void OnBuildTargetHelp(wxCommandEvent& event) override;
+  void OnBuildCustomArgHelp(wxCommandEvent& event) override;
 
-  void OnBuildFeatureAdd(wxCommandEvent& event);
-  void OnBuildFeatureEdit(wxCommandEvent& event);
-  void OnBuildFeatureRemove(wxCommandEvent& event);
-  void OnBuildFeatureUp(wxCommandEvent& event);
-  void OnBuildFeatureDown(wxCommandEvent& event);
+  void OnBuildFeatureAdd(wxCommandEvent& event) override;
+  void OnBuildFeatureEdit(wxCommandEvent& event) override;
+  void OnBuildFeatureRemove(wxCommandEvent& event) override;
+  void OnBuildFeatureUp(wxCommandEvent& event) override;
+  void OnBuildFeatureDown(wxCommandEvent& event) override;
 
-  void OnRunConfiguration(wxCommandEvent& event);
-  void OnRunConfigurationModify(wxCommandEvent& event);
-  void OnRunText(wxCommandEvent& event);
-  void OnRunApplication(wxCommandEvent& event);
-  void OnRunArguments(wxCommandEvent& event);
-  void OnRunFolder(wxCommandEvent& event);
-  void OnCmdBeforeLaunch(wxCommandEvent& event);
-  void OnRunCheck(wxCommandEvent& event);
+  void OnRunConfiguration(wxCommandEvent& event) override;
+  void OnRunConfigurationModify(wxCommandEvent& event) override;
+  void OnRunText(wxCommandEvent& event) override;
+  void OnRunApplication(wxCommandEvent& event) override;
+  void OnRunArguments(wxCommandEvent& event) override;
+  void OnRunFolder(wxCommandEvent& event) override;
+  void OnCmdBeforeLaunch(wxCommandEvent& event) override;
+  void OnRunCheck(wxCommandEvent& event) override;
 
  protected:
   Cargo cargo_;

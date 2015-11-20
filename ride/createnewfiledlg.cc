@@ -24,13 +24,13 @@ class CreateNewFileDlg : public ui::CreateNewFile {
   const wxString GetTemplateSource() const;
 
  protected:
-  void OnTextChanged(wxCommandEvent& event);
-  void OnComboChanged(wxCommandEvent& event);
-  void OnCheckChanged(wxCommandEvent& event);
+  void OnTextChanged(wxCommandEvent& event) override;
+  void OnComboChanged(wxCommandEvent& event) override;
+  void OnCheckChanged(wxCommandEvent& event) override;
 
-  void OnNameEnter(wxCommandEvent& event);
-  void OnCancel(wxCommandEvent& event);
-  void OnOk(wxCommandEvent& event);
+  void OnNameEnter(wxCommandEvent& event) override;
+  void OnCancel(wxCommandEvent& event) override;
+  void OnOk(wxCommandEvent& event) override;
 
  private:
   void UpdateTemplateSource();
@@ -81,14 +81,14 @@ void AddFileTemplate(wxListCtrl* list, const wxString& text, int image,
 
 class EmptyFileTemplate : public FileTemplate {
  public:
-  virtual const wxString GenerateContent(const wxString& name) {
+  const wxString GenerateContent(const wxString& name) override {
     return wxEmptyString;
   }
 } g_empty_file_template;
 
 class RustClassFileTemplate : public FileTemplate {
  public:
-  virtual const wxString GenerateContent(const wxString& name) {
+  const wxString GenerateContent(const wxString& name) override {
     return wxString::Format(
         "struct %s {\n"
         "}\n"

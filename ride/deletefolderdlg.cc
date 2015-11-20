@@ -17,8 +17,8 @@ class DeleteFolderDlg : public ui::DeleteFolder {
   void set_recursive(bool new_recursive) const;
 
  protected:
-  void OnNo(wxCommandEvent& event);
-  void OnYes(wxCommandEvent& event);
+  void OnNo(wxCommandEvent& event) override;
+  void OnYes(wxCommandEvent& event) override;
 };
 
 namespace {
