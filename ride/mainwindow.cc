@@ -627,7 +627,7 @@ void MainWindow::UpdateTheme() {
   wxFrame::SetForegroundColour(wxColor(255, 0, 0));
   wxFrame::SetBackgroundColour(C(c.dock_background()));
 
-  aui_.Update();    // we changed the tab art, update all the sizes
+  aui_.Update();       // we changed the tab art, update all the sizes
   wxFrame::Refresh();  // and then force a repaint
 }
 
