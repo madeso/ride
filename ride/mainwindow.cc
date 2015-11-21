@@ -1396,7 +1396,7 @@ void MainWindow::RestoreSession() {
   } else if (session.state() == ride::WINDOWSTATE_ICONIZED) {
     // if we quit in a iconized/minimized state... should we restore to the same
     // state or to the normal state...?
-    Iconize();
+    wxFrame::Iconize();
   }
 
   wxString cargo_file = session.project();
