@@ -45,12 +45,8 @@ void SettingsCommon::Revert() {
 
 void SettingsCommon::Apply(wxWindow* main) {
   main_window_->set_settings(current_settings_);
-  if (false == SaveSettings(main, current_settings_)) {
-    ShowError(main, "Failed to save settings", "Failed!");
-  }
+  SaveSettings(main, current_settings_);
 
   main_window_->set_machine(current_machine_);
-  if (false == SaveSettings(main, current_machine_)) {
-    ShowError(main, "Failed to save machine settings", "Failed!");
-  }
+  SaveSettings(main, current_machine_);
 }

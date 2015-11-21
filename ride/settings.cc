@@ -31,37 +31,46 @@ void LoadProtoTextOrBinary(google::protobuf::Message* message,
                            const wxString& error) {
   if (false == LoadProto(message, file)) {
     if (false == LoadProtoBinary(message, file)) {
-      ShowWarning(main, error, "Error");
+      ShowError(main, error, "Error while loading");
     }
+  }
+}
+
+void SaveProto(const google::protobuf::Message& message, const wxFileName file,
+               wxWindow* main, const wxString& error) {
+  if (false == SaveProto(message, file)) {
+    ShowError(main, error, "Error while saving");
   }
 }
 
 void LoadSettings(wxWindow* main, ::ride::MachineSettings* settings) {
   LoadProtoTextOrBinary(settings, GetMachineFile(), main,
-                        "Unable to parse machine settings file!");
+                        "Unable to load machine settings file!");
 }
 
-bool SaveSettings(wxWindow*, const ::ride::MachineSettings& settings) {
-  return SaveProto(settings, GetMachineFile());
+void SaveSettings(wxWindow* main, const ::ride::MachineSettings& settings) {
+  return SaveProto(settings, GetMachineFile(), main,
+                   "Unable to save machine settings!");
 }
 
 void LoadSettings(wxWindow* main, ::ride::Settings* settings) {
   LoadProtoTextOrBinary(settings, GetConfigFile(), main,
-                        "Unable to parse settings file!");
+                        "Unable to load settings file!");
   AddBuiltInThemes(settings);
 }
 
-bool SaveSettings(wxWindow*, const ::ride::Settings& settings) {
-  return SaveProto(settings, GetConfigFile());
+void SaveSettings(wxWindow* main, const ::ride::Settings& settings) {
+  SaveProto(settings, GetConfigFile(), main, "Unable to save settings!");
 }
 
 void LoadSession(wxWindow* main, ::ride::Session* settings) {
   LoadProtoTextOrBinary(settings, GetSessionFile(), main,
-                        "Unable to parse session file!");
+                        "Unable to load last session!");
 }
 
-bool SaveSession(wxWindow*, const ::ride::Session& settings) {
-  return SaveProto(settings, GetSessionFile());
+void SaveSession(wxWindow* main, const ::ride::Session& settings) {
+  SaveProto(settings, GetSessionFile(), main,
+            "Unable to save current session!");
 }
 
 wxColor C(const ride::Color& c) { return wxColor(c.r(), c.g(), c.b()); }
