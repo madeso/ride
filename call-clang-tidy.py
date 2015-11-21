@@ -9,9 +9,10 @@ from subprocess import call
 parser = argparse.ArgumentParser(description="Run clang-format with globbing support and less arguments")
 parser.add_argument('files', metavar ='FILE', nargs='+', help='A file, may contain wildcards to modify with clang-format')
 parser.add_argument('-build', help='The build folders where to find the compilation database')
+parser.add_argument('-name', default='clang-tidy', help='the clang-tidy name')
 args = parser.parse_args()
 
-clangformat = "clang-tidy"
+clangformat = args.name
 # on osx assume that the clang-format is installed via alcatraz in eclipse
 # http://stackoverflow.com/questions/110362/how-can-i-find-the-current-os-in-python
 if platform.system() == 'Darwin':

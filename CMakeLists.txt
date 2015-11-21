@@ -9,6 +9,7 @@ option(BUILD_USE_CLANG_FORMAT "Add clang format to the build" ON)
 option(BUILD_USE_CPPLINT "Add cpplint to the build" OFF)
 option(BUILD_USE_DOXYGEN "Add doxygen to the build" OFF)
 option(BUILD_USE_CLANG_TIDY "Add clang-tidy to the build" OFF)
+set(BUILD_CLANG_TIDY_NAME "clang-tidy" CACHE STRING "The name of clang-tidy")
 option(BUILD_USE_DOXYGEN_GLOBAL "Add doxygen as a seperate build" OFF)
 option(BUILD_USE_CPPCHECK "run cppcheck on all source" OFF)
 option(BUILD_USE_INCLUDECHECK "run custom script to include order problems" OFF)
@@ -81,7 +82,7 @@ ENDIF(BUILD_USE_CLOC)
 
 if(BUILD_USE_CLANG_TIDY)
 	add_custom_target(run-clang-tidy ALL
-				   ./call-clang-tidy.py -build ${CMAKE_CURRENT_BINARY_DIR} ride/*.cc ride/*.h ride/switcher/*.cc ride/switcher/*.h
+				   ./call-clang-tidy.py -name ${BUILD_CLANG_TIDY_NAME} -build ${CMAKE_CURRENT_BINARY_DIR} ride/*.cc ride/*.h ride/switcher/*.cc ride/switcher/*.h
 				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 				   COMMENT "Running clang-tidy" VERBATIM)
 endif(BUILD_USE_CLANG_TIDY)
