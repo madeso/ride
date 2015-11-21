@@ -54,7 +54,9 @@ const wxString ProjectRunFunctions::ADD_TEXT = "Name of run to create";
 const wxString ProjectRunFunctions::EDIT_TEXT =
     "Please specify the new run name";
 
-class RunConfigurationsDlg : public ui::Configurations {
+typedef ui::Configurations Configurations;
+
+class RunConfigurationsDlg : public Configurations {
  public:
   RunConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
                        Project* project, int selected);
@@ -101,7 +103,7 @@ RunConfigurationsDlg::RunConfigurationsDlg(wxWindow* parent,
       feature_list_(uiList, this),
       has_applied_(false) {
   AllToGui(true);
-  SetTitle("Run Configuration Manager");
+  Configurations::SetTitle("Run Configuration Manager");
 
   feature_list_.Select(selected, project->user_ptr());
   feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp,
