@@ -62,6 +62,51 @@ FileEdit* NotebookFromIndexOrNull(wxAuiNotebook* notebook, int tab_index) {
   return tab->ToFileEdit();
 }
 
+class NotebookFileEditIterator {
+ public:
+  NotebookFileEditIterator(wxAuiNotebook* notebook, int index)
+      : notebook_(notebook), index_(index) {}
+
+  void operator++() { next(); }
+  void operator++(int unused) { next(); }
+  void next() {
+    while (index_ < notebook_->GetPageCount()) {
+      ++index_;
+      FileEdit* edit = NotebookFromIndexOrNull(notebook_, index_);
+      if (edit) return;
+    }
+  }
+  FileEdit* operator*() {
+    FileEdit* edit = NotebookFromIndexOrNull(notebook_, index_);
+    assert(edit);
+    return edit;
+  }
+  bool operator!=(const NotebookFileEditIterator& o) {
+    return !(notebook_ == o.notebook_ && index_ == o.index_);
+  }
+
+  int index() const { return index_; }
+
+ private:
+  wxAuiNotebook* notebook_;
+  int index_;
+};
+
+class IterateOverFileEdits {
+ public:
+  explicit IterateOverFileEdits(wxAuiNotebook* notebook)
+      : notebook_(notebook) {}
+  NotebookFileEditIterator begin() {
+    return NotebookFileEditIterator(notebook_, 0);
+  }
+  NotebookFileEditIterator end() {
+    return NotebookFileEditIterator(notebook_, notebook_->GetPageCount());
+  }
+
+ private:
+  wxAuiNotebook* notebook_;
+};
+
 Tab* GetSelectedTabOrNull(wxAuiNotebook* notebook) {
   const int selected_tab_index = notebook->GetSelection();
   if (selected_tab_index == -1) {
@@ -1062,13 +1107,11 @@ void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& event) {
 }
 
 FoundEdit MainWindow::GetEditFromFileName(const wxString& file) {
-  for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount();
-       ++tab_index) {
-    FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
-    if (edit) {
-      if (edit->filename() == file) {
-        return FoundEdit(tab_index, edit);
-      }
+  for (auto it = IterateOverFileEdits(notebook_).begin();
+       it != IterateOverFileEdits(notebook_).end(); ++it) {
+    FileEdit* edit = *it;
+    if (edit->filename() == file) {
+      return FoundEdit(it.index(), edit);
     }
   }
 
@@ -1094,15 +1137,11 @@ void MainWindow::OnClose(wxCloseEvent& event) {
   if (closing_) return;
   closing_ = true;
 
-  for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount();
-       ++tab_index) {
-    FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
-    if (edit) {
-      const bool canAbort = event.CanVeto();
-      if (edit->CanClose(canAbort) == false) {
-        event.Veto();
-        return;
-      }
+  for (FileEdit* edit : IterateOverFileEdits(notebook_)) {
+    const bool canAbort = event.CanVeto();
+    if (edit->CanClose(canAbort) == false) {
+      event.Veto();
+      return;
     }
   }
 
@@ -1128,12 +1167,8 @@ void MainWindow::set_machine(const ride::MachineSettings& machine) {
 void MainWindow::ProjectSettingsHasChanged() { UpdateAllEdits(); }
 
 void MainWindow::UpdateAllEdits() {
-  for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount();
-       ++tab_index) {
-    FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
-    if (edit) {
-      edit->UpdateTextControl();
-    }
+  for (FileEdit* edit : IterateOverFileEdits(notebook_)) {
+    edit->UpdateTextControl();
   }
   findres_window_->UpdateStyle();
   build_output_.UpdateStyles();
@@ -1357,22 +1392,18 @@ void MainWindow::SaveSession() {
 
   session.set_aui_perspective(perspective);
 
-  for (unsigned int tab_index = 0; tab_index < notebook_->GetPageCount();
-       ++tab_index) {
-    FileEdit* edit = NotebookFromIndexOrNull(notebook_, tab_index);
-    if (edit) {
-      int start_line = 0;
-      int start_index = 0;
-      int end_line = 0;
-      int end_index = 0;
-      edit->GetSelection(&start_line, &start_index, &end_line, &end_index);
-      auto* f = session.mutable_files()->Add();
-      f->set_path(edit->filename());
-      f->set_start_line(start_line);
-      f->set_start_index(start_index);
-      f->set_end_line(end_line);
-      f->set_end_index(end_index);
-    }
+  for (FileEdit* edit : IterateOverFileEdits(notebook_)) {
+    int start_line = 0;
+    int start_index = 0;
+    int end_line = 0;
+    int end_index = 0;
+    edit->GetSelection(&start_line, &start_index, &end_line, &end_index);
+    auto* f = session.mutable_files()->Add();
+    f->set_path(edit->filename());
+    f->set_start_line(start_line);
+    f->set_start_index(start_index);
+    f->set_end_line(end_line);
+    f->set_end_index(end_index);
   }
 
   ::SaveSession(this, session);
