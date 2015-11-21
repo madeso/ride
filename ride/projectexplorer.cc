@@ -32,7 +32,7 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
   BindEvents();
   UpdateColors();
 
-  this->SetImageList(&images_);
+  wxTreeCtrl::SetImageList(&images_);
 
   images_.Add(wxIcon(file_normal_xpm));
   images_.Add(wxIcon(folder_normal_xpm));
@@ -41,8 +41,8 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
 void ProjectExplorer::UpdateColors() {
   const ride::Style& style =
       main_->settings().fonts_and_colors().default_style();
-  this->SetBackgroundColour(C(style.background()));
-  this->SetForegroundColour(C(style.foreground()));
+  wxTreeCtrl::SetBackgroundColour(C(style.background()));
+  wxTreeCtrl::SetForegroundColour(C(style.foreground()));
 }
 
 void ProjectExplorer::SetFolder(const wxString& folder) {

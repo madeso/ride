@@ -55,7 +55,9 @@ const wxString ProjectBuildFunctions::ADD_TEXT = "Name of build to create";
 const wxString ProjectBuildFunctions::EDIT_TEXT =
     "Please specify the new build name";
 
-class BuildConfigurationsDlg : public ui::Configurations {
+typedef ui::Configurations Configurations;
+
+class BuildConfigurationsDlg : public Configurations {
  public:
   BuildConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
                          Project* project, int selected);
@@ -102,7 +104,7 @@ BuildConfigurationsDlg::BuildConfigurationsDlg(wxWindow* parent,
       feature_list_(uiList, this),
       has_applied_(false) {
   AllToGui(true);
-  SetTitle("Build Configuration Manager");
+  Configurations::SetTitle("Build Configuration Manager");
 
   feature_list_.Select(selected, project->project_ptr());
   feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp,

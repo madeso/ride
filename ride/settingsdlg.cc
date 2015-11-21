@@ -49,9 +49,9 @@ class RideListBox : public wxVListBox {
         height_(32),
         spacing_(3),
         img_size_(32) {
-    this->SetMinClientSize(wxSize(120, 120));
-    this->SetBackgroundColour(background_);
-    this->SetOwnBackgroundColour(background_);
+    wxVListBox::SetMinClientSize(wxSize(120, 120));
+    wxVListBox::SetBackgroundColour(background_);
+    wxVListBox::SetOwnBackgroundColour(background_);
   }
 
   void OnDrawItem(wxDC& dc, const wxRect& rect, size_t n) const override {
@@ -62,7 +62,6 @@ class RideListBox : public wxVListBox {
       dc.SetBrush(wxBrush(background_));
       dc.SetPen(wxPen(background_));
     }
-    int size = 1;
     dc.DrawRectangle(rect);
 
     if (IsSelected(n)) {
@@ -213,7 +212,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     main_sizer->Add(button_sizer, 0, wxEXPAND | wxFIXED_MINSIZE, 5);
 
     this->SetSizer(main_sizer);
-    this->Layout();
+    wxDialog::Layout();
 
     this->SetSize(g_last_width, g_last_height);
 

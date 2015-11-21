@@ -723,7 +723,7 @@ StatusBarGeneric::StatusBarGeneric(wxWindow* parent, wxWindowID winid,
   highlight_ = wxSystemSettings::GetColour(wxSYS_COLOUR_3DHILIGHT);
   Init();
   Create(parent, winid, style, name);
-  SetThemeEnabled(false);
+  wxStatusBarGeneric::SetThemeEnabled(false);
 }
 
 void StatusBarGeneric::InitColours() {

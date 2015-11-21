@@ -205,7 +205,7 @@ Ctrl::Ctrl(const ItemList& items, const Style& style)
   entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL | wxACCEL_SHIFT,
                                        WXK_TAB, ID_TAB_PREV));
   wxAcceleratorTable acc(entries.size(), &entries[0]);
-  SetAcceleratorTable(acc);
+  wxControl::SetAcceleratorTable(acc);
 }
 
 bool Ctrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,

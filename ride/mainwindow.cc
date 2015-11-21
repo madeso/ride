@@ -268,8 +268,8 @@ void MainWindow::SetupMenu() {
   menu_bar->Append(menu_project, "&Project");
   menu_bar->Append(menu_help, "&Help");
 
-  wxMenuBar* old_menu_bar = GetMenuBar();
-  SetMenuBar(menu_bar);
+  wxMenuBar* old_menu_bar = wxFrame::GetMenuBar();
+  wxFrame::SetMenuBar(menu_bar);
 
   if (old_menu_bar) {
     delete old_menu_bar;
@@ -367,7 +367,7 @@ void MainWindow::BindEvents() {
   entries.push_back(wxAcceleratorEntry(wxACCEL_RAW_CTRL | wxACCEL_SHIFT,
                                        WXK_TAB, ID_TAB_PREV));
   wxAcceleratorTable acc(entries.size(), &entries[0]);
-  SetAcceleratorTable(acc);
+  wxFrame::SetAcceleratorTable(acc);
 }
 
 void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& event) {
@@ -505,7 +505,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   int sbstyle =
       wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
   statusbar_ = new StatusBarGeneric(this, wxID_ANY, sbstyle);
-  SetStatusBar(reinterpret_cast<wxStatusBar*>(statusbar_));
+  wxFrame::SetStatusBar(reinterpret_cast<wxStatusBar*>(statusbar_));
   statusbar_->SetFieldsCount(STATUSBAR_MAXCOUNT);
 
   const int small_width = 60;
@@ -624,11 +624,11 @@ void MainWindow::UpdateTheme() {
   statusbar_->SetBackgroundColour(C(c.statusbar_background()));
   statusbar_->InitColours();
 
-  this->SetForegroundColour(wxColor(255, 0, 0));
-  this->SetBackgroundColour(C(c.dock_background()));
+  wxFrame::SetForegroundColour(wxColor(255, 0, 0));
+  wxFrame::SetBackgroundColour(C(c.dock_background()));
 
   aui_.Update();    // we changed the tab art, update all the sizes
-  this->Refresh();  // and then force a repaint
+  wxFrame::Refresh();  // and then force a repaint
 }
 
 void MainWindow::OnViewRestoreWindows(wxCommandEvent& event) {
@@ -1222,7 +1222,7 @@ void MainWindow::UpdateTitle() {
           ? app_name_
           // todo: only display project folder name instead of the whole path?
           : wxString::Format("%s - %s", project_->root_folder(), app_name_);
-  this->SetTitle(new_title);
+  wxFrame::SetTitle(new_title);
 }
 
 void MainWindow::OnProjectNew(wxCommandEvent& event) {
@@ -1387,14 +1387,17 @@ void MainWindow::RestoreSession() {
             session.window_height());
   }
 
-  if (session.state() == ride::WINDOWSTATE_MAXIMIZED) Maximize();
-  if (session.state() == ride::WINDOWSTATE_MAXIMIZED) ShowFullScreen(true);
+  if (session.state() == ride::WINDOWSTATE_MAXIMIZED) {
+    wxFrame::Maximize();
+  }
 
-  // if we quit in a iconized/minimized state... should we restore to the same
-  // state
-  // or to the normal state...?
-  else if (session.state() == ride::WINDOWSTATE_ICONIZED)
+  if (session.state() == ride::WINDOWSTATE_MAXIMIZED) {
+    wxFrame::ShowFullScreen(true);
+  } else if (session.state() == ride::WINDOWSTATE_ICONIZED) {
+    // if we quit in a iconized/minimized state... should we restore to the same
+    // state or to the normal state...?
     Iconize();
+  }
 
   wxString cargo_file = session.project();
   if (cargo_file.IsEmpty() == false) {
