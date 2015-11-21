@@ -452,7 +452,9 @@ void ProjectExplorer::OnRename(wxCommandEvent& event) {
 
 void ProjectExplorer::OnOpenExplorer(wxCommandEvent& event) {
   const auto data = GetFocused(this);
-  wxLaunchDefaultApplication(data.second->path());
+  if (data.second != NULL) {
+    wxLaunchDefaultApplication(data.second->path());
+  }
 }
 
 void ProjectExplorer::BindEvents() {
