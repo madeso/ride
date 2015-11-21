@@ -486,15 +486,11 @@ int AuiGenericTabArt::GetBorderWidth(wxWindow* wnd) {
   return 1;
 }
 
-int AuiGenericTabArt::GetAdditionalBorderSpace(wxWindow* WXUNUSED(wnd)) {
-  return 0;
-}
+int AuiGenericTabArt::GetAdditionalBorderSpace(wxWindow* wnd) { return 0; }
 
 wxSize AuiGenericTabArt::GetTabSize(wxDC& dc,  // NOLINT
-                                    wxWindow* WXUNUSED(wnd),
-                                    const wxString& caption,
-                                    const wxBitmap& bitmap,
-                                    bool WXUNUSED(active),
+                                    wxWindow* wnd, const wxString& caption,
+                                    const wxBitmap& bitmap, bool active,
                                     int close_button_state, int* x_extent) {
   wxCoord measured_textx, measured_texty, tmp;
 

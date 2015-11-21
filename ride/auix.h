@@ -14,42 +14,42 @@ class AuiGenericTabArt : public wxAuiTabArt {
   AuiGenericTabArt();
   virtual ~AuiGenericTabArt();
 
-  wxAuiTabArt* Clone();
-  void SetFlags(unsigned int flags);
-  void SetSizingInfo(const wxSize& tabCtrlSize, size_t tabCount);
+  wxAuiTabArt* Clone() override;
+  void SetFlags(unsigned int flags) override;
+  void SetSizingInfo(const wxSize& tabCtrlSize, size_t tabCount) override;
 
-  void SetNormalFont(const wxFont& font);
-  void SetSelectedFont(const wxFont& font);
-  void SetMeasuringFont(const wxFont& font);
-  void SetColour(const wxColour& colour);
-  void SetActiveColour(const wxColour& colour);
+  void SetNormalFont(const wxFont& font) override;
+  void SetSelectedFont(const wxFont& font) override;
+  void SetMeasuringFont(const wxFont& font) override;
+  void SetColour(const wxColour& colour) override;
+  void SetActiveColour(const wxColour& colour) override;
 
-  void DrawBorder(wxDC& dc, wxWindow* wnd, const wxRect& rect);
+  void DrawBorder(wxDC& dc, wxWindow* wnd, const wxRect& rect) override;
 
-  void DrawBackground(wxDC& dc, wxWindow* wnd, const wxRect& rect);
+  void DrawBackground(wxDC& dc, wxWindow* wnd, const wxRect& rect) override;
 
   void DrawTab(wxDC& dc, wxWindow* wnd, const wxAuiNotebookPage& pane,
                const wxRect& inRect, int closeButtonState, wxRect* outTabRect,
-               wxRect* outButtonRect, int* xExtent);
+               wxRect* outButtonRect, int* xExtent) override;
 
   void DrawButton(wxDC& dc, wxWindow* wnd, const wxRect& inRect, int bitmapId,
-                  int buttonState, int orientation, wxRect* outRect);
+                  int buttonState, int orientation, wxRect* outRect) override;
 
-  int GetIndentSize();
+  int GetIndentSize() override;
 
-  int GetBorderWidth(wxWindow* wnd);
+  int GetBorderWidth(wxWindow* wnd) override;
 
-  int GetAdditionalBorderSpace(wxWindow* wnd);
+  int GetAdditionalBorderSpace(wxWindow* wnd) override;
 
   wxSize GetTabSize(wxDC& dc, wxWindow* wnd, const wxString& caption,
                     const wxBitmap& bitmap, bool active, int closeButtonState,
-                    int* xExtent);
+                    int* xExtent) override;
 
   int ShowDropDown(wxWindow* wnd, const wxAuiNotebookPageArray& items,
-                   int activeIdx);
+                   int activeIdx) override;
 
   int GetBestTabCtrlSize(wxWindow* wnd, const wxAuiNotebookPageArray& pages,
-                         const wxSize& requiredBmpSize);
+                         const wxSize& requiredBmpSize) override;
 
   AuiGenericTabArt& set_backgroundColor(const wxColor& c);
   AuiGenericTabArt& set_activeTabBackground(const wxColor& c);
