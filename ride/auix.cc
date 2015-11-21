@@ -204,8 +204,7 @@ void AuiGenericTabArt::DrawBorder(wxDC& dc, wxWindow* wnd, const wxRect& rect) {
 }
 
 void AuiGenericTabArt::DrawBackground(wxDC& dc,  // NOLINT
-                                      wxWindow* WXUNUSED(wnd),
-                                      const wxRect& rect) {
+                                      wxWindow* wnd, const wxRect& rect) {
   // draw background
   wxRect r;
 
