@@ -47,3 +47,7 @@ samples/projects/*
 #another temporary/swap files
 *~
 
+# kdevelop ignores
+ride.kdev4
+.kdev4/*
+
