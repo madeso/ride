@@ -27,13 +27,18 @@ bool LoadProto(google::protobuf::Message* t, const wxFileName& file_name) {
   return true;
 }
 
-bool SaveProto(const google::protobuf::Message& t,
-               const wxFileName& file_name) {
+bool VerifyFileForWriting(const wxFileName& file_name) {
   file_name.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
   if (file_name.FileExists() && file_name.IsFileWritable() == false) {
     // abort if the file exist and isn't writable
     return false;
   }
+  return true;
+}
+
+bool SaveProto(const google::protobuf::Message& t,
+               const wxFileName& file_name) {
+  if (false == VerifyFileForWriting(file_name)) return false;
   const wxString path = file_name.GetFullPath();
 
   std::ofstream output(path.char_str());
@@ -60,12 +65,9 @@ bool LoadProtoBinary(google::protobuf::Message* message,
 
 bool SaveProtoBinary(const google::protobuf::Message& message,
                      const wxFileName& file_name) {
-  file_name.Mkdir(wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
-  if (file_name.FileExists() && file_name.IsFileWritable() == false) {
-    // abort if the file exist and isn't writable
-    return false;
-  }
+  if (false == VerifyFileForWriting(file_name)) return false;
   const wxString config_path = file_name.GetFullPath();
+
   std::fstream config_stream(
       config_path.c_str().AsChar(),
       std::ios::out | std::ios::trunc | std::ios::binary);

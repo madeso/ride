@@ -271,16 +271,14 @@ class SettingsDlg : public wxDialog, ToGuiSender {
   }
 
   void SelectionChangedCommand(wxCommandEvent& event) {
-    const auto selection = GetSelection(nootebook_ctrl);
-
-    if (!selection.empty() && selection.size() == 1) {
-      SetSelection(selection[0]);
-    } else {
-      SetSelection(-1);
-    }
+    DoSelectionChanged();
   }
 
   void SelectionChanged(wxListEvent& event) {
+    DoSelectionChanged();
+  }
+
+  void DoSelectionChanged() {
     const auto selection = GetSelection(nootebook_ctrl);
 
     if (!selection.empty() && selection.size() == 1) {
