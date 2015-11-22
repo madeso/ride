@@ -79,7 +79,6 @@ class NotebookFileEditIterator {
     }
   }
   FileEdit* operator*() {
-    int pages = notebook_->GetPageCount();
     FileEdit* edit = NotebookFromIndexOrNull(notebook_, index_);
     assert(edit);
     return edit;
