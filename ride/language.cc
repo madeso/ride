@@ -166,84 +166,88 @@ const std::vector<wxString>& Language::GetKeywords() const { return keywords_; }
 
 //////////////////////////////////////////////////////////////////////////
 
-void CommonDocumentStyle(wxStyledTextCtrl* text, const ride::Settings& settings) {
+void CommonDocumentStyle(wxStyledTextCtrl* text,
+                         const ride::Settings& settings) {
   SetStyle(text, wxSTC_C_STRINGEOL,
-    settings.fonts_and_colors().style_string_eol());
+           settings.fonts_and_colors().style_string_eol());
   SetStyle(text, wxSTC_C_VERBATIM,
-    settings.fonts_and_colors().style_verbatim());
+           settings.fonts_and_colors().style_verbatim());
   SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors().style_regex());
   SetStyle(text, wxSTC_C_COMMENTLINEDOC,
-    settings.fonts_and_colors().style_commentlinedoc());
+           settings.fonts_and_colors().style_commentlinedoc());
   SetStyle(text, wxSTC_C_WORD2,
-    settings.fonts_and_colors().style_keyword_types());
+           settings.fonts_and_colors().style_keyword_types());
   SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD,
-    settings.fonts_and_colors().style_commentdockeyword());
+           settings.fonts_and_colors().style_commentdockeyword());
   SetStyle(text, wxSTC_C_COMMENTDOCKEYWORDERROR,
-    settings.fonts_and_colors().style_commentdockeyworderror());
+           settings.fonts_and_colors().style_commentdockeyworderror());
   SetStyle(text, wxSTC_C_GLOBALCLASS,
-    settings.fonts_and_colors().style_globalclass());
+           settings.fonts_and_colors().style_globalclass());
   SetStyle(text, wxSTC_C_STRINGRAW,
-    settings.fonts_and_colors().style_stringraw());
+           settings.fonts_and_colors().style_stringraw());
   SetStyle(text, wxSTC_C_TRIPLEVERBATIM,
-    settings.fonts_and_colors().style_tripleverbatim());
+           settings.fonts_and_colors().style_tripleverbatim());
   SetStyle(text, wxSTC_C_HASHQUOTEDSTRING,
-    settings.fonts_and_colors().style_hashquotedstring());
+           settings.fonts_and_colors().style_hashquotedstring());
   SetStyle(text, wxSTC_C_PREPROCESSORCOMMENT,
-    settings.fonts_and_colors().style_preprocessorcomment());
+           settings.fonts_and_colors().style_preprocessorcomment());
 }
 
-void DefaultStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) {
+void DefaultStyleDocument(wxStyledTextCtrl* text,
+                          const ride::Settings& settings, Language* language) {
   SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors().default_style(),
-    true);
-  SetStyle(text, wxSTC_C_COMMENT,
-    settings.fonts_and_colors().style_comment());
+           true);
+  SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors().style_comment());
   SetStyle(text, wxSTC_C_COMMENTLINE,
-    settings.fonts_and_colors().style_commentline());
+           settings.fonts_and_colors().style_commentline());
   SetStyle(text, wxSTC_C_COMMENTDOC,
-    settings.fonts_and_colors().style_commentdoc());
+           settings.fonts_and_colors().style_commentdoc());
   SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors().style_number());
   SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors().style_keyword());
   SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors().style_string());
   SetStyle(text, wxSTC_C_CHARACTER,
-    settings.fonts_and_colors().style_character());
+           settings.fonts_and_colors().style_character());
   SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors().style_uuid());
   SetStyle(text, wxSTC_C_PREPROCESSOR,
-    settings.fonts_and_colors().style_preprocessor());
+           settings.fonts_and_colors().style_preprocessor());
   SetStyle(text, wxSTC_C_OPERATOR,
-    settings.fonts_and_colors().style_operator());
+           settings.fonts_and_colors().style_operator());
   SetStyle(text, wxSTC_C_IDENTIFIER,
-    settings.fonts_and_colors().style_identifier());
+           settings.fonts_and_colors().style_identifier());
   CommonDocumentStyle(text, settings);
 
-  SetProperty(text, wxT("fold"), b2s01(settings.foldenable()));
-  SetProperty(text, wxT("fold.comment"), b2s01(settings.foldcomment()));
-  SetProperty(text, wxT("fold.compact"), b2s01(settings.foldcompact()));
-  SetProperty(text, wxT("fold.preprocessor"), b2s01(settings.foldpreproc()));
-  SetProperty(text, wxT("styling.within.preprocessor"),
-    b2s01(settings.styling_within_preprocessor()));
-  SetProperty(text, wxT("lexer.cpp.allow.dollars"),
-    b2s01(settings.lexer_cpp_allow_dollars()));
-  SetProperty(text, wxT("lexer.cpp.track.preprocessor"),
-    b2s01(settings.lexer_cpp_track_preprocessor()));
-  SetProperty(text, wxT("lexer.cpp.update.preprocessor"),
-    b2s01(settings.lexer_cpp_update_preprocessor()));
-  SetProperty(text, wxT("lexer.cpp.triplequoted.strings"),
-    b2s01(settings.lexer_cpp_triplequoted_strings()));
-  SetProperty(text, wxT("lexer.cpp.hashquoted.strings"),
-    b2s01(settings.lexer_cpp_hashquoted_strings()));
-  SetProperty(text, wxT("fold.cpp.syntax.based"),
-    b2s01(settings.fold_cpp_syntax_based()));
-  SetProperty(text, wxT("fold.cpp.comment.multiline"),
-    b2s01(settings.fold_cpp_comment_multiline()));
-  SetProperty(text, wxT("fold.cpp.comment.explicit"),
-    b2s01(settings.fold_cpp_comment_explicit()));
-  SetProperty(text, wxT("fold.cpp.explicit.anywhere"),
-    b2s01(settings.fold_cpp_explicit_anywhere()));
-  SetProperty(text, wxT("fold.at.else"), b2s01(settings.fold_at_else()));
-  SetProperty(text, wxT("fold.cpp.explicit.start"), _T("//{"));
-  SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
+  language->SetProperty(text, wxT("fold"), b2s01(settings.foldenable()));
+  language->SetProperty(text, wxT("fold.comment"),
+                        b2s01(settings.foldcomment()));
+  language->SetProperty(text, wxT("fold.compact"),
+                        b2s01(settings.foldcompact()));
+  language->SetProperty(text, wxT("fold.preprocessor"),
+                        b2s01(settings.foldpreproc()));
+  language->SetProperty(text, wxT("styling.within.preprocessor"),
+                        b2s01(settings.styling_within_preprocessor()));
+  language->SetProperty(text, wxT("lexer.cpp.allow.dollars"),
+                        b2s01(settings.lexer_cpp_allow_dollars()));
+  language->SetProperty(text, wxT("lexer.cpp.track.preprocessor"),
+                        b2s01(settings.lexer_cpp_track_preprocessor()));
+  language->SetProperty(text, wxT("lexer.cpp.update.preprocessor"),
+                        b2s01(settings.lexer_cpp_update_preprocessor()));
+  language->SetProperty(text, wxT("lexer.cpp.triplequoted.strings"),
+                        b2s01(settings.lexer_cpp_triplequoted_strings()));
+  language->SetProperty(text, wxT("lexer.cpp.hashquoted.strings"),
+                        b2s01(settings.lexer_cpp_hashquoted_strings()));
+  language->SetProperty(text, wxT("fold.cpp.syntax.based"),
+                        b2s01(settings.fold_cpp_syntax_based()));
+  language->SetProperty(text, wxT("fold.cpp.comment.multiline"),
+                        b2s01(settings.fold_cpp_comment_multiline()));
+  language->SetProperty(text, wxT("fold.cpp.comment.explicit"),
+                        b2s01(settings.fold_cpp_comment_explicit()));
+  language->SetProperty(text, wxT("fold.cpp.explicit.anywhere"),
+                        b2s01(settings.fold_cpp_explicit_anywhere()));
+  language->SetProperty(text, wxT("fold.at.else"),
+                        b2s01(settings.fold_at_else()));
+  language->SetProperty(text, wxT("fold.cpp.explicit.start"), _T("//{"));
+  language->SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 }
-
 
 class CppLanguage : public Language {
  public:
@@ -326,7 +330,7 @@ class CppLanguage : public Language {
   wxString primary_keywords_;
   void DoStyleDocument(wxStyledTextCtrl* text,
                        const ride::Settings& settings) override {
-    DefaultStyleDocument(text, settings);
+    DefaultStyleDocument(text, settings, this);
 
     const wxString CppWordlist2 = "file";
     const wxString CppWordlist3 =
@@ -507,7 +511,7 @@ class ProtobufLanguage : public Language {
 
   void DoStyleDocument(wxStyledTextCtrl* text,
                        const ride::Settings& settings) override {
-    DefaultStyleDocument(text, settings);
+    DefaultStyleDocument(text, settings, this);
 
     SetKeys(text, 0, KeywordBuilder() << "message"
                                       << "required"

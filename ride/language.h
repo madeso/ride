@@ -30,12 +30,14 @@ class Language {
 
   const std::vector<wxString>& GetKeywords() const;
 
+ public:
+  void SetProperty(wxStyledTextCtrl* text, const wxString& name,
+                   const wxString& value);
+
  protected:
   Language(const wxString& name, int style);
   virtual void DoStyleDocument(wxStyledTextCtrl* text,
                                const ride::Settings& settings) = 0;
-  void SetProperty(wxStyledTextCtrl* text, const wxString& name,
-                   const wxString& value);
   void SetKeys(wxStyledTextCtrl* text, unsigned int id,
                const wxString& keywords);
 
