@@ -80,22 +80,59 @@ void SetSelection(wxListCtrl* list, WXID item, bool select) {
   }
 }
 
+class ListCtrlIterator {
+ public:
+  ListCtrlIterator(wxListCtrl* list, int geom, int state, WXID index)
+      : list_(list), geom_(geom), state_(state), index_(index) {}
+
+  void operator++() { next(); }
+  void operator++(int unused) { next(); }
+  void next() { index_ = list_->GetNextItem(index_, geom_, state_); }
+
+  WXID operator*() { return index_; }
+
+  bool operator!=(const ListCtrlIterator& o) {
+    return !(list_ == o.list_ && geom_ == o.geom_ && state_ == o.state_ &&
+             index_ == o.index_);
+  }
+
+ private:
+  wxListCtrl* list_;
+  int geom_;
+  int state_;
+  WXID index_;
+};
+
+class IterateOverListCtrl {
+ public:
+  explicit IterateOverListCtrl(wxListCtrl* list, int geom, int state)
+      : list_(list), geom_(geom), state_(state) {}
+
+  ListCtrlIterator begin() {
+    ListCtrlIterator it(list_, geom_, state_, -1);
+    it.next();
+    return it;
+  }
+  ListCtrlIterator end() { return ListCtrlIterator(list_, geom_, state_, -1); }
+
+ private:
+  wxListCtrl* list_;
+  int geom_;
+  int state_;
+};
+
 std::vector<WXID> GetSelection(wxListCtrl* listctrl) {
   std::vector<WXID> ret;
-  WXID item = -1;
-  while (true) {
-    item = listctrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item == -1) break;
+  for (WXID item :
+       IterateOverListCtrl(listctrl, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) {
     ret.push_back(item);
   }
   return ret;
 }
 
 void ClearSelection(wxListCtrl* listctrl) {
-  WXID item = -1;
-  while (true) {
-    item = listctrl->GetNextItem(item, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-    if (item == -1) break;
+  for (WXID item :
+       IterateOverListCtrl(listctrl, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) {
     SetSelection(listctrl, item, false);
   }
 }
