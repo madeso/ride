@@ -32,7 +32,6 @@
 #include "ride/project.h"
 #include "ride/stcutils.h"
 #include "ride/wxutils.h"
-#include "ride/findresultscontrol.h"
 
 wxDEFINE_EVENT(EVENT_UPDATE_SELECTION, wxCommandEvent);
 
@@ -85,24 +84,22 @@ void FileEdit::Delete() {
   UpdateTitle();
 }
 
-void FileEdit::Find(FindResultsControl* output, const wxString& project) {
+void FileEdit::Find(OutputControl* output, const wxString& project) {
   ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output,
               FindAction::Find, FindScope::File);
 }
 
-void FileEdit::Replace(FindResultsControl* output, const wxString& project) {
+void FileEdit::Replace(OutputControl* output, const wxString& project) {
   ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output,
               FindAction::Replace, FindScope::File);
 }
 
-void FileEdit::FindInFiles(FindResultsControl* output,
-                           const wxString& project) {
+void FileEdit::FindInFiles(OutputControl* output, const wxString& project) {
   ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output,
               FindAction::Find, FindScope::Project);
 }
 
-void FileEdit::ReplaceInFiles(FindResultsControl* output,
-                              const wxString& project) {
+void FileEdit::ReplaceInFiles(OutputControl* output, const wxString& project) {
   ShowFindDlg(main_, text_->GetSelectedText(), filename_, project, output,
               FindAction::Replace, FindScope::Project);
 }

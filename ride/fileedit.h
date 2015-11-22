@@ -12,7 +12,7 @@ class MainWindow;
 class CompilerMessage;
 class Language;
 class Project;
-class FindResultsControl;
+class OutputControl;
 class Languages;
 
 namespace ride {
@@ -37,10 +37,10 @@ class FileEdit : public wxControl {
   void ReloadFileIfNeeded();
   void FileHasBeenRenamed(const wxString& new_path);
 
-  void Find(FindResultsControl* output, const wxString& project);
-  void Replace(FindResultsControl* output, const wxString& project);
-  void FindInFiles(FindResultsControl* output, const wxString& project);
-  void ReplaceInFiles(FindResultsControl* output, const wxString& project);
+  void Find(OutputControl* output, const wxString& project);
+  void Replace(OutputControl* output, const wxString& project);
+  void FindInFiles(OutputControl* output, const wxString& project);
+  void ReplaceInFiles(OutputControl* output, const wxString& project);
 
   void SetFocus();
   void SetFocusFromKbd();

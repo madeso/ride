@@ -15,7 +15,7 @@
 class FileEdit;
 class SettingsDlg;
 class CompilerMessage;
-class FindResultsControl;
+class OutputControl;
 class ProjectExplorer;
 class StatusBarGeneric;
 
@@ -194,7 +194,7 @@ class MainWindow : public wxFrame {
   wxAuiNotebook* notebook_;
   OutputDirector build_output_;
   OutputDirector compiler_output_;
-  FindResultsControl* findres_window_;
+  OutputControl* findres_window_;
   ProjectExplorer* project_explorer_;
 
   ride::Settings settings_;

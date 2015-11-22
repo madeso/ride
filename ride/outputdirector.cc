@@ -14,7 +14,9 @@ OutputDirector::OutputDirector() : main_(NULL), control_(NULL) {}
 void OutputDirector::Create(MainWindow* window, wxAuiManager* aui,
                             const wxString& name, const wxString& caption) {
   main_ = window;
-  control_ = new OutputControl(window);
+  control_ = new OutputControl(
+      window, static_cast<OutputControlFunctions>(OCF_RUN_COMPILER_MESSAGE |
+                                                  OCF_SEARCH_COMPILER_MESSAGE));
   control_->UpdateStyle();
   control_->UpdateStyle();
   aui->AddPane(

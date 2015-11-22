@@ -30,7 +30,6 @@
 #include "ride/createnewfiledlg.h"
 #include "ride/createnewprojectdlg.h"
 #include "ride/fileedit.h"
-#include "ride/findresultscontrol.h"
 #include "ride/outputcontrol.h"
 #include "ride/projectexplorer.h"
 #include "ride/quickopendlg.h"
@@ -70,13 +69,17 @@ class NotebookFileEditIterator {
   void operator++() { next(); }
   void operator++(int unused) { next(); }
   void next() {
-    while (index_ < notebook_->GetPageCount()) {
+    ++index_;
+    GoToNextFile();
+  }
+  void GoToNextFile() {
+    while (index_ < notebook_->GetPageCount() &&
+           NotebookFromIndexOrNull(notebook_, index_) == NULL) {
       ++index_;
-      FileEdit* edit = NotebookFromIndexOrNull(notebook_, index_);
-      if (edit) return;
     }
   }
   FileEdit* operator*() {
+    int pages = notebook_->GetPageCount();
     FileEdit* edit = NotebookFromIndexOrNull(notebook_, index_);
     assert(edit);
     return edit;
@@ -97,7 +100,9 @@ class IterateOverFileEdits {
   explicit IterateOverFileEdits(wxAuiNotebook* notebook)
       : notebook_(notebook) {}
   NotebookFileEditIterator begin() {
-    return NotebookFileEditIterator(notebook_, 0);
+    NotebookFileEditIterator it(notebook_, 0);
+    it.GoToNextFile();
+    return it;
   }
   NotebookFileEditIterator end() {
     return NotebookFileEditIterator(notebook_, notebook_->GetPageCount());
@@ -578,7 +583,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
   build_output_.Create(this, &aui_, PANE_BUILD, "Build");
   compiler_output_.Create(this, &aui_, PANE_COMPILE, "Compile");
 
-  findres_window_ = new FindResultsControl(this);
+  findres_window_ = new OutputControl(this, OCF_DEFAULT);
   findres_window_->UpdateStyle();
   findres_window_->UpdateStyle();
   aui_.AddPane(findres_window_, wxAuiPaneInfo()

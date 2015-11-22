@@ -39,10 +39,11 @@ const wxRegEx& GetCommandLineRegex() {
   return ret;
 }
 
-OutputControl::OutputControl(MainWindow* main)
+OutputControl::OutputControl(MainWindow* main, OutputControlFunctions functions)
     : wxControl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                 wxBORDER_NONE),
-      main_(main) {
+      main_(main),
+      functions_(functions) {
   text_ = new wxStyledTextCtrl(
       this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
       wxBORDER_NONE | wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
@@ -94,14 +95,18 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
   AppendEnabled(menu, ID_COPY, "Copy", has_selected);
   AppendEnabled(menu, ID_SELECTALL, "Select all", true);
   menu.AppendSeparator();
-  AppendEnabled(
-      menu, ID_RUN_THIS_COMPILER_MESSAGE,
-      wxString::Format("Run '%s'", commandline.IsEmpty() ? "<no command found>"
-                                                         : commandline),
-      commandline.IsEmpty() == false);
-  AppendEnabled(menu, ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
-                wxString::Format("Search for \"%s\" online", message),
-                has_compiler_message);
+  if (functions_ & OCF_RUN_COMPILER_MESSAGE) {
+    AppendEnabled(menu, ID_RUN_THIS_COMPILER_MESSAGE,
+                  wxString::Format("Run '%s'", commandline.IsEmpty()
+                                                   ? "<no command found>"
+                                                   : commandline),
+                  commandline.IsEmpty() == false);
+  }
+  if (functions_ & OCF_SEARCH_COMPILER_MESSAGE) {
+    AppendEnabled(menu, ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
+                  wxString::Format("Search for \"%s\" online", message),
+                  has_compiler_message);
+  }
   AppendEnabled(menu, ID_COPY_THIS_COMPILER_MESSAGE,
                 wxString::Format("Copy \"%s\" to clipboard", message),
                 has_compiler_message);

@@ -243,6 +243,7 @@ class CppLanguage : public Language {
     keywords_ = temp.ToVector();
     primary_keywords_ = temp.ToString();
   }
+
   wxString primary_keywords_;
   void DoStyleDocument(wxStyledTextCtrl* text,
                        const ride::Settings& settings) override {

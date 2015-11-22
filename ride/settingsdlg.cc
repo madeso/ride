@@ -270,13 +270,9 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     EndModal(wxOK);
   }
 
-  void SelectionChangedCommand(wxCommandEvent& event) {
-    DoSelectionChanged();
-  }
+  void SelectionChangedCommand(wxCommandEvent& event) { DoSelectionChanged(); }
 
-  void SelectionChanged(wxListEvent& event) {
-    DoSelectionChanged();
-  }
+  void SelectionChanged(wxListEvent& event) { DoSelectionChanged(); }
 
   void DoSelectionChanged() {
     const auto selection = GetSelection(nootebook_ctrl);

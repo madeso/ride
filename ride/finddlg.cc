@@ -17,7 +17,7 @@
 #include "ride/mainwindow.h"
 #include "ride/settings.h"
 #include "ride/wxutils.h"
-#include "ride/findresultscontrol.h"
+#include "ride/outputcontrol.h"
 
 class FindDlg : public ui::Find {
  public:
@@ -244,7 +244,7 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback,
 
 bool ShowFindDlg(MainWindow* parent, const wxString& current_selection,
                  const wxString& current_file, const wxString root_folder,
-                 FindResultsControl* output, FindAction find_action,
+                 OutputControl* output, FindAction find_action,
                  FindScope find_scope) {
   static ride::FindDlg find_dlg_data;
   FindDlg dlg(parent, current_selection, find_dlg_data, find_action,

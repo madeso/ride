@@ -8,9 +8,15 @@
 
 class MainWindow;
 
+enum OutputControlFunctions {
+  OCF_DEFAULT = 0,
+  OCF_RUN_COMPILER_MESSAGE = (1 << 1),
+  OCF_SEARCH_COMPILER_MESSAGE = (1 << 2)
+};
+
 class OutputControl : public wxControl {
  public:
-  explicit OutputControl(MainWindow* main);
+  OutputControl(MainWindow* main, OutputControlFunctions functions);
 
   void UpdateStyle();
   const wxString GetContextLineContent();
@@ -33,6 +39,7 @@ class OutputControl : public wxControl {
   MainWindow* main_;
   wxStyledTextCtrl* text_;
   int context_positon_;
+  OutputControlFunctions functions_;
 };
 
 #endif  // RIDE_OUTPUTCONTROL_H_
