@@ -123,16 +123,16 @@ class IterateOverListCtrl {
 
 std::vector<WXID> GetSelection(wxListCtrl* listctrl) {
   std::vector<WXID> ret;
-  for (WXID item :
-       IterateOverListCtrl(listctrl, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) {
+  IterateOverListCtrl it(listctrl, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+  for (WXID item : it) {
     ret.push_back(item);
   }
   return ret;
 }
 
 void ClearSelection(wxListCtrl* listctrl) {
-  for (WXID item :
-       IterateOverListCtrl(listctrl, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) {
+  IterateOverListCtrl it(listctrl, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+  for (WXID item : it) {
     SetSelection(listctrl, item, false);
   }
 }
