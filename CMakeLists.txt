@@ -20,8 +20,14 @@ option(BUILD_USE_SIMIAN "Create simian project" OFF)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(${UNIX})
+	set(RIDE_OS_UNIX "1")
+endif()	
+
+
 if(${APPLE})
 	set(RIDE_OS_APPLE "1")
+	set(RIDE_OS_UNIX "0")
 	
 	if(NOT ${BUILD_USE_ALL_COMPILER_WARNINGS})
 		# disabling http://stackoverflow.com/questions/32626171/xcode-7-how-to-suppress-warning-overrides-a-member-function-but-is-not-marked
