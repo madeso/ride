@@ -711,7 +711,9 @@ void UpdateMenuItemBasedOnPane(wxAuiManager* aui, wxMenuItem* item,
   assert(aui);
   wxAuiPaneInfo& pane = aui->GetPane(name);
   assert(pane.IsValid() && "This function should only take valid pane names!");
-  item->Check(pane.IsShown());
+  if( item != NULL ) {
+    item->Check(pane.IsShown());
+  }
 }
 
 void ShowPane(wxAuiManager* aui, const wxString& name) {
