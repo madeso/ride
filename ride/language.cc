@@ -482,7 +482,7 @@ class RustLanguage : public Language {
     SetProperty(text, wxT("lexer.rust.fold.at.else"),
                 b2s01(settings.fold_at_else()));
 #else
-    DefaultStyleDocument(text, settings);
+    DefaultStyleDocument(text, settings, this);
 #endif
     // end of setstyle/setprop fallback
 
