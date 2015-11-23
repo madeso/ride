@@ -16,6 +16,8 @@
 #include <set>
 #include <vector>
 
+#include "ride_compiler_settings.h"  // NOLINT cmake generated file
+
 #include "ride/resources/icons.h"
 
 #include "ride/cmdrunner.h"
@@ -116,8 +118,22 @@ class WordEntryList {
 };
 
 void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, const char** xpm) {
+#ifndef RIDE_OS_UNIX
   wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
-  wxImage img = bitmap.ConvertToImage();
+  /*
+   On Ubuntu 15.10:
+   (ride:12676): Gdk-WARNING **: /build/gtk+2.0-xmBAGF/gtk+2.0-2.24.28/gdk/gdkpixbuf-drawable.c:1249: Source drawable has no colormap; either pass in a colormap, or set the colormap on the drawable with gdk_drawable_set_colormap()
+The program 'ride' received an X Window System error.
+This probably reflects a bug in the program.
+The error was 'BadValue (integer parameter out of range for operation)'.
+  (Details: serial 18056 error_code 2 request_code 53 minor_code 0)
+  (Note to programmers: normally, X errors are reported asynchronously;
+   that is, you will receive the error a while after causing it.
+   To debug your program, run it with the --sync command line
+   option to change this behavior. You can then get a meaningful
+   backtrace from your debugger if you break on the gdk_x_error() function.)
+   */
+  wxImage img = bitmap.ConvertToImage(); // here
   // t->RegisterImage(icon, bitmap);
   const int w = bitmap.GetWidth();
   const int h = bitmap.GetHeight();
@@ -143,6 +159,7 @@ void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, const char** xpm) {
   // Register image kills wxWidgets, so we have to manually convert to rgba and
   // use that instead
   t->RegisterRGBAImage(icon, pixels.get());
+#endif
 }
 
 void SetupScintillaAutoCompleteImages(wxStyledTextCtrl* t) {

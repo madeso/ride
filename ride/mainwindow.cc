@@ -141,12 +141,14 @@ struct AddMenuItem {
   AddMenuItem(wxMenu* menu, int id, const wxString& title = wxEmptyString,
               const wxString& help = wxEmptyString, const char** xpm = NULL) {
     item = new wxMenuItem(NULL, id, title, help);
+#ifndef RIDE_OS_UNIX
     if (xpm) {
       // it's important to set the icon before adding the item
       // otherwise it will silently fail on some wxWidgets versions
       wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
       item->SetBitmap(bitmap);
     }
+#endif
     menu->Append(item);
   }
 
