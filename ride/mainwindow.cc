@@ -43,7 +43,7 @@
 #include "ride/pathtester.h"
 #include "ride/enviroment.h"
 
-FoundEdit FoundEdit::NOT_FOUND(0, NULL);
+FoundEdit FoundEdit::NOT_FOUND(0, nullptr);
 
 bool operator==(const OpenDocument& lhs, const OpenDocument& rhs) {
   return lhs.id == rhs.id && lhs.path == rhs.path;
@@ -74,7 +74,7 @@ class NotebookFileEditIterator {
   }
   void GoToNextFile() {
     while (index_ < notebook_->GetPageCount() &&
-           NotebookFromIndexOrNull(notebook_, index_) == NULL) {
+           NotebookFromIndexOrNull(notebook_, index_) == nullptr) {
       ++index_;
     }
   }
@@ -114,7 +114,7 @@ class IterateOverFileEdits {
 Tab* GetSelectedTabOrNull(wxAuiNotebook* notebook) {
   const int selected_tab_index = notebook->GetSelection();
   if (selected_tab_index == -1) {
-    return NULL;
+    return nullptr;
   }
   return TabFromIndex(notebook, selected_tab_index);
 }
@@ -139,8 +139,8 @@ struct AddMenuItem {
   operator wxMenuItem*() { return item; }
 
   AddMenuItem(wxMenu* menu, int id, const wxString& title = wxEmptyString,
-              const wxString& help = wxEmptyString, const char** xpm = NULL) {
-    item = new wxMenuItem(NULL, id, title, help);
+              const wxString& help = wxEmptyString, const char** xpm = nullptr) {
+    item = new wxMenuItem(nullptr, id, title, help);
 #ifndef RIDE_OS_UNIX
     if (xpm) {
       // it's important to set the icon before adding the item
@@ -160,7 +160,7 @@ struct AddMenuItem {
 
 void MainWindow::SetupMenu() {
   //////////////////////////////////////////////////////////////////////////
-  wxMenu* menu_file = new wxMenu;
+  auto  menu_file = new wxMenu;
   AddMenuItem(menu_file, wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
   AddMenuItem(menu_file, wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
   AddMenuItem(menu_file, wxID_SAVEAS, "Save &as...\tCtrl-Shift-S",
@@ -172,7 +172,7 @@ void MainWindow::SetupMenu() {
   AddMenuItem(menu_file, wxID_EXIT, "", "", file_quit_xpm);
 
   //////////////////////////////////////////////////////////////////////////
-  wxMenu* menu_edit = NULL;
+  wxMenu* menu_edit = nullptr;
 
   Tab* tab = GetSelectedTabOrNull(notebook_);
   if (tab && tab->ToFileEdit()) {
@@ -228,7 +228,7 @@ void MainWindow::SetupMenu() {
 
   //////////////////////////////////////////////////////////////////////////
 
-  wxMenu* menu_project = new wxMenu;
+  auto  menu_project = new wxMenu;
   AddMenuItem(menu_project, ID_PROJECT_NEW, "New project...",
               "Create a new cargo project");
   AddMenuItem(menu_project, ID_PROJECT_OPEN, "Open project...\tCtrl-Shift-O",
@@ -271,7 +271,7 @@ void MainWindow::SetupMenu() {
 
   //////////////////////////////////////////////////////////////////////////
 
-  wxMenu* menu_view = new wxMenu;
+  auto  menu_view = new wxMenu;
   AddMenuItem(menu_view, ID_VIEW_RESTORE_WINDOWS, "Restore window layout", "");
   AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
@@ -296,7 +296,7 @@ void MainWindow::SetupMenu() {
           .Checkable();
 
   //////////////////////////////////////////////////////////////////////////
-  wxMenu* menu_help = new wxMenu;
+  auto  menu_help = new wxMenu;
   menu_help->Append(wxID_ABOUT);
 
   menu_help->AppendSeparator();
@@ -304,7 +304,7 @@ void MainWindow::SetupMenu() {
   AddMenuItem(menu_help, ID_GAMES_FORTY, "Play Forty Thieves!");
 
   //////////////////////////////////////////////////////////////////////////
-  wxMenuBar* menu_bar = new wxMenuBar;
+  auto  menu_bar = new wxMenuBar;
   menu_bar->Append(menu_file, "&File");
   if (menu_edit) {
     menu_bar->Append(menu_edit, "&Edit");
@@ -324,7 +324,7 @@ void MainWindow::SetupMenu() {
 
   if (old_menu_bar) {
     delete old_menu_bar;
-    old_menu_bar = NULL;
+    old_menu_bar = nullptr;
   }
 }
 
@@ -531,12 +531,12 @@ void TestPaths(wxWindow* main, const ride::MachineSettings& machine) {
 
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
                        const wxSize& size)
-    : wxFrame(NULL, wxID_ANY, app_name, pos, size),
+    : wxFrame(nullptr, wxID_ANY, app_name, pos, size),
       closing_(false),
-      aui_(NULL, AUI_OPTIONS),
-      findres_window_(NULL),
+      aui_(nullptr, AUI_OPTIONS),
+      findres_window_(nullptr),
       app_name_(app_name),
-      statusbar_(NULL) {
+      statusbar_(nullptr) {
 #ifdef RIDE_OS_APPLE
   EnableFullScreenView();
 #endif
@@ -652,7 +652,7 @@ void MainWindow::UpdateTheme() {
 
   // we have to create a new tab art each time as wx copies it around
   // like crazy and out new values are not set if we just change a member
-  AuiGenericTabArt* tab_art = new AuiGenericTabArt();
+  auto  tab_art = new AuiGenericTabArt();
   // tab_art->SetColour(wxColor(255, 0, 0, 0));
   // tab_art->SetActiveColour(wxColor(255, 0, 0));
   tab_art->set_backgroundColor(C(c.tab_background()));
@@ -713,7 +713,7 @@ void UpdateMenuItemBasedOnPane(wxAuiManager* aui, wxMenuItem* item,
   assert(aui);
   wxAuiPaneInfo& pane = aui->GetPane(name);
   assert(pane.IsValid() && "This function should only take valid pane names!");
-  if( item != NULL ) {
+  if( item != nullptr ) {
     item->Check(pane.IsShown());
   }
 }
@@ -785,9 +785,9 @@ void MainWindow::OnGamesForty(wxCommandEvent& event) {
 
 void MainWindow::SendTabEventToTab(wxCommandEvent& event) {
   Tab* tab = GetSelectedTabOrNull(notebook_);
-  if (tab == NULL) return;
+  if (tab == nullptr) return;
   wxWindow* wind = tab->ToControl();
-  if (wind == NULL) return;
+  if (wind == nullptr) return;
   wind->ProcessWindowEvent(event);
 }
 
@@ -816,11 +816,11 @@ std::vector<switcher::Item> ListPanes(wxAuiManager* aui) {
 }
 
 struct NonNullToolbar {
-  static bool Check(wxToolBar* toolbar) { return toolbar != NULL; }
+  static bool Check(wxToolBar* toolbar) { return toolbar != nullptr; }
 };
 
 struct NullToolbar {
-  static bool Check(wxToolBar* toolbar) { return toolbar == NULL; }
+  static bool Check(wxToolBar* toolbar) { return toolbar == nullptr; }
 };
 
 void AddGroup(const std::vector<switcher::Item>& toolbars,
@@ -1038,9 +1038,8 @@ void MainWindow::OnFileOpen(wxCommandEvent& event) {
 
   wxArrayString paths_to_open;
   open_file.GetPaths(paths_to_open);
-  for (wxArrayString::iterator path = paths_to_open.begin();
-       path != paths_to_open.end(); ++path) {
-    OpenFile(*path);
+  for (auto & path : paths_to_open) {
+    OpenFile(path);
   }
 }
 
@@ -1071,7 +1070,7 @@ FileEdit* MainWindow::OpenFile(const wxString& file, int start_line,
   if (false == file_name.Exists()) {
     ShowError(this, wxString::Format("Unable to open '%s'", full_path),
               "Unable to open file!");
-    return NULL;
+    return nullptr;
   }
 
   FoundEdit found_edit = GetEditFromFileName(full_path);
@@ -1079,7 +1078,7 @@ FileEdit* MainWindow::OpenFile(const wxString& file, int start_line,
     notebook_->SetSelection(found_edit.index);
   };
   FileEdit* found_edit_or_new =
-      found_edit.edit != NULL ? found_edit.edit
+      found_edit.edit != nullptr ? found_edit.edit
                               : AddAllCompilerMessages(new FileEdit(
                                     notebook_, this, full_path, &languages_));
   found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
@@ -1100,7 +1099,7 @@ FileEdit* MainWindow::GetFile(const wxString& file) {
 FileEdit* MainWindow::GetSelectedEditorNull() {
   const int selected_tab_index = notebook_->GetSelection();
   if (selected_tab_index == -1) {
-    return NULL;
+    return nullptr;
   }
   return NotebookFromIndexOrNull(notebook_, selected_tab_index);
 }
@@ -1189,40 +1188,40 @@ void MainWindow::OnFileShowSettings(wxCommandEvent& event) {
 
 void MainWindow::OnFileSave(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
-  if (selected_edit == NULL) return;
+  if (selected_edit == nullptr) return;
   selected_edit->Save();
 }
 
 void MainWindow::OnFileSaveAs(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
-  if (selected_edit == NULL) return;
+  if (selected_edit == nullptr) return;
   selected_edit->SaveAs();
 }
 
 void MainWindow::OnEditFind(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
-  if (selected_edit == NULL) return;
+  if (selected_edit == nullptr) return;
   ShowFindWindow();
   selected_edit->Find(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnEditReplace(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
-  if (selected_edit == NULL) return;
+  if (selected_edit == nullptr) return;
   ShowFindWindow();
   selected_edit->Replace(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnProjectFindInFiles(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
-  if (selected_edit == NULL) return;
+  if (selected_edit == nullptr) return;
   ShowFindWindow();
   selected_edit->FindInFiles(findres_window_, project_->root_folder());
 }
 
 void MainWindow::OnProjectReplaceInFiles(wxCommandEvent& event) {
   FileEdit* selected_edit = GetSelectedEditorNull();
-  if (selected_edit == NULL) return;
+  if (selected_edit == nullptr) return;
   ShowFindWindow();
   selected_edit->ReplaceInFiles(findres_window_, project_->root_folder());
 }

@@ -2,7 +2,7 @@
 
 namespace switcher {
 
-Item::Item() : id_(0), row_pos_(0), col_pos_(0), window_(NULL) {}
+Item::Item() : id_(0), row_pos_(0), col_pos_(0), window_(nullptr) {}
 
 Item::Item(const wxString& title, const wxString& name, int id,
            const wxBitmap& bitmap)
@@ -12,7 +12,7 @@ Item::Item(const wxString& title, const wxString& name, int id,
       bitmap_(bitmap),
       row_pos_(0),
       col_pos_(0),
-      window_(NULL) {}
+      window_(nullptr) {}
 
 bool Item::operator==(const Item& rhs) const {
 #define EQUAL_CHECK(mem)        \

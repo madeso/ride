@@ -283,7 +283,7 @@ void ProjectSettingsDlg::BuildToGui(bool togui) {
   }
 
   ride::BuildSetting* setting_ptr = GetSelectedBuildSetting();
-  EnableDisable(setting_ptr != NULL)
+  EnableDisable(setting_ptr != nullptr)
       << uiBuildConfigurationRelease << uiBuildConfigurationDefaultFeatures
       << uiBuildConfigurationVerbose << uiBuildConfigurationTarget
       << uiBuildConfigurationTargetHelp << uiBuildConfigurationCustomArgs
@@ -291,7 +291,7 @@ void ProjectSettingsDlg::BuildToGui(bool togui) {
       << uiBuildFeatureAdd << uiBuildFeatureRemove << uiBuildFeatureUp
       << uiBuildFeatureDown << uiBuildFeatureEdit;
 
-  if (setting_ptr == NULL) return;
+  if (setting_ptr == nullptr) return;
 
   ride::BuildSetting& setting = *setting_ptr;
 
@@ -315,7 +315,7 @@ ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting() {
   const int selection = uiBuildConfiguration->GetSelection();
   const bool found = selection != wxNOT_FOUND;
 
-  if (!found) return NULL;
+  if (!found) return nullptr;
   void* d = uiBuildConfiguration->GetClientData(selection);
   ride::BuildSetting* setting = reinterpret_cast<ride::BuildSetting*>(d);
 
@@ -364,7 +364,7 @@ ride::RunSetting* ProjectSettingsDlg::GetSelectedRunSetting() {
   const int selection = uiRunConfigurations->GetSelection();
   const bool found = selection != wxNOT_FOUND;
 
-  if (!found) return NULL;
+  if (!found) return nullptr;
   void* d = uiRunConfigurations->GetClientData(selection);
   ride::RunSetting* setting = reinterpret_cast<ride::RunSetting*>(d);
 
@@ -385,12 +385,12 @@ void ProjectSettingsDlg::RunToGui(bool togui) {
   }
 
   ride::RunSetting* setting_ptr = GetSelectedRunSetting();
-  EnableDisable(setting_ptr != NULL)
+  EnableDisable(setting_ptr != nullptr)
       << uiRunApplication << uiRunApplicationCmd << uiRunArguments
       << uiRunArgumentsCmd << uiRunFolder << uiRunFolderCmd << uiCmdBeforeLaunch
       << uiCmdBeforeLaunchCmd << uiRunWaitForExit;
 
-  if (setting_ptr == NULL) {
+  if (setting_ptr == nullptr) {
     allow_run_to_gui_ = true;
     return;
   }

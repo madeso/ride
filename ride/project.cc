@@ -108,7 +108,7 @@ void Project::SelectActiveBuild() {
     names.push_back(setting.name());
   }
 
-  wxSingleChoiceDialog dlg(NULL, "Select build", "Build", names.size(),
+  wxSingleChoiceDialog dlg(nullptr, "Select build", "Build", names.size(),
                            &names[0]);
   dlg.SetSelection(user_.build_setting());
   const int dialog_result = dlg.ShowModal();
@@ -126,7 +126,7 @@ void Project::SelectActiveRun() {
     names.push_back(setting.name());
   }
 
-  wxSingleChoiceDialog dlg(NULL, "Select run", "Build", names.size(),
+  wxSingleChoiceDialog dlg(nullptr, "Select run", "Build", names.size(),
                            &names[0]);
   dlg.SetSelection(user_.run_setting());
   const int dialog_result = dlg.ShowModal();

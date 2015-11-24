@@ -213,7 +213,7 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback,
                  std::vector<FindResult>* res, FindAction find_action,
                  const wxString& replaceText, bool keepFilesOpen) {
   FileEdit* edit = parent->GetFile(file);
-  wxStyledTextCtrl* stc = NULL;
+  wxStyledTextCtrl* stc = nullptr;
   if (edit) {
     stc = edit->GetStc();
   } else {
@@ -224,7 +224,7 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback,
     // if we are replacing with keep-open, do a find to see if we should
     // open the file and if so use that file instead of the 'fallback file'
     if (find_action == FindAction::Replace && keepFilesOpen) {
-      int found = FindStcText(fallback, 0, stc->GetLength(), text, flags, NULL);
+      int found = FindStcText(fallback, 0, stc->GetLength(), text, flags, nullptr);
       if (found > 0) {
         FileEdit* opened_edit = parent->OpenFile(file);
         stc = opened_edit->GetStc();

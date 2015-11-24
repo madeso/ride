@@ -37,9 +37,8 @@ wxString PropTypeToString(int type) {
 }
 
 bool Language::IsKeyword(const wxString word) const {
-  for (std::vector<wxString>::const_iterator keyword = keywords_.begin();
-       keyword != keywords_.end(); ++keyword) {
-    if (*keyword == word) {
+  for (const auto & keyword : keywords_) {
+    if (keyword == word) {
       return true;
     }
   }
@@ -58,12 +57,11 @@ class KeywordBuilder {
   wxString ToString() const {
     wxString ret;
     bool first = true;
-    for (std::vector<wxString>::const_iterator keyword = keywords_.begin();
-         keyword != keywords_.end(); ++keyword) {
+    for (const auto& keyword : keywords_) {
       if (first)
-        ret = *keyword;
+        ret = keyword;
       else
-        ret += " " + *keyword;
+        ret += " " + keyword;
       first = false;
     }
     return ret;
@@ -133,9 +131,8 @@ void Language::AddExtension(const wxString& ext) {
 }
 
 bool Language::MatchPattern(const wxString& file) const {
-  for (std::vector<wxString>::const_iterator p = file_patterns_.begin();
-       p != file_patterns_.end(); ++p) {
-    if (file.EndsWith(*p)) {
+  for (const auto & elem : file_patterns_) {
+    if (file.EndsWith(elem)) {
       return true;
     }
   }
@@ -145,11 +142,10 @@ bool Language::MatchPattern(const wxString& file) const {
 wxString Language::GetFilePattern() const {
   wxString patterns;
 
-  for (std::vector<wxString>::const_iterator p = file_patterns_.begin();
-       p != file_patterns_.end(); ++p) {
+  for (const auto & elem : file_patterns_) {
     // if the pattern starts with a dot, assume it's a extension and we
     // need a star, if not we need to match the whole file
-    const wxString patt = p->StartsWith(".") ? "*" + *p : *p;
+    const wxString patt = elem.StartsWith(".") ? "*" + elem : elem;
 
     // build a *.txt;*.pdf list
     if (patterns.IsEmpty()) {
@@ -885,7 +881,7 @@ wxString Languages::GetFilePattern() {
   // need to loop from back to front to get the LanguageList in order for
   // display
   // since we are adding 'back to front'
-  for (std::vector<Language*>::const_reverse_iterator l =
+  for (auto l =
            pimpl_->LanguageList.rbegin();
        l != pimpl_->LanguageList.rend(); ++l) {
     Language* lang = *l;
@@ -895,9 +891,8 @@ wxString Languages::GetFilePattern() {
 }
 
 Language* Languages::DetermineLanguage(const wxString& filepath) {
-  for (std::vector<Language*>::const_iterator l = pimpl_->LanguageList.begin();
-       l != pimpl_->LanguageList.end(); ++l) {
-    Language* lang = *l;
+  for (auto lang : pimpl_->LanguageList) {
+    
     if (lang->MatchPattern(filepath)) {
       return lang;
     }

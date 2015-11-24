@@ -111,7 +111,7 @@ CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent,
                                    const wxString& project_folder,
                                    const wxString& fodler_hint)
     : ui::CreateNewFile(parent), project_folder_(project_folder) {
-  wxImageList* images = new wxImageList(16, 16);
+  auto  images = new wxImageList(16, 16);
   images->Add(wxIcon(file_normal_xpm));
   uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);
 
@@ -192,7 +192,7 @@ const wxString CreateNewFileDlg::GetFilePath() const {
 FileTemplate* GetFt(wxListCtrl* list) {
   const auto selection =
       list->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
-  if (selection == -1) return NULL;
+  if (selection == -1) return nullptr;
   wxUIntPtr data = list->GetItemData(selection);
   FileTemplate* ret = reinterpret_cast<FileTemplate*>(data);
   return ret;
@@ -200,7 +200,7 @@ FileTemplate* GetFt(wxListCtrl* list) {
 
 const wxString CreateNewFileDlg::GetTemplateSource() const {
   FileTemplate* file_template = GetFt(uiTemplates);
-  if (file_template == NULL)
+  if (file_template == nullptr)
     return wxEmptyString;
   else
     return file_template->GenerateContent(uiName->GetValue());

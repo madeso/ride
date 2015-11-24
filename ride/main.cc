@@ -24,7 +24,7 @@ bool MyApp::OnInit() {
   app_console->SetVendorName("madeso");
   app_console->SetVendorDisplayName("madeso");
 
-  MainWindow* main_window =
+  auto  main_window =
       new MainWindow(DISPLAY_NAME, wxPoint(50, 50), wxSize(450, 340));
   main_window->Show(true);
   return true;

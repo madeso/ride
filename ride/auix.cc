@@ -73,7 +73,7 @@ class wxAuiCommandCapture : public wxEvtHandler {
   wxAuiCommandCapture() { m_lastId = 0; }
   int GetCommandId() const { return m_lastId; }
 
-  bool ProcessEvent(wxEvent& evt) {  // NOLINT
+  bool ProcessEvent(wxEvent& evt) override {  // NOLINT
     if (evt.GetEventType() == wxEVT_MENU) {
       m_lastId = evt.GetId();
       return true;
@@ -595,7 +595,7 @@ int AuiGenericTabArt::ShowDropDown(wxWindow* wnd,
     // an assert in the menu code.
     if (caption.IsEmpty()) caption = wxT(" ");
 
-    wxMenuItem* item = new wxMenuItem(NULL, 1000 + i, caption);
+    wxMenuItem* item = new wxMenuItem(nullptr, 1000 + i, caption);
     if (page.bitmap.IsOk()) item->SetBitmap(page.bitmap);
     menuPopup.Append(item);
   }
@@ -608,7 +608,7 @@ int AuiGenericTabArt::ShowDropDown(wxWindow* wnd,
   wxRect cli_rect = wnd->GetClientRect();
   pt.y = cli_rect.y + cli_rect.height;
 
-  wxAuiCommandCapture* cc = new wxAuiCommandCapture;
+  auto  cc = new wxAuiCommandCapture;
   wnd->PushEventHandler(cc);
   wnd->PopupMenu(&menuPopup, pt);
   int command = cc->GetCommandId();

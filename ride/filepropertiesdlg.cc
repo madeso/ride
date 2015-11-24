@@ -61,7 +61,7 @@ class StringIntConverter {
   }
 
   wxString ToString(int i) const {
-    IntsToStrings::const_iterator ret = intstostrings_.find(i);
+    auto ret = intstostrings_.find(i);
     if (ret == intstostrings_.end())
       return "Unknown";
     else

@@ -240,7 +240,7 @@ void SettingsFontsTab::StyleToGui(bool togui) {
   StyleLink* link =
       reinterpret_cast<StyleLink*>(uiFontStyles->GetClientData(selection));
   assert(link);
-  if (link == NULL) return;
+  if (link == nullptr) return;
 
   ride::Style style = link->get(common_->current_settings().fonts_and_colors());
 

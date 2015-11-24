@@ -71,7 +71,7 @@ void QuickOpenDlg::ChangeSelection(const wxKeyEvent& event, int change) {
 }
 
 void QuickOpenDlg::OnKeyUp(wxKeyEvent& event) {
-  if (uiFileList == NULL) return;
+  if (uiFileList == nullptr) return;
 
   if (event.GetKeyCode() == WXK_UP) {
     ChangeSelection(event, -1);

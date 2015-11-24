@@ -8,15 +8,15 @@
 #include "ride/fileedit.h"
 #include "ride/startpage.h"
 
-Tab::Tab(FileEdit* edit) : edit_(edit), start_(NULL), data_(NULL) {
+Tab::Tab(FileEdit* edit) : edit_(edit), start_(nullptr), data_(nullptr) {
   assert(edit);
 }
 
-Tab::Tab(StartPageTab* start) : edit_(NULL), start_(start), data_(NULL) {
+Tab::Tab(StartPageTab* start) : edit_(nullptr), start_(start), data_(nullptr) {
   assert(start);
 }
 
-Tab::Tab(TabData* data) : edit_(NULL), start_(NULL), data_(data) {
+Tab::Tab(TabData* data) : edit_(nullptr), start_(nullptr), data_(data) {
   assert(data);
 }
 
@@ -44,5 +44,5 @@ wxWindow* Tab::ToControl() {
     return edit_;
   else if (data_)
     return data_->ToControl();
-  return NULL;
+  return nullptr;
 }

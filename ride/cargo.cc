@@ -11,7 +11,7 @@
 template <typename T>
 std::shared_ptr<T> GetValue(const std::shared_ptr<cpptoml::base> base) {
   const auto t = base->as<T>();
-  if (t.get() == NULL) {
+  if (t.get() == nullptr) {
     // if null, return null
     return std::shared_ptr<T>();
   }
@@ -23,7 +23,7 @@ template <>
 std::shared_ptr<wxString> GetValue<wxString>(
     const std::shared_ptr<cpptoml::base> base) {
   const auto str = GetValue<std::string>(base);
-  if (str.get() == NULL) {
+  if (str.get() == nullptr) {
     // if null, return null
     return std::shared_ptr<wxString>();
   }
@@ -44,7 +44,7 @@ LoadResult SafeGet(const std::string& table_name,
         wxString::Format("%s from table %s is not a value", name, table_name));
   }
   const auto value = GetValue<T>(base);
-  if (value.get() == NULL) {
+  if (value.get() == nullptr) {
     return LoadResult::Error(wxString::Format(
         "%s from table %s is not a valid value", name, table_name));
   }
@@ -63,7 +63,7 @@ LoadResult SafeGet(const std::string& table_name,
         wxString::Format("table %s doesn't contain %s", table_name, name));
   }
   const auto array = table->get_array(name);
-  if (array.get() == NULL) {
+  if (array.get() == nullptr) {
     return LoadResult::Error(
         wxString::Format("%s from table %s is not a array", name, table_name));
   }
@@ -76,7 +76,7 @@ LoadResult SafeGet(const std::string& table_name,
                            index, name, table_name));
     }
     const auto value = GetValue<T>(base);
-    if (NULL == value.get()) {
+    if (nullptr == value.get()) {
       return LoadResult::Error(wxString::Format(
           "value %d in array %s from table %s is not a valid value", index,
           name, table_name));
@@ -131,7 +131,7 @@ LoadResult Cargo::Load(const wxString& file) {
     cpptoml::table root = cpptoml::parse_file(static_cast<std::string>(file));
 
     auto package = root.get_table(cargo::PACKAGE);
-    if (package.get() == NULL)
+    if (package.get() == nullptr)
       return LoadResult::Error("No package in cargo file");
 
     TRY(SafeGet(cargo::PACKAGE, package, cargo::NAME, &name_));
@@ -139,7 +139,7 @@ LoadResult Cargo::Load(const wxString& file) {
     TRY(SafeGet(cargo::PACKAGE, package, cargo::AUTHORS, &authors_));
 
     auto dependcies = root.get_table(cargo::DEPENDENCIES);
-    if (dependcies.get() != NULL) {
+    if (dependcies.get() != nullptr) {
       for (const auto dep : *dependcies) {
         const std::string& name = dep.first;
         dependencies_.push_back(name);
@@ -147,7 +147,7 @@ LoadResult Cargo::Load(const wxString& file) {
     }
 
     auto features = root.get_table(cargo::FEATURES);
-    if (features.get() != NULL) {
+    if (features.get() != nullptr) {
       for (const auto dep : *features) {
         const std::string& name = dep.first;
         AddFeature(dependencies_, &features_, name);

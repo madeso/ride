@@ -28,7 +28,7 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
                      wxTR_LINES_AT_ROOT | wxTR_EDIT_LABELS | wxBORDER_NONE),
       images_(16, 16),
       main_(main),
-      last_highlighted_item_(NULL) {
+      last_highlighted_item_(nullptr) {
   BindEvents();
   UpdateColors();
 
@@ -111,13 +111,13 @@ typedef std::pair<wxTreeItemId, FileEntry*> TreeItemFileEntry;
 
 TreeItemFileEntry GetTreeItemData(const ProjectExplorer* pe,
                                   wxTreeItemId selected) {
-  if (selected.IsOk() == false) return TreeItemFileEntry(NULL, NULL);
+  if (selected.IsOk() == false) return TreeItemFileEntry(nullptr, nullptr);
   wxTreeItemData* data = pe->GetItemData(selected);
   if (data) {
     FileEntry* entry = reinterpret_cast<FileEntry*>(data);
     return TreeItemFileEntry(selected, entry);
   } else {
-    return TreeItemFileEntry(selected, NULL);
+    return TreeItemFileEntry(selected, nullptr);
   }
 }
 
@@ -146,13 +146,13 @@ void ProjectExplorer::UpdateFolderStructure() {
 
 wxString ProjectExplorer::GetPathOfSelected() const {
   TreeItemFileEntry file = GetFocused(this);
-  if (file.second == NULL) return wxEmptyString;
+  if (file.second == nullptr) return wxEmptyString;
   return file.second->path();
 }
 
 wxString ProjectExplorer::GetRelativePathOfSelected() const {
   TreeItemFileEntry file = GetFocused(this);
-  if (file.second == NULL) return wxEmptyString;
+  if (file.second == nullptr) return wxEmptyString;
   return file.second->GetRelativeFolderPath(folder_);
 }
 
@@ -201,7 +201,7 @@ void ProjectExplorer::SubUpdateFolderStructure(
         relative_path + file_or_directory_name + "/";
     const wxString dir_path = wxDir(path).GetNameWithSep();
 
-    FileEntry* fileentry = new FileEntry(is_dir, is_dir ? dir_path : path);
+    auto  fileentry = new FileEntry(is_dir, is_dir ? dir_path : path);
     wxTreeItemData* data = fileentry;
     wxTreeItemId child =
         this->AppendItem(parent, file_or_directory_name, image, image, data);
@@ -345,14 +345,14 @@ void ProjectExplorer::OnOpenFile(wxCommandEvent& event) {
 void ProjectExplorer::OnDeleteFileOrFolder(wxCommandEvent& event) {
   const auto selected = GetFocused(this);
   FileEntry* file = selected.second;
-  if (file == NULL) return;
+  if (file == nullptr) return;
 
   // if a dialog is shown, the file pointer is invalidated, since we rebuild the
   // whole tree structure and thus delete the entries
   // lets "fix" this for now by storing copies and setting our reference to null
   const wxString path = file->path();
   const bool is_directory = file->is_directory();
-  file = NULL;
+  file = nullptr;
 
   if (is_directory) {
     // we don't care about the value of these really, since the dialog should
@@ -393,7 +393,7 @@ void ProjectExplorer::OnEditLabelStart(wxTreeEvent& event) {
   if (event.IsEditCancelled()) return;
   auto data = GetTreeItemData(this, event.GetItem());
   FileEntry* file = data.second;
-  if (file == NULL) {
+  if (file == nullptr) {
     event.Veto();
     return;
   }
@@ -408,7 +408,7 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event) {
   if (event.IsEditCancelled()) return;
   auto data = GetTreeItemData(this, event.GetItem());
   FileEntry* file = data.second;
-  if (file == NULL) {
+  if (file == nullptr) {
     event.Veto();
     return;
   }
@@ -452,7 +452,7 @@ void ProjectExplorer::OnRename(wxCommandEvent& event) {
 
 void ProjectExplorer::OnOpenExplorer(wxCommandEvent& event) {
   const auto data = GetFocused(this);
-  if (data.second != NULL) {
+  if (data.second != nullptr) {
     wxLaunchDefaultApplication(data.second->path());
   }
 }

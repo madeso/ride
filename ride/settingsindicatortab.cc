@@ -125,7 +125,7 @@ void SettingsIndicatorTab::IndicatorToGui(bool togui) {
   IndicatorLink* link = reinterpret_cast<IndicatorLink*>(
       uiIndicatorList->GetClientData(selected_item));
   assert(link);
-  if (link == NULL) return;
+  if (link == nullptr) return;
   link->IndicatorToGui(togui, &fonts_and_colors,
                        *common_->current_settings_mod(), uiIndicatorStyle,
                        uiIndicatorColor, uiIndicatorUnder, uiIndicatorAlpha,

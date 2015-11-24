@@ -12,8 +12,8 @@ Dialog::Dialog(const ItemList& items, Index index, int group, bool forward,
                const wxString& title, const wxPoint& position,
                const wxSize& size,
                long style)  // NOLINT
-    : list_ctrl_(NULL),
-      path_ctrl_(NULL),
+    : list_ctrl_(nullptr),
+      path_ctrl_(nullptr),
       is_closing_(false),
       switcher_border_style_(0),
       style_(sstyle) {
@@ -43,8 +43,8 @@ Dialog::Dialog(const ItemList& items, Index index, int group, bool forward,
   path_ctrl_ = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition,
                                 wxDefaultSize, wxST_ELLIPSIZE_START);
 
-  wxBoxSizer* root = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+  auto  root = new wxBoxSizer(wxVERTICAL);
+  auto  sizer = new wxBoxSizer(wxVERTICAL);
 
   const int mainborder = style_.dlg_main_border();
   const int border = style_.dlg_item_border();

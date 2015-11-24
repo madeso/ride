@@ -109,7 +109,7 @@ CreateNewProjectDlg::CreateNewProjectDlg(wxWindow* parent)
   uiVcs->SetSelection(0);
   uiProjectfolder->SetValue(wxStandardPaths::Get().GetDocumentsDir());
 
-  wxImageList* images = new wxImageList(16, 16);
+  auto  images = new wxImageList(16, 16);
   images->Add(wxIcon(create_app_xpm));
   images->Add(wxIcon(create_library_xpm));
   uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);
@@ -139,7 +139,7 @@ void CreateNewProjectDlg::OnProjectFolderChanged(wxCommandEvent& event) {
 }
 
 void CreateNewProjectDlg::OnBrowseProjectFolder(wxCommandEvent& event) {
-  wxDirDialog dlg(NULL, "Choose project folder", uiProjectfolder->GetValue(),
+  wxDirDialog dlg(nullptr, "Choose project folder", uiProjectfolder->GetValue(),
                   wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
   if (wxID_OK != dlg.ShowModal()) return;
   uiProjectfolder->SetValue(dlg.GetPath());

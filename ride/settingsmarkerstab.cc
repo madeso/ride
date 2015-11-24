@@ -112,7 +112,7 @@ void SettingsMarkersTab::MarkerToGui(bool togui) {
   MarkerLink* link =
       reinterpret_cast<MarkerLink*>(uiMarkerList->GetClientData(selected_item));
   assert(link);
-  if (link == NULL) return;
+  if (link == nullptr) return;
   link->MarkerToGui(togui, &fonts_and_colors, *common_->current_settings_mod(),
                     uiMarkerSymbol, uiMarkerForegroundColor,
                     uiMarkerBackgroundColor);

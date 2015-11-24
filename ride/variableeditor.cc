@@ -70,7 +70,7 @@ void VariableEditorDlg::AddText(const wxString& text) {
 }
 
 void VariableEditorDlg::OnFolder(wxCommandEvent& event) {
-  wxDirDialog dlg(NULL, "Select directory", "", wxDD_DEFAULT_STYLE);
+  wxDirDialog dlg(nullptr, "Select directory", "", wxDD_DEFAULT_STYLE);
   if (dlg.ShowModal() == wxID_CANCEL) return;
   AddText(dlg.GetPath());
 }

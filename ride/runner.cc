@@ -41,7 +41,7 @@ class IdleTimer : public wxTimer {
 struct SingleRunner::Pimpl {
   explicit Pimpl(SingleRunner* p)
       : parent_(p),
-        processes_(NULL),
+        processes_(nullptr),
         pid_(0),
         has_exit_code_(false),
         exit_code_(-1) {
@@ -179,7 +179,7 @@ wxString ListEnviroment(const wxEnvVariableHashMap& e) {
 }
 
 bool SingleRunner::Pimpl::RunCmd(const Command& c) {
-  Process* process = new Process(this, c.cmd);
+  auto  process = new Process(this, c.cmd);
   Append("> " + c.cmd);
 
   wxExecuteEnv env;
@@ -218,7 +218,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c) {
     return false;
   }
 
-  assert(processes_ == NULL);
+  assert(processes_ == nullptr);
   assert(pid_ == 0);
   processes_ = process;
   pid_ = process_id;
@@ -240,7 +240,7 @@ bool SingleRunner::RunCmd(const Command& cmd) {
 }
 
 bool SingleRunner::IsRunning() const {
-  const bool has_process = pimpl->processes_ != NULL;
+  const bool has_process = pimpl->processes_ != nullptr;
   if (has_process == false) return false;
   // for some reason, calling/assinging theese on osx, keeps osx from waiting
   // forever for a response... weird. there might be some horrible

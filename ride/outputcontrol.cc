@@ -47,7 +47,7 @@ OutputControl::OutputControl(MainWindow* main, OutputControlFunctions functions)
   text_ = new wxStyledTextCtrl(
       this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
       wxBORDER_NONE | wxTE_READONLY | wxTE_MULTILINE | wxHSCROLL);
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+  auto  sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(text_, 1, wxEXPAND);
   SetSizer(sizer);
   BindEvents();

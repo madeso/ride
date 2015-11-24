@@ -30,7 +30,7 @@ ride::Color Color(google::protobuf::int32 r, google::protobuf::int32 g,
 
 ride::Color Color(google::protobuf::int32 c) { return Color(c, c, c); }
 
-ride::Style Style(ride::Color* front, ride::Color* back = NULL,
+ride::Style Style(ride::Color* front, ride::Color* back = nullptr,
                   bool bold = false) {
   ride::Style style;
 
@@ -180,7 +180,7 @@ class BasicThemeBuilder {
     colors->set_allocated_selection_background(New(selection_background_));
 
     colors->set_allocated_default_style(New(Style(New(front_), New(bkg_))));
-    colors->set_allocated_line_number_style(New(Style(NULL, New(bkg_))));
+    colors->set_allocated_line_number_style(New(Style(nullptr, New(bkg_))));
     colors->set_allocated_fold_margin_hi(New(fold_hi_));
     colors->set_allocated_fold_margin_low(New(fold_lo_));
 
@@ -190,7 +190,7 @@ class BasicThemeBuilder {
     colors->set_allocated_style_commentline(New(Style(New(comment_))));
     colors->set_allocated_style_commentdoc(New(Style(New(comment_))));
     colors->set_allocated_style_commentlinedoc(New(Style(New(comment_))));
-    colors->set_allocated_style_keyword(New(Style(New(keyword_), NULL, true)));
+    colors->set_allocated_style_keyword(New(Style(New(keyword_), nullptr, true)));
 
     colors->set_allocated_folderend_foreground(New(front_));
     colors->set_allocated_folderopenmid_foreground(New(front_));
@@ -209,7 +209,7 @@ class BasicThemeBuilder {
     colors->set_allocated_folderopen_background(New(bkg_));
 
     colors->set_allocated_props_key(New(Style(New(keyword_))));
-    colors->set_allocated_props_section(New(Style(NULL, NULL, true)));
+    colors->set_allocated_props_section(New(Style(nullptr, nullptr, true)));
 
     colors->set_allocated_indicator_error(New(Indicator(error_)));
     colors->set_allocated_indicator_warning(New(Indicator(warning_)));

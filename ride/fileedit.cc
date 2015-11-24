@@ -424,7 +424,7 @@ class UndoActionRaii {
 enum class StringType { NONE, DOUBLE_QUOTE, SINGLE_QUOTE };
 
 StringType IsStringAt(wxStyledTextCtrl* text, int pos,
-                      bool* support_language = NULL) {
+                      bool* support_language = nullptr) {
   const int lexer = text->GetLexer();
   const int style = text->GetStyleAt(pos);
 
@@ -955,7 +955,7 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
       main_(parent),
       notebook_(anotebook),
       languages_(languages),
-      current_language_(NULL),
+      current_language_(nullptr),
       highlight_current_word_last_start_position_(-1),
       highlight_current_word_last_end_position_(-1) {
   assert(anotebook);
@@ -969,7 +969,7 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
   filename_ = file;
   LoadFile();
 
-  wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+  auto  sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(text_, 1, wxEXPAND);
   SetSizer(sizer);
 
@@ -1107,7 +1107,7 @@ void FileEdit::UpdateTextControl() {
   Project* project = main_->project();
 
   SetupScintilla(text_, set, current_language_,
-                 project->IsPartOfProject(filename_) ? project : NULL);
+                 project->IsPartOfProject(filename_) ? project : nullptr);
   SetupScintillaAutoCompleteImages(text_);
 }
 
@@ -1164,7 +1164,7 @@ bool FileEdit::CanClose(bool can_abort) {
   return true;
 }
 
-FileEdit::~FileEdit() { text_->SetClientData(NULL); }
+FileEdit::~FileEdit() { text_->SetClientData(nullptr); }
 
 void FileEdit::BindEvents() {
   Bind(wxEVT_STC_MARGINCLICK, &FileEdit::OnMarginClick, this);
@@ -1338,7 +1338,7 @@ void FileEdit::HighlightCurrentWord() {
           const int flags = wxSTC_FIND_WHOLEWORD | wxSTC_FIND_MATCHCASE;
           int match_position =
               FindStcText(text_, search_point, text_->GetLength(), current_text,
-                          flags, NULL);
+                          flags, nullptr);
           if (match_position == -1) {
             break;
           }
