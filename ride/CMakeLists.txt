@@ -35,6 +35,12 @@ configure_file (
 set(src settings.proto resources/resources.rc ${src_glob} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
 set(generated_src generated/ui.cpp generated/ui.h)
 
+set(tinyxml_src
+	${CMAKE_SOURCE_DIR}/external/tinyxml2/tinyxml2.cpp
+	${CMAKE_SOURCE_DIR}/external/tinyxml2/tinyxml2.h
+	)
+include_directories(${CMAKE_SOURCE_DIR}/external/tinyxml2/)
+
 set(switcher_src
 	switcher/ctrl.cc
 	switcher/ctrl.h
@@ -86,6 +92,7 @@ source_group("generated" FILES ${generated_src} ${SETTINGS_PROTO_SRCS} ${SETTING
 source_group("switcher" FILES ${switcher_src})
 source_group("games/bombs" FILES ${bombs_src})
 source_group("games/forty" FILES ${forty_src})
+source_group("external/tinyxml2" FILES ${tinyxml_src})
 
 if(APPLE)
 	set(OSX_ICON_FILES ${CMAKE_CURRENT_SOURCE_DIR}/resources/application.icns)
@@ -96,7 +103,7 @@ ENDIF()
 
 add_executable(
 	${PROJECT_NAME} WIN32 MACOSX_BUNDLE
-	${src} ${generated_src} ${switcher_src} ${games_src}
+	${src} ${generated_src} ${switcher_src} ${games_src} ${tinyxml_src}
 )
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ".")
