@@ -109,7 +109,7 @@ CreateNewProjectDlg::CreateNewProjectDlg(wxWindow* parent)
   uiVcs->SetSelection(0);
   uiProjectfolder->SetValue(wxStandardPaths::Get().GetDocumentsDir());
 
-  auto  images = new wxImageList(16, 16);
+  auto images = new wxImageList(16, 16);
   images->Add(wxIcon(create_app_xpm));
   images->Add(wxIcon(create_library_xpm));
   uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);

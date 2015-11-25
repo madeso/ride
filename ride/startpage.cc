@@ -43,7 +43,7 @@ StartPageTab::StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent)
   ctrl->SetPage(html);
 #endif
 
-  auto  sizer = new wxBoxSizer(wxVERTICAL);
+  auto sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(ctrl, 1, wxEXPAND);
   SetSizer(sizer);
 

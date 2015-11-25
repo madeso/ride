@@ -122,7 +122,10 @@ void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, const char** xpm) {
   wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
   /*
    On Ubuntu 15.10:
-   (ride:12676): Gdk-WARNING **: /build/gtk+2.0-xmBAGF/gtk+2.0-2.24.28/gdk/gdkpixbuf-drawable.c:1249: Source drawable has no colormap; either pass in a colormap, or set the colormap on the drawable with gdk_drawable_set_colormap()
+   (ride:12676): Gdk-WARNING **:
+/build/gtk+2.0-xmBAGF/gtk+2.0-2.24.28/gdk/gdkpixbuf-drawable.c:1249: Source
+drawable has no colormap; either pass in a colormap, or set the colormap on the
+drawable with gdk_drawable_set_colormap()
 The program 'ride' received an X Window System error.
 This probably reflects a bug in the program.
 The error was 'BadValue (integer parameter out of range for operation)'.
@@ -133,7 +136,7 @@ The error was 'BadValue (integer parameter out of range for operation)'.
    option to change this behavior. You can then get a meaningful
    backtrace from your debugger if you break on the gdk_x_error() function.)
    */
-  wxImage img = bitmap.ConvertToImage(); // here
+  wxImage img = bitmap.ConvertToImage();  // here
   // t->RegisterImage(icon, bitmap);
   const int w = bitmap.GetWidth();
   const int h = bitmap.GetHeight();

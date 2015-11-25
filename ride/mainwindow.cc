@@ -139,7 +139,8 @@ struct AddMenuItem {
   operator wxMenuItem*() { return item; }
 
   AddMenuItem(wxMenu* menu, int id, const wxString& title = wxEmptyString,
-              const wxString& help = wxEmptyString, const char** xpm = nullptr) {
+              const wxString& help = wxEmptyString,
+              const char** xpm = nullptr) {
     item = new wxMenuItem(nullptr, id, title, help);
 #ifndef RIDE_OS_UNIX
     if (xpm) {
@@ -160,7 +161,7 @@ struct AddMenuItem {
 
 void MainWindow::SetupMenu() {
   //////////////////////////////////////////////////////////////////////////
-  auto  menu_file = new wxMenu;
+  auto menu_file = new wxMenu;
   AddMenuItem(menu_file, wxID_OPEN, "&Open...\tCtrl-O", "Open a file");
   AddMenuItem(menu_file, wxID_SAVE, "&Save...\tCtrl-S", "Save the file");
   AddMenuItem(menu_file, wxID_SAVEAS, "Save &as...\tCtrl-Shift-S",
@@ -228,7 +229,7 @@ void MainWindow::SetupMenu() {
 
   //////////////////////////////////////////////////////////////////////////
 
-  auto  menu_project = new wxMenu;
+  auto menu_project = new wxMenu;
   AddMenuItem(menu_project, ID_PROJECT_NEW, "New project...",
               "Create a new cargo project");
   AddMenuItem(menu_project, ID_PROJECT_OPEN, "Open project...\tCtrl-Shift-O",
@@ -271,7 +272,7 @@ void MainWindow::SetupMenu() {
 
   //////////////////////////////////////////////////////////////////////////
 
-  auto  menu_view = new wxMenu;
+  auto menu_view = new wxMenu;
   AddMenuItem(menu_view, ID_VIEW_RESTORE_WINDOWS, "Restore window layout", "");
   AddMenuItem(menu_view, ID_VIEW_SAVE_LAYOUT, "Save layout", "");
   AddMenuItem(menu_view, ID_VIEW_LOAD_LAYOUT, "Load layout", "");
@@ -296,7 +297,7 @@ void MainWindow::SetupMenu() {
           .Checkable();
 
   //////////////////////////////////////////////////////////////////////////
-  auto  menu_help = new wxMenu;
+  auto menu_help = new wxMenu;
   menu_help->Append(wxID_ABOUT);
 
   menu_help->AppendSeparator();
@@ -304,7 +305,7 @@ void MainWindow::SetupMenu() {
   AddMenuItem(menu_help, ID_GAMES_FORTY, "Play Forty Thieves!");
 
   //////////////////////////////////////////////////////////////////////////
-  auto  menu_bar = new wxMenuBar;
+  auto menu_bar = new wxMenuBar;
   menu_bar->Append(menu_file, "&File");
   if (menu_edit) {
     menu_bar->Append(menu_edit, "&Edit");
@@ -652,7 +653,7 @@ void MainWindow::UpdateTheme() {
 
   // we have to create a new tab art each time as wx copies it around
   // like crazy and out new values are not set if we just change a member
-  auto  tab_art = new AuiGenericTabArt();
+  auto tab_art = new AuiGenericTabArt();
   // tab_art->SetColour(wxColor(255, 0, 0, 0));
   // tab_art->SetActiveColour(wxColor(255, 0, 0));
   tab_art->set_backgroundColor(C(c.tab_background()));
@@ -713,7 +714,7 @@ void UpdateMenuItemBasedOnPane(wxAuiManager* aui, wxMenuItem* item,
   assert(aui);
   wxAuiPaneInfo& pane = aui->GetPane(name);
   assert(pane.IsValid() && "This function should only take valid pane names!");
-  if( item != nullptr ) {
+  if (item != nullptr) {
     item->Check(pane.IsShown());
   }
 }
@@ -1038,7 +1039,7 @@ void MainWindow::OnFileOpen(wxCommandEvent& event) {
 
   wxArrayString paths_to_open;
   open_file.GetPaths(paths_to_open);
-  for (auto & path : paths_to_open) {
+  for (auto& path : paths_to_open) {
     OpenFile(path);
   }
 }
@@ -1078,9 +1079,10 @@ FileEdit* MainWindow::OpenFile(const wxString& file, int start_line,
     notebook_->SetSelection(found_edit.index);
   };
   FileEdit* found_edit_or_new =
-      found_edit.edit != nullptr ? found_edit.edit
-                              : AddAllCompilerMessages(new FileEdit(
-                                    notebook_, this, full_path, &languages_));
+      found_edit.edit != nullptr
+          ? found_edit.edit
+          : AddAllCompilerMessages(
+                new FileEdit(notebook_, this, full_path, &languages_));
   found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
   found_edit_or_new->SetFocus();
 

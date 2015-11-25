@@ -179,7 +179,7 @@ wxString ListEnviroment(const wxEnvVariableHashMap& e) {
 }
 
 bool SingleRunner::Pimpl::RunCmd(const Command& c) {
-  auto  process = new Process(this, c.cmd);
+  auto process = new Process(this, c.cmd);
   Append("> " + c.cmd);
 
   wxExecuteEnv env;

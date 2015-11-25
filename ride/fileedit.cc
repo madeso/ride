@@ -969,7 +969,7 @@ FileEdit::FileEdit(wxAuiNotebook* anotebook, MainWindow* parent,
   filename_ = file;
   LoadFile();
 
-  auto  sizer = new wxBoxSizer(wxVERTICAL);
+  auto sizer = new wxBoxSizer(wxVERTICAL);
   sizer->Add(text_, 1, wxEXPAND);
   SetSizer(sizer);
 

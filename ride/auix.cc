@@ -608,7 +608,7 @@ int AuiGenericTabArt::ShowDropDown(wxWindow* wnd,
   wxRect cli_rect = wnd->GetClientRect();
   pt.y = cli_rect.y + cli_rect.height;
 
-  auto  cc = new wxAuiCommandCapture;
+  auto cc = new wxAuiCommandCapture;
   wnd->PushEventHandler(cc);
   wnd->PopupMenu(&menuPopup, pt);
   int command = cc->GetCommandId();

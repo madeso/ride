@@ -190,7 +190,8 @@ class BasicThemeBuilder {
     colors->set_allocated_style_commentline(New(Style(New(comment_))));
     colors->set_allocated_style_commentdoc(New(Style(New(comment_))));
     colors->set_allocated_style_commentlinedoc(New(Style(New(comment_))));
-    colors->set_allocated_style_keyword(New(Style(New(keyword_), nullptr, true)));
+    colors->set_allocated_style_keyword(
+        New(Style(New(keyword_), nullptr, true)));
 
     colors->set_allocated_folderend_foreground(New(front_));
     colors->set_allocated_folderopenmid_foreground(New(front_));

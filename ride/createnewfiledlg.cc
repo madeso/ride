@@ -111,7 +111,7 @@ CreateNewFileDlg::CreateNewFileDlg(wxWindow* parent,
                                    const wxString& project_folder,
                                    const wxString& fodler_hint)
     : ui::CreateNewFile(parent), project_folder_(project_folder) {
-  auto  images = new wxImageList(16, 16);
+  auto images = new wxImageList(16, 16);
   images->Add(wxIcon(file_normal_xpm));
   uiTemplates->AssignImageList(images, wxIMAGE_LIST_SMALL);
 

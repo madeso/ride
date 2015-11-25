@@ -224,7 +224,8 @@ void FindInFiles(MainWindow* parent, wxStyledTextCtrl* fallback,
     // if we are replacing with keep-open, do a find to see if we should
     // open the file and if so use that file instead of the 'fallback file'
     if (find_action == FindAction::Replace && keepFilesOpen) {
-      int found = FindStcText(fallback, 0, stc->GetLength(), text, flags, nullptr);
+      int found =
+          FindStcText(fallback, 0, stc->GetLength(), text, flags, nullptr);
       if (found > 0) {
         FileEdit* opened_edit = parent->OpenFile(file);
         stc = opened_edit->GetStc();

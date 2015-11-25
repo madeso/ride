@@ -43,8 +43,8 @@ Dialog::Dialog(const ItemList& items, Index index, int group, bool forward,
   path_ctrl_ = new wxStaticText(this, wxID_ANY, "", wxDefaultPosition,
                                 wxDefaultSize, wxST_ELLIPSIZE_START);
 
-  auto  root = new wxBoxSizer(wxVERTICAL);
-  auto  sizer = new wxBoxSizer(wxVERTICAL);
+  auto root = new wxBoxSizer(wxVERTICAL);
+  auto sizer = new wxBoxSizer(wxVERTICAL);
 
   const int mainborder = style_.dlg_main_border();
   const int border = style_.dlg_item_border();

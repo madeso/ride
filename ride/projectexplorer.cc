@@ -201,7 +201,7 @@ void ProjectExplorer::SubUpdateFolderStructure(
         relative_path + file_or_directory_name + "/";
     const wxString dir_path = wxDir(path).GetNameWithSep();
 
-    auto  fileentry = new FileEntry(is_dir, is_dir ? dir_path : path);
+    auto fileentry = new FileEntry(is_dir, is_dir ? dir_path : path);
     wxTreeItemData* data = fileentry;
     wxTreeItemId child =
         this->AppendItem(parent, file_or_directory_name, image, image, data);

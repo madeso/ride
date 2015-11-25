@@ -151,8 +151,8 @@ class SettingsDlg : public wxDialog, ToGuiSender {
         common_(mainwindow) {
     this->SetSizeHints(wxSize(623, 665), wxDefaultSize);
 
-    auto  main_sizer = new wxBoxSizer(wxVERTICAL);
-    auto  notebook_sizer = new wxFlexGridSizer(0, 2, 0, 0);
+    auto main_sizer = new wxBoxSizer(wxVERTICAL);
+    auto notebook_sizer = new wxFlexGridSizer(0, 2, 0, 0);
     notebook_sizer->AddGrowableCol(1);
     notebook_sizer->AddGrowableRow(1);
     notebook_sizer->SetFlexibleDirection(wxBOTH);
@@ -201,7 +201,7 @@ class SettingsDlg : public wxDialog, ToGuiSender {
     wxButton* apply_button = new wxButton(this, wxID_APPLY);
     wxButton* cancel_buytton = new wxButton(this, wxID_CANCEL);
 
-    auto  button_sizer = new wxStdDialogButtonSizer();
+    auto button_sizer = new wxStdDialogButtonSizer();
 
     button_sizer->AddButton(ok_button);
     button_sizer->AddButton(apply_button);
