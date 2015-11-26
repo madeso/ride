@@ -16,7 +16,7 @@
 
 #include "ride/stringutils.h"
 
-bool LoadProto(google::protobuf::Message* t, const wxFileName& file_name) {
+bool LoadProtoText(google::protobuf::Message* t, const wxFileName& file_name) {
   assert(t);
 
   if (file_name.IsFileReadable() == false) {
@@ -42,8 +42,8 @@ bool VerifyFileForWriting(const wxFileName& file_name) {
   return true;
 }
 
-bool SaveProto(const google::protobuf::Message& t,
-               const wxFileName& file_name) {
+bool SaveProtoText(const google::protobuf::Message& t,
+                   const wxFileName& file_name) {
   if (false == VerifyFileForWriting(file_name)) return false;
   const wxString path = file_name.GetFullPath();
 

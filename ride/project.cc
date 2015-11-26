@@ -22,7 +22,7 @@
 Project::Project(MainWindow* output, const wxString& root_folder)
     : main_(output), root_folder_(root_folder) {
   if (root_folder_.IsEmpty() == false) {
-    if (LoadProto(&project_, GetProjectFile()) == false) {
+    if (LoadProtoText(&project_, GetProjectFile()) == false) {
     }
     if (project_.build_settings_size() == 0) {
       // add default build settings to the project
@@ -35,7 +35,7 @@ Project::Project(MainWindow* output, const wxString& root_folder)
       release->set_release(true);
     }
 
-    if (LoadProto(&user_, GetUserFile()) == false) {
+    if (LoadProtoText(&user_, GetUserFile()) == false) {
     }
 
     if (user_.run_size() == 0) {
@@ -54,7 +54,7 @@ const wxString& Project::root_folder() const { return root_folder_; }
 
 bool Project::Save() {
   if (root_folder_.IsEmpty()) return false;
-  bool project_saved = SaveProto(project_, GetProjectFile());
+  bool project_saved = SaveProtoText(project_, GetProjectFile());
   bool user_saved = SaveUser();
   return project_saved && user_saved;
 }
@@ -274,7 +274,7 @@ void Project::RunCmd(const wxString& cmd) {
                               CollectRideSpecificEnviroment(main_->machine())));
 }
 
-bool Project::SaveUser() { return SaveProto(user_, GetUserFile()); }
+bool Project::SaveUser() { return SaveProtoText(user_, GetUserFile()); }
 
 int Project::GetSelectedBuildIndex() {
   if (project_.build_settings_size() <= 0) return -1;
