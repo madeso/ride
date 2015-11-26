@@ -12,6 +12,7 @@
 #include <string>
 
 #include "tinyxml2.h"  // NOLINT this is how we use tinyxml2
+#include "pbjson.hpp"  // NOLINT this is how we use tinyxml2
 
 #include "ride/stringutils.h"
 
@@ -270,16 +271,36 @@ wxString SaveProtoXml(const google::protobuf::Message& mess,
 
   FillElement(&doc, root, mess);
   doc.InsertEndChild(root);
-  wxString path = file_name.GetFullPath();
 
   CustomPrinter p;
   doc.Print(&p);
 
   wxFile f;
+  wxString path = file_name.GetFullPath();
   if (false == f.Open(path, wxFile::write)) {
     return "Unable to open file";
   }
   f.Write(p.CStr());
+  f.Close();
+
+  return "";
+}
+
+wxString SaveProtoJson(const google::protobuf::Message& t,
+                       const wxFileName& file_name) {
+  if (false == VerifyFileForWriting(file_name)) {
+    return "Unable to verify file";
+  }
+
+  std::string str;
+  pbjson::pb2json(&t, str);
+
+  wxFile f;
+  wxString path = file_name.GetFullPath();
+  if (false == f.Open(path, wxFile::write)) {
+    return "Unable to open file";
+  }
+  f.Write(str.c_str());
   f.Close();
 
   return "";

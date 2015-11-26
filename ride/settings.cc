@@ -45,6 +45,13 @@ void SaveProto(const google::protobuf::Message& message, const wxFileName file,
     ShowError(main, "Error while saving xml:" + err, error);
   }
 
+  wxFileName json = file;
+  json.SetExt("json");
+  const wxString jsonerr = SaveProtoJson(message, json);
+  if (jsonerr != "") {
+    ShowError(main, "Error while json: " + err, error);
+  }
+
   if (false == SaveProto(message, file)) {
     ShowError(main, error, "Error while saving");
   }

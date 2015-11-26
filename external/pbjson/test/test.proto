@@ -1,0 +1,21 @@
+
+message Header
+{
+	required string user = 1;
+	required string passwd = 2;
+}
+
+message Arg
+{
+	optional string f1	= 1;
+	optional string f2	= 2;
+}
+
+message Request
+{
+	required Header header = 1;
+	required int32  arg1 = 2;
+	repeated int64 arg2 = 3;
+	optional double arg3 =	4;
+	repeated  Arg args = 5;
+}

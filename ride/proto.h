@@ -19,4 +19,7 @@ bool SaveProtoBinary(const google::protobuf::Message& message,
 wxString SaveProtoXml(const google::protobuf::Message& t,
                       const wxFileName& path);
 
+wxString SaveProtoJson(const google::protobuf::Message& t,
+                       const wxFileName& path);
+
 #endif  // RIDE_PROTO_H_
