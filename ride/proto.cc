@@ -293,7 +293,7 @@ wxString SaveProtoJson(const google::protobuf::Message& t,
   }
 
   std::string str;
-  pbjson::pb2json(&t, str);
+  pbjson::pb2json(&t, str, true);
 
   wxFile f;
   wxString path = file_name.GetFullPath();

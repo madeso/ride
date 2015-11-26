@@ -42,10 +42,10 @@
 
 namespace pbjson
 {
-    void pb2json(const google::protobuf::Message* msg, std::string& str);
+    void pb2json(const google::protobuf::Message* msg, std::string& str, bool pretty);
     rapidjson::Value* pb2jsonobject(const google::protobuf::Message* msg);
     rapidjson::Value* pb2jsonobject(const google::protobuf::Message* msg, rapidjson::Value::AllocatorType& allocator);
-    void json2string(const rapidjson::Value* json, std::string& str);
+    void json2string(const rapidjson::Value* json, std::string& str, bool pretty);
 
     int json2pb(const std::string& json, google::protobuf::Message* msg, std::string& err);
     int jsonobject2pb(const rapidjson::Value* json, google::protobuf::Message* msg, std::string& err);

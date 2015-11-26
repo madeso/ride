@@ -31,6 +31,7 @@
 #include "bin2ascii.h"
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/writer.h"
+#include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 
 #define RETURN_ERR(id, cause)  do{\
@@ -500,19 +501,26 @@ namespace pbjson
         return 0;
     }
 
-    void json2string(const rapidjson::Value* json, std::string& str)
+    void json2string(const rapidjson::Value* json, std::string& str, bool pretty)
     {
         rapidjson::StringBuffer buffer;
-        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-        json->Accept(writer);
+        if (pretty) {
+          rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+          writer.SetIndent('\t', 1);
+          json->Accept(writer);
+        }
+        else {
+          rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+          json->Accept(writer);
+        }
         str.append(buffer.GetString(), buffer.GetSize());
     }
 
-    void pb2json(const Message* msg, std::string& str)
+    void pb2json(const Message* msg, std::string& str, bool pretty)
     {
         rapidjson::Value::AllocatorType allocator;
         rapidjson::Value* json = parse_msg(msg, allocator);
-        json2string(json, str);
+        json2string(json, str, pretty);
         delete json;
     }
 
