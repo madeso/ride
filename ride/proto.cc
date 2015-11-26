@@ -96,6 +96,10 @@ void AddItem(tinyxml2::XMLElement* el, tinyxml2::XMLDocument* doc,
 void FillElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* root,
                  const google::protobuf::Message& mess);
 
+bool UseCdata(const std::string& str) {
+  return str.find_first_of(" \n\t") != std::string::npos;
+}
+
 tinyxml2::XMLElement* CreateXmlNode(
     tinyxml2::XMLDocument* doc, const google::protobuf::FieldDescriptor* desc,
     const google::protobuf::Message& mess) {
@@ -109,7 +113,6 @@ tinyxml2::XMLElement* CreateXmlNode(
 
   tinyxml2::XMLElement* el = doc->NewElement("f");
   el->SetAttribute("n", desc->name().c_str());
-  el->SetAttribute("u", desc->number());
 
   // TODO(Gustav): cleanup code
   if (desc->is_repeated()) {
@@ -155,7 +158,6 @@ tinyxml2::XMLElement* CreateXmlNode(
           auto e = ref->GetRepeatedEnum(mess, desc, i);
           auto x = doc->NewElement("x");
           x->SetAttribute("v", e->name().c_str());
-          x->SetAttribute("e", e->number());
           el->InsertEndChild(x);
         }
         break;
@@ -165,7 +167,7 @@ tinyxml2::XMLElement* CreateXmlNode(
           auto t = doc->NewText(str.c_str());
           auto x = doc->NewElement("x");
           x->InsertEndChild(t);
-          if (StartsWith(str, " ") || str.length() > 40) {
+          if (UseCdata(str)) {
             // TODO(Gustav): change the logic here?
             t->SetCData(true);
           }
@@ -207,14 +209,13 @@ tinyxml2::XMLElement* CreateXmlNode(
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_ENUM: {
         auto e = ref->GetEnum(mess, desc);
-        el->SetAttribute("value", e->name().c_str());
-        el->SetAttribute("enum", e->number());
+        el->SetAttribute("v", e->name().c_str());
       } break;
       case google::protobuf::FieldDescriptor::CPPTYPE_STRING: {
         const auto str = ref->GetString(mess, desc);
         auto t = doc->NewText(str.c_str());
         el->InsertEndChild(t);
-        if (StartsWith(str, " ") || str.length() > 40) {
+        if (UseCdata(str)) {
           // TODO(Gustav): change the logic here?
           t->SetCData(true);
         }
@@ -279,4 +280,3 @@ wxString SaveProtoXml(const google::protobuf::Message& mess,
 
   return "";
 }
-
