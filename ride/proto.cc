@@ -87,9 +87,9 @@ wxString ToString(const T& t) {
 }
 
 void AddItem(tinyxml2::XMLElement* el, tinyxml2::XMLDocument* doc,
-             const wxString s) {
+             const wxString& s) {
   auto x = doc->NewElement("x");
-  x->SetText(s);
+  x->SetText(s.c_str().AsChar());
   el->InsertEndChild(x);
 }
 
@@ -98,6 +98,10 @@ void FillElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* root,
 
 bool UseCdata(const std::string& str) {
   return str.find_first_of(" \n\t") != std::string::npos;
+}
+
+void SetText(tinyxml2::XMLElement* el, const wxString str) {
+  el->SetText(str.c_str().AsChar());
 }
 
 tinyxml2::XMLElement* CreateXmlNode(
@@ -187,25 +191,25 @@ tinyxml2::XMLElement* CreateXmlNode(
   } else {
     switch (desc->cpp_type()) {
       case google::protobuf::FieldDescriptor::CPPTYPE_INT32:
-        el->SetText(ToString(ref->GetInt32(mess, desc)));
+        SetText(el, ToString(ref->GetInt32(mess, desc)));
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_INT64:
-        el->SetText(ToString(ref->GetInt64(mess, desc)));
+        SetText(el, ToString(ref->GetInt64(mess, desc)));
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_UINT32:
-        el->SetText(ToString(ref->GetUInt32(mess, desc)));
+        SetText(el, ToString(ref->GetUInt32(mess, desc)));
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_UINT64:
-        el->SetText(ToString(ref->GetUInt64(mess, desc)));
+        SetText(el, ToString(ref->GetUInt64(mess, desc)));
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_DOUBLE:
-        el->SetText(ToString(ref->GetDouble(mess, desc)));
+        SetText(el, ToString(ref->GetDouble(mess, desc)));
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_FLOAT:
-        el->SetText(ToString(ref->GetFloat(mess, desc)));
+        SetText(el, ToString(ref->GetFloat(mess, desc)));
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_BOOL:
-        el->SetText(ToString(ref->GetBool(mess, desc)));
+        SetText(el, ToString(ref->GetBool(mess, desc)));
         break;
       case google::protobuf::FieldDescriptor::CPPTYPE_ENUM: {
         auto e = ref->GetEnum(mess, desc);
