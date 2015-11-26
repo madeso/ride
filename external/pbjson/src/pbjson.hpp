@@ -39,15 +39,18 @@
 #define ERR_INVALID_PB -2
 #define ERR_UNKNOWN_FIELD -3
 #define ERR_INVALID_JSON -4
+#define ERR_INVALID_FILE -5
 
 namespace pbjson
 {
     void pb2json(const google::protobuf::Message* msg, std::string& str, bool pretty);
+    bool pb2json_file(const google::protobuf::Message* msg, const std::string& str, bool pretty);
     rapidjson::Value* pb2jsonobject(const google::protobuf::Message* msg);
     rapidjson::Value* pb2jsonobject(const google::protobuf::Message* msg, rapidjson::Value::AllocatorType& allocator);
     void json2string(const rapidjson::Value* json, std::string& str, bool pretty);
 
     int json2pb(const std::string& json, google::protobuf::Message* msg, std::string& err);
+    int json2pb_file(const std::string& json, google::protobuf::Message* msg, std::string& err);
     int jsonobject2pb(const rapidjson::Value* json, google::protobuf::Message* msg, std::string& err);
 }
 

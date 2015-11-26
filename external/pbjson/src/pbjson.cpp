@@ -34,6 +34,9 @@
 #include "rapidjson/prettywriter.h"
 #include "rapidjson/stringbuffer.h"
 
+#include "rapidjson/filereadstream.h"
+#include "rapidjson/filewritestream.h"
+
 #define RETURN_ERR(id, cause)  do{\
                                   err = cause; \
                                   return id;   \
@@ -516,12 +519,42 @@ namespace pbjson
         str.append(buffer.GetString(), buffer.GetSize());
     }
 
+    bool json2file(const rapidjson::Value* json, const std::string& str, bool pretty)
+    {
+      FILE* fp = fopen(str.c_str(), "wb"); // non-Windows use "w"
+      if (fp == NULL) return false;
+      char writeBuffer[65536];
+      rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
+
+      if (pretty) {
+        rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
+        writer.SetIndent('\t', 1);
+        json->Accept(writer);
+      }
+      else {
+        rapidjson::Writer<rapidjson::FileWriteStream> writer(os);
+        json->Accept(writer);
+      }
+
+      fclose(fp);
+      return true;
+    }
+
     void pb2json(const Message* msg, std::string& str, bool pretty)
     {
         rapidjson::Value::AllocatorType allocator;
         rapidjson::Value* json = parse_msg(msg, allocator);
         json2string(json, str, pretty);
         delete json;
+    }
+
+    bool pb2json_file(const Message* msg, const std::string& str, bool pretty)
+    {
+      rapidjson::Value::AllocatorType allocator;
+      rapidjson::Value* json = parse_msg(msg, allocator);
+      bool ok = json2file(json, str, pretty);
+      delete json;
+      return ok;
     }
 
     rapidjson::Value* pb2jsonobject(const google::protobuf::Message* msg)
@@ -546,6 +579,27 @@ namespace pbjson
         }
         int ret = jsonobject2pb(&d, msg, err);
         return ret;
+    }
+    int json2pb_file(const std::string& path, google::protobuf::Message* msg, std::string& err)
+    {
+      rapidjson::Document d;
+      FILE* fp = fopen(path.c_str(), "rb"); // non-Windows use "r"
+      if (fp == NULL) {
+        err += "Unable to open file";
+        return ERR_INVALID_FILE;
+      }
+      char readBuffer[65536];
+      rapidjson::FileReadStream is(fp, readBuffer, sizeof(readBuffer));
+      d.ParseStream<0>(is);
+      if (d.HasParseError())
+      {
+        err += d.GetParseError();
+        fclose(fp);
+        return ERR_INVALID_ARG;
+      }
+      int ret = jsonobject2pb(&d, msg, err);
+      fclose(fp);
+      return ret;
     }
     int jsonobject2pb(const rapidjson::Value* json, google::protobuf::Message* msg, std::string& err)
     {
