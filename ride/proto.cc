@@ -86,6 +86,13 @@ wxString ToString(const T& t) {
   return ss.str().c_str();
 }
 
+void AddItem(tinyxml2::XMLElement* el, tinyxml2::XMLDocument* doc,
+             const wxString s) {
+  auto x = doc->NewElement("x");
+  x->SetText(s);
+  el->InsertEndChild(x);
+}
+
 void FillElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* root,
                  const google::protobuf::Message& mess);
 
@@ -100,12 +107,82 @@ tinyxml2::XMLElement* CreateXmlNode(
     }
   }
 
-  tinyxml2::XMLElement* el = doc->NewElement("field");
-  el->SetAttribute("name", desc->name().c_str());
-  el->SetAttribute("number", desc->number());
+  tinyxml2::XMLElement* el = doc->NewElement("f");
+  el->SetAttribute("n", desc->name().c_str());
+  el->SetAttribute("u", desc->number());
 
-  // TODO(Gustav): handle repeated
-  if (false == desc->is_repeated()) {
+  // TODO(Gustav): cleanup code
+  if (desc->is_repeated()) {
+    const int count = ref->FieldSize(mess, desc);
+    switch (desc->cpp_type()) {
+      case google::protobuf::FieldDescriptor::CPPTYPE_INT32:
+        for (int i = 0; i < count; ++i) {
+          AddItem(el, doc, ToString(ref->GetRepeatedInt32(mess, desc, i)));
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_INT64:
+        for (int i = 0; i < count; ++i) {
+          AddItem(el, doc, ToString(ref->GetRepeatedInt64(mess, desc, i)));
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_UINT32:
+        for (int i = 0; i < count; ++i) {
+          AddItem(el, doc, ToString(ref->GetRepeatedUInt32(mess, desc, i)));
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_UINT64:
+        for (int i = 0; i < count; ++i) {
+          AddItem(el, doc, ToString(ref->GetRepeatedUInt64(mess, desc, i)));
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_DOUBLE:
+        for (int i = 0; i < count; ++i) {
+          AddItem(el, doc, ToString(ref->GetRepeatedDouble(mess, desc, i)));
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_FLOAT:
+        for (int i = 0; i < count; ++i) {
+          AddItem(el, doc, ToString(ref->GetRepeatedFloat(mess, desc, i)));
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_BOOL:
+        for (int i = 0; i < count; ++i) {
+          AddItem(el, doc, ToString(ref->GetRepeatedBool(mess, desc, i)));
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_ENUM:
+        for (int i = 0; i < count; ++i) {
+          auto e = ref->GetRepeatedEnum(mess, desc, i);
+          auto x = doc->NewElement("x");
+          x->SetAttribute("v", e->name().c_str());
+          x->SetAttribute("e", e->number());
+          el->InsertEndChild(x);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_STRING:
+        for (int i = 0; i < count; ++i) {
+          const auto str = ref->GetRepeatedString(mess, desc, i);
+          auto t = doc->NewText(str.c_str());
+          auto x = doc->NewElement("x");
+          x->InsertEndChild(t);
+          if (StartsWith(str, " ") || str.length() > 40) {
+            // TODO(Gustav): change the logic here?
+            t->SetCData(true);
+          }
+          el->InsertEndChild(x);
+        }
+        break;
+      case google::protobuf::FieldDescriptor::CPPTYPE_MESSAGE:
+        for (int i = 0; i < count; ++i) {
+          auto x = doc->NewElement("x");
+          FillElement(doc, x, ref->GetRepeatedMessage(mess, desc, i));
+          el->InsertEndChild(x);
+        }
+        break;
+      default:
+        assert(false && "Unhandled cpp type");
+    }
+  } else {
     switch (desc->cpp_type()) {
       case google::protobuf::FieldDescriptor::CPPTYPE_INT32:
         el->SetText(ToString(ref->GetInt32(mess, desc)));
@@ -164,6 +241,15 @@ void FillElement(tinyxml2::XMLDocument* doc, tinyxml2::XMLElement* root,
   }
 }
 
+class CustomPrinter : public tinyxml2::XMLPrinter {
+ public:
+  void PrintSpace(int depth) override {
+    for (int i = 0; i < depth; ++i) {
+      Print("\t");
+    }
+  }
+};
+
 wxString SaveProtoXml(const google::protobuf::Message& mess,
                       const wxFileName& file_name) {
   if (false == VerifyFileForWriting(file_name)) {
@@ -180,45 +266,17 @@ wxString SaveProtoXml(const google::protobuf::Message& mess,
   FillElement(&doc, root, mess);
   doc.InsertEndChild(root);
   wxString path = file_name.GetFullPath();
-  if (doc.SaveFile(path) != tinyxml2::XML_NO_ERROR) {
-    std::ostringstream ss;
-    auto str1 = doc.GetErrorStr1();
-    auto str2 = doc.GetErrorStr2();
-    ss << "Unable to write xml doc(" << doc.ErrorName()
-       << "): " << (str1 ? str1 : "UNKNOWN");
-    if (str2) ss << "\n" << str2;
-    return ss.str().c_str();
+
+  CustomPrinter p;
+  doc.Print(&p);
+
+  wxFile f;
+  if (false == f.Open(path, wxFile::write)) {
+    return "Unable to open file";
   }
+  f.Write(p.CStr());
+  f.Close();
 
   return "";
 }
 
-/*
-wxXmlNode* CreateXmlNode(const google::protobuf::Message& mess, wxXmlNode*
-parent) {
-  auto ref = mess.GetReflection();
-  auto desc = mess.GetDescriptor();
-  wxXmlNode* node = new wxXmlNode(parent, wxXML_ELEMENT_NODE, "message");
-  node->AddAttribute("name", desc->name());
-  node->AddAttribute("id", ToString(desc->index()));
-  return node;
-}
-
-wxString SaveProtoXml(const google::protobuf::Message& t, const wxFileName&
-file_name) {
-  if (false == VerifyFileForWriting(file_name)) {
-    return "Unable to verify file";
-  }
-
-  wxXmlDocument doc;
-
-  wxXmlNode* root = CreateXmlNode(t, nullptr);
-  doc.SetRoot(root);
-
-  if (false == doc.Save(file_name.GetFullPath()) {
-    return "Unable to write xml doc";
-  }
-
-  return "";
-}
-*/
