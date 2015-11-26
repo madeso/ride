@@ -38,18 +38,11 @@ void LoadProtoTextOrBinary(google::protobuf::Message* message,
 
 void SaveProto(const google::protobuf::Message& message, const wxFileName file,
                wxWindow* main, const wxString& error) {
-  wxFileName xml = file;
-  xml.SetExt("xml");
-  const wxString err = SaveProtoXml(message, xml);
-  if (err != "") {
-    ShowError(main, "Error while saving xml:" + err, error);
-  }
-
   wxFileName json = file;
   json.SetExt("json");
   const wxString jsonerr = SaveProtoJson(message, json);
   if (jsonerr != "") {
-    ShowError(main, "Error while json: " + err, error);
+    ShowError(main, "Error while json: " + jsonerr, error);
   }
 
   if (false == SaveProto(message, file)) {

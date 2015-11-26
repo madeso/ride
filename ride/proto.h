@@ -16,9 +16,6 @@ bool LoadProtoBinary(google::protobuf::Message* message,
 bool SaveProtoBinary(const google::protobuf::Message& message,
                      const wxFileName& file_name);
 
-wxString SaveProtoXml(const google::protobuf::Message& t,
-                      const wxFileName& path);
-
 wxString SaveProtoJson(const google::protobuf::Message& t,
                        const wxFileName& path);
 
