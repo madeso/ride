@@ -521,7 +521,13 @@ namespace pbjson
 
     bool json2file(const rapidjson::Value* json, const std::string& str, bool pretty)
     {
-      FILE* fp = fopen(str.c_str(), "wb"); // non-Windows use "w"
+      FILE* fp = fopen(str.c_str(),
+#ifdef WIN32
+        "wb"
+#else
+        "w"
+#endif
+        );
       if (fp == NULL) return false;
       char writeBuffer[65536];
       rapidjson::FileWriteStream os(fp, writeBuffer, sizeof(writeBuffer));
@@ -583,7 +589,13 @@ namespace pbjson
     int json2pb_file(const std::string& path, google::protobuf::Message* msg, std::string& err)
     {
       rapidjson::Document d;
-      FILE* fp = fopen(path.c_str(), "rb"); // non-Windows use "r"
+      FILE* fp = fopen(path.c_str(),
+#ifdef WIN32
+        "rb"
+#else
+        "r"
+#endif
+      );
       if (fp == NULL) {
         err += "Unable to open file";
         return ERR_INVALID_FILE;
