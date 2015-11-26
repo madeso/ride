@@ -6,9 +6,11 @@
 
 #include <wx/utils.h>
 
+#include <streambuf>
 #include <cassert>
 #include <fstream>  // NOLINT this is how we use fstrean
 #include <sstream>  // NOLINT this is how we use sstream
+
 #include <string>
 
 #include "tinyxml2.h"  // NOLINT this is how we use tinyxml2
@@ -18,15 +20,13 @@
 
 bool LoadProtoText(google::protobuf::Message* t, const wxFileName& file_name) {
   assert(t);
+  if (file_name.FileExists() == false) return true;
 
-  if (file_name.IsFileReadable() == false) {
-    return true;
-  }
   const wxString path = file_name.GetFullPath();
 
-  std::ifstream output(path.char_str());
-  if (!output) return false;
-  std::string data((std::istreambuf_iterator<char>(output)),
+  std::ifstream file(path.char_str());
+  if (!file) return false;
+  std::string data((std::istreambuf_iterator<char>(file)),
                    std::istreambuf_iterator<char>());
   if (false == google::protobuf::TextFormat::ParseFromString(data, t))
     return false;
@@ -57,6 +57,8 @@ bool SaveProtoText(const google::protobuf::Message& t,
 
 bool LoadProtoBinary(google::protobuf::Message* message,
                      const wxFileName& file_name) {
+  if (file_name.FileExists() == false) return true;
+
   const wxString path = file_name.GetFullPath();
   if (file_name.IsFileReadable()) {
     std::fstream input(path.c_str().AsChar(), std::ios::in | std::ios::binary);
@@ -64,9 +66,11 @@ bool LoadProtoBinary(google::protobuf::Message* message,
     if (false == parse_result) {
       return false;
     }
+
+    return true;
   }
 
-  return true;
+  return false;
 }
 
 bool SaveProtoBinary(const google::protobuf::Message& message,
@@ -80,22 +84,36 @@ bool SaveProtoBinary(const google::protobuf::Message& message,
   return message.SerializeToOstream(&config_stream);
 }
 
+wxString LoadProtoJson(google::protobuf::Message* message,
+                       const wxFileName& file_name) {
+  if (file_name.FileExists() == false) return "";
+
+  const wxString path = file_name.GetFullPath();
+  if (file_name.IsFileReadable() == false) {
+    return "file is not readable";
+  }
+
+  std::string err;
+  int load_result = pbjson::json2pb_file(path.c_str().AsChar(), message, err);
+  if (load_result < 0) {
+    return err.c_str();
+  }
+
+  return "";
+}
+
 wxString SaveProtoJson(const google::protobuf::Message& t,
                        const wxFileName& file_name) {
   if (false == VerifyFileForWriting(file_name)) {
     return "Unable to verify file";
   }
 
-  std::string str;
-  pbjson::pb2json(&t, str, true);
-
-  wxFile f;
   wxString path = file_name.GetFullPath();
-  if (false == f.Open(path, wxFile::write)) {
-    return "Unable to open file";
+
+  bool write_result = pbjson::pb2json_file(&t, path.c_str().AsChar(), true);
+  if (write_result == false) {
+    return "Unable to write to file";
   }
-  f.Write(str.c_str());
-  f.Close();
 
   return "";
 }
