@@ -126,24 +126,6 @@ TreeItemFileEntry GetFocused(const ProjectExplorer* pe) {
   return GetTreeItemData(pe, selected);
 }
 
-void ProjectExplorer::UpdateFolderStructure() {
-  const int flags = wxDIR_FILES | wxDIR_DIRS;  // walk files and folders
-  const wxString filespec = "";
-
-  last_highlighted_item_.Unset();
-  folder_to_item_.clear();
-  this->Freeze();
-  this->DeleteAllItems();
-  files_.resize(0);
-  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL,
-                   ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
-  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags,
-                           wxEmptyString, 0);
-  this->Thaw();
-
-  this->ExpandAll();
-}
-
 wxString ProjectExplorer::GetPathOfSelected() const {
   TreeItemFileEntry file = GetFocused(this);
   if (file.second == nullptr) return wxEmptyString;
@@ -182,6 +164,215 @@ std::vector<wxString> TraverseFilesAndFolders(const wxFileName& root,
 wxString JoinPath(const wxFileName& root, const wxString& file_or_folder) {
   // todo: is this really the correct way to do things?
   return root.GetFullPath() + file_or_folder;
+}
+
+typedef std::map<wxString, wxTreeItemId> StringIdMap;
+
+struct FilesAndFolders {
+  StringIdMap files;
+  StringIdMap folders;
+};
+
+wxTreeItemId TreeItemIdNull() {
+  wxTreeItemId ret;
+  return ret;
+}
+
+void ListFilesAndFolders(FilesAndFolders* ret, const wxString& root,
+                         const wxString& relative_path_root,
+                         const wxString& filespec, const int flags, int depth) {
+  ret->folders.insert(
+      StringIdMap::value_type(relative_path_root, TreeItemIdNull()));
+
+  const std::vector<wxString> files_and_folders =
+      TraverseFilesAndFolders(root, filespec, flags);
+
+  for (const wxString file_or_directory_name : files_and_folders) {
+    if (file_or_directory_name == "target" && depth == 0) continue;
+
+    const bool is_dir = IsDirectory(root, file_or_directory_name);
+
+    const wxString path = JoinPath(root, file_or_directory_name);
+    const wxString relative_path =
+        is_dir ? relative_path_root + file_or_directory_name + "/"
+               : relative_path_root + file_or_directory_name;
+
+    if (is_dir) {
+      const wxString dir_path = wxDir(path).GetNameWithSep();
+      ListFilesAndFolders(ret, dir_path, relative_path, filespec, flags,
+                          depth + 1);
+    } else {
+      ret->files.insert(
+          StringIdMap::value_type(relative_path, TreeItemIdNull()));
+    }
+  }
+}
+
+FilesAndFolders ListFilesAndFolders(const wxString& root,
+                                    const wxString& filespec, int flags) {
+  FilesAndFolders ff;
+  ListFilesAndFolders(&ff, root, "", filespec, flags, 0);
+  return ff;
+}
+
+std::vector<wxTreeItemId> ListChildren(wxTreeCtrl* tree,
+                                       const wxTreeItemId& root) {
+  std::vector<wxTreeItemId> ret;
+  wxTreeItemIdValue cookie;
+  for (wxTreeItemId child = tree->GetFirstChild(root, cookie); child.IsOk();
+       child = tree->GetNextChild(root, cookie)) {
+    ret.push_back(child);
+  }
+  return ret;
+}
+
+FileEntry* GetFileEntryOrNull(wxTreeCtrl* tree, const wxTreeItemId& id) {
+  assert(id.IsOk());
+  wxTreeItemData* data = tree->GetItemData(id);
+  if (data == nullptr) return nullptr;
+  FileEntry* entry = reinterpret_cast<FileEntry*>(data);
+  return entry;
+}
+
+void ListTree(FilesAndFolders* ff, wxTreeCtrl* tree, const wxString& root,
+              const wxTreeItemId& id, FileEntry* data) {
+  assert(id.IsOk());
+  assert(data);
+  const wxString path = data->GetRelativePath(root);
+  assert(data->is_directory());
+  ff->folders.insert(StringIdMap::value_type(path, id));
+  const std::vector<wxTreeItemId> children = ListChildren(tree, id);
+  for (wxTreeItemId child : children) {
+    FileEntry* entry = GetFileEntryOrNull(tree, child);
+    if (entry->is_directory()) {
+      ListTree(ff, tree, root, child, entry);
+    } else {
+      const wxString child_path = entry->GetRelativePath(root);
+      ff->files.insert(StringIdMap::value_type(child_path, child));
+    }
+  }
+}
+
+FilesAndFolders ListTree(wxTreeCtrl* tree, const wxString& root) {
+  FilesAndFolders ret;
+
+  wxTreeItemId root_id = tree->GetRootItem();
+  if (root_id.IsOk()) {
+    ListTree(&ret, tree, root, root_id, GetFileEntryOrNull(tree, root_id));
+  }
+
+  return ret;
+}
+
+wxString FindParentPath(const wxString& pp) {
+  auto p = pp;
+  if (p.EndsWith('/')) p = p.substr(0, p.Length() - 1);
+  auto i = p.find_last_of('/');
+  if (i == -1) return "";
+  wxString t = p.substr(0, i);
+  return t + "/";
+}
+
+wxTreeItemId FindRoot(wxTreeCtrl* tree, const wxString& root,
+                      const wxString& path) {
+  if (path == "") return tree->GetRootItem();
+  // TODO(Gustav): Optimize
+  FilesAndFolders ff = ListTree(tree, root);
+  const wxString root_path = FindParentPath(path);
+  auto f = ff.folders.find(root_path);
+  assert(f != ff.folders.end());
+  return f->second;
+}
+
+wxString ToAbsolutePath(const wxString& root, const wxString& relative) {
+  return root + relative;
+}
+
+const wxString ToDisplayName(const wxString& relative_path) {
+  if (relative_path == "") return "Project";
+  wxString without_ending_slash = relative_path;
+  if (without_ending_slash.EndsWith('/')) {
+    without_ending_slash =
+        without_ending_slash.substr(0, without_ending_slash.Length() - 1);
+  }
+
+  auto i = without_ending_slash.find_last_of('/');
+  if (i == -1) return without_ending_slash;
+  wxString name = without_ending_slash.substr(i + 1);
+  return name;
+}
+
+void ProjectExplorer::UpdateFolderStructure() {
+  const int flags = wxDIR_FILES | wxDIR_DIRS;  // walk files and folders
+  const wxString filespec = "";
+
+  const FilesAndFolders current = ListFilesAndFolders(folder_, filespec, flags);
+  const FilesAndFolders tree = ListTree(this, folder_);
+
+  this->Freeze();
+  // add missing folders
+  for (auto i : current.folders) {
+    if (tree.folders.find(i.first) == tree.folders.end()) {
+      if (i.first == "") {
+        this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL,
+                         ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
+      } else {
+        auto root = FindRoot(this, folder_, i.first);
+        const auto absolute_path = ToAbsolutePath(folder_, i.first);
+        const auto display_name = ToDisplayName(i.first);
+        this->AppendItem(root, display_name, ICON_FOLDER_NORMAL,
+                         ICON_FOLDER_NORMAL,
+                         new FileEntry(true, absolute_path));
+      }
+    }
+  }
+  const FilesAndFolders all_folders = ListTree(this, folder_);
+  // add missing files
+  for (auto i : current.files) {
+    if (tree.files.find(i.first) == tree.files.end()) {
+      const auto parent_path = FindParentPath(i.first);
+      auto parent = all_folders.folders.find(parent_path);
+      assert(parent != all_folders.folders.end());
+      const auto absolute_path = ToAbsolutePath(folder_, i.first);
+      const auto display_name = ToDisplayName(i.first);
+      this->AppendItem(parent->second, display_name, ICON_FILE_NORMAL,
+                       ICON_FILE_NORMAL, new FileEntry(false, absolute_path));
+    }
+  }
+  const FilesAndFolders all_files = ListTree(this, folder_);
+  // remove files
+  for (auto i : all_files.files) {
+    if (current.files.find(i.first) == current.files.end()) {
+      this->Delete(i.second);
+    }
+  }
+  // remove folders in reverse to remove child before parent
+  for (auto i = all_files.folders.rbegin(); i != all_files.folders.rend();
+       ++i) {
+    if (current.folders.find(i->first) == current.folders.end()) {
+      this->Delete(i->second);
+    }
+  }
+
+  this->Thaw();
+  if (tree.files.empty()) {
+    this->ExpandAll();
+  }
+
+  /*
+  last_highlighted_item_.Unset();
+  folder_to_item_.clear();
+  this->Freeze();
+  this->DeleteAllItems();
+  files_.resize(0);
+  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL,
+                   ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
+  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags,
+                           wxEmptyString, 0);
+  this->Thaw();
+
+  this->ExpandAll();
+  */
 }
 
 void ProjectExplorer::SubUpdateFolderStructure(
