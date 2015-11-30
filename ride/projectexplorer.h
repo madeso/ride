@@ -12,6 +12,13 @@
 class wxFileName;
 class MainWindow;
 
+typedef std::map<wxString, wxTreeItemId> StringIdMap;
+
+struct FilesAndFolders {
+  StringIdMap files;
+  StringIdMap folders;
+};
+
 class ProjectExplorer : public wxTreeCtrl {
  public:
   explicit ProjectExplorer(MainWindow* main);
@@ -25,7 +32,7 @@ class ProjectExplorer : public wxTreeCtrl {
   wxString GetPathOfSelected() const;
   wxString GetRelativePathOfSelected() const;
 
-  const std::vector<wxString>& GetFiles() const;
+  std::vector<wxString> GetFiles();
 
  private:
   void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent,
@@ -56,9 +63,9 @@ class ProjectExplorer : public wxTreeCtrl {
   wxImageList images_;
   MainWindow* main_;
   wxString folder_;
-  std::map<wxString, wxTreeItemId> folder_to_item_;
   wxTreeItemId last_highlighted_item_;
-  std::vector<wxString> files_;
+
+  FilesAndFolders files_;
 };
 
 #endif  // RIDE_PROJECTEXPLORER_H_

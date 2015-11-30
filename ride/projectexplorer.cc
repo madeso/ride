@@ -18,10 +18,6 @@
 
 enum { ICON_FILE_NORMAL, ICON_FOLDER_NORMAL };
 
-const std::vector<wxString>& ProjectExplorer::GetFiles() const {
-  return files_;
-}
-
 ProjectExplorer::ProjectExplorer(MainWindow* main)
     : wxTreeCtrl(main, wxID_ANY, wxDefaultPosition, wxDefaultSize,
                  wxTR_HAS_BUTTONS | wxTR_TWIST_BUTTONS | wxTR_MULTIPLE |
@@ -50,16 +46,26 @@ void ProjectExplorer::SetFolder(const wxString& folder) {
   UpdateFolderStructure();
 }
 
-void ProjectExplorer::HighlightOpenFile(const wxString& file_path) {
-  auto res = folder_to_item_.find(file_path);
-  if (res != folder_to_item_.end()) {
-    wxTreeItemId id = res->second;
+wxString GetRelativePath(const wxString& root, const wxString& f) {
+  if (f == "") return "";
+  assert(f.StartsWith(root));
+  wxString p = f.substr(root.Length());
+  p.Replace("\\", "/");
+  return p;
+}
+
+void ProjectExplorer::HighlightOpenFile(const wxString& f) {
+  auto file_path = GetRelativePath(folder_, f);
+  auto res = files_.files.find(file_path);
+  const wxTreeItemId id =
+      res != files_.files.end() ? res->second : wxTreeItemId();
+  if (id.IsOk()) {
     this->SetItemBold(id, true);
-    if (last_highlighted_item_.IsOk()) {
-      this->SetItemBold(last_highlighted_item_, false);
-    }
-    last_highlighted_item_ = id;
   }
+  if (last_highlighted_item_.IsOk()) {
+    this->SetItemBold(last_highlighted_item_, false);
+  }
+  last_highlighted_item_ = id;
 }
 
 wxFileName SubFolder(const wxFileName& root, const wxString& sub_folder) {
@@ -165,13 +171,6 @@ wxString JoinPath(const wxFileName& root, const wxString& file_or_folder) {
   // todo: is this really the correct way to do things?
   return root.GetFullPath() + file_or_folder;
 }
-
-typedef std::map<wxString, wxTreeItemId> StringIdMap;
-
-struct FilesAndFolders {
-  StringIdMap files;
-  StringIdMap folders;
-};
 
 wxTreeItemId TreeItemIdNull() {
   wxTreeItemId ret;
@@ -343,6 +342,9 @@ void ProjectExplorer::UpdateFolderStructure() {
   // remove files
   for (auto i : all_files.files) {
     if (current.files.find(i.first) == current.files.end()) {
+      if (i.second == last_highlighted_item_) {
+        last_highlighted_item_.Unset();
+      }
       this->Delete(i.second);
     }
   }
@@ -353,6 +355,8 @@ void ProjectExplorer::UpdateFolderStructure() {
       this->Delete(i->second);
     }
   }
+
+  files_ = ListTree(this, folder_);
 
   this->Thaw();
   if (tree.files.empty()) {
@@ -373,6 +377,14 @@ void ProjectExplorer::UpdateFolderStructure() {
 
   this->ExpandAll();
   */
+}
+
+std::vector<wxString> ProjectExplorer::GetFiles() {
+  std::vector<wxString> r(files_.files.size());
+  for (auto i : files_.files) {
+    r.push_back(i.first);
+  }
+  return r;
 }
 
 void ProjectExplorer::SubUpdateFolderStructure(
@@ -396,13 +408,13 @@ void ProjectExplorer::SubUpdateFolderStructure(
     wxTreeItemData* data = fileentry;
     wxTreeItemId child =
         this->AppendItem(parent, file_or_directory_name, image, image, data);
-    folder_to_item_[path] = child;
+    // folder_to_item_[path] = child;
     if (is_dir) {
       const wxFileName folder_name = SubFolder(root, file_or_directory_name);
       SubUpdateFolderStructure(folder_name, child, filespec, flags,
                                future_relative_path, index + 1);
     } else {
-      files_.push_back(fileentry->GetRelativePath(folder_));
+      // files_.push_back(fileentry->GetRelativePath(folder_));
     }
   }
 }
