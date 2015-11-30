@@ -35,9 +35,6 @@ class ProjectExplorer : public wxTreeCtrl {
   std::vector<wxString> GetFiles();
 
  private:
-  void SubUpdateFolderStructure(const wxFileName& root, wxTreeItemId parent,
-                                const wxString filespec, const int flags,
-                                const wxString& relative_path, int index);
   void OnDoubleClick(wxMouseEvent& event);
   void OnContextMenu(wxContextMenuEvent& event);
 

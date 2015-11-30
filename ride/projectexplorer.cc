@@ -362,21 +362,6 @@ void ProjectExplorer::UpdateFolderStructure() {
   if (tree.files.empty()) {
     this->ExpandAll();
   }
-
-  /*
-  last_highlighted_item_.Unset();
-  folder_to_item_.clear();
-  this->Freeze();
-  this->DeleteAllItems();
-  files_.resize(0);
-  this->AppendItem(this->GetRootItem(), "Project", ICON_FOLDER_NORMAL,
-                   ICON_FOLDER_NORMAL, new FileEntry(true, folder_));
-  SubUpdateFolderStructure(folder_, this->GetRootItem(), filespec, flags,
-                           wxEmptyString, 0);
-  this->Thaw();
-
-  this->ExpandAll();
-  */
 }
 
 std::vector<wxString> ProjectExplorer::GetFiles() {
@@ -385,38 +370,6 @@ std::vector<wxString> ProjectExplorer::GetFiles() {
     r.push_back(i.first);
   }
   return r;
-}
-
-void ProjectExplorer::SubUpdateFolderStructure(
-    const wxFileName& root, wxTreeItemId parent, const wxString filespec,
-    const int flags, const wxString& relative_path, int index) {
-  const wxString root_full_path = root.GetFullPath();
-  const std::vector<wxString> files_and_folders =
-      TraverseFilesAndFolders(root, filespec, flags);
-  for (const wxString file_or_directory_name : files_and_folders) {
-    if (file_or_directory_name == "target" && index == 0) continue;
-
-    const bool is_dir = IsDirectory(root, file_or_directory_name);
-    const int image = is_dir ? ICON_FOLDER_NORMAL : ICON_FILE_NORMAL;
-
-    const wxString path = JoinPath(root, file_or_directory_name);
-    const wxString future_relative_path =
-        relative_path + file_or_directory_name + "/";
-    const wxString dir_path = wxDir(path).GetNameWithSep();
-
-    auto fileentry = new FileEntry(is_dir, is_dir ? dir_path : path);
-    wxTreeItemData* data = fileentry;
-    wxTreeItemId child =
-        this->AppendItem(parent, file_or_directory_name, image, image, data);
-    // folder_to_item_[path] = child;
-    if (is_dir) {
-      const wxFileName folder_name = SubFolder(root, file_or_directory_name);
-      SubUpdateFolderStructure(folder_name, child, filespec, flags,
-                               future_relative_path, index + 1);
-    } else {
-      // files_.push_back(fileentry->GetRelativePath(folder_));
-    }
-  }
 }
 
 void OpenFile(TreeItemFileEntry tife, MainWindow* main) {
