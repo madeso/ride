@@ -4,6 +4,7 @@
 
 #include <ride/wx.h>
 
+#include <algorithm>
 #include <set>
 #include <vector>
 
@@ -56,17 +57,16 @@ class QuickOpenDlg : public ui::QuickOpen {
 
 void QuickOpenDlg::ChangeSelection(const wxKeyEvent& event, int change) {
   auto selected = ::GetSelection(uiFileList);
+  const WXID max = uiFileList->GetItemCount();
   if (selected.empty()) {
-    ::SetSelection(uiFileList, 0, true);
+    if( max != 0 ) {
+      ::SetSelection(uiFileList, 0, true);
+    }
   } else {
     WXID last = last_selected_;
     if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
-    WXID next = last + change;
+    const WXID next = std::min<WXID>(max-1, std::max<WXID>(0, last + change));
     ::SetSelection(uiFileList, next, true);
-    if (last_selected_ == last) {
-      last_selected_ = next;
-      ::SetSelection(uiFileList, last, false);
-    }
   }
 }
 
