@@ -365,7 +365,8 @@ void ProjectExplorer::UpdateFolderStructure() {
 }
 
 std::vector<wxString> ProjectExplorer::GetFiles() {
-  std::vector<wxString> r(files_.files.size());
+  std::vector<wxString> r;
+  r.reserve(files_.files.size());
   for (auto i : files_.files) {
     r.push_back(i.first);
   }
