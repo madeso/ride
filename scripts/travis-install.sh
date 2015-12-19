@@ -59,6 +59,11 @@ fi
 # 	cd $cwd
 # fi
 
+if [ "`echo $CXX`" == "clang++" ]; then
+	ls
+	clang scrips/hello-world.c
+fi
+
 # build wxWidgtets
 sudo -u $usr mkdir wx3
 cd wx3
