@@ -67,12 +67,12 @@ sudo -i \
   cd $TRAVIS_BUILD_DIR && \
   mkdir wx3 && \
   cd wx3 && \
-  wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz && \
-  tar -xzf wx.tar.gz && \
+  wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz ; \
+  tar -xzf wx.tar.gz ; \
   cd wxWidgets-WX_3_0_2 && \
   mkdir gtk-build && \
   cd gtk-build && \
-  which $CC
+  which $CC ; \
   ../configure --enable-webview --disable-compat28 && \
   make
 
