@@ -63,20 +63,21 @@ sudo -i echo $CC
 sudo -i $CC $TRAVIS_BUILD_DIR/scripts/hello-world.c
 
 # build wxWidgtets
-sudo -u $usr mkdir wx3
-cd wx3
-sudo -u $usr wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz
-sudo -u $usr tar -xzf wx.tar.gz
-sudo -u $usr ls
-cd wxWidgets-WX_3_0_2
-sudo -u $usr mkdir gtk-build
-cd gtk-build
-sudo -u $usr ../configure --help
 sudo -i \
-  cd $TRAVIS_BUILD_DIR/wx3/wxWidgets-WX_3_0_2/gtk-build && \
+  cd $TRAVIS_BUILD_DIR && \
+  mkdir wx3 && \
+  cd wx3 && \
+  wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz && \
+  tar -xzf wx.tar.gz && \
+  cd wxWidgets-WX_3_0_2 && \
+  mkdir gtk-build && \
+  cd gtk-build && \
+  which $CC
   ../configure --enable-webview --disable-compat28 && \
   make
-ls
+
+cd $TRAVIS_BUILD_DIR/wx3/wxWidgets-WX_3_0_2/gtk-build/
 cat config.log
 make install
 sudo -u $usr wx-config --version
+
