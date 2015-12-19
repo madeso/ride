@@ -60,7 +60,7 @@ fi
 # fi
 
 sudo -i echo $CC
-sudo -s $CC scripts/hello-world.c
+sudo -i $CC $TRAVIS_BUILD_DIR/scripts/hello-world.c
 
 # build wxWidgtets
 sudo -u $usr mkdir wx3
@@ -71,8 +71,10 @@ sudo -u $usr ls
 cd wxWidgets-WX_3_0_2
 sudo -u $usr mkdir gtk-build
 cd gtk-build
-sudo -s ../configure --help
-sudo -s ../configure --enable-webview --disable-compat28
-sudo -s make
+sudo -u $usr ../configure --help
+sudo -i \
+  cd $TRAVIS_BUILD_DIR/wx3/wxWidgets-WX_3_0_2/gtk-build && \
+  ../configure --enable-webview --disable-compat28 && \
+  make
 make install
-sudo -i -u $usr wx-config --version
+sudo -u $usr wx-config --version
