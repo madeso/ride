@@ -77,6 +77,6 @@ sudo -i \
   ../configure --enable-webview --disable-compat28 && \
   make
 ls
-echo config.log
+cat config.log
 make install
 sudo -u $usr wx-config --version
