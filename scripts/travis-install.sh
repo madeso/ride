@@ -60,7 +60,7 @@ fi
 # fi
 
 echo $CC
-$CC scrips/hello-world.c
+$CC scripts/hello-world.c
 
 # build wxWidgtets
 sudo -u $usr mkdir wx3
