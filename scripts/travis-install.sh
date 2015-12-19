@@ -59,8 +59,8 @@ fi
 # 	cd $cwd
 # fi
 
-sudo -u echo $CC
-sudo -u $CC scripts/hello-world.c
+sudo -i echo $CC
+sudo -i $CC scripts/hello-world.c
 
 # build wxWidgtets
 sudo -u $usr mkdir wx3
