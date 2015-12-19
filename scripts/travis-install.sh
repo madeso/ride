@@ -71,8 +71,8 @@ sudo -u $usr ls
 cd wxWidgets-WX_3_0_2
 sudo -u $usr mkdir gtk-build
 cd gtk-build
-sudo -u $usr ../configure --help
-sudo -u $usr ../configure --enable-webview --disable-compat28
-sudo -u $usr make
+sudo -i -u $usr ../configure --help
+sudo -i -u $usr ../configure --enable-webview --disable-compat28
+sudo -i -u $usr make
 make install
-sudo -u $usr wx-config --version
+sudo -i -u $usr wx-config --version
