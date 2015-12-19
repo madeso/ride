@@ -59,22 +59,8 @@ fi
 # 	cd $cwd
 # fi
 
-sudo -i echo $CC
-sudo -i $CC $TRAVIS_BUILD_DIR/scripts/hello-world.c
-
 # build wxWidgtets
-sudo -i \
-  cd $TRAVIS_BUILD_DIR && \
-  mkdir wx3 && \
-  cd wx3 && \
-  wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz ; \
-  tar -xzf wx.tar.gz ; \
-  cd wxWidgets-WX_3_0_2 && \
-  mkdir gtk-build && \
-  cd gtk-build && \
-  which $CC ; \
-  ../configure --enable-webview --disable-compat28 && \
-  make
+sudo -i cd $TRAVIS_BUILD_DIR/scripts/build-wx.sh
 
 cd $TRAVIS_BUILD_DIR/wx3/wxWidgets-WX_3_0_2/gtk-build/
 cat config.log
