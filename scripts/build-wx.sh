@@ -4,7 +4,7 @@ which $CC
 ls
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-DIR = $DIR + "/../"
+DIR=$DIR + "/../"
 
 $CC $DIR/scripts/hello-world.c
 
