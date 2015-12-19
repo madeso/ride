@@ -1,4 +1,6 @@
 #!/bin/bash
+set -ev
+
 echo $CC
 which $CC
 ls
