@@ -60,7 +60,7 @@ fi
 # fi
 
 sudo -i echo $CC
-sudo -i $CC $TRAVIS_BUILD_DIR/scripts/hello-world.c
+sudo -s $CC scripts/hello-world.c
 
 # build wxWidgtets
 sudo -u $usr mkdir wx3
