@@ -1,13 +1,14 @@
 #!/bin/bash
-set -ev
-
 echo $CC
 which $CC
 ls
 
-$CC $TRAVIS_BUILD_DIR/scripts/hello-world.c
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR = $DIR + "/../"
 
-cd $TRAVIS_BUILD_DIR
+$CC $DIR/scripts/hello-world.c
+
+cd $DIR
 mkdir wx3
 cd wx3
 wget https://github.com/wxWidgets/wxWidgets/archive/WX_3_0_2.tar.gz -O wx.tar.gz
