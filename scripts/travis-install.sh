@@ -60,6 +60,7 @@ fi
 # fi
 
 sudo -i echo $CC
+sudo -i ls
 sudo -i $CC scripts/hello-world.c
 
 # build wxWidgtets
