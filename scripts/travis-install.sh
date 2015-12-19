@@ -60,7 +60,7 @@ fi
 # fi
 
 # build wxWidgtets
-sudo -i cd $TRAVIS_BUILD_DIR/scripts/build-wx.sh
+sudo -i $TRAVIS_BUILD_DIR/scripts/build-wx.sh
 
 cd $TRAVIS_BUILD_DIR/wx3/wxWidgets-WX_3_0_2/gtk-build/
 cat config.log
