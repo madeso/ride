@@ -76,5 +76,7 @@ sudo -i \
   cd $TRAVIS_BUILD_DIR/wx3/wxWidgets-WX_3_0_2/gtk-build && \
   ../configure --enable-webview --disable-compat28 && \
   make
+ls
+echo config.log
 make install
 sudo -u $usr wx-config --version
