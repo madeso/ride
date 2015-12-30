@@ -54,6 +54,16 @@ if(${MSVC})
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4100 /wd4018 /wd4389 /wd4125 /wd4127 /wd4512 /wd4244 /wd4996") # unref parameter, < signed/unsigned mismatch, == signed/unsigned mismatch, decimal digit termnates octal(protobuf warning), constant conditional (protobuf), assignment couldnt be generated(protobuf), possible loss of data(protobuf), deprecated (generated/ui.cpp)
 endif(${MSVC})
 
+if(${MSVC})
+	# warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+	# The workaround is simple, /SAFESEH makes no sense in the debug build.  Only use that linker option in the Release build.
+	# https://social.msdn.microsoft.com/Forums/vstudio/en-US/30a23b09-190d-44e9-9157-4b896cc11e73/safeseh-disables-edit-and-continue?forum=vcgeneral
+	# code adopted from: https://github.com/EQEmu/Server/blob/master/CMakeLists.txt
+	SET(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
+	SET(CMAKE_SHARED_LINKER_FLAGS_DEBUG "${CMAKE_SHARED_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
+	SET(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
+endif()
+
 find_package(Doxygen REQUIRED)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.ini ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 if(BUILD_USE_DOXYGEN_GLOBAL)
