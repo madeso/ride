@@ -1376,8 +1376,8 @@ void FileEdit::OnUpdateUi(wxStyledTextEvent& event) {
   const int type = event.GetUpdated();
 
   if (type & wxSTC_UPDATE_SELECTION) {
-    wxCommandEvent event(EVENT_UPDATE_SELECTION);
-    wxPostEvent(this, event);
+    wxCommandEvent command(EVENT_UPDATE_SELECTION);
+    wxPostEvent(this, command);
   }
 }
 

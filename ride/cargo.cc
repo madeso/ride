@@ -148,8 +148,8 @@ LoadResult Cargo::Load(const wxString& file) {
 
     auto features = root.get_table(cargo::FEATURES);
     if (features.get() != nullptr) {
-      for (const auto dep : *features) {
-        const std::string& name = dep.first;
+      for (const auto feat : *features) {
+        const std::string& name = feat.first;
         AddFeature(dependencies_, &features_, name);
         std::vector<wxString> deps;
         TRY(SafeGet(cargo::FEATURES, features, name, &deps));

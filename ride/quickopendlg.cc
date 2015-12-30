@@ -59,13 +59,13 @@ void QuickOpenDlg::ChangeSelection(const wxKeyEvent& event, int change) {
   auto selected = ::GetSelection(uiFileList);
   const WXID max = uiFileList->GetItemCount();
   if (selected.empty()) {
-    if( max != 0 ) {
+    if (max != 0) {
       ::SetSelection(uiFileList, 0, true);
     }
   } else {
     WXID last = last_selected_;
     if (event.ShiftDown() == false) ::ClearSelection(uiFileList);
-    const WXID next = std::min<WXID>(max-1, std::max<WXID>(0, last + change));
+    const WXID next = std::min<WXID>(max - 1, std::max<WXID>(0, last + change));
     ::SetSelection(uiFileList, next, true);
   }
 }
