@@ -19,9 +19,8 @@ then
 fi
 
 #install ride dependencies
-add-apt-repository -y ppa:chris-lea/protobuf
 apt-get update -qq
-apt-get install -qq --assume-yes libgtk2.0-dev libprotobuf-dev protobuf-compiler libwebkit-dev
+apt-get install -qq --assume-yes libgtk2.0-dev libwebkit-dev
 
 # update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
 apt-get install libc6-i386
@@ -58,6 +57,17 @@ fi
 # 	make install
 # 	cd $cwd
 # fi
+
+#build and install protobuf
+mkdir $TRAVIS_BUILD_DIR/build-proto/
+cd $TRAVIS_BUILD_DIR/build-proto/
+wget https://github.com/google/protobuf/archive/v2.6.1.tar.gz -O proto.tar.gz
+tar -xzf proto.tar.gz
+cd protobuf-2.6.1/
+./configure
+make
+make check
+sudo make install
 
 # build wxWidgtets
 sudo -i $TRAVIS_BUILD_DIR/scripts/build-wx.sh
