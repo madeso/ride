@@ -17,4 +17,4 @@ cd wxWidgets-3.1.0
 mkdir gtk-build
 cd gtk-build
 ../configure --enable-webview --disable-compat28
-make
+make > wx_build_log | cat wx_build_log

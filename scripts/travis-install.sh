@@ -49,7 +49,7 @@ pwd
 ls
 autoreconf -i
 ./configure || cat config.log
-make
+make > proto_build_log || cat proto_build_log
 make check
 sudo make install
 
