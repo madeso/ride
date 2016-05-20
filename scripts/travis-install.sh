@@ -4,7 +4,7 @@ set -ev
 # what is the current compiler?
 echo $CXX
 echo $CC
-which $CC
+# which $CC
 
 #are commands even run?
 ls
@@ -41,7 +41,7 @@ fi
 #build and install protobuf
 mkdir $TRAVIS_BUILD_DIR/build-proto/
 cd $TRAVIS_BUILD_DIR/build-proto/
-wget https://github.com/google/protobuf/archive/v2.6.1.tar.gz -O proto.tar.gz
+wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz -O proto.tar.gz
 tar -xzf proto.tar.gz
 mv protobuf-2.6.1 pb
 cd pb/
