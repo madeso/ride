@@ -21,7 +21,7 @@ fi
 #install ride dependencies
 add-apt-repository -y ppa:chris-lea/protobuf
 apt-get update -qq
-apt-get install -qq --assume-yes libgtk2.0-dev libprotobuf-dev protobuf-compiler libwebkit-dev graphviz doxygen
+apt-get install -qq --assume-yes libgtk2.0-dev libprotobuf-dev protobuf-compiler libwebkit-dev
 
 # update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
 apt-get install libc6-i386
