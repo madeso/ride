@@ -4,6 +4,7 @@ set -ev
 # what is the current compiler?
 echo $CXX
 echo $CC
+which $CC
 
 #are commands even run?
 ls
@@ -31,9 +32,10 @@ sh cmake-3.3.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
 # install g++ 4.8, if tests are run with g++
 if [ "`echo $CXX`" == "g++" ]; then
 	add-apt-repository -y ppa:ubuntu-toolchain-r/test;
-	apt-get update;
+	sudo apt-get update -qq;
 	apt-get install -qq g++-4.8;
 	update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+    export CXX="g++-4.8" CC="gcc-4.8"
 fi
 
 #build and install protobuf
@@ -48,7 +50,7 @@ ls
 autoreconf -i
 ./configure || cat config.log
 make
-# make check
+make check
 sudo make install
 
 # build wxWidgtets
