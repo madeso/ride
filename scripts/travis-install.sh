@@ -42,7 +42,7 @@ fi
 mkdir $TRAVIS_BUILD_DIR/build-proto/
 cd $TRAVIS_BUILD_DIR/build-proto/
 wget https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.gz -O proto.tar.gz
-tar -xzf proto.tar.gz
+tar -xzf proto.tar.gz > prototar || cat prototar
 mv protobuf-2.6.1 pb
 cd pb/
 pwd
@@ -50,7 +50,7 @@ ls
 autoreconf -i
 ./configure || cat config.log
 make > proto_build_log || cat proto_build_log
-make check
+make check > proto_check || cat proto_check
 sudo make install
 export LD_LIBRARY_PATH=/usr/local/lib
 
