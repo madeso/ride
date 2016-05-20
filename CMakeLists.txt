@@ -64,7 +64,10 @@ if(${MSVC})
 	SET(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
 endif()
 
-find_package(Doxygen REQUIRED)
+if(BUILD_USE_DOXYGEN OR BUILD_USE_DOXYGEN_GLOBAL)
+    find_package(Doxygen REQUIRED)
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.ini ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 if(BUILD_USE_DOXYGEN_GLOBAL)
 	add_custom_target(doxygen ALL
