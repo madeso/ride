@@ -57,7 +57,6 @@ sudo make install
 sudo -i $TRAVIS_BUILD_DIR/scripts/build-wx.sh
 
 cd $TRAVIS_BUILD_DIR/wx3/wxWidgets-3.1.0/gtk-build/
-cat config.log
 make install
 sudo -u $usr wx-config --version
 
