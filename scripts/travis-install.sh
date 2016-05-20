@@ -64,7 +64,9 @@ cd $TRAVIS_BUILD_DIR/build-proto/
 wget https://github.com/google/protobuf/archive/v2.6.1.tar.gz -O proto.tar.gz
 tar -xzf proto.tar.gz
 cd protobuf-2.6.1/
-./configure
+pwd
+ls
+configure
 make
 make check
 sudo make install
