@@ -52,6 +52,7 @@ autoreconf -i
 make > proto_build_log || cat proto_build_log
 make check
 sudo make install
+export LD_LIBRARY_PATH=/usr/local/lib
 
 # build wxWidgtets
 sudo -i $TRAVIS_BUILD_DIR/scripts/build-wx.sh
