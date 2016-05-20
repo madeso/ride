@@ -36,28 +36,6 @@ if [ "`echo $CXX`" == "g++" ]; then
 	update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
 fi
 
-# if [ "`echo $CXX`" == "clang++" ]; then
-# 	cwd=$(pwd)
-# 	svn co --quiet http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
-# 	git clone https://github.com/pathscale/libcxxrt.git libcxxrt
-# 	cd libcxxrt
-# 	mkdir build
-# 	cd build
-# 	cmake -DCMAKE_BUILD_TYPE=Release ../
-# 	make
-# 	cp lib/libcxxrt.so /usr/lib
-# 	ln -sf /usr/lib/libcxxrt.so /usr/lib/libcxxrt.so.1
-# 	ln -sf /usr/lib/libcxxrt.so /usr/lib/libcxxrt.so.1.0
-# 	cd $cwd
-# 	cd libcxx
-# 	mkdir build
-# 	cd build
-# 	cmake -DLIBCXX_CXX_ABI=libcxxrt -DLIBCXX_LIBCXXRT_INCLUDE_PATHS="../../libcxxrt/src" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
-# 	make
-# 	make install
-# 	cd $cwd
-# fi
-
 #build and install protobuf
 mkdir $TRAVIS_BUILD_DIR/build-proto/
 cd $TRAVIS_BUILD_DIR/build-proto/
@@ -68,9 +46,9 @@ cd pb/
 pwd
 ls
 autoreconf -i
-./configure
+./configure || cat config.log
 make
-make check
+# make check
 sudo make install
 
 # build wxWidgtets
