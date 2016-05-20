@@ -8,6 +8,9 @@ echo $CC
 #are commands even run?
 ls
 
+# update autoconfigure scripts
+autoreconf -i
+
 #from http://unix.stackexchange.com/questions/190571/sudo-in-non-interactive-script
 ## Detect the user who launched the script
 usr=$(env | grep SUDO_USER | cut -d= -f 2)
@@ -67,7 +70,7 @@ mv protobuf-2.6.1 pb
 cd pb/
 pwd
 ls
-$TRAVIS_BUILD_DIR/build-proto/pb/configure
+./configure
 make
 make check
 sudo make install
