@@ -12,7 +12,7 @@ cd $DIR
 mkdir wx3
 cd wx3
 wget https://github.com/wxWidgets/wxWidgets/archive/v3.1.0.tar.gz -O wx.tar.gz
-tar -xzf wx.tar.gz > wxtar || cat wxtar
+tar -xzf wx.tar.gz &> wxtar || cat wxtar
 cd wxWidgets-3.1.0
 mkdir gtk-build
 cd gtk-build
