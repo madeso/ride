@@ -13,23 +13,24 @@ ls
 ## Detect the user who launched the script
 usr=$(env | grep SUDO_USER | cut -d= -f 2)
 
-#install ride dependencies
-sudo apt-get update -qq
-sudo apt-get install -qq --assume-yes libgtk2.0-dev libwebkit-dev
+if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+  sudo apt-get update -qq
+  sudo apt-get install -qq --assume-yes libgtk2.0-dev libwebkit-dev
 
-# update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
-sudo apt-get install libc6-i386
-wget --no-check-certificate http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.sh
-sudo sh cmake-3.3.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
+  # update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
+  sudo apt-get install libc6-i386
+  wget --no-check-certificate http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.sh
+  sudo sh cmake-3.3.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
 
-# credit: https://github.com/beark/ftl/
-# install g++ 4.8, if tests are run with g++
-if [ "`echo $CXX`" == "g++" ]; then
+  # credit: https://github.com/beark/ftl/
+  # install g++ 4.8, if tests are run with g++
+  if [ "`echo $CXX`" == "g++" ]; then
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
     sudo apt-get update -qq;
     sudo apt-get install -qq g++-4.8;
     sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
     export CXX="g++-4.8" CC="gcc-4.8"
+  fi
 fi
 
 #build and install protobuf

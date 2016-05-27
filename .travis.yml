@@ -6,6 +6,16 @@ compiler:
 
 sudo: required
 
+os:
+  - linux
+  - osx
+
+matrix:
+  allow_failures:
+    - os: osx
+
+osx_image: xcode7.2
+
 install: ./scripts/travis-dependencies.sh
 before_script: cmake .
 script: make
