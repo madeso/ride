@@ -4,7 +4,9 @@ compiler:
   - gcc
   - clang
 
-install: sudo -E ./scripts/travis-install.sh
+install:
+  - $CC --version
+  - ./scripts/travis-install.sh
 before_script: ./scripts/travis-prebuild.sh
 script: make
 
