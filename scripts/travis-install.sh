@@ -6,6 +6,9 @@ echo $CXX
 echo $CC
 # which $CC
 
+$CC --version
+$CXX --version
+
 # update and display enviroment variables
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/lib
@@ -53,9 +56,6 @@ cd pb/
 pwd
 ls
 autoreconf -i
-./configure -help
-$CC --version
-$CXX --version
 ./configure CC=$CXX CXX=$CXX || cat config.log
 make &> proto_build_log || cat proto_build_log
 make check &> proto_check || cat proto_check
