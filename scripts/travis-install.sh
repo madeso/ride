@@ -28,21 +28,21 @@ then
 fi
 
 #install ride dependencies
-apt-get update -qq
-apt-get install -qq --assume-yes libgtk2.0-dev libwebkit-dev
+sudo apt-get update -qq
+sudo apt-get install -qq --assume-yes libgtk2.0-dev libwebkit-dev
 
 # update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
-apt-get install libc6-i386
-sudo -u $usr wget --no-check-certificate http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.sh
-sh cmake-3.3.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
+sudo apt-get install libc6-i386
+wget --no-check-certificate http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.sh
+sudo sh cmake-3.3.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
 
 # credit: https://github.com/beark/ftl/
 # install g++ 4.8, if tests are run with g++
 if [ "`echo $CXX`" == "g++" ]; then
-	add-apt-repository -y ppa:ubuntu-toolchain-r/test;
+	sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
 	sudo apt-get update -qq;
-	apt-get install -qq g++-4.8;
-	update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
+	sudo apt-get install -qq g++-4.8;
+	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 50
     export CXX="g++-4.8" CC="gcc-4.8"
 fi
 
@@ -65,6 +65,6 @@ sudo make install
 sudo -i $TRAVIS_BUILD_DIR/scripts/build-wx.sh
 
 cd $TRAVIS_BUILD_DIR/wx3/wxWidgets-3.1.0/gtk-build/
-make install
-sudo -u $usr wx-config --version
+sudo make install
+wx-config --version
 
