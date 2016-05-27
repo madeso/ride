@@ -21,7 +21,7 @@ addons:
       name: "madeso/ride"
       description: "Ride is a Rust IDE"
     notification_email: sir.gustav.the.coder@gmail.com
-    build_command_prepend: "$CC --version; sudo -E ./scripts/travis-install.sh; ./scripts/travis-prebuild.sh"
+    build_command_prepend: "$CC --version; ./scripts/travis-install.sh; ./scripts/travis-prebuild.sh"
     build_command:   "make"
     branch_pattern: coverity_scan
 
