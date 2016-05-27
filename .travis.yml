@@ -4,6 +4,8 @@ compiler:
   - gcc
   - clang
 
+sudo: required
+
 install:
   - $CC --version
   - ./scripts/travis-install.sh
