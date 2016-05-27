@@ -116,6 +116,12 @@ add_executable(
 
 install(TARGETS ${PROJECT_NAME} DESTINATION ".")
 
+# install dependencies
+if(APPLE)
+  install(SCRIPT macdylibbundler.cmake)
+endif()
+
+# make apple installer look prettier
 if(APPLE)
 	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "application")
 	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/bundle-info.plist")
@@ -184,7 +190,7 @@ IF (MSVC)
 			TARGET ${PROJECT_NAME}
 			POST_BUILD
 			COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\dpiaware.manifest.xml\" -inputresource:\"$<TARGET_FILE:${PROJECT_NAME}>\"\;\#1 -outputresource:\"$<TARGET_FILE:${PROJECT_NAME}>\"\;\#1
-			COMMENT "Adding display aware manifest..." 
+			COMMENT "Adding display aware manifest..."
 		)
 	ENDIF()
 ENDIF(MSVC)
