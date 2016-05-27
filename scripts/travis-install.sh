@@ -6,8 +6,8 @@ echo $CXX
 echo $CC
 # which $CC
 
-$CC --version
 $CXX --version
+$CC --version
 
 # update and display enviroment variables
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
