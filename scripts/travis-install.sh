@@ -54,8 +54,8 @@ pwd
 ls
 autoreconf -i
 ./configure -help
-$CC -version
-$CXX -version
+$CC --version
+$CXX --version
 ./configure CC=$CXX CXX=$CXX || cat config.log
 make &> proto_build_log || cat proto_build_log
 make check &> proto_check || cat proto_check
