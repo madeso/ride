@@ -6,7 +6,12 @@ echo $CXX
 echo $CC
 # which $CC
 
-#are commands even run?
+# update and display enviroment variables
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/lib
+echo "$LD_LIBRARY_PATH"
+echo "$LD_RUN_PATH"
+
 ls
 
 #from http://unix.stackexchange.com/questions/190571/sudo-in-non-interactive-script
@@ -48,11 +53,10 @@ cd pb/
 pwd
 ls
 autoreconf -i
-./configure || cat config.log
+./configure CC=$CC CXX=$CXX || cat config.log
 make &> proto_build_log || cat proto_build_log
 make check &> proto_check || cat proto_check
 sudo make install
-export LD_LIBRARY_PATH=/usr/local/lib
 
 # build wxWidgtets
 sudo -i $TRAVIS_BUILD_DIR/scripts/build-wx.sh
