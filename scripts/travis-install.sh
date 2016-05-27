@@ -56,10 +56,10 @@ cd pb/
 pwd
 ls
 autoreconf -i
-./configure CC=$CXX CXX=$CXX || cat config.log
+./configure  --disable-shared &> config.log|| cat config.log
 make &> proto_build_log || cat proto_build_log
 make check &> proto_check || cat proto_check
-make install
+sudo make install
 
 # build wxWidgtets
 sudo -i $TRAVIS_BUILD_DIR/scripts/build-wx.sh
