@@ -53,7 +53,10 @@ cd pb/
 pwd
 ls
 autoreconf -i
-./configure CC=$CC CXX=$CXX || cat config.log
+./configure -help
+$CC -version
+$CXX -version
+./configure CC=$CXX CXX=$CXX || cat config.log
 make &> proto_build_log || cat proto_build_log
 make check &> proto_check || cat proto_check
 sudo make install
