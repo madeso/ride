@@ -6,9 +6,7 @@ compiler:
 
 sudo: required
 
-install:
-  - $CC --version
-  - ./scripts/travis-install.sh
+install: ./scripts/travis-install.sh
 before_script: ./scripts/travis-prebuild.sh
 script: make
 
