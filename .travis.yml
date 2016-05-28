@@ -2,12 +2,14 @@ language: cpp
 
 sudo: required
 
+os: linux
+
+compiler: 
+  - gcc
+  - clang
+
 matrix:
   include:
-    - os: linux
-      compiler: gcc
-    - os: linux
-      compiler: clang
     - os: osx
       compiler: clang
       osx_image: 7.2
@@ -15,8 +17,6 @@ matrix:
 matrix:
   allow_failures:
     - os: osx
-
-osx_image: xcode7.2
 
 install: ./scripts/travis-dependencies.sh
 before_script: cmake .
