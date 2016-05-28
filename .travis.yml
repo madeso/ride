@@ -2,15 +2,20 @@ language: cpp
 
 sudo: required
 
+compiler:
+  - gcc
+  - clang
+
+osx_image: 7.2
+
+os:
+  - linux
+  - osx
+
 matrix:
-  include:
-    - os: linux
-      compiler: gcc
-    - os: linux
-      compiler: clang
+  exclude:
     - os: osx
-      compiler: clang
-      osx_image: 7.2
+      compiler: gcc
   allow_failures:
     - os: osx
 
