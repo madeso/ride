@@ -6,18 +6,21 @@ compiler:
   - gcc
   - clang
 
-osx_image: 7.2
-
 os:
   - linux
-  - osx
+
+osx_image: 7.2
 
 matrix:
-  exclude:
+  include:
     - os: osx
-      compiler: gcc
+      compiler: clang
+  exclude:
+    - compiler: clang
+      env: COVERITY_SCAN_BRANCH=1
   allow_failures:
     - os: osx
+  
 
 install: ./scripts/travis-dependencies.sh
 before_script: cmake .
@@ -34,14 +37,7 @@ addons:
   coverity_scan:
     project:
       name: "madeso/ride"
-      description: "Ride is a Rust IDE"
     notification_email: sir.gustav.the.coder@gmail.com
     build_command_prepend: "$CC --version; ./scripts/travis-install.sh; ./scripts/travis-prebuild.sh"
     build_command:   "make"
     branch_pattern: coverity_scan
-
-# don't run clang with coverity
-matrix:
-  exclude:
-    - compiler: clang
-      env: COVERITY_SCAN_BRANCH=1
