@@ -44,6 +44,9 @@ if [ "$TRAVIS_OS_NAME" = "osx" ]; then
   export PATH=$PATH:/$TRAVIS_BUILD_DIR/osx-deps/cmake-3.5.2-Darwin-x86_64/CMake.app/Contents/bin
 fi
 
+# display the cmake version
+cmake --version
+
 #build and install protobuf
 mkdir $TRAVIS_BUILD_DIR/build-proto/
 cd $TRAVIS_BUILD_DIR/build-proto/
