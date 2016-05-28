@@ -19,8 +19,8 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
 
   # update cmake and compiler: copied from install part of https://github.com/skystrife/cpptoml/blob/toml-v0.4.0/.travis.yml
   sudo apt-get install libc6-i386
-  wget --no-check-certificate http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-i386.sh
-  sudo sh cmake-3.3.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
+  wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Linux-i386.sh
+  sudo sh cmake-3.5.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
 
   # credit: https://github.com/beark/ftl/
   # install g++ 4.8, if tests are run with g++
