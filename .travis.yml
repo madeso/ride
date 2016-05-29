@@ -16,6 +16,7 @@ addons:
       - libgtk2.0-dev
       - libwebkit-dev
       - libc6-i386
+      - tree
 
 os:
   - linux
