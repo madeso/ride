@@ -21,7 +21,7 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
   cd $TRAVIS_BUILD_DIR/deps/
   wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Linux-i386.sh
   sh cmake-3.5.2-Linux-i386.sh --prefix=$TRAVIS_BUILD_DIR/deps/ --exclude-subdir
-  tree
+  find | sed 's|[^/]*/|- |g'
 
   # credit: https://github.com/beark/ftl/
   # install g++ 4.8, if tests are run with g++
