@@ -1,6 +1,6 @@
 language: cpp
 
-sudo: false
+sudo: required
 
 compiler:
   - gcc
@@ -10,14 +10,12 @@ addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
-      - sourceline: 'ppa:george-edison55/precise-backport'
     packages:
       - gcc-4.8
       - g++-4.8
       - libgtk2.0-dev
       - libwebkit-dev
       - libc6-i386
-      - cmake
 
 os:
   - linux
