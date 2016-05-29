@@ -1,10 +1,21 @@
 language: cpp
 
-sudo: required
+sudo: false
 
 compiler:
   - gcc
   - clang
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gcc-4.8
+      - g++-4.8
+      - libgtk2.0-dev
+      - libwebkit-dev
+      - libc6-i386
 
 os:
   - linux
