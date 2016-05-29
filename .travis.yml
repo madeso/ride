@@ -33,7 +33,9 @@ matrix:
     - os: osx
   
 
-install: ./scripts/travis-dependencies.sh
+install:
+  - if [ "`echo $CXX`" == "g++" ]; then export CC="gcc-4.8"; export CXX="g++-4.8"; fi
+  - ./scripts/travis-dependencies.sh
 before_script: cmake .
 script: make
 
