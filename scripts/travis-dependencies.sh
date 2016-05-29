@@ -37,9 +37,7 @@ if [ "$TRAVIS_OS_NAME" = "osx" ]; then
   cd $TRAVIS_BUILD_DIR/osx-deps/
   wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Darwin-x86_64.tar.gz
   tar -xzf cmake-3.5.2-Darwin-x86_64.tar.gz
-  cd cmake-3.5.2-Darwin-x86_64
-  ls
-  export PATH=$PATH:/$TRAVIS_BUILD_DIR/osx-deps/cmake-3.5.2-Darwin-x86_64/CMake.app/Contents/bin
+  mv cmake-3.5.2-Darwin-x86_64 cmake
 fi
 
 # display the cmake version
