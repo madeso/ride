@@ -20,9 +20,9 @@ if [ "$TRAVIS_OS_NAME" = "linux" ]; then
   mkdir $TRAVIS_BUILD_DIR/deps/
   cd $TRAVIS_BUILD_DIR/deps/
   wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Linux-i386.sh
-  sh cmake-3.5.2-Linux-i386.sh --prefix=$TRAVIS_BUILD_DIR/deps/ --exclude-subdir
-  cd bin
-  ls
+  sh cmake-3.5.2-Linux-i386.sh --prefix=/usr/local/ --exclude-subdir
+  #cd bin
+  #ls
 
   # credit: https://github.com/beark/ftl/
   # install g++ 4.8, if tests are run with g++
@@ -54,7 +54,7 @@ cd pb/
 pwd
 ls
 autoreconf -i
-./configure  --prefix=$TRAVIS_BUILD_DIR/deps/ --disable-shared &> config.log|| cat config.log
+./configure  --prefix=/usr/local/ --disable-shared &> config.log|| cat config.log
 make &> proto_build_log || cat proto_build_log
 make check &> proto_check || cat proto_check
 make install
@@ -68,7 +68,7 @@ tar -xzf wx.tar.gz &> wxtar || cat wxtar
 cd wxWidgets-3.1.0
 mkdir gtk-build
 cd gtk-build
-../configure --prefix=$TRAVIS_BUILD_DIR/deps/ --enable-webview --disable-compat28
+../configure --prefix=/usr/local/ --enable-webview --disable-compat28
 make
 make install
 wx-config --version
