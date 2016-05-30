@@ -1,7 +1,7 @@
 // Copyright (2015) Gustav
 
 // TODO(gustav) move to a config or a better place
-#define USE_WEBVIEW
+// #define USE_WEBVIEW
 
 #include "ride/startpage.h"
 
