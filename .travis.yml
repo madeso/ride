@@ -44,19 +44,3 @@ install:
   - ./scripts/travis-dependencies.sh
 before_script: cmake .
 script: make
-
-# coverity stuff:
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "HJsgD1B2gys+45zkGqFD8riF+fKMKGiq4956nXePXJATXCQEJKOGfz+rmw8nVaBOxKvVjyk8l5WIiXVoOQ6ZlFkhCz1sttBZn6x123vIR1ruP6Ze8B2OJnRzPt3ZTJJvlPyonhOMI+lXYnVCRwa+uwAiIkAyl4bDsCtSjlXeIV8="
-
-addons:
-  coverity_scan:
-    project:
-      name: "madeso/ride"
-    notification_email: sir.gustav.the.coder@gmail.com
-    build_command_prepend: "$CC --version; ./scripts/travis-install.sh; ./scripts/travis-prebuild.sh"
-    build_command:   "make"
-    branch_pattern: coverity_scan
