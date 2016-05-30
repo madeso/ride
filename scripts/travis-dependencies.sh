@@ -15,22 +15,6 @@ echo "$LD_RUN_PATH"
 
 mkdir $TRAVIS_BUILD_DIR/deps/
 
-#if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-#  wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Linux-i386.sh
-#  sh cmake-3.5.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
-#fi
-
-if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-  # expose cmake command for osx https://cmake.org/pipermail/cmake/2014-September/058760.html
-  mkdir $TRAVIS_BUILD_DIR/osx-deps/
-  cd $TRAVIS_BUILD_DIR/osx-deps/
-  wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Darwin-x86_64.tar.gz
-  tar -xzf cmake-3.5.2-Darwin-x86_64.tar.gz
-  cd cmake-3.5.2-Darwin-x86_64
-  ls
-  export PATH=$PATH:/$TRAVIS_BUILD_DIR/osx-deps/cmake-3.5.2-Darwin-x86_64/CMake.app/Contents/bin
-fi
-
 #build and install protobuf
 mkdir $TRAVIS_BUILD_DIR/build-proto/
 cd $TRAVIS_BUILD_DIR/build-proto/
