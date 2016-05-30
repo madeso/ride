@@ -30,7 +30,7 @@ addons:
 os:
   - linux
 
-# osx_image: 7.2
+osx_image: 7.2
 
 matrix:
   include:
