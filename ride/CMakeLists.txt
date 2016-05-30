@@ -1,15 +1,21 @@
 # extra wx libs that we will probably use soon
 # html propgrid xml xrc net webview
 
+
+SET(RIDE_WX_COMPONENTS core aui base stc adv html)
+
 if(${MSVC})
 # on windows and visual-studio it requires scintilla
-find_package(wxWidgets COMPONENTS core webview aui base stc adv scintilla html REQUIRED)
-else()
-find_package(wxWidgets COMPONENTS core webview aui base stc adv html REQUIRED)
-# on travis we get a linker errror
-# that wx_gtk2u_scintilla-3.0 is missing, but the log says it builds
-#      libwxscintilla-3.0.a   ..bug? lets hope wx-config solve the problem for us since we use stc
+LIST(APPEND RIDE_WX_COMPONENTS scintilla)
 endif()
+
+if(${RIDE_USE_WEBVIEW})
+# only try to find webview if it's required
+LIST(APPEND RIDE_WX_COMPONENTS webview)
+endif()
+
+message(STATUS "wxWidgets components: ${RIDE_WX_COMPONENTS}")
+find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
 
 include( "${wxWidgets_USE_FILE}" )
 message(STATUS "wxWidgets use file: ${wxWidgets_USE_FILE}")
@@ -21,11 +27,6 @@ FILE(GLOB src_glob *.cc;*.h)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 PROTOBUF_GENERATE_CPP(SETTINGS_PROTO_SRCS SETTINGS_PROTO_HDRS settings.proto)
-
-
-option(USE_WXWIDGETS_LEGACY_FINDTEXT "use the old wxwidgets findtext" ON)
-option(USE_CPP_AS_RUST "fallback to use c++ lexer instead of the rust lexer" OFF)
-option(RIDE_WXWIDGETS_USE_NEW_GO_HOME_END "fallback to the old go gome/end options" OFF)
 
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/ride_compiler_settings.in.h"

@@ -13,4 +13,6 @@
 
 #cmakedefine RIDE_WXWIDGETS_USE_NEW_GO_HOME_END
 
+#cmakedefine RIDE_USE_WEBVIEW
+
 #endif  // RIDE_RIDE_COMPILER_SETTINGS_IN_H_
