@@ -6,10 +6,14 @@ compiler:
   - gcc
   - clang
 
+
+# cmake 3 https://github.com/travis-ci/travis-ci/issues/4631
+
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
+      - george-edison55-precise-backports # cmake 3
     packages:
       - gcc-4.9
       - g++-4.9
@@ -20,6 +24,8 @@ addons:
       - libgtk2.0-dev
       - libwebkit-dev
       - libc6-i386
+      - cmake
+      - cmake-data
 
 os:
   - linux
