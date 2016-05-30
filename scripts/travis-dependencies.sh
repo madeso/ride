@@ -1,6 +1,10 @@
 #!/bin/bash
 set -ev
 
+{CC} --version
+
+{CXX} --version
+
 # update and display enviroment variables
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export LD_RUN_PATH=$LD_RUN_PATH:/usr/local/lib
