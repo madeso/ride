@@ -9,10 +9,10 @@ echo "$LD_RUN_PATH"
 
 mkdir $TRAVIS_BUILD_DIR/deps/
 
-if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-  # wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Linux-i386.sh
-  # sh cmake-3.5.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
-fi
+#if [ "$TRAVIS_OS_NAME" = "linux" ]; then
+#  wget --no-check-certificate https://cmake.org/files/v3.5/cmake-3.5.2-Linux-i386.sh
+#  sh cmake-3.5.2-Linux-i386.sh --prefix=/usr/local --exclude-subdir
+#fi
 
 if [ "$TRAVIS_OS_NAME" = "osx" ]; then
   # expose cmake command for osx https://cmake.org/pipermail/cmake/2014-September/058760.html
