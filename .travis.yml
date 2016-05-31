@@ -47,5 +47,5 @@ matrix:
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then export CC="gcc-4.9"; export CXX="g++-4.9"; fi
   - ./scripts/travis-dependencies.sh
-before_script: cmake -DCMAKE_PREFIX_PATH=$TRAVIS_BUILD_DIR/deps/ -DwxWidgets_CONFIG_OPTIONS="--prefix=$TRAVIS_BUILD_DIR/deps/" .
+before_script: ./scripts/travis-cmake.sh
 script: make

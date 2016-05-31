@@ -39,7 +39,11 @@ tar -xzf wx.tar.gz &> wxtar || cat wxtar
 cd wxWidgets-3.1.0
 mkdir gtk-build
 cd gtk-build
-../configure --prefix=$TRAVIS_BUILD_DIR/deps/ --enable-webview --disable-compat28
+CMAKEOSXARG=""
+if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+  CMAKEOSXARG="--with-osx_cocoa --with-macosx-version-min=10.10 --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk"
+fi
+../configure --prefix=$TRAVIS_BUILD_DIR/deps/ --enable-webview --disable-compat28 $CMAKEOSXARG
 make
 make install
 # wx-config --version
