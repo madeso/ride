@@ -26,7 +26,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(${UNIX})
 	set(RIDE_OS_UNIX "1")
-endif()	
+endif()
+
+message(STATUS "cmake osx status: ${cmake_osx_deployment_target}")
 
 
 if(${APPLE})
