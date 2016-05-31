@@ -28,13 +28,13 @@ if(${UNIX})
 	set(RIDE_OS_UNIX "1")
 endif()
 
-message(STATUS "cmake osx status: ${cmake_osx_deployment_target}")
+message(STATUS "cmake osx status: ${CMAKE_OSX_DEPLOYMENT_TARGET}")
 
 
 if(${APPLE})
 	set(RIDE_OS_APPLE "1")
 	set(RIDE_OS_UNIX "0")
-	
+
 	if(NOT ${BUILD_USE_ALL_COMPILER_WARNINGS})
 		# disabling http://stackoverflow.com/questions/32626171/xcode-7-how-to-suppress-warning-overrides-a-member-function-but-is-not-marked
 		# that apple-clang spews out for wx headers
@@ -47,7 +47,7 @@ if(${MSVC})
 	# C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\include\xutility(2132): warning C4996: 'std::_Copy_impl': Function call with parameters that may be unsafe - this call relies on the caller to check that the passed values are correct. To disable this warning, use -D_SCL_SECURE_NO_WARNINGS.
 	add_definitions("-D_SCL_SECURE_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS")
 	message(STATUS "Adding _SCL_SECURE_NO_WARNINGS and _CRT_SECURE_NO_WARNINGS")
-	
+
 	if(${BUILD_USE_ALL_COMPILER_WARNINGS})
 		# Force to always compile with W4
 		if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
@@ -56,7 +56,7 @@ if(${MSVC})
 			set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 		endif()
 	endif()
-	
+
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4100 /wd4018 /wd4389 /wd4125 /wd4127 /wd4512 /wd4244 /wd4996") # unref parameter, < signed/unsigned mismatch, == signed/unsigned mismatch, decimal digit termnates octal(protobuf warning), constant conditional (protobuf), assignment couldnt be generated(protobuf), possible loss of data(protobuf), deprecated (generated/ui.cpp)
 endif(${MSVC})
 
@@ -93,7 +93,7 @@ IF(BUILD_USE_CLOC)
 					   run-cloc.py ride CMakeLists.txt --out code-stat-everything.txt
 					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 					   COMMENT "Running cloc on everything" VERBATIM)
-					   
+
 	add_custom_target(codestat-everything-switcher ALL
 					   run-cloc.py --out code-stat-switcher.txt ride/switcher
 					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}

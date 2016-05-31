@@ -9,7 +9,7 @@ The tl;dr is that the --with-macosx-version-min and the cmake_osx_deployment_tar
 With the following command to build wxWidgets:
     ../configure --with-osx_cocoa --with-macosx-version-min=10.10 --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk --enable-debug --with-opengl  --prefix="$(pwd)"
 
-One has to set the cmake variable cmake_osx_deployment_target to 10.10.
+One has to set the cmake variable CMAKE_OSX_DEPLOYMENT_TARGET to 10.10.
 
 # Sample errors with a bad configuration
 * exc_bad_access in wxWindowBase::SetName called in wxNonOwnedWindow::Create
