@@ -21,6 +21,11 @@ option(USE_WXWIDGETS_LEGACY_FINDTEXT "use the old wxwidgets findtext" ON)
 option(USE_CPP_AS_RUST "fallback to use c++ lexer instead of the rust lexer" OFF)
 option(RIDE_WXWIDGETS_USE_NEW_GO_HOME_END "fallback to the old go gome/end options" OFF)
 
+SET(RIDE_BUILD_COMMIT "unknown-commit" CACHE STRING "The current commit")
+SET(RIDE_BUILD_NUMBER "unknown-build"  CACHE STRING "The current build number")
+SET(RIDE_BUILD_BRANCH "unknown-branch" CACHE STRING "The current branch")
+SET(RIDE_BUILD_REPO   "unknown-repo"   CACHE STRING "The repo")
+
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -29,6 +34,10 @@ if(${UNIX})
 endif()
 
 message(STATUS "cmake osx status: ${cmake_osx_deployment_target}")
+message(STATUS "commit: ${RIDE_BUILD_COMMIT}")
+message(STATUS "build number: ${RIDE_BUILD_NUMBER}")
+message(STATUS "branch: ${RIDE_BUILD_BRANCH}")
+message(STATUS "repo: ${RIDE_BUILD_REPO}")
 
 
 if(${APPLE})
