@@ -14,6 +14,7 @@ echo "$LD_LIBRARY_PATH"
 echo "$LD_RUN_PATH"
 
 mkdir $TRAVIS_BUILD_DIR/deps/
+mkdir $TRAVIS_BUILD_DIR/install-dist/
 
 #build and install protobuf
 mkdir $TRAVIS_BUILD_DIR/build-proto/
