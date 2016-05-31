@@ -1,7 +1,7 @@
 #!/bin/bash
 set -ev
 
-CMAKEOSXARG = ""
+CMAKEOSXARG=""
 
 if [ "$TRAVIS_OS_NAME" = "osx" ]; then
   CMAKEOSXARG="-Dcmake_osx_deployment_target=10.10"
