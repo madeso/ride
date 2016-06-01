@@ -51,3 +51,10 @@ before_script: ./scripts/travis-cmake.sh
 script:
   - make
   - make install
+
+deploy:
+  provider: bintray
+  file: bintray-template.json
+  user: "madeso"
+  key: ${TRAVIS_BINTRAY_SECRET}
+  dry-run: true
