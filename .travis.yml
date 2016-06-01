@@ -52,6 +52,10 @@ script:
   - make
   - make install
 
+cache:
+  directories:
+  - $TRAVIS_BUILD_DIR/deps/
+
 deploy:
   provider: bintray
   file: bintray-template.json
