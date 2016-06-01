@@ -1020,9 +1020,12 @@ void MainWindow::OnAbout(wxCommandEvent& event) {
   about_info.SetName(app_name_);
 
   // aboutInfo.SetVersion(RIDE_VERSION_STRING);
-  about_info.SetDescription(
+  about_info.SetDescription(wxString::Format(
       _("Ride is a Rust IDE. It's named after concatenating R from rust and "
-        "IDE."));
+        "IDE.\n\nCommit: %s\nBuild: %s\nBranch: %s\nRepo: %s"),
+      RIDE_BUILD_COMMIT, RIDE_BUILD_NUMBER, RIDE_BUILD_BRANCH,
+      RIDE_BUILD_REPO));
+
   // aboutInfo.SetCopyright("(C) 1992-2010");
   about_info.SetWebSite("https://github.com/madeso/ride");
   wxAboutBox(about_info, this);
