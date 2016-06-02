@@ -46,6 +46,7 @@ matrix:
 # gcc update grabbed from https://github.com/ldc-developers/ldc/blob/master/.travis.yml
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then export CC="gcc-4.9"; export CXX="g++-4.9"; fi
+  - export COMPILER=${CC}
   - ./scripts/travis-dependencies.sh
 before_script: ./scripts/travis-cmake.sh
 script:
@@ -58,7 +59,7 @@ cache:
 
 deploy:
   provider: bintray
-  file: scripts/bintray-${TRAVIS_OS_NAME}-${CC}.json
+  file: scripts/bintray-${TRAVIS_OS_NAME}-${COMPILER}.json
   user: "madeso"
   key: ${TRAVIS_BINTRAY_SECRET}
   dry-run: false
