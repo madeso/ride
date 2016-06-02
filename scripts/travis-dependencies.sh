@@ -16,6 +16,14 @@ echo "$LD_LIBRARY_PATH"
 echo "$LD_RUN_PATH"
 
 if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "clang" ]; then
+  # https://github.com/m-a-d-n-e-s-s/madness/commit/65debe77e040af31d2f67d9b3befc4c0dec7ab8e
+  # should fix:
+  # /usr/lib/gcc/x86_64-linux-gnu/4.9/../../../../include/c++/4.9/cstddef:51:11: error: 
+  #    no member named 'max_align_t' in the global namespace
+  export CXXFLAGS="-stdlib=libc++"
+fi
+
+if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "clang" ]; then
   echo "deleting cache..."
   rm -rf $TRAVIS_BUILD_DIR/deps/
   mkdir $TRAVIS_BUILD_DIR/deps/
