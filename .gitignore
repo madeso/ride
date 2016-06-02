@@ -51,3 +51,5 @@ samples/projects/*
 ride.kdev4
 .kdev4/*
 
+# install/dist folder
+dist/
