@@ -32,7 +32,7 @@ addons:
       - libgtk2.0-dev
       - libwebkit-dev
       - libc6-i386
-      - clang-3.6
+#      - clang-3.6
       - cmake
       - cmake-data
 
