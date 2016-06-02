@@ -45,8 +45,8 @@ matrix:
 
 # gcc update grabbed from https://github.com/ldc-developers/ldc/blob/master/.travis.yml
 install:
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then export CC="gcc-4.9"; export CXX="g++-4.9"; fi
   - export COMPILER=${CC}
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "gcc" ]; then export CC="gcc-4.9"; export CXX="g++-4.9"; fi
   - ./scripts/travis-dependencies.sh
 before_script: ./scripts/travis-cmake.sh
 script:
