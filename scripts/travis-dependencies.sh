@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Exit on error
 set -ev
 
 ${CC} --version
