@@ -1,0 +1,23 @@
+{
+  "package": {
+    "name": "ride-generic",
+    "repo": "ride-master",
+    "subject": "madeso"
+  },
+
+  "version": {
+    "name": "master"
+  },
+
+  "files":
+    [
+      {
+        "includePattern": "install-dist/(.*)",
+        "uploadPattern": "linux-clang/$1",
+        "matrixParams": {
+          "override": 1
+        }
+      }
+    ],
+  "publish": true
+}

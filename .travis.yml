@@ -58,7 +58,7 @@ cache:
 
 deploy:
   provider: bintray
-  file: bintray-template.json
+  file: scripts/bintray-${TRAVIS_OS_NAME}-${CC}.json
   user: "madeso"
   key: ${TRAVIS_BINTRAY_SECRET}
-  dry-run: true
+  dry-run: false
