@@ -51,7 +51,7 @@ install:
 before_script: ./scripts/travis-cmake.sh
 script:
   - make
-  - make install
+  - make package
 
 cache:
   directories:
