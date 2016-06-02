@@ -20,6 +20,7 @@ if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "clang" ]; then
   # should fix:
   # /usr/lib/gcc/x86_64-linux-gnu/4.9/../../../../include/c++/4.9/cstddef:51:11: error: 
   #    no member named 'max_align_t' in the global namespace
+  echo "cxxflags: $CXXFLAGS"
   export CXXFLAGS="-stdlib=libc++"
 fi
 
