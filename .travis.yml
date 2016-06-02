@@ -48,9 +48,9 @@ install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then export CC="gcc-4.9"; export CXX="g++-4.9"; fi
   - ./scripts/travis-dependencies.sh
 before_script: ./scripts/travis-cmake.sh
-script: echo "cache build"
-#  - make
-#  - make install
+script:
+  - make
+  - make install
 
 cache:
   directories:
