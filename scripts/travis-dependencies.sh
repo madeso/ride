@@ -73,7 +73,8 @@ else
   if [ "$TRAVIS_OS_NAME" = "osx" ]; then
     CMAKEOSXARG="--with-osx_cocoa --with-macosx-version-min=10.11 --with-macosx-sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk"
   fi
-  ../configure --prefix=$TRAVIS_BUILD_DIR/deps/ --enable-webview --disable-compat28 $CMAKEOSXARG
+  # since we intend to distribute this build, using shared libraries only complicates things, so we disable-shared libraries
+  ../configure --prefix=$TRAVIS_BUILD_DIR/deps/ --enable-webview --disable-compat28 --disable-shared $CMAKEOSXARG
   make
   make install
   # wx-config --version
