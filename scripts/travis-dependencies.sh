@@ -25,11 +25,11 @@ echo "$LD_RUN_PATH"
 #   export CXXFLAGS="-stdlib=libc++"
 # fi
 
-if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "clang" ]; then
-  echo "deleting cache..."
-  rm -rf $TRAVIS_BUILD_DIR/deps/
-  mkdir $TRAVIS_BUILD_DIR/deps/
-fi
+# if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "clang" ]; then
+#   echo "deleting cache..."
+#   rm -rf $TRAVIS_BUILD_DIR/deps/
+#   mkdir $TRAVIS_BUILD_DIR/deps/
+# fi
 
 if [ -d "$TRAVIS_BUILD_DIR/deps/" ]; then
   echo "Deps exists and it contains:"
