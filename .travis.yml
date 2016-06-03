@@ -59,9 +59,9 @@ install:
 #  - if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "clang" ]; then export CC="clang-3.8"; export CXX="clang-3.8"; fi
   - ./scripts/travis-dependencies.sh
 before_script: ./scripts/travis-cmake.sh
-script:
-  - make
-  - make package
+script: echo "cache build"
+#  - make
+#  - make package
 
 cache:
   directories:
