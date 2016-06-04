@@ -48,8 +48,6 @@ matrix:
   exclude:
     - compiler: clang
       env: COVERITY_SCAN_BRANCH=1
-  allow_failures:
-    - os: osx
 
 
 # gcc update grabbed from https://github.com/ldc-developers/ldc/blob/master/.travis.yml
