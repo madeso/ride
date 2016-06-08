@@ -3,7 +3,7 @@ Sky blue stolen from a image in this page http://installbuilder.bitrock.com/docs
 
 A small note on creating the ds_store:
 
-1. First build a dmg so that you have something to work with, the install target should do this.
+1. First build a dmg so that you have something to work with, the package target should do this.
 
 2. Make a writeable copy of that dmg:
 Note that there is a i in hd I util, and it's not called hdutil
@@ -11,7 +11,7 @@ $ hdiutil convert -format UDRW -o ride-test.dmg ride-0.1.1-Darwin.dmg
 
 3. Mount the new writeable dmg by double clicking on it
 
-4. No do your changes. Change the background, move around the icons etc...
+4. Now do your changes. Change the background, move around the icons etc...
 
 5. In a terminal, go to that mounted folder
 $ cd /Volumes/ride-0.1.1-Darwin/
