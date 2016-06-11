@@ -1026,6 +1026,8 @@ void MainWindow::OnAbout(wxCommandEvent& event) {
       RIDE_BUILD_COMMIT, RIDE_BUILD_NUMBER, RIDE_BUILD_BRANCH,
       RIDE_BUILD_REPO));
 
+  about_info.SetVersion(RIDE_VERSION3, RIDE_VERSION3);
+
   // aboutInfo.SetCopyright("(C) 1992-2010");
   about_info.SetWebSite("https://github.com/madeso/ride");
   wxAboutBox(about_info, this);

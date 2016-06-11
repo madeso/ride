@@ -3,7 +3,9 @@ cmake_minimum_required(VERSION 3.0.2)
 set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(cpack-config.cmake)
+set(RIDE_VERSION_MAJOR "1")
+set(RIDE_VERSION_MINOR "2")
+set(RIDE_VERSION_REVISION "3")
 
 option(BUILD_USE_CLANG_FORMAT "Add clang format to the build" OFF)
 option(BUILD_USE_CPPLINT "Add cpplint to the build" OFF)
@@ -25,6 +27,8 @@ SET(RIDE_BUILD_COMMIT "unknown-commit" CACHE STRING "The current commit")
 SET(RIDE_BUILD_NUMBER "unknown-build"  CACHE STRING "The current build number")
 SET(RIDE_BUILD_BRANCH "unknown-branch" CACHE STRING "The current branch")
 SET(RIDE_BUILD_REPO   "unknown-repo"   CACHE STRING "The repo")
+
+include(cpack-config.cmake)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
