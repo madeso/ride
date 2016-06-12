@@ -15,6 +15,7 @@ LIST(APPEND RIDE_WX_COMPONENTS webview)
 endif()
 
 message(STATUS "wxWidgets components: ${RIDE_WX_COMPONENTS}")
+set(wxWidgets_USE_STATIC ON)
 find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
 
 include( "${wxWidgets_USE_FILE}" )
