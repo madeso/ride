@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.0.2)
 set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(RIDE_VERSION_MAJOR "1")
-set(RIDE_VERSION_MINOR "2")
-set(RIDE_VERSION_REVISION "3")
+set(RIDE_VERSION_MAJOR "0")
+set(RIDE_VERSION_MINOR "0")
+set(RIDE_VERSION_REVISION "0")
 
 option(BUILD_USE_CLANG_FORMAT "Add clang format to the build" OFF)
 option(BUILD_USE_CPPLINT "Add cpplint to the build" OFF)
