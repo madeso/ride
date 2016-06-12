@@ -29,6 +29,9 @@ try:
 		for fname in glob.glob(dir):
 			filename = os.path.abspath(fname)
 			count += 1
+			if ".in." in filename:
+				print "Ignoring ", filename
+				continue
 			print "Working ", filename
 			lastcmd = [clangformat, "-i", "-style=Google", filename]
 			retcode = call(lastcmd)
