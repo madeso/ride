@@ -1,6 +1,6 @@
 branches:
   only:
-    master
+    - master
 
 image: Visual Studio 2015
 
