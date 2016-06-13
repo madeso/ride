@@ -1,0 +1,21 @@
+branches:
+  only:
+    master
+
+image: Visual Studio 2015
+
+install:
+  - cmd: scripts/appveyor-install.bat
+
+before_build:
+  - cmd: scripts/appveyor-cmake.bat
+
+platform:
+  - x86
+  - x64
+
+configuration: Release
+
+build:
+  parallel: true
+  project: build/ride.sln
