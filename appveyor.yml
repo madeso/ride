@@ -5,7 +5,7 @@ branches:
 image: Visual Studio 2015
 
 install:
-  - cmd: scripts/appveyor-install.bat
+  - cmd: scripts/appveyor-install.py
 
 before_build:
   - cmd: scripts/appveyor-cmake.bat
