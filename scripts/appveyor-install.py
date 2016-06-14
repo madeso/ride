@@ -11,6 +11,9 @@ wxsln = os.path.join(wxbuild, 'build', 'msw', 'wx_vc14.sln')
 print root
 print wxsln
 
+os.makedirs(build)
+os.makedirs(wxbuild)
+
 wxurl = "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.0/wxWidgets-3.1.0.zip"
 
 urllib.urlretrieve (wxurl, os.path.join(build, localwxzip))
