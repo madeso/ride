@@ -2,6 +2,7 @@
 import urllib
 import os
 import zipfile
+import sys
 
 # todo: change wx solution to use static crt...
 # sln file:
@@ -31,6 +32,7 @@ protomsbuildcmd = 'msbuild /p:Configuration=Release /p:Platform="{platform}" {so
 
 print root
 print wxsln
+print protosln
 
 os.makedirs(build)
 os.makedirs(wxbuild)
@@ -45,4 +47,12 @@ with zipfile.ZipFile(localwxzip, 'r') as z:
 with zipfile.ZipFile(localprotozip, 'r') as z:
     z.extractall(protobuild)
 
+print "building wxwidgets"
+print "-----------------------------------"
+sys.stdout.flush()
 os.system(wxmsbuildcmd)
+
+print "building protobuf"
+print "-----------------------------------"
+sys.stdout.flush()
+os.system(protomsbuildcmd)
