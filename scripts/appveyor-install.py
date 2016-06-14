@@ -15,7 +15,7 @@ if os.environ['PLATFORM'] == 'x86':
   platform='Win32'
 
 root = os.getcwd()
-build = os.path.join(root, 'build')
+build = os.path.join(root, 'install-dist')
 wxbuild = os.path.join(build, 'wx')
 localwxzip = os.path.join(build, "wx.zip")
 wxsln = os.path.join(wxbuild, 'build', 'msw', 'wx_vc14.sln')
