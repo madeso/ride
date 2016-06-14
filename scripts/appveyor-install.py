@@ -11,7 +11,7 @@ import zipfile
 # <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 
 platform='x64'
-if os.environ['PLATFORM'] = 'x86':
+if os.environ['PLATFORM'] == 'x86':
   platform='Win32'
 
 root = os.getcwd()
