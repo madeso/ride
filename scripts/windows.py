@@ -16,12 +16,13 @@ root = os.getcwd()
 install_dist = os.path.join(root, 'install-dist')
 wx_root = os.path.join(install_dist, 'wx')
 proto_root = os.path.join(install_dist, 'proto')
+proto_root_root = os.path.join(proto_root, 'protobuf-2.6.1')
 
 def install_cmd(args):
     global root
     global install_dist
     global wx_root
-    global proto_root
+    global proto_root_root
     platform='x64'
     if os.environ['PLATFORM'] == 'x86':
         platform='Win32'
@@ -33,7 +34,7 @@ def install_cmd(args):
 
     proto_url = "https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip"
     proto_zip = os.path.join(install_dist, 'proto.zip')
-    proto_sln = os.path.join(proto_root, 'protobuf-2.6.1', 'vsprojects', 'protobuf.sln')
+    proto_sln = os.path.join(proto_root_root, 'vsprojects', 'protobuf.sln')
     proto_msbuild_cmd = 'msbuild /p:Configuration=Release /p:Platform="{platform}" {solution}'.format(platform=platform, solution=proto_sln)
 
     print root
@@ -68,8 +69,9 @@ def cmake_cmd(args):
     global root
     global install_dist
     global wx_root
-    global proto_root
+    global proto_root_root
     build = os.path.join(root, 'build')
+    proto_src_root = os.path.join(proto_root_root, 'src')
     os.makedirs(build)
     cmakecmd = ("cd {build} && cmake "
                 "-DCMAKE_INSTALL_PREFIX= {install_dist} "
@@ -82,7 +84,7 @@ def cmake_cmd(args):
                 "{root}").format(
         root=root,
         install_dist=install_dist,
-        proto_root=proto_root,
+        proto_root=proto_root_root,
         wx_root=wx_root,
         build=build
     )
