@@ -91,10 +91,10 @@ def cmake_cmd(args):
 parser = argparse.ArgumentParser(description='Does the windows build')
 subparsers = parser.add_subparsers()
 
-install_parser = subparsers.add('install')
+install_parser = subparsers.add_parser('install')
 install_parser.set_defaults(func=install_cmd)
 
-cmake_parser = subparsers.add('cmake')
+cmake_parser = subparsers.add_parser('cmake')
 cmake_parser.set_defaults(func=cmake_cmd)
 
 args = parser.parse_args()
