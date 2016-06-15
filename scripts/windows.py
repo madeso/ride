@@ -71,7 +71,7 @@ def cmake_cmd(args):
     global proto_root
     build = os.path.join(root, 'build')
     os.makedirs(build)
-    cmakecmd = ("cmake "
+    cmakecmd = ("cd {build} && cmake "
                 "-DCMAKE_INSTALL_PREFIX= {install_dist} "
                 "-DPROTOBUF_SRC_ROOT_FOLDER={proto_root} "
                 "-DwxWidgets_ROOT_DIR={wx_root} "
@@ -79,7 +79,8 @@ def cmake_cmd(args):
                 "-DRIDE_BUILD_NUMBER=%APPVEYOR_BUILD_NUMBER% "
                 "-DRIDE_BUILD_BRANCH=%APPVEYOR_REPO_BRANCH% "
                 "-DRIDE_BUILD_REPO=%APPVEYOR_REPO_NAME% "
-                "{build}").format(
+                "{root}").format(
+        root=root,
         install_dist=install_dist,
         proto_root=proto_root,
         wx_root=wx_root,
