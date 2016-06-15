@@ -23,6 +23,7 @@ def hklm(path, var):
         raise "registry not a string!"
     return value
 
+vs_root = hklm(r'SOFTWARE\Microsoft\VisualStudio\14.0', 'InstallDir')
 print "studio path ", vs_root
 
 root = os.getcwd()
