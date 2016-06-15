@@ -31,7 +31,7 @@ def install_cmd(args):
     wx_sln = os.path.join(wx_root, 'build', 'msw', 'wx_vc14.sln')
     wx_msbuild_cmd = 'msbuild /p:Configuration=Release /p:Platform="{platform}" {solution}'.format(platform=platform, solution=wx_sln)
 
-    proto_url = "https://github.com/google/protobuf/archive/v2.6.1.zip"
+    proto_url = "https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip"
     proto_zip = os.path.join(install_dist, 'proto.zip')
     proto_sln = os.path.join(proto_root, 'protobuf-2.6.1', 'vsprojects', 'protobuf.sln')
     proto_msbuild_cmd = 'msbuild /p:Configuration=Release /p:Platform="{platform}" {solution}'.format(platform=platform, solution=proto_sln)
