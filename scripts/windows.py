@@ -4,6 +4,7 @@ import os
 import zipfile
 import sys
 import argparse
+import _winreg as registry
 
 # todo: change wx solution to use static crt...
 # sln file:
@@ -12,6 +13,19 @@ import argparse
 # <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 # <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 
+def hklm(path, var):
+    reg = registry.ConnectRegistry(None,registry.HKEY_LOCAL_MACHINE)
+    key = registry.OpenKey(reg, path)
+    value, type = registry.QueryValueEx(key, var)
+    registry.CloseKey(key)
+    registry.CloseKey(reg)
+    if not type == registry.REG_SZ:
+        raise "registry not a string!"
+    return value
+
+vs_root = hklm('SOFTWARE\Microsoft\VisualStudio\14.0', 'InstallDir')
+print "studio path ", vs_root
+
 root = os.getcwd()
 install_dist = os.path.join(root, 'install-dist')
 wx_root = os.path.join(install_dist, 'wx')
@@ -19,6 +33,7 @@ proto_root = os.path.join(install_dist, 'proto')
 proto_root_root = os.path.join(proto_root, 'protobuf-2.6.1')
 
 def install_cmd(args):
+    global vs_root
     global root
     global install_dist
     global wx_root
@@ -62,7 +77,7 @@ def install_cmd(args):
     print "upgrading protobuf"
     print "-----------------------------------"
     sys.stdout.flush()
-    os.system('devenv {sln} /upgrade'.format(sln=proto_sln))
+    os.system('{root}devenv.exe {sln} /upgrade'.format(sln=proto_sln, root=vs_root))
     
     print "building protobuf"
     print "-----------------------------------"
