@@ -59,6 +59,11 @@ def install_cmd(args):
     sys.stdout.flush()
     os.system(wx_msbuild_cmd)
 
+    print "upgrading protobuf"
+    print "-----------------------------------"
+    sys.stdout.flush()
+    os.system('devenv {sln} /upgrade'.format(sln=proto_sln))
+    
     print "building protobuf"
     print "-----------------------------------"
     sys.stdout.flush()
@@ -88,6 +93,7 @@ def cmake_cmd(args):
         wx_root=wx_root,
         build=build
     )
+    sys.stdout.flush()
     os.system(cmakecmd)
 
 parser = argparse.ArgumentParser(description='Does the windows build')
