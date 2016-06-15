@@ -27,19 +27,10 @@ import _winreg as registry
 # print "studio path ", vs_root#
 
 
-def sayifexist(path):
-    if os.path.isdir(path):
-        print path, "exist!"
-    else:
-        print path, "doesn't exist"
-
-sayifexist(r'C:\Program files (x86)')
-sayifexist(r'C:\Program files')
-sayifexist(r'C:\Programs')
-sayifexist(r'C:\Programs files\Microsoft')
-sayifexist(r'C:\Programs files (x86)\Microsoft')
-sayifexist(r'C:\Programs files\Microsoft\Visual studio')
-sayifexist(r'C:\Programs files (x86)\Microsoft\Visual studio')
+print "This is the vs solution path..."
+sys.stdout.flush()
+os.system(r"reg QUERY HKLM\SOFTWARE\Microsoft\VisualStudio\14.0 /v InstallDir /reg:32")
+sys.stdout.flush()
 
 root = os.getcwd()
 install_dist = os.path.join(root, 'install-dist')
