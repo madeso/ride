@@ -13,18 +13,33 @@ import _winreg as registry
 # <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
 # <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
 
-def hklm(path, var):
-    reg = registry.ConnectRegistry(None,registry.HKEY_LOCAL_MACHINE)
-    key = registry.OpenKey(reg, path)
-    value, type = registry.QueryValueEx(key, var)
-    registry.CloseKey(key)
-    registry.CloseKey(reg)
-    if not type == registry.REG_SZ:
-        raise "registry not a string!"
-    return value
+# def hklm(path, var):
+#     reg = registry.ConnectRegistry(None,registry.HKEY_LOCAL_MACHINE)
+#     key = registry.OpenKey(reg, path)
+#     value, type = registry.QueryValueEx(key, var)
+#     registry.CloseKey(key)
+#     registry.CloseKey(reg)
+#     if not type == registry.REG_SZ:
+#         raise "registry not a string!"
+#     return value
+#
+# vs_root = hklm(r'SOFTWARE\Microsoft\VisualStudio\14.0', 'InstallDir')
+# print "studio path ", vs_root#
 
-vs_root = hklm(r'SOFTWARE\Microsoft\VisualStudio\14.0', 'InstallDir')
-print "studio path ", vs_root
+
+def sayifexist(path):
+    if os.path.isdir(path):
+        print path, "exist!"
+    else:
+        print path, "doesn't exist"
+
+sayifexist(r'C:\Program files (x86)')
+sayifexist(r'C:\Program files')
+sayifexist(r'C:\Programs')
+sayifexist(r'C:\Programs files\Microsoft')
+sayifexist(r'C:\Programs files (x86)\Microsoft')
+sayifexist(r'C:\Programs files\Microsoft\Visual studio')
+sayifexist(r'C:\Programs files (x86)\Microsoft\Visual studio')
 
 root = os.getcwd()
 install_dist = os.path.join(root, 'install-dist')
