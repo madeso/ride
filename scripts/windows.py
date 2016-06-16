@@ -93,6 +93,11 @@ def add_definition_cmd(args):
     add_definition_to_project(args.project, args.define)
 
 
+def add_definition_to_solution(sln, definition):
+    projects = list_projects_in_solution(sln)
+    for p in projects:
+        add_definition_to_project(p, definition)
+
 
 def install_cmd(args):
     global vs_root
@@ -149,6 +154,8 @@ def install_cmd(args):
     if build:
       sys.stdout.flush()
       os.system('"{devenv}" {sln} /upgrade'.format(sln=proto_sln, devenv=devenv))
+    # add definitoon so vs will compile
+    add_definition_to_solution(proto_sln, '_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS')
     
     print "building protobuf"
     print "-----------------------------------"
