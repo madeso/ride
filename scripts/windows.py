@@ -86,7 +86,7 @@ def install_cmd(args):
     print "-----------------------------------"
     devenv = os.path.join(vs_root, 'devenv.exe')
     sys.stdout.flush()
-    os.system('{root}devenv.exe {sln} /upgrade'.format(sln=proto_sln, root=devenv))
+    os.system('"{devenv}" {sln} /upgrade'.format(sln=proto_sln, devenv=devenv))
     
     print "building protobuf"
     print "-----------------------------------"
