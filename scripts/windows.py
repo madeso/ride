@@ -4,6 +4,7 @@ import os
 import zipfile
 import sys
 import argparse
+import re
 
 # todo: change wx solution to use static crt...
 # sln file:
@@ -51,6 +52,25 @@ def download_file(url, path):
         urllib.urlretrieve(url, path)
     else:
         print "Aldready downloaded", path
+
+
+def list_projects_in_solution(path):
+    ret = []
+    dir = os.path.dirname(path)
+    pl = re.compile(r'Project\("[^"]+"\) = "[^"]+", "([^"]+)"')
+    with open(path) as sln:
+        for line in sln:
+            # Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "richtext", "wx_richtext.vcxproj", "{7FB0902D-8579-5DCE-B883-DAF66A885005}"
+            m = pl.match(line)
+            if m:
+                ret.append(os.path.join(dir, m.group(1)))
+    return ret
+
+
+def list_projects_cmd(cmd):
+    projects = list_projects_in_solution(cmd.sln)
+    for p in projects:
+        print "project", p
 
 
 def install_cmd(args):
@@ -148,6 +168,10 @@ subparsers = parser.add_subparsers()
 install_parser = subparsers.add_parser('install')
 install_parser.set_defaults(func=install_cmd)
 install_parser.add_argument('--nobuild', dest='build', action='store_const', const=False, default=True)
+
+install_parser = subparsers.add_parser('listprojects')
+install_parser.set_defaults(func=list_projects_cmd)
+install_parser.add_argument('sln', help='solution file')
 
 cmake_parser = subparsers.add_parser('cmake')
 cmake_parser.set_defaults(func=cmake_cmd)
