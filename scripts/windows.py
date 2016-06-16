@@ -73,6 +73,27 @@ def list_projects_cmd(cmd):
         print "project", p
 
 
+def add_definition_to_project(path, define):
+    # <PreprocessorDefinitions>WIN32;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;NDEBUG;_UNICODE;WXBUILDING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    pp = re.compile(r'([ ]*<PreprocessorDefinitions>)([^<]*</PreprocessorDefinitions>)')
+    lines = []
+    with open(path) as project:
+        for line in project:
+            m = pp.match(line)
+            if m:
+                lines.append('{0}{1};{2}'.format(m.group(1), define, m.group(2)))
+            else:
+                lines.append(line.rstrip())
+    with open(path, mode='w') as project:
+        for line in lines:
+            project.write(line + "\n")
+
+
+def add_definition_cmd(args):
+    add_definition_to_project(args.project, args.define)
+
+
+
 def install_cmd(args):
     global vs_root
     global root
@@ -172,6 +193,11 @@ install_parser.add_argument('--nobuild', dest='build', action='store_const', con
 install_parser = subparsers.add_parser('listprojects')
 install_parser.set_defaults(func=list_projects_cmd)
 install_parser.add_argument('sln', help='solution file')
+
+install_parser = subparsers.add_parser('add_define')
+install_parser.set_defaults(func=add_definition_cmd)
+install_parser.add_argument('project', help='project file')
+install_parser.add_argument('define', help='preprocessor to add')
 
 cmake_parser = subparsers.add_parser('cmake')
 cmake_parser.set_defaults(func=cmake_cmd)
