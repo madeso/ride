@@ -30,6 +30,7 @@ import _winreg as registry
 print "This is the vs solution path..."
 sys.stdout.flush()
 os.system(r"reg QUERY HKLM\SOFTWARE\Microsoft\VisualStudio\14.0 /v InstallDir /reg:32")
+vs_root = r'C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE'
 sys.stdout.flush()
 
 root = os.getcwd()
@@ -37,6 +38,7 @@ install_dist = os.path.join(root, 'install-dist')
 wx_root = os.path.join(install_dist, 'wx')
 proto_root = os.path.join(install_dist, 'proto')
 proto_root_root = os.path.join(proto_root, 'protobuf-2.6.1')
+
 
 def install_cmd(args):
     global vs_root
@@ -82,8 +84,9 @@ def install_cmd(args):
 
     print "upgrading protobuf"
     print "-----------------------------------"
+    devenv = os.path.join(vs_root, 'devenv.exe')
     sys.stdout.flush()
-    os.system('{root}devenv.exe {sln} /upgrade'.format(sln=proto_sln, root=vs_root))
+    os.system('{root}devenv.exe {sln} /upgrade'.format(sln=proto_sln, root=devenv))
     
     print "building protobuf"
     print "-----------------------------------"
