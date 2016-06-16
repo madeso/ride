@@ -4,7 +4,6 @@ import os
 import zipfile
 import sys
 import argparse
-import _winreg as registry
 
 # todo: change wx solution to use static crt...
 # sln file:
@@ -27,9 +26,11 @@ import _winreg as registry
 # print "studio path ", vs_root#
 
 
-print "This is the vs solution path..."
-sys.stdout.flush()
-os.system(r"reg QUERY HKLM\SOFTWARE\Microsoft\VisualStudio\14.0 /v InstallDir /reg:32")
+if os.name == 'nt':
+  print "This is the vs solution path..."
+  sys.stdout.flush()
+  os.system(r"reg QUERY HKLM\SOFTWARE\Microsoft\VisualStudio\14.0 /v InstallDir /reg:32")
+
 vs_root = r'C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE'
 sys.stdout.flush()
 
@@ -40,14 +41,27 @@ proto_root = os.path.join(install_dist, 'proto')
 proto_root_root = os.path.join(proto_root, 'protobuf-2.6.1')
 
 
+def verify_dir_exist(path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+
+def download_file(url, path):
+    if not os.path.isfile(path):
+        urllib.urlretrieve(url, path)
+    else:
+        print "Aldready downloaded", path
+
+
 def install_cmd(args):
     global vs_root
     global root
     global install_dist
     global wx_root
     global proto_root_root
+    build = args.build
     platform='x64'
-    if os.environ['PLATFORM'] == 'x86':
+    if os.environ.get('PLATFORM', 'unknown') == 'x86':
         platform='Win32'
 
     wx_url = "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.0/wxWidgets-3.1.0.zip"
@@ -64,34 +78,42 @@ def install_cmd(args):
     print wx_sln
     print proto_sln
 
-    os.makedirs(install_dist)
-    os.makedirs(wx_root)
-    os.makedirs(proto_root)
+    verify_dir_exist(install_dist)
+    verify_dir_exist(wx_root)
+    verify_dir_exist(proto_root)
 
-    urllib.urlretrieve (wx_url, os.path.join(install_dist, wx_zip))
-    urllib.urlretrieve (proto_url, os.path.join(install_dist, proto_zip))
+    print "downloading wx..."
+    download_file(wx_url, os.path.join(install_dist, wx_zip))
 
+    print "downloding proto..."
+    download_file(proto_url, os.path.join(install_dist, proto_zip))
+
+    print "extracting wx"
     with zipfile.ZipFile(wx_zip, 'r') as z:
         z.extractall(wx_root)
 
+    print "extracting proto"
     with zipfile.ZipFile(proto_zip, 'r') as z:
         z.extractall(proto_root)
 
     print "building wxwidgets"
     print "-----------------------------------"
-    sys.stdout.flush()
-    os.system(wx_msbuild_cmd)
+    if build:
+      sys.stdout.flush()
+      os.system(wx_msbuild_cmd)
 
     print "upgrading protobuf"
     print "-----------------------------------"
     devenv = os.path.join(vs_root, 'devenv.exe')
-    sys.stdout.flush()
-    os.system('"{devenv}" {sln} /upgrade'.format(sln=proto_sln, devenv=devenv))
+    if build:
+      sys.stdout.flush()
+      os.system('"{devenv}" {sln} /upgrade'.format(sln=proto_sln, devenv=devenv))
     
     print "building protobuf"
     print "-----------------------------------"
-    sys.stdout.flush()
-    os.system(proto_msbuild_cmd)
+    if build:
+      sys.stdout.flush()
+      os.system(proto_msbuild_cmd)
 
 
 def cmake_cmd(args):
@@ -125,6 +147,7 @@ subparsers = parser.add_subparsers()
 
 install_parser = subparsers.add_parser('install')
 install_parser.set_defaults(func=install_cmd)
+install_parser.add_argument('--nobuild', dest='build', action='store_const', const=False, default=True)
 
 cmake_parser = subparsers.add_parser('cmake')
 cmake_parser.set_defaults(func=cmake_cmd)
