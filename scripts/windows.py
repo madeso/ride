@@ -202,8 +202,8 @@ def build_cmd(args):
     global build
     global platform
     global appveyor_msbuild
-    ride_sln = os.path.join(build, 'ride.sln')
-    ride_msbuild_cmd = 'msbuild /t:PACKAGE /p:Configuration=Release' \
+    ride_sln = os.path.join(build, 'PACKAGE.vcxproj')
+    ride_msbuild_cmd = 'msbuild /p:Configuration=Release' \
                         ' /p:Platform="{platform}"{appveyor} {solution}'.format(
         appveyor=appveyor_msbuild, platform=platform, solution=ride_sln)
     os.system(ride_msbuild_cmd)
