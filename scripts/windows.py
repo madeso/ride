@@ -110,15 +110,20 @@ def install_cmd(args):
     if os.environ.get('PLATFORM', 'unknown') == 'x86':
         platform='Win32'
 
+    appveyor_msbuild = r' /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"'
+
     wx_url = "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.0/wxWidgets-3.1.0.zip"
     wx_zip = os.path.join(install_dist, "wx.zip")
     wx_sln = os.path.join(wx_root, 'build', 'msw', 'wx_vc14.sln')
-    wx_msbuild_cmd = 'msbuild /p:Configuration=Release /p:Platform="{platform}" {solution}'.format(platform=platform, solution=wx_sln)
+    wx_msbuild_cmd = 'msbuild /p:Configuration=Release /p:Platform="{platform}"{appveyor} {solution}'.format(
+        appveyor=appveyor_msbuild, platform=platform, solution=wx_sln)
 
     proto_url = "https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip"
     proto_zip = os.path.join(install_dist, 'proto.zip')
     proto_sln = os.path.join(proto_root_root, 'vsprojects', 'protobuf.sln')
-    proto_msbuild_cmd = 'msbuild /t:libprotobuf;protoc /p:Configuration=Release /p:Platform="{platform}" {solution}'.format(platform=platform, solution=proto_sln)
+    proto_msbuild_cmd = 'msbuild /t:libprotobuf;protoc /p:Configuration=Release' \
+                        ' /p:Platform="{platform}"{appveyor} {solution}'.format(
+        appveyor=appveyor_msbuild, platform=platform, solution=proto_sln)
 
     print root
     print wx_sln
