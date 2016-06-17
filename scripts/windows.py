@@ -91,11 +91,49 @@ def add_definition_to_project(path, define):
                 lines.append(line.rstrip())
     with open(path, mode='w') as project:
         for line in lines:
-            project.write(line + "\n")
+            project.write(line + '\n')
 
 
 def add_definition_cmd(args):
     add_definition_to_project(args.project, args.define)
+
+
+# change from:
+# <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+# <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+def change_to_static_link(path):
+    mtdebug = re.compile(r'([ ]*)<RuntimeLibrary>MultiThreadedDebugDLL')
+    mtrelease = re.compile(r'([ ]*)<RuntimeLibrary>MultiThreadedDLL')
+    lines = []
+    with open(path) as project:
+        for line in project:
+            mdebug = mtdebug.match(line)
+            mrelease = mtrelease.match(line)
+            if mdebug:
+                print 'in {project} changed to static debug'.format(project=path)
+                lines.append('{spaces}<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>'.format(spaces=mdebug.group(1)))
+            elif mrelease:
+                print 'in {project} changed to static release'.format(project=path)
+                lines.append('{spaces}<RuntimeLibrary>MultiThreaded</RuntimeLibrary>'.format(spaces=mrelease.group(1)))
+            else:
+                lines.append(line.rstrip())
+    with open(path, mode='w') as project:
+        for line in lines:
+            project.write(line + '\n')
+
+
+def change_to_static_cmd(args):
+    change_to_static_link(args.project)
+
+
+def change_all_projects_to_static(sln):
+    projects = list_projects_in_solution(sln)
+    for p in projects:
+        change_to_static_link(p)
+
+
+def change_all_projects_to_static_cmd(args):
+    change_all_projects_to_static(args.sln)
 
 
 def add_definition_to_solution(sln, definition):
@@ -219,6 +257,15 @@ install_parser.add_argument('--nobuild', dest='build', action='store_const', con
 install_parser = subparsers.add_parser('listprojects')
 install_parser.set_defaults(func=list_projects_cmd)
 install_parser.add_argument('sln', help='solution file')
+
+static_project_parser = subparsers.add_parser('static_project')
+static_project_parser.set_defaults(func=change_to_static_cmd)
+static_project_parser.add_argument('project', help='make a project staticly link to the CRT')
+
+static_solution_parser = subparsers.add_parser('static_sln')
+static_solution_parser.set_defaults(func=change_all_projects_to_static_cmd)
+static_solution_parser.add_argument('sln',
+                                    help='make all the projects in the specified solution staticly link to the CRT')
 
 install_parser = subparsers.add_parser('add_define')
 install_parser.set_defaults(func=add_definition_cmd)
