@@ -228,6 +228,10 @@ def cmake_cmd(args):
     proto_src_root = os.path.join(proto_root_root, 'src')
     os.makedirs(build)
     os.makedirs(install)
+    generator = 'Visual Studio 14 2015'
+    if os.enviroment.get('PLATFORM', 'unknown') == 'x64':
+        generator = 'Visual Studio 14 2015 Win64'
+
     cmakecmd = ("cd {build} && cmake "
                 "-DCMAKE_INSTALL_PREFIX={install} "
                 "-DPROTOBUF_SRC_ROOT_FOLDER={proto_root} "
@@ -236,13 +240,15 @@ def cmake_cmd(args):
                 "-DRIDE_BUILD_NUMBER=%APPVEYOR_BUILD_NUMBER% "
                 "-DRIDE_BUILD_BRANCH=%APPVEYOR_REPO_BRANCH% "
                 "-DRIDE_BUILD_REPO=%APPVEYOR_REPO_NAME% "
+                "{generator} "
                 "{root}").format(
         root=root,
         install=install,
         install_dist=install_dist,
         proto_root=proto_root_root,
         wx_root=wx_root,
-        build=build
+        build=build,
+        generator = '-G "' + generator + '"'
     )
     sys.stdout.flush()
     os.system(cmakecmd)
