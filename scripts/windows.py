@@ -187,6 +187,12 @@ def install_cmd(args):
     with zipfile.ZipFile(proto_zip, 'r') as z:
         z.extractall(proto_root)
 
+    print "changing wx to static"
+    change_all_projects_to_static(wx_sln)
+
+    print "changing proto to static"
+    change_all_projects_to_static(proto_sln)
+
     print "building wxwidgets"
     print "-----------------------------------"
     if build:
