@@ -23,3 +23,6 @@ configuration: Release
 
 build:
   parallel: true
+
+artifacts:
+  - path: '*.*'
