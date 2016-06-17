@@ -11,6 +11,8 @@ before_build:
   - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py cmake'
 
 build_script:
+  - cmd: 'cd %APPVEYOR_BUILD_FOLDER%\build && dir'
+  - cmd: 'cd %APPVEYOR_BUILD_FOLDER%'
   - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py build'
 
 platform:
