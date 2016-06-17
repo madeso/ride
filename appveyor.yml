@@ -25,4 +25,4 @@ build:
   parallel: true
 
 artifacts:
-  - path: '*.*'
+  - path: 'install\*.*'
