@@ -40,7 +40,12 @@ install_dist = os.path.join(root, 'install-dist')
 wx_root = os.path.join(install_dist, 'wx')
 proto_root = os.path.join(install_dist, 'proto')
 proto_root_root = os.path.join(proto_root, 'protobuf-2.6.1')
+build = os.path.join(root, 'build')
+appveyor_msbuild = r' /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"'
 
+platform = 'x64'
+if os.environ.get('PLATFORM', 'unknown') == 'x86':
+    platform = 'Win32'
 
 def verify_dir_exist(path):
     if not os.path.isdir(path):
@@ -105,12 +110,9 @@ def install_cmd(args):
     global install_dist
     global wx_root
     global proto_root_root
+    global platform
+    global appveyor_msbuild
     build = args.build
-    platform='x64'
-    if os.environ.get('PLATFORM', 'unknown') == 'x86':
-        platform='Win32'
-
-    appveyor_msbuild = r' /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"'
 
     wx_url = "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.0/wxWidgets-3.1.0.zip"
     wx_zip = os.path.join(install_dist, "wx.zip")
@@ -174,7 +176,7 @@ def cmake_cmd(args):
     global install_dist
     global wx_root
     global proto_root_root
-    build = os.path.join(root, 'build')
+    global build
     proto_src_root = os.path.join(proto_root_root, 'src')
     os.makedirs(build)
     cmakecmd = ("cd {build} && cmake "
@@ -195,6 +197,18 @@ def cmake_cmd(args):
     sys.stdout.flush()
     os.system(cmakecmd)
 
+
+def build_cmd(args):
+    global build
+    global platform
+    global appveyor_msbuild
+    ride_sln = os.path.join(build, 'ride.sln')
+    ride_msbuild_cmd = 'msbuild /t:PACKAGE /p:Configuration=Release' \
+                        ' /p:Platform="{platform}"{appveyor} {solution}'.format(
+        appveyor=appveyor_msbuild, platform=platform, solution=ride_sln)
+    os.system(ride_msbuild_cmd)
+
+
 parser = argparse.ArgumentParser(description='Does the windows build')
 subparsers = parser.add_subparsers()
 
@@ -213,6 +227,9 @@ install_parser.add_argument('define', help='preprocessor to add')
 
 cmake_parser = subparsers.add_parser('cmake')
 cmake_parser.set_defaults(func=cmake_cmd)
+
+build_parser = subparsers.add_parser('build')
+build_parser.set_defaults(func=build_cmd)
 
 args = parser.parse_args()
 args.func(args)
