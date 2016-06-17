@@ -37,6 +37,7 @@ sys.stdout.flush()
 
 root = os.getcwd()
 install_dist = os.path.join(root, 'install-dist')
+install = os.path.join(root, 'install')
 wx_root = os.path.join(install_dist, 'wx')
 proto_root = os.path.join(install_dist, 'proto')
 proto_root_root = os.path.join(proto_root, 'protobuf-2.6.1')
@@ -221,10 +222,12 @@ def cmake_cmd(args):
     global wx_root
     global proto_root_root
     global build
+    global install
     proto_src_root = os.path.join(proto_root_root, 'src')
     os.makedirs(build)
+    os.makedirs(install)
     cmakecmd = ("cd {build} && cmake "
-                "-DCMAKE_INSTALL_PREFIX= {install_dist} "
+                "-DCMAKE_INSTALL_PREFIX={install} "
                 "-DPROTOBUF_SRC_ROOT_FOLDER={proto_root} "
                 "-DwxWidgets_ROOT_DIR={wx_root} "
                 "-DRIDE_BUILD_COMMIT=%APPVEYOR_REPO_COMMIT% "
@@ -233,6 +236,7 @@ def cmake_cmd(args):
                 "-DRIDE_BUILD_REPO=%APPVEYOR_REPO_NAME% "
                 "{root}").format(
         root=root,
+        install=install,
         install_dist=install_dist,
         proto_root=proto_root_root,
         wx_root=wx_root,
