@@ -48,6 +48,7 @@ platform = 'x64'
 if os.environ.get('PLATFORM', 'unknown') == 'x86':
     platform = 'Win32'
 
+
 def verify_dir_exist(path):
     if not os.path.isdir(path):
         os.makedirs(path)
@@ -57,7 +58,7 @@ def download_file(url, path):
     if not os.path.isfile(path):
         urllib.urlretrieve(url, path)
     else:
-        print "Aldready downloaded", path
+        print "Already downloaded", path
 
 
 def list_projects_in_solution(path):
@@ -191,11 +192,9 @@ def install_cmd(args):
     print "changing wx to static"
     change_all_projects_to_static(wx_sln)
 
-    print "changing proto to static"
-    change_all_projects_to_static(proto_sln)
-
     print "building wxwidgets"
     print "-----------------------------------"
+
     if build:
       sys.stdout.flush()
       os.system(wx_msbuild_cmd)
@@ -208,6 +207,9 @@ def install_cmd(args):
       os.system('"{devenv}" {sln} /upgrade'.format(sln=proto_sln, devenv=devenv))
     # add definitoon so vs will compile
     add_definition_to_solution(proto_sln, '_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS')
+
+    print "changing proto to static"
+    change_all_projects_to_static(proto_sln)
     
     print "building protobuf"
     print "-----------------------------------"
