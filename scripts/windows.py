@@ -232,7 +232,7 @@ def cmake_cmd(args):
     os.makedirs(install)
     os.makedirs(subinstall)
     generator = 'Visual Studio 14 2015'
-    if os.enviroment.get('PLATFORM', 'unknown') == 'x64':
+    if os.environ.get('PLATFORM', 'unknown') == 'x64':
         generator = 'Visual Studio 14 2015 Win64'
 
     cmakecmd = ("cd {build} && cmake "
