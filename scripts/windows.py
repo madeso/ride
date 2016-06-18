@@ -227,7 +227,7 @@ def cmake_cmd(args):
     global install
     global platform
     proto_src_root = os.path.join(proto_root_root, 'src')
-    subinstall = os.path.join(install, 'win'+platform)
+    subinstall = os.path.join(install, 'windows', platform)
     os.makedirs(build)
     os.makedirs(install)
     os.makedirs(subinstall)
