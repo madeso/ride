@@ -37,7 +37,7 @@ deploy:
     username: madeso
     api_key:
       # api key from https://bintray.com/profile/edit
-      # encrypted in https://ci.appveyor.com/tools/encrypt 
+      # encrypted in https://ci.appveyor.com/tools/encrypt
       secure: 4+yuIks0NBwT5o8cMeC0uc2qRFlG8y3rhyRtalbby0wwlCTBlquzVQqQSVdm2a1J
     subject: madeso
     repo: ride-generic
