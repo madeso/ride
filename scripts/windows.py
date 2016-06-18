@@ -225,9 +225,12 @@ def cmake_cmd(args):
     global proto_root_root
     global build
     global install
+    global platform
     proto_src_root = os.path.join(proto_root_root, 'src')
+    subinstall = os.path.join(install, 'win'+platform)
     os.makedirs(build)
     os.makedirs(install)
+    os.makedirs(subinstall)
     generator = 'Visual Studio 14 2015'
     if os.enviroment.get('PLATFORM', 'unknown') == 'x64':
         generator = 'Visual Studio 14 2015 Win64'
@@ -243,7 +246,7 @@ def cmake_cmd(args):
                 "{generator} "
                 "{root}").format(
         root=root,
-        install=install,
+        install=subinstall,
         install_dist=install_dist,
         proto_root=proto_root_root,
         wx_root=wx_root,
