@@ -25,7 +25,7 @@ build:
   parallel: true
 
 after_build:
-  - cmd: '7z a %APPVEYOR_BUILD_FOLDER%\artifact.zip %APPVEYOR_BUILD_FOLDER%\install\*'
+  - cmd: '7z a %APPVEYOR_BUILD_FOLDER%\install\artifact.zip %APPVEYOR_BUILD_FOLDER%\install\*'
 
 artifacts:
   - path: install\artifact.zip
