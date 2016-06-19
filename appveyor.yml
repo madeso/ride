@@ -24,13 +24,11 @@ configuration: Release
 build:
   parallel: true
 
-# artifacts:
-#   - path: 'install\*.*'
-
-# publish all files in install while preserving the directory structure
-# stolen from the docs http://www.appveyor.com/docs/packaging-artifacts
 after_build:
-  - ps: $root = Resolve-Path .\install; [IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName to-publish }
+  - cmd: '7z a %APPVEYOR_BUILD_FOLDER%\artifact.zip %APPVEYOR_BUILD_FOLDER%\install\*'
+
+artifacts:
+  - path: install\artifact.zip
 
 deploy:
   - provider: BinTray
@@ -45,4 +43,4 @@ deploy:
     version: master
     publish: true
     override: true
-    explode: false
+    explode: true
