@@ -27,10 +27,26 @@ import re
 # print "studio path ", vs_root#
 
 
+class TextReplacer:
+    def __init__(self):
+        self.res = []
+
+    def add(self, reg, rep):
+        self.res.append( (reg, rep ))
+        return self
+
+    def replace(self, text):
+        for r in self.res:
+            reg = r[0]
+            rep = r[1]
+            text = text.replace(reg, rep)
+        return text
+
+
 if os.name == 'nt':
-  print "This is the vs solution path..."
-  sys.stdout.flush()
-  os.system(r"reg QUERY HKLM\SOFTWARE\Microsoft\VisualStudio\14.0 /v InstallDir /reg:32")
+    print "This is the vs solution path..."
+    sys.stdout.flush()
+    os.system(r"reg QUERY HKLM\SOFTWARE\Microsoft\VisualStudio\14.0 /v InstallDir /reg:32")
 
 vs_root = r'C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE'
 sys.stdout.flush()
@@ -142,6 +158,52 @@ def add_definition_to_solution(sln, definition):
     projects = list_projects_in_solution(sln)
     for p in projects:
         add_definition_to_project(p, definition)
+
+
+def make_single_project_64(project_path, rep):
+    if os.path.isfile(project_path) == False:
+        print 'missing ' + project_path
+        return
+    lines = []
+    with open(project_path) as project:
+        for line in project:
+            nl = rep.replace(line.rstrip())
+            lines.append(nl)
+    with open(project_path, 'w') as project:
+        for line in lines:
+            project.write(line + '\n')
+
+def make_projects_64(sln):
+    projects = list_projects_in_solution(sln)
+    rep = TextReplacer()
+    rep.add('Win32', 'x64')
+    rep.add('<DebugInformationFormat>EditAndContinue</DebugInformationFormat>', '<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>')
+    for project in projects:
+        make_single_project_64(project, rep)
+
+
+def make_solution_64(sln):
+    rep = TextReplacer()
+    rep.add('Win32', 'x64')
+
+    lines = []
+    with open(sln) as slnlines:
+        for line in slnlines:
+            nl = rep.replace(line.rstrip())
+            lines.append(nl)
+
+    with open(sln, 'w') as f:
+     for line in lines:
+            f.write(line + '\n')
+
+
+def convert_sln_to_64(sln):
+    make_solution_64(sln)
+    make_projects_64(sln)
+
+
+def make_solution_64_cmd(args):
+    convert_sln_to_64(args.sln)
 
 
 def install_cmd(args):
@@ -282,6 +344,10 @@ install_parser.add_argument('sln', help='solution file')
 static_project_parser = subparsers.add_parser('static_project')
 static_project_parser.set_defaults(func=change_to_static_cmd)
 static_project_parser.add_argument('project', help='make a project staticly link to the CRT')
+
+static_project_parser = subparsers.add_parser('to64')
+static_project_parser.set_defaults(func=make_solution_64_cmd)
+static_project_parser.add_argument('sln', help='the solution to upgrade')
 
 static_solution_parser = subparsers.add_parser('static_sln')
 static_solution_parser.set_defaults(func=change_all_projects_to_static_cmd)
