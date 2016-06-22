@@ -178,6 +178,7 @@ def make_projects_64(sln):
     rep = TextReplacer()
     rep.add('Win32', 'x64')
     rep.add('<DebugInformationFormat>EditAndContinue</DebugInformationFormat>', '<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>')
+    rep.add('<TargetMachine>MachineX86</TargetMachine>', '<TargetMachine>MachineX64</TargetMachine>')
     for project in projects:
         make_single_project_64(project, rep)
 
