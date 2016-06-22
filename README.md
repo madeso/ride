@@ -3,7 +3,7 @@
 Ride is a [Rust](http://www.rust-lang.org/) [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment). It's named after concatenating R from rust and IDE. It's currently not in a usable state.
 If you're looking for something more complete, perhaps [RustDT](http://rustdt.github.io/) for Eclipse, [SolidOak](https://github.com/oakes/SolidOak) or [Rust](https://github.com/rrandom/Brackets-Rust-IDE/) for [brackets](http://brackets.io/) is your thing.
 
-[![Build Status](https://travis-ci.org/madeso/ride.svg)](https://travis-ci.org/madeso/ride)
+[![Build Status](https://travis-ci.org/madeso/ride.svg)](https://travis-ci.org/madeso/ride) [![Project Stats](https://www.openhub.net/p/ride/widgets/project_thin_badge.gif)](https://www.openhub.net/p/ride)
 
 The current features are:
 
