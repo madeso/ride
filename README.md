@@ -21,6 +21,8 @@ The project aim is to implement as much of it in C++ and then port it to rust wh
 Some of the development is streamed [on twitch](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
 
 # Screenshots
+
+[![Join the chat at https://gitter.im/madeso/ride](https://badges.gitter.im/madeso/ride.svg)](https://gitter.im/madeso/ride?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![screenshot](gfx/screenshots/3.png)
 ![screenshot](gfx/screenshots/2.png)
 
