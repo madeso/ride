@@ -272,6 +272,10 @@ def install_cmd(args):
 
     print "changing proto to static"
     change_all_projects_to_static(proto_sln)
+
+    if platform == 'x64':
+        print '64 bit build, hacking proto to 64 bit'
+        convert_sln_to_64(proto_sln)
     
     print "building protobuf"
     print "-----------------------------------"
