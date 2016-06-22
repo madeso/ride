@@ -179,6 +179,9 @@ def make_projects_64(sln):
     rep.add('Win32', 'x64')
     rep.add('<DebugInformationFormat>EditAndContinue</DebugInformationFormat>', '<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>')
     rep.add('<TargetMachine>MachineX86</TargetMachine>', '<TargetMachine>MachineX64</TargetMachine>')
+    # protobuf specific hack since cmake looks in x64 folder
+    rep.add('<OutDir>Release\</OutDir>', '<OutDir>x64\Release\</OutDir>')
+    rep.add('<OutDir>Debug\</OutDir>', '<OutDir>x64\Debug\</OutDir>')
     for project in projects:
         make_single_project_64(project, rep)
 
