@@ -16,6 +16,7 @@ build_script:
   - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py build'
 
 platform:
+  - x86
   - x64
 
 configuration: Release
