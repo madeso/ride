@@ -1,46 +1,56 @@
-branches:
-  only:
-    - master
+environment:
+  global:
+    # This will be used as part of the zipfile name
+    # TODO change the project name
+    PROJECT_NAME: ride
+  # TODO feel free to delete targets/channels you don't need
+  matrix:
+    # Stable channel
+    - TARGET: i686-pc-windows-gnu
+      CHANNEL: stable
+    - TARGET: i686-pc-windows-msvc
+      CHANNEL: stable
+    - TARGET: x86_64-pc-windows-gnu
+      CHANNEL: stable
+    - TARGET: x86_64-pc-windows-msvc
+      CHANNEL: stable
 
-image: Visual Studio 2015
-
+# Install Rust and Cargo
+# (Based on from https://github.com/rust-lang/libc/blob/master/appveyor.yml)
 install:
-  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py install'
+  - curl -sSf -o rustup-init.exe https://win.rustup.rs
+  - rustup-init.exe --default-host %TARGET% --default-toolchain %CHANNEL% -y
+  - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+  - rustc -Vv
+  - cargo -V
 
-before_build:
-  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py cmake'
+# 'cargo test' takes care of building for us, so disable Appveyor's build stage. This prevents
+# the "directory does not contain a project or solution file" error.
+# source: https://github.com/starkat99/appveyor-rust/blob/master/appveyor.yml#L113
+build: false
 
-build_script:
-  - cmd: 'cd %APPVEYOR_BUILD_FOLDER%\build && dir'
-  - cmd: 'cd %APPVEYOR_BUILD_FOLDER%'
-  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py build'
+# Equivalent to Travis' `script` phase
+# TODO modify this phase as you see fit
+test_script:
+  - cargo build --verbose
+  - cargo run
+  - cargo test
 
-platform:
-  - x86
-  - x64
-
-configuration: Release
-
-build:
-  parallel: true
-
-after_build:
-  - cmd: '7z a %APPVEYOR_BUILD_FOLDER%\install\artifact.zip %APPVEYOR_BUILD_FOLDER%\install\*'
-
-artifacts:
-  - path: install\artifact.zip
+before_deploy:
+  # Generate artifacts for release
+  - cargo build --release
+  - mkdir staging
+  - copy target\release\ride.exe staging
+  - cd staging
+    # release zipfile will look like 'rust-everywhere-v1.2.3-x86_64-pc-windows-msvc'
+  - 7z a ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip *
+  - appveyor PushArtifact ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip
 
 deploy:
-  - provider: BinTray
-    username: madeso
-    api_key:
-      # api key from https://bintray.com/profile/edit
-      # encrypted in https://ci.appveyor.com/tools/encrypt
-      secure: 4+yuIks0NBwT5o8cMeC0uc2qRFlG8y3rhyRtalbby0wwlCTBlquzVQqQSVdm2a1J
-    subject: madeso
-    repo: ride-generic
-    package: ride-master
-    version: master
-    publish: true
-    override: true
-    explode: true
+  description: 'Windows release'
+  # All the zipped artifacts will be deployed
+  artifact: /.*\.zip/
+
+branches:
+  only:
+    - rust

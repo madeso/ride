@@ -10,33 +10,9 @@ If you're looking for something more complete, perhaps [RustDT](http://rustdt.gi
 
 The current features are:
 
-* A pretty ok editor (scintilla based)
-* Shortcuts for running various cargo commands
-* Listing its output and
-	- Double clicking on warnings/errors to go to them.
-	- Context clicking on warnings/errors to google them.
-* A basic project/cargo (file) explorer
-* Space/tab settings are saved per project so the same settings are used by everyone on the project
-* Autocompile protobuf files
+* Nothing
 
-The project aim is to implement as much of it in C++ and then port it to rust when wxWidgets for rust is available.
-
-Some of the development is streamed [on twitch](http://www.twitch.tv/imadesome) and later uploaded [to youtube](https://www.youtube.com/playlist?list=PLLZf3o2GDQ_hHiXd_xqL_ShzGcU44WMi3).
-
-# Screenshots
-![screenshot](gfx/screenshots/3.png)
-![screenshot](gfx/screenshots/2.png)
-
-# Getting ride
-This isn't finished. Eventually there should be a installer here, but that isn't finished. [Issue #13](https://github.com/madeso/ride/issues/13) is looking to fix this. If you want to try it, you need to download the source and build it yourself.
-
-Since it isn't finished at first launch you might want to set all the colors to something other than black. [Issue 64](https://github.com/madeso/ride/issues/64) should fix this.
-
-# Building ride
-You need CMake, a C++ compiler, protobuf and wxWidgets 3+. Doxygen, Python 2, clang-format and cppcheck are optional and can be disabled via the CMake BUILD_USE_ variables. To actually build it, it is pretty standard. Use CMake to generate a configuration and then build that configuration.
-
-## wxWidgets 3.x
-Currently the wxWidgets used is a fork from the public wxWidgets master. [Issue #16](https://github.com/madeso/ride/issues/16) is looking to fix this. The public download of wxWidgets 3.0 or the public master can be used but then the CMake variables USE_CPP_AS_RUST use WX_WIDGETS_LEGACY_FINDTEXT has to be changed to true.
+This is a complete rewrite in rust of the current master build.
 
 # Contributing
-I accept pull requests. Follow the google C++ style guide when writing new code.
+I accept pull requests.
