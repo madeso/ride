@@ -36,21 +36,6 @@ test_script:
   - cargo run
   - cargo test
 
-before_deploy:
-  # Generate artifacts for release
-  - cargo build --release
-  - mkdir staging
-  - copy target\release\ride.exe staging
-  - cd staging
-    # release zipfile will look like 'rust-everywhere-v1.2.3-x86_64-pc-windows-msvc'
-  - 7z a ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip *
-  - appveyor PushArtifact ../%PROJECT_NAME%-%APPVEYOR_REPO_TAG_NAME%-%TARGET%.zip
-
-deploy:
-  description: 'Windows release'
-  # All the zipped artifacts will be deployed
-  artifact: /.*\.zip/
-
 branches:
   only:
     - rust
