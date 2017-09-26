@@ -3,4 +3,13 @@ name = "ride"
 version = "0.1.0"
 authors = ["Gustav <sir.gustav.the.coder@gmail.com>"]
 
+[features]
+default = []
+backend_gtk =["gtk"]
+
 [dependencies]
+
+[dependencies.gtk]
+optional = true
+version = "0.2.0"
+features = ["v3_16"]
