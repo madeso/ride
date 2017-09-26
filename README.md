@@ -12,7 +12,12 @@ The current features are:
 
 * Nothing
 
-This is a complete rewrite in rust of the current master build.
+This is a complete rewrite in rust of the current master branch.
+
+For running the current rust consider using on of the following:
+
+    $ cargo run --features "backend_win32"
+    $ cargo run --features "backend_gtk"
 
 # Contributing
 I accept pull requests.
