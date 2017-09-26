@@ -1,9 +1,9 @@
 #[cfg(feature = "backend_gtk")]
-mod gtk_main;
+mod main_gtk;
 
 #[cfg(feature = "backend_gtk")]
 fn main() {
-  gtk_main::main();
+  main_gtk::main();
 }
 
 #[cfg(not(feature = "backend_gtk"))]
