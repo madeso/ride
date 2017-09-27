@@ -4,14 +4,14 @@ use self::gtk::prelude::*;
 
 use self::gtk::{Button, Window, WindowType};
 
-pub fn main() {
+pub fn launch_application(title : &str) {
     if gtk::init().is_err() {
         println!("Failed to initialize GTK.");
         return;
     }
 
     let window = Window::new(WindowType::Toplevel);
-    window.set_title("First GTK+ Program");
+    window.set_title(title);
     window.set_default_size(350, 70);
     let button = Button::new_with_label("Click me!");
     window.add(&button);

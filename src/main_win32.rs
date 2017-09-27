@@ -128,8 +128,8 @@ fn handle_message( window : &mut Window ) -> bool {
     }
 }
 
-pub fn main() {
-    let mut window = create_window( "ride", "Ride - Rust IDE" ).unwrap();
+pub fn launch_application(title : &str) {
+    let mut window = create_window( "ride", title).unwrap();
 
     loop {
         if !handle_message( &mut window ) {
