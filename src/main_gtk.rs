@@ -1,5 +1,6 @@
 extern crate gtk;
 extern crate cairo;
+extern crate gdk;
 
 use std::f64::consts::PI;
 
@@ -21,6 +22,10 @@ impl Drawer for Context {
   }
 }
 
+fn print_key(key : &gdk::EventKey) -> Option<char> {
+  return gdk::keyval_to_unicode(key.get_keyval())
+}
+
 pub fn launch_application(width: i32, height: i32, title : &str, app : Application) {
     if gtk::init().is_err() {
         println!("Failed to initialize GTK.");
@@ -33,6 +38,25 @@ pub fn launch_application(width: i32, height: i32, title : &str, app : Applicati
 
     let drawing_area = Box::new(DrawingArea::new)();
     window.add(&drawing_area);
+    window.connect_key_press_event(|_, key| {
+      println!("The key pressed was {:?}.", print_key(key));
+      Inhibit(true)
+    });
+    window.connect_key_release_event(|_, key| {
+      println!("The key released was {:?}.", print_key(key));
+      Inhibit(true)
+    });
+    window.connect_button_press_event(|_, key| {
+      // works = mouse
+      println!("The mouse button pressed was {:?}.", key.get_button());
+      Inhibit(true)
+    });
+    window.connect_button_release_event(|_, key| {
+      // works = mouse
+      println!("The mouse button released was {:?}.", key.get_button());
+      Inhibit(true)
+    });
+
     drawing_area.connect_draw(move |_, cr| {
         // cr.scale(500f64, 500f64);
 

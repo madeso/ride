@@ -4,6 +4,7 @@ version = "0.1.0"
 dependencies = [
  "cairo-rs 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gdi32-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "gdk 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "gtk 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "user32-sys 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
