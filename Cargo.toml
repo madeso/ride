@@ -5,7 +5,7 @@ authors = ["Gustav <sir.gustav.the.coder@gmail.com>"]
 
 [features]
 default = []
-backend_gtk =["gtk"]
+backend_gtk =["gtk", "cairo-rs"]
 backend_win32 =["winapi", "user32-sys", "kernel32-sys", "gdi32-sys"]
 
 [dependencies]
@@ -14,6 +14,10 @@ backend_win32 =["winapi", "user32-sys", "kernel32-sys", "gdi32-sys"]
 optional = true
 version = "0.2.0"
 features = ["v3_16"]
+
+[dependencies.cairo-rs]
+optional = true
+version = "0.2.0"
 
 [dependencies.winapi]
 optional = true
