@@ -8,6 +8,10 @@ pub trait Drawer {
   fn text(&self, text : &str, x: i32, y: i32);
 }
 
+pub trait Backend {
+  fn redraw(&self);
+}
+
 pub struct Application {
   text : String
 }
@@ -18,9 +22,10 @@ impl Application {
     draw.text(&self.text.to_string(), 20, 20);
   }
 
-  fn on_char(&mut self, ch : char)
+  fn on_char(&mut self, ch : char, backend: &Backend)
   {
     self.text.push(ch);
+    backend.redraw();
     // println!("Char recieved {}", ch);
   }
 }

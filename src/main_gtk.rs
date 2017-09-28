@@ -17,12 +17,20 @@ use std::sync::Arc;
 
 use Application;
 use Drawer;
+use Backend;
 
 impl Drawer for Context {
   fn text(&self, text : &str, x: i32, y: i32)
   {
     self.move_to(x as f64, y as f64);
     self.show_text(text);
+  }
+}
+
+impl Backend for Window {
+  fn redraw(&self)
+  {
+    self.queue_draw();
   }
 }
 
@@ -46,12 +54,12 @@ pub fn launch_application(width: i32, height: i32, title : &str, the_app : Appli
     window.add(&drawing_area);
 
     let keypress_app = app.clone();
-    window.connect_key_press_event(move |_, key| {
+    window.connect_key_press_event(move |widget, key| {
       let k = print_key(key);
       match k {
         Some(ch) => {
           let mut a = keypress_app.write().unwrap();
-          a.on_char(ch)
+          a.on_char(ch, widget)
         },
         None => (),
       };
