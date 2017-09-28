@@ -11,6 +11,10 @@ use self::gtk::DrawingArea;
 use self::cairo::enums::{FontSlant, FontWeight};
 use self::cairo::Context;
 
+// use std::cell::RefCell;
+use std::sync::RwLock;
+use std::sync::Arc;
+
 use Application;
 use Drawer;
 
@@ -26,7 +30,7 @@ fn print_key(key : &gdk::EventKey) -> Option<char> {
   return gdk::keyval_to_unicode(key.get_keyval())
 }
 
-pub fn launch_application(width: i32, height: i32, title : &str, app : Application) {
+pub fn launch_application(width: i32, height: i32, title : &str, the_app : Application) {
     if gtk::init().is_err() {
         println!("Failed to initialize GTK.");
         return;
@@ -36,10 +40,22 @@ pub fn launch_application(width: i32, height: i32, title : &str, app : Applicati
     window.set_title(title);
     window.set_default_size(width, height);
 
+    let app = Arc::new(RwLock::new(the_app));
+
     let drawing_area = Box::new(DrawingArea::new)();
     window.add(&drawing_area);
-    window.connect_key_press_event(|_, key| {
-      println!("The key pressed was {:?}.", print_key(key));
+
+    let keypress_app = app.clone();
+    window.connect_key_press_event(move |_, key| {
+      let k = print_key(key);
+      match k {
+        Some(ch) => {
+          let a = keypress_app.write().unwrap();
+          a.on_char(ch)
+        },
+        None => (),
+      };
+      println!("The key pressed was {:?}.", k);
       Inhibit(true)
     });
     window.connect_key_release_event(|_, key| {
@@ -57,13 +73,17 @@ pub fn launch_application(width: i32, height: i32, title : &str, app : Applicati
       Inhibit(true)
     });
 
+    let draw_app = app.clone();
     drawing_area.connect_draw(move |_, cr| {
         // cr.scale(500f64, 500f64);
 
         cr.select_font_face("Sans", FontSlant::Normal, FontWeight::Normal);
         cr.set_font_size(12f64);
 
-        app.draw(cr);
+        {
+          let a = draw_app.read().unwrap();
+          a.draw(cr);
+        }
 
         Inhibit(false)
     });

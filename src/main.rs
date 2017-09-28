@@ -16,6 +16,11 @@ impl Application {
   {
     draw.text("Hello world!", 20, 20);
   }
+
+  fn on_char(&self, ch : char)
+  {
+    println!("Char recieved {}", ch);
+  }
 }
 
 #[cfg(feature = "backend_gtk")]
