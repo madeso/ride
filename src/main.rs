@@ -9,17 +9,19 @@ pub trait Drawer {
 }
 
 pub struct Application {
+  text : String
 }
 
 impl Application {
   fn draw(&self, draw : &Drawer)
   {
-    draw.text("Hello world!", 20, 20);
+    draw.text(&self.text.to_string(), 20, 20);
   }
 
-  fn on_char(&self, ch : char)
+  fn on_char(&mut self, ch : char)
   {
-    println!("Char recieved {}", ch);
+    self.text.push(ch);
+    // println!("Char recieved {}", ch);
   }
 }
 
@@ -41,5 +43,5 @@ fn launch_application(width: i32, height: i32, title : &str, app: Application) {
 
 fn main() {
   // todo: error, not a valid configuration
-  launch_application(800, 600, "Ride - Rust IDE", Application{})
+  launch_application(800, 600, "Ride - Rust IDE", Application{text: String::from("")})
 }

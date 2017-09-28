@@ -50,7 +50,7 @@ pub fn launch_application(width: i32, height: i32, title : &str, the_app : Appli
       let k = print_key(key);
       match k {
         Some(ch) => {
-          let a = keypress_app.write().unwrap();
+          let mut a = keypress_app.write().unwrap();
           a.on_char(ch)
         },
         None => (),
