@@ -1,3 +1,7 @@
+This project is currently unmaintained. I'd like to rewrite a revision 2 in rust (rust branch) but can't seem to find a good ui library that lets me create a window and just draw text, rectangles, lines and respond to various events. Currently thinking about creating a small FFI wxWidgets based library that does just that.
+
+In the mean time I still think ride c++ is useable but far from good or recomended for any serious rust development.
+
 ![screenshot](gfx/logo/256text.png)
 
 Ride is a [Rust](http://www.rust-lang.org/) [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment). It's named after concatenating R from rust and IDE. It's currently not in a usable state.
