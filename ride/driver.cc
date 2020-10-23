@@ -1,4 +1,5 @@
 #include "driver.h"
+#include <iostream>
 
 namespace ride
 {
@@ -48,6 +49,10 @@ namespace ride
 
         float circle = 25.0f;
 
+        bool on_left = false;
+
+        std::string str;
+
         RideApp(std::shared_ptr<Driver> d)
             : driver(d)
         {
@@ -65,7 +70,7 @@ namespace ride
             painter->Rect(vec2(0, 0), window_size, Rgb{200, 200, 200}, std::nullopt);
 
             // draw some text
-            painter->Text("Testing", {40,60}, {0,0,0});
+            painter->Text(str, {40,60}, {0,0,0});
 
             // draw a circle, green filling, 5-pixels-thick red outline
             if(mouse && !start)
@@ -74,7 +79,7 @@ namespace ride
             }
             
             // draw a rectangle, blue filling, 10-pixels-thick pink outline
-            painter->Rect({window_size.x - 400, 100}, {400, 200}, Rgb{0, 0, 255}, Line{{0,0,0}, 1});
+            painter->Rect({on_left ? 0 : (window_size.x - 400), 100}, {400, 200}, Rgb{0, 0, 255}, Line{{0,0,0}, 1});
             
             // draw a black line, 3 pixels thick
             if(start && mouse)
@@ -118,6 +123,34 @@ namespace ride
         void OnMouseScroll(float scroll, int lines) override
         {
             circle = std::max(1.0f, circle + scroll * lines);
+            driver->Refresh();
+        }
+
+        bool OnKey(bool down, Key key) override
+        {
+            if(down) { return false; }
+
+            bool handled = false;
+            
+            switch(key)
+            {
+            case Key::Left: on_left = true; handled = true; break;
+            case Key::Right: on_left = false; handled = true; break;
+            case Key::Escape: str = ""; handled = true; break;
+            default: break;
+            }
+
+            if(handled)
+            {
+                driver->Refresh();
+            }
+
+            return handled;
+        }
+
+        void OnChar(const std::string& ch) override
+        {
+            str += ch;
             driver->Refresh();
         }
     };

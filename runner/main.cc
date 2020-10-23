@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "wx.h"
 
 #include "ride/driver.h"
@@ -13,6 +15,7 @@ struct MyApp : public wxApp
 
 
 wxIMPLEMENT_APP(MyApp);
+
 
 struct Pane : public wxPanel
 {
@@ -31,13 +34,9 @@ struct Pane : public wxPanel
     void OnMouseButton(ride::MouseState state, ride::MouseButton button);
     void OnMouseWheel(wxMouseEvent& event);
     
-    // some useful events
-    /*
-     
-     void rightClick(wxMouseEvent& event);
-     void keyPressed(wxKeyEvent& event);
-     void keyReleased(wxKeyEvent& event);
-     */
+    void OnKeyPressed(wxKeyEvent& event);
+    void OnKeyReleased(wxKeyEvent& event);
+    void OnChar(wxKeyEvent& event);
 };
 
 
@@ -62,32 +61,6 @@ bool MyApp::OnInit()
     return true;
 }
 
-/*
-BEGIN_EVENT_TABLE(Pane, wxPanel)
-    // some useful events
-    // EVT_LEFT_DOWN(Pane::mouseDown)
-    // EVT_LEFT_UP(Pane::mouseReleased)
-    // EVT_RIGHT_DOWN(Pane::rightClick)
-    // EVT_KEY_DOWN(Pane::keyPressed)
-    // EVT_KEY_UP(Pane::keyReleased)
-    // EVT_MOUSEWHEEL(Pane::mouseWheelMoved)
-
-    // catch paint events
-    EVT_PAINT(Pane::paintEvent)
-END_EVENT_TABLE()
-*/
-
-
-// some useful events
-/*
- 
- void Pane::mouseWheelMoved(wxMouseEvent& event) {}
-
- void Pane::rightClick(wxMouseEvent& event) {}
-
- void Pane::keyPressed(wxKeyEvent& event) {}
- void Pane::keyReleased(wxKeyEvent& event) {}
- */
 
 struct WxDriver : ride::Driver
 {
@@ -113,6 +86,138 @@ wxColor C(const ride::Rgb& c)
         static_cast<wxColourBase::ChannelType>(c.g),
         static_cast<wxColourBase::ChannelType>(c.b)
     };
+}
+
+
+ride::Key ToKey(int k)
+{
+    switch(k)
+    {
+    case WXK_BACK: return ride::Key::Backspace;
+    case WXK_TAB: return ride::Key::Tab;
+    case WXK_RETURN: return ride::Key::Return;
+    case WXK_ESCAPE: return ride::Key::Escape;
+    case WXK_SPACE: return ride::Key::Space;
+    case WXK_DELETE: return ride::Key::Delete;
+    case WXK_START: return ride::Key::Start;
+    case WXK_LBUTTON: return ride::Key::LButton;
+    case WXK_RBUTTON: return ride::Key::RButton;
+    case WXK_CANCEL: return ride::Key::Cancel;
+    case WXK_MBUTTON: return ride::Key::MButton;
+    case WXK_CLEAR: return ride::Key::Clear;
+    case WXK_SHIFT: return ride::Key::Shift;
+    case WXK_ALT: return ride::Key::Alt;
+    case WXK_CONTROL: return ride::Key::Control;
+    case WXK_MENU: return ride::Key::Menu;
+    case WXK_PAUSE: return ride::Key::Pause;
+    case WXK_CAPITAL: return ride::Key::Capital;
+    case WXK_END: return ride::Key::End;
+    case WXK_HOME: return ride::Key::Home;
+    case WXK_LEFT: return ride::Key::Left;
+    case WXK_UP: return ride::Key::Up;
+    case WXK_RIGHT: return ride::Key::Right;
+    case WXK_DOWN: return ride::Key::Down;
+    case WXK_SELECT: return ride::Key::Select;
+    case WXK_PRINT: return ride::Key::Print;
+    case WXK_EXECUTE: return ride::Key::Execute;
+    case WXK_SNAPSHOT: return ride::Key::Snapshot;
+    case WXK_INSERT: return ride::Key::Insert;
+    case WXK_HELP: return ride::Key::Help;
+    case WXK_NUMPAD0: return ride::Key::Numpad0;
+    case WXK_NUMPAD1: return ride::Key::Numpad1;
+    case WXK_NUMPAD2: return ride::Key::Numpad2;
+    case WXK_NUMPAD3: return ride::Key::Numpad3;
+    case WXK_NUMPAD4: return ride::Key::Numpad4;
+    case WXK_NUMPAD5: return ride::Key::Numpad5;
+    case WXK_NUMPAD6: return ride::Key::Numpad6;
+    case WXK_NUMPAD7: return ride::Key::Numpad7;
+    case WXK_NUMPAD8: return ride::Key::Numpad8;
+    case WXK_NUMPAD9: return ride::Key::Numpad9;
+    case WXK_MULTIPLY: return ride::Key::Multiply;
+    case WXK_ADD: return ride::Key::Add;
+    case WXK_SEPARATOR: return ride::Key::Separator;
+    case WXK_SUBTRACT: return ride::Key::Subtract;
+    case WXK_DECIMAL: return ride::Key::Decimal;
+    case WXK_DIVIDE: return ride::Key::Divide;
+    case WXK_F1: return ride::Key::F1;
+    case WXK_F2: return ride::Key::F2;
+    case WXK_F3: return ride::Key::F3;
+    case WXK_F4: return ride::Key::F4;
+    case WXK_F5: return ride::Key::F5;
+    case WXK_F6: return ride::Key::F6;
+    case WXK_F7: return ride::Key::F7;
+    case WXK_F8: return ride::Key::F8;
+    case WXK_F9: return ride::Key::F9;
+    case WXK_F10: return ride::Key::F10;
+    case WXK_F11: return ride::Key::F11;
+    case WXK_F12: return ride::Key::F12;
+    case WXK_F13: return ride::Key::F13;
+    case WXK_F14: return ride::Key::F14;
+    case WXK_F15: return ride::Key::F15;
+    case WXK_F16: return ride::Key::F16;
+    case WXK_F17: return ride::Key::F17;
+    case WXK_F18: return ride::Key::F18;
+    case WXK_F19: return ride::Key::F19;
+    case WXK_F20: return ride::Key::F20;
+    case WXK_F21: return ride::Key::F21;
+    case WXK_F22: return ride::Key::F22;
+    case WXK_F23: return ride::Key::F23;
+    case WXK_F24: return ride::Key::F24;
+    case WXK_NUMLOCK: return ride::Key::Numlock;
+    case WXK_SCROLL: return ride::Key::Scroll;
+    case WXK_PAGEUP: return ride::Key::PageUp;
+    case WXK_PAGEDOWN: return ride::Key::PageDown;
+    case WXK_NUMPAD_SPACE: return ride::Key::NumpadSpace;
+    case WXK_NUMPAD_TAB: return ride::Key::NumpadEnter;
+    case WXK_NUMPAD_ENTER: return ride::Key::NumpadEnter;
+    case WXK_NUMPAD_F1: return ride::Key::NumpadF1;
+    case WXK_NUMPAD_F2: return ride::Key::NumpadF2;
+    case WXK_NUMPAD_F3: return ride::Key::NumpadF3;
+    case WXK_NUMPAD_F4: return ride::Key::NumpadF4;
+    case WXK_NUMPAD_HOME: return ride::Key::NumpadHome;
+    case WXK_NUMPAD_LEFT: return ride::Key::NumpadLeft;
+    case WXK_NUMPAD_UP: return ride::Key::NumpadUp;
+    case WXK_NUMPAD_RIGHT: return ride::Key::NumpadRight;
+    case WXK_NUMPAD_DOWN: return ride::Key::NumpadDown;
+    case WXK_NUMPAD_PAGEUP: return ride::Key::NumpadPageUp;
+    case WXK_NUMPAD_PAGEDOWN: return ride::Key::NumpadPageDown;
+    case WXK_NUMPAD_END: return ride::Key::NumpadEnd;
+    case WXK_NUMPAD_BEGIN: return ride::Key::NumpadBegin;
+    case WXK_NUMPAD_INSERT: return ride::Key::NumpadInsert;
+    case WXK_NUMPAD_DELETE: return ride::Key::NumpadDelete;
+    case WXK_NUMPAD_EQUAL: return ride::Key::NupadEqual;
+    case WXK_NUMPAD_MULTIPLY: return ride::Key::NumpadMultiply;
+    case WXK_NUMPAD_ADD: return ride::Key::NumpadAdd;
+    case WXK_NUMPAD_SEPARATOR: return ride::Key::NumpadSeparator;
+    case WXK_NUMPAD_SUBTRACT: return ride::Key::NumpadSubtract;
+    case WXK_NUMPAD_DECIMAL: return ride::Key::NumpadDecimal;
+    case WXK_NUMPAD_DIVIDE: return ride::Key::NumpadDivide;
+    case WXK_WINDOWS_LEFT: return ride::Key::WindowLeft;
+    case WXK_WINDOWS_RIGHT: return ride::Key::WindowsRight;
+    case WXK_WINDOWS_MENU: return ride::Key::WindowsMenu;
+    case WXK_SPECIAL1: return ride::Key::Special1;
+    case WXK_SPECIAL2: return ride::Key::Special2;
+    case WXK_SPECIAL3: return ride::Key::Special3;
+    case WXK_SPECIAL4: return ride::Key::Special4;
+    case WXK_SPECIAL5: return ride::Key::Special5;
+    case WXK_SPECIAL6: return ride::Key::Special6;
+    case WXK_SPECIAL7: return ride::Key::Special7;
+    case WXK_SPECIAL8: return ride::Key::Special8;
+    case WXK_SPECIAL9: return ride::Key::Special9;
+    case WXK_SPECIAL10: return ride::Key::Special10;
+    case WXK_SPECIAL11: return ride::Key::Special11;
+    case WXK_SPECIAL12: return ride::Key::Special12;
+    case WXK_SPECIAL13: return ride::Key::Special13;
+    case WXK_SPECIAL14: return ride::Key::Special14;
+    case WXK_SPECIAL15: return ride::Key::Special15;
+    case WXK_SPECIAL16: return ride::Key::Special16;
+    case WXK_SPECIAL17: return ride::Key::Special17;
+    case WXK_SPECIAL18: return ride::Key::Special18;
+    case WXK_SPECIAL19: return ride::Key::Special19;
+    case WXK_SPECIAL20: return ride::Key::Special20;
+    default:
+        return ride::Key::None;
+    }
 }
 
 
@@ -174,8 +279,9 @@ struct WxPainter : public ride::Painter
 
     void Text(const std::string& text, const ride::vec2& where, const ride::Rgb& color) override
     {
+        const auto str = wxString::FromUTF8(text.c_str());
         dc->SetTextForeground(wxColor(C(color)));
-        dc->DrawText(text.c_str(), where.x, where.y);
+        dc->DrawText(str, where.x, where.y);
     }
 };
 
@@ -212,6 +318,9 @@ Pane::Pane(wxFrame* parent)
     Bind(wxEVT_AUX2_DCLICK, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::DoubleClick, ride::MouseButton::X2);});
 
     Bind(wxEVT_MOUSEWHEEL, &Pane::OnMouseWheel, this);
+    Bind(wxEVT_KEY_UP, &Pane::OnKeyReleased, this);
+    Bind(wxEVT_KEY_DOWN, &Pane::OnKeyPressed, this);
+    Bind(wxEVT_CHAR, &Pane::OnChar, this);
 }
 
 
@@ -237,24 +346,65 @@ void Pane::OnSize(wxSizeEvent& e)
     app->OnSize(ride::vec2{width, height});
 }
 
+
 void Pane::OnMouseMoved(wxMouseEvent& event)
 {
     app->OnMouseMoved(ride::vec2{event.GetX(), event.GetY()});
 }
+
 
 void Pane::OnMouseLeftWindow(wxMouseEvent& event)
 {
     app->OnMouseLeftWindow();
 }
 
+
 void Pane::OnMouseButton(ride::MouseState state, ride::MouseButton button)
 {
     app->OnMouseButton(state, button);
 }
+
 
 void Pane::OnMouseWheel(wxMouseEvent& e)
 {
     const float rotation = e.GetWheelRotation() / 120.0f;
     const int lines = e.GetLinesPerAction();
     app->OnMouseScroll(rotation, lines);
+}
+
+
+void Pane::OnKeyPressed(wxKeyEvent& e)
+{
+    const auto key = ToKey(e.GetKeyCode());
+    if(key == ride::Key::None) { e.Skip(); return; }
+    const auto handled = app->OnKey(true, key);
+    if(!handled)
+    {
+        e.Skip();
+    }
+}
+
+
+void Pane::OnKeyReleased(wxKeyEvent& e)
+{
+    const auto key = ToKey(e.GetKeyCode());
+    if(key == ride::Key::None) { e.Skip(); return; }
+    app->OnKey(false, key);
+    const auto handled = app->OnKey(false, key);
+    if(!handled)
+    {
+        e.Skip();
+    }
+}
+
+void Pane::OnChar(wxKeyEvent& e)
+{
+    const auto unicode_key = e.GetUnicodeKey();
+    if ( unicode_key == WXK_NONE ) { return; }
+
+    const auto wx = wxString{unicode_key};
+    const auto buff = wx.utf8_str();
+    const std::string str = buff.data();
+
+    app->OnChar(str);
 }
