@@ -115,9 +115,9 @@ namespace ride
             driver->Refresh();
         }
 
-        void OnMouseScroll(float scroll) override
+        void OnMouseScroll(float scroll, int lines) override
         {
-            circle = std::max(1.0f, circle + scroll);
+            circle = std::max(1.0f, circle + scroll * lines);
             driver->Refresh();
         }
     };

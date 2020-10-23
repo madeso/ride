@@ -255,7 +255,6 @@ void Pane::OnMouseButton(ride::MouseState state, ride::MouseButton button)
 void Pane::OnMouseWheel(wxMouseEvent& e)
 {
     const float rotation = e.GetWheelRotation() / 120.0f;
-    const float lines_per_action = e.GetLinesPerAction();
-    float lines = rotation * lines_per_action;
-    app->OnMouseScroll(lines);
+    const int lines = e.GetLinesPerAction();
+    app->OnMouseScroll(rotation, lines);
 }
