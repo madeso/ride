@@ -28,12 +28,12 @@ struct Pane : public wxPanel
     void OnSize(wxSizeEvent& e);
     void OnMouseMoved(wxMouseEvent& event);
     void OnMouseLeftWindow(wxMouseEvent& event);
-
     void OnMouseButton(ride::MouseState state, ride::MouseButton button);
+    void OnMouseWheel(wxMouseEvent& event);
     
     // some useful events
     /*
-     void mouseWheelMoved(wxMouseEvent& event);
+     
      void rightClick(wxMouseEvent& event);
      void keyPressed(wxKeyEvent& event);
      void keyReleased(wxKeyEvent& event);
@@ -210,6 +210,8 @@ Pane::Pane(wxFrame* parent)
     Bind(wxEVT_AUX2_DOWN, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Down, ride::MouseButton::X2);});
     Bind(wxEVT_AUX2_UP, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Up, ride::MouseButton::X2);});
     Bind(wxEVT_AUX2_DCLICK, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::DoubleClick, ride::MouseButton::X2);});
+
+    Bind(wxEVT_MOUSEWHEEL, &Pane::OnMouseWheel, this);
 }
 
 
@@ -248,4 +250,12 @@ void Pane::OnMouseLeftWindow(wxMouseEvent& event)
 void Pane::OnMouseButton(ride::MouseState state, ride::MouseButton button)
 {
     app->OnMouseButton(state, button);
+}
+
+void Pane::OnMouseWheel(wxMouseEvent& e)
+{
+    const float rotation = e.GetWheelRotation() / 120.0f;
+    const float lines_per_action = e.GetLinesPerAction();
+    float lines = rotation * lines_per_action;
+    app->OnMouseScroll(lines);
 }

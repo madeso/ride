@@ -62,6 +62,7 @@ namespace ride
         virtual void OnMouseMoved(const vec2& new_position) = 0;
         virtual void OnMouseLeftWindow() = 0;
         virtual void OnMouseButton(MouseState state, MouseButton button) = 0;
+        virtual void OnMouseScroll(float scroll) = 0;
     };
 
     std::shared_ptr<App> CreateApp(std::shared_ptr<Driver> driver);

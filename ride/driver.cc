@@ -46,6 +46,8 @@ namespace ride
         std::optional<vec2> mouse = std::nullopt;
         std::optional<vec2> start = std::nullopt;
 
+        float circle = 25.0f;
+
         RideApp(std::shared_ptr<Driver> d)
             : driver(d)
         {
@@ -68,7 +70,7 @@ namespace ride
             // draw a circle, green filling, 5-pixels-thick red outline
             if(mouse && !start)
             {
-                painter->Circle(*mouse, 25, Rgb{0, 255, 0}, Line{{0,0,0}, 1});
+                painter->Circle(*mouse, static_cast<int>(circle), Rgb{0, 255, 0}, Line{{0,0,0}, 1});
             }
             
             // draw a rectangle, blue filling, 10-pixels-thick pink outline
@@ -110,6 +112,12 @@ namespace ride
                 }
                 
             }
+            driver->Refresh();
+        }
+
+        void OnMouseScroll(float scroll) override
+        {
+            circle = std::max(1.0f, circle + scroll);
             driver->Refresh();
         }
     };
