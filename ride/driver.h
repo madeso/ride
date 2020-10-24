@@ -7,38 +7,6 @@
 
 namespace ride
 {
-    struct Rgb
-    {
-        int r;
-        int g;
-        int b;
-
-        Rgb(int rr, int gg, int bb);
-    };
-
-    struct Line
-    {
-        Rgb color;
-        int width;
-
-        Line(const Rgb& c, int w = 1);
-    };
-
-    struct vec2
-    {
-        int x;
-        int y;
-
-        vec2(int xx, int yy);
-    };
-
-    struct Driver
-    {
-        virtual ~Driver();
-
-        virtual void Refresh() = 0;
-    };
-
     enum class MouseState { Up, Down, DoubleClick };
     enum class MouseButton { Left, Middle, Right, X1, X2 };
 
@@ -167,14 +135,55 @@ namespace ride
         Special19,
         Special20
 
+        /* values from 33 to 126 are reserved for the standard ASCII characters */
 
-    /* values from 33 to 126 are reserved for the standard ASCII characters */
-
-    /* values from 128 to 255 are reserved for ASCII extended characters
-       (note that there isn't a single fixed standard for the meaning
-       of these values; avoid them in portable apps!) */
+        /* values from 128 to 255 are reserved for ASCII extended characters
+        (note that there isn't a single fixed standard for the meaning
+        of these values; avoid them in portable apps!) */
        
-    // Hardware-specific buttons
+        // Hardware-specific buttons
+    };
+
+    struct Rgb
+    {
+        int r;
+        int g;
+        int b;
+
+        Rgb(int rr, int gg, int bb);
+    };
+
+    struct Line
+    {
+        Rgb color;
+        int width;
+
+        Line(const Rgb& c, int w = 1);
+    };
+
+    struct vec2
+    {
+        int x;
+        int y;
+
+        vec2(int xx, int yy);
+    };
+
+    struct Font
+    {
+        virtual ~Font();
+    };
+
+    struct Driver
+    {
+        virtual ~Driver();
+
+        virtual void Refresh() = 0;
+
+        virtual std::shared_ptr<Font> CreateCodeFont(int pixel_size) = 0;
+        virtual std::shared_ptr<Font> CreateUiFont(int pixel_size) = 0;
+        // std::shared_ptr<Font> LoadFont(const FontDescription&);
+        // FontDescription BrowseFont();
     };
 
     struct Painter
@@ -183,11 +192,8 @@ namespace ride
         
         virtual void Rect(const vec2& point, const vec2& size, std::optional<Rgb> fill, std::optional<Line> line_color) = 0;
         virtual void Circle(const vec2& point, int radius, std::optional<Rgb> fill, std::optional<Line> line_color) = 0;
-
         virtual void Line(const vec2& from, const vec2& to, const Line& line) = 0;
-
-        // todo(Gustav): handle font
-        virtual void Text(const std::string& text, const vec2& where, const Rgb& color) = 0;
+        virtual void Text(std::shared_ptr<Font> font, const std::string& text, const vec2& where, const Rgb& color) = 0;
     };
     
     struct App

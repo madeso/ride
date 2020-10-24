@@ -25,6 +25,11 @@ namespace ride
     }
 
 
+    Font::~Font()
+    {
+    }
+
+
     Driver::~Driver()
     {
     }
@@ -43,6 +48,9 @@ namespace ride
     struct RideApp : App
     {
         std::shared_ptr<Driver> driver;
+        std::shared_ptr<Font> font_ui;
+        std::shared_ptr<Font> font_code;
+
         vec2 window_size = vec2{0,0};
         std::optional<vec2> mouse = std::nullopt;
         std::optional<vec2> start = std::nullopt;
@@ -51,10 +59,12 @@ namespace ride
 
         bool on_left = false;
 
-        std::string str;
+        std::string str = "void main() { return 42; }";
 
         RideApp(std::shared_ptr<Driver> d)
             : driver(d)
+            , font_ui(d->CreateUiFont(14))
+            , font_code(d->CreateCodeFont(14))
         {
         }
 
@@ -70,7 +80,8 @@ namespace ride
             painter->Rect(vec2(0, 0), window_size, Rgb{200, 200, 200}, std::nullopt);
 
             // draw some text
-            painter->Text(str, {40,60}, {0,0,0});
+            painter->Text(font_ui, "File | Code | Help", {40, 20}, {0, 0, 0});
+            painter->Text(font_code, str, {40,60}, {0,0,0});
 
             // draw a circle, green filling, 5-pixels-thick red outline
             if(mouse && !start)

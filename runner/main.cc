@@ -62,6 +62,13 @@ bool MyApp::OnInit()
 }
 
 
+struct WxFont : ride::Font
+{
+    wxFont font;
+    WxFont(wxFont f) : font(f) {}
+};
+
+
 struct WxDriver : ride::Driver
 {
     Pane* pane;
@@ -74,6 +81,35 @@ struct WxDriver : ride::Driver
     void Refresh() override
     {
         pane->Refresh();
+    }
+
+    std::shared_ptr<ride::Font> MakeFont(wxFont font)
+    {
+        return std::make_shared<WxFont>(font);
+    }
+
+    std::shared_ptr<ride::Font> CreateCodeFont(int pixel_size) override
+    {
+        return MakeFont
+        (
+            wxFont
+            {
+                wxFontInfo{wxSize{0, pixel_size}}
+                .Family(wxFONTFAMILY_TELETYPE)
+            }
+        );
+    }
+
+    std::shared_ptr<ride::Font> CreateUiFont(int pixel_size) override
+    {
+        return MakeFont
+        (
+            wxFont
+            {
+                wxFontInfo{wxSize{0, pixel_size}}
+                .Family(wxFONTFAMILY_ROMAN)
+            }
+        );
     }
 };
 
@@ -277,11 +313,16 @@ struct WxPainter : public ride::Painter
         dc->DrawLine(from.x, from.y, to.x, to.y);
     }
 
-    void Text(const std::string& text, const ride::vec2& where, const ride::Rgb& color) override
+    void Text(std::shared_ptr<ride::Font> font, const std::string& text, const ride::vec2& where, const ride::Rgb& color) override
     {
         const auto str = wxString::FromUTF8(text.c_str());
         dc->SetTextForeground(wxColor(C(color)));
+        auto* wx_font = static_cast<WxFont*>(font.get());
+        dc->SetFont(wx_font->font);
         dc->DrawText(str, where.x, where.y);
+        dc->SetFont(wxNullFont);
+
+        // todo(Gustav): change api so we don't have to clear font for several lines
     }
 };
 
