@@ -37,9 +37,6 @@ namespace ride
     {
         std::vector<std::string> lines;
 
-        vec2 scroll = {0, 0};
-
-
         Document()
         {
             LoadFile(__FILE__);
@@ -82,35 +79,51 @@ namespace ride
     };
 
 
-    void DrawDocument
-    (
-        std::shared_ptr<Driver> driver,
-        std::shared_ptr<Font> font,
-        Painter* painter,
-        const Rgb& color,
-        const Document& d,
-        const Rect& rect
-    )
+    struct View
     {
-        const auto scope = RectScope{painter, rect};
-        const auto lower_right = rect.position + rect.size;
-        const auto meassure = driver->GetSizeOfString(font, "ABCgdijlk");
-        
-        auto draw = rect.position;
-        auto scroll = d.scroll;
+        std::shared_ptr<Font> font;
+        std::shared_ptr<Document> document;
 
-        for(; draw.y < lower_right.y; draw.y += meassure.height)
+        vec2 scroll = {0, 0};
+        Rect rect = {{0, 0}, {0, 0}};
+
+        void ScrollY(int y)
         {
-            if(scroll.y >= 0 && scroll.y < d.lines.size())
-            {
-                const auto l = d.lines[scroll.y];
-                painter->Text(font, l, draw, color);
-            }
-
-            scroll.y = scroll.y + 1;
+            scroll.y += y;
         }
-    }
 
+        void Draw
+        (
+            std::shared_ptr<Driver> driver,
+            Painter* painter,
+            const Rgb& foreground_color,
+            const Rgb& background_color
+        )
+        {
+            painter->Rect(rect, background_color, std::nullopt);
+
+            if(font && document)
+            {
+                const auto scope = RectScope{painter, rect};
+                const auto lower_right = rect.position + rect.size;
+                const auto line_height = driver->GetSizeOfString(font, "ABCgdijlk").height;
+                
+                auto draw = rect.position;
+                auto current_scroll = scroll;
+
+                for(; draw.y < lower_right.y; draw.y += line_height)
+                {
+                    if(current_scroll.y >= 0 && current_scroll.y < document->lines.size())
+                    {
+                        const auto l = document->lines[current_scroll.y];
+                        painter->Text(font, l, draw, foreground_color);
+                    }
+
+                    current_scroll.y = current_scroll.y + 1;
+                }
+            }
+        }
+    };
 
 
     const std::string MEASSURE_STRING = "ABCdefjklm";
@@ -124,7 +137,7 @@ namespace ride
         std::shared_ptr<Font> font_big;
         TextSize text_size;
 
-        Document doc;
+        View view;
 
         vec2 window_size = vec2{0,0};
         std::optional<vec2> mouse = std::nullopt;
@@ -143,6 +156,9 @@ namespace ride
             , font_big(d->CreateUiFont(100))
             , text_size(d->GetSizeOfString(font_big, MEASSURE_STRING))
         {
+            view.font = font_code;
+            view.rect = Rect{{10, 20}, {400, 420}};
+            view.document = std::make_shared<Document>();
             std::cout << text_size.external_leading << "\n";
         }
 
@@ -173,10 +189,7 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            constexpr auto edit = Rect{{10, 20}, {400, 420}};
-            painter->Rect(edit, Rgb{180, 180, 180}, std::nullopt);
-
-            DrawDocument(driver, font_code, painter, {0,0,0}, doc, edit);
+            view.Draw(driver, painter, {0,0,0}, Rgb{180, 180, 180});
         }
 
         void OnMouseMoved(const vec2& new_position) override
@@ -239,14 +252,14 @@ namespace ride
             case Key::Up:
                 if(ctrl)
                 {
-                    doc.scroll.y -= 1;
+                    view.ScrollY(-1);
                     handled = true;
                 }
                 break;
             case Key::Down:
                 if(ctrl)
                 {
-                    doc.scroll.y += 1;
+                    view.ScrollY(1);
                     handled = true;
                 }
                 break;
