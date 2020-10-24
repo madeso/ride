@@ -1,117 +1,15 @@
 #include <iostream>
 
 #include "wx.h"
+#include <wx/dcclient.h>
 
 #include "ride/driver.h"
 
 
-constexpr char* DISPLAY_NAME = "Ride";
-
-
-struct MyApp : public wxApp
+wxString C(const std::string& text)
 {
-    bool OnInit() override;
-};
-
-
-wxIMPLEMENT_APP(MyApp);
-
-
-struct Pane : public wxPanel
-{
-    Pane(wxFrame* parent);
-
-    std::shared_ptr<ride::App> app;
-    
-    void paintEvent(wxPaintEvent & evt);
-    
-    void render(wxDC& dc);
-
-
-    void OnSize(wxSizeEvent& e);
-    void OnMouseMoved(wxMouseEvent& event);
-    void OnMouseLeftWindow(wxMouseEvent& event);
-    void OnMouseButton(ride::MouseState state, ride::MouseButton button);
-    void OnMouseWheel(wxMouseEvent& event);
-    
-    void OnKeyPressed(wxKeyEvent& event);
-    void OnKeyReleased(wxKeyEvent& event);
-    void OnChar(wxKeyEvent& event);
-};
-
-
-bool MyApp::OnInit()
-{
-    wxAppConsole* app_console = wxAppConsole::GetInstance();
-    app_console->SetAppName("ride");
-    app_console->SetAppDisplayName(DISPLAY_NAME);
-    app_console->SetVendorName("madeso");
-    app_console->SetVendorDisplayName("madeso");
-
-    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    auto* frame = new wxFrame((wxFrame *)NULL, -1,  DISPLAY_NAME, wxPoint(50,50), wxSize(800,600));
-	
-    auto* pane = new Pane( (wxFrame*) frame );
-    sizer->Add(pane, 1, wxEXPAND);
-	
-    frame->SetSizer(sizer);
-    frame->SetAutoLayout(true);
-	
-    frame->Show(true);
-    return true;
+    return wxString::FromUTF8(text.c_str());
 }
-
-
-struct WxFont : ride::Font
-{
-    wxFont font;
-    WxFont(wxFont f) : font(f) {}
-};
-
-
-struct WxDriver : ride::Driver
-{
-    Pane* pane;
-
-    WxDriver(Pane* p)
-        : pane(p)
-    {
-    }
-
-    void Refresh() override
-    {
-        pane->Refresh();
-    }
-
-    std::shared_ptr<ride::Font> MakeFont(wxFont font)
-    {
-        return std::make_shared<WxFont>(font);
-    }
-
-    std::shared_ptr<ride::Font> CreateCodeFont(int pixel_size) override
-    {
-        return MakeFont
-        (
-            wxFont
-            {
-                wxFontInfo{wxSize{0, pixel_size}}
-                .Family(wxFONTFAMILY_TELETYPE)
-            }
-        );
-    }
-
-    std::shared_ptr<ride::Font> CreateUiFont(int pixel_size) override
-    {
-        return MakeFont
-        (
-            wxFont
-            {
-                wxFontInfo{wxSize{0, pixel_size}}
-                .Family(wxFONTFAMILY_ROMAN)
-            }
-        );
-    }
-};
 
 
 wxColor C(const ride::Rgb& c)
@@ -257,6 +155,138 @@ ride::Key ToKey(int k)
 }
 
 
+constexpr char* DISPLAY_NAME = "Ride";
+
+
+struct MyApp : public wxApp
+{
+    bool OnInit() override;
+};
+
+
+wxIMPLEMENT_APP(MyApp);
+
+
+
+struct Pane : public wxPanel
+{
+    Pane(wxFrame* parent);
+
+    std::shared_ptr<ride::App> app;
+    
+    void paintEvent(wxPaintEvent & evt);
+    
+    void render(wxDC& dc);
+
+
+    void OnSize(wxSizeEvent& e);
+    void OnMouseMoved(wxMouseEvent& event);
+    void OnMouseLeftWindow(wxMouseEvent& event);
+    void OnMouseButton(ride::MouseState state, ride::MouseButton button);
+    void OnMouseWheel(wxMouseEvent& event);
+    
+    void OnKeyPressed(wxKeyEvent& event);
+    void OnKeyReleased(wxKeyEvent& event);
+    void OnChar(wxKeyEvent& event);
+};
+
+
+bool MyApp::OnInit()
+{
+    wxAppConsole* app_console = wxAppConsole::GetInstance();
+    app_console->SetAppName("ride");
+    app_console->SetAppDisplayName(DISPLAY_NAME);
+    app_console->SetVendorName("madeso");
+    app_console->SetVendorDisplayName("madeso");
+
+    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+    auto* frame = new wxFrame((wxFrame *)NULL, -1,  DISPLAY_NAME, wxPoint(50,50), wxSize(800,600));
+	
+    auto* pane = new Pane( (wxFrame*) frame );
+    sizer->Add(pane, 1, wxEXPAND);
+	
+    frame->SetSizer(sizer);
+    frame->SetAutoLayout(true);
+	
+    frame->Show(true);
+    return true;
+}
+
+
+struct WxFont : ride::Font
+{
+    wxFont font;
+
+    WxFont(wxFont f) : font(f) {}
+};
+
+
+wxFont C(std::shared_ptr<ride::Font> font)
+{
+    auto* wx_font = static_cast<WxFont*>(font.get());
+    return wx_font->font;
+}
+
+
+struct WxDriver : ride::Driver
+{
+    Pane* pane;
+
+    WxDriver(Pane* p)
+        : pane(p)
+    {
+    }
+
+    void Refresh() override
+    {
+        pane->Refresh();
+    }
+
+    std::shared_ptr<ride::Font> MakeFont(wxFont font)
+    {
+        return std::make_shared<WxFont>(font);
+    }
+
+    ride::TextSize GetSizeOfString(std::shared_ptr<ride::Font> font, const std::string& str) override
+    {
+        int width = 0;
+        int height = 0;
+        int descent = 0;
+        int external_leading = 0;
+
+        auto dc = wxClientDC{pane};
+        auto wx_font = C(font);
+        dc.GetTextExtent(C(str), &width, &height, &descent, &external_leading, &wx_font);
+
+        return {width, height, descent, external_leading};
+    }
+
+    std::shared_ptr<ride::Font> CreateCodeFont(int pixel_size) override
+    {
+        return MakeFont
+        (
+            wxFont
+            {
+                wxFontInfo{pixel_size}
+                .Family(wxFONTFAMILY_TELETYPE)
+            }
+        );
+    }
+
+    std::shared_ptr<ride::Font> CreateUiFont(int pixel_size) override
+    {
+        return MakeFont
+        (
+            wxFont
+            {
+                wxFontInfo{pixel_size}
+                .Family(wxFONTFAMILY_ROMAN)
+            }
+        );
+    }
+};
+
+
 void SetBrush(wxDC* dc, std::optional<ride::Rgb> fill)
 {
     if(fill)
@@ -315,10 +345,9 @@ struct WxPainter : public ride::Painter
 
     void Text(std::shared_ptr<ride::Font> font, const std::string& text, const ride::vec2& where, const ride::Rgb& color) override
     {
-        const auto str = wxString::FromUTF8(text.c_str());
+        const auto str = C(text);
         dc->SetTextForeground(wxColor(C(color)));
-        auto* wx_font = static_cast<WxFont*>(font.get());
-        dc->SetFont(wx_font->font);
+        dc->SetFont(C(font));
         dc->DrawText(str, where.x, where.y);
         dc->SetFont(wxNullFont);
 

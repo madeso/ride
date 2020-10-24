@@ -174,6 +174,16 @@ namespace ride
         virtual ~Font();
     };
 
+    struct TextSize
+    {
+        int width;
+        int height;
+        int descent;
+        int external_leading;
+
+        TextSize(int w, int h, int d, int e);
+    };
+
     struct Driver
     {
         virtual ~Driver();
@@ -182,6 +192,7 @@ namespace ride
 
         virtual std::shared_ptr<Font> CreateCodeFont(int pixel_size) = 0;
         virtual std::shared_ptr<Font> CreateUiFont(int pixel_size) = 0;
+        virtual TextSize GetSizeOfString(std::shared_ptr<Font> font, const std::string& str) = 0;
         // std::shared_ptr<Font> LoadFont(const FontDescription&);
         // FontDescription BrowseFont();
     };
