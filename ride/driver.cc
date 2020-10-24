@@ -96,9 +96,14 @@ namespace ride
         vec2 scroll = {0, 0};
         Rect rect = {{0, 0}, {0, 0}};
 
-        void ScrollY(int y)
+        void ScrollDown(int y)
         {
             scroll.y += y;
+        }
+
+        void ScrollRight(int x)
+        {
+            scroll.x += x;
         }
 
         void Draw
@@ -136,11 +141,24 @@ namespace ride
                 {
                     if(current_scroll.y >= 0 && current_scroll.y < document->lines.size())
                     {
+                        const auto substr = [](const std::string& str, int offset) -> std::string
+                        {
+                            if(offset >= static_cast<int>(str.length())) { return ""; }
+                            else if(offset < 0)
+                            {
+                                return std::string(-offset, ' ') + str;
+                            }
+                            else
+                            {
+                                return str.substr(offset);
+                            }
+                        };
                         if(render_linenumber && current_scroll.y >= 0)
                         {
                             painter->Text(font, Str{} << current_scroll.y + 1, {draw.x + left_gutter_padding, draw.y}, foreground_color);
                         }
-                        const auto line = document->lines[current_scroll.y];
+                        const auto line = substr(document->lines[current_scroll.y], scroll.x);
+
                         painter->Text(font, line, {draw.x + gutter_rect.size.x + editor_padding_left, draw.y}, foreground_color);
                     }
 
@@ -198,9 +216,7 @@ namespace ride
         {
             painter->Rect({{0, 0}, window_size}, Rgb{230, 230, 230}, std::nullopt);
 
-            // draw some text
             painter->Text(font_ui, "File | Code | Help", {40, 00}, {0, 0, 0});
-            // painter->Text(font_code, str, {40,60}, {0,0,0});
 
             // draw a circle, green filling, 5-pixels-thick red outline
             if(mouse && !start)
@@ -265,28 +281,38 @@ namespace ride
                 return true;
             }
 
-            if(!down) { return false; }
-
             bool handled = false;
 
             switch(key)
             {
-            case Key::Left: on_left = true; handled = true; break;
-            case Key::Right: on_left = false; handled = true; break;
             case Key::Escape: str = ""; handled = true; break;
-            case Key::Up:
-                if(ctrl)
+            case Key::Left:
+                if(ctrl && down)
                 {
-                    view.ScrollY(-1);
-                    handled = true;
+                    view.ScrollRight(-1);
                 }
+                handled = true;
+                break;
+            case Key::Right:
+                if(ctrl && down)
+                {
+                    view.ScrollRight(1);
+                }
+                handled = true;
+                break;
+            case Key::Up:
+                if(ctrl && down)
+                {
+                    view.ScrollDown(-1);
+                }
+                handled = true;
                 break;
             case Key::Down:
-                if(ctrl)
+                if(ctrl && down)
                 {
-                    view.ScrollY(1);
-                    handled = true;
+                    view.ScrollDown(1);
                 }
+                handled = true;
                 break;
 
             default: break;
