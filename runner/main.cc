@@ -323,11 +323,21 @@ struct WxPainter : public ride::Painter
     {
     }
 
-    void Rect(const ride::vec2& point, const ride::vec2& size, std::optional<ride::Rgb> fill, std::optional<ride::Line> line_color) override
+    void PushClip(const ride::Rect& rect) override
+    {
+        dc->SetClippingRegion(rect.position.x, rect.position.y, rect.size.x, rect.size.y);
+    }
+
+    void PopClip() override
+    {
+        dc->DestroyClippingRegion();
+    }
+
+    void Rect(const ride::Rect& rect, std::optional<ride::Rgb> fill, std::optional<ride::Line> line_color) override
     {
         SetBrush(dc, fill);
         SetPen(dc, line_color);
-        dc->DrawRectangle(point.x, point.y, size.x, size.y);
+        dc->DrawRectangle(rect.position.x, rect.position.y, rect.size.x, rect.size.y);
     }
 
     void Circle(const ride::vec2& point, int radius, std::optional<ride::Rgb> fill, std::optional<ride::Line> line_color) override

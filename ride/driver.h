@@ -144,13 +144,15 @@ namespace ride
         // Hardware-specific buttons
     };
 
+
     struct Rgb
     {
         int r;
         int g;
         int b;
 
-        Rgb(int rr, int gg, int bb);
+        constexpr Rgb(int rr, int gg, int bb)
+            : r(rr), g(gg), b(bb) {}
     };
 
     struct Line
@@ -158,20 +160,8 @@ namespace ride
         Rgb color;
         int width;
 
-        Line(const Rgb& c, int w = 1);
-    };
-
-    struct vec2
-    {
-        int x;
-        int y;
-
-        vec2(int xx, int yy);
-    };
-
-    struct Font
-    {
-        virtual ~Font();
+        constexpr Line(const Rgb& c, int w = 1)
+            : color(c), width(w) {}
     };
 
     struct TextSize
@@ -181,7 +171,33 @@ namespace ride
         int descent;
         int external_leading;
 
-        TextSize(int w, int h, int d, int e);
+        constexpr TextSize(int w, int h, int d, int e)
+            : width(w), height(h), descent(d), external_leading(e) {}
+    };
+
+    struct vec2
+    {
+        int x;
+        int y;
+
+        constexpr vec2(int xx, int yy)
+            : x(xx), y(yy) {}
+    };
+
+    vec2 operator+(const vec2& lhs, const vec2& rhs);
+
+    struct Rect
+    {
+        vec2 position;
+        vec2 size;
+
+        constexpr Rect(const vec2& p, const vec2& s)
+            : position(p), size(s) {}
+    };
+
+    struct Font
+    {
+        virtual ~Font();
     };
 
     struct Driver
@@ -200,8 +216,11 @@ namespace ride
     struct Painter
     {
         virtual ~Painter();
+
+        virtual void PushClip(const Rect& rect) = 0;
+        virtual void PopClip() = 0;
         
-        virtual void Rect(const vec2& point, const vec2& size, std::optional<Rgb> fill, std::optional<Line> line_color) = 0;
+        virtual void Rect(const Rect& rect, std::optional<Rgb> fill, std::optional<Line> line_color) = 0;
         virtual void Circle(const vec2& point, int radius, std::optional<Rgb> fill, std::optional<Line> line_color) = 0;
         virtual void Line(const vec2& from, const vec2& to, const Line& line) = 0;
         virtual void Text(std::shared_ptr<Font> font, const std::string& text, const vec2& where, const Rgb& color) = 0;

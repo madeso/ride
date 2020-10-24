@@ -7,38 +7,13 @@
 
 namespace ride
 {
-    Rgb::Rgb(int rr, int gg, int bb)
-        : r(rr)
-        , g(gg)
-        , b(bb)
+    vec2 operator+(const vec2& lhs, const vec2& rhs)
     {
-    }
-
-
-    Line::Line(const Rgb& c, int w)
-        : color(c)
-        , width(w)
-    {
-    }
-
-
-    vec2::vec2(int xx, int yy)
-        : x(xx)
-        , y(yy)
-    {
+        return {lhs.x + rhs.x, lhs.y + rhs.y};
     }
 
 
     Font::~Font()
-    {
-    }
-
-
-    TextSize::TextSize(int w, int h, int d, int e)
-        : width(w)
-        , height(h)
-        , descent(d)
-        , external_leading(e)
     {
     }
 
@@ -91,6 +66,21 @@ namespace ride
     };
 
 
+    struct RectScope
+    {
+        Painter* painter;
+
+        RectScope(Painter* p, const Rect& rect) : painter(p)
+        {
+            painter->PushClip(rect);
+        }
+
+        ~RectScope()
+        {
+            painter->PopClip();
+        }
+    };
+
 
     void DrawDocument
     (
@@ -99,13 +89,14 @@ namespace ride
         Painter* painter,
         const Rgb& color,
         const Document& d,
-        const vec2& where,
-        const vec2& lower_right
+        const Rect& rect
     )
     {
+        const auto scope = RectScope{painter, rect};
+        const auto lower_right = rect.position + rect.size;
         const auto meassure = driver->GetSizeOfString(font, "ABCgdijlk");
         
-        auto draw = where;
+        auto draw = rect.position;
         auto scroll = d.scroll;
 
         for(; draw.y < lower_right.y; draw.y += meassure.height)
@@ -164,14 +155,11 @@ namespace ride
 
         void OnPaint(Painter* painter) override
         {
-            painter->Rect(vec2(0, 0), window_size, Rgb{200, 200, 200}, std::nullopt);
+            painter->Rect({{0, 0}, window_size}, Rgb{230, 230, 230}, std::nullopt);
 
             // draw some text
             painter->Text(font_ui, "File | Code | Help", {40, 00}, {0, 0, 0});
             // painter->Text(font_code, str, {40,60}, {0,0,0});
-
-            // draw a rectangle, blue filling, 10-pixels-thick pink outline
-            painter->Rect({on_left ? 0 : (window_size.x - 200), 100}, {200, 400}, Rgb{100, 100, 100}, Line{{0,0,0}, 1});
 
             // draw a circle, green filling, 5-pixels-thick red outline
             if(mouse && !start)
@@ -185,7 +173,10 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            DrawDocument(driver, font_code, painter, {0,0,0}, doc, {10, 20}, window_size);
+            constexpr auto edit = Rect{{10, 20}, {400, 420}};
+            painter->Rect(edit, Rgb{180, 180, 180}, std::nullopt);
+
+            DrawDocument(driver, font_code, painter, {0,0,0}, doc, edit);
         }
 
         void OnMouseMoved(const vec2& new_position) override
