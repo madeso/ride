@@ -193,6 +193,8 @@ namespace ride
 
         constexpr Rect(const vec2& p, const vec2& s)
             : position(p), size(s) {}
+
+        Rect CreateWestFromMaxSize(int max_size) const;
     };
 
     struct Font

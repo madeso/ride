@@ -1,5 +1,7 @@
 #include "driver.h"
 
+#include "ride/str.h"
+
 #include <vector>
 #include <string>
 #include <fstream>
@@ -10,6 +12,12 @@ namespace ride
     vec2 operator+(const vec2& lhs, const vec2& rhs)
     {
         return {lhs.x + rhs.x, lhs.y + rhs.y};
+    }
+
+
+    Rect Rect::CreateWestFromMaxSize(int max_size) const
+    {
+        return {position, {std::min(max_size, size.x), size.y}};
     }
 
 
@@ -31,6 +39,7 @@ namespace ride
     App::~App()
     {
     }
+    
 
 
     struct Document
@@ -97,7 +106,8 @@ namespace ride
             std::shared_ptr<Driver> driver,
             Painter* painter,
             const Rgb& foreground_color,
-            const Rgb& background_color
+            const Rgb& background_color,
+            const Rgb& gutter_color
         )
         {
             painter->Rect(rect, background_color, std::nullopt);
@@ -105,6 +115,17 @@ namespace ride
             if(font && document)
             {
                 const auto scope = RectScope{painter, rect};
+
+                const bool render_linenumber = true;
+                const int left_gutter_padding = 3;
+                const int right_gutter_padding = 6;
+                const int editor_padding_left = 6;
+
+                const auto line_number_size = !render_linenumber ? 0 : driver->GetSizeOfString(font, Str{} << document->lines.size() + 1).width;
+
+                const auto gutter_rect = rect.CreateWestFromMaxSize(left_gutter_padding + line_number_size + right_gutter_padding);
+                painter->Rect(gutter_rect, gutter_color, std::nullopt);
+                
                 const auto lower_right = rect.position + rect.size;
                 const auto line_height = driver->GetSizeOfString(font, "ABCgdijlk").height;
                 
@@ -115,8 +136,12 @@ namespace ride
                 {
                     if(current_scroll.y >= 0 && current_scroll.y < document->lines.size())
                     {
-                        const auto l = document->lines[current_scroll.y];
-                        painter->Text(font, l, draw, foreground_color);
+                        if(render_linenumber && current_scroll.y >= 0)
+                        {
+                            painter->Text(font, Str{} << current_scroll.y + 1, {draw.x + left_gutter_padding, draw.y}, foreground_color);
+                        }
+                        const auto line = document->lines[current_scroll.y];
+                        painter->Text(font, line, {draw.x + gutter_rect.size.x + editor_padding_left, draw.y}, foreground_color);
                     }
 
                     current_scroll.y = current_scroll.y + 1;
@@ -189,7 +214,7 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            view.Draw(driver, painter, {0,0,0}, Rgb{180, 180, 180});
+            view.Draw(driver, painter, {0,0,0}, {180, 180, 180}, {160, 160, 160});
         }
 
         void OnMouseMoved(const vec2& new_position) override
