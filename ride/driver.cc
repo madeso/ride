@@ -93,8 +93,29 @@ namespace ride
         std::shared_ptr<Font> font;
         std::shared_ptr<Document> document;
 
+        int requested_cursor_x = 0;
+        vec2 cursor = {0, 0};
         vec2 scroll = {0, 0};
         Rect rect = {{0, 0}, {0, 0}};
+
+        void StepRight(int x)
+        {
+            const int next_x = std::max(0, cursor.x + x);
+            if(document && cursor.y < document->lines.size())
+            {
+                cursor.x = std::min<int>(document->lines[cursor.y].length(), next_x);
+            }
+            requested_cursor_x = cursor.x;
+        }
+
+        void StepDown(int y)
+        {
+            if(document)
+            {
+                cursor.y = std::min<int>(std::max(0, cursor.y + y), document->lines.size());
+                cursor.x = std::min<int>(document->lines[cursor.y].length(), requested_cursor_x);
+            }
+        }
 
         void ScrollDown(int y)
         {
@@ -157,9 +178,22 @@ namespace ride
                         {
                             painter->Text(font, Str{} << current_scroll.y + 1, {draw.x + left_gutter_padding, draw.y}, foreground_color);
                         }
-                        const auto line = substr(document->lines[current_scroll.y], scroll.x);
+                        const auto full_line = document->lines[current_scroll.y];
+                        const auto line = substr(full_line, scroll.x);
+                        const auto draw_position = vec2{draw.x + gutter_rect.size.x + editor_padding_left, draw.y};
 
-                        painter->Text(font, line, {draw.x + gutter_rect.size.x + editor_padding_left, draw.y}, foreground_color);
+                        if(current_scroll.y == cursor.y)
+                        {
+                            const auto cursor_x = driver->GetSizeOfString(font, full_line.substr(0, cursor.x)).width;
+                            painter->Line
+                            (
+                                {draw_position.x + cursor_x, draw_position.y},
+                                {draw_position.x + cursor_x, draw_position.y + line_height},
+                                {{0, 0, 0}, 1}
+                            );
+                        }
+
+                        painter->Text(font, line, draw_position, foreground_color);
                     }
 
                     current_scroll.y = current_scroll.y + 1;
@@ -287,30 +321,34 @@ namespace ride
             {
             case Key::Escape: str = ""; handled = true; break;
             case Key::Left:
-                if(ctrl && down)
+                if(down)
                 {
-                    view.ScrollRight(-1);
+                    if(ctrl) { view.ScrollRight(-1); }
+                    else { view.StepRight(-1); }
                 }
                 handled = true;
                 break;
             case Key::Right:
-                if(ctrl && down)
+                if(down)
                 {
-                    view.ScrollRight(1);
+                    if(ctrl) { view.ScrollRight(1); }
+                    else { view.StepRight(1); }
                 }
                 handled = true;
                 break;
             case Key::Up:
-                if(ctrl && down)
+                if(down)
                 {
-                    view.ScrollDown(-1);
+                    if(ctrl) { view.ScrollDown(-1); }
+                    else { view.StepDown(-1); }
                 }
                 handled = true;
                 break;
             case Key::Down:
-                if(ctrl && down)
+                if(down)
                 {
-                    view.ScrollDown(1);
+                    if(ctrl) { view.ScrollDown(1); }
+                    else { view.StepDown(1); }
                 }
                 handled = true;
                 break;
