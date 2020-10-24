@@ -459,7 +459,6 @@ void Pane::OnKeyReleased(wxKeyEvent& e)
 {
     const auto key = ToKey(e.GetKeyCode());
     if(key == ride::Key::None) { e.Skip(); return; }
-    app->OnKey(false, key);
     const auto handled = app->OnKey(false, key);
     if(!handled)
     {

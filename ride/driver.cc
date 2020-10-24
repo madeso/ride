@@ -1,4 +1,8 @@
 #include "driver.h"
+
+#include <vector>
+#include <string>
+#include <fstream>
 #include <iostream>
 
 namespace ride
@@ -54,7 +58,71 @@ namespace ride
     }
 
 
-    const std::string MEASSURE_STRING = "egbd";
+    struct Document
+    {
+        std::vector<std::string> lines;
+
+        vec2 scroll = {0, 0};
+
+
+        Document()
+        {
+            LoadFile(__FILE__);
+        }
+
+        void LoadFile(const std::string& path)
+        {
+            std::cout << "Loading " << path << "\n";
+            lines.clear();
+
+            std::ifstream file;
+            file.open(path.c_str(), std::ios::in | std::ios::binary);
+            if(file.is_open() == false)
+            {
+                return;
+            }
+
+            std::string line;
+            while(getline(file,line))
+            {
+                lines.emplace_back(line);
+            }
+        }
+    };
+
+
+
+    void DrawDocument
+    (
+        std::shared_ptr<Driver> driver,
+        std::shared_ptr<Font> font,
+        Painter* painter,
+        const Rgb& color,
+        const Document& d,
+        const vec2& where,
+        const vec2& lower_right
+    )
+    {
+        const auto meassure = driver->GetSizeOfString(font, "ABCgdijlk");
+        
+        auto draw = where;
+        auto scroll = d.scroll;
+
+        for(; draw.y < lower_right.y; draw.y += meassure.height)
+        {
+            if(scroll.y >= 0 && scroll.y < d.lines.size())
+            {
+                const auto l = d.lines[scroll.y];
+                painter->Text(font, l, draw, color);
+            }
+
+            scroll.y = scroll.y + 1;
+        }
+    }
+
+
+
+    const std::string MEASSURE_STRING = "ABCdefjklm";
 
 
     struct RideApp : App
@@ -64,6 +132,8 @@ namespace ride
         std::shared_ptr<Font> font_code;
         std::shared_ptr<Font> font_big;
         TextSize text_size;
+
+        Document doc;
 
         vec2 window_size = vec2{0,0};
         std::optional<vec2> mouse = std::nullopt;
@@ -97,11 +167,11 @@ namespace ride
             painter->Rect(vec2(0, 0), window_size, Rgb{200, 200, 200}, std::nullopt);
 
             // draw some text
-            painter->Text(font_ui, "File | Code | Help", {40, 20}, {0, 0, 0});
-            painter->Text(font_code, str, {40,60}, {0,0,0});
+            painter->Text(font_ui, "File | Code | Help", {40, 00}, {0, 0, 0});
+            // painter->Text(font_code, str, {40,60}, {0,0,0});
 
             // draw a rectangle, blue filling, 10-pixels-thick pink outline
-            painter->Rect({on_left ? 0 : (window_size.x - 400), 100}, {400, 200}, Rgb{0, 0, 255}, Line{{0,0,0}, 1});
+            painter->Rect({on_left ? 0 : (window_size.x - 200), 100}, {200, 400}, Rgb{100, 100, 100}, Line{{0,0,0}, 1});
 
             // draw a circle, green filling, 5-pixels-thick red outline
             if(mouse && !start)
@@ -115,31 +185,7 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            // meassure string
-            const auto baseline = Rgb{100, 100, 100};
-            const auto start_pos = vec2{100, 200};
-            auto hline = [=](int y, const Rgb& c, const std::string& s = "")
-            {
-                const auto p = start_pos;
-                painter->Line({0, p.y+y}, {window_size.x, p.y+y}, {c, 1});
-
-                if(s.empty() == false)
-                {
-                    painter->Text(font_ui, s, {10, p.y+y}, c);
-                }
-            };
-            auto vline = [=](int x, const Rgb& c)
-            {
-                const auto p = start_pos;
-                painter->Line({p.x+x, 0}, {p.x+x, window_size.y}, {c, 1});
-            };
-            painter->Text(font_big, MEASSURE_STRING, start_pos, {100, 100, 100});
-            vline(0, baseline); hline(0, baseline);
-
-            const auto line = Rgb{255,0,0};
-            hline(text_size.height, line, "height");
-            hline(text_size.descent, line, "descent");
-            vline(text_size.width, line);
+            DrawDocument(driver, font_code, painter, {0,0,0}, doc, {10, 20}, window_size);
         }
 
         void OnMouseMoved(const vec2& new_position) override
@@ -180,17 +226,40 @@ namespace ride
             driver->Refresh();
         }
 
+        bool ctrl = false;
         bool OnKey(bool down, Key key) override
         {
-            if(down) { return false; }
+            if(key == Key::Control)
+            {
+                ctrl = down;
+                driver->Refresh();
+                return true;
+            }
+
+            if(!down) { return false; }
 
             bool handled = false;
-            
+
             switch(key)
             {
             case Key::Left: on_left = true; handled = true; break;
             case Key::Right: on_left = false; handled = true; break;
             case Key::Escape: str = ""; handled = true; break;
+            case Key::Up:
+                if(ctrl)
+                {
+                    doc.scroll.y -= 1;
+                    handled = true;
+                }
+                break;
+            case Key::Down:
+                if(ctrl)
+                {
+                    doc.scroll.y += 1;
+                    handled = true;
+                }
+                break;
+
             default: break;
             }
 
