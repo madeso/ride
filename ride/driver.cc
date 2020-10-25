@@ -163,6 +163,32 @@ namespace ride
             FocusCursor();
         }
 
+        void InsertStringAtCursor(const std::string& str)
+        {
+            if(document == nullptr) { return; }
+            if(cursor.x < 0) { return; }
+            if(cursor.y < 0) { return; }
+
+            if(cursor.y == document->GetNumberOfLines())
+            {
+                document->lines.emplace_back(str);
+                cursor.x = str.length();
+            }
+            else
+            {
+                auto line = document->GetLineAt(cursor.y);
+                if(line.length() < cursor.x )
+                {
+                    // add spaces
+                    const auto number_of_spaces = cursor.x - line.length();
+                    line = line + std::string(number_of_spaces, ' ');
+                }
+                line.insert(cursor.x, str);
+                document->lines[cursor.y] = line;
+                cursor.x += str.length();
+            }
+        }
+
         void LimitScroll()
         {
             if(document == nullptr) { return; }
@@ -236,6 +262,7 @@ namespace ride
                 }
             }
         }
+
         void FocusCursorWidth()
         {
             if(settings == nullptr) { return; }
@@ -509,7 +536,7 @@ namespace ride
 
         void OnChar(const std::string& ch) override
         {
-            str += ch;
+            view.InsertStringAtCursor(ch);
             driver->Refresh();
         }
     };
