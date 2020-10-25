@@ -108,7 +108,7 @@ namespace ride
 
     struct Settings
     {
-        vec2 scroll_spacing = {0, 0};
+        vec2 scroll_spacing = {3, 3};
 
         bool render_linenumber = true;
         int left_gutter_padding = 3;
@@ -163,14 +163,32 @@ namespace ride
             FocusCursor();
         }
 
+        void LimitScroll()
+        {
+            if(document == nullptr) { return; }
+            if(settings == nullptr) { return; }
+
+            const auto limy = [this](int lines) { if(scroll.y > lines) { scroll.y = lines; } };
+
+            // limy(document->GetNumberOfLines() + 1);
+            limy(document->GetNumberOfLines() + 1 - GetWindowHeightInLines());
+
+            // todo(Gustav): also limit based on width
+
+            if(scroll.x < 0) { scroll.x = 0; }
+            if(scroll.y < 0) { scroll.y = 0; }
+        }
+
         void ScrollDown(int y)
         {
             scroll.y += y;
+            LimitScroll();
         }
 
         void ScrollRight(int x)
         {
             scroll.x += x;
+            LimitScroll();
         }
 
         int GetWindowHeightInLines() const
@@ -245,8 +263,7 @@ namespace ride
         {
             FocusCursorHeight();
             FocusCursorWidth();
-
-            // todo(Gustav): Keep scroll within document
+            LimitScroll();
         }
 
         void Draw
