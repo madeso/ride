@@ -260,6 +260,7 @@ struct WxDriver : ride::Driver
     {
         std::shared_ptr<ride::Font> r = std::make_shared<WxFont>(font);
         r->line_height = GetSizeOfString(r, "ABCgdijlk").height;
+        r->char_width = GetSizeOfString(r, "a").width;
         return r;
     }
 

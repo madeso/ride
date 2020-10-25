@@ -203,6 +203,7 @@ namespace ride
 
         // only for fixed size?
         int line_height = 0;
+        int char_width = 0;
     };
 
     struct Driver

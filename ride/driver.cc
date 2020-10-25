@@ -45,7 +45,25 @@ namespace ride
 
     struct Document
     {
-        std::vector<std::string> lines;
+        std::vector<std::string> lines =
+        {
+            "abcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHIJabcdefghijABCDEFGHI",
+            "         111111111122222222223333333333444444444455555555556666666666777777777788888888889999999999",
+            "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789",
+            ""
+        };
+        
+        int GetNumberOfLines() const
+        {
+            return lines.size();
+        }
+
+        std::string GetLineAt(int y) const
+        {
+            if(y < 0) { return ""; }
+            else if(y >= lines.size()) { return ""; }
+            else { return lines[y]; }
+        }
 
         Document()
         {
@@ -54,7 +72,6 @@ namespace ride
 
         void LoadFile(const std::string& path)
         {
-            std::cout << "Loading " << path << "\n";
             lines.clear();
 
             std::ifstream file;
@@ -92,11 +109,17 @@ namespace ride
     struct Settings
     {
         vec2 scroll_spacing = {0, 0};
+
+        bool render_linenumber = true;
+        int left_gutter_padding = 3;
+        int right_gutter_padding = 6;
+        int editor_padding_left = 6;
     };
 
 
     struct View
     {
+        std::shared_ptr<Driver> driver;
         std::shared_ptr<Font> font;
         std::shared_ptr<Document> document;
         std::shared_ptr<Settings> settings;
@@ -109,21 +132,32 @@ namespace ride
         void StepRight(int x)
         {
             const int next_x = std::max(0, cursor.x + x);
-            if(document && cursor.y < document->lines.size())
+            if(document && cursor.y < document->GetNumberOfLines())
             {
-                cursor.x = std::min<int>(document->lines[cursor.y].length(), next_x);
+                cursor.x = std::min<int>(document->GetLineAt(cursor.y).length(), next_x);
             }
             requested_cursor_x = cursor.x;
 
             FocusCursor();
         }
 
+        int GetLineNumberSize()
+        {
+            if(settings == nullptr) { return 0; }
+            if(document == nullptr) { return 0; }
+            if(driver == nullptr) { return 0; }
+
+            if(settings->render_linenumber == false) { return 0; }
+            
+            return driver->GetSizeOfString(font, Str{} << document->GetNumberOfLines() + 1).width;
+        }
+
         void StepDown(int y)
         {
             if(document)
             {
-                cursor.y = std::min<int>(std::max(0, cursor.y + y), document->lines.size());
-                cursor.x = std::min<int>(document->lines[cursor.y].length(), requested_cursor_x);
+                cursor.y = std::min<int>(std::max(0, cursor.y + y), document->GetNumberOfLines());
+                cursor.x = std::min<int>(document->GetLineAt(cursor.y).length(), requested_cursor_x);
             }
 
             FocusCursor();
@@ -145,18 +179,31 @@ namespace ride
             if(font->line_height <= 0) { return 0; }
 
             const auto lines = rect.size.y / static_cast<float>(font->line_height);
-            const auto li = static_cast<int>(std::floor(lines));
-            return li;
+            return static_cast<int>(std::floor(lines));
         }
 
-        void FocusCursor()
+        int GetWindowWidthInChars()
+        {
+            if(font == nullptr) { return 0; }
+            if(font->char_width <= 0) { return 0; }
+
+            const auto gutter_width = settings->left_gutter_padding + settings->right_gutter_padding + GetLineNumberSize() + settings->editor_padding_left;
+            const auto window_width = std::max(0, rect.size.x - gutter_width);
+
+            const auto chars = window_width / static_cast<float>(font->char_width);
+            const auto ci = static_cast<int>(std::floor(chars));
+
+            return ci;
+        }
+
+        void FocusCursorHeight()
         {
             if(settings == nullptr) { return; }
 
+            const auto window_height = GetWindowHeightInLines();
+
             const auto cursor_up = cursor.y - settings->scroll_spacing.y;
             const auto cursor_down = cursor.y + settings->scroll_spacing.y;
-
-            const auto window_height = GetWindowHeightInLines();
 
             if(scroll.y > cursor_up)
             {
@@ -170,31 +217,63 @@ namespace ride
                     scroll.y -= steps;
                 }
             }
+        }
+        void FocusCursorWidth()
+        {
+            if(settings == nullptr) { return; }
+
+            const auto window_width = GetWindowWidthInChars();
+
+            const auto cursor_left = cursor.x - settings->scroll_spacing.x;
+            const auto cursor_right = cursor.x + settings->scroll_spacing.x;
+
+            if(scroll.x > cursor_left)
+            {
+                scroll.x = cursor_left;
+            }
+
+            {
+                const auto steps = scroll.x + window_width - cursor_right;
+                if(steps < 0)
+                {
+                    scroll.x -= steps;
+                }
+            }
+        }
+
+        void FocusCursor()
+        {
+            FocusCursorHeight();
+            FocusCursorWidth();
 
             // todo(Gustav): Keep scroll within document
         }
 
         void Draw
         (
-            std::shared_ptr<Driver> driver,
             Painter* painter,
             const Rgb& foreground_color,
             const Rgb& background_color,
             const Rgb& gutter_color
         )
         {
+            const auto linenumber_color = foreground_color;
+
+            if(settings == nullptr) { return; }
+            if(driver == nullptr) { return; }
+
             painter->Rect(rect, background_color, std::nullopt);
 
             if(font && document)
             {
                 const auto scope = RectScope{painter, rect};
 
-                const bool render_linenumber = true;
-                const int left_gutter_padding = 3;
-                const int right_gutter_padding = 6;
-                const int editor_padding_left = 6;
+                const bool render_linenumber = settings->render_linenumber;
+                const int left_gutter_padding = settings->left_gutter_padding;
+                const int right_gutter_padding = settings->right_gutter_padding;
+                const int editor_padding_left = settings->editor_padding_left;
 
-                const auto line_number_size = !render_linenumber ? 0 : driver->GetSizeOfString(font, Str{} << document->lines.size() + 1).width;
+                const auto line_number_size = GetLineNumberSize();
 
                 const auto gutter_rect = rect.CreateWestFromMaxSize(left_gutter_padding + line_number_size + right_gutter_padding);
                 painter->Rect(gutter_rect, gutter_color, std::nullopt);
@@ -206,7 +285,7 @@ namespace ride
 
                 for(; draw.y < lower_right.y; draw.y += font->line_height)
                 {
-                    if(current_scroll.y >= 0 && current_scroll.y < document->lines.size()+1)
+                    if(current_scroll.y >= 0 && current_scroll.y < document->GetNumberOfLines()+1)
                     {
                         const auto substr = [](const std::string& str, int offset) -> std::string
                         {
@@ -222,15 +301,15 @@ namespace ride
                         };
                         if(render_linenumber && current_scroll.y >= 0)
                         {
-                            painter->Text(font, Str{} << current_scroll.y + 1, {draw.x + left_gutter_padding, draw.y}, foreground_color);
+                            painter->Text(font, Str{} << current_scroll.y + 1, {draw.x + left_gutter_padding, draw.y}, linenumber_color);
                         }
-                        const auto full_line = current_scroll.y < document->lines.size() ? document->lines[current_scroll.y] : "";
+                        const auto full_line = document->GetLineAt(current_scroll.y);
                         const auto line = substr(full_line, scroll.x);
                         const auto draw_position = vec2{draw.x + gutter_rect.size.x + editor_padding_left, draw.y};
 
                         if(current_scroll.y == cursor.y)
                         {
-                            const auto cursor_x = driver->GetSizeOfString(font, full_line.substr(0, cursor.x)).width;
+                            const auto cursor_x = driver->GetSizeOfString(font, full_line.substr(0, cursor.x - scroll.x)).width;
                             painter->Line
                             (
                                 {draw_position.x + cursor_x, draw_position.y},
@@ -283,7 +362,7 @@ namespace ride
             view.rect = Rect{{10, 20}, {400, 420}};
             view.document = std::make_shared<Document>();
             view.settings = std::make_shared<Settings>();
-            std::cout << text_size.external_leading << "\n";
+            view.driver = driver;
         }
 
         void OnSize(const vec2& new_size) override
@@ -311,7 +390,7 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            view.Draw(driver, painter, {0,0,0}, {180, 180, 180}, {160, 160, 160});
+            view.Draw(painter, {0,0,0}, {180, 180, 180}, {160, 160, 160});
         }
 
         void OnMouseMoved(const vec2& new_position) override
