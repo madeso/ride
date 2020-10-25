@@ -228,6 +228,20 @@ wxFont C(std::shared_ptr<ride::Font> font)
 }
 
 
+ride::TextSize GetSizeOfStringFromDC(wxDC* dc, std::shared_ptr<ride::Font> font, const std::string& str)
+{
+    int width = 0;
+    int height = 0;
+    int descent = 0;
+    int external_leading = 0;
+
+    auto wx_font = C(font);
+    dc->GetTextExtent(C(str), &width, &height, &descent, &external_leading, &wx_font);
+
+    return {width, height, descent, external_leading};
+}
+
+
 struct WxDriver : ride::Driver
 {
     Pane* pane;
@@ -244,21 +258,15 @@ struct WxDriver : ride::Driver
 
     std::shared_ptr<ride::Font> MakeFont(wxFont font)
     {
-        return std::make_shared<WxFont>(font);
+        std::shared_ptr<ride::Font> r = std::make_shared<WxFont>(font);
+        r->line_height = GetSizeOfString(r, "ABCgdijlk").height;
+        return r;
     }
 
     ride::TextSize GetSizeOfString(std::shared_ptr<ride::Font> font, const std::string& str) override
     {
-        int width = 0;
-        int height = 0;
-        int descent = 0;
-        int external_leading = 0;
-
-        auto dc = wxClientDC{pane};
-        auto wx_font = C(font);
-        dc.GetTextExtent(C(str), &width, &height, &descent, &external_leading, &wx_font);
-
-        return {width, height, descent, external_leading};
+        wxClientDC dc{pane};
+        return GetSizeOfStringFromDC(&dc, font, str);
     }
 
     std::shared_ptr<ride::Font> CreateCodeFont(int pixel_size) override
@@ -351,6 +359,11 @@ struct WxPainter : public ride::Painter
     {
         dc->SetPen(wxPen(C(line.color), line.width));
         dc->DrawLine(from.x, from.y, to.x, to.y);
+    }
+
+    ride::TextSize GetSizeOfString(std::shared_ptr<ride::Font> font, const std::string& str) override
+    {
+        return GetSizeOfStringFromDC(dc, font, str);
     }
 
     void Text(std::shared_ptr<ride::Font> font, const std::string& text, const ride::vec2& where, const ride::Rgb& color) override

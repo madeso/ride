@@ -6,6 +6,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <cmath>
 
 namespace ride
 {
@@ -88,10 +89,17 @@ namespace ride
     };
 
 
+    struct Settings
+    {
+        vec2 scroll_spacing = {0, 0};
+    };
+
+
     struct View
     {
         std::shared_ptr<Font> font;
         std::shared_ptr<Document> document;
+        std::shared_ptr<Settings> settings;
 
         int requested_cursor_x = 0;
         vec2 cursor = {0, 0};
@@ -106,6 +114,8 @@ namespace ride
                 cursor.x = std::min<int>(document->lines[cursor.y].length(), next_x);
             }
             requested_cursor_x = cursor.x;
+
+            FocusCursor();
         }
 
         void StepDown(int y)
@@ -115,6 +125,8 @@ namespace ride
                 cursor.y = std::min<int>(std::max(0, cursor.y + y), document->lines.size());
                 cursor.x = std::min<int>(document->lines[cursor.y].length(), requested_cursor_x);
             }
+
+            FocusCursor();
         }
 
         void ScrollDown(int y)
@@ -125,6 +137,41 @@ namespace ride
         void ScrollRight(int x)
         {
             scroll.x += x;
+        }
+
+        int GetWindowHeightInLines() const
+        {
+            if(font == nullptr) { return 0; }
+            if(font->line_height <= 0) { return 0; }
+
+            const auto lines = rect.size.y / static_cast<float>(font->line_height);
+            const auto li = static_cast<int>(std::floor(lines));
+            return li;
+        }
+
+        void FocusCursor()
+        {
+            if(settings == nullptr) { return; }
+
+            const auto cursor_up = cursor.y - settings->scroll_spacing.y;
+            const auto cursor_down = cursor.y + settings->scroll_spacing.y;
+
+            const auto window_height = GetWindowHeightInLines();
+
+            if(scroll.y > cursor_up)
+            {
+                scroll.y = cursor_up;
+            }
+
+            {
+                const auto steps = scroll.y + window_height - cursor_down -1;
+                if(steps < 0)
+                {
+                    scroll.y -= steps;
+                }
+            }
+
+            // todo(Gustav): Keep scroll within document
         }
 
         void Draw
@@ -153,14 +200,13 @@ namespace ride
                 painter->Rect(gutter_rect, gutter_color, std::nullopt);
                 
                 const auto lower_right = rect.position + rect.size;
-                const auto line_height = driver->GetSizeOfString(font, "ABCgdijlk").height;
                 
                 auto draw = rect.position;
                 auto current_scroll = scroll;
 
-                for(; draw.y < lower_right.y; draw.y += line_height)
+                for(; draw.y < lower_right.y; draw.y += font->line_height)
                 {
-                    if(current_scroll.y >= 0 && current_scroll.y < document->lines.size())
+                    if(current_scroll.y >= 0 && current_scroll.y < document->lines.size()+1)
                     {
                         const auto substr = [](const std::string& str, int offset) -> std::string
                         {
@@ -178,7 +224,7 @@ namespace ride
                         {
                             painter->Text(font, Str{} << current_scroll.y + 1, {draw.x + left_gutter_padding, draw.y}, foreground_color);
                         }
-                        const auto full_line = document->lines[current_scroll.y];
+                        const auto full_line = current_scroll.y < document->lines.size() ? document->lines[current_scroll.y] : "";
                         const auto line = substr(full_line, scroll.x);
                         const auto draw_position = vec2{draw.x + gutter_rect.size.x + editor_padding_left, draw.y};
 
@@ -188,7 +234,7 @@ namespace ride
                             painter->Line
                             (
                                 {draw_position.x + cursor_x, draw_position.y},
-                                {draw_position.x + cursor_x, draw_position.y + line_height},
+                                {draw_position.x + cursor_x, draw_position.y + font->line_height},
                                 {{0, 0, 0}, 1}
                             );
                         }
@@ -236,6 +282,7 @@ namespace ride
             view.font = font_code;
             view.rect = Rect{{10, 20}, {400, 420}};
             view.document = std::make_shared<Document>();
+            view.settings = std::make_shared<Settings>();
             std::cout << text_size.external_leading << "\n";
         }
 
