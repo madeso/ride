@@ -114,11 +114,16 @@ namespace ride
         int left_gutter_padding = 3;
         int right_gutter_padding = 6;
         int editor_padding_left = 6;
+
+        int statusbar_padding_bottom = 3;
+        int statusbar_padding_top = 3;
+        int statusbar_padding_right = 6;
     };
 
 
     struct View
     {
+        Rect rect;
         std::shared_ptr<Driver> driver;
         std::shared_ptr<Font> font;
         std::shared_ptr<Document> document;
@@ -127,7 +132,15 @@ namespace ride
         int requested_cursor_x = 0;
         vec2 cursor = {0, 0};
         vec2 scroll = {0, 0};
-        Rect rect = {{0, 0}, {0, 0}};
+
+        View
+        (
+            Rect r,
+            std::shared_ptr<Driver> d,
+            std::shared_ptr<Font> f,
+            std::shared_ptr<Document> doc,
+            std::shared_ptr<Settings> s
+        ) : rect(r), driver(d), font(f), document(doc), settings(s) {}
 
         void StepRight(int x)
         {
@@ -372,6 +385,54 @@ namespace ride
     };
 
 
+    struct StatusBar
+    {
+        std::shared_ptr<Font> font;
+        std::shared_ptr<Settings> settings;
+        View* view;
+
+        StatusBar
+        (
+            std::shared_ptr<Font> f,
+            std::shared_ptr<Settings> s,
+            View* v
+        ) : font(f), settings(s), view(v) {}
+
+        void Draw(Painter* painter, const vec2& window_size)
+        {
+            const Rgb text_color = {0, 0, 0};
+            const Rgb bkg = {200, 200, 200};
+
+            const auto draw_height = GetHeight();
+            const auto rect = Rect{{0, window_size.y - draw_height}, {window_size.x, draw_height}};
+
+            painter->Rect(rect, bkg, std::nullopt);
+
+            const std::string str = Str{}
+                << "Ln " << view->cursor.y + 1 << " / " << view->document->GetNumberOfLines() << " | "
+                << "Col " << view->cursor.x + 1
+                ;
+
+            const auto text_size = painter->GetSizeOfString(font, str);
+            const auto text_pos = vec2
+            {
+                rect.position.x + rect.size.x - text_size.width - settings->statusbar_padding_right,
+                rect.position.y + settings->statusbar_padding_top
+            };
+
+            painter->Text(font, str, text_pos, text_color);
+        }
+
+        int GetHeight() const
+        {
+            if(font == nullptr) { return 0; }
+            if(settings == nullptr) { return 0; }
+
+            return font->line_height + settings->statusbar_padding_bottom + settings->statusbar_padding_top;
+        }
+    };
+
+
     const std::string MEASSURE_STRING = "ABCdefjklm";
 
 
@@ -383,7 +444,11 @@ namespace ride
         std::shared_ptr<Font> font_big;
         TextSize text_size;
 
+        std::shared_ptr<Document> document;
+        std::shared_ptr<Settings> settings;
+
         View view;
+        StatusBar statusbar;
 
         vec2 window_size = vec2{0,0};
         std::optional<vec2> mouse = std::nullopt;
@@ -401,12 +466,11 @@ namespace ride
             , font_code(d->CreateCodeFont(8))
             , font_big(d->CreateUiFont(100))
             , text_size(d->GetSizeOfString(font_big, MEASSURE_STRING))
+            , document(std::make_shared<Document>())
+            , settings(std::make_shared<Settings>())
+            , view({{10, 20}, {400, 420}}, driver, font_code, document, settings)
+            , statusbar(font_code, settings, &view)
         {
-            view.font = font_code;
-            view.rect = Rect{{10, 20}, {400, 420}};
-            view.document = std::make_shared<Document>();
-            view.settings = std::make_shared<Settings>();
-            view.driver = driver;
         }
 
         void OnSize(const vec2& new_size) override
@@ -435,6 +499,7 @@ namespace ride
             }
 
             view.Draw(painter, {0,0,0}, {180, 180, 180}, {160, 160, 160});
+            statusbar.Draw(painter, window_size);
         }
 
         void OnMouseMoved(const vec2& new_position) override
