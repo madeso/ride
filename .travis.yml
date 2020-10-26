@@ -1,60 +1,57 @@
 language: cpp
-
 sudo: false
+compiler: clang
 
-compiler:
-  - gcc
-  - clang
-
-
-# cmake 3 https://github.com/travis-ci/travis-ci/issues/4631
-
-# Can't use llvm currently :(
-# http://thread.gmane.org/gmane.comp.compilers.llvm.devel/99556
-# http://llvm.org/apt/
-# APT mirror was temporary switched off due to excess load. We are working on bringing it back. Stay tuned! 
-# https://github.com/dotnet/coreclr/issues/1017
+matrix:
+    include:
+        - os: linux
+          dist: focal
+          compiler: gcc
+          env:
+              - CONF=release
+              - COMPILER=gcc
+        - os: linux
+          dist: focal
+          compiler: gcc
+          env:
+              - CONF=release
+              - COMPILER=gcc
+        - os: linux
+          dist: focal
+          compiler: clang
+          env:
+              - CONF=debug
+              - COMPILER=clang
+        - os: linux
+          dist: focal
+          compiler: clang
+          env:
+              - CONF=release
+              - COMPILER=clang
+        - os: osx
+          osx_image: xcode7.3
+          compiler: clang
+          env:
+              - CONF=debug
+              - COMPILER=apple-clang
+        - os: osx
+          osx_image: xcode7.3
+          compiler: clang
+          env:
+              - CONF=release
+              - COMPILER=apple-clang
 
 
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - george-edison55-precise-backports # cmake 3
-#      - llvm-toolchain-precise-3.8
+    update: true
     packages:
-      - gcc-4.8
-      - g++-4.8
-      - gcc-4.8-multilib
-      - g++-4.8-multilib
-      - gcc-multilib
-      - g++-multilib
-      - libgtk2.0-dev
-      - libwebkit-dev
-      - libc6-i386
-#      - clang-3.6
-      - cmake
-      - cmake-data
-
-os:
-  - linux
-
-osx_image: xcode7.3
-
-matrix:
-  include:
-    - os: osx
-      compiler: clang
-  exclude:
-    - compiler: clang
-      env: COVERITY_SCAN_BRANCH=1
+      - libsdl2-dev
 
 
 # gcc update grabbed from https://github.com/ldc-developers/ldc/blob/master/.travis.yml
 install:
-  - export COMPILER=${CC}
-  - if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "gcc" ]; then export CC="gcc-4.8"; export CXX="g++-4.8"; fi
-#  - if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "clang" ]; then export CC="clang-3.8"; export CXX="clang-3.8"; fi
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "gcc" ]; then export CC="gcc-4.8"; export CXX="g++-4.8"; fi #  - if [ "${TRAVIS_OS_NAME}" = "linux" ] && [ "${CC}" = "clang" ]; then export CC="clang-3.8"; export CXX="clang-3.8"; fi
   - ./scripts/travis-dependencies.sh
 before_script: ./scripts/travis-cmake.sh
 script:
@@ -71,3 +68,4 @@ deploy:
   user: "madeso"
   key: ${TRAVIS_BINTRAY_SECRET}
   dry-run: false
+
