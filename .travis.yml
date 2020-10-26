@@ -8,7 +8,7 @@ matrix:
           dist: focal
           compiler: gcc
           env:
-              - CONF=release
+              - CONF=debug
               - COMPILER=gcc
         - os: linux
           dist: focal
