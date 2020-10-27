@@ -568,16 +568,13 @@ namespace ride
     };
 
 
-    const std::string MEASSURE_STRING = "ABCdefjklm";
-
-
     struct RideApp : App
     {
         std::shared_ptr<Driver> driver;
+
         std::shared_ptr<Font> font_ui;
         std::shared_ptr<Font> font_code;
         std::shared_ptr<Font> font_big;
-        TextSize text_size;
 
         std::shared_ptr<Document> document;
         std::shared_ptr<Settings> settings;
@@ -589,21 +586,12 @@ namespace ride
         Widget* active_widget;
 
         vec2 window_size = vec2{0,0};
-        std::optional<vec2> mouse = std::nullopt;
-        std::optional<vec2> start = std::nullopt;
-
-        float circle = 25.0f;
-
-        bool on_left = false;
-
-        std::string str = "void main() { return 42; }";
 
         RideApp(std::shared_ptr<Driver> d)
             : driver(d)
             , font_ui(d->CreateUiFont(12))
             , font_code(d->CreateCodeFont(8))
             , font_big(d->CreateUiFont(100))
-            , text_size(d->GetSizeOfString(font_big, MEASSURE_STRING))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
             , widget(driver, font_code, document, settings)
@@ -634,18 +622,6 @@ namespace ride
 
             painter->Text(font_ui, "File | Code | Help", {40, 00}, {0, 0, 0});
 
-            // draw a circle, green filling, 5-pixels-thick red outline
-            if(mouse && !start)
-            {
-                painter->Circle(*mouse, static_cast<int>(circle), Rgb{0, 255, 0}, Line{{0,0,0}, 1});
-            }
-            
-            // draw a black line, 3 pixels thick
-            if(start && mouse)
-            {
-                painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
-            }
-
             widget.Draw(painter);
             demo_widget.Draw(painter);
             statusbar.Draw(painter, window_size);
@@ -653,40 +629,21 @@ namespace ride
 
         void OnMouseMoved(const vec2& new_position) override
         {
-            mouse = new_position;
-            driver->Refresh();
+            // driver->Refresh();
         }
 
         void OnMouseLeftWindow() override
         {
-            mouse = std::nullopt;
             driver->Refresh();
         }
 
         void OnMouseButton(MouseState state, MouseButton button) override
         {
-            if(button == MouseButton::Left)
-            {
-                if(state == MouseState::Up)
-                {
-                    start = std::nullopt;
-                }
-                else
-                {
-                    if(mouse)
-                    {
-                        start = *mouse;
-                    }
-                }
-                
-            }
             driver->Refresh();
         }
 
         void OnMouseScroll(float scroll, int lines) override
         {
-            circle = std::max(1.0f, circle + scroll * lines);
-            driver->Refresh();
         }
 
         bool ctrl = false;
