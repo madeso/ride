@@ -184,6 +184,13 @@ namespace ride
             : x(xx), y(yy) {}
     };
 
+    template<typename T>
+    T& operator<<(T& t, const vec2& v)
+    {
+        t << "(" << v.x << ", " << v.y << ")";
+        return t;
+    }
+
     vec2 operator+(const vec2& lhs, const vec2& rhs);
 
     struct Rect
@@ -193,6 +200,8 @@ namespace ride
 
         constexpr Rect(const vec2& p, const vec2& s)
             : position(p), size(s) {}
+
+        bool Contains(const vec2& p) const;
 
         Rect CreateWestFromMaxSize(int max_size) const;
     };

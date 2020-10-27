@@ -18,6 +18,14 @@ namespace ride
     }
 
 
+    bool Rect::Contains(const vec2& p) const
+    {
+        const auto cx = p.x >= position.x && position.x + size.x >= p.x;
+        const auto cy = p.y >= position.y && position.y + size.y >= p.y;
+        return cx && cy;
+    }
+
+
     Rect Rect::CreateWestFromMaxSize(int max_size) const
     {
         return {position, {std::min(max_size, size.x), size.y}};
@@ -464,6 +472,8 @@ namespace ride
     {
         virtual ~Widget() = default;
 
+        virtual Rect GetRect() const = 0;
+
         virtual void Draw(Painter* painter) = 0;
         virtual bool OnKey(Key key, const Meta& meta) = 0;
         virtual void OnChar(const std::string& ch) = 0;
@@ -478,8 +488,13 @@ namespace ride
         Rect rect;
 
         DemoWidget(std::shared_ptr<Font> f, const Rect& r) : font(f), rect(r) { }
+
+        Rect GetRect() const override
+        {
+            return rect;
+        }
         
-        void Draw(Painter* painter)
+        void Draw(Painter* painter) override
         {
             const auto background_color = Rgb{180, 180, 180};
             
@@ -488,12 +503,12 @@ namespace ride
             
         }
 
-        bool OnKey(Key key, const Meta& meta)
+        bool OnKey(Key key, const Meta& meta) override
         {
             return false;
         }
 
-        void OnChar(const std::string& ch)
+        void OnChar(const std::string& ch) override
         {
             latest_str = ch;
         }
@@ -522,6 +537,11 @@ namespace ride
                 view.cursor.x + 1,
                 view.document->GetNumberOfLines()
             };
+        }
+
+        Rect GetRect() const override
+        {
+            return view.rect;
         }
         
         void Draw(Painter* painter) override
@@ -627,8 +647,30 @@ namespace ride
             statusbar.Draw(painter, window_size);
         }
 
+        Widget* HitTest(const vec2& p)
+        {
+            const auto widgets = std::array
+            {
+                static_cast<Widget*>(&widget),
+                static_cast<Widget*>(&demo_widget),
+            };
+
+            for(auto* w: widgets)
+            {
+                const Rect r = w->GetRect();
+                if(r.Contains(p))
+                {
+                    return w;
+                }
+            }
+
+            return nullptr;
+        }
+
+        vec2 last_mouse = vec2{0,0};
         void OnMouseMoved(const vec2& new_position) override
         {
+            last_mouse = new_position;
             // driver->Refresh();
         }
 
@@ -639,6 +681,10 @@ namespace ride
 
         void OnMouseButton(MouseState state, MouseButton button) override
         {
+            if(state == MouseState::Down && button == MouseButton::Left)
+            {
+                active_widget = HitTest(last_mouse);
+            }
             driver->Refresh();
         }
 
@@ -663,7 +709,7 @@ namespace ride
                     active_widget = active_widget==&demo_widget ? static_cast<Widget*>(&widget) : static_cast<Widget*>(&demo_widget);
                     driver->Refresh();
                 }
-                else
+                else if(active_widget != nullptr)
                 {
                     const bool handled = active_widget->OnKey(key, {ctrl, shift, alt});
 
@@ -686,8 +732,11 @@ namespace ride
 
         void OnChar(const std::string& ch) override
         {
-            active_widget->OnChar(ch);
-            driver->Refresh();
+            if(active_widget != nullptr)
+            {
+                active_widget->OnChar(ch);
+                driver->Refresh();
+            }
         }
     };
 
