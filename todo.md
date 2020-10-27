@@ -1,4 +1,6 @@
 # ride todo
+* draw scrollbar
+* floatscrolling
 * add compiler warnings and errors
 * file explorer/tree view
 * tabbed documents
@@ -11,6 +13,4 @@
 * add sdl driver
 * rework text editor to use proper data structure
 
-* draw scrollbar
-* floatscrolling
 * scroll with scrollbar
