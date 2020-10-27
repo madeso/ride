@@ -450,7 +450,26 @@ namespace ride
     };
 
 
-    struct TextWidget
+    struct Meta
+    {
+        bool ctrl;
+        bool shift;
+        bool alt;
+
+        Meta(bool c, bool s, bool a) : ctrl(c), shift(s), alt(a) {}
+    };
+
+
+    struct Widget
+    {
+        virtual ~Widget() = default;
+
+        virtual void Draw(Painter* painter) = 0;
+        virtual bool OnKey(Key key, const Meta& meta) = 0;
+        virtual void OnChar(const std::string& ch) = 0;
+    };
+
+    struct TextWidget : public Widget
     {
         View view;
 
@@ -475,13 +494,15 @@ namespace ride
             };
         }
         
-        void Draw(Painter* painter)
+        void Draw(Painter* painter) override
         {
             view.Draw(painter);
         }
 
-        bool OnKey(Key key, bool ctrl)
+        bool OnKey(Key key, const Meta& meta) override
         {
+            const auto ctrl = meta.ctrl;
+
             bool handled = true;
 
             switch(key)
@@ -510,7 +531,7 @@ namespace ride
             return handled;
         }
 
-        void OnChar(const std::string& ch)
+        void OnChar(const std::string& ch) override
         {
             view.InsertStringAtCursor(ch);
         }
@@ -534,6 +555,8 @@ namespace ride
         TextWidget widget;
         StatusBar statusbar;
 
+        Widget* active_widget;
+
         vec2 window_size = vec2{0,0};
         std::optional<vec2> mouse = std::nullopt;
         std::optional<vec2> start = std::nullopt;
@@ -554,11 +577,15 @@ namespace ride
             , settings(std::make_shared<Settings>())
             , widget(driver, font_code, document, settings)
             , statusbar
-            (
-                font_code,
-                settings,
-                [this]() { return widget.GetCurrentDocumentInformation(); }
-            )
+                (
+                    font_code,
+                    settings,
+                    [this]()
+                    {
+                        return widget.GetCurrentDocumentInformation();
+                    }
+                )
+            , active_widget(&widget)
         {
         }
 
@@ -587,7 +614,7 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            widget.Draw(painter);
+            active_widget->Draw(painter);
             statusbar.Draw(painter, window_size);
         }
 
@@ -640,7 +667,7 @@ namespace ride
 
             if(down)
             {
-                const bool handled = widget.OnKey(key, ctrl);
+                const bool handled = active_widget->OnKey(key, {ctrl, shift, alt});
 
                 if(handled)
                 {
@@ -660,7 +687,7 @@ namespace ride
 
         void OnChar(const std::string& ch) override
         {
-            widget.OnChar(ch);
+            active_widget->OnChar(ch);
             driver->Refresh();
         }
     };
