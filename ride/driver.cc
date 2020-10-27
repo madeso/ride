@@ -7,6 +7,8 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <functional>
+
 
 namespace ride
 {
@@ -385,23 +387,38 @@ namespace ride
     };
 
 
+    struct DocumentInformation
+    {
+        int line;
+        int column;
+        int number_of_lines;
+
+        DocumentInformation(int l, int c, int n) : line(l), column(c), number_of_lines(n) {}
+    };
+
+
+    using DocumentInformationProvider = std::function<DocumentInformation ()>;
+
+
     struct StatusBar
     {
         std::shared_ptr<Font> font;
         std::shared_ptr<Settings> settings;
-        View* view;
+        DocumentInformationProvider information_provider;
 
         StatusBar
         (
             std::shared_ptr<Font> f,
             std::shared_ptr<Settings> s,
-            View* v
-        ) : font(f), settings(s), view(v) {}
+            DocumentInformationProvider ip
+        ) : font(f), settings(s), information_provider(ip) {}
 
         void Draw(Painter* painter, const vec2& window_size)
         {
             const Rgb text_color = {0, 0, 0};
             const Rgb bkg = {200, 200, 200};
+
+            const auto info = information_provider();
 
             const auto draw_height = GetHeight();
             const auto rect = Rect{{0, window_size.y - draw_height}, {window_size.x, draw_height}};
@@ -409,8 +426,8 @@ namespace ride
             painter->Rect(rect, bkg, std::nullopt);
 
             const std::string str = Str{}
-                << "Ln " << view->cursor.y + 1 << " / " << view->document->GetNumberOfLines() << " | "
-                << "Col " << view->cursor.x + 1
+                << "Ln " << info.line << " / " << info.number_of_lines << " | "
+                << "Col " << info.column
                 ;
 
             const auto text_size = painter->GetSizeOfString(font, str);
@@ -433,6 +450,73 @@ namespace ride
     };
 
 
+    struct TextWidget
+    {
+        View view;
+
+        TextWidget
+        (
+            std::shared_ptr<Driver> driver,
+            std::shared_ptr<Font> font,
+            std::shared_ptr<Document> document,
+            std::shared_ptr<Settings> settings
+        )
+            : view({{10, 20}, {400, 420}}, driver, font, document, settings)
+        {
+        }
+
+        DocumentInformation GetCurrentDocumentInformation() const
+        {
+            return
+            {
+                view.cursor.y + 1,
+                view.cursor.x + 1,
+                view.document->GetNumberOfLines()
+            };
+        }
+        
+        void Draw(Painter* painter)
+        {
+            view.Draw(painter);
+        }
+
+        bool OnKey(Key key, bool ctrl)
+        {
+            bool handled = true;
+
+            switch(key)
+            {
+            case Key::Left:
+                if(ctrl) { view.ScrollRight(-1); }
+                else { view.StepRight(-1); }
+                break;
+            case Key::Right:
+                if(ctrl) { view.ScrollRight(1); }
+                else { view.StepRight(1); }
+                break;
+            case Key::Up:
+                if(ctrl) { view.ScrollDown(-1); }
+                else { view.StepDown(-1); }
+                break;
+            case Key::Down:
+                if(ctrl) { view.ScrollDown(1); }
+                else { view.StepDown(1); }
+                break;
+            default:
+                handled = false;
+                break;
+            }
+
+            return handled;
+        }
+
+        void OnChar(const std::string& ch)
+        {
+            view.InsertStringAtCursor(ch);
+        }
+    };
+
+
     const std::string MEASSURE_STRING = "ABCdefjklm";
 
 
@@ -447,7 +531,7 @@ namespace ride
         std::shared_ptr<Document> document;
         std::shared_ptr<Settings> settings;
 
-        View view;
+        TextWidget widget;
         StatusBar statusbar;
 
         vec2 window_size = vec2{0,0};
@@ -468,8 +552,13 @@ namespace ride
             , text_size(d->GetSizeOfString(font_big, MEASSURE_STRING))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
-            , view({{10, 20}, {400, 420}}, driver, font_code, document, settings)
-            , statusbar(font_code, settings, &view)
+            , widget(driver, font_code, document, settings)
+            , statusbar
+            (
+                font_code,
+                settings,
+                [this]() { return widget.GetCurrentDocumentInformation(); }
+            )
         {
         }
 
@@ -498,7 +587,7 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            view.Draw(painter);
+            widget.Draw(painter);
             statusbar.Draw(painter, window_size);
         }
 
@@ -541,67 +630,37 @@ namespace ride
         }
 
         bool ctrl = false;
+        bool alt = false;
+        bool shift = false;
         bool OnKey(bool down, Key key) override
         {
-            if(key == Key::Control)
+            if(key == Key::Control) { ctrl = down; driver->Refresh(); return true; }
+            if(key == Key::Alt) { alt = down; driver->Refresh(); return true; }
+            if(key == Key::Shift) { shift = down; driver->Refresh(); return true; }
+
+            if(down)
             {
-                ctrl = down;
-                driver->Refresh();
+                const bool handled = widget.OnKey(key, ctrl);
+
+                if(handled)
+                {
+                    driver->Refresh();
+                }
+            }
+
+            if(ctrl || alt)
+            {
                 return true;
             }
-
-            bool handled = false;
-
-            switch(key)
+            else
             {
-            case Key::Escape: str = ""; handled = true; break;
-            case Key::Left:
-                if(down)
-                {
-                    if(ctrl) { view.ScrollRight(-1); }
-                    else { view.StepRight(-1); }
-                }
-                handled = true;
-                break;
-            case Key::Right:
-                if(down)
-                {
-                    if(ctrl) { view.ScrollRight(1); }
-                    else { view.StepRight(1); }
-                }
-                handled = true;
-                break;
-            case Key::Up:
-                if(down)
-                {
-                    if(ctrl) { view.ScrollDown(-1); }
-                    else { view.StepDown(-1); }
-                }
-                handled = true;
-                break;
-            case Key::Down:
-                if(down)
-                {
-                    if(ctrl) { view.ScrollDown(1); }
-                    else { view.StepDown(1); }
-                }
-                handled = true;
-                break;
-
-            default: break;
+                return false;
             }
-
-            if(handled)
-            {
-                driver->Refresh();
-            }
-
-            return handled;
         }
 
         void OnChar(const std::string& ch) override
         {
-            view.InsertStringAtCursor(ch);
+            widget.OnChar(ch);
             driver->Refresh();
         }
     };
