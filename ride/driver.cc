@@ -308,12 +308,12 @@ namespace ride
 
         void Draw
         (
-            Painter* painter,
-            const Rgb& foreground_color,
-            const Rgb& background_color,
-            const Rgb& gutter_color
+            Painter* painter
         )
         {
+            const auto foreground_color = Rgb{0,0,0};
+            const auto background_color = Rgb{180, 180, 180};
+            const auto gutter_color = Rgb{160, 160, 160};
             const auto linenumber_color = foreground_color;
 
             if(settings == nullptr) { return; }
@@ -498,7 +498,7 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            view.Draw(painter, {0,0,0}, {180, 180, 180}, {160, 160, 160});
+            view.Draw(painter);
             statusbar.Draw(painter, window_size);
         }
 
