@@ -17,6 +17,11 @@ namespace ride
         return {lhs.x + rhs.x, lhs.y + rhs.y};
     }
 
+    vec2 operator-(const vec2& lhs, const vec2& rhs)
+    {
+        return {lhs.x - rhs.x, lhs.y - rhs.y};
+    }
+
 
     bool Rect::Contains(const vec2& p) const
     {
@@ -128,6 +133,8 @@ namespace ride
         int statusbar_padding_bottom = 3;
         int statusbar_padding_top = 3;
         int statusbar_padding_right = 6;
+
+        bool scroll_to_cursor_on_click = true;
     };
 
 
@@ -164,6 +171,23 @@ namespace ride
             FocusCursor();
         }
 
+        vec2 FromPixelPoint(const vec2& pos)
+        {
+            const auto dx = -GetGutterWidth();
+            const auto dy = 0;
+            const auto base = vec2
+            {
+                static_cast<int>(std::floor(static_cast<float>(pos.x+dx) / font->char_width)) - 1,
+                static_cast<int>(std::floor(static_cast<float>(pos.y+dy) / font->line_height))
+            };
+            const auto r =  base + scroll;
+
+            const auto ry = std::min<int>(std::max(0, r.y), document->GetNumberOfLines()+1);
+            const auto rx = std::min<int>(std::max(0, r.x), document->GetLineAt(ry).length());
+
+            return {rx, ry};
+        }
+
         int GetLineNumberSize()
         {
             if(settings == nullptr) { return 0; }
@@ -184,6 +208,11 @@ namespace ride
             }
 
             FocusCursor();
+        }
+
+        void PlaceCursorAt(const vec2& p)
+        {
+            cursor = p;
         }
 
         void InsertStringAtCursor(const std::string& str)
@@ -316,6 +345,15 @@ namespace ride
             LimitScroll();
         }
 
+        int GetGutterWidth()
+        {
+            const auto line_number_size = GetLineNumberSize();
+            
+            if(settings == nullptr) { return line_number_size; }
+
+            return settings->left_gutter_padding + line_number_size + settings->right_gutter_padding;
+        }
+
         void Draw
         (
             Painter* painter
@@ -340,9 +378,7 @@ namespace ride
                 const int right_gutter_padding = settings->right_gutter_padding;
                 const int editor_padding_left = settings->editor_padding_left;
 
-                const auto line_number_size = GetLineNumberSize();
-
-                const auto gutter_rect = rect.CreateWestFromMaxSize(left_gutter_padding + line_number_size + right_gutter_padding);
+                const auto gutter_rect = rect.CreateWestFromMaxSize(GetGutterWidth());
                 painter->Rect(gutter_rect, gutter_color, std::nullopt);
                 
                 const auto lower_right = rect.position + rect.size;
@@ -477,6 +513,8 @@ namespace ride
         virtual void Draw(Painter* painter) = 0;
         virtual bool OnKey(Key key, const Meta& meta) = 0;
         virtual void OnChar(const std::string& ch) = 0;
+
+        virtual void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) = 0;
     };
 
 
@@ -500,7 +538,6 @@ namespace ride
             
             painter->Rect(rect, background_color, std::nullopt);
             painter->Text(font, latest_str, rect.position, {0, 0, 0});
-            
         }
 
         bool OnKey(Key key, const Meta& meta) override
@@ -511,6 +548,10 @@ namespace ride
         void OnChar(const std::string& ch) override
         {
             latest_str = ch;
+        }
+
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) override
+        {
         }
     };
 
@@ -584,6 +625,20 @@ namespace ride
         void OnChar(const std::string& ch) override
         {
             view.InsertStringAtCursor(ch);
+        }
+
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) override
+        {
+            if(state != MouseState::Down) { return; }
+            if( button != MouseButton::Left) { return; }
+
+            const auto new_pos = view.FromPixelPoint(pos);
+            view.PlaceCursorAt(new_pos);
+
+            if(view.settings && view.settings->scroll_to_cursor_on_click)
+            {
+                view.FocusCursor();
+            }
         }
     };
 
@@ -685,6 +740,12 @@ namespace ride
             {
                 active_widget = HitTest(last_mouse);
             }
+
+            if(active_widget != nullptr)
+            {
+                active_widget->MouseClick(button, state, last_mouse - active_widget->GetRect().position);
+            }
+
             driver->Refresh();
         }
 

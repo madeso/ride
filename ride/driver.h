@@ -192,6 +192,7 @@ namespace ride
     }
 
     vec2 operator+(const vec2& lhs, const vec2& rhs);
+    vec2 operator-(const vec2& lhs, const vec2& rhs);
 
     struct Rect
     {
