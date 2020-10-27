@@ -1,5 +1,5 @@
 # ride todo
-* mouseclick to select
+* add compiler warnings and errors
 * file explorer/tree view
 * tabbed documents
 * cmdlet
