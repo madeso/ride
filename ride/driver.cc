@@ -469,6 +469,36 @@ namespace ride
         virtual void OnChar(const std::string& ch) = 0;
     };
 
+
+    struct DemoWidget : public Widget
+    {
+        std::shared_ptr<Font> font;
+        std::string latest_str = "?";
+
+        Rect rect;
+
+        DemoWidget(std::shared_ptr<Font> f, const Rect& r) : font(f), rect(r) { }
+        
+        void Draw(Painter* painter)
+        {
+            const auto background_color = Rgb{180, 180, 180};
+            
+            painter->Rect(rect, background_color, std::nullopt);
+            painter->Text(font, latest_str, rect.position, {0, 0, 0});
+            
+        }
+
+        bool OnKey(Key key, const Meta& meta)
+        {
+            return false;
+        }
+
+        void OnChar(const std::string& ch)
+        {
+            latest_str = ch;
+        }
+    };
+
     struct TextWidget : public Widget
     {
         View view;
@@ -554,6 +584,7 @@ namespace ride
 
         TextWidget widget;
         StatusBar statusbar;
+        DemoWidget demo_widget;
 
         Widget* active_widget;
 
@@ -585,6 +616,7 @@ namespace ride
                         return widget.GetCurrentDocumentInformation();
                     }
                 )
+            , demo_widget(font_big, {{50, 600}, {300, 300}})
             , active_widget(&widget)
         {
         }
@@ -614,7 +646,8 @@ namespace ride
                 painter->Line( *start, *mouse, {{0,0,0}, 3} ); // draw line across the rectangle
             }
 
-            active_widget->Draw(painter);
+            widget.Draw(painter);
+            demo_widget.Draw(painter);
             statusbar.Draw(painter, window_size);
         }
 
@@ -667,11 +700,20 @@ namespace ride
 
             if(down)
             {
-                const bool handled = active_widget->OnKey(key, {ctrl, shift, alt});
-
-                if(handled)
+                if(key == Key::Tab)
                 {
+                    // tab switches between the widgets
+                    active_widget = active_widget==&demo_widget ? static_cast<Widget*>(&widget) : static_cast<Widget*>(&demo_widget);
                     driver->Refresh();
+                }
+                else
+                {
+                    const bool handled = active_widget->OnKey(key, {ctrl, shift, alt});
+
+                    if(handled)
+                    {
+                        driver->Refresh();
+                    }
                 }
             }
 
