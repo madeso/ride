@@ -4,4 +4,6 @@ set(src
 )
 
 add_library(libride STATIC ${src})
-
+target_link_libraries(libride
+    project_options project_warnings
+)

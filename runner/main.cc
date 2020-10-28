@@ -155,7 +155,7 @@ ride::Key ToKey(int k)
 }
 
 
-constexpr char* DISPLAY_NAME = "Ride";
+constexpr const char* const DISPLAY_NAME = "Ride";
 
 
 struct MyApp : public wxApp
@@ -200,9 +200,9 @@ bool MyApp::OnInit()
     app_console->SetVendorDisplayName("madeso");
 
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    auto* frame = new wxFrame((wxFrame *)NULL, -1,  DISPLAY_NAME, wxPoint(50,50), wxSize(800,600));
+    auto* frame = new wxFrame(nullptr, -1,  DISPLAY_NAME, wxPoint(50,50), wxSize(800,600));
 	
-    auto* pane = new Pane( (wxFrame*) frame );
+    auto* pane = new Pane( frame );
     sizer->Add(pane, 1, wxEXPAND);
 	
     frame->SetSizer(sizer);
@@ -418,7 +418,7 @@ Pane::Pane(wxFrame* parent)
 }
 
 
-void Pane::paintEvent(wxPaintEvent & evt)
+void Pane::paintEvent(wxPaintEvent&)
 {
     wxPaintDC dc(this);
     render(dc);
@@ -432,7 +432,7 @@ void Pane::render(wxDC& dc)
 }
 
 
-void Pane::OnSize(wxSizeEvent& e)
+void Pane::OnSize(wxSizeEvent&)
 {
     int width = 0;
     int height = 0;
@@ -447,7 +447,7 @@ void Pane::OnMouseMoved(wxMouseEvent& event)
 }
 
 
-void Pane::OnMouseLeftWindow(wxMouseEvent& event)
+void Pane::OnMouseLeftWindow(wxMouseEvent&)
 {
     app->OnMouseLeftWindow();
 }
@@ -461,7 +461,7 @@ void Pane::OnMouseButton(ride::MouseState state, ride::MouseButton button)
 
 void Pane::OnMouseWheel(wxMouseEvent& e)
 {
-    const float rotation = e.GetWheelRotation() / 120.0f;
+    const float rotation = static_cast<float>(e.GetWheelRotation()) / 120.0f;
     const int lines = e.GetLinesPerAction();
     app->OnMouseScroll(rotation, lines);
 }

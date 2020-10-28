@@ -12,6 +12,9 @@
 
 namespace ride
 {
+    int C(std::size_t i)  { return static_cast<int>(i); }
+    std::size_t Cs(int i)  { return static_cast<size_t>(i); }
+
     vec2 operator+(const vec2& lhs, const vec2& rhs)
     {
         return {lhs.x + rhs.x, lhs.y + rhs.y};
@@ -88,14 +91,14 @@ namespace ride
         
         int GetNumberOfLines() const
         {
-            return lines.size();
+            return C(lines.size());
         }
 
         std::string GetLineAt(int y) const
         {
             if(y < 0) { return ""; }
-            else if(y >= lines.size()) { return ""; }
-            else { return lines[y]; }
+            else if(y >= C(lines.size())) { return ""; }
+            else { return lines[Cs(y)]; }
         }
 
         Document()
@@ -182,7 +185,7 @@ namespace ride
             const int next_x = std::max(0, cursor.x + x);
             if(document && cursor.y < document->GetNumberOfLines())
             {
-                cursor.x = std::min<int>(document->GetLineAt(cursor.y).length(), next_x);
+                cursor.x = std::min<int>(C(document->GetLineAt(cursor.y).length()), next_x);
             }
             requested_cursor_x = cursor.x;
 
@@ -195,13 +198,13 @@ namespace ride
             const auto dy = 0;
             const auto base = vec2
             {
-                static_cast<int>(std::floor(static_cast<float>(pos.x+dx) / font->char_width)) - 1,
-                static_cast<int>(std::floor(static_cast<float>(pos.y+dy) / font->line_height))
+                static_cast<int>(std::floor(static_cast<float>(pos.x+dx) / static_cast<float>(font->char_width))) - 1,
+                static_cast<int>(std::floor(static_cast<float>(pos.y+dy) / static_cast<float>(font->line_height)))
             };
             const auto r =  base + scroll;
 
             const auto ry = std::min<int>(std::max(0, r.y), document->GetNumberOfLines()+1);
-            const auto rx = std::min<int>(std::max(0, r.x), document->GetLineAt(ry).length());
+            const auto rx = std::min<int>(std::max(0, r.x), C(document->GetLineAt(ry).length()));
 
             return {rx, ry};
         }
@@ -222,7 +225,7 @@ namespace ride
             if(document)
             {
                 cursor.y = std::min<int>(std::max(0, cursor.y + y), document->GetNumberOfLines());
-                cursor.x = std::min<int>(document->GetLineAt(cursor.y).length(), requested_cursor_x);
+                cursor.x = std::min<int>(C(document->GetLineAt(cursor.y).length()), requested_cursor_x);
             }
 
             FocusCursor();
@@ -242,20 +245,20 @@ namespace ride
             if(cursor.y == document->GetNumberOfLines())
             {
                 document->lines.emplace_back(str);
-                cursor.x = str.length();
+                cursor.x = C(str.length());
             }
             else
             {
                 auto line = document->GetLineAt(cursor.y);
-                if(line.length() < cursor.x )
+                if(C(line.length()) < cursor.x )
                 {
                     // add spaces
-                    const auto number_of_spaces = cursor.x - line.length();
-                    line = line + std::string(number_of_spaces, ' ');
+                    const auto number_of_spaces = cursor.x - C(line.length());
+                    line = line + std::string(Cs(number_of_spaces), ' ');
                 }
-                line.insert(cursor.x, str);
-                document->lines[cursor.y] = line;
-                cursor.x += str.length();
+                line.insert(Cs(cursor.x), str);
+                document->lines[Cs(cursor.y)] = line;
+                cursor.x += C(str.length());
             }
         }
 
@@ -292,7 +295,7 @@ namespace ride
             if(font == nullptr) { return 0; }
             if(font->line_height <= 0) { return 0; }
 
-            const auto lines = rect.size.y / static_cast<float>(font->line_height);
+            const auto lines = static_cast<float>(rect.size.y) / static_cast<float>(font->line_height);
             return static_cast<int>(std::floor(lines));
         }
 
@@ -304,7 +307,7 @@ namespace ride
             const auto gutter_width = settings->left_gutter_padding + settings->right_gutter_padding + GetLineNumberSize() + settings->editor_padding_left;
             const auto window_width = std::max(0, rect.size.x - gutter_width);
 
-            const auto chars = window_width / static_cast<float>(font->char_width);
+            const auto chars = static_cast<float>(window_width) / static_cast<float>(font->char_width);
             const auto ci = static_cast<int>(std::floor(chars));
 
             return ci;
@@ -393,12 +396,12 @@ namespace ride
             const auto size_without_buttons = rect.size.y - (up_button.size.y + down_button.size.y);
             if(size_without_buttons <= 0) { return; }
 
-            const auto suggest_scrollbar_size = (lines_in_view/static_cast<float>(lines_no_view)) * size_without_buttons;
+            const auto suggest_scrollbar_size = (static_cast<float>(lines_in_view)/static_cast<float>(lines_no_view)) * static_cast<float>(size_without_buttons);
             const auto scrollbar_size = std::max(min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
 
             const auto area_to_scroll = size_without_buttons - scrollbar_size;
 
-            const auto suggest_scroll_position = (scroll / static_cast<float>(lines_no_view)) * area_to_scroll;
+            const auto suggest_scroll_position = (static_cast<float>(scroll) / static_cast<float>(lines_no_view)) * static_cast<float>(area_to_scroll);
             const auto scroll_position = static_cast<int>(std::floor(suggest_scroll_position));
 
             const auto scrollbar = Rect{{rect.position.x, rect.position.y + scroll_position + up_button.size.y}, {rect.size.x, scrollbar_size}};
@@ -426,7 +429,6 @@ namespace ride
 
                 const bool render_linenumber = settings->render_linenumber;
                 const int left_gutter_padding = settings->left_gutter_padding;
-                const int right_gutter_padding = settings->right_gutter_padding;
                 const int editor_padding_left = settings->editor_padding_left;
 
                 const auto gutter_rect = rect.CreateWestFromMaxSize(GetGutterWidth());
@@ -446,11 +448,11 @@ namespace ride
                             if(offset >= static_cast<int>(str.length())) { return ""; }
                             else if(offset < 0)
                             {
-                                return std::string(-offset, ' ') + str;
+                                return std::string(Cs(-offset), ' ') + str;
                             }
                             else
                             {
-                                return str.substr(offset);
+                                return str.substr(Cs(offset));
                             }
                         };
                         if(render_linenumber && current_scroll.y >= 0)
@@ -463,7 +465,7 @@ namespace ride
 
                         if(current_scroll.y == cursor.y)
                         {
-                            const auto cursor_x = driver->GetSizeOfString(font, full_line.substr(0, cursor.x - scroll.x)).width;
+                            const auto cursor_x = driver->GetSizeOfString(font, full_line.substr(0, Cs(cursor.x - scroll.x))).width;
                             painter->Line
                             (
                                 {draw_position.x + cursor_x, draw_position.y},
@@ -600,7 +602,7 @@ namespace ride
             painter->Text(font, latest_str, rect.position, {0, 0, 0});
         }
 
-        bool OnKey(Key key, const Meta& meta) override
+        bool OnKey(Key, const Meta&) override
         {
             return false;
         }
@@ -610,7 +612,7 @@ namespace ride
             latest_str = ch;
         }
 
-        void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) override
+        void MouseClick(const MouseButton&, const MouseState, const vec2&) override
         {
         }
     };
@@ -809,7 +811,7 @@ namespace ride
             driver->Refresh();
         }
 
-        void OnMouseScroll(float scroll, int lines) override
+        void OnMouseScroll(float, int) override
         {
         }
 

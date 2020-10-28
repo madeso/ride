@@ -15,10 +15,14 @@ if(APPLE)
 endif()
 
 add_executable (
-	ride WIN32 MACOSX_BUNDLE
+    ride WIN32 MACOSX_BUNDLE
 	${src} ${apple_resources}
 )
-target_link_libraries(ride ${wxWidgets_LIBRARIES} libride)
+target_link_libraries(ride
+    ${wxWidgets_LIBRARIES}
+    libride
+    project_options
+)
 
 install(TARGETS ride DESTINATION ".")
 
