@@ -1,5 +1,4 @@
 # ride todo
-* draw scrollbar
 * floatscrolling
 * add compiler warnings and errors
 * file explorer/tree view
