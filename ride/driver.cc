@@ -575,6 +575,7 @@ namespace ride
         virtual void Draw(Painter* painter) = 0;
         virtual bool OnKey(Key key, const Meta& meta) = 0;
         virtual void OnChar(const std::string& ch) = 0;
+        virtual void OnScroll(float scroll, int lines) = 0;
 
         virtual void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) = 0;
     };
@@ -610,6 +611,10 @@ namespace ride
         void OnChar(const std::string& ch) override
         {
             latest_str = ch;
+        }
+
+        void OnScroll(float, int) override
+        {
         }
 
         void MouseClick(const MouseButton&, const MouseState, const vec2&) override
@@ -687,6 +692,15 @@ namespace ride
         void OnChar(const std::string& ch) override
         {
             view.InsertStringAtCursor(ch);
+        }
+
+        void OnScroll(float scroll, int lines) override
+        {
+            // todo(Gustav): custom scroll speed lines/multiplier
+            // todo(Gustav): handle (or save) partial scrolls
+            view.ScrollDown(static_cast<int>(-scroll * static_cast<float>(lines)));
+            // todo(Gustav): yuck! fix this hack
+            view.driver->Refresh();
         }
 
         void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) override
@@ -811,8 +825,12 @@ namespace ride
             driver->Refresh();
         }
 
-        void OnMouseScroll(float, int) override
+        void OnMouseScroll(float scroll, int lines) override
         {
+            // todo(Gustav): should scroll use active widget or hovering widget? as a option?
+            auto* w = HitTest(last_mouse);
+            if(w == nullptr) { return; }
+            w->OnScroll(scroll, lines);
         }
 
         bool ctrl = false;
