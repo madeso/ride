@@ -205,6 +205,9 @@ namespace ride
         bool Contains(const vec2& p) const;
 
         Rect CreateWestFromMaxSize(int max_size) const;
+        Rect CreateNorthFromMaxSize(int max_size) const;
+        Rect CreateSouthFromMaxSize(int max_size) const;
+        Rect CreateEastFromMaxSize(int max_size) const;
     };
 
     struct Font

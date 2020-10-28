@@ -37,6 +37,24 @@ namespace ride
     }
 
 
+    Rect Rect::CreateNorthFromMaxSize(int max_size) const
+    {
+        return {position, {size.x, std::min(max_size, size.y)}};
+    }
+
+    Rect Rect::CreateSouthFromMaxSize(int max_size) const
+    {
+        const auto s = std::min(max_size, size.y);
+        return {{position.x, position.y + size.y - s}, {size.x, s}};
+    }
+
+    Rect Rect::CreateEastFromMaxSize(int max_size) const
+    {
+        const auto s = std::min(max_size, size.x);
+        return {{position.x + size.x - s, position.y}, {s, size.y}};
+    }
+
+
     Font::~Font()
     {
     }
@@ -354,6 +372,39 @@ namespace ride
             return settings->left_gutter_padding + line_number_size + settings->right_gutter_padding;
         }
 
+        static void DrawScrollbarVertical(Painter* painter, int scroll, int lines_no_view, int lines_in_view, Rect rect)
+        {
+            const auto min_size_of_scrollbar = 3;
+            const auto background_color = Rgb{120, 120, 120};
+            const auto scrollbar_color = Rgb{210, 210, 210};
+            const auto line_color = Rgb{50, 50, 50};
+            const auto button_color = Rgb{150, 150, 150};
+
+            const auto line = Line{line_color, 1};
+            const auto button_height = rect.size.x;
+
+            const auto up_button = rect.CreateNorthFromMaxSize(button_height);
+            const auto down_button = rect.CreateSouthFromMaxSize(button_height);
+
+            painter->Rect(rect, background_color, line);
+            painter->Rect(up_button, button_color, line);
+            painter->Rect(down_button, button_color, line);
+
+            const auto size_without_buttons = rect.size.y - (up_button.size.y + down_button.size.y);
+            if(size_without_buttons <= 0) { return; }
+
+            const auto suggest_scrollbar_size = (lines_in_view/static_cast<float>(lines_no_view)) * size_without_buttons;
+            const auto scrollbar_size = std::max(min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
+
+            const auto area_to_scroll = size_without_buttons - scrollbar_size;
+
+            const auto suggest_scroll_position = (scroll / static_cast<float>(lines_no_view)) * area_to_scroll;
+            const auto scroll_position = static_cast<int>(std::floor(suggest_scroll_position));
+
+            const auto scrollbar = Rect{{rect.position.x, rect.position.y + scroll_position + up_button.size.y}, {rect.size.x, scrollbar_size}};
+            painter->Rect(scrollbar, scrollbar_color, line);
+        }
+
         void Draw
         (
             Painter* painter
@@ -426,6 +477,15 @@ namespace ride
 
                     current_scroll.y = current_scroll.y + 1;
                 }
+
+                DrawScrollbarVertical
+                (
+                    painter,
+                    scroll.y * font->line_height,
+                    (document->GetNumberOfLines() - GetWindowHeightInLines())*font->line_height,
+                    GetWindowHeightInLines()*font->line_height,
+                    rect.CreateEastFromMaxSize(10)
+                );
             }
         }
     };
