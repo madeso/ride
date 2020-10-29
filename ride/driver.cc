@@ -34,6 +34,13 @@ namespace ride
 
         bool directories_first = true;
         bool sort_files = true;
+
+        int tab_padding_left = 3;
+        int tab_padding_right = 3;
+        int tab_height_padding = 3;
+        int tab_spacing = 3;
+        int tab_start_padding = 3;
+        int selected_tab_height = 6;
     };
 
 
@@ -704,6 +711,159 @@ namespace ride
     };
 
 
+    struct Tab
+    {
+        std::string name;
+        int width;
+        int x = 0;
+
+        Tab(const std::string& n, int w) : name(n), width(w) {}
+    };
+
+    struct TabsWidget : public Widget
+    {
+        std::shared_ptr<Driver> driver;
+        std::shared_ptr<Settings> settings;
+        std::shared_ptr<Font> font;
+        Rect rect;
+
+        std::vector<Tab> tabs;
+
+        TabsWidget
+        (
+            std::shared_ptr<Driver> d,
+            std::shared_ptr<Settings> s,
+            std::shared_ptr<Font> f,
+            const Rect& r
+        ) : driver(d), settings(s), font(f), rect(r) { }
+
+        int CalculateWidthOfTab(const std::string& name)
+        {
+            const auto s = driver->GetSizeOfString(font, name);
+            const auto total_width = s.width + settings->tab_padding_left + settings->tab_padding_right;
+            return total_width;
+        }
+
+        void AddFile(const std::string& name)
+        {
+            const auto start_index = C(tabs.size());
+            tabs.emplace_back(name, CalculateWidthOfTab(name));
+            UpdateTabPositions(start_index);
+        }
+
+        Rect GetRect() const override
+        {
+            return rect;
+        }
+
+        void UpdateTabPositions(int start_tab_index)
+        {
+            const auto tab_spacing = settings->tab_spacing;
+            const auto calculate_x = [tab_spacing](const Tab& t) -> int
+            {
+                return t.x + t.width + tab_spacing;
+            };
+
+            for(int tab_index=start_tab_index; tab_index<C(tabs.size()); tab_index+=1)
+            {
+                const auto x = (tab_index == 0)
+                    ? settings->tab_start_padding
+                    : calculate_x(tabs[Cs(tab_index -1)]);
+                auto& tab = tabs[Cs(tab_index)];
+                tab.x = x;
+            }
+        }
+
+        int selected_tab = 1;
+        
+        void Draw(Painter* painter) override
+        {
+            const auto background_color = Rgb{200, 200, 200};
+            const auto tab_inactive_background = Rgb{180, 180, 180};
+            const auto tab_selected_background = Rgb{220, 220, 220};
+            painter->Rect(rect, background_color, std::nullopt);
+
+            auto scope = RectScope{painter, rect};
+            
+            const auto bottom = rect.position.y + rect.size.y;
+            for
+            (
+                int tab_index = 0;
+                tab_index < C(tabs.size());
+                tab_index += 1
+            )
+            {
+                const auto tab = tabs[Cs(tab_index)];
+                if(tab.x > rect.size.x ) { break; }
+                const auto is_selected = IsTabIndexSelected(tab_index);
+                const auto tab_height_offset = CalculateTabHeightOffset(tab_index);
+                const auto tab_background = is_selected ? tab_selected_background : tab_inactive_background;
+                const auto tab_rect = CalculateTabRect(tab_index);
+                painter->Rect(tab_rect, tab_background, Line{{0,0,0}, 1});
+                painter->Text(font, tab.name, {tab.x + rect.position.x + settings->tab_padding_left, bottom - (font->line_height + tab_height_offset)}, {0, 0, 0});
+            }
+        }
+
+        bool IsTabIndexSelected(int tab_index) const
+        {
+            return selected_tab == tab_index;
+        }
+
+        Rect CalculateTabRect(int tab_index) const
+        {
+            const auto bottom = rect.position.y + rect.size.y;
+            const auto tab = tabs[Cs(tab_index)];
+            const auto tab_height = CalculateTabHeight(tab_index);
+            return {{tab.x + rect.position.x, bottom - tab_height}, {tab.width, tab_height + 2}};
+        }
+
+        // how tall the tab is compared to a regular tab
+        int CalculateTabHeightOffset(int tab_index) const
+        {
+            const auto tab_height_offset = IsTabIndexSelected(tab_index) ? settings->selected_tab_height : 0;
+            return tab_height_offset;
+        }
+
+        int CalculateTabHeight(int tab_index) const
+        {
+            const auto tab_height = font->line_height + settings->tab_height_padding + CalculateTabHeightOffset(tab_index);
+            return tab_height;
+        }
+
+        bool OnKey(Key, const Meta&) override
+        {
+            return false;
+        }
+
+        void OnChar(const std::string&) override
+        {
+        }
+
+        void OnScroll(float, int) override
+        {
+        }
+
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& p) override
+        {
+            if(button != MouseButton::Left) { return; }
+            if(state != MouseState::Down) { return; }
+
+            // todo(Gustav): should we be able to deselect tabs by hitting between or over tabs?
+            selected_tab = -1;
+            for(int tab_index=0; tab_index<C(tabs.size()); tab_index+=1)
+            {
+                // todo(Gustav): does this correctly handle when rect is non-zero?
+                const auto tab_rect = CalculateTabRect(tab_index);
+                if(tab_rect.Contains(p))
+                {
+                    selected_tab = tab_index;
+                    return;
+                }
+            }
+        }
+    };
+
+
     struct FileSystemWidget : public Widget
     {
         std::shared_ptr<Font> font;
@@ -922,6 +1082,7 @@ namespace ride
         StatusBar statusbar;
         DemoWidget demo_widget;
         FileSystemWidget fs_widget;
+        TabsWidget tabs;
 
         Widget* active_widget;
 
@@ -934,7 +1095,7 @@ namespace ride
             , font_big(d->CreateUiFont(100))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
-            , widget({{176, 20}, {400, 420}}, driver, font_code, document, settings)
+            , widget({{176, 36}, {400, 420}}, driver, font_code, document, settings)
             , statusbar
                 (
                     font_code,
@@ -945,9 +1106,17 @@ namespace ride
                     }
                 )
             , demo_widget(font_big, {{50, 600}, {300, 300}})
-            , fs_widget(font_code, {{10, 20}, {160, 420}}, settings, fs, root)
+            , fs_widget(font_code, {{10, 36}, {160, 420}}, settings, fs, root)
+            , tabs(driver, settings, font_code, {{0, 0}, {600, 30}})
             , active_widget(&widget)
         {
+            for(const auto& f: fs_widget.entries)
+            {
+                if(f.is_directory == false)
+                {
+                    tabs.AddFile(f.name);
+                }
+            }
         }
 
         void OnSize(const vec2& new_size) override
@@ -966,6 +1135,7 @@ namespace ride
             widget.Draw(painter);
             demo_widget.Draw(painter);
             fs_widget.Draw(painter);
+            tabs.Draw(painter);
             statusbar.Draw(painter, window_size);
         }
 
@@ -975,6 +1145,8 @@ namespace ride
             {
                 static_cast<Widget*>(&widget),
                 static_cast<Widget*>(&demo_widget),
+                static_cast<Widget*>(&fs_widget),
+                static_cast<Widget*>(&tabs)
             };
 
             for(auto* w: widgets)
