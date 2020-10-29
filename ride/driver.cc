@@ -35,12 +35,15 @@ namespace ride
         bool directories_first = true;
         bool sort_files = true;
 
-        int tab_padding_left = 3;
-        int tab_padding_right = 3;
+        int tab_padding_left = 6;
+        int tab_padding_right = 6;
         int tab_height_padding = 3;
         int tab_spacing = 3;
         int tab_start_padding = 3;
+        int tab_end_padding = 3;
         int selected_tab_height = 6;
+
+        int tab_scroll_speed = 40;
     };
 
 
@@ -720,6 +723,14 @@ namespace ride
         Tab(const std::string& n, int w) : name(n), width(w) {}
     };
 
+    template<typename T>
+    T KeepWithin(T min, T t, T max)
+    {
+        if(t < min) { return min; }
+        else if(t > max) { return max; }
+        else { return t; }
+    }
+
     struct TabsWidget : public Widget
     {
         std::shared_ptr<Driver> driver;
@@ -728,6 +739,8 @@ namespace ride
         Rect rect;
 
         std::vector<Tab> tabs;
+
+        int scroll = 0; // in pixels
 
         TabsWidget
         (
@@ -794,13 +807,13 @@ namespace ride
             )
             {
                 const auto tab = tabs[Cs(tab_index)];
-                if(tab.x > rect.size.x ) { break; }
+                if(tab.x-scroll > rect.size.x ) { break; }
                 const auto is_selected = IsTabIndexSelected(tab_index);
                 const auto tab_height_offset = CalculateTabHeightOffset(tab_index);
                 const auto tab_background = is_selected ? tab_selected_background : tab_inactive_background;
                 const auto tab_rect = CalculateTabRect(tab_index);
                 painter->Rect(tab_rect, tab_background, Line{{0,0,0}, 1});
-                painter->Text(font, tab.name, {tab.x + rect.position.x + settings->tab_padding_left, bottom - (font->line_height + tab_height_offset)}, {0, 0, 0});
+                painter->Text(font, tab.name, {tab.x + rect.position.x + settings->tab_padding_left - scroll, bottom - (font->line_height + tab_height_offset)}, {0, 0, 0});
             }
         }
 
@@ -814,7 +827,7 @@ namespace ride
             const auto bottom = rect.position.y + rect.size.y;
             const auto tab = tabs[Cs(tab_index)];
             const auto tab_height = CalculateTabHeight(tab_index);
-            return {{tab.x + rect.position.x, bottom - tab_height}, {tab.width, tab_height + 2}};
+            return {{tab.x + rect.position.x - scroll, bottom - tab_height}, {tab.width, tab_height + 2}};
         }
 
         // how tall the tab is compared to a regular tab
@@ -839,8 +852,20 @@ namespace ride
         {
         }
 
-        void OnScroll(float, int) override
+        void OnScroll(float mouse_scroll, int) override
         {
+            scroll -= static_cast<int>(mouse_scroll * static_cast<float>(settings->tab_scroll_speed));
+
+            const auto end_of_tab = [](const Tab& t) -> int
+            {
+                return t.x + t.width;
+            };
+
+            const auto scroll_width = tabs.empty() ? 0 : end_of_tab(*tabs.rbegin()) + settings->tab_end_padding;
+            const auto max_scroll = std::max(0, scroll_width - rect.size.x);
+            scroll = KeepWithin(0, scroll, max_scroll);
+
+            driver->Refresh();
         }
 
         void MouseClick(const MouseButton& button, const MouseState state, const vec2& p) override
