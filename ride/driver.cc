@@ -1,17 +1,157 @@
 #include "driver.h"
 
-#include "ride/str.h"
-
 #include <vector>
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <cmath>
 #include <functional>
+#include <algorithm>
+
+#include <filesystem>
+#include <system_error>
+
+#include "ride/str.h"
+#include "ride/humane_sort.h"
 
 
 namespace ride
 {
+    struct Settings
+    {
+        vec2 scroll_spacing = {3, 3};
+
+        bool render_linenumber = true;
+        int left_gutter_padding = 3;
+        int right_gutter_padding = 6;
+        int editor_padding_left = 6;
+
+        int statusbar_padding_bottom = 3;
+        int statusbar_padding_top = 3;
+        int statusbar_padding_right = 6;
+
+        bool scroll_to_cursor_on_click = true;
+
+        bool directories_first = true;
+        bool sort_files = true;
+    };
+
+
+    struct FileEntry
+    {
+        std::string name;
+        std::string path;
+        bool is_directory;
+
+        FileEntry(const std::string& n, const std::string& p, bool d) : name(n), path(p), is_directory(d) {}
+    };
+
+
+    struct FileSystem
+    {
+        std::optional<std::string> GetCurrentDirectory() const
+        {
+            std::error_code error;
+            const auto p = std::filesystem::current_path(error);
+            if(error)
+            {
+                std::cerr << "Error getting current directory: " << error << "\n";
+                return std::nullopt;
+            }
+            else
+            {
+                return p.u8string();
+            }
+        }
+
+        std::optional<std::string> AsAbsolute(const std::string& p)
+        {
+            std::error_code error;
+
+            const auto relative = std::filesystem::path(p);
+            const auto absolute = std::filesystem::canonical(relative, error);
+            if(error)
+            {
+                std::cerr << "Error making path '" << p << "'absolute: " << error << "\n";
+                return std::nullopt;
+            }
+
+            return absolute.u8string();
+        }
+
+        std::optional<bool> Exists(const std::string& p)
+        {
+            const auto path = std::filesystem::path(p);
+            std::error_code error;
+            const bool exists = std::filesystem::exists(path, error);
+            if(error)
+            {
+                std::cerr << "Error checking '" << p << "' if it exists: " << error << "\n";
+                return std::nullopt;
+            }
+
+            return exists;
+        }
+
+        std::optional<std::vector<FileEntry>> List(const std::string& dir, const Settings& settings) const
+        {
+            const auto should_sort = settings.sort_files;
+            const auto sort = [should_sort](std::vector<FileEntry>* files)
+            {
+                if(should_sort == false) { return; }
+                std::sort(files->begin(), files->end(), [](const FileEntry& lhs, const FileEntry& rhs) {
+                    return humane_strcmp(lhs.name.c_str(), rhs.name.c_str()) < 0;
+                });
+            };
+
+            std::vector<FileEntry> files;
+            std::vector<FileEntry> folders;
+
+            std::error_code error;
+            auto directory_iterator = std::filesystem::directory_iterator(dir, error);
+            if(error)
+            {
+                std::cerr << "Error listing file in " << dir << ": " << error << "\n";
+                return std::nullopt;
+            }
+
+            for(auto& iterator: directory_iterator)
+            {
+                const auto p = iterator.path();
+                const auto file_name = p.filename();
+                const auto file_path = p.u8string();
+                if(iterator.is_directory())
+                {
+                    folders.emplace_back(file_name, file_path, true);
+                }
+                else if(iterator.is_regular_file())
+                {
+                    files.emplace_back(file_name, file_path, false);
+                }
+                // ignore other types
+            }
+
+            if(settings.directories_first)
+            {
+                sort(&files);
+                sort(&folders);
+                folders.insert(folders.end(), files.begin(), files.end());
+                return folders;
+            }
+            else
+            {
+                folders.insert(folders.end(), files.begin(), files.end());
+                sort(&folders);
+                return folders;
+            }
+        }
+    };
+
+    std::shared_ptr<FileSystem> MakeFs()
+    {
+        return std::make_shared<FileSystem>();
+    }
+
     int C(std::size_t i)  { return static_cast<int>(i); }
     std::size_t Cs(int i)  { return static_cast<size_t>(i); }
 
@@ -139,23 +279,6 @@ namespace ride
         {
             painter->PopClip();
         }
-    };
-
-
-    struct Settings
-    {
-        vec2 scroll_spacing = {3, 3};
-
-        bool render_linenumber = true;
-        int left_gutter_padding = 3;
-        int right_gutter_padding = 6;
-        int editor_padding_left = 6;
-
-        int statusbar_padding_bottom = 3;
-        int statusbar_padding_top = 3;
-        int statusbar_padding_right = 6;
-
-        bool scroll_to_cursor_on_click = true;
     };
 
 
@@ -738,7 +861,7 @@ namespace ride
 
         vec2 window_size = vec2{0,0};
 
-        RideApp(std::shared_ptr<Driver> d)
+        RideApp(std::shared_ptr<Driver> d, const Arguments& args)
             : driver(d)
             , font_ui(d->CreateUiFont(12))
             , font_code(d->CreateCodeFont(8))
@@ -758,6 +881,35 @@ namespace ride
             , demo_widget(font_big, {{50, 600}, {300, 300}})
             , active_widget(&widget)
         {
+            auto fs = MakeFs();
+            auto root = fs->GetCurrentDirectory();
+            if(args.arguments.empty() == false)
+            {
+                const auto resolved = fs->AsAbsolute(args.arguments[0]);
+                if(resolved)
+                {
+                    if(fs->Exists(*resolved).value_or(false))
+                    {
+                        root = resolved;
+                    }
+                    else
+                    {
+                        std::cout << "Ignoring path and using current\n";
+                    }
+                }
+            }
+            if(root)
+            {
+                std::cout << "Current dir: " << *root << "\n";
+                const auto list = fs->List(*root, *settings);
+                if(list)
+                {
+                    for(const auto& f: *list)
+                    {
+                        std::cout << "  " << (f.is_directory ? "D" : "F") << " " << f.name << "\n";
+                    }
+                }
+            }
         }
 
         void OnSize(const vec2& new_size) override
@@ -882,8 +1034,14 @@ namespace ride
     };
 
     std::shared_ptr<App>
-    CreateApp(std::shared_ptr<Driver> driver)
+    CreateApp(std::shared_ptr<Driver> driver, const Arguments& arguments)
     {
-        return std::make_shared<RideApp>(driver);
+        std::cout << "Started with " << arguments.name << "\n";
+        for(const auto& a: arguments.arguments)
+        {
+            std::cout << " - " << a << "\n";
+        }
+
+        return std::make_shared<RideApp>(driver, arguments);
     }
 }

@@ -4,6 +4,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <vector>
 
 namespace ride
 {
@@ -210,6 +211,12 @@ namespace ride
         Rect CreateEastFromMaxSize(int max_size) const;
     };
 
+    struct Arguments
+    {
+        std::string name;
+        std::vector<std::string> arguments;
+    };
+
     struct Font
     {
         virtual ~Font();
@@ -262,7 +269,7 @@ namespace ride
         virtual void OnChar(const std::string& str) = 0;
     };
 
-    std::shared_ptr<App> CreateApp(std::shared_ptr<Driver> driver);
+    std::shared_ptr<App> CreateApp(std::shared_ptr<Driver> driver, const Arguments& arguments);
 }
 
 #endif  // RIDE_DRIVER_H

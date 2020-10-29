@@ -11,6 +11,13 @@ wxString C(const std::string& text)
     return wxString::FromUTF8(text.c_str());
 }
 
+std::string C(const wxString& text)
+{
+    const auto buffer = text.utf8_str();
+    std::string r = buffer.data();
+    return r;
+}
+
 
 wxColor C(const ride::Rgb& c)
 {
@@ -170,7 +177,7 @@ wxIMPLEMENT_APP(MyApp);
 
 struct Pane : public wxPanel
 {
-    Pane(wxFrame* parent);
+    Pane(wxFrame* parent, const ride::Arguments& arguments);
 
     std::shared_ptr<ride::App> app;
     
@@ -191,6 +198,21 @@ struct Pane : public wxPanel
 };
 
 
+ride::Arguments CollectArguments(int argc, wxChar** argv)
+{
+    ride::Arguments r;
+
+    r.name = C(wxString(argv[0]));
+
+    for(int i=1; i<argc; i+=1)
+    {
+        r.arguments.emplace_back(C(argv[i]));
+    }
+
+    return r;
+}
+
+
 bool MyApp::OnInit()
 {
     wxAppConsole* app_console = wxAppConsole::GetInstance();
@@ -202,7 +224,7 @@ bool MyApp::OnInit()
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
     auto* frame = new wxFrame(nullptr, -1,  DISPLAY_NAME, wxPoint(50,50), wxSize(800,600));
 	
-    auto* pane = new Pane( frame );
+    auto* pane = new Pane{frame, CollectArguments(argc, argv)};
     sizer->Add(pane, 1, wxEXPAND);
 	
     frame->SetSizer(sizer);
@@ -380,10 +402,10 @@ struct WxPainter : public ride::Painter
 };
 
 
-Pane::Pane(wxFrame* parent)
+Pane::Pane(wxFrame* parent, const ride::Arguments& arguments)
     : wxPanel(parent)
 {
-    app = ride::CreateApp(std::make_shared<WxDriver>(this));
+    app = ride::CreateApp(std::make_shared<WxDriver>(this), arguments);
 
     Bind(wxEVT_PAINT, &Pane::paintEvent, this);
     Bind(wxEVT_SIZE, &Pane::OnSize, this);
