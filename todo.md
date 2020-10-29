@@ -1,5 +1,4 @@
 # ride todo/roadmap
-* tabbed documents
 * OnChanged repaint functor thing
 * cmdlet
 * keymap to cmdlet
