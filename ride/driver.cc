@@ -704,6 +704,70 @@ namespace ride
     };
 
 
+    struct FileSystemWidget : public Widget
+    {
+        std::shared_ptr<Font> font;
+        Rect rect;
+        std::shared_ptr<Settings> settings;
+        std::shared_ptr<FileSystem> filesystem;
+        std::string root;
+
+        std::vector<FileEntry> entries;
+
+        FileSystemWidget
+        (
+            std::shared_ptr<Font> f,
+            const Rect& r,
+            std::shared_ptr<Settings> s,
+            std::shared_ptr<FileSystem> fs,
+            const std::string& rt
+        ) : font(f), rect(r), settings(s), filesystem(fs), root(rt)
+        {
+            auto folders_and_files = filesystem->List(root, *settings);
+            if(folders_and_files)
+            {
+                entries = *folders_and_files;
+            }
+        }
+
+        Rect GetRect() const override
+        {
+            return rect;
+        }
+        
+        void Draw(Painter* painter) override
+        {
+            const auto background_color = Rgb{180, 180, 180};
+            painter->Rect(rect, background_color, std::nullopt);
+            const auto scope = RectScope{painter, rect};
+
+            int index = 0;
+            for(auto p = rect.position; p.y < rect.size.y && index < C(entries.size()); p.y += font->line_height)
+            {
+                const auto e = entries[Cs(index)]; index +=1;
+                painter->Text(font, e.name, p, {0, 0, 0});
+            }
+        }
+
+        bool OnKey(Key, const Meta&) override
+        {
+            return false;
+        }
+
+        void OnChar(const std::string&) override
+        {
+        }
+
+        void OnScroll(float, int) override
+        {
+        }
+
+        void MouseClick(const MouseButton&, const MouseState, const vec2&) override
+        {
+        }
+    };
+
+
     struct DemoWidget : public Widget
     {
         std::shared_ptr<Font> font;
@@ -751,12 +815,13 @@ namespace ride
 
         TextWidget
         (
+            const Rect& rect,
             std::shared_ptr<Driver> driver,
             std::shared_ptr<Font> font,
             std::shared_ptr<Document> document,
             std::shared_ptr<Settings> settings
         )
-            : view({{10, 20}, {400, 420}}, driver, font, document, settings)
+            : view(rect, driver, font, document, settings)
         {
         }
 
@@ -856,19 +921,20 @@ namespace ride
         TextWidget widget;
         StatusBar statusbar;
         DemoWidget demo_widget;
+        FileSystemWidget fs_widget;
 
         Widget* active_widget;
 
         vec2 window_size = vec2{0,0};
 
-        RideApp(std::shared_ptr<Driver> d, const Arguments& args)
+        RideApp(std::shared_ptr<Driver> d, std::shared_ptr<FileSystem> fs, const std::string& root)
             : driver(d)
-            , font_ui(d->CreateUiFont(12))
+            , font_ui(d->CreateUiFont(8))
             , font_code(d->CreateCodeFont(8))
             , font_big(d->CreateUiFont(100))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
-            , widget(driver, font_code, document, settings)
+            , widget({{176, 20}, {400, 420}}, driver, font_code, document, settings)
             , statusbar
                 (
                     font_code,
@@ -879,37 +945,9 @@ namespace ride
                     }
                 )
             , demo_widget(font_big, {{50, 600}, {300, 300}})
+            , fs_widget(font_code, {{10, 20}, {160, 420}}, settings, fs, root)
             , active_widget(&widget)
         {
-            auto fs = MakeFs();
-            auto root = fs->GetCurrentDirectory();
-            if(args.arguments.empty() == false)
-            {
-                const auto resolved = fs->AsAbsolute(args.arguments[0]);
-                if(resolved)
-                {
-                    if(fs->Exists(*resolved).value_or(false))
-                    {
-                        root = resolved;
-                    }
-                    else
-                    {
-                        std::cout << "Ignoring path and using current\n";
-                    }
-                }
-            }
-            if(root)
-            {
-                std::cout << "Current dir: " << *root << "\n";
-                const auto list = fs->List(*root, *settings);
-                if(list)
-                {
-                    for(const auto& f: *list)
-                    {
-                        std::cout << "  " << (f.is_directory ? "D" : "F") << " " << f.name << "\n";
-                    }
-                }
-            }
         }
 
         void OnSize(const vec2& new_size) override
@@ -923,10 +961,11 @@ namespace ride
         {
             painter->Rect({{0, 0}, window_size}, Rgb{230, 230, 230}, std::nullopt);
 
-            painter->Text(font_ui, "File | Code | Help", {40, 00}, {0, 0, 0});
+            painter->Text(font_ui, "File | Code | Help", {40, 0}, {0, 0, 0});
 
             widget.Draw(painter);
             demo_widget.Draw(painter);
+            fs_widget.Draw(painter);
             statusbar.Draw(painter, window_size);
         }
 
@@ -1034,14 +1073,38 @@ namespace ride
     };
 
     std::shared_ptr<App>
-    CreateApp(std::shared_ptr<Driver> driver, const Arguments& arguments)
+    CreateApp(std::shared_ptr<Driver> driver, const Arguments& args)
     {
-        std::cout << "Started with " << arguments.name << "\n";
-        for(const auto& a: arguments.arguments)
+        std::cout << "Started with " << args.name << "\n";
+        for(const auto& a: args.arguments)
         {
             std::cout << " - " << a << "\n";
         }
 
-        return std::make_shared<RideApp>(driver, arguments);
+        auto fs = MakeFs();
+        auto root = fs->GetCurrentDirectory();
+        if(args.arguments.empty() == false)
+        {
+            const auto resolved = fs->AsAbsolute(args.arguments[0]);
+            if(resolved)
+            {
+                if(fs->Exists(*resolved).value_or(false))
+                {
+                    root = resolved;
+                }
+                else
+                {
+                    std::cout << "Ignoring path and using current\n";
+                }
+            }
+        }
+
+        if(root.has_value() == false)
+        {
+            std::cerr << "Unable to find a required root folder\n";
+            return nullptr;
+        }
+
+        return std::make_shared<RideApp>(driver, fs, *root);
     }
 }
