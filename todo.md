@@ -1,9 +1,9 @@
 # ride todo/roadmap
 * OnChanged repaint functor thing
-* cmdlet
-* keymap to cmdlet
 * super basic sizing code so we don't have to set the sizes of widgets
 * refactor out colors into a theme struct
+* cmdlet
+* keymap to cmdlet
 * refactor out textview code so it can be shared with other components
 * file explorer/tree view and tab control handle documents
 
