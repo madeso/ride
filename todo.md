@@ -7,6 +7,7 @@
 
 * remove and integrate existing sources
 
+* port i3 or something else so we can have multiple widgets in same window
 * add sdl driver
 * rework text editor to use proper data structure
 
