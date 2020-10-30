@@ -1118,9 +1118,7 @@ namespace ride
 
         RideApp(std::shared_ptr<Driver> d, std::shared_ptr<FileSystem> fs, const std::string& root)
             : driver(d)
-            , font_ui(d->CreateUiFont(8))
             , font_code(d->CreateCodeFont(8))
-            , font_big(d->CreateUiFont(100))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
             , edit_widget(driver, font_code, document, settings)
@@ -1192,8 +1190,6 @@ namespace ride
         void OnPaint(Painter* painter) override
         {
             painter->Rect({{0, 0}, window_size}, Rgb{230, 230, 230}, std::nullopt);
-
-            painter->Text(font_ui, "File | Code | Help", {40, 0}, {0, 0, 0});
 
             edit_widget.Draw(painter);
             fs_widget.Draw(painter);
