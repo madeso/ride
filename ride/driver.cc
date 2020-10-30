@@ -47,6 +47,27 @@ namespace ride
     };
 
 
+    struct Callbacks
+    {
+        using Callback = std::function<void ()>;
+
+        std::vector<Callback> callbacks;
+
+        void Add(Callback&& c)
+        {
+            callbacks.emplace_back(std::move(c));
+        }
+
+        void Call()
+        {
+            for(const auto& c: callbacks)
+            {
+                c();
+            }
+        }
+    };
+
+
     struct FileEntry
     {
         std::string name;
@@ -706,11 +727,17 @@ namespace ride
         virtual Rect GetRect() const = 0;
 
         virtual void Draw(Painter* painter) = 0;
-        virtual bool OnKey(Key key, const Meta& meta) = 0;
+        virtual void OnKey(Key key, const Meta& meta) = 0;
         virtual void OnChar(const std::string& ch) = 0;
         virtual void OnScroll(float scroll, int lines) = 0;
 
         virtual void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) = 0;
+
+        Callbacks on_change;
+        void WidgetChanged()
+        {
+            on_change.Call();
+        }
     };
 
 
@@ -762,6 +789,7 @@ namespace ride
             const auto start_index = C(tabs.size());
             tabs.emplace_back(name, CalculateWidthOfTab(name));
             UpdateTabPositions(start_index);
+            WidgetChanged();
         }
 
         Rect GetRect() const override
@@ -843,9 +871,8 @@ namespace ride
             return tab_height;
         }
 
-        bool OnKey(Key, const Meta&) override
+        void OnKey(Key, const Meta&) override
         {
-            return false;
         }
 
         void OnChar(const std::string&) override
@@ -865,7 +892,7 @@ namespace ride
             const auto max_scroll = std::max(0, scroll_width - rect.size.x);
             scroll = KeepWithin(0, scroll, max_scroll);
 
-            driver->Refresh();
+            WidgetChanged();
         }
 
         void MouseClick(const MouseButton& button, const MouseState state, const vec2& p) override
@@ -873,18 +900,28 @@ namespace ride
             if(button != MouseButton::Left) { return; }
             if(state != MouseState::Down) { return; }
 
-            // todo(Gustav): should we be able to deselect tabs by hitting between or over tabs?
-            selected_tab = -1;
+            auto select_tab = [this](int new_tab)
+            {
+                if(this->selected_tab != new_tab)
+                {
+                    this->selected_tab = new_tab;
+                    this->WidgetChanged();
+                }
+            };
+
             for(int tab_index=0; tab_index<C(tabs.size()); tab_index+=1)
             {
                 // todo(Gustav): does this correctly handle when rect is non-zero?
                 const auto tab_rect = CalculateTabRect(tab_index);
                 if(tab_rect.Contains(p))
                 {
-                    selected_tab = tab_index;
+                    select_tab(tab_index);
                     return;
                 }
             }
+
+            // todo(Gustav): should we be able to deselect tabs by hitting between or over tabs?
+            select_tab(-1);
         }
     };
 
@@ -938,9 +975,8 @@ namespace ride
             }
         }
 
-        bool OnKey(Key, const Meta&) override
+        void OnKey(Key, const Meta&) override
         {
-            return false;
         }
 
         void OnChar(const std::string&) override
@@ -979,14 +1015,14 @@ namespace ride
             painter->Text(font, latest_str, rect.position, {0, 0, 0});
         }
 
-        bool OnKey(Key, const Meta&) override
+        void OnKey(Key, const Meta&) override
         {
-            return false;
         }
 
         void OnChar(const std::string& ch) override
         {
             latest_str = ch;
+            WidgetChanged();
         }
 
         void OnScroll(float, int) override
@@ -1034,7 +1070,7 @@ namespace ride
             view.Draw(painter);
         }
 
-        bool OnKey(Key key, const Meta& meta) override
+        void OnKey(Key key, const Meta& meta) override
         {
             const auto ctrl = meta.ctrl;
 
@@ -1063,12 +1099,13 @@ namespace ride
                 break;
             }
 
-            return handled;
+            if(handled) { WidgetChanged(); }
         }
 
         void OnChar(const std::string& ch) override
         {
             view.InsertStringAtCursor(ch);
+            WidgetChanged();
         }
 
         void OnScroll(float scroll, int lines) override
@@ -1076,8 +1113,8 @@ namespace ride
             // todo(Gustav): custom scroll speed lines/multiplier
             // todo(Gustav): handle (or save) partial scrolls
             view.ScrollDown(static_cast<int>(-scroll * static_cast<float>(lines)));
-            // todo(Gustav): yuck! fix this hack
-            view.driver->Refresh();
+            
+            WidgetChanged();
         }
 
         void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) override
@@ -1092,6 +1129,8 @@ namespace ride
             {
                 view.FocusCursor();
             }
+
+            WidgetChanged();
         }
     };
 
@@ -1107,7 +1146,7 @@ namespace ride
         std::shared_ptr<Document> document;
         std::shared_ptr<Settings> settings;
 
-        TextWidget widget;
+        TextWidget edit_widget;
         StatusBar statusbar;
         DemoWidget demo_widget;
         FileSystemWidget fs_widget;
@@ -1124,20 +1163,20 @@ namespace ride
             , font_big(d->CreateUiFont(100))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
-            , widget({{176, 36}, {400, 420}}, driver, font_code, document, settings)
+            , edit_widget({{176, 36}, {400, 420}}, driver, font_code, document, settings)
             , statusbar
                 (
                     font_code,
                     settings,
                     [this]()
                     {
-                        return widget.GetCurrentDocumentInformation();
+                        return edit_widget.GetCurrentDocumentInformation();
                     }
                 )
             , demo_widget(font_big, {{50, 600}, {300, 300}})
             , fs_widget(font_code, {{10, 36}, {160, 420}}, settings, fs, root)
             , tabs(driver, settings, font_code, {{0, 0}, {600, 30}})
-            , active_widget(&widget)
+            , active_widget(&edit_widget)
         {
             for(const auto& f: fs_widget.entries)
             {
@@ -1146,12 +1185,22 @@ namespace ride
                     tabs.AddFile(f.name);
                 }
             }
+
+            for(auto* widget : GetAllWidgets())
+            {
+                widget->on_change.Add([this](){this->Refresh();});
+            }
         }
 
         void OnSize(const vec2& new_size) override
         {
             window_size = new_size;
 
+            Refresh();
+        }
+
+        void Refresh()
+        {
             driver->Refresh();
         }
 
@@ -1161,24 +1210,27 @@ namespace ride
 
             painter->Text(font_ui, "File | Code | Help", {40, 0}, {0, 0, 0});
 
-            widget.Draw(painter);
+            edit_widget.Draw(painter);
             demo_widget.Draw(painter);
             fs_widget.Draw(painter);
             tabs.Draw(painter);
             statusbar.Draw(painter, window_size);
         }
 
-        Widget* HitTest(const vec2& p)
+        std::vector<Widget*> GetAllWidgets()
         {
-            const auto widgets = std::array
+            return
             {
-                static_cast<Widget*>(&widget),
+                static_cast<Widget*>(&edit_widget),
                 static_cast<Widget*>(&demo_widget),
                 static_cast<Widget*>(&fs_widget),
                 static_cast<Widget*>(&tabs)
             };
+        }
 
-            for(auto* w: widgets)
+        Widget* HitTest(const vec2& p)
+        {
+            for(auto* w: GetAllWidgets())
             {
                 const Rect r = w->GetRect();
                 if(r.Contains(p))
@@ -1194,12 +1246,10 @@ namespace ride
         void OnMouseMoved(const vec2& new_position) override
         {
             last_mouse = new_position;
-            // driver->Refresh();
         }
 
         void OnMouseLeftWindow() override
         {
-            driver->Refresh();
         }
 
         void OnMouseButton(MouseState state, MouseButton button) override
@@ -1213,8 +1263,6 @@ namespace ride
             {
                 active_widget->MouseClick(button, state, last_mouse - active_widget->GetRect().position);
             }
-
-            driver->Refresh();
         }
 
         void OnMouseScroll(float scroll, int lines) override
@@ -1230,26 +1278,15 @@ namespace ride
         bool shift = false;
         bool OnKey(bool down, Key key) override
         {
-            if(key == Key::Control) { ctrl = down; driver->Refresh(); return true; }
-            if(key == Key::Alt) { alt = down; driver->Refresh(); return true; }
-            if(key == Key::Shift) { shift = down; driver->Refresh(); return true; }
+            if(key == Key::Control) { ctrl = down; Refresh(); return true; }
+            if(key == Key::Alt) { alt = down; Refresh(); return true; }
+            if(key == Key::Shift) { shift = down; Refresh(); return true; }
 
             if(down)
             {
-                if(key == Key::Tab)
+                if(active_widget != nullptr)
                 {
-                    // tab switches between the widgets
-                    active_widget = active_widget==&demo_widget ? static_cast<Widget*>(&widget) : static_cast<Widget*>(&demo_widget);
-                    driver->Refresh();
-                }
-                else if(active_widget != nullptr)
-                {
-                    const bool handled = active_widget->OnKey(key, {ctrl, shift, alt});
-
-                    if(handled)
-                    {
-                        driver->Refresh();
-                    }
+                    active_widget->OnKey(key, {ctrl, shift, alt});
                 }
             }
 
@@ -1268,7 +1305,6 @@ namespace ride
             if(active_widget != nullptr)
             {
                 active_widget->OnChar(ch);
-                driver->Refresh();
             }
         }
     };
