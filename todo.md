@@ -1,6 +1,8 @@
 # ride todo/roadmap
 * super basic sizing code so we don't have to set the sizes of widgets
 * refactor out colors into a theme struct
+* floatscrolling
+* scroll with scrollbar
 * cmdlet
 * keymap to cmdlet
 * numbered command "dynamic/temporary keybind"... select command and type keybind to bind it. displayed in statusbar and saved per project(?)
@@ -14,7 +16,6 @@
 * add sdl driver
 * rework text editor to use proper data structure
 
-* floatscrolling
-* scroll with scrollbar
+
 * make editor behave as expected, including cut/copy/paste support
 * (per project) scripting support
