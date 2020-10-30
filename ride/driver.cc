@@ -993,47 +993,6 @@ namespace ride
     };
 
 
-    struct DemoWidget : public Widget
-    {
-        std::shared_ptr<Font> font;
-        std::string latest_str = "?";
-
-        Rect rect;
-
-        DemoWidget(std::shared_ptr<Font> f, const Rect& r) : font(f), rect(r) { }
-
-        Rect GetRect() const override
-        {
-            return rect;
-        }
-        
-        void Draw(Painter* painter) override
-        {
-            const auto background_color = Rgb{180, 180, 180};
-            
-            painter->Rect(rect, background_color, std::nullopt);
-            painter->Text(font, latest_str, rect.position, {0, 0, 0});
-        }
-
-        void OnKey(Key, const Meta&) override
-        {
-        }
-
-        void OnChar(const std::string& ch) override
-        {
-            latest_str = ch;
-            WidgetChanged();
-        }
-
-        void OnScroll(float, int) override
-        {
-        }
-
-        void MouseClick(const MouseButton&, const MouseState, const vec2&) override
-        {
-        }
-    };
-
     struct TextWidget : public Widget
     {
         View view;
@@ -1148,7 +1107,6 @@ namespace ride
 
         TextWidget edit_widget;
         StatusBar statusbar;
-        DemoWidget demo_widget;
         FileSystemWidget fs_widget;
         TabsWidget tabs;
 
@@ -1173,7 +1131,6 @@ namespace ride
                         return edit_widget.GetCurrentDocumentInformation();
                     }
                 )
-            , demo_widget(font_big, {{50, 600}, {300, 300}})
             , fs_widget(font_code, {{10, 36}, {160, 420}}, settings, fs, root)
             , tabs(driver, settings, font_code, {{0, 0}, {600, 30}})
             , active_widget(&edit_widget)
@@ -1211,7 +1168,6 @@ namespace ride
             painter->Text(font_ui, "File | Code | Help", {40, 0}, {0, 0, 0});
 
             edit_widget.Draw(painter);
-            demo_widget.Draw(painter);
             fs_widget.Draw(painter);
             tabs.Draw(painter);
             statusbar.Draw(painter, window_size);
@@ -1222,7 +1178,6 @@ namespace ride
             return
             {
                 static_cast<Widget*>(&edit_widget),
-                static_cast<Widget*>(&demo_widget),
                 static_cast<Widget*>(&fs_widget),
                 static_cast<Widget*>(&tabs)
             };
