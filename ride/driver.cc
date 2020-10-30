@@ -228,6 +228,11 @@ namespace ride
         return {{position.x + size.x - s, position.y}, {s, size.y}};
     }
 
+    Rect Rect::Offset(const vec2& offset) const
+    {
+        return {position + offset, size};
+    }
+
 
     Font::~Font()
     {
@@ -838,7 +843,7 @@ namespace ride
                 const auto is_selected = IsTabIndexSelected(tab_index);
                 const auto tab_height_offset = CalculateTabHeightOffset(tab_index);
                 const auto tab_background = is_selected ? tab_selected_background : tab_inactive_background;
-                const auto tab_rect = CalculateTabRect(tab_index);
+                const auto tab_rect = CalculateLocalTabRect(tab_index).Offset(rect.position);
                 painter->Rect(tab_rect, tab_background, Line{{0,0,0}, 1});
                 painter->Text(font, tab.name, {tab.x + rect.position.x + settings->tab_padding_left - scroll, bottom - (font->line_height + tab_height_offset)}, {0, 0, 0});
             }
@@ -849,12 +854,12 @@ namespace ride
             return selected_tab == tab_index;
         }
 
-        Rect CalculateTabRect(int tab_index) const
+        Rect CalculateLocalTabRect(int tab_index) const
         {
-            const auto bottom = rect.position.y + rect.size.y;
+            const auto bottom = rect.size.y;
             const auto tab = tabs[Cs(tab_index)];
             const auto tab_height = CalculateTabHeight(tab_index);
-            return {{tab.x + rect.position.x - scroll, bottom - tab_height}, {tab.width, tab_height + 2}};
+            return {{tab.x - scroll, bottom - tab_height}, {tab.width, tab_height + 2}};
         }
 
         // how tall the tab is compared to a regular tab
@@ -911,7 +916,7 @@ namespace ride
             for(int tab_index=0; tab_index<C(tabs.size()); tab_index+=1)
             {
                 // todo(Gustav): does this correctly handle when rect is non-zero?
-                const auto tab_rect = CalculateTabRect(tab_index);
+                const auto tab_rect = CalculateLocalTabRect(tab_index);
                 if(tab_rect.Contains(p))
                 {
                     select_tab(tab_index);

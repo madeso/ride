@@ -209,6 +209,8 @@ namespace ride
         Rect CreateNorthFromMaxSize(int max_size) const;
         Rect CreateSouthFromMaxSize(int max_size) const;
         Rect CreateEastFromMaxSize(int max_size) const;
+
+        Rect Offset(const vec2& offset) const;
     };
 
     constexpr const Rect EmptyRect = {{0,0}, {0,0}};
