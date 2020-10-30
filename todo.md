@@ -1,5 +1,4 @@
 # ride todo/roadmap
-* super basic sizing code so we don't have to set the sizes of widgets
 * refactor out colors into a theme struct
 * floatscrolling
 * scroll with scrollbar

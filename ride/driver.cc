@@ -773,9 +773,8 @@ namespace ride
         (
             std::shared_ptr<Driver> d,
             std::shared_ptr<Settings> s,
-            std::shared_ptr<Font> f,
-            const Rect& r
-        ) : driver(d), settings(s), font(f), rect(r) { }
+            std::shared_ptr<Font> f
+        ) : driver(d), settings(s), font(f), rect(EmptyRect) { }
 
         int CalculateWidthOfTab(const std::string& name)
         {
@@ -939,11 +938,10 @@ namespace ride
         FileSystemWidget
         (
             std::shared_ptr<Font> f,
-            const Rect& r,
             std::shared_ptr<Settings> s,
             std::shared_ptr<FileSystem> fs,
             const std::string& rt
-        ) : font(f), rect(r), settings(s), filesystem(fs), root(rt)
+        ) : font(f), rect(EmptyRect), settings(s), filesystem(fs), root(rt)
         {
             auto folders_and_files = filesystem->List(root, *settings);
             if(folders_and_files)
@@ -999,13 +997,12 @@ namespace ride
 
         TextWidget
         (
-            const Rect& rect,
             std::shared_ptr<Driver> driver,
             std::shared_ptr<Font> font,
             std::shared_ptr<Document> document,
             std::shared_ptr<Settings> settings
         )
-            : view(rect, driver, font, document, settings)
+            : view(EmptyRect, driver, font, document, settings)
         {
         }
 
@@ -1121,7 +1118,7 @@ namespace ride
             , font_big(d->CreateUiFont(100))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
-            , edit_widget({{176, 36}, {400, 420}}, driver, font_code, document, settings)
+            , edit_widget(driver, font_code, document, settings)
             , statusbar
                 (
                     font_code,
@@ -1131,8 +1128,8 @@ namespace ride
                         return edit_widget.GetCurrentDocumentInformation();
                     }
                 )
-            , fs_widget(font_code, {{10, 36}, {160, 420}}, settings, fs, root)
-            , tabs(driver, settings, font_code, {{0, 0}, {600, 30}})
+            , fs_widget(font_code, settings, fs, root)
+            , tabs(driver, settings, font_code)
             , active_widget(&edit_widget)
         {
             for(const auto& f: fs_widget.entries)
@@ -1149,9 +1146,35 @@ namespace ride
             }
         }
 
+        void DoLayout()
+        {
+            const auto sidebar_width = 160;
+            const auto padding = 3;
+            const auto tab_height = 30;
+
+            const auto status_height = statusbar.GetHeight();
+
+            fs_widget.rect =
+            {
+                {padding, padding},
+                {sidebar_width, window_size.y - (status_height + padding + padding)}
+            };
+            tabs.rect =
+            {
+                {sidebar_width + padding + padding, padding},
+                {window_size.x - (sidebar_width + padding + padding + padding), tab_height}
+            };
+            edit_widget.view.rect =
+            {
+                {sidebar_width + padding + padding, padding + tab_height},
+                {window_size.x - (sidebar_width + padding + padding + padding), window_size.y - (status_height + padding + tab_height + padding)}
+            };
+        }
+
         void OnSize(const vec2& new_size) override
         {
             window_size = new_size;
+            DoLayout();
 
             Refresh();
         }

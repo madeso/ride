@@ -211,6 +211,8 @@ namespace ride
         Rect CreateEastFromMaxSize(int max_size) const;
     };
 
+    constexpr const Rect EmptyRect = {{0,0}, {0,0}};
+
     struct Arguments
     {
         std::string name;
