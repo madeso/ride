@@ -2,7 +2,7 @@ branches:
   only:
     - master
 
-image: Visual Studio 2015
+image: Visual Studio 2019
 
 install:
   - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py install'

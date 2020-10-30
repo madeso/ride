@@ -23,8 +23,6 @@ import re
 #         raise "registry not a string!"
 #     return value
 #
-# vs_root = hklm(r'SOFTWARE\Microsoft\VisualStudio\14.0', 'InstallDir')
-# print "studio path ", vs_root#
 
 
 class TextReplacer:
@@ -43,20 +41,10 @@ class TextReplacer:
         return text
 
 
-if os.name == 'nt':
-    print "This is the vs solution path..."
-    sys.stdout.flush()
-    os.system(r"reg QUERY HKLM\SOFTWARE\Microsoft\VisualStudio\14.0 /v InstallDir /reg:32")
-
-vs_root = r'C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE'
-sys.stdout.flush()
-
 root = os.getcwd()
 install_dist = os.path.join(root, 'install-dist')
 install = os.path.join(root, 'install')
 wx_root = os.path.join(install_dist, 'wx')
-proto_root = os.path.join(install_dist, 'proto')
-proto_root_root = os.path.join(proto_root, 'protobuf-2.6.1')
 build = os.path.join(root, 'build')
 appveyor_msbuild = r' /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"'
 
@@ -211,11 +199,9 @@ def make_solution_64_cmd(args):
 
 
 def install_cmd(args):
-    global vs_root
     global root
     global install_dist
     global wx_root
-    global proto_root_root
     global platform
     global appveyor_msbuild
     build = args.build
@@ -226,34 +212,18 @@ def install_cmd(args):
     wx_msbuild_cmd = 'msbuild /p:Configuration=Release /p:Platform="{platform}"{appveyor} {solution}'.format(
         appveyor=appveyor_msbuild, platform=platform, solution=wx_sln)
 
-    proto_url = "https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.zip"
-    proto_zip = os.path.join(install_dist, 'proto.zip')
-    proto_sln = os.path.join(proto_root_root, 'vsprojects', 'protobuf.sln')
-    proto_msbuild_cmd = 'msbuild /t:libprotobuf;protoc /p:Configuration=Release' \
-                        ' /p:Platform="{platform}"{appveyor} {solution}'.format(
-        appveyor=appveyor_msbuild, platform=platform, solution=proto_sln)
-
     print root
     print wx_sln
-    print proto_sln
 
     verify_dir_exist(install_dist)
     verify_dir_exist(wx_root)
-    verify_dir_exist(proto_root)
 
     print "downloading wx..."
     download_file(wx_url, os.path.join(install_dist, wx_zip))
 
-    print "downloding proto..."
-    download_file(proto_url, os.path.join(install_dist, proto_zip))
-
     print "extracting wx"
     with zipfile.ZipFile(wx_zip, 'r') as z:
         z.extractall(wx_root)
-
-    print "extracting proto"
-    with zipfile.ZipFile(proto_zip, 'r') as z:
-        z.extractall(proto_root)
 
     print "changing wx to static"
     change_all_projects_to_static(wx_sln)
@@ -265,38 +235,14 @@ def install_cmd(args):
       sys.stdout.flush()
       os.system(wx_msbuild_cmd)
 
-    print "upgrading protobuf"
-    print "-----------------------------------"
-    devenv = os.path.join(vs_root, 'devenv.exe')
-    if build:
-      sys.stdout.flush()
-      os.system('"{devenv}" {sln} /upgrade'.format(sln=proto_sln, devenv=devenv))
-    # add definitoon so vs will compile
-    add_definition_to_solution(proto_sln, '_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS')
-
-    print "changing proto to static"
-    change_all_projects_to_static(proto_sln)
-
-    if platform == 'x64':
-        print '64 bit build, hacking proto to 64 bit'
-        convert_sln_to_64(proto_sln)
-    
-    print "building protobuf"
-    print "-----------------------------------"
-    if build:
-      sys.stdout.flush()
-      os.system(proto_msbuild_cmd)
-
 
 def cmake_cmd(args):
     global root
     global install_dist
     global wx_root
-    global proto_root_root
     global build
     global install
     global platform
-    proto_src_root = os.path.join(proto_root_root, 'src')
     subinstall = os.path.join(install, 'windows', platform)
     os.makedirs(build)
     os.makedirs(install)
@@ -307,7 +253,6 @@ def cmake_cmd(args):
 
     cmakecmd = ("cd {build} && cmake "
                 "-DCMAKE_INSTALL_PREFIX={install} "
-                "-DPROTOBUF_SRC_ROOT_FOLDER={proto_root} "
                 "-DwxWidgets_ROOT_DIR={wx_root} "
                 "-DRIDE_BUILD_COMMIT=%APPVEYOR_REPO_COMMIT% "
                 "-DRIDE_BUILD_NUMBER=%APPVEYOR_BUILD_NUMBER% "
@@ -318,7 +263,6 @@ def cmake_cmd(args):
         root=root,
         install=subinstall,
         install_dist=install_dist,
-        proto_root=proto_root_root,
         wx_root=wx_root,
         build=build,
         generator = '-G "' + generator + '"'
