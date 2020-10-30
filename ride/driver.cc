@@ -923,6 +923,9 @@ namespace ride
         void Draw(Painter* painter) override
         {
             const auto background_color = Rgb{180, 180, 180};
+            const auto folder_color = Rgb{0, 0, 0};
+            const auto file_color = Rgb{40, 40, 40};
+            const auto hidden_color = Rgb{80, 80, 80};
             painter->Rect(rect, background_color, std::nullopt);
             const auto scope = RectScope{painter, rect};
 
@@ -930,7 +933,8 @@ namespace ride
             for(auto p = rect.position; p.y < rect.size.y && index < C(entries.size()); p.y += font->line_height)
             {
                 const auto e = entries[Cs(index)]; index +=1;
-                painter->Text(font, e.name, p, {0, 0, 0});
+                const std::string text = e.is_directory ? (Str{} << e.name << "/").ToString() : e.name;
+                painter->Text(font, text, p, e.name[0] == '.' ? hidden_color : (e.is_directory ? folder_color : file_color));
             }
         }
 
