@@ -19,6 +19,8 @@ namespace ride
 {
     struct Settings
     {
+        int window_padding = 3;
+
         vec2 scroll_spacing = {3, 3};
 
         bool render_linenumber = true;
@@ -1152,10 +1154,10 @@ namespace ride
         void DoLayout()
         {
             const auto sidebar_width = 160;
-            const auto padding = 3;
             const auto tab_height = 30;
 
             const auto status_height = statusbar.GetHeight();
+            const auto padding = settings->window_padding;
 
             fs_widget.rect =
             {
@@ -1189,7 +1191,10 @@ namespace ride
 
         void OnPaint(Painter* painter) override
         {
-            painter->Rect({{0, 0}, window_size}, Rgb{230, 230, 230}, std::nullopt);
+            if(settings->window_padding != 0)
+            {
+                painter->Rect({{0, 0}, window_size}, Rgb{230, 230, 230}, std::nullopt);
+            }
 
             edit_widget.Draw(painter);
             fs_widget.Draw(painter);
