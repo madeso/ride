@@ -25,10 +25,10 @@ platform:
 configuration: Release
 
 after_build:
-  - cmd: '7z a %APPVEYOR_BUILD_FOLDER%\install\artifact.zip %APPVEYOR_BUILD_FOLDER%\install\*'
+  - cmd: '7z a %APPVEYOR_BUILD_FOLDER%\dist\artifact.zip %APPVEYOR_BUILD_FOLDER%\dist\*'
 
 artifacts:
-  - path: install\artifact.zip
+  - path: dist\artifact.zip
 
 deploy:
   - provider: BinTray
