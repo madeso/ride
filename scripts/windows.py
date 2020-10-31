@@ -8,6 +8,11 @@ import re
 import subprocess
 
 
+
+###############################################################################
+## Classes
+
+
 class TextReplacer:
     def __init__(self):
         self.res = []
@@ -42,6 +47,10 @@ class Settings:
         print('build:', self.build)
         print('appveyor_msbuild:', self.appveyor_msbuild)
         print('platform:', self.platform)
+
+
+###############################################################################
+## Functions
 
 
 def setup() -> Settings:
@@ -84,12 +93,6 @@ def list_projects_in_solution(path):
     return ret
 
 
-def list_projects_cmd(cmd):
-    projects = list_projects_in_solution(cmd.sln)
-    for proj in projects:
-        print("project", proj)
-
-
 def add_definition_to_project(path, define):
     # <PreprocessorDefinitions>WIN32;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;NDEBUG;_UNICODE;WXBUILDING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     preproc = re.compile(r'([ ]*<PreprocessorDefinitions>)([^<]*</PreprocessorDefinitions>)')
@@ -104,11 +107,6 @@ def add_definition_to_project(path, define):
     with open(path, mode='w') as project:
         for line in lines:
             project.write(line + '\n')
-
-
-def add_definition_cmd(args):
-    add_definition_to_project(args.project, args.define)
-
 
 # change from:
 # <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -134,18 +132,10 @@ def change_to_static_link(path):
             project.write(line + '\n')
 
 
-def change_to_static_cmd(args):
-    change_to_static_link(args.project)
-
-
 def change_all_projects_to_static(sln):
     projects = list_projects_in_solution(sln)
     for proj in projects:
         change_to_static_link(proj)
-
-
-def change_all_projects_to_static_cmd(args):
-    change_all_projects_to_static(args.sln)
 
 
 def add_definition_to_solution(sln, definition):
@@ -201,16 +191,39 @@ def convert_sln_to_64(sln):
     make_projects_64(sln)
 
 
-def make_solution_64_cmd(args):
-    convert_sln_to_64(args.sln)
-
-
 def extract_zip_to(path_to_zip, target):
     with zipfile.ZipFile(path_to_zip, 'r') as zip_handle:
         zip_handle.extractall(target)
 
 
-def install_cmd(args):
+
+###############################################################################
+## Commands
+
+
+def handle_make_solution_64_cmd(args):
+    convert_sln_to_64(args.sln)
+
+
+def handle_change_all_projects_to_static_cmd(args):
+    change_all_projects_to_static(args.sln)
+
+
+def handle_list_projects_cmd(cmd):
+    projects = list_projects_in_solution(cmd.sln)
+    for proj in projects:
+        print("project", proj)
+
+
+def handle_add_definition_cmd(args):
+    add_definition_to_project(args.project, args.define)
+
+
+def handle_change_to_static_cmd(args):
+    change_to_static_link(args.project)
+
+
+def handle_install_cmd(args):
     settings = setup()
 
     build = args.build
@@ -252,7 +265,7 @@ def install_cmd(args):
         print(wx_msbuild_cmd)
 
 
-def cmake_cmd(_):
+def handle_cmake_cmd(_):
     settings = setup()
 
     subinstall = os.path.join(settings.install, 'windows', settings.platform)
@@ -281,7 +294,7 @@ def cmake_cmd(_):
     subprocess.check_call(cmakecmd, cwd=settings.build)
 
 
-def build_cmd(_):
+def handle_build_cmd(_):
     settings = setup()
 
     ride_sln = os.path.join(settings.build, 'PACKAGE.vcxproj')
@@ -297,47 +310,53 @@ def build_cmd(_):
     subprocess.check_call(ride_msbuild_cmd)
 
 
-def handle_print(_):
+def handle_print_cmd(_):
     settings = setup()
     settings.print()
+
+
+
+###############################################################################
+## Main
+
 
 def main():
     parser = argparse.ArgumentParser(description='Does the windows build')
     subparsers = parser.add_subparsers()
 
     install_parser = subparsers.add_parser('install')
-    install_parser.set_defaults(func=install_cmd)
+    install_parser.set_defaults(func=handle_install_cmd)
     install_parser.add_argument('--nobuild', dest='build', action='store_const', const=False, default=True)
 
     install_parser = subparsers.add_parser('listprojects')
-    install_parser.set_defaults(func=list_projects_cmd)
+    install_parser.set_defaults(func=handle_list_projects_cmd)
     install_parser.add_argument('sln', help='solution file')
 
     static_project_parser = subparsers.add_parser('static_project')
-    static_project_parser.set_defaults(func=change_to_static_cmd)
+    static_project_parser.set_defaults(func=handle_change_to_static_cmd)
     static_project_parser.add_argument('project', help='make a project staticly link to the CRT')
 
     static_project_parser = subparsers.add_parser('to64')
-    static_project_parser.set_defaults(func=make_solution_64_cmd)
+    static_project_parser.set_defaults(func=handle_make_solution_64_cmd)
     static_project_parser.add_argument('sln', help='the solution to upgrade')
 
     static_solution_parser = subparsers.add_parser('static_sln')
-    static_solution_parser.set_defaults(func=change_all_projects_to_static_cmd)
+    static_solution_parser.set_defaults(func=handle_change_all_projects_to_static_cmd)
     static_solution_parser.add_argument('sln', help='make all the projects in the specified solution staticly link to the CRT')
 
     install_parser = subparsers.add_parser('add_define')
-    install_parser.set_defaults(func=add_definition_cmd)
+    install_parser.set_defaults(func=handle_add_definition_cmd)
     install_parser.add_argument('project', help='project file')
     install_parser.add_argument('define', help='preprocessor to add')
 
     cmake_parser = subparsers.add_parser('cmake')
-    cmake_parser.set_defaults(func=cmake_cmd)
+    cmake_parser.set_defaults(func=handle_cmake_cmd)
 
     build_parser = subparsers.add_parser('build')
-    build_parser.set_defaults(func=build_cmd)
+    build_parser.set_defaults(func=handle_build_cmd)
 
     print_parser = subparsers.add_parser('print')
-    print_parser.set_defaults(func=handle_print)
+    print_parser.set_defaults(func=handle_print_cmd)
 
     args = parser.parse_args()
     args.func(args)
