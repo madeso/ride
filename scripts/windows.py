@@ -33,7 +33,7 @@ class Settings:
         self.build = build
         self.appveyor_msbuild = appveyor_msbuild
         self.platform = platform
-    
+
     def print(self):
         print('root:', self.root)
         print('install_dist:', self.install_dist)
@@ -86,8 +86,8 @@ def list_projects_in_solution(path):
 
 def list_projects_cmd(cmd):
     projects = list_projects_in_solution(cmd.sln)
-    for p in projects:
-        print("project", p)
+    for proj in projects:
+        print("project", proj)
 
 
 def add_definition_to_project(path, define):
