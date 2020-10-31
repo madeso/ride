@@ -6,7 +6,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(RIDE_VERSION_MAJOR "0")
 set(RIDE_VERSION_MINOR "0")
-set(RIDE_VERSION_REVISION "0")
+set(RIDE_VERSION_REVISION "1")
 
 include(install/cpack-config.cmake)
 
