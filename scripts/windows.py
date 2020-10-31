@@ -283,9 +283,6 @@ def handle_cmake_cmd(_):
     os.makedirs(subinstall)
 
     generator = 'Visual Studio 16 2019'
-    platform = 'Win32'
-    if os.environ.get('PLATFORM', 'unknown') == 'x64':
-        platform = 'x64'
 
     cmakecmd = [
         'cmake',
@@ -296,7 +293,7 @@ def handle_cmake_cmd(_):
         "-DRIDE_BUILD_BRANCH=%APPVEYOR_REPO_BRANCH%",
         "-DRIDE_BUILD_REPO=%APPVEYOR_REPO_NAME%",
         '-G', generator,
-        '-A', platform,
+        '-A', settings.platform,
         settings.root
     ]
     sys.stdout.flush()
