@@ -215,9 +215,9 @@ def install_cmd(args):
 
     build = args.build
 
-    wx_url = "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.0/wxWidgets-3.1.0.zip"
+    wx_url = "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.4/wxWidgets-3.1.4.zip"
     wx_zip = os.path.join(settings.install_dist, "wx.zip")
-    wx_sln = os.path.join(settings.wx_root, 'build', 'msw', 'wx_vc14.sln')
+    wx_sln = os.path.join(settings.wx_root, 'build', 'msw', 'wx_vc16.sln')
 
     print('Root:', settings.root)
     print('wxWidgets solution: ', wx_sln)
