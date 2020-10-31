@@ -24,9 +24,6 @@ platform:
 
 configuration: Release
 
-build:
-  parallel: true
-
 after_build:
   - cmd: '7z a %APPVEYOR_BUILD_FOLDER%\install\artifact.zip %APPVEYOR_BUILD_FOLDER%\install\*'
 
