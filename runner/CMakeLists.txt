@@ -18,6 +18,7 @@ add_executable (
     ride WIN32 MACOSX_BUNDLE
 	${src} ${apple_resources}
 )
+set_crt_to_static(ride)
 target_link_libraries(ride
     ${wxWidgets_LIBRARIES}
     libride

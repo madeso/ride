@@ -16,6 +16,11 @@ target_compile_features(project_options INTERFACE cxx_std_17)
 set_project_warnings(project_warnings)
 enable_sanitizers(project_options)
 
+# https://cmake.org/cmake/help/latest/prop_tgt/MSVC_RUNTIME_LIBRARY.html
+function(set_crt_to_static project_name)
+    set_property(TARGET ${project_name} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endfunction()
+
 set(RIDE_VERSION_MAJOR "0")
 set(RIDE_VERSION_MINOR "0")
 set(RIDE_VERSION_REVISION "0")

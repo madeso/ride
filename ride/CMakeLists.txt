@@ -14,3 +14,5 @@ target_link_libraries(libride
     project_warnings
     std::filesystem
 )
+
+set_crt_to_static(libride)
