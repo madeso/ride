@@ -236,7 +236,7 @@ def install_cmd(args):
     wx_msbuild_cmd = [
         'msbuild',
         '/p:Configuration=Release',
-        '/p:Platform="{}"'.format(settings.platform),
+        '/p:Platform={}'.format(settings.platform),
         settings.appveyor_msbuild,
         wx_sln
     ]
