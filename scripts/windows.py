@@ -47,6 +47,15 @@ class Settings:
         print('build:', self.build)
         print('appveyor_msbuild:', self.appveyor_msbuild)
         print('platform:', self.platform)
+    
+    def is_appveyor(self) -> bool:
+        key = 'APPVEYOR'
+        value = os.environ[key] if key in os.environ else ''
+        return value.lower().strip() == 'true'
+    
+    def append_appveyor(self, args):
+        if self.is_appveyor():
+            args.append(self.appveyor_msbuild)
 
 
 ###############################################################################
@@ -253,10 +262,10 @@ def handle_install_cmd(args):
     wx_msbuild_cmd = [
         'msbuild',
         '/p:Configuration=Release',
-        '/p:Platform={}'.format(settings.platform),
-        settings.appveyor_msbuild,
-        wx_sln
+        '/p:Platform={}'.format(settings.platform)
     ]
+    settings.append_appveyor(wx_msbuild_cmd)
+    wx_msbuild_cmd.append(wx_sln)
 
     if build:
         sys.stdout.flush()
