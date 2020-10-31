@@ -92,13 +92,13 @@ def list_projects_cmd(cmd):
 
 def add_definition_to_project(path, define):
     # <PreprocessorDefinitions>WIN32;_LIB;_CRT_SECURE_NO_DEPRECATE=1;_CRT_NON_CONFORMING_SWPRINTFS=1;_SCL_SECURE_NO_WARNINGS=1;__WXMSW__;NDEBUG;_UNICODE;WXBUILDING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    pp = re.compile(r'([ ]*<PreprocessorDefinitions>)([^<]*</PreprocessorDefinitions>)')
+    preproc = re.compile(r'([ ]*<PreprocessorDefinitions>)([^<]*</PreprocessorDefinitions>)')
     lines = []
     with open(path) as project:
         for line in project:
-            m = pp.match(line)
-            if m:
-                lines.append('{0}{1};{2}'.format(m.group(1), define, m.group(2)))
+            preproc_match = preproc.match(line)
+            if preproc_match:
+                lines.append('{0}{1};{2}'.format(preproc_match.group(1), define, preproc_match.group(2)))
             else:
                 lines.append(line.rstrip())
     with open(path, mode='w') as project:
@@ -140,8 +140,8 @@ def change_to_static_cmd(args):
 
 def change_all_projects_to_static(sln):
     projects = list_projects_in_solution(sln)
-    for p in projects:
-        change_to_static_link(p)
+    for proj in projects:
+        change_to_static_link(proj)
 
 
 def change_all_projects_to_static_cmd(args):
@@ -150,8 +150,8 @@ def change_all_projects_to_static_cmd(args):
 
 def add_definition_to_solution(sln, definition):
     projects = list_projects_in_solution(sln)
-    for p in projects:
-        add_definition_to_project(p, definition)
+    for proj in projects:
+        add_definition_to_project(proj, definition)
 
 
 def make_single_project_64(project_path, rep):
@@ -161,8 +161,8 @@ def make_single_project_64(project_path, rep):
     lines = []
     with open(project_path) as project:
         for line in project:
-            nl = rep.replace(line.rstrip())
-            lines.append(nl)
+            new_line = rep.replace(line.rstrip())
+            lines.append(new_line)
     with open(project_path, 'w') as project:
         for line in lines:
             project.write(line + '\n')
@@ -181,19 +181,19 @@ def make_projects_64(sln):
         make_single_project_64(project, rep)
 
 
-def make_solution_64(sln):
+def make_solution_64(solution_path):
     rep = TextReplacer()
     rep.add('Win32', 'x64')
 
     lines = []
-    with open(sln) as slnlines:
+    with open(solution_path) as slnlines:
         for line in slnlines:
-            nl = rep.replace(line.rstrip())
-            lines.append(nl)
+            new_line = rep.replace(line.rstrip())
+            lines.append(new_line)
 
-    with open(sln, 'w') as f:
+    with open(solution_path, 'w') as solution_handle:
         for line in lines:
-            f.write(line + '\n')
+            solution_handle.write(line + '\n')
 
 
 def convert_sln_to_64(sln):
@@ -203,6 +203,11 @@ def convert_sln_to_64(sln):
 
 def make_solution_64_cmd(args):
     convert_sln_to_64(args.sln)
+
+
+def extract_zip_to(path_to_zip, target):
+    with zipfile.ZipFile(path_to_zip, 'r') as zip_handle:
+        zip_handle.extractall(target)
 
 
 def install_cmd(args):
@@ -224,8 +229,7 @@ def install_cmd(args):
     download_file(wx_url, os.path.join(settings.install_dist, wx_zip))
 
     print("extracting wx")
-    with zipfile.ZipFile(wx_zip, 'r') as z:
-        z.extractall(settings.wx_root)
+    extract_zip_to(wx_zip, settings.wx_root)
 
     print("changing wx to static")
     change_all_projects_to_static(wx_sln)
