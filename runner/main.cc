@@ -2,6 +2,7 @@
 
 #include "wx.h"
 #include <wx/dcclient.h>
+#include <wx/dcbuffer.h>
 
 #include "ride/driver.h"
 
@@ -183,7 +184,7 @@ struct Pane : public wxPanel
     
     void paintEvent(wxPaintEvent & evt);
     
-    void render(wxDC& dc);
+    void render(wxBufferedPaintDC& dc);
 
 
     void OnSize(wxSizeEvent& e);
@@ -364,9 +365,9 @@ void SetPen(wxDC* dc, std::optional<ride::Line> line_color)
 
 struct WxPainter : public ride::Painter
 {
-    wxDC* dc;
+    wxBufferedPaintDC* dc;
 
-    WxPainter(wxDC* w)
+    WxPainter(wxBufferedPaintDC* w)
          : dc(w)
     {
     }
@@ -424,6 +425,8 @@ Pane::Pane(wxFrame* parent, const ride::Arguments& arguments)
 {
     app = ride::CreateApp(std::make_shared<WxDriver>(this), arguments);
 
+    SetDoubleBuffered(true);
+
     Bind(wxEVT_PAINT, &Pane::paintEvent, this);
     Bind(wxEVT_SIZE, &Pane::OnSize, this);
 
@@ -459,12 +462,12 @@ Pane::Pane(wxFrame* parent, const ride::Arguments& arguments)
 
 void Pane::paintEvent(wxPaintEvent&)
 {
-    wxPaintDC dc(this);
+    wxBufferedPaintDC dc(this);
     render(dc);
 }
 
 
-void Pane::render(wxDC& dc)
+void Pane::render(wxBufferedPaintDC& dc)
 {
     auto painter = WxPainter{&dc};
     app->OnPaint(&painter);
