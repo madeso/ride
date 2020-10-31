@@ -4,7 +4,7 @@ project(ride C CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include(cpack-config.cmake)
+include(cmake/cpack-config.cmake)
 
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/CompilerWarnings.cmake)
