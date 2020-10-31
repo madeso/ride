@@ -50,7 +50,7 @@ def setup() -> Settings:
     install = os.path.join(root, 'install')
     wx_root = os.path.join(install_dist, 'wx')
     build = os.path.join(root, 'build')
-    appveyor_msbuild = r'/logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"'
+    appveyor_msbuild = r'/logger:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll'
 
     platform = 'x64'
     if os.environ.get('PLATFORM', 'unknown') == 'x86':
