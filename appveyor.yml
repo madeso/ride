@@ -5,15 +5,18 @@ branches:
 image: Visual Studio 2019
 
 install:
-  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py install'
+  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\set_python.bat'
+  - cmd: '%RIDE_PYTHON%\python.exe %APPVEYOR_BUILD_FOLDER%\scripts\windows.py install'
 
 before_build:
-  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py cmake'
+  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\set_python.bat'
+  - cmd: '%RIDE_PYTHON%\python.exe %APPVEYOR_BUILD_FOLDER%\scripts\windows.py cmake'
 
 build_script:
+  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\set_python.bat'
   - cmd: 'cd %APPVEYOR_BUILD_FOLDER%\build && dir'
   - cmd: 'cd %APPVEYOR_BUILD_FOLDER%'
-  - cmd: '%APPVEYOR_BUILD_FOLDER%\scripts\windows.py build'
+  - cmd: '%RIDE_PYTHON%\python.exe %APPVEYOR_BUILD_FOLDER%\scripts\windows.py build'
 
 platform:
   - x86
