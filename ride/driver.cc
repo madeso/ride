@@ -17,8 +17,43 @@
 
 namespace ride
 {
+    struct Theme
+    {
+        // todo(Gustav): refactor out to a palette with named colors
+        Rgb background = {230, 230, 230};
+        
+        Rgb scrollbar_background_color = {120, 120, 120};
+        Rgb scrollbar_scrollbar_color = {210, 210, 210};
+        Rgb scrollbar_line_color = {50, 50, 50};
+        Rgb scrollbar_button_color = {150, 150, 150};
+
+        Rgb text_foreground_color = {0,0,0};
+        Rgb text_background_color = {180, 180, 180};
+        Rgb text_gutter_color = {160, 160, 160};
+        Rgb text_linenumber_color = {0,0,0};
+        Rgb text_cursor = {0,0,0};
+
+        Rgb statusbar_text_color = {0, 0, 0};
+        Rgb statusbar_bkg = {200, 200, 200};
+
+        Rgb tabbar_background_color = {200, 200, 200};
+        Rgb tabbar_tab_inactive_background = {180, 180, 180};
+        Rgb tabbar_tab_selected_background = {220, 220, 220};
+        Rgb tabbar_tab_line_color = {0, 0, 0};
+        Rgb tabbar_tab_text_color = {0, 0, 0};
+
+        Rgb filesys_background_color = {180, 180, 180};
+        Rgb filesys_folder_color = {0, 0, 0};
+        Rgb filesys_file_color = {40, 40, 40};
+        Rgb filesys_hidden_color = {80, 80, 80};
+    };
+
     struct Settings
     {
+        Theme theme;
+
+        int min_size_of_scrollbar = 3;
+
         int window_padding = 3;
 
         vec2 scroll_spacing = {3, 3};
@@ -536,13 +571,12 @@ namespace ride
             return settings->left_gutter_padding + line_number_size + settings->right_gutter_padding;
         }
 
-        static void DrawScrollbarVertical(Painter* painter, int scroll, int lines_no_view, int lines_in_view, Rect rect)
+        static void DrawScrollbarVertical(const Settings& settings, Painter* painter, int scroll, int lines_no_view, int lines_in_view, Rect rect)
         {
-            const auto min_size_of_scrollbar = 3;
-            const auto background_color = Rgb{120, 120, 120};
-            const auto scrollbar_color = Rgb{210, 210, 210};
-            const auto line_color = Rgb{50, 50, 50};
-            const auto button_color = Rgb{150, 150, 150};
+            const auto background_color = settings.theme.scrollbar_background_color;
+            const auto scrollbar_color = settings.theme.scrollbar_scrollbar_color;
+            const auto line_color = settings.theme.scrollbar_line_color;
+            const auto button_color = settings.theme.scrollbar_button_color;
 
             const auto line = Line{line_color, 1};
             const auto button_height = rect.size.x;
@@ -558,7 +592,7 @@ namespace ride
             if(size_without_buttons <= 0) { return; }
 
             const auto suggest_scrollbar_size = (static_cast<float>(lines_in_view)/static_cast<float>(lines_no_view)) * static_cast<float>(size_without_buttons);
-            const auto scrollbar_size = std::max(min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
+            const auto scrollbar_size = std::max(settings.min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
 
             const auto area_to_scroll = size_without_buttons - scrollbar_size;
 
@@ -574,10 +608,10 @@ namespace ride
             Painter* painter
         )
         {
-            const auto foreground_color = Rgb{0,0,0};
-            const auto background_color = Rgb{180, 180, 180};
-            const auto gutter_color = Rgb{160, 160, 160};
-            const auto linenumber_color = foreground_color;
+            const auto foreground_color = settings->theme.text_foreground_color;
+            const auto background_color = settings->theme.text_background_color;
+            const auto gutter_color = settings->theme.text_gutter_color;
+            const auto linenumber_color = settings->theme.text_linenumber_color;
 
             if(settings == nullptr) { return; }
             if(driver == nullptr) { return; }
@@ -631,7 +665,7 @@ namespace ride
                             (
                                 {draw_position.x + cursor_x, draw_position.y},
                                 {draw_position.x + cursor_x, draw_position.y + font->line_height},
-                                {{0, 0, 0}, 1}
+                                {settings->theme.text_cursor, 1}
                             );
                         }
 
@@ -643,6 +677,7 @@ namespace ride
 
                 DrawScrollbarVertical
                 (
+                    *settings,
                     painter,
                     scroll.y * font->line_height,
                     (document->GetNumberOfLines() - GetWindowHeightInLines())*font->line_height,
@@ -682,8 +717,8 @@ namespace ride
 
         void Draw(Painter* painter, const vec2& window_size)
         {
-            const Rgb text_color = {0, 0, 0};
-            const Rgb bkg = {200, 200, 200};
+            const auto text_color = settings->theme.statusbar_text_color;
+            const auto bkg = settings->theme.statusbar_bkg;
 
             const auto info = information_provider();
 
@@ -825,9 +860,11 @@ namespace ride
         
         void Draw(Painter* painter) override
         {
-            const auto background_color = Rgb{200, 200, 200};
-            const auto tab_inactive_background = Rgb{180, 180, 180};
-            const auto tab_selected_background = Rgb{220, 220, 220};
+            const auto background_color = settings->theme.tabbar_background_color;
+            const auto tab_inactive_background = settings->theme.tabbar_tab_inactive_background;
+            const auto tab_selected_background = settings->theme.tabbar_tab_selected_background;
+            const auto tab_line_color = settings->theme.tabbar_tab_line_color;
+            const auto tab_text_color = settings->theme.tabbar_tab_text_color;
             painter->Rect(rect, background_color, std::nullopt);
 
             auto scope = RectScope{painter, rect};
@@ -846,8 +883,8 @@ namespace ride
                 const auto tab_height_offset = CalculateTabHeightOffset(tab_index);
                 const auto tab_background = is_selected ? tab_selected_background : tab_inactive_background;
                 const auto tab_rect = CalculateLocalTabRect(tab_index).Offset(rect.position);
-                painter->Rect(tab_rect, tab_background, Line{{0,0,0}, 1});
-                painter->Text(font, tab.name, {tab.x + rect.position.x + settings->tab_padding_left - scroll, bottom - (font->line_height + tab_height_offset)}, {0, 0, 0});
+                painter->Rect(tab_rect, tab_background, Line{tab_line_color, 1});
+                painter->Text(font, tab.name, {tab.x + rect.position.x + settings->tab_padding_left - scroll, bottom - (font->line_height + tab_height_offset)}, tab_text_color);
             }
         }
 
@@ -964,10 +1001,11 @@ namespace ride
         
         void Draw(Painter* painter) override
         {
-            const auto background_color = Rgb{180, 180, 180};
-            const auto folder_color = Rgb{0, 0, 0};
-            const auto file_color = Rgb{40, 40, 40};
-            const auto hidden_color = Rgb{80, 80, 80};
+            const auto background_color = settings->theme.filesys_background_color;
+            const auto folder_color = settings->theme.filesys_folder_color;
+            const auto file_color = settings->theme.filesys_file_color;
+            const auto hidden_color = settings->theme.filesys_hidden_color;
+
             painter->Rect(rect, background_color, std::nullopt);
             const auto scope = RectScope{painter, rect};
 
@@ -1193,7 +1231,7 @@ namespace ride
         {
             if(settings->window_padding != 0)
             {
-                painter->Rect({{0, 0}, window_size}, Rgb{230, 230, 230}, std::nullopt);
+                painter->Rect({{0, 0}, window_size}, settings->theme.background, std::nullopt);
             }
 
             edit_widget.Draw(painter);

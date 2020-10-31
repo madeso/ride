@@ -1,5 +1,4 @@
 # ride todo/roadmap
-* refactor out colors into a theme struct
 * floatscrolling
 * scroll with scrollbar
 * cmdlet
