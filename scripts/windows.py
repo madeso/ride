@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import urllib
+import urllib.request
 import os
 import zipfile
 import sys
@@ -33,6 +33,15 @@ class Settings:
         self.build = build
         self.appveyor_msbuild = appveyor_msbuild
         self.platform = platform
+    
+    def print(self):
+        print('root:', self.root)
+        print('install_dist:', self.install_dist)
+        print('install:', self.install)
+        print('wx_root:', self.wx_root)
+        print('build:', self.build)
+        print('appveyor_msbuild:', self.appveyor_msbuild)
+        print('platform:', self.platform)
 
 
 def setup() -> Settings:
@@ -284,6 +293,10 @@ def build_cmd(_):
     subprocess.check_call(ride_msbuild_cmd)
 
 
+def handle_print(_):
+    settings = setup()
+    settings.print()
+
 def main():
     parser = argparse.ArgumentParser(description='Does the windows build')
     subparsers = parser.add_subparsers()
@@ -318,6 +331,9 @@ def main():
 
     build_parser = subparsers.add_parser('build')
     build_parser.set_defaults(func=build_cmd)
+
+    print_parser = subparsers.add_parser('print')
+    print_parser.set_defaults(func=handle_print)
 
     args = parser.parse_args()
     args.func(args)
