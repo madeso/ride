@@ -1,56 +1,53 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 import urllib
 import os
 import zipfile
 import sys
 import argparse
 import re
-
-# todo: change wx solution to use static crt...
-# sln file:
-# Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "richtext", "wx_richtext.vcxproj", "{7FB0902D-8579-5DCE-B883-DAF66A885005}"
-# in vcxproj file: change:
-# <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-# <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary> to <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-
-# def hklm(path, var):
-#     reg = registry.ConnectRegistry(None,registry.HKEY_LOCAL_MACHINE)
-#     key = registry.OpenKey(reg, path)
-#     value, type = registry.QueryValueEx(key, var)
-#     registry.CloseKey(key)
-#     registry.CloseKey(reg)
-#     if not type == registry.REG_SZ:
-#         raise "registry not a string!"
-#     return value
-#
+import subprocess
 
 
 class TextReplacer:
     def __init__(self):
         self.res = []
 
-    def add(self, reg, rep):
-        self.res.append( (reg, rep ))
+    def add(self, reg: str, rep: str):
+        self.res.append( (reg, rep) )
         return self
 
-    def replace(self, text):
-        for r in self.res:
-            reg = r[0]
-            rep = r[1]
+    def replace(self, text: str) -> str:
+        for replacer in self.res:
+            reg = replacer[0]
+            rep = replacer[1]
             text = text.replace(reg, rep)
         return text
 
 
-root = os.getcwd()
-install_dist = os.path.join(root, 'install-dist')
-install = os.path.join(root, 'install')
-wx_root = os.path.join(install_dist, 'wx')
-build = os.path.join(root, 'build')
-appveyor_msbuild = r' /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"'
+class Settings:
+    def __init__(self, root: str, install_dist: str, install: str, wx_root: str, build: str, appveyor_msbuild: str, platform: str):
+        self.root = root
+        self.install_dist = install_dist
+        self.install = install
+        self.wx_root = wx_root
+        self.build = build
+        self.appveyor_msbuild = appveyor_msbuild
+        self.platform = platform
 
-platform = 'x64'
-if os.environ.get('PLATFORM', 'unknown') == 'x86':
-    platform = 'Win32'
+
+def setup() -> Settings:
+    root = os.getcwd()
+    install_dist = os.path.join(root, 'install-dist')
+    install = os.path.join(root, 'install')
+    wx_root = os.path.join(install_dist, 'wx')
+    build = os.path.join(root, 'build')
+    appveyor_msbuild = r'/logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"'
+
+    platform = 'x64'
+    if os.environ.get('PLATFORM', 'unknown') == 'x86':
+        platform = 'Win32'
+
+    return Settings(root, install_dist, install, wx_root, build, appveyor_msbuild, platform)
 
 
 def verify_dir_exist(path):
@@ -60,28 +57,28 @@ def verify_dir_exist(path):
 
 def download_file(url, path):
     if not os.path.isfile(path):
-        urllib.urlretrieve(url, path)
+        urllib.request.urlretrieve(url, path)
     else:
-        print "Already downloaded", path
+        print("Already downloaded", path)
 
 
 def list_projects_in_solution(path):
     ret = []
-    dir = os.path.dirname(path)
-    pl = re.compile(r'Project\("[^"]+"\) = "[^"]+", "([^"]+)"')
+    directory_name = os.path.dirname(path)
+    project_line = re.compile(r'Project\("[^"]+"\) = "[^"]+", "([^"]+)"')
     with open(path) as sln:
         for line in sln:
             # Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "richtext", "wx_richtext.vcxproj", "{7FB0902D-8579-5DCE-B883-DAF66A885005}"
-            m = pl.match(line)
-            if m:
-                ret.append(os.path.join(dir, m.group(1)))
+            project_match = project_line.match(line)
+            if project_match:
+                ret.append(os.path.join(directory_name, project_match.group(1)))
     return ret
 
 
 def list_projects_cmd(cmd):
     projects = list_projects_in_solution(cmd.sln)
     for p in projects:
-        print "project", p
+        print("project", p)
 
 
 def add_definition_to_project(path, define):
@@ -116,10 +113,10 @@ def change_to_static_link(path):
             mdebug = mtdebug.match(line)
             mrelease = mtrelease.match(line)
             if mdebug:
-                print 'in {project} changed to static debug'.format(project=path)
+                print('in {project} changed to static debug'.format(project=path))
                 lines.append('{spaces}<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>'.format(spaces=mdebug.group(1)))
             elif mrelease:
-                print 'in {project} changed to static release'.format(project=path)
+                print('in {project} changed to static release'.format(project=path))
                 lines.append('{spaces}<RuntimeLibrary>MultiThreaded</RuntimeLibrary>'.format(spaces=mrelease.group(1)))
             else:
                 lines.append(line.rstrip())
@@ -149,8 +146,8 @@ def add_definition_to_solution(sln, definition):
 
 
 def make_single_project_64(project_path, rep):
-    if os.path.isfile(project_path) == False:
-        print 'missing ' + project_path
+    if not os.path.isfile(project_path):
+        print('missing ' + project_path)
         return
     lines = []
     with open(project_path) as project:
@@ -161,6 +158,7 @@ def make_single_project_64(project_path, rep):
         for line in lines:
             project.write(line + '\n')
 
+
 def make_projects_64(sln):
     projects = list_projects_in_solution(sln)
     rep = TextReplacer()
@@ -168,8 +166,8 @@ def make_projects_64(sln):
     rep.add('<DebugInformationFormat>EditAndContinue</DebugInformationFormat>', '<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>')
     rep.add('<TargetMachine>MachineX86</TargetMachine>', '<TargetMachine>MachineX64</TargetMachine>')
     # protobuf specific hack since cmake looks in x64 folder
-    rep.add('<OutDir>Release\</OutDir>', '<OutDir>x64\Release\</OutDir>')
-    rep.add('<OutDir>Debug\</OutDir>', '<OutDir>x64\Debug\</OutDir>')
+    rep.add(r'<OutDir>Release\</OutDir>', r'<OutDir>x64\Release\</OutDir>')
+    rep.add(r'<OutDir>Debug\</OutDir>', r'<OutDir>x64\Debug\</OutDir>')
     for project in projects:
         make_single_project_64(project, rep)
 
@@ -185,7 +183,7 @@ def make_solution_64(sln):
             lines.append(nl)
 
     with open(sln, 'w') as f:
-     for line in lines:
+        for line in lines:
             f.write(line + '\n')
 
 
@@ -199,123 +197,131 @@ def make_solution_64_cmd(args):
 
 
 def install_cmd(args):
-    global root
-    global install_dist
-    global wx_root
-    global platform
-    global appveyor_msbuild
+    settings = setup()
+
     build = args.build
 
     wx_url = "https://github.com/wxWidgets/wxWidgets/releases/download/v3.1.0/wxWidgets-3.1.0.zip"
-    wx_zip = os.path.join(install_dist, "wx.zip")
-    wx_sln = os.path.join(wx_root, 'build', 'msw', 'wx_vc14.sln')
-    wx_msbuild_cmd = 'msbuild /p:Configuration=Release /p:Platform="{platform}"{appveyor} {solution}'.format(
-        appveyor=appveyor_msbuild, platform=platform, solution=wx_sln)
+    wx_zip = os.path.join(settings.install_dist, "wx.zip")
+    wx_sln = os.path.join(settings.wx_root, 'build', 'msw', 'wx_vc14.sln')
 
-    print root
-    print wx_sln
+    print('Root:', settings.root)
+    print('wxWidgets solution: ', wx_sln)
 
-    verify_dir_exist(install_dist)
-    verify_dir_exist(wx_root)
+    verify_dir_exist(settings.install_dist)
+    verify_dir_exist(settings.wx_root)
 
-    print "downloading wx..."
-    download_file(wx_url, os.path.join(install_dist, wx_zip))
+    print("downloading wx...")
+    download_file(wx_url, os.path.join(settings.install_dist, wx_zip))
 
-    print "extracting wx"
+    print("extracting wx")
     with zipfile.ZipFile(wx_zip, 'r') as z:
-        z.extractall(wx_root)
+        z.extractall(settings.wx_root)
 
-    print "changing wx to static"
+    print("changing wx to static")
     change_all_projects_to_static(wx_sln)
 
-    print "building wxwidgets"
-    print "-----------------------------------"
+    print("building wxwidgets")
+    print("-----------------------------------")
+
+    wx_msbuild_cmd = [
+        'msbuild',
+        '/p:Configuration=Release'
+        '/p:Platform="{}"'.format(settings.platform),
+        settings.appveyor_msbuild,
+        wx_sln
+    ]
 
     if build:
-      sys.stdout.flush()
-      os.system(wx_msbuild_cmd)
+        sys.stdout.flush()
+        subprocess.check_call(wx_msbuild_cmd)
+    else:
+        print(wx_msbuild_cmd)
 
 
-def cmake_cmd(args):
-    global root
-    global install_dist
-    global wx_root
-    global build
-    global install
-    global platform
-    subinstall = os.path.join(install, 'windows', platform)
-    os.makedirs(build)
-    os.makedirs(install)
+def cmake_cmd(_):
+    settings = setup()
+
+    subinstall = os.path.join(settings.install, 'windows', settings.platform)
+    os.makedirs(settings.build)
+    os.makedirs(settings.install)
     os.makedirs(subinstall)
-    generator = 'Visual Studio 14 2015'
+
+    generator = 'Visual Studio 16 2019'
+    platform = 'Win32'
     if os.environ.get('PLATFORM', 'unknown') == 'x64':
-        generator = 'Visual Studio 14 2015 Win64'
+        platform = 'x64'
 
-    cmakecmd = ("cd {build} && cmake "
-                "-DCMAKE_INSTALL_PREFIX={install} "
-                "-DwxWidgets_ROOT_DIR={wx_root} "
-                "-DRIDE_BUILD_COMMIT=%APPVEYOR_REPO_COMMIT% "
-                "-DRIDE_BUILD_NUMBER=%APPVEYOR_BUILD_NUMBER% "
-                "-DRIDE_BUILD_BRANCH=%APPVEYOR_REPO_BRANCH% "
-                "-DRIDE_BUILD_REPO=%APPVEYOR_REPO_NAME% "
-                "{generator} "
-                "{root}").format(
-        root=root,
-        install=subinstall,
-        install_dist=install_dist,
-        wx_root=wx_root,
-        build=build,
-        generator = '-G "' + generator + '"'
-    )
+    cmakecmd = [
+        'cmake',
+        "-DCMAKE_INSTALL_PREFIX={}".format(subinstall),
+        "-DwxWidgets_ROOT_DIR={}".format(settings.wx_root),
+        "-DRIDE_BUILD_COMMIT=%APPVEYOR_REPO_COMMIT%",
+        "-DRIDE_BUILD_NUMBER=%APPVEYOR_BUILD_NUMBER%",
+        "-DRIDE_BUILD_BRANCH=%APPVEYOR_REPO_BRANCH%",
+        "-DRIDE_BUILD_REPO=%APPVEYOR_REPO_NAME%",
+        '-G', generator,
+        '-A', platform,
+        settings.root
+    ]
     sys.stdout.flush()
-    os.system(cmakecmd)
+    subprocess.check_call(cmakecmd, cwd=settings.build)
 
 
-def build_cmd(args):
-    global build
-    global platform
-    global appveyor_msbuild
-    ride_sln = os.path.join(build, 'PACKAGE.vcxproj')
-    ride_msbuild_cmd = 'msbuild /p:Configuration=Release' \
-                        ' /p:Platform="{platform}"{appveyor} {solution}'.format(
-        appveyor=appveyor_msbuild, platform=platform, solution=ride_sln)
-    os.system(ride_msbuild_cmd)
+def build_cmd(_):
+    settings = setup()
+
+    ride_sln = os.path.join(settings.build, 'PACKAGE.vcxproj')
+    ride_msbuild_cmd = [
+        'msbuild',
+        '/p:Configuration=Release',
+        '/p:Platform="{}"'.format(settings.platform),
+        settings.appveyor_msbuild,
+        ride_sln
+    ]
+
+    sys.stdout.flush()
+    subprocess.check_call(ride_msbuild_cmd)
 
 
-parser = argparse.ArgumentParser(description='Does the windows build')
-subparsers = parser.add_subparsers()
+def main():
+    parser = argparse.ArgumentParser(description='Does the windows build')
+    subparsers = parser.add_subparsers()
 
-install_parser = subparsers.add_parser('install')
-install_parser.set_defaults(func=install_cmd)
-install_parser.add_argument('--nobuild', dest='build', action='store_const', const=False, default=True)
+    install_parser = subparsers.add_parser('install')
+    install_parser.set_defaults(func=install_cmd)
+    install_parser.add_argument('--nobuild', dest='build', action='store_const', const=False, default=True)
 
-install_parser = subparsers.add_parser('listprojects')
-install_parser.set_defaults(func=list_projects_cmd)
-install_parser.add_argument('sln', help='solution file')
+    install_parser = subparsers.add_parser('listprojects')
+    install_parser.set_defaults(func=list_projects_cmd)
+    install_parser.add_argument('sln', help='solution file')
 
-static_project_parser = subparsers.add_parser('static_project')
-static_project_parser.set_defaults(func=change_to_static_cmd)
-static_project_parser.add_argument('project', help='make a project staticly link to the CRT')
+    static_project_parser = subparsers.add_parser('static_project')
+    static_project_parser.set_defaults(func=change_to_static_cmd)
+    static_project_parser.add_argument('project', help='make a project staticly link to the CRT')
 
-static_project_parser = subparsers.add_parser('to64')
-static_project_parser.set_defaults(func=make_solution_64_cmd)
-static_project_parser.add_argument('sln', help='the solution to upgrade')
+    static_project_parser = subparsers.add_parser('to64')
+    static_project_parser.set_defaults(func=make_solution_64_cmd)
+    static_project_parser.add_argument('sln', help='the solution to upgrade')
 
-static_solution_parser = subparsers.add_parser('static_sln')
-static_solution_parser.set_defaults(func=change_all_projects_to_static_cmd)
-static_solution_parser.add_argument('sln',
-                                    help='make all the projects in the specified solution staticly link to the CRT')
+    static_solution_parser = subparsers.add_parser('static_sln')
+    static_solution_parser.set_defaults(func=change_all_projects_to_static_cmd)
+    static_solution_parser.add_argument('sln', help='make all the projects in the specified solution staticly link to the CRT')
 
-install_parser = subparsers.add_parser('add_define')
-install_parser.set_defaults(func=add_definition_cmd)
-install_parser.add_argument('project', help='project file')
-install_parser.add_argument('define', help='preprocessor to add')
+    install_parser = subparsers.add_parser('add_define')
+    install_parser.set_defaults(func=add_definition_cmd)
+    install_parser.add_argument('project', help='project file')
+    install_parser.add_argument('define', help='preprocessor to add')
 
-cmake_parser = subparsers.add_parser('cmake')
-cmake_parser.set_defaults(func=cmake_cmd)
+    cmake_parser = subparsers.add_parser('cmake')
+    cmake_parser.set_defaults(func=cmake_cmd)
 
-build_parser = subparsers.add_parser('build')
-build_parser.set_defaults(func=build_cmd)
+    build_parser = subparsers.add_parser('build')
+    build_parser.set_defaults(func=build_cmd)
 
-args = parser.parse_args()
-args.func(args)
+    args = parser.parse_args()
+    args.func(args)
+
+
+if __name__ == "__main__":
+    main()
