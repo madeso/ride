@@ -40,7 +40,7 @@ deploy:
     subject: madeso
     repo: ride-generic
     package: ride-master
-    version: master
+    version: master2
     publish: true
     override: true
     explode: true
