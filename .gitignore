@@ -53,7 +53,7 @@ ride.kdev4
 
 # install/dist folder
 dist/
-/install/
-/install-dist/
+dependencies/
+dist/
 
 .vscode

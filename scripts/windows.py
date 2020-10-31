@@ -47,12 +47,12 @@ class Settings:
         print('build:', self.build)
         print('appveyor_msbuild:', self.appveyor_msbuild)
         print('platform:', self.platform)
-    
+
     def is_appveyor(self) -> bool:
         key = 'APPVEYOR'
         value = os.environ[key] if key in os.environ else ''
         return value.lower().strip() == 'true'
-    
+
     def append_appveyor(self, args):
         if self.is_appveyor():
             args.append(self.appveyor_msbuild)
@@ -64,8 +64,8 @@ class Settings:
 
 def setup() -> Settings:
     root = os.getcwd()
-    install_dist = os.path.join(root, 'install-dist')
-    install = os.path.join(root, 'install')
+    install_dist = os.path.join(root, 'dependencies')
+    install = os.path.join(root, 'dist')
     wx_root = os.path.join(install_dist, 'wx')
     build = os.path.join(root, 'build')
     appveyor_msbuild = r'/logger:C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll'
