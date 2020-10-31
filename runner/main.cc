@@ -298,7 +298,7 @@ struct WxDriver : ride::Driver
         (
             wxFont
             {
-                wxFontInfo{pixel_size}
+                wxFontInfo{static_cast<double>(pixel_size)}
                 .Family(wxFONTFAMILY_TELETYPE)
             }
         );
@@ -310,7 +310,7 @@ struct WxDriver : ride::Driver
         (
             wxFont
             {
-                wxFontInfo{pixel_size}
+                wxFontInfo{static_cast<double>(pixel_size)}
                 .Family(wxFONTFAMILY_ROMAN)
             }
         );

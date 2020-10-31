@@ -151,7 +151,7 @@ namespace ride
             for(auto& iterator: directory_iterator)
             {
                 const auto p = iterator.path();
-                const auto file_name = p.filename();
+                const auto file_name = p.filename().u8string();
                 const auto file_path = p.u8string();
                 if(iterator.is_directory())
                 {
