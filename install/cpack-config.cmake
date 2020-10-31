@@ -28,7 +28,7 @@ ENDIF()
 # nsis setup
 SET(NSIS_WIZARD_BMP "${PROJECT_SOURCE_DIR}/install/gfx/nsis-wizard.bmp")
 SET(NSIS_HEADER_BMP "${PROJECT_SOURCE_DIR}/install/gfx/nsis-header.bmp")
-SET(NSIS_INSTALLER_ICON "${PROJECT_SOURCE_DIR}/ride/resources/application.ico")
+SET(NSIS_INSTALLER_ICON "${PROJECT_SOURCE_DIR}/runner/resources/application.ico")
 string(REGEX REPLACE "/" "\\\\\\\\" NSIS_WIZARD_BMP "${NSIS_WIZARD_BMP}")
 string(REGEX REPLACE "/" "\\\\\\\\" NSIS_HEADER_BMP "${NSIS_HEADER_BMP}")
 string(REGEX REPLACE "/" "\\\\\\\\" NSIS_INSTALLER_ICON "${NSIS_INSTALLER_ICON}")

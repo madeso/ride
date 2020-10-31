@@ -4,6 +4,10 @@ project(ride C CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(RIDE_VERSION_MAJOR "0")
+set(RIDE_VERSION_MINOR "0")
+set(RIDE_VERSION_REVISION "0")
+
 include(install/cpack-config.cmake)
 
 include(cmake/StandardProjectSettings.cmake)
@@ -20,10 +24,6 @@ enable_sanitizers(project_options)
 function(set_crt_to_static project_name)
     set_property(TARGET ${project_name} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endfunction()
-
-set(RIDE_VERSION_MAJOR "0")
-set(RIDE_VERSION_MINOR "0")
-set(RIDE_VERSION_REVISION "0")
 
 SET(RIDE_BUILD_COMMIT "unknown-commit" CACHE STRING "The current commit")
 SET(RIDE_BUILD_NUMBER "unknown-build"  CACHE STRING "The current build number")
