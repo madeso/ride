@@ -292,13 +292,23 @@ struct WxDriver : ride::Driver
         return GetSizeOfStringFromDC(&dc, font, str);
     }
 
+    // not 100% sure what's going on but on arch and ubuntu wxFontInfo takes a int but on windows it takes a double
+    // perhaps it's some version conflict going on but for now we use a ugly ifdef and a static_cast to solve the compilation issue
+
     std::shared_ptr<ride::Font> CreateCodeFont(int pixel_size) override
     {
+        const auto point_size =
+#ifdef _WIN32
+            static_cast<double>(pixel_size)
+#else
+            pixel_size
+#endif
+            ;
         return MakeFont
         (
             wxFont
             {
-                wxFontInfo{static_cast<double>(pixel_size)}
+                wxFontInfo{point_size}
                 .Family(wxFONTFAMILY_TELETYPE)
             }
         );
@@ -306,11 +316,18 @@ struct WxDriver : ride::Driver
 
     std::shared_ptr<ride::Font> CreateUiFont(int pixel_size) override
     {
+        const auto point_size =
+#ifdef _WIN32
+            static_cast<double>(pixel_size)
+#else
+            pixel_size
+#endif
+            ;
         return MakeFont
         (
             wxFont
             {
-                wxFontInfo{static_cast<double>(pixel_size)}
+                wxFontInfo{point_size}
                 .Family(wxFONTFAMILY_ROMAN)
             }
         );
