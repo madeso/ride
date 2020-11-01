@@ -211,6 +211,12 @@ namespace ride
         Rect CreateEastFromMaxSize(int max_size) const;
 
         Rect Offset(const vec2& offset) const;
+
+        int GetTop() const;
+        int GetBottom() const;
+
+        int GetLeft() const;
+        int GetRight() const;
     };
 
     constexpr const Rect EmptyRect = {{0,0}, {0,0}};

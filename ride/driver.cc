@@ -61,6 +61,7 @@ namespace ride
         bool render_linenumber = true;
         int left_gutter_padding = 3;
         int right_gutter_padding = 6;
+
         int editor_padding_left = 6;
 
         int statusbar_padding_bottom = 3;
@@ -268,6 +269,26 @@ namespace ride
     Rect Rect::Offset(const vec2& offset) const
     {
         return {position + offset, size};
+    }
+
+    int Rect::GetTop() const
+    {
+        return position.y;
+    }
+
+    int Rect::GetBottom() const
+    {
+        return position.y + size.y;
+    }
+
+    int Rect::GetLeft() const
+    {
+        return position.x;
+    }
+
+    int Rect::GetRight() const
+    {
+        return position.x + size.x;
     }
 
 
@@ -702,212 +723,97 @@ namespace ride
     };
 
 
-    struct TextView : public View
+    struct ScrollableView : public View
     {
-        Rect rect;
-        std::shared_ptr<Driver> driver;
-        std::shared_ptr<Font> font;
-        std::shared_ptr<Document> document;
         std::shared_ptr<Settings> settings;
 
-        int requested_cursor_x = 0;
-        vec2 cursor = {0, 0};
-        vec2 scroll = {0, 0};
+        Rect window_rect = EmptyRect;
+        vec2 pixel_scroll = {0, 0};
 
-        void StepRight(int x)
-        {
-            const int next_x = std::max(0, cursor.x + x);
-            if(document && cursor.y < document->GetNumberOfLines())
-            {
-                cursor.x = std::min<int>(C(document->GetLineAt(cursor.y).length()), next_x);
-            }
-            requested_cursor_x = cursor.x;
+        ScrollableView(std::shared_ptr<Settings> s) : settings(s) {}
 
-            FocusCursor();
-        }
+        // get the full document area
+        virtual vec2 GetDocumentSize() = 0;
 
-        // given a pixel, get the suggested cursor position
-        vec2 FromPixelPoint(const vec2& pos)
-        {
-            const auto dx = -GetGutterWidth();
-            const auto dy = 0;
-            const auto base = vec2
-            {
-                static_cast<int>(std::floor(static_cast<float>(pos.x+dx) / static_cast<float>(font->char_width))) - 1,
-                static_cast<int>(std::floor(static_cast<float>(pos.y+dy) / static_cast<float>(font->line_height)))
-            };
-            const auto r =  base + scroll;
+        // how wide should the gutter area be?
+        virtual int GetWestWidth() = 0;
 
-            const auto ry = std::min<int>(std::max(0, r.y), document->GetNumberOfLines()+1);
-            const auto rx = std::min<int>(std::max(0, r.x), C(document->GetLineAt(ry).length()));
-
-            return {rx, ry};
-        }
-
-        int GetLineNumberSize()
-        {
-            if(settings == nullptr) { return 0; }
-            if(document == nullptr) { return 0; }
-            if(driver == nullptr) { return 0; }
-
-            if(settings->render_linenumber == false) { return 0; }
-            
-            return driver->GetSizeOfString(font, Str{} << document->GetNumberOfLines() + 1).width;
-        }
-
-        void StepDown(int y)
-        {
-            if(document)
-            {
-                cursor.y = std::min<int>(std::max(0, cursor.y + y), document->GetNumberOfLines());
-                cursor.x = std::min<int>(C(document->GetLineAt(cursor.y).length()), requested_cursor_x);
-            }
-
-            FocusCursor();
-        }
-
-        void PlaceCursorAt(const vec2& p)
-        {
-            cursor = p;
-        }
-
-        void InsertStringAtCursor(const std::string& str)
-        {
-            if(document == nullptr) { return; }
-            if(cursor.x < 0) { return; }
-            if(cursor.y < 0) { return; }
-
-            if(cursor.y == document->GetNumberOfLines())
-            {
-                document->lines.emplace_back(str);
-                cursor.x = C(str.length());
-            }
-            else
-            {
-                auto line = document->GetLineAt(cursor.y);
-                if(C(line.length()) < cursor.x )
-                {
-                    // add spaces
-                    const auto number_of_spaces = cursor.x - C(line.length());
-                    line = line + std::string(Cs(number_of_spaces), ' ');
-                }
-                line.insert(Cs(cursor.x), str);
-                document->lines[Cs(cursor.y)] = line;
-                cursor.x += C(str.length());
-            }
-        }
+        // vec2 GlobalToLocal(const vec2& global) const;
+        // vec2 LocalToGlobal(const vec2& local) const;
 
         void LimitScroll()
         {
-            if(document == nullptr) { return; }
-            if(settings == nullptr) { return; }
+            const auto document_size = GetDocumentSize();
 
-            const auto limy = [this](int lines) { if(scroll.y > lines) { scroll.y = lines; } };
-
-            // limy(document->GetNumberOfLines() + 1);
-            limy(document->GetNumberOfLines() + 1 - GetWindowHeightInLines());
-
-            // todo(Gustav): also limit based on width
-
-            if(scroll.x < 0) { scroll.x = 0; }
-            if(scroll.y < 0) { scroll.y = 0; }
-        }
-
-        void ScrollDown(int y)
-        {
-            scroll.y += y;
-            LimitScroll();
-        }
-
-        void ScrollRight(int x)
-        {
-            scroll.x += x;
-            LimitScroll();
-        }
-
-        int GetWindowHeightInLines() const
-        {
-            if(font == nullptr) { return 0; }
-            if(font->line_height <= 0) { return 0; }
-
-            const auto lines = static_cast<float>(rect.size.y) / static_cast<float>(font->line_height);
-            return static_cast<int>(std::floor(lines));
-        }
-
-        int GetWindowWidthInChars()
-        {
-            if(font == nullptr) { return 0; }
-            if(font->char_width <= 0) { return 0; }
-
-            const auto gutter_width = settings->left_gutter_padding + settings->right_gutter_padding + GetLineNumberSize() + settings->editor_padding_left;
-            const auto window_width = std::max(0, rect.size.x - gutter_width);
-
-            const auto chars = static_cast<float>(window_width) / static_cast<float>(font->char_width);
-            const auto ci = static_cast<int>(std::floor(chars));
-
-            return ci;
-        }
-
-        void FocusCursorHeight()
-        {
-            if(settings == nullptr) { return; }
-
-            const auto window_height = GetWindowHeightInLines();
-
-            const auto cursor_up = cursor.y - settings->scroll_spacing.y;
-            const auto cursor_down = cursor.y + settings->scroll_spacing.y;
-
-            if(scroll.y > cursor_up)
+            if(pixel_scroll.y > (document_size.y - window_rect.size.y))
             {
-                scroll.y = cursor_up;
+                pixel_scroll.y = document_size.y - window_rect.size.y;
+            }
+
+            if(pixel_scroll.x > (document_size.x - window_rect.size.x))
+            {
+                pixel_scroll.x = document_size.x - window_rect.size.x;
+            }
+
+            if(pixel_scroll.x < 0) { pixel_scroll.x = 0; }
+            if(pixel_scroll.y < 0) { pixel_scroll.y = 0; }
+        }
+
+        void ScrollDownPixels(int y)
+        {
+            pixel_scroll.y += y;
+            LimitScroll();
+        }
+
+        void ScrollRightPixels(int x)
+        {
+            pixel_scroll.x += x;
+            LimitScroll();
+        }
+
+        void ScrollToRectHeight(const Rect& rect)
+        {
+            const auto cursor_up = rect.GetTop();
+            const auto cursor_down = rect.GetBottom();
+
+            if(pixel_scroll.y > cursor_up)
+            {
+                pixel_scroll.y = cursor_up;
             }
 
             {
-                const auto steps = scroll.y + window_height - cursor_down -1;
-                if(steps < 0)
+                const auto steps = pixel_scroll.y + window_rect.size.y - cursor_down -1;
+                if(pixel_scroll.y < 0)
                 {
-                    scroll.y -= steps;
+                    pixel_scroll.y -= steps;
                 }
             }
         }
 
-        void FocusCursorWidth()
+        void ScrollToRectWidth(const Rect& rect)
         {
-            if(settings == nullptr) { return; }
+            const auto cursor_left = rect.GetLeft();
+            const auto cursor_right = rect.GetRight();
 
-            const auto window_width = GetWindowWidthInChars();
-
-            const auto cursor_left = cursor.x - settings->scroll_spacing.x;
-            const auto cursor_right = cursor.x + settings->scroll_spacing.x;
-
-            if(scroll.x > cursor_left)
+            if(pixel_scroll.x > cursor_left)
             {
-                scroll.x = cursor_left;
+                pixel_scroll.x = cursor_left;
             }
 
             {
-                const auto steps = scroll.x + window_width - cursor_right;
+                const auto steps = pixel_scroll.x + window_rect.size.x - cursor_right;
                 if(steps < 0)
                 {
-                    scroll.x -= steps;
+                    pixel_scroll.x -= steps;
                 }
             }
         }
 
-        void FocusCursor()
+        void ScrollToRect(const Rect& rect)
         {
-            FocusCursorHeight();
-            FocusCursorWidth();
+            ScrollToRectHeight(rect);
+            ScrollToRectWidth(rect);
             LimitScroll();
-        }
-
-        int GetGutterWidth()
-        {
-            const auto line_number_size = GetLineNumberSize();
-            
-            if(settings == nullptr) { return line_number_size; }
-
-            return settings->left_gutter_padding + line_number_size + settings->right_gutter_padding;
         }
 
         static void DrawScrollbarVertical(const Settings& settings, Painter* painter, int scroll, int lines_no_view, int lines_in_view, Rect rect)
@@ -942,84 +848,258 @@ namespace ride
             painter->Rect(scrollbar, scrollbar_color, line);
         }
 
+        int GetClientTop() const
+        {
+            return pixel_scroll.y;
+        }
+
+        int GetClientBottom() const
+        {
+            return pixel_scroll.y + window_rect.size.y;
+        }
+
+        vec2 WestToGlobal(const vec2& w) const
+        {
+            return w + window_rect.position - vec2{0, pixel_scroll.y};
+        }
+
+        vec2 ClientToGlobal(const vec2& c)
+        {
+            const auto cc = c + window_rect.position - pixel_scroll;
+            return {cc.x + GetWestWidth(), cc.y};
+        }
+
+        vec2 GlobalToClient(const vec2& g)
+        {
+            const auto cc = vec2{g.x - GetWestWidth(), g.y};
+            return cc - window_rect.position + pixel_scroll;
+        }
+
+        virtual void DrawWestSide(Painter* painter, const Rect& r) = 0;
+        virtual void DrawMainSide(Painter* painter, const Rect& r) = 0;
+
         void Draw(Painter* painter) override
+        {
+            {
+                const auto rect = window_rect.CreateWestFromMaxSize(GetWestWidth());
+                const auto scope = RectScope(painter, rect);
+                DrawWestSide(painter, rect);
+            }
+            {
+                const auto rect = window_rect.CreateEastFromMaxSize(window_rect.size.x - GetWestWidth());
+                const auto scope = RectScope(painter, rect);
+                DrawMainSide(painter, rect);
+            }
+
+            DrawScrollbarVertical
+            (
+                *settings,
+                painter,
+                pixel_scroll.y,
+                GetDocumentSize().y - window_rect.size.y,
+                window_rect.size.y,
+                window_rect.CreateEastFromMaxSize(10)
+            );
+        }
+
+        float stored_yscroll = 0.0f;
+        void OnScrollEvent(float yscroll, int lines, int line_height)
+        {
+            // todo(Gustav): custom scroll speed lines/multiplier
+            stored_yscroll -= yscroll * static_cast<float>(lines * line_height);
+            const auto remainder = std::fmod(stored_yscroll, 1.0f);
+            const auto pixels = static_cast<int>(stored_yscroll - remainder);
+            stored_yscroll = remainder;
+            if(pixels != 0)
+            {
+                ScrollDownPixels(pixels);
+                ViewChanged();
+            }
+        }
+    };
+
+
+    struct TextView : public ScrollableView
+    {
+        std::shared_ptr<Driver> driver;
+        std::shared_ptr<Font> font;
+        std::shared_ptr<Document> document;
+
+        int requested_cursor_x = 0;
+        vec2 cursor = {0, 0};
+
+        vec2 GetDocumentSize() override
+        {
+            return {-1, document->GetNumberOfLines() * font->line_height};
+        }
+
+        int GetWestWidth() override
+        {
+            const auto line_number_size = GetLineNumberSize();
+            
+            if(settings == nullptr) { return line_number_size; }
+
+            return settings->left_gutter_padding + line_number_size + settings->right_gutter_padding;
+        }
+
+        void OnScroll(float yscroll, int lines) override
+        {
+            OnScrollEvent(yscroll, lines, font->line_height);
+        }
+
+        void FocusCursor()
+        {
+            // todo(Gustav): fix this!
+            ViewChanged();
+        }
+
+        void StepRight(int x)
+        {
+            const int next_x = std::max(0, cursor.x + x);
+            if(document && cursor.y < document->GetNumberOfLines())
+            {
+                cursor.x = std::min<int>(C(document->GetLineAt(cursor.y).length()), next_x);
+            }
+            requested_cursor_x = cursor.x;
+
+            FocusCursor();
+            ViewChanged();
+        }
+
+        vec2 VirtualCursorToActualCursor(const vec2& r) const
+        {
+            const auto ry = std::min<int>(std::max(0, r.y), document->GetNumberOfLines()+1);
+            const auto rx = std::min<int>(std::max(0, r.x), C(document->GetLineAt(ry).length()));
+            return {rx, ry};
+        }
+
+        // given a local pixel, get the suggested cursor position
+        vec2 LocalPointToCursor(const vec2& pos)
+        {
+            const auto r = vec2
+            {
+                static_cast<int>(std::round(static_cast<float>(pos.x) / static_cast<float>(font->char_width))),
+                static_cast<int>(std::floor(static_cast<float>(pos.y) / static_cast<float>(font->line_height)))
+            };
+
+            return VirtualCursorToActualCursor(r);
+        }
+
+        int GetLineNumberSize()
+        {
+            if(settings == nullptr) { return 0; }
+            if(document == nullptr) { return 0; }
+            if(driver == nullptr) { return 0; }
+
+            if(settings->render_linenumber == false) { return 0; }
+            
+            return driver->GetSizeOfString(font, Str{} << document->GetNumberOfLines() + 1).width;
+        }
+
+        void StepDown(int y)
+        {
+            cursor = VirtualCursorToActualCursor({requested_cursor_x, cursor.y + y});
+            FocusCursor();
+            ViewChanged();
+        }
+
+        void PlaceCursorAt(const vec2& p)
+        {
+            cursor = VirtualCursorToActualCursor(p);
+            ViewChanged();
+        }
+
+        void InsertStringAtCursor(const std::string& str)
+        {
+            if(document == nullptr) { return; }
+            if(cursor.x < 0) { return; }
+            if(cursor.y < 0) { return; }
+
+            if(cursor.y == document->GetNumberOfLines())
+            {
+                document->lines.emplace_back(str);
+                cursor.x = C(str.length());
+                ViewChanged();
+            }
+            else
+            {
+                auto line = document->GetLineAt(cursor.y);
+                if(C(line.length()) < cursor.x )
+                {
+                    // add spaces
+                    const auto number_of_spaces = cursor.x - C(line.length());
+                    line = line + std::string(Cs(number_of_spaces), ' ');
+                }
+                line.insert(Cs(cursor.x), str);
+                document->lines[Cs(cursor.y)] = line;
+                cursor.x += C(str.length());
+                ViewChanged();
+            }
+        }
+
+        int GetLineNumberTop()
+        {
+            int top = GetClientTop();
+            const auto line_top = static_cast<int>(std::floor(static_cast<float>(top) / static_cast<float>(font->line_height)));
+            return line_top;
+        }
+        
+        int GetLineNumberBottom()
+        {
+            int bottom = GetClientBottom();
+            const auto line_bottom = static_cast<int>(std::ceil(static_cast<float>(bottom) / static_cast<float>(font->line_height)));
+            return line_bottom;
+        }
+
+        int LineNumberToY(int line) const
+        {
+            return line * font->line_height;
+        }
+
+        void DrawWestSide(Painter* painter, const Rect& gutter_rect) override
+        {
+            painter->Rect(gutter_rect, settings->theme.text_gutter_color, std::nullopt);
+
+            if(settings->render_linenumber)
+            {
+                const auto top = GetLineNumberTop();
+                const auto bottom = GetLineNumberBottom();
+
+                for(auto line_index=top; line_index<=bottom; line_index +=1)
+                {
+                    const auto y = LineNumberToY(line_index);
+                    painter->Text(font, Str{} << line_index + 1, WestToGlobal({settings->left_gutter_padding, y}), settings->theme.text_linenumber_color);
+                }
+            }
+        }
+
+        void DrawMainSide(Painter* painter, const Rect& rect) override
         {
             const auto foreground_color = settings->theme.text_foreground_color;
             const auto background_color = settings->theme.text_background_color;
-            const auto gutter_color = settings->theme.text_gutter_color;
-            const auto linenumber_color = settings->theme.text_linenumber_color;
 
-            if(settings == nullptr) { return; }
-            if(driver == nullptr) { return; }
+            const auto top = GetLineNumberTop();
+            const auto bottom = GetLineNumberBottom();
 
             painter->Rect(rect, background_color, std::nullopt);
 
-            if(font && document)
+            for(auto line_index=top; line_index<=bottom; line_index +=1)
             {
-                const auto scope = RectScope{painter, rect};
+                const auto y = LineNumberToY(line_index);
+                const auto line = document->GetLineAt(line_index);
 
-                const bool render_linenumber = settings->render_linenumber;
-                const int left_gutter_padding = settings->left_gutter_padding;
-                const int editor_padding_left = settings->editor_padding_left;
+                painter->Text(font, line, ClientToGlobal({settings->editor_padding_left, y}), foreground_color);
 
-                const auto gutter_rect = rect.CreateWestFromMaxSize(GetGutterWidth());
-                painter->Rect(gutter_rect, gutter_color, std::nullopt);
-                
-                const auto lower_right = rect.position + rect.size;
-                
-                auto draw = rect.position;
-                auto current_scroll = scroll;
-
-                for(; draw.y < lower_right.y; draw.y += font->line_height)
+                if(line_index == cursor.y)
                 {
-                    if(current_scroll.y >= 0 && current_scroll.y < document->GetNumberOfLines()+1)
-                    {
-                        const auto substr = [](const std::string& str, int offset) -> std::string
-                        {
-                            if(offset >= static_cast<int>(str.length())) { return ""; }
-                            else if(offset < 0)
-                            {
-                                return std::string(Cs(-offset), ' ') + str;
-                            }
-                            else
-                            {
-                                return str.substr(Cs(offset));
-                            }
-                        };
-                        if(render_linenumber && current_scroll.y >= 0)
-                        {
-                            painter->Text(font, Str{} << current_scroll.y + 1, {draw.x + left_gutter_padding, draw.y}, linenumber_color);
-                        }
-                        const auto full_line = document->GetLineAt(current_scroll.y);
-                        const auto line = substr(full_line, scroll.x);
-                        const auto draw_position = vec2{draw.x + gutter_rect.size.x + editor_padding_left, draw.y};
-
-                        if(current_scroll.y == cursor.y)
-                        {
-                            const auto cursor_x = driver->GetSizeOfString(font, full_line.substr(0, Cs(cursor.x - scroll.x))).width;
-                            painter->Line
-                            (
-                                {draw_position.x + cursor_x, draw_position.y},
-                                {draw_position.x + cursor_x, draw_position.y + font->line_height},
-                                {settings->theme.text_cursor, 1}
-                            );
-                        }
-
-                        painter->Text(font, line, draw_position, foreground_color);
-                    }
-
-                    current_scroll.y = current_scroll.y + 1;
+                    const auto cursor_x = settings->editor_padding_left + driver->GetSizeOfString(font, line.substr(0, Cs(cursor.x))).width;
+                    painter->Line
+                    (
+                        ClientToGlobal({cursor_x, y}),
+                        ClientToGlobal({cursor_x, y + font->line_height}),
+                        {settings->theme.text_cursor, 1}
+                    );
                 }
-
-                DrawScrollbarVertical
-                (
-                    *settings,
-                    painter,
-                    scroll.y * font->line_height,
-                    (document->GetNumberOfLines() - GetWindowHeightInLines())*font->line_height,
-                    GetWindowHeightInLines()*font->line_height,
-                    rect.CreateEastFromMaxSize(10)
-                );
             }
         }
 
@@ -1029,7 +1109,7 @@ namespace ride
             std::shared_ptr<Font> f,
             std::shared_ptr<Document> doc,
             std::shared_ptr<Settings> s
-        ) : rect(EmptyRect), driver(d), font(f), document(doc), settings(s) {}
+        ) : ScrollableView(s), driver(d), font(f), document(doc) {}
 
         
         DocumentInformation GetCurrentDocumentInformation() const
@@ -1044,7 +1124,7 @@ namespace ride
 
         Rect GetRect() const override
         {
-            return rect;
+            return window_rect;
         }
 
         void OnKey(Key key, const Meta& meta) override
@@ -1056,19 +1136,19 @@ namespace ride
             switch(key)
             {
             case Key::Left:
-                if(ctrl) { ScrollRight(-1); }
+                if(ctrl) { ScrollRightPixels(-font->char_width); }
                 else { StepRight(-1); }
                 break;
             case Key::Right:
-                if(ctrl) { ScrollRight(1); }
+                if(ctrl) { ScrollRightPixels(font->char_width); }
                 else { StepRight(1); }
                 break;
             case Key::Up:
-                if(ctrl) { ScrollDown(-1); }
+                if(ctrl) { ScrollDownPixels(-font->line_height); }
                 else { StepDown(-1); }
                 break;
             case Key::Down:
-                if(ctrl) { ScrollDown(1); }
+                if(ctrl) { ScrollDownPixels(font->line_height); }
                 else { StepDown(1); }
                 break;
             default:
@@ -1085,29 +1165,22 @@ namespace ride
             ViewChanged();
         }
 
-        void OnScroll(float yscroll, int lines) override
-        {
-            // todo(Gustav): custom scroll speed lines/multiplier
-            // todo(Gustav): handle (or save) partial scrolls
-            ScrollDown(static_cast<int>(-yscroll * static_cast<float>(lines)));
-            
-            ViewChanged();
-        }
-
-        void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) override
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_position) override
         {
             if(state != MouseState::Down) { return; }
             if( button != MouseButton::Left) { return; }
 
-            const auto new_pos = FromPixelPoint(pos);
+            const auto global_position = local_position + GetRect().position;
+            const auto client_position = GlobalToClient(global_position);
+            const auto dropped_spacing = vec2{client_position.x - settings->editor_padding_left, client_position.y};
+
+            const auto new_pos = LocalPointToCursor(dropped_spacing);
             PlaceCursorAt(new_pos);
 
             if(settings && settings->scroll_to_cursor_on_click)
             {
                 FocusCursor();
             }
-
-            ViewChanged();
         }
     };
 
@@ -1183,7 +1256,7 @@ namespace ride
                 {sidebar_width + padding + padding, padding},
                 {window_size.x - (sidebar_width + padding + padding + padding), tab_height}
             };
-            edit_widget.rect =
+            edit_widget.window_rect =
             {
                 {sidebar_width + padding + padding, padding + tab_height},
                 {window_size.x - (sidebar_width + padding + padding + padding), window_size.y - (status_height + padding + tab_height + padding)}

@@ -1,5 +1,4 @@
 # ride todo/roadmap
-* floatscrolling
 * scroll with scrollbar
 * cmdlet
 * keymap to cmdlet
