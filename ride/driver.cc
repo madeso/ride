@@ -428,9 +428,9 @@ namespace ride
     };
 
 
-    struct Widget
+    struct View
     {
-        virtual ~Widget() = default;
+        virtual ~View() = default;
 
         virtual Rect GetRect() const = 0;
 
@@ -442,7 +442,7 @@ namespace ride
         virtual void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) = 0;
 
         Callbacks on_change;
-        void WidgetChanged()
+        void ViewChanged()
         {
             on_change.Call();
         }
@@ -466,7 +466,7 @@ namespace ride
         else { return t; }
     }
 
-    struct TabsWidget : public Widget
+    struct TabsView : public View
     {
         std::shared_ptr<Driver> driver;
         std::shared_ptr<Settings> settings;
@@ -477,7 +477,7 @@ namespace ride
 
         int scroll = 0; // in pixels
 
-        TabsWidget
+        TabsView
         (
             std::shared_ptr<Driver> d,
             std::shared_ptr<Settings> s,
@@ -496,7 +496,7 @@ namespace ride
             const auto start_index = C(tabs.size());
             tabs.emplace_back(name, CalculateWidthOfTab(name));
             UpdateTabPositions(start_index);
-            WidgetChanged();
+            ViewChanged();
         }
 
         Rect GetRect() const override
@@ -601,7 +601,7 @@ namespace ride
             const auto max_scroll = std::max(0, scroll_width - rect.size.x);
             scroll = KeepWithin(0, scroll, max_scroll);
 
-            WidgetChanged();
+            ViewChanged();
         }
 
         void MouseClick(const MouseButton& button, const MouseState state, const vec2& p) override
@@ -614,7 +614,7 @@ namespace ride
                 if(this->selected_tab != new_tab)
                 {
                     this->selected_tab = new_tab;
-                    this->WidgetChanged();
+                    this->ViewChanged();
                 }
             };
 
@@ -635,7 +635,7 @@ namespace ride
     };
 
 
-    struct FileSystemWidget : public Widget
+    struct FileSystemView : public View
     {
         std::shared_ptr<Font> font;
         Rect rect;
@@ -645,7 +645,7 @@ namespace ride
 
         std::vector<FileEntry> entries;
 
-        FileSystemWidget
+        FileSystemView
         (
             std::shared_ptr<Font> f,
             std::shared_ptr<Settings> s,
@@ -702,7 +702,7 @@ namespace ride
     };
 
 
-    struct TextWidget : public Widget
+    struct TextView : public View
     {
         Rect rect;
         std::shared_ptr<Driver> driver;
@@ -1023,7 +1023,7 @@ namespace ride
             }
         }
 
-        TextWidget
+        TextView
         (
             std::shared_ptr<Driver> d,
             std::shared_ptr<Font> f,
@@ -1076,13 +1076,13 @@ namespace ride
                 break;
             }
 
-            if(handled) { WidgetChanged(); }
+            if(handled) { ViewChanged(); }
         }
 
         void OnChar(const std::string& ch) override
         {
             InsertStringAtCursor(ch);
-            WidgetChanged();
+            ViewChanged();
         }
 
         void OnScroll(float yscroll, int lines) override
@@ -1091,7 +1091,7 @@ namespace ride
             // todo(Gustav): handle (or save) partial scrolls
             ScrollDown(static_cast<int>(-yscroll * static_cast<float>(lines)));
             
-            WidgetChanged();
+            ViewChanged();
         }
 
         void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) override
@@ -1107,7 +1107,7 @@ namespace ride
                 FocusCursor();
             }
 
-            WidgetChanged();
+            ViewChanged();
         }
     };
 
@@ -1123,12 +1123,12 @@ namespace ride
         std::shared_ptr<Document> document;
         std::shared_ptr<Settings> settings;
 
-        TextWidget edit_widget;
+        TextView edit_widget;
         StatusBar statusbar;
-        FileSystemWidget fs_widget;
-        TabsWidget tabs;
+        FileSystemView fs_widget;
+        TabsView tabs;
 
-        Widget* active_widget;
+        View* active_widget;
 
         vec2 window_size = vec2{0,0};
 
@@ -1159,7 +1159,7 @@ namespace ride
                 }
             }
 
-            for(auto* widget : GetAllWidgets())
+            for(auto* widget : GetAllViews())
             {
                 widget->on_change.Add([this](){this->Refresh();});
             }
@@ -1216,19 +1216,19 @@ namespace ride
             statusbar.Draw(painter, window_size);
         }
 
-        std::vector<Widget*> GetAllWidgets()
+        std::vector<View*> GetAllViews()
         {
             return
             {
-                static_cast<Widget*>(&edit_widget),
-                static_cast<Widget*>(&fs_widget),
-                static_cast<Widget*>(&tabs)
+                static_cast<View*>(&edit_widget),
+                static_cast<View*>(&fs_widget),
+                static_cast<View*>(&tabs)
             };
         }
 
-        Widget* HitTest(const vec2& p)
+        View* HitTest(const vec2& p)
         {
-            for(auto* w: GetAllWidgets())
+            for(auto* w: GetAllViews())
             {
                 const Rect r = w->GetRect();
                 if(r.Contains(p))
