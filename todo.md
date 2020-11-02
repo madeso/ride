@@ -16,3 +16,8 @@
 
 * make editor behave as expected, including cut/copy/paste support
 * (per project) scripting support
+
+* quick change between highlight modes - one that highlights comments and dims code vs one that highlights code and dims comments
+* highlight todo comments
+* list todo comments in a tasklisk
+* view documentation in a sidebar
