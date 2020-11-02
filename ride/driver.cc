@@ -56,6 +56,7 @@ namespace ride
 
         int window_padding = 3;
 
+        // number of extra lines to display in view
         vec2 scroll_spacing = {3, 3};
 
         bool render_linenumber = true;
@@ -81,6 +82,7 @@ namespace ride
         int tab_end_padding = 3;
         int selected_tab_height = 6;
 
+        // how many pixels is a line when scrolling in the tab bar
         int tab_scroll_speed = 40;
     };
 
@@ -337,7 +339,7 @@ namespace ride
 
         Document()
         {
-            LoadFile(__FILE__);
+            // LoadFile(__FILE__);
         }
 
         void LoadFile(const std::string& path)
@@ -745,14 +747,22 @@ namespace ride
         {
             const auto document_size = GetDocumentSize();
 
-            if(pixel_scroll.y > (document_size.y - window_rect.size.y))
+            // if document size < 0 then if is considerd 'infinite' so there is no limit
+
+            if(document_size.y > 0)
             {
-                pixel_scroll.y = document_size.y - window_rect.size.y;
+                if(pixel_scroll.y > (document_size.y - window_rect.size.y))
+                {
+                    pixel_scroll.y = document_size.y - window_rect.size.y;
+                }
             }
 
-            if(pixel_scroll.x > (document_size.x - window_rect.size.x))
+            if(document_size.x > 0)
             {
-                pixel_scroll.x = document_size.x - window_rect.size.x;
+                if(pixel_scroll.x > (document_size.x - window_rect.size.x))
+                {
+                    pixel_scroll.x = document_size.x - window_rect.size.x;
+                }
             }
 
             if(pixel_scroll.x < 0) { pixel_scroll.x = 0; }
@@ -783,7 +793,7 @@ namespace ride
 
             {
                 const auto steps = pixel_scroll.y + window_rect.size.y - cursor_down -1;
-                if(pixel_scroll.y < 0)
+                if(steps < 0)
                 {
                     pixel_scroll.y -= steps;
                 }
@@ -949,7 +959,26 @@ namespace ride
 
         void FocusCursor()
         {
-            // todo(Gustav): fix this!
+            const auto cursor_top_point = vec2
+            {
+                cursor.x * font->char_width + settings->editor_padding_left,
+                cursor.y * font->line_height
+            };
+            const auto scroll_spacing_half_height = settings->scroll_spacing.y * font->line_height;
+            const auto scroll_spacing_half_width = settings->scroll_spacing.x * font->char_width;
+            const auto scroll_rect = Rect
+            {
+                {
+                    cursor_top_point.x - scroll_spacing_half_width,
+                    cursor_top_point.y - scroll_spacing_half_height
+                },
+                {
+                    scroll_spacing_half_width * 2,
+                    // use line_height here since we count from top _and_ extra lines is extra lines _below_
+                    scroll_spacing_half_height * 2 + font->line_height
+                }
+            };
+            ScrollToRect(scroll_rect);
             ViewChanged();
         }
 
@@ -966,6 +995,7 @@ namespace ride
             ViewChanged();
         }
 
+        // moves a cursor with virtual whitespace to a cursor without virtual whitespace
         vec2 VirtualCursorToActualCursor(const vec2& r) const
         {
             const auto ry = std::min<int>(std::max(0, r.y), document->GetNumberOfLines()+1);
