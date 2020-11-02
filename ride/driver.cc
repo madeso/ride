@@ -819,7 +819,7 @@ namespace ride
 
             {
                 const auto scrollbar_width = ShowScrollbarVertical() ? window_rect.CreateEastFromMaxSize(settings->scrollbar_width).size.x : 0;
-                const auto steps = pixel_scroll.x + (window_rect.size.x - scrollbar_width) - cursor_right;
+                const auto steps = pixel_scroll.x + (window_rect.size.x - scrollbar_width - GetWestWidth()) - cursor_right;
                 if(steps < 0)
                 {
                     pixel_scroll.x -= steps;
