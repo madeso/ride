@@ -740,6 +740,10 @@ namespace ride
         // get the full document area
         virtual vec2 GetDocumentSize() = 0;
 
+        // todo(Gustav): store gutter width calculation as a optional std::function
+        // and use that instead of virtual functions... this allows the children
+        // to use meaningful names instead of the "west" and "main" lingo
+
         // how wide should the gutter area be?
         virtual int GetWestWidth() = 0;
 
