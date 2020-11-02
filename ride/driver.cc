@@ -84,6 +84,9 @@ namespace ride
 
         // how many pixels is a line when scrolling in the tab bar
         int tab_scroll_speed = 40;
+
+        // the width of the scrollbar
+        int scrollbar_width = 10;
     };
 
 
@@ -811,7 +814,8 @@ namespace ride
             }
 
             {
-                const auto steps = pixel_scroll.x + window_rect.size.x - cursor_right;
+                const auto scrollbar_width = ShowScrollbarVertical() ? window_rect.CreateEastFromMaxSize(settings->scrollbar_width).size.x : 0;
+                const auto steps = pixel_scroll.x + (window_rect.size.x - scrollbar_width) - cursor_right;
                 if(steps < 0)
                 {
                     pixel_scroll.x -= steps;
@@ -888,6 +892,11 @@ namespace ride
         virtual void DrawWestSide(Painter* painter, const Rect& r) = 0;
         virtual void DrawMainSide(Painter* painter, const Rect& r) = 0;
 
+        bool ShowScrollbarVertical() const
+        {
+            return true;
+        }
+
         void Draw(Painter* painter) override
         {
             {
@@ -901,15 +910,18 @@ namespace ride
                 DrawMainSide(painter, rect);
             }
 
-            DrawScrollbarVertical
-            (
-                *settings,
-                painter,
-                pixel_scroll.y,
-                GetDocumentSize().y - window_rect.size.y,
-                window_rect.size.y,
-                window_rect.CreateEastFromMaxSize(10)
-            );
+            if(ShowScrollbarVertical())
+            {
+                DrawScrollbarVertical
+                (
+                    *settings,
+                    painter,
+                    pixel_scroll.y,
+                    GetDocumentSize().y - window_rect.size.y,
+                    window_rect.size.y,
+                    window_rect.CreateEastFromMaxSize(settings->scrollbar_width)
+                );
+            }
         }
 
         float stored_yscroll = 0.0f;
@@ -940,7 +952,12 @@ namespace ride
 
         vec2 GetDocumentSize() override
         {
-            return {-1, document->GetNumberOfLines() * font->line_height};
+            return
+            {
+                // todo(Gustav): calculate document width instead of sending -1
+                -1,
+                document->GetNumberOfLines() * font->line_height
+            };
         }
 
         int GetWestWidth() override
