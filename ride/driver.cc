@@ -841,12 +841,16 @@ namespace ride
             LimitScroll();
         }
 
-        static void DrawScrollbarVertical(const Settings& settings, Painter* painter, int scroll, int document_size, Rect rect)
+        void DrawScrollbarVertical(Painter* painter)
         {
-            const auto background_color = settings.theme.scrollbar_background_color;
-            const auto scrollbar_color = settings.theme.scrollbar_scrollbar_color;
-            const auto line_color = settings.theme.scrollbar_line_color;
-            const auto button_color = settings.theme.scrollbar_button_color;
+            const int scroll = pixel_scroll.y;
+            const int document_size = GetDocumentSize().y;
+            const Rect rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
+
+            const auto background_color = settings->theme.scrollbar_background_color;
+            const auto scrollbar_color = settings->theme.scrollbar_scrollbar_color;
+            const auto line_color = settings->theme.scrollbar_line_color;
+            const auto button_color = settings->theme.scrollbar_button_color;
 
             const auto line = Line{line_color, 1};
             const auto button_height = rect.size.x;
@@ -863,7 +867,7 @@ namespace ride
 
             const auto scrollbar_ratio = KeepWithin(0.0f, static_cast<float>(rect.size.y)/static_cast<float>(document_size), 1.0f);
             const auto suggest_scrollbar_size = scrollbar_ratio * static_cast<float>(size_without_buttons);
-            const auto scrollbar_size = std::max(settings.min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
+            const auto scrollbar_size = std::max(settings->min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
 
             const auto area_to_scroll = std::max(0, size_without_buttons - scrollbar_size);
 
@@ -928,11 +932,7 @@ namespace ride
             {
                 DrawScrollbarVertical
                 (
-                    *settings,
-                    painter,
-                    pixel_scroll.y,
-                    GetDocumentSize().y,
-                    window_rect.CreateEastFromMaxSize(settings->scrollbar_width)
+                    painter
                 );
             }
         }
