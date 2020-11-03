@@ -190,7 +190,7 @@ struct Pane : public wxPanel
     void OnSize(wxSizeEvent& e);
     void OnMouseMoved(wxMouseEvent& event);
     void OnMouseLeftWindow(wxMouseEvent& event);
-    void OnMouseButton(ride::MouseState state, ride::MouseButton button);
+    void OnMouseButton(wxMouseEvent& e, ride::MouseState state, ride::MouseButton button);
     void OnMouseWheel(wxMouseEvent& event);
     
     void OnKeyPressed(wxKeyEvent& event);
@@ -433,25 +433,25 @@ Pane::Pane(wxFrame* parent, const ride::Arguments& arguments)
     Bind(wxEVT_MOTION, &Pane::OnMouseMoved, this);
     Bind(wxEVT_LEAVE_WINDOW, &Pane::OnMouseLeftWindow, this);
 
-    Bind(wxEVT_LEFT_DOWN, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Down, ride::MouseButton::Left);});
-    Bind(wxEVT_LEFT_UP, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Up, ride::MouseButton::Left);});
-    Bind(wxEVT_LEFT_DCLICK, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::DoubleClick, ride::MouseButton::Left);});
+    Bind(wxEVT_LEFT_DOWN, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Down, ride::MouseButton::Left);});
+    Bind(wxEVT_LEFT_UP, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Up, ride::MouseButton::Left);});
+    Bind(wxEVT_LEFT_DCLICK, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::DoubleClick, ride::MouseButton::Left);});
 
-    Bind(wxEVT_MIDDLE_DOWN, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Down, ride::MouseButton::Middle);});
-    Bind(wxEVT_MIDDLE_UP, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Up, ride::MouseButton::Middle);});
-    Bind(wxEVT_MIDDLE_DCLICK, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::DoubleClick, ride::MouseButton::Middle);});
+    Bind(wxEVT_MIDDLE_DOWN, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Down, ride::MouseButton::Middle);});
+    Bind(wxEVT_MIDDLE_UP, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Up, ride::MouseButton::Middle);});
+    Bind(wxEVT_MIDDLE_DCLICK, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::DoubleClick, ride::MouseButton::Middle);});
 
-    Bind(wxEVT_RIGHT_DOWN, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Down, ride::MouseButton::Right);});
-    Bind(wxEVT_RIGHT_UP, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Up, ride::MouseButton::Right);});
-    Bind(wxEVT_RIGHT_DCLICK, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::DoubleClick, ride::MouseButton::Right);});
+    Bind(wxEVT_RIGHT_DOWN, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Down, ride::MouseButton::Right);});
+    Bind(wxEVT_RIGHT_UP, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Up, ride::MouseButton::Right);});
+    Bind(wxEVT_RIGHT_DCLICK, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::DoubleClick, ride::MouseButton::Right);});
 
-    Bind(wxEVT_AUX1_DOWN, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Down, ride::MouseButton::X1);});
-    Bind(wxEVT_AUX1_UP, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Up, ride::MouseButton::X1);});
-    Bind(wxEVT_AUX1_DCLICK, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::DoubleClick, ride::MouseButton::X1);});
+    Bind(wxEVT_AUX1_DOWN, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Down, ride::MouseButton::X1);});
+    Bind(wxEVT_AUX1_UP, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Up, ride::MouseButton::X1);});
+    Bind(wxEVT_AUX1_DCLICK, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::DoubleClick, ride::MouseButton::X1);});
 
-    Bind(wxEVT_AUX2_DOWN, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Down, ride::MouseButton::X2);});
-    Bind(wxEVT_AUX2_UP, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::Up, ride::MouseButton::X2);});
-    Bind(wxEVT_AUX2_DCLICK, [this](wxMouseEvent&) {this->OnMouseButton(ride::MouseState::DoubleClick, ride::MouseButton::X2);});
+    Bind(wxEVT_AUX2_DOWN, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Down, ride::MouseButton::X2);});
+    Bind(wxEVT_AUX2_UP, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::Up, ride::MouseButton::X2);});
+    Bind(wxEVT_AUX2_DCLICK, [this] (wxMouseEvent& e) {this->OnMouseButton(e, ride::MouseState::DoubleClick, ride::MouseButton::X2);});
 
     Bind(wxEVT_MOUSEWHEEL, &Pane::OnMouseWheel, this);
     Bind(wxEVT_KEY_UP, &Pane::OnKeyReleased, this);
@@ -495,8 +495,9 @@ void Pane::OnMouseLeftWindow(wxMouseEvent&)
 }
 
 
-void Pane::OnMouseButton(ride::MouseState state, ride::MouseButton button)
+void Pane::OnMouseButton(wxMouseEvent& event, ride::MouseState state, ride::MouseButton button)
 {
+    app->OnMouseMoved(ride::vec2{event.GetX(), event.GetY()});
     app->OnMouseButton(state, button);
 }
 

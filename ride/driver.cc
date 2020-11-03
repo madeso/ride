@@ -1001,17 +1001,18 @@ namespace ride
         {
             const auto global_mouse = local_mouse + window_rect.position;
             const auto data = GetVerticalScrollbarData();
-            if(data.rect.Contains(global_mouse) == false)
-            {
-                dragging_offset = std::nullopt;
-                return false;
-            }
-            if(button != MouseButton::Left) { return true; }
-            if(state == MouseState::Up)
+            if(state == MouseState::Up && button==MouseButton::Left)
             {
                 dragging_offset = std::nullopt;
                 return true;
             }
+
+            if(data.rect.Contains(global_mouse) == false)
+            {
+                return false;
+            }
+
+            if(button != MouseButton::Left) { return true; }
 
             if(data.up_button.Contains(global_mouse))
             {
@@ -1024,8 +1025,11 @@ namespace ride
             else if(data.scrollbar.Contains(global_mouse))
             {
                 dragging_offset = data.scrollbar.position - global_mouse;
-                ViewChanged();
+                OnMouseMoved(local_mouse);
             }
+
+            // todo(Gustav): how shold we scroll when we click outside scrollbar?
+            // towards the spot makes sense but by how much?
 
             return true;
         }
@@ -1037,14 +1041,15 @@ namespace ride
             const auto global_mouse = local_mouse + window_rect.position;
             const auto new_scrollbar_pos = *dragging_offset + global_mouse;
             const auto pixel_offset = -(data.rect.position.y - new_scrollbar_pos.y);
-            const auto scroll_factor = static_cast<float>(pixel_offset)/static_cast<float>(data.area_to_scroll);
+            // remove button size since the scrollbar is offset by that much
+            // not sure where +1 comes from, but without it we scroll automatically when clicking the scrollbar by one pixel
+            const auto scroll_factor = static_cast<float>(pixel_offset - data.up_button.size.y + 1)/static_cast<float>(data.area_to_scroll);
             const auto scroll_y = static_cast<int>(scroll_factor * static_cast<float>(data.max_scroll));
 
             pixel_scroll.y = scroll_y;
             LimitScroll();
             ViewChanged();
 
-            // std::cout << "drag " << scroll_factor << "\n";
             return true;
         }
 
