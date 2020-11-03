@@ -1,9 +1,7 @@
 # ride todo/roadmap
-* scroll with scrollbar
 * cmdlet
 * keymap to cmdlet
 * numbered command "dynamic/temporary keybind"... select command and type keybind to bind it. displayed in statusbar and saved per project(?)
-* refactor out textview code so it can be shared with other components
 * file explorer/tree view and tab control handle documents
 
 * remove and integrate existing sources
