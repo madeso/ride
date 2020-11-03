@@ -82,6 +82,7 @@ namespace ride
         int statusbar_padding_right = 6;
 
         bool scroll_to_cursor_on_click = true;
+        int lines_to_scroll_for_scrollbar_button = 3;
 
         bool directories_first = true;
         bool sort_files = true;
@@ -784,12 +785,14 @@ namespace ride
         {
             pixel_scroll.y += y;
             LimitScroll();
+            ViewChanged();
         }
 
         void ScrollRightPixels(int x)
         {
             pixel_scroll.x += x;
             LimitScroll();
+            ViewChanged();
         }
 
         void ScrollToRectHeight(const Rect& rect)
@@ -934,6 +937,29 @@ namespace ride
             }
         }
 
+        bool OnMouseClick(const MouseButton& button, const MouseState state, const vec2& local_mouse, int pixels_to_scroll)
+        {
+            const auto global_mouse = local_mouse + window_rect.position;
+            const auto scrollbar_rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
+            if(scrollbar_rect.Contains(global_mouse) == false) { return false; }
+            if(button != MouseButton::Left) { return true; }
+            if(state != MouseState::Down) { return true; }
+
+            const auto up_button = scrollbar_rect.CreateNorthFromMaxSize(settings->scrollbar_width);
+            const auto down_button = scrollbar_rect.CreateSouthFromMaxSize(settings->scrollbar_width);
+
+            if(up_button.Contains(global_mouse))
+            {
+                ScrollDownPixels(-pixels_to_scroll);
+            }
+            else if(down_button.Contains(global_mouse))
+            {
+                ScrollDownPixels(pixels_to_scroll);
+            }
+
+            return true;
+        }
+
         float stored_yscroll = 0.0f;
         void OnScrollEvent(float yscroll, int lines, int line_height)
         {
@@ -945,7 +971,6 @@ namespace ride
             if(pixels != 0)
             {
                 ScrollDownPixels(pixels);
-                ViewChanged();
             }
         }
     };
@@ -1224,8 +1249,9 @@ namespace ride
 
         void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_position) override
         {
-            if(state != MouseState::Down) { return; }
+            if( OnMouseClick(button, state, local_position, settings->lines_to_scroll_for_scrollbar_button * font->line_height) == true ) { return; }
             if( button != MouseButton::Left) { return; }
+            if(state != MouseState::Down) { return; }
 
             const auto global_position = local_position + GetRect().position;
             const auto client_position = GlobalToClient(global_position);
