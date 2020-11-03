@@ -841,29 +841,43 @@ namespace ride
             LimitScroll();
         }
 
-        void DrawScrollbarVertical(Painter* painter)
+        struct ScrollbarData
+        {
+            int size_without_buttons;
+            Rect rect;
+            Rect up_button;
+            Rect down_button;
+            Rect scrollbar;
+
+            ScrollbarData
+            (
+                int s,
+                const Rect& re,
+                const Rect& up,
+                const Rect& dw,
+                const Rect& sc
+            )
+                : size_without_buttons(s)
+                , rect(re)
+                , up_button(up)
+                , down_button(dw)
+                , scrollbar(sc)
+            {
+            }
+        };
+
+        ScrollbarData GetVerticalScrollbarData()
         {
             const int scroll = pixel_scroll.y;
             const int document_size = GetDocumentSize().y;
             const Rect rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
 
-            const auto background_color = settings->theme.scrollbar_background_color;
-            const auto scrollbar_color = settings->theme.scrollbar_scrollbar_color;
-            const auto line_color = settings->theme.scrollbar_line_color;
-            const auto button_color = settings->theme.scrollbar_button_color;
-
-            const auto line = Line{line_color, 1};
             const auto button_height = rect.size.x;
 
             const auto up_button = rect.CreateNorthFromMaxSize(button_height);
             const auto down_button = rect.CreateSouthFromMaxSize(button_height);
 
-            painter->Rect(rect, background_color, line);
-            painter->Rect(up_button, button_color, line);
-            painter->Rect(down_button, button_color, line);
-
             const auto size_without_buttons = rect.size.y - (up_button.size.y + down_button.size.y);
-            if(size_without_buttons <= 0) { return; }
 
             const auto scrollbar_ratio = KeepWithin(0.0f, static_cast<float>(rect.size.y)/static_cast<float>(document_size), 1.0f);
             const auto suggest_scrollbar_size = scrollbar_ratio * static_cast<float>(size_without_buttons);
@@ -877,7 +891,35 @@ namespace ride
             const auto scroll_position = static_cast<int>(std::floor(suggest_scroll_position));
 
             const auto scrollbar = Rect{{rect.position.x, rect.position.y + scroll_position + up_button.size.y}, {rect.size.x, scrollbar_size}};
-            painter->Rect(scrollbar, scrollbar_color, line);
+
+            return
+            {
+                size_without_buttons,
+                rect,
+                up_button,
+                down_button,
+                scrollbar
+            };
+        }
+
+        void DrawScrollbarVertical(Painter* painter)
+        {
+            const auto data = GetVerticalScrollbarData();
+
+            if(data.size_without_buttons <= 0) { return; }
+
+            const auto background_color = settings->theme.scrollbar_background_color;
+            const auto scrollbar_color = settings->theme.scrollbar_scrollbar_color;
+            const auto line_color = settings->theme.scrollbar_line_color;
+            const auto button_color = settings->theme.scrollbar_button_color;
+
+            const auto line = Line{line_color, 1};
+
+            painter->Rect(data.rect, background_color, line);
+            painter->Rect(data.up_button, button_color, line);
+            painter->Rect(data.down_button, button_color, line);
+
+            painter->Rect(data.scrollbar, scrollbar_color, line);
         }
 
         int GetClientTop() const
