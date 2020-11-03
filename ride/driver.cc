@@ -7,6 +7,7 @@
 #include <cmath>
 #include <functional>
 #include <algorithm>
+#include <cassert>
 
 #include <filesystem>
 #include <system_error>
@@ -17,6 +18,17 @@
 
 namespace ride
 {
+    template<typename T>
+    T KeepWithin(T min, T t, T max)
+    {
+        assert(min <= max);
+
+        if(t < min) { return min; }
+        else if(t > max) { return max; }
+        else { return t; }
+    }
+
+
     struct Theme
     {
         // todo(Gustav): refactor out to a palette with named colors
@@ -342,7 +354,7 @@ namespace ride
 
         Document()
         {
-            // LoadFile(__FILE__);
+            LoadFile(__FILE__);
         }
 
         void LoadFile(const std::string& path)
@@ -483,14 +495,6 @@ namespace ride
 
         Tab(const std::string& n, int w) : name(n), width(w) {}
     };
-
-    template<typename T>
-    T KeepWithin(T min, T t, T max)
-    {
-        if(t < min) { return min; }
-        else if(t > max) { return max; }
-        else { return t; }
-    }
 
     struct TabsView : public View
     {
@@ -834,7 +838,7 @@ namespace ride
             LimitScroll();
         }
 
-        static void DrawScrollbarVertical(const Settings& settings, Painter* painter, int scroll, int lines_no_view, int lines_in_view, Rect rect)
+        static void DrawScrollbarVertical(const Settings& settings, Painter* painter, int scroll, int document_size, Rect rect)
         {
             const auto background_color = settings.theme.scrollbar_background_color;
             const auto scrollbar_color = settings.theme.scrollbar_scrollbar_color;
@@ -854,12 +858,15 @@ namespace ride
             const auto size_without_buttons = rect.size.y - (up_button.size.y + down_button.size.y);
             if(size_without_buttons <= 0) { return; }
 
-            const auto suggest_scrollbar_size = (static_cast<float>(lines_in_view)/static_cast<float>(lines_no_view)) * static_cast<float>(size_without_buttons);
+            const auto scrollbar_ratio = KeepWithin(0.0f, static_cast<float>(rect.size.y)/static_cast<float>(document_size), 1.0f);
+            const auto suggest_scrollbar_size = scrollbar_ratio * static_cast<float>(size_without_buttons);
             const auto scrollbar_size = std::max(settings.min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
 
-            const auto area_to_scroll = size_without_buttons - scrollbar_size;
+            const auto area_to_scroll = std::max(0, size_without_buttons - scrollbar_size);
 
-            const auto suggest_scroll_position = (static_cast<float>(scroll) / static_cast<float>(lines_no_view)) * static_cast<float>(area_to_scroll);
+            const auto max_scroll = document_size - rect.size.y;
+
+            const auto suggest_scroll_position = (static_cast<float>(scroll) / static_cast<float>(max_scroll)) * static_cast<float>(area_to_scroll);
             const auto scroll_position = static_cast<int>(std::floor(suggest_scroll_position));
 
             const auto scrollbar = Rect{{rect.position.x, rect.position.y + scroll_position + up_button.size.y}, {rect.size.x, scrollbar_size}};
@@ -921,8 +928,7 @@ namespace ride
                     *settings,
                     painter,
                     pixel_scroll.y,
-                    GetDocumentSize().y - window_rect.size.y,
-                    window_rect.size.y,
+                    GetDocumentSize().y,
                     window_rect.CreateEastFromMaxSize(settings->scrollbar_width)
                 );
             }
@@ -960,7 +966,7 @@ namespace ride
             {
                 // todo(Gustav): calculate document width instead of sending -1
                 -1,
-                document->GetNumberOfLines() * font->line_height
+                (document->GetNumberOfLines()+1) * font->line_height
             };
         }
 
@@ -1019,8 +1025,8 @@ namespace ride
         // moves a cursor with virtual whitespace to a cursor without virtual whitespace
         vec2 VirtualCursorToActualCursor(const vec2& r) const
         {
-            const auto ry = std::min<int>(std::max(0, r.y), document->GetNumberOfLines()+1);
-            const auto rx = std::min<int>(std::max(0, r.x), C(document->GetLineAt(ry).length()));
+            const auto ry = KeepWithin(0, r.y, document->GetNumberOfLines());
+            const auto rx = KeepWithin(0, r.x, C(document->GetLineAt(ry).length()));
             return {rx, ry};
         }
 
