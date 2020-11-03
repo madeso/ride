@@ -943,7 +943,7 @@ namespace ride
             const auto scrollbar_rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
             if(scrollbar_rect.Contains(global_mouse) == false) { return false; }
             if(button != MouseButton::Left) { return true; }
-            if(state != MouseState::Down) { return true; }
+            if(state == MouseState::Up) { return true; }
 
             const auto up_button = scrollbar_rect.CreateNorthFromMaxSize(settings->scrollbar_width);
             const auto down_button = scrollbar_rect.CreateSouthFromMaxSize(settings->scrollbar_width);
