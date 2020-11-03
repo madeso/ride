@@ -479,6 +479,7 @@ namespace ride
         virtual void OnScroll(float scroll, int lines) = 0;
 
         virtual void MouseClick(const MouseButton& button, const MouseState state, const vec2& pos) = 0;
+        virtual void MouseMoved(const vec2& pos) = 0;
 
         Callbacks on_change;
         void ViewChanged()
@@ -663,6 +664,10 @@ namespace ride
             // todo(Gustav): should we be able to deselect tabs by hitting between or over tabs?
             select_tab(-1);
         }
+
+        void MouseMoved(const vec2&) override
+        {
+        }
     };
 
 
@@ -728,6 +733,10 @@ namespace ride
         }
 
         void MouseClick(const MouseButton&, const MouseState, const vec2&) override
+        {
+        }
+
+        void MouseMoved(const vec2&) override
         {
         }
     };
@@ -848,6 +857,8 @@ namespace ride
             Rect up_button;
             Rect down_button;
             Rect scrollbar;
+            int area_to_scroll;
+            int max_scroll;
 
             ScrollbarData
             (
@@ -855,13 +866,17 @@ namespace ride
                 const Rect& re,
                 const Rect& up,
                 const Rect& dw,
-                const Rect& sc
+                const Rect& sc,
+                int as,
+                int ms
             )
                 : size_without_buttons(s)
                 , rect(re)
                 , up_button(up)
                 , down_button(dw)
                 , scrollbar(sc)
+                , area_to_scroll(as)
+                , max_scroll(ms)
             {
             }
         };
@@ -898,7 +913,9 @@ namespace ride
                 rect,
                 up_button,
                 down_button,
-                scrollbar
+                scrollbar,
+                area_to_scroll,
+                max_scroll
             };
         }
 
@@ -979,26 +996,55 @@ namespace ride
             }
         }
 
+        std::optional<vec2> dragging_offset = std::nullopt;
         bool OnMouseClick(const MouseButton& button, const MouseState state, const vec2& local_mouse, int pixels_to_scroll)
         {
             const auto global_mouse = local_mouse + window_rect.position;
-            const auto scrollbar_rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
-            if(scrollbar_rect.Contains(global_mouse) == false) { return false; }
+            const auto data = GetVerticalScrollbarData();
+            if(data.rect.Contains(global_mouse) == false)
+            {
+                dragging_offset = std::nullopt;
+                return false;
+            }
             if(button != MouseButton::Left) { return true; }
-            if(state == MouseState::Up) { return true; }
+            if(state == MouseState::Up)
+            {
+                dragging_offset = std::nullopt;
+                return true;
+            }
 
-            const auto up_button = scrollbar_rect.CreateNorthFromMaxSize(settings->scrollbar_width);
-            const auto down_button = scrollbar_rect.CreateSouthFromMaxSize(settings->scrollbar_width);
-
-            if(up_button.Contains(global_mouse))
+            if(data.up_button.Contains(global_mouse))
             {
                 ScrollDownPixels(-pixels_to_scroll);
             }
-            else if(down_button.Contains(global_mouse))
+            else if(data.down_button.Contains(global_mouse))
             {
                 ScrollDownPixels(pixels_to_scroll);
             }
+            else if(data.scrollbar.Contains(global_mouse))
+            {
+                dragging_offset = data.scrollbar.position - global_mouse;
+                ViewChanged();
+            }
 
+            return true;
+        }
+
+        bool OnMouseMoved(const vec2& local_mouse)
+        {
+            if(dragging_offset.has_value() == false) { return false; }
+            const auto data = GetVerticalScrollbarData();
+            const auto global_mouse = local_mouse + window_rect.position;
+            const auto new_scrollbar_pos = *dragging_offset + global_mouse;
+            const auto pixel_offset = -(data.rect.position.y - new_scrollbar_pos.y);
+            const auto scroll_factor = static_cast<float>(pixel_offset)/static_cast<float>(data.area_to_scroll);
+            const auto scroll_y = static_cast<int>(scroll_factor * static_cast<float>(data.max_scroll));
+
+            pixel_scroll.y = scroll_y;
+            LimitScroll();
+            ViewChanged();
+
+            // std::cout << "drag " << scroll_factor << "\n";
             return true;
         }
 
@@ -1307,6 +1353,11 @@ namespace ride
                 FocusCursor();
             }
         }
+
+        void MouseMoved(const vec2& p) override
+        {
+            if(OnMouseMoved(p) == true) { return; }
+        }
     };
 
 
@@ -1442,6 +1493,7 @@ namespace ride
         void OnMouseMoved(const vec2& new_position) override
         {
             last_mouse = new_position;
+            active_widget->MouseMoved(last_mouse - active_widget->GetRect().position);
         }
 
         void OnMouseLeftWindow() override
