@@ -6,6 +6,7 @@
 
 * remove and integrate existing sources
 
+* "open with ride" for windows installation
 * some form of basic color/theme editor
 * port i3 or something else so we can have multiple widgets in same window
 * add sdl driver
