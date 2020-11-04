@@ -212,6 +212,9 @@ namespace ride
 
         Rect Offset(const vec2& offset) const;
 
+        Rect CreateFromCenterMaxSize(int max_size) const;
+        Rect Inset(int inset) const;
+
         int GetTop() const;
         int GetBottom() const;
 

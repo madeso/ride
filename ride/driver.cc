@@ -58,6 +58,13 @@ namespace ride
         Rgb filesys_folder_color = {0, 0, 0};
         Rgb filesys_file_color = {40, 40, 40};
         Rgb filesys_hidden_color = {80, 80, 80};
+
+        Rgb edit_background = {110, 110, 110};
+        Rgb edit_selection_bkg = {80, 80, 80};
+        Rgb edit_cursor = {0, 0, 0};
+        Rgb edit_text = {0, 0, 0};
+
+        Rgb command_view_background = {80, 80, 80};
     };
 
     struct Settings
@@ -100,6 +107,11 @@ namespace ride
 
         // the width of the scrollbar
         int scrollbar_width = 10;
+
+        int commandview_height = 300;
+        int commandview_width = 400;
+        int commandview_edit_inset = 6;
+        int commandview_edit_extra_height = 3;
     };
 
 
@@ -287,6 +299,19 @@ namespace ride
     Rect Rect::Offset(const vec2& offset) const
     {
         return {position + offset, size};
+    }
+
+    Rect Rect::CreateFromCenterMaxSize(int max_size) const
+    {
+        const auto s = std::min(max_size, size.x);
+        const auto h = static_cast<int>(static_cast<float>(size.x - s) / 2.0f);
+        return {{position.x + h, position.y}, {s, size.y}};
+    }
+
+    Rect Rect::Inset(int inset) const
+    {
+        // todo(Gustav): handle when inset is greater than size
+        return {{position.x+inset, position.y+inset}, {size.x - inset*2, size.y - inset*2}};
     }
 
     int Rect::GetTop() const
@@ -485,6 +510,182 @@ namespace ride
         void ViewChanged()
         {
             on_change.Call();
+        }
+    };
+
+    struct Edit
+    {
+        std::shared_ptr<Settings> settings;
+        std::shared_ptr<Font> font;
+        Rect rect;
+        std::function<void (void)> on_activated;
+
+        std::string text;
+        int cursor_from = 0;
+        int cursor_to = 0;
+
+        Edit
+        (
+            std::shared_ptr<Settings> s,
+            std::shared_ptr<Font> f
+        )
+            : settings(s)
+            , font(f)
+            , rect(EmptyRect)
+        {
+        }
+
+        void Draw(Painter* painter)
+        {
+            const auto scope = RectScope(painter, rect);
+            painter->Rect(rect, settings->theme.edit_background, std::nullopt);
+
+            const auto start_x = rect.position.x;
+            const auto start_y = rect.position.y;
+
+            const auto index2x = [this, start_x](int index) -> int { return start_x + font->char_width * index;};
+
+            if(cursor_from != cursor_to)
+            {
+                const auto cursor_start = std::min(cursor_from, cursor_to);
+                const auto cursor_end = std::max(cursor_from, cursor_to);
+                const auto select_start = index2x(cursor_start);
+                const auto select_end = index2x(cursor_end);
+                painter->Rect({{select_start, start_y}, {select_end - select_start, font->line_height}}, settings->theme.edit_selection_bkg, std::nullopt);
+            }
+            else
+            {
+                painter->Line({index2x(cursor_from), start_y}, {index2x(cursor_from), start_y + font->line_height}, {settings->theme.edit_cursor, 1});
+            }
+
+            painter->Text(font, text, {start_x, start_y}, settings->theme.edit_text);
+        }
+
+        bool OnKey(Key key, const Meta& meta)
+        {
+            switch(key)
+            {
+                case Key::Return: SelectAll(); on_activated(); break;
+                case Key::Left:  cursor_to = StepCursor(cursor_to, -1); if(meta.shift == false) {cursor_from = cursor_to;} break;
+                case Key::Right: cursor_to = StepCursor(cursor_to, +1); if(meta.shift == false) {cursor_from = cursor_to;} break;
+                case Key::Delete: if(cursor_to != cursor_from) { DeleteToEmptySelection(); } else { Delete(cursor_from+1); } break;
+                case Key::Backspace: if(cursor_to != cursor_from) { DeleteToEmptySelection(); } else { Delete(cursor_from); cursor_from = cursor_to = StepCursor(cursor_from, -1); } break;
+                case Key::Escape: if(text.empty()) {on_activated();} else { cursor_to = cursor_from = 0; text = ""; } break;
+                default: return false;
+            }
+
+            return true;
+        }
+
+        void SelectAll()
+        {
+            cursor_from = 0;
+            cursor_to = C(text.length());
+        }
+
+        int StepCursor(int cursor, int steps)
+        {
+            return KeepWithin(0, cursor+steps, C(text.length()));
+        }
+
+        void OnChar(const std::string& ch)
+        {
+            DeleteToEmptySelection();
+            text.insert(text.begin() + cursor_from, ch.begin(), ch.end());
+            cursor_from = cursor_to = StepCursor(cursor_from, C(ch.length()));
+        }
+
+        void Delete(int at)
+        {
+            text.erase(text.begin() + at);
+        }
+
+        void DeleteToEmptySelection()
+        {
+            if(cursor_from == cursor_to) { return; }
+            const auto cursor_start = std::min(cursor_from, cursor_to);
+            const auto cursor_end = std::max(cursor_from, cursor_to);
+            text.erase(text.begin() + cursor_start, text.begin() + cursor_end);
+            cursor_from = cursor_start;
+            cursor_to = cursor_start;
+        }
+
+        void OnMouseClick(const vec2&)
+        {
+            // do selection
+        }
+    };
+
+    struct CommandView : View
+    {
+        std::shared_ptr<Settings> settings;
+        std::shared_ptr<Font> font;
+        Rect rect;
+
+        Edit edit;
+        bool enabled = false;
+
+        CommandView
+        (
+            std::shared_ptr<Settings> s,
+            std::shared_ptr<Font> f
+        )
+            : settings(s)
+            , font(f)
+            , rect(EmptyRect)
+            , edit(settings, font)
+        {
+            edit.on_activated = [this](){enabled = false; ViewChanged(); std::cout << "Command: " << edit.text << "\n";};
+        }
+
+        Rect GetRect() const override
+        {
+            return rect;
+        }
+
+        void Draw(Painter* painter) override
+        {
+            painter->Rect(rect, settings->theme.command_view_background, std::nullopt);
+            edit.Draw(painter);
+        }
+
+        void OnKey(Key key, const Meta& meta) override
+        {
+            if(edit.OnKey(key, meta))
+            {
+                ViewChanged();
+            }
+        }
+
+        void OnChar(const std::string& ch) override
+        {
+            edit.OnChar(ch);
+            ViewChanged();
+        }
+
+        void OnScroll(float, int) override
+        {
+        }
+
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_position) override
+        {
+            if(button != MouseButton::Left) { return; }
+            if(state != MouseState::Down) { return; }
+            const auto global_position = local_position + rect.position;
+            if(edit.rect.Contains(global_position))
+            {
+                edit.OnMouseClick(global_position);
+            }
+            else
+            {
+                enabled = false;
+                ViewChanged();
+            }
+            
+        }
+        
+        void MouseMoved(const vec2&) override
+        {
         }
     };
 
@@ -1381,6 +1582,7 @@ namespace ride
         StatusBar statusbar;
         FileSystemView fs_widget;
         TabsView tabs;
+        CommandView command_view;
 
         View* active_widget;
 
@@ -1403,6 +1605,7 @@ namespace ride
                 )
             , fs_widget(font_code, settings, fs, root)
             , tabs(driver, settings, font_code)
+            , command_view(settings, font_code)
             , active_widget(&edit_widget)
         {
             for(const auto& f: fs_widget.entries)
@@ -1413,10 +1616,12 @@ namespace ride
                 }
             }
 
+            command_view.enabled = true;
             for(auto* widget : GetAllViews())
             {
                 widget->on_change.Add([this](){this->Refresh();});
             }
+            command_view.enabled = false;
         }
 
         void DoLayout()
@@ -1442,6 +1647,17 @@ namespace ride
                 {sidebar_width + padding + padding, padding + tab_height},
                 {window_size.x - (sidebar_width + padding + padding + padding), window_size.y - (status_height + padding + tab_height + padding)}
             };
+
+            command_view.rect =
+                Rect{{0, 0}, window_size}
+                .CreateNorthFromMaxSize(settings->commandview_height)
+                .CreateFromCenterMaxSize(settings->commandview_width)
+                ;
+            command_view.edit.rect =
+                command_view.rect
+                .Inset(settings->commandview_edit_inset)
+                .CreateNorthFromMaxSize(command_view.edit.font->line_height + settings->commandview_edit_extra_height)
+                ;
         }
 
         void OnSize(const vec2& new_size) override
@@ -1468,16 +1684,28 @@ namespace ride
             fs_widget.Draw(painter);
             tabs.Draw(painter);
             statusbar.Draw(painter, window_size);
+
+            if(command_view.enabled)
+            {
+                command_view.Draw(painter);
+            }
         }
 
         std::vector<View*> GetAllViews()
         {
-            return
+            std::vector<View*> r =
             {
                 static_cast<View*>(&edit_widget),
                 static_cast<View*>(&fs_widget),
                 static_cast<View*>(&tabs)
             };
+
+            if(command_view.enabled)
+            {
+                r.push_back(&command_view);
+            }
+
+            return r;
         }
 
         View* HitTest(const vec2& p)
@@ -1498,7 +1726,7 @@ namespace ride
         void OnMouseMoved(const vec2& new_position) override
         {
             last_mouse = new_position;
-            active_widget->MouseMoved(last_mouse - active_widget->GetRect().position);
+            GetActiveOrCmd()->MouseMoved(last_mouse - active_widget->GetRect().position);
         }
 
         void OnMouseLeftWindow() override
@@ -1512,14 +1740,20 @@ namespace ride
                 active_widget = HitTest(last_mouse);
             }
 
-            if(active_widget != nullptr)
+            if(GetActiveOrCmd() != nullptr)
             {
-                active_widget->MouseClick(button, state, last_mouse - active_widget->GetRect().position);
+                GetActiveOrCmd()->MouseClick(button, state, last_mouse - active_widget->GetRect().position);
             }
         }
 
         void OnMouseScroll(float scroll, int lines) override
         {
+            if(command_view.enabled)
+            {
+                command_view.OnScroll(scroll, lines);
+                return;
+            }
+
             // todo(Gustav): should scroll use active widget or hovering widget? as a option?
             auto* w = HitTest(last_mouse);
             if(w == nullptr) { return; }
@@ -1537,9 +1771,18 @@ namespace ride
 
             if(down)
             {
-                if(active_widget != nullptr)
+                if(key == Key::Tab)
                 {
-                    active_widget->OnKey(key, {ctrl, shift, alt});
+                    command_view.enabled = true;
+                    Refresh();
+                    return true;
+                }
+                else
+                {
+                    if(GetActiveOrCmd() != nullptr)
+                    {
+                        GetActiveOrCmd()->OnKey(key, {ctrl, shift, alt});
+                    }
                 }
             }
 
@@ -1555,9 +1798,21 @@ namespace ride
 
         void OnChar(const std::string& ch) override
         {
-            if(active_widget != nullptr)
+            if(GetActiveOrCmd() != nullptr)
             {
-                active_widget->OnChar(ch);
+                GetActiveOrCmd()->OnChar(ch);
+            }
+        }
+
+        View* GetActiveOrCmd()
+        {
+            if(command_view.enabled)
+            {
+                return &command_view;
+            }
+            else
+            {
+                return active_widget;
             }
         }
     };
