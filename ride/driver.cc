@@ -1775,7 +1775,7 @@ namespace ride
 
             if(down)
             {
-                if(key == Key::Tab)
+                if(key == Key::Tab && ctrl)
                 {
                     command_view.enabled = true;
                     Refresh();
