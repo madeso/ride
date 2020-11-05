@@ -767,6 +767,7 @@ namespace ride
             const auto start_x = rect.position.x;
             const auto start_y = rect.position.y;
 
+            // todo(Gustav): handle utf8 escape characters when calculating x
             const auto index2x = [this, start_x](int index) -> int { return start_x + font->char_width * index;};
 
             if(cursor_from != cursor_to)
@@ -809,6 +810,8 @@ namespace ride
 
         int StepCursor(int cursor, int steps)
         {
+            // todo(Gustav): handle utf8 escape codes when stepping
+            // todo(Gustav): handle ctrl stepping over words
             return KeepWithin(0, cursor+steps, C(text.length()));
         }
 
