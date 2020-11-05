@@ -158,6 +158,102 @@ ride::Key ToKey(int k)
     case WXK_SPECIAL18: return ride::Key::Special18;
     case WXK_SPECIAL19: return ride::Key::Special19;
     case WXK_SPECIAL20: return ride::Key::Special20;
+
+    case 33: return ride::Key::ExclamationMark;
+    case 34: return ride::Key::DoubleQuotes;
+    case 35: return ride::Key::Number;
+    case 36: return ride::Key::Dollar;
+    case 37: return ride::Key::Percent;
+    case 38: return ride::Key::Ampersand;
+    case 39: return ride::Key::SingleQuote;
+    case 40: return ride::Key::OpenParenthesis;
+    case 41: return ride::Key::CloseParenthesis;
+    case 42: return ride::Key::Asterisk;
+    case 43: return ride::Key::Plus;
+    case 44: return ride::Key::Comma;
+    case 45: return ride::Key::Hyphen;
+    case 46: return ride::Key::Dot;
+    case 47: return ride::Key::Slash;
+    case 48: return ride::Key::Zero;
+    case 49: return ride::Key::One;
+    case 50: return ride::Key::Two;
+    case 51: return ride::Key::Three;
+    case 52: return ride::Key::Four;
+    case 53: return ride::Key::Five;
+    case 54: return ride::Key::Six;
+    case 55: return ride::Key::Seven;
+    case 56: return ride::Key::Eight;
+    case 57: return ride::Key::Nine;
+    case 58: return ride::Key::Colon;
+    case 59: return ride::Key::Semicolon;
+    case 60: return ride::Key::LessThan;
+    case 61: return ride::Key::Equals;
+    case 62: return ride::Key::GreaterThan;
+    case 63: return ride::Key::QuestionMark;
+    case 64: return ride::Key::At;
+    case 65: return ride::Key::UppercaseA;
+    case 66: return ride::Key::UppercaseB;
+    case 67: return ride::Key::UppercaseC;
+    case 68: return ride::Key::UppercaseD;
+    case 69: return ride::Key::UppercaseE;
+    case 70: return ride::Key::UppercaseF;
+    case 71: return ride::Key::UppercaseG;
+    case 72: return ride::Key::UppercaseH;
+    case 73: return ride::Key::UppercaseI;
+    case 74: return ride::Key::UppercaseJ;
+    case 75: return ride::Key::UppercaseK;
+    case 76: return ride::Key::UppercaseL;
+    case 77: return ride::Key::UppercaseM;
+    case 78: return ride::Key::UppercaseN;
+    case 79: return ride::Key::UppercaseO;
+    case 80: return ride::Key::UppercaseP;
+    case 81: return ride::Key::UppercaseQ;
+    case 82: return ride::Key::UppercaseR;
+    case 83: return ride::Key::UppercaseS;
+    case 84: return ride::Key::UppercaseT;
+    case 85: return ride::Key::UppercaseU;
+    case 86: return ride::Key::UppercaseV;
+    case 87: return ride::Key::UppercaseW;
+    case 88: return ride::Key::UppercaseX;
+    case 89: return ride::Key::UppercaseY;
+    case 90: return ride::Key::UppercaseZ;
+    case 91: return ride::Key::OpeningBracket;
+    case 92: return ride::Key::Backslash;
+    case 93: return ride::Key::ClosingBracket;
+    case 94: return ride::Key::Caret;
+    case 95: return ride::Key::Underscore;
+    case 96: return ride::Key::GraveAccent;
+    case 97: return ride::Key::LowercaseA;
+    case 98: return ride::Key::LowercaseB;
+    case 99: return ride::Key::LowercaseC;
+    case 100: return ride::Key::LowercaseD;
+    case 101: return ride::Key::LowercaseE;
+    case 102: return ride::Key::LowercaseF;
+    case 103: return ride::Key::LowercaseG;
+    case 104: return ride::Key::LowercaseH;
+    case 105: return ride::Key::LowercaseI;
+    case 106: return ride::Key::LowercaseJ;
+    case 107: return ride::Key::LowercaseK;
+    case 108: return ride::Key::LowercaseL;
+    case 109: return ride::Key::LowercaseM;
+    case 110: return ride::Key::LowercaseN;
+    case 111: return ride::Key::LowercaseO;
+    case 112: return ride::Key::LowercaseP;
+    case 113: return ride::Key::LowercaseQ;
+    case 114: return ride::Key::LowercaseR;
+    case 115: return ride::Key::LowercaseS;
+    case 116: return ride::Key::LowercaseT;
+    case 117: return ride::Key::LowercaseU;
+    case 118: return ride::Key::LowercaseV;
+    case 119: return ride::Key::LowercaseW;
+    case 120: return ride::Key::LowercaseX;
+    case 121: return ride::Key::LowercaseY;
+    case 122: return ride::Key::LowercaseZ;
+    case 123: return ride::Key::OpeningBrace;
+    case 124: return ride::Key::VerticalVar;
+    case 125: return ride::Key::ClosingBrace;
+    case 126: return ride::Key::Tilde;
+
     default:
         return ride::Key::None;
     }
@@ -518,7 +614,7 @@ constexpr const std::array special_characters
 {
     CharacterKey{'\n', ride::Key::Return},
     CharacterKey{'\r', ride::Key::Return},
-    CharacterKey{8, ride::Key::Backspace},
+    CharacterKey{WXK_BACK, ride::Key::Backspace},
     CharacterKey{27, ride::Key::Escape},
     CharacterKey{'\t', ride::Key::Tab}
 };
@@ -531,9 +627,9 @@ void Pane::OnKeyPressed(wxKeyEvent& e)
 
     if(handle_special)
     {
-        for(const auto& [ch, skey]: special_characters)
+        for(const auto& [special_unicode_key, special_ride_key]: special_characters)
         {
-            if(key == skey) { e.Skip(); return; }
+            if(key == special_ride_key) { e.Skip(); return; }
         }
     }
 
@@ -552,9 +648,9 @@ void Pane::OnKeyReleased(wxKeyEvent& e)
 
     if(handle_special)
     {
-        for(const auto& [ch, skey]: special_characters)
+        for(const auto& [special_unicode_key, special_ride_key]: special_characters)
         {
-            if(key == skey) { e.Skip(); return; }
+            if(key == special_ride_key) { e.Skip(); return; }
         }
     }
 
@@ -565,7 +661,6 @@ void Pane::OnKeyReleased(wxKeyEvent& e)
     }
 }
 
-
 void Pane::OnChar(wxKeyEvent& e)
 {
     const auto unicode_key = e.GetUnicodeKey();
@@ -574,16 +669,24 @@ void Pane::OnChar(wxKeyEvent& e)
     if(handle_special)
     {
         // std::cout << "unicode " << unicode_key << "\n";
-        for(const auto& [ch, key]: special_characters)
+        for(const auto& [special_unicode_key, special_ride_key]: special_characters)
         {
-            if(unicode_key == ch)
+            if(unicode_key == special_unicode_key)
             {
-                app->OnKey(true, key);
-                app->OnKey(false, key);
+                app->OnKey(true, special_ride_key);
+                app->OnKey(false, special_ride_key);
                 return;
             }
         }
     }
+
+    // ignore all other weird keys
+    if(unicode_key < 32)
+    {
+        std::cout << "blocked weird character\n";
+        return;
+    }
+
 
     const auto wx = wxString{unicode_key};
     const auto buff = wx.utf8_str();
