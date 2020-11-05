@@ -595,8 +595,12 @@ namespace ride
             cursor_from = cursor_to = StepCursor(cursor_from, C(ch.length()));
         }
 
-        void Delete(int at)
+        void Delete(int pos)
         {
+            if(pos == 0) { return; }
+            const auto at = pos - 1;
+            if(text.length() == 0) { return; }
+            assert(at < C(text.length()));
             text.erase(text.begin() + at);
         }
 
