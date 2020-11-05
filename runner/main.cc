@@ -1,4 +1,5 @@
 #include <iostream>
+#include <array>
 
 #include "wx.h"
 #include <wx/dcclient.h>
@@ -510,10 +511,32 @@ void Pane::OnMouseWheel(wxMouseEvent& e)
 }
 
 
+constexpr bool handle_special = true;
+
+using CharacterKey = std::pair<wxChar, ride::Key>;
+constexpr const std::array special_characters
+{
+    CharacterKey{'\n', ride::Key::Return},
+    CharacterKey{'\r', ride::Key::Return},
+    CharacterKey{8, ride::Key::Backspace},
+    CharacterKey{27, ride::Key::Escape},
+    CharacterKey{'\t', ride::Key::Tab}
+};
+
+
 void Pane::OnKeyPressed(wxKeyEvent& e)
 {
     const auto key = ToKey(e.GetKeyCode());
     if(key == ride::Key::None) { e.Skip(); return; }
+
+    if(handle_special)
+    {
+        for(const auto& [ch, skey]: special_characters)
+        {
+            if(key == skey) { e.Skip(); return; }
+        }
+    }
+
     const auto handled = app->OnKey(true, key);
     if(!handled)
     {
@@ -526,6 +549,15 @@ void Pane::OnKeyReleased(wxKeyEvent& e)
 {
     const auto key = ToKey(e.GetKeyCode());
     if(key == ride::Key::None) { e.Skip(); return; }
+
+    if(handle_special)
+    {
+        for(const auto& [ch, skey]: special_characters)
+        {
+            if(key == skey) { e.Skip(); return; }
+        }
+    }
+
     const auto handled = app->OnKey(false, key);
     if(!handled)
     {
@@ -533,10 +565,25 @@ void Pane::OnKeyReleased(wxKeyEvent& e)
     }
 }
 
+
 void Pane::OnChar(wxKeyEvent& e)
 {
     const auto unicode_key = e.GetUnicodeKey();
     if ( unicode_key == WXK_NONE ) { return; }
+
+    if(handle_special)
+    {
+        // std::cout << "unicode " << unicode_key << "\n";
+        for(const auto& [ch, key]: special_characters)
+        {
+            if(unicode_key == ch)
+            {
+                app->OnKey(true, key);
+                app->OnKey(false, key);
+                return;
+            }
+        }
+    }
 
     const auto wx = wxString{unicode_key};
     const auto buff = wx.utf8_str();
