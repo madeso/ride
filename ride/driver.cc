@@ -737,6 +737,334 @@ namespace ride
         }
     };
 
+
+    struct ScrollableView : public View
+    {
+        std::shared_ptr<Settings> settings;
+
+        Rect window_rect = EmptyRect;
+        vec2 pixel_scroll = {0, 0};
+
+        ScrollableView(std::shared_ptr<Settings> s) : settings(s) {}
+
+        // get the full document area
+        virtual vec2 GetDocumentSize() = 0;
+
+        // todo(Gustav): store gutter width calculation as a optional std::function
+        // and use that instead of virtual functions... this allows the children
+        // to use meaningful names instead of the "west" and "main" lingo
+
+        // how wide should the gutter area be?
+        virtual int GetWestWidth() = 0;
+
+        // vec2 GlobalToLocal(const vec2& global) const;
+        // vec2 LocalToGlobal(const vec2& local) const;
+
+        void LimitScroll()
+        {
+            const auto document_size = GetDocumentSize();
+
+            // if document size < 0 then if is considerd 'infinite' so there is no limit
+
+            if(document_size.y > 0)
+            {
+                if(pixel_scroll.y > (document_size.y - window_rect.size.y))
+                {
+                    pixel_scroll.y = document_size.y - window_rect.size.y;
+                }
+            }
+
+            if(document_size.x > 0)
+            {
+                if(pixel_scroll.x > (document_size.x - window_rect.size.x))
+                {
+                    pixel_scroll.x = document_size.x - window_rect.size.x;
+                }
+            }
+
+            if(pixel_scroll.x < 0) { pixel_scroll.x = 0; }
+            if(pixel_scroll.y < 0) { pixel_scroll.y = 0; }
+        }
+
+        void ScrollDownPixels(int y)
+        {
+            pixel_scroll.y += y;
+            LimitScroll();
+            ViewChanged();
+        }
+
+        void ScrollRightPixels(int x)
+        {
+            pixel_scroll.x += x;
+            LimitScroll();
+            ViewChanged();
+        }
+
+        void ScrollToRectHeight(const Rect& rect)
+        {
+            const auto cursor_up = rect.GetTop();
+            const auto cursor_down = rect.GetBottom();
+
+            if(pixel_scroll.y > cursor_up)
+            {
+                pixel_scroll.y = cursor_up;
+            }
+
+            {
+                const auto steps = pixel_scroll.y + window_rect.size.y - cursor_down -1;
+                if(steps < 0)
+                {
+                    pixel_scroll.y -= steps;
+                }
+            }
+        }
+
+        void ScrollToRectWidth(const Rect& rect)
+        {
+            const auto cursor_left = rect.GetLeft();
+            const auto cursor_right = rect.GetRight();
+
+            if(pixel_scroll.x > cursor_left)
+            {
+                pixel_scroll.x = cursor_left;
+            }
+
+            {
+                const auto scrollbar_width = ShowScrollbarVertical() ? window_rect.CreateEastFromMaxSize(settings->scrollbar_width).size.x : 0;
+                const auto steps = pixel_scroll.x + (window_rect.size.x - scrollbar_width - GetWestWidth()) - cursor_right;
+                if(steps < 0)
+                {
+                    pixel_scroll.x -= steps;
+                }
+            }
+        }
+
+        void ScrollToRect(const Rect& rect)
+        {
+            ScrollToRectHeight(rect);
+            ScrollToRectWidth(rect);
+            LimitScroll();
+        }
+
+        struct ScrollbarData
+        {
+            int size_without_buttons;
+            Rect rect;
+            Rect up_button;
+            Rect down_button;
+            Rect scrollbar;
+            int area_to_scroll;
+            int max_scroll;
+
+            ScrollbarData
+            (
+                int s,
+                const Rect& re,
+                const Rect& up,
+                const Rect& dw,
+                const Rect& sc,
+                int as,
+                int ms
+            )
+                : size_without_buttons(s)
+                , rect(re)
+                , up_button(up)
+                , down_button(dw)
+                , scrollbar(sc)
+                , area_to_scroll(as)
+                , max_scroll(ms)
+            {
+            }
+        };
+
+        ScrollbarData GetVerticalScrollbarData()
+        {
+            const int scroll = pixel_scroll.y;
+            const int document_size = GetDocumentSize().y;
+            const Rect rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
+
+            const auto button_height = rect.size.x;
+
+            const auto up_button = rect.CreateNorthFromMaxSize(button_height);
+            const auto down_button = rect.CreateSouthFromMaxSize(button_height);
+
+            const auto size_without_buttons = rect.size.y - (up_button.size.y + down_button.size.y);
+
+            const auto scrollbar_ratio = KeepWithin(0.0f, static_cast<float>(rect.size.y)/static_cast<float>(document_size), 1.0f);
+            const auto suggest_scrollbar_size = scrollbar_ratio * static_cast<float>(size_without_buttons);
+            const auto scrollbar_size = std::max(settings->min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
+
+            const auto area_to_scroll = std::max(0, size_without_buttons - scrollbar_size);
+
+            const auto max_scroll = document_size - rect.size.y;
+
+            const auto suggest_scroll_position = (static_cast<float>(scroll) / static_cast<float>(max_scroll)) * static_cast<float>(area_to_scroll);
+            const auto scroll_position = static_cast<int>(std::floor(suggest_scroll_position));
+
+            const auto scrollbar = Rect{{rect.position.x, rect.position.y + scroll_position + up_button.size.y}, {rect.size.x, scrollbar_size}};
+
+            return
+            {
+                size_without_buttons,
+                rect,
+                up_button,
+                down_button,
+                scrollbar,
+                area_to_scroll,
+                max_scroll
+            };
+        }
+
+        void DrawScrollbarVertical(Painter* painter)
+        {
+            const auto data = GetVerticalScrollbarData();
+
+            if(data.size_without_buttons <= 0) { return; }
+
+            const auto background_color = settings->theme.scrollbar_background_color;
+            const auto scrollbar_color = settings->theme.scrollbar_scrollbar_color;
+            const auto line_color = settings->theme.scrollbar_line_color;
+            const auto button_color = settings->theme.scrollbar_button_color;
+
+            const auto line = Line{line_color, 1};
+
+            painter->Rect(data.rect, background_color, line);
+            painter->Rect(data.up_button, button_color, line);
+            painter->Rect(data.down_button, button_color, line);
+
+            painter->Rect(data.scrollbar, scrollbar_color, line);
+        }
+
+        int GetClientTop() const
+        {
+            return pixel_scroll.y;
+        }
+
+        int GetClientBottom() const
+        {
+            return pixel_scroll.y + window_rect.size.y;
+        }
+
+        vec2 WestToGlobal(const vec2& w) const
+        {
+            return w + window_rect.position - vec2{0, pixel_scroll.y};
+        }
+
+        vec2 ClientToGlobal(const vec2& c)
+        {
+            const auto cc = c + window_rect.position - pixel_scroll;
+            return {cc.x + GetWestWidth(), cc.y};
+        }
+
+        vec2 GlobalToClient(const vec2& g)
+        {
+            const auto cc = vec2{g.x - GetWestWidth(), g.y};
+            return cc - window_rect.position + pixel_scroll;
+        }
+
+        virtual void DrawWestSide(Painter* painter, const Rect& r) = 0;
+        virtual void DrawMainSide(Painter* painter, const Rect& r) = 0;
+
+        bool ShowScrollbarVertical() const
+        {
+            return true;
+        }
+
+        void Draw(Painter* painter) override
+        {
+            {
+                const auto rect = window_rect.CreateWestFromMaxSize(GetWestWidth());
+                const auto scope = RectScope(painter, rect);
+                DrawWestSide(painter, rect);
+            }
+            {
+                const auto rect = window_rect.CreateEastFromMaxSize(window_rect.size.x - GetWestWidth());
+                const auto scope = RectScope(painter, rect);
+                DrawMainSide(painter, rect);
+            }
+
+            if(ShowScrollbarVertical())
+            {
+                DrawScrollbarVertical
+                (
+                    painter
+                );
+            }
+        }
+
+        std::optional<vec2> dragging_offset = std::nullopt;
+        bool OnMouseClick(const MouseButton& button, const MouseState state, const vec2& local_mouse, int pixels_to_scroll)
+        {
+            const auto global_mouse = local_mouse + window_rect.position;
+            const auto data = GetVerticalScrollbarData();
+            if(state == MouseState::Up && button==MouseButton::Left)
+            {
+                dragging_offset = std::nullopt;
+                return true;
+            }
+
+            if(data.rect.Contains(global_mouse) == false)
+            {
+                return false;
+            }
+
+            if(button != MouseButton::Left) { return true; }
+
+            if(data.up_button.Contains(global_mouse))
+            {
+                ScrollDownPixels(-pixels_to_scroll);
+            }
+            else if(data.down_button.Contains(global_mouse))
+            {
+                ScrollDownPixels(pixels_to_scroll);
+            }
+            else if(data.scrollbar.Contains(global_mouse))
+            {
+                dragging_offset = data.scrollbar.position - global_mouse;
+                OnMouseMoved(local_mouse);
+            }
+
+            // todo(Gustav): how shold we scroll when we click outside scrollbar?
+            // towards the spot makes sense but by how much?
+
+            return true;
+        }
+
+        bool OnMouseMoved(const vec2& local_mouse)
+        {
+            if(dragging_offset.has_value() == false) { return false; }
+            const auto data = GetVerticalScrollbarData();
+            const auto global_mouse = local_mouse + window_rect.position;
+            const auto new_scrollbar_pos = *dragging_offset + global_mouse;
+            const auto pixel_offset = -(data.rect.position.y - new_scrollbar_pos.y);
+            // remove button size since the scrollbar is offset by that much
+            // not sure where +1 comes from, but without it we scroll automatically when clicking the scrollbar by one pixel
+            const auto scroll_factor = static_cast<float>(pixel_offset - data.up_button.size.y + 1)/static_cast<float>(data.area_to_scroll);
+            const auto scroll_y = static_cast<int>(scroll_factor * static_cast<float>(data.max_scroll));
+
+            pixel_scroll.y = scroll_y;
+            LimitScroll();
+            ViewChanged();
+
+            return true;
+        }
+
+        float stored_yscroll = 0.0f;
+        void OnScrollEvent(float yscroll, int lines, int line_height)
+        {
+            // todo(Gustav): custom scroll speed lines/multiplier
+            stored_yscroll -= yscroll * static_cast<float>(lines * line_height);
+            const auto remainder = std::fmod(stored_yscroll, 1.0f);
+            const auto pixels = static_cast<int>(stored_yscroll - remainder);
+            stored_yscroll = remainder;
+            if(pixels != 0)
+            {
+                ScrollDownPixels(pixels);
+            }
+        }
+    };
+
+
     struct Edit
     {
         std::shared_ptr<Settings> settings;
@@ -1170,333 +1498,6 @@ namespace ride
 
         void MouseMoved(const vec2&) override
         {
-        }
-    };
-
-
-    struct ScrollableView : public View
-    {
-        std::shared_ptr<Settings> settings;
-
-        Rect window_rect = EmptyRect;
-        vec2 pixel_scroll = {0, 0};
-
-        ScrollableView(std::shared_ptr<Settings> s) : settings(s) {}
-
-        // get the full document area
-        virtual vec2 GetDocumentSize() = 0;
-
-        // todo(Gustav): store gutter width calculation as a optional std::function
-        // and use that instead of virtual functions... this allows the children
-        // to use meaningful names instead of the "west" and "main" lingo
-
-        // how wide should the gutter area be?
-        virtual int GetWestWidth() = 0;
-
-        // vec2 GlobalToLocal(const vec2& global) const;
-        // vec2 LocalToGlobal(const vec2& local) const;
-
-        void LimitScroll()
-        {
-            const auto document_size = GetDocumentSize();
-
-            // if document size < 0 then if is considerd 'infinite' so there is no limit
-
-            if(document_size.y > 0)
-            {
-                if(pixel_scroll.y > (document_size.y - window_rect.size.y))
-                {
-                    pixel_scroll.y = document_size.y - window_rect.size.y;
-                }
-            }
-
-            if(document_size.x > 0)
-            {
-                if(pixel_scroll.x > (document_size.x - window_rect.size.x))
-                {
-                    pixel_scroll.x = document_size.x - window_rect.size.x;
-                }
-            }
-
-            if(pixel_scroll.x < 0) { pixel_scroll.x = 0; }
-            if(pixel_scroll.y < 0) { pixel_scroll.y = 0; }
-        }
-
-        void ScrollDownPixels(int y)
-        {
-            pixel_scroll.y += y;
-            LimitScroll();
-            ViewChanged();
-        }
-
-        void ScrollRightPixels(int x)
-        {
-            pixel_scroll.x += x;
-            LimitScroll();
-            ViewChanged();
-        }
-
-        void ScrollToRectHeight(const Rect& rect)
-        {
-            const auto cursor_up = rect.GetTop();
-            const auto cursor_down = rect.GetBottom();
-
-            if(pixel_scroll.y > cursor_up)
-            {
-                pixel_scroll.y = cursor_up;
-            }
-
-            {
-                const auto steps = pixel_scroll.y + window_rect.size.y - cursor_down -1;
-                if(steps < 0)
-                {
-                    pixel_scroll.y -= steps;
-                }
-            }
-        }
-
-        void ScrollToRectWidth(const Rect& rect)
-        {
-            const auto cursor_left = rect.GetLeft();
-            const auto cursor_right = rect.GetRight();
-
-            if(pixel_scroll.x > cursor_left)
-            {
-                pixel_scroll.x = cursor_left;
-            }
-
-            {
-                const auto scrollbar_width = ShowScrollbarVertical() ? window_rect.CreateEastFromMaxSize(settings->scrollbar_width).size.x : 0;
-                const auto steps = pixel_scroll.x + (window_rect.size.x - scrollbar_width - GetWestWidth()) - cursor_right;
-                if(steps < 0)
-                {
-                    pixel_scroll.x -= steps;
-                }
-            }
-        }
-
-        void ScrollToRect(const Rect& rect)
-        {
-            ScrollToRectHeight(rect);
-            ScrollToRectWidth(rect);
-            LimitScroll();
-        }
-
-        struct ScrollbarData
-        {
-            int size_without_buttons;
-            Rect rect;
-            Rect up_button;
-            Rect down_button;
-            Rect scrollbar;
-            int area_to_scroll;
-            int max_scroll;
-
-            ScrollbarData
-            (
-                int s,
-                const Rect& re,
-                const Rect& up,
-                const Rect& dw,
-                const Rect& sc,
-                int as,
-                int ms
-            )
-                : size_without_buttons(s)
-                , rect(re)
-                , up_button(up)
-                , down_button(dw)
-                , scrollbar(sc)
-                , area_to_scroll(as)
-                , max_scroll(ms)
-            {
-            }
-        };
-
-        ScrollbarData GetVerticalScrollbarData()
-        {
-            const int scroll = pixel_scroll.y;
-            const int document_size = GetDocumentSize().y;
-            const Rect rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
-
-            const auto button_height = rect.size.x;
-
-            const auto up_button = rect.CreateNorthFromMaxSize(button_height);
-            const auto down_button = rect.CreateSouthFromMaxSize(button_height);
-
-            const auto size_without_buttons = rect.size.y - (up_button.size.y + down_button.size.y);
-
-            const auto scrollbar_ratio = KeepWithin(0.0f, static_cast<float>(rect.size.y)/static_cast<float>(document_size), 1.0f);
-            const auto suggest_scrollbar_size = scrollbar_ratio * static_cast<float>(size_without_buttons);
-            const auto scrollbar_size = std::max(settings->min_size_of_scrollbar, static_cast<int>(std::ceil(suggest_scrollbar_size)));
-
-            const auto area_to_scroll = std::max(0, size_without_buttons - scrollbar_size);
-
-            const auto max_scroll = document_size - rect.size.y;
-
-            const auto suggest_scroll_position = (static_cast<float>(scroll) / static_cast<float>(max_scroll)) * static_cast<float>(area_to_scroll);
-            const auto scroll_position = static_cast<int>(std::floor(suggest_scroll_position));
-
-            const auto scrollbar = Rect{{rect.position.x, rect.position.y + scroll_position + up_button.size.y}, {rect.size.x, scrollbar_size}};
-
-            return
-            {
-                size_without_buttons,
-                rect,
-                up_button,
-                down_button,
-                scrollbar,
-                area_to_scroll,
-                max_scroll
-            };
-        }
-
-        void DrawScrollbarVertical(Painter* painter)
-        {
-            const auto data = GetVerticalScrollbarData();
-
-            if(data.size_without_buttons <= 0) { return; }
-
-            const auto background_color = settings->theme.scrollbar_background_color;
-            const auto scrollbar_color = settings->theme.scrollbar_scrollbar_color;
-            const auto line_color = settings->theme.scrollbar_line_color;
-            const auto button_color = settings->theme.scrollbar_button_color;
-
-            const auto line = Line{line_color, 1};
-
-            painter->Rect(data.rect, background_color, line);
-            painter->Rect(data.up_button, button_color, line);
-            painter->Rect(data.down_button, button_color, line);
-
-            painter->Rect(data.scrollbar, scrollbar_color, line);
-        }
-
-        int GetClientTop() const
-        {
-            return pixel_scroll.y;
-        }
-
-        int GetClientBottom() const
-        {
-            return pixel_scroll.y + window_rect.size.y;
-        }
-
-        vec2 WestToGlobal(const vec2& w) const
-        {
-            return w + window_rect.position - vec2{0, pixel_scroll.y};
-        }
-
-        vec2 ClientToGlobal(const vec2& c)
-        {
-            const auto cc = c + window_rect.position - pixel_scroll;
-            return {cc.x + GetWestWidth(), cc.y};
-        }
-
-        vec2 GlobalToClient(const vec2& g)
-        {
-            const auto cc = vec2{g.x - GetWestWidth(), g.y};
-            return cc - window_rect.position + pixel_scroll;
-        }
-
-        virtual void DrawWestSide(Painter* painter, const Rect& r) = 0;
-        virtual void DrawMainSide(Painter* painter, const Rect& r) = 0;
-
-        bool ShowScrollbarVertical() const
-        {
-            return true;
-        }
-
-        void Draw(Painter* painter) override
-        {
-            {
-                const auto rect = window_rect.CreateWestFromMaxSize(GetWestWidth());
-                const auto scope = RectScope(painter, rect);
-                DrawWestSide(painter, rect);
-            }
-            {
-                const auto rect = window_rect.CreateEastFromMaxSize(window_rect.size.x - GetWestWidth());
-                const auto scope = RectScope(painter, rect);
-                DrawMainSide(painter, rect);
-            }
-
-            if(ShowScrollbarVertical())
-            {
-                DrawScrollbarVertical
-                (
-                    painter
-                );
-            }
-        }
-
-        std::optional<vec2> dragging_offset = std::nullopt;
-        bool OnMouseClick(const MouseButton& button, const MouseState state, const vec2& local_mouse, int pixels_to_scroll)
-        {
-            const auto global_mouse = local_mouse + window_rect.position;
-            const auto data = GetVerticalScrollbarData();
-            if(state == MouseState::Up && button==MouseButton::Left)
-            {
-                dragging_offset = std::nullopt;
-                return true;
-            }
-
-            if(data.rect.Contains(global_mouse) == false)
-            {
-                return false;
-            }
-
-            if(button != MouseButton::Left) { return true; }
-
-            if(data.up_button.Contains(global_mouse))
-            {
-                ScrollDownPixels(-pixels_to_scroll);
-            }
-            else if(data.down_button.Contains(global_mouse))
-            {
-                ScrollDownPixels(pixels_to_scroll);
-            }
-            else if(data.scrollbar.Contains(global_mouse))
-            {
-                dragging_offset = data.scrollbar.position - global_mouse;
-                OnMouseMoved(local_mouse);
-            }
-
-            // todo(Gustav): how shold we scroll when we click outside scrollbar?
-            // towards the spot makes sense but by how much?
-
-            return true;
-        }
-
-        bool OnMouseMoved(const vec2& local_mouse)
-        {
-            if(dragging_offset.has_value() == false) { return false; }
-            const auto data = GetVerticalScrollbarData();
-            const auto global_mouse = local_mouse + window_rect.position;
-            const auto new_scrollbar_pos = *dragging_offset + global_mouse;
-            const auto pixel_offset = -(data.rect.position.y - new_scrollbar_pos.y);
-            // remove button size since the scrollbar is offset by that much
-            // not sure where +1 comes from, but without it we scroll automatically when clicking the scrollbar by one pixel
-            const auto scroll_factor = static_cast<float>(pixel_offset - data.up_button.size.y + 1)/static_cast<float>(data.area_to_scroll);
-            const auto scroll_y = static_cast<int>(scroll_factor * static_cast<float>(data.max_scroll));
-
-            pixel_scroll.y = scroll_y;
-            LimitScroll();
-            ViewChanged();
-
-            return true;
-        }
-
-        float stored_yscroll = 0.0f;
-        void OnScrollEvent(float yscroll, int lines, int line_height)
-        {
-            // todo(Gustav): custom scroll speed lines/multiplier
-            stored_yscroll -= yscroll * static_cast<float>(lines * line_height);
-            const auto remainder = std::fmod(stored_yscroll, 1.0f);
-            const auto pixels = static_cast<int>(stored_yscroll - remainder);
-            stored_yscroll = remainder;
-            if(pixels != 0)
-            {
-                ScrollDownPixels(pixels);
-            }
         }
     };
 
