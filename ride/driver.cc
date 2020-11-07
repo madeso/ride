@@ -738,6 +738,46 @@ namespace ride
     };
 
 
+
+    struct ScrollbarData
+    {
+        int size_without_buttons;
+        Rect rect;
+        Rect up_button;
+        Rect down_button;
+        Rect scrollbar;
+        int area_to_scroll;
+        int max_scroll;
+
+        ScrollbarData
+        (
+            int s,
+            const Rect& re,
+            const Rect& up,
+            const Rect& dw,
+            const Rect& sc,
+            int as,
+            int ms
+        )
+            : size_without_buttons(s)
+            , rect(re)
+            , up_button(up)
+            , down_button(dw)
+            , scrollbar(sc)
+            , area_to_scroll(as)
+            , max_scroll(ms)
+        {
+        }
+    };
+
+
+    struct FixedSection
+    {
+        std::function<int ()> get_size = []() -> int {return 0;};
+        std::function<void (Painter*, const Rect&)> on_draw = [](Painter*, const Rect&){};
+    };
+
+
     struct ScrollableView : public View
     {
         std::shared_ptr<Settings> settings;
@@ -755,7 +795,7 @@ namespace ride
         // to use meaningful names instead of the "west" and "main" lingo
 
         // how wide should the gutter area be?
-        virtual int GetWestWidth() = 0;
+        FixedSection west;
 
         // vec2 GlobalToLocal(const vec2& global) const;
         // vec2 LocalToGlobal(const vec2& local) const;
@@ -831,7 +871,7 @@ namespace ride
 
             {
                 const auto scrollbar_width = ShowScrollbarVertical() ? window_rect.CreateEastFromMaxSize(settings->scrollbar_width).size.x : 0;
-                const auto steps = pixel_scroll.x + (window_rect.size.x - scrollbar_width - GetWestWidth()) - cursor_right;
+                const auto steps = pixel_scroll.x + (window_rect.size.x - scrollbar_width - west.get_size()) - cursor_right;
                 if(steps < 0)
                 {
                     pixel_scroll.x -= steps;
@@ -845,37 +885,6 @@ namespace ride
             ScrollToRectWidth(rect);
             LimitScroll();
         }
-
-        struct ScrollbarData
-        {
-            int size_without_buttons;
-            Rect rect;
-            Rect up_button;
-            Rect down_button;
-            Rect scrollbar;
-            int area_to_scroll;
-            int max_scroll;
-
-            ScrollbarData
-            (
-                int s,
-                const Rect& re,
-                const Rect& up,
-                const Rect& dw,
-                const Rect& sc,
-                int as,
-                int ms
-            )
-                : size_without_buttons(s)
-                , rect(re)
-                , up_button(up)
-                , down_button(dw)
-                , scrollbar(sc)
-                , area_to_scroll(as)
-                , max_scroll(ms)
-            {
-            }
-        };
 
         ScrollbarData GetVerticalScrollbarData()
         {
@@ -953,34 +962,31 @@ namespace ride
         vec2 ClientToGlobal(const vec2& c)
         {
             const auto cc = c + window_rect.position - pixel_scroll;
-            return {cc.x + GetWestWidth(), cc.y};
+            return {cc.x + west.get_size(), cc.y};
         }
 
         vec2 GlobalToClient(const vec2& g)
         {
-            const auto cc = vec2{g.x - GetWestWidth(), g.y};
+            const auto cc = vec2{g.x - west.get_size(), g.y};
             return cc - window_rect.position + pixel_scroll;
         }
-
-        virtual void DrawWestSide(Painter* painter, const Rect& r) = 0;
-        virtual void DrawMainSide(Painter* painter, const Rect& r) = 0;
 
         bool ShowScrollbarVertical() const
         {
             return true;
         }
 
-        void Draw(Painter* painter) override
+        void OnDraw(Painter* painter, std::function<void (const Rect& r)> draw_main)
         {
             {
-                const auto rect = window_rect.CreateWestFromMaxSize(GetWestWidth());
+                const auto rect = window_rect.CreateWestFromMaxSize(west.get_size());
                 const auto scope = RectScope(painter, rect);
-                DrawWestSide(painter, rect);
+                west.on_draw(painter, rect);
             }
             {
-                const auto rect = window_rect.CreateEastFromMaxSize(window_rect.size.x - GetWestWidth());
+                const auto rect = window_rect.CreateEastFromMaxSize(window_rect.size.x - west.get_size());
                 const auto scope = RectScope(painter, rect);
-                DrawMainSide(painter, rect);
+                draw_main(rect);
             }
 
             if(ShowScrollbarVertical())
@@ -1521,7 +1527,7 @@ namespace ride
             };
         }
 
-        int GetWestWidth() override
+        int GetGutterWidth()
         {
             const auto line_number_size = GetLineNumberSize();
             
@@ -1664,7 +1670,7 @@ namespace ride
             return line * font->line_height;
         }
 
-        void DrawWestSide(Painter* painter, const Rect& gutter_rect) override
+        void DrawGutter(Painter* painter, const Rect& gutter_rect)
         {
             painter->Rect(gutter_rect, settings->theme.text_gutter_color, std::nullopt);
 
@@ -1681,7 +1687,7 @@ namespace ride
             }
         }
 
-        void DrawMainSide(Painter* painter, const Rect& rect) override
+        void DrawEdit(Painter* painter, const Rect& rect)
         {
             const auto foreground_color = settings->theme.text_foreground_color;
             const auto background_color = settings->theme.text_background_color;
@@ -1717,7 +1723,16 @@ namespace ride
             std::shared_ptr<Font> f,
             std::shared_ptr<Document> doc,
             std::shared_ptr<Settings> s
-        ) : ScrollableView(s), driver(d), font(f), document(doc) {}
+        ) : ScrollableView(s), driver(d), font(f), document(doc)
+        {
+            west.get_size = [this]() -> int { return this->GetGutterWidth();};
+            west.on_draw = [this](Painter* painter, const Rect& rect) { this->DrawGutter(painter, rect); };
+        }
+
+        void Draw(Painter* painter) override
+        {
+            OnDraw(painter, [this, painter](const Rect& rect){ this->DrawEdit(painter, rect); });
+        }
 
         
         DocumentInformation GetCurrentDocumentInformation() const
