@@ -289,6 +289,11 @@ namespace ride
         Rgb edit_text = {0, 0, 0};
 
         Rgb command_view_background = {80, 80, 80};
+
+        Rgb command_view_selected_foreground = {0, 0, 0};
+        Rgb command_view_selected_background = {200, 200, 200};
+        Rgb command_view_deselected_foreground = {0, 0, 0};
+        Rgb command_view_deselected_background = {150, 150, 150};
     };
 
     struct Settings
@@ -336,6 +341,12 @@ namespace ride
         int commandview_width = 400;
         int commandview_edit_inset = 6;
         int commandview_edit_extra_height = 3;
+
+        int results_padding_left = 6;
+        int results_border_side = 6;
+        int results_padding_top = 6;
+        int results_padding_middle = 6;
+        int results_internal_padding = 3;
     };
 
 
@@ -984,7 +995,10 @@ namespace ride
                 west.on_draw(painter, rect);
             }
             {
-                const auto rect = window_rect.CreateEastFromMaxSize(window_rect.size.x - west.get_size());
+                const auto west_size = west.get_size();
+                const auto scroll_width = GetVerticalScrollbarData().rect.size.x;
+                const auto width_including_scroll = window_rect.size.x - west_size;
+                const auto rect = window_rect.CreateEastFromMaxSize(width_including_scroll).CreateWestFromMaxSize(width_including_scroll - scroll_width);
                 const auto scope = RectScope(painter, rect);
                 draw_main(rect);
             }
@@ -1181,6 +1195,23 @@ namespace ride
         }
     };
 
+
+    struct CommandGroup
+    {
+        bool enabled = false;
+
+        void RunCommand(const std::string& command)
+        {
+            enabled = false;
+            std::cout << "Command: " << command << "\n";
+        }
+
+        void OnClickedOutside()
+        {
+            enabled = false;
+        }
+    };
+
     struct CommandView : View
     {
         std::shared_ptr<Settings> settings;
@@ -1188,19 +1219,21 @@ namespace ride
         Rect rect;
 
         Edit edit;
-        bool enabled = false;
+        CommandGroup* group;
 
         CommandView
         (
             std::shared_ptr<Settings> s,
-            std::shared_ptr<Font> f
+            std::shared_ptr<Font> f,
+            CommandGroup* g
         )
             : settings(s)
             , font(f)
             , rect(EmptyRect)
             , edit(settings, font)
+            , group(g)
         {
-            edit.on_activated = [this](){enabled = false; ViewChanged(); std::cout << "Command: " << edit.text << "\n";};
+            edit.on_activated = [this](){ViewChanged(); this->group->RunCommand(edit.text);};
         }
 
         Rect GetRect() const override
@@ -1243,7 +1276,7 @@ namespace ride
             }
             else
             {
-                enabled = false;
+                group->OnClickedOutside();
                 ViewChanged();
             }
             
@@ -1251,6 +1284,202 @@ namespace ride
         
         void MouseMoved(const vec2&) override
         {
+        }
+    };
+
+    struct CommandResultsView : ScrollableView
+    {
+        std::shared_ptr<Driver> driver;
+        std::shared_ptr<Font> font;
+
+        std::vector<std::string> results
+        {
+            "hello",
+            "dog",
+            "awesome",
+            "cat"
+        };
+
+        int cursor = 0;
+
+        CommandResultsView
+        (
+            std::shared_ptr<Driver> d,
+            std::shared_ptr<Font> f,
+            std::shared_ptr<Settings> s
+        ) : ScrollableView(s), driver(d), font(f)
+        {
+        }
+
+        std::string GetResultAt(int ii)
+        {
+            const auto i = Cs(ii);
+            if(i >= results.size()) { return ""; }
+            else return results[i];
+        }
+
+        vec2 GetDocumentSize() override
+        {
+            return
+            {
+                // todo(Gustav): calculate document width instead of sending -1
+                -1,
+                C(results.size()) * font->line_height
+            };
+        }
+
+        void OnScroll(float yscroll, int lines) override
+        {
+            OnScrollEvent(yscroll, lines, font->line_height);
+        }
+
+        void FocusCursor()
+        {
+            const auto cursor_top_point = vec2
+            {
+                0,
+                cursor * font->line_height
+            };
+            const auto scroll_rect = Rect
+            {
+                cursor_top_point,
+                {
+                    0,
+                    font->line_height
+                }
+            };
+            ScrollToRect(scroll_rect);
+            ViewChanged();
+        }
+
+        // moves a cursor with virtual whitespace to a cursor without virtual whitespace
+        vec2 VirtualCursorToActualCursor(const vec2& r) const
+        {
+            const auto ry = KeepWithin(0, r.y, C(results.size()));
+            const auto rx = 0;
+            return {rx, ry};
+        }
+
+        // given a local pixel, get the suggested cursor position
+        vec2 LocalPointToCursor(const vec2& pos)
+        {
+            const auto r = vec2
+            {
+                static_cast<int>(std::round(static_cast<float>(pos.x) / static_cast<float>(font->char_width))),
+                static_cast<int>(std::floor(static_cast<float>(pos.y) / static_cast<float>(font->line_height)))
+            };
+
+            return VirtualCursorToActualCursor(r);
+        }
+
+        void StepDown(int y)
+        {
+            cursor = VirtualCursorToActualCursor({0, cursor + y}).y;
+            FocusCursor();
+            ViewChanged();
+        }
+
+        void PlaceCursorAt(const vec2& p)
+        {
+            cursor = VirtualCursorToActualCursor(p).y;
+            ViewChanged();
+        }
+
+        int GetLineNumberTop()
+        {
+            int top = GetClientTop();
+            const auto line_top = static_cast<int>(std::floor(static_cast<float>(top) / static_cast<float>(font->line_height)));
+            return line_top;
+        }
+        
+        int GetLineNumberBottom()
+        {
+            int bottom = GetClientBottom();
+            const auto line_bottom = static_cast<int>(std::ceil(static_cast<float>(bottom) / static_cast<float>(font->line_height)));
+            return line_bottom;
+        }
+
+        int LineNumberToY(int line) const
+        {
+            return settings->results_padding_top + line * (font->line_height + settings->results_padding_middle + settings->results_internal_padding * 2);
+        }
+
+        void DrawResults(Painter* painter, const Rect& rect)
+        {
+            const auto top = GetLineNumberTop();
+            const auto bottom = GetLineNumberBottom();
+
+            painter->Rect(rect, settings->theme.command_view_background, std::nullopt);
+
+            for(auto line_index=top; line_index<=bottom; line_index +=1)
+            {
+                if(line_index < 0 || line_index >= C(results.size())) continue;
+                const auto y = LineNumberToY(line_index);
+                const auto line = GetResultAt(line_index);
+
+                const auto selected = line_index == cursor;
+                const auto foreground_color = selected ? settings->theme.command_view_selected_foreground : settings->theme.command_view_deselected_foreground;
+                const auto background_color = selected ? settings->theme.command_view_selected_background : settings->theme.command_view_deselected_background;
+
+                painter->Rect
+                (
+                    {
+                        ClientToGlobal
+                        ({
+                            settings->results_border_side,
+                            y - settings->results_internal_padding
+                        }),
+                        {
+                            rect.size.x - settings->results_border_side * 2,
+                            font->line_height + settings->results_internal_padding * 2
+                        }
+                    },
+                    background_color, std::nullopt
+                );
+                painter->Text(font, line, ClientToGlobal({settings->results_border_side + settings->results_padding_left, y}), foreground_color);
+            }
+        }
+
+        void Draw(Painter* painter) override
+        {
+            OnDraw(painter, [this, painter](const Rect& rect){ this->DrawResults(painter, rect); });
+        }
+
+        Rect GetRect() const override
+        {
+            return window_rect;
+        }
+
+        void OnKey(Key, const Meta&) override
+        {
+        }
+
+        void OnChar(const std::string&) override
+        {
+        }
+
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_position) override
+        {
+            if( OnMouseClick(button, state, local_position, settings->lines_to_scroll_for_scrollbar_button * font->line_height) == true ) { return; }
+            if( button != MouseButton::Left) { return; }
+            if(state != MouseState::Down) { return; }
+
+            const auto global_position = local_position + GetRect().position;
+            const auto client_position = GlobalToClient(global_position);
+            const auto dropped_spacing = vec2{client_position.x - settings->editor_padding_left, client_position.y};
+
+            const auto new_pos = LocalPointToCursor(dropped_spacing);
+            PlaceCursorAt(new_pos);
+
+            if(settings && settings->scroll_to_cursor_on_click)
+            {
+                FocusCursor();
+            }
+        }
+
+        void MouseMoved(const vec2& p) override
+        {
+            if(OnMouseMoved(p) == true) { return; }
         }
     };
 
@@ -1825,11 +2054,14 @@ namespace ride
         std::shared_ptr<Document> document;
         std::shared_ptr<Settings> settings;
 
+        CommandGroup command_group;
+
         TextView edit_widget;
         StatusBar statusbar;
         FileSystemView fs_widget;
         TabsView tabs;
         CommandView command_view;
+        CommandResultsView command_results_view;
 
         View* active_widget;
 
@@ -1840,6 +2072,7 @@ namespace ride
             , font_code(d->CreateCodeFont(8))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
+            , command_group()
             , edit_widget(driver, font_code, document, settings)
             , statusbar
                 (
@@ -1852,7 +2085,8 @@ namespace ride
                 )
             , fs_widget(font_code, settings, fs, root)
             , tabs(driver, settings, font_code)
-            , command_view(settings, font_code)
+            , command_view(settings, font_code, &command_group)
+            , command_results_view(driver, font_code, settings)
             , active_widget(&edit_widget)
         {
             for(const auto& f: fs_widget.entries)
@@ -1863,12 +2097,12 @@ namespace ride
                 }
             }
 
-            command_view.enabled = true;
+            command_group.enabled = true;
             for(auto* widget : GetAllViews())
             {
                 widget->on_change.Add([this](){this->Refresh();});
             }
-            command_view.enabled = false;
+            command_group.enabled = false;
         }
 
         void DoLayout()
@@ -1895,15 +2129,20 @@ namespace ride
                 {window_size.x - (sidebar_width + padding + padding + padding), window_size.y - (status_height + padding + tab_height + padding)}
             };
 
-            command_view.rect =
+            const auto command_rect =
                 Rect{{0, 0}, window_size}
                 .CreateNorthFromMaxSize(settings->commandview_height)
                 .CreateFromCenterMaxSize(settings->commandview_width)
                 ;
             command_view.edit.rect =
-                command_view.rect
+                command_rect
                 .Inset(settings->commandview_edit_inset)
                 .CreateNorthFromMaxSize(command_view.edit.font->line_height + settings->commandview_edit_extra_height)
+                ;
+            command_view.rect = command_view.edit.rect.Inset(-settings->commandview_edit_inset);
+            command_results_view.window_rect = command_rect
+                .CreateSouthFromMaxSize(command_rect.size.y - command_view.rect.size.y)
+                // .Inset(settings->commandview_edit_inset)
                 ;
         }
 
@@ -1932,9 +2171,10 @@ namespace ride
             tabs.Draw(painter);
             statusbar.Draw(painter, window_size);
 
-            if(command_view.enabled)
+            if(command_group.enabled)
             {
                 command_view.Draw(painter);
+                command_results_view.Draw(painter);
             }
         }
 
@@ -1947,9 +2187,10 @@ namespace ride
                 static_cast<View*>(&tabs)
             };
 
-            if(command_view.enabled)
+            if(command_group.enabled)
             {
                 r.push_back(&command_view);
+                r.push_back(&command_results_view);
             }
 
             return r;
@@ -1995,7 +2236,7 @@ namespace ride
 
         void OnMouseScroll(float scroll, int lines) override
         {
-            if(command_view.enabled)
+            if(command_group.enabled)
             {
                 command_view.OnScroll(scroll, lines);
                 return;
@@ -2020,7 +2261,7 @@ namespace ride
             {
                 if(key == Key::Tab && ctrl)
                 {
-                    command_view.enabled = true;
+                    command_group.enabled = true;
                     Refresh();
                     return true;
                 }
@@ -2054,8 +2295,9 @@ namespace ride
 
         View* GetActiveOrCmd()
         {
-            if(command_view.enabled)
+            if(command_group.enabled)
             {
+                // todo(Gustav): return command group to enable scroll
                 return &command_view;
             }
             else
