@@ -1213,7 +1213,7 @@ namespace ride
             "cat"
         };
 
-        int cursor = 0;
+        int cursor = -1;
 
         CommandResultsView
         (
@@ -1224,7 +1224,7 @@ namespace ride
         {
         }
 
-        std::string GetResultAt(int ii)
+        std::string GetResultAt(int ii) const
         {
             const auto i = Cs(ii);
             if(i >= results.size()) { return ""; }
@@ -1363,9 +1363,34 @@ namespace ride
             return window_rect;
         }
 
-        void OnKey(Key, const Meta&) override
+        void OnKey(Key key, const Meta&) override
         {
+            switch(key)
+            {
+            case Key::Up: MoveDown(-1); break;
+            case Key::Down: MoveDown(1); break;
+            default: break;
+            }
         }
+
+        void MoveDown(int steps)
+        {
+            if(cursor == 0)
+            {
+                cursor = steps;
+            }
+            else
+            {
+                cursor += steps;
+            }
+
+            cursor = (cursor + C(results.size())) % C(results.size());
+            ViewChanged();
+        }
+
+        bool HasCursor() const { return cursor >= 0; }
+        std::string GetCursor() const  { return GetResultAt(cursor); }
+        void ClearCursor() { cursor = -1; ViewChanged(); }
 
         void OnChar(const std::string&) override
         {
@@ -1453,11 +1478,20 @@ namespace ride
             {
             case Key::Return:
                 ViewChanged();
+                if(results.HasCursor())
+                {
+                    edit.text = results.GetCursor();
+                    results.ClearCursor();
+                }
                 edit.SelectAll();
                 this->RunCommand(edit.text);
                 break;
             case Key::Escape:
-                if(edit.text.empty() == false)
+                if(results.HasCursor())
+                {
+                    results.ClearCursor();
+                }
+                else if(edit.text.empty() == false)
                 {
                     edit.ClearText();
                     ViewChanged();
@@ -1473,6 +1507,10 @@ namespace ride
                 results.OnKey(key, meta);
                 break;
             default:
+                if(results.HasCursor())
+                {
+                    results.ClearCursor();
+                }
                 if(edit.OnKey(key, meta))
                 {
                     ViewChanged();
