@@ -1196,91 +1196,6 @@ namespace ride
     };
 
 
-    struct CommandView : View
-    {
-        std::shared_ptr<Settings> settings;
-        std::shared_ptr<Font> font;
-        Rect rect;
-
-        Edit edit;
-
-        bool enabled = false;
-
-        void RunCommand(const std::string& command)
-        {
-            enabled = false;
-            std::cout << "Command: " << command << "\n";
-        }
-
-        void OnClickedOutside()
-        {
-            enabled = false;
-        }
-
-        CommandView
-        (
-            std::shared_ptr<Settings> s,
-            std::shared_ptr<Font> f
-        )
-            : settings(s)
-            , font(f)
-            , rect(EmptyRect)
-            , edit(settings, font)
-        {
-            edit.on_activated = [this](){ViewChanged(); this->RunCommand(edit.text);};
-        }
-
-        Rect GetRect() const override
-        {
-            return rect;
-        }
-
-        void Draw(Painter* painter) override
-        {
-            painter->Rect(rect, settings->theme.command_view_background, std::nullopt);
-            edit.Draw(painter);
-        }
-
-        void OnKey(Key key, const Meta& meta) override
-        {
-            if(edit.OnKey(key, meta))
-            {
-                ViewChanged();
-            }
-        }
-
-        void OnChar(const std::string& ch) override
-        {
-            edit.OnChar(ch);
-            ViewChanged();
-        }
-
-        void OnScroll(float, int) override
-        {
-        }
-
-        void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_position) override
-        {
-            if(button != MouseButton::Left) { return; }
-            if(state != MouseState::Down) { return; }
-            const auto global_position = local_position + rect.position;
-            if(edit.rect.Contains(global_position))
-            {
-                edit.OnMouseClick(global_position);
-            }
-            else
-            {
-                OnClickedOutside();
-                ViewChanged();
-            }
-            
-        }
-        
-        void MouseMoved(const vec2&) override
-        {
-        }
-    };
-
     struct CommandResultsView : ScrollableView
     {
         std::shared_ptr<Driver> driver;
@@ -1474,6 +1389,107 @@ namespace ride
         void MouseMoved(const vec2& p) override
         {
             if(OnMouseMoved(p) == true) { return; }
+        }
+    };
+
+
+    struct CommandView : View
+    {
+        std::shared_ptr<Settings> settings;
+        std::shared_ptr<Font> font;
+        Rect rect;
+
+        Edit edit;
+
+        bool enabled = false;
+
+        CommandResultsView results;
+
+        void RunCommand(const std::string& command)
+        {
+            enabled = false;
+            std::cout << "Command: " << command << "\n";
+        }
+
+        void OnClickedOutside()
+        {
+            enabled = false;
+        }
+
+        CommandView
+        (
+            std::shared_ptr<Driver> d,
+            std::shared_ptr<Settings> s,
+            std::shared_ptr<Font> f
+        )
+            : settings(s)
+            , font(f)
+            , rect(EmptyRect)
+            , edit(settings, font)
+            , results(d, font, settings)
+        {
+            edit.on_activated = [this](){ViewChanged(); this->RunCommand(edit.text);};
+            results.on_change.Add([this](){ViewChanged();});
+        }
+
+        Rect GetRect() const override
+        {
+            return rect;
+        }
+
+        void Draw(Painter* painter) override
+        {
+            painter->Rect(rect, settings->theme.command_view_background, std::nullopt);
+            edit.Draw(painter);
+            results.Draw(painter);
+        }
+
+        void OnKey(Key key, const Meta& meta) override
+        {
+            if(edit.OnKey(key, meta))
+            {
+                ViewChanged();
+            }
+
+            results.OnKey(key, meta);
+        }
+
+        void OnChar(const std::string& ch) override
+        {
+            edit.OnChar(ch);
+            ViewChanged();
+        }
+
+        void OnScroll(float delta, int lines) override
+        {
+            results.OnScroll(delta, lines);
+        }
+
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_position) override
+        {
+            if(button != MouseButton::Left) { return; }
+            if(state != MouseState::Down) { return; }
+            const auto global_position = local_position + rect.position;
+            if(edit.rect.Contains(global_position))
+            {
+                edit.OnMouseClick(global_position);
+            }
+            else if(rect.Contains(global_position))
+            {
+                results.MouseClick(button, state, global_position - results.GetRect().position);
+            }
+            else
+            {
+
+                OnClickedOutside();
+                ViewChanged();
+            }
+            
+        }
+        
+        void MouseMoved(const vec2& p) override
+        {
+            results.MouseMoved(p);
         }
     };
 
@@ -2053,7 +2069,6 @@ namespace ride
         FileSystemView fs_widget;
         TabsView tabs;
         CommandView command_view;
-        CommandResultsView command_results_view;
 
         View* active_widget;
 
@@ -2076,8 +2091,7 @@ namespace ride
                 )
             , fs_widget(font_code, settings, fs, root)
             , tabs(driver, settings, font_code)
-            , command_view(settings, font_code)
-            , command_results_view(driver, font_code, settings)
+            , command_view(driver, settings, font_code)
             , active_widget(&edit_widget)
         {
             for(const auto& f: fs_widget.entries)
@@ -2132,7 +2146,7 @@ namespace ride
                 ;
             const auto command_view_rect = command_view.edit.rect.Inset(-settings->commandview_edit_inset);
             command_view.rect = command_rect;
-            command_results_view.window_rect = command_rect
+            command_view.results.window_rect = command_rect
                 .CreateSouthFromMaxSize(command_rect.size.y - command_view_rect.size.y)
                 // .Inset(settings->commandview_edit_inset)
                 ;
@@ -2166,7 +2180,6 @@ namespace ride
             if(command_view.enabled)
             {
                 command_view.Draw(painter);
-                command_results_view.Draw(painter);
             }
         }
 
@@ -2182,7 +2195,6 @@ namespace ride
             if(command_view.enabled)
             {
                 r.push_back(&command_view);
-                r.push_back(&command_results_view);
             }
 
             return r;
