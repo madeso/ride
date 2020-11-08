@@ -1090,7 +1090,6 @@ namespace ride
         std::shared_ptr<Settings> settings;
         std::shared_ptr<Font> font;
         Rect rect;
-        std::function<void (void)> on_activated;
 
         std::string text;
         int cursor_from = 0;
@@ -1134,16 +1133,21 @@ namespace ride
             painter->Text(font, text, {start_x, start_y}, settings->theme.edit_text);
         }
 
+        void ClearText()
+        {
+            cursor_to = 0;
+            cursor_from = 0;
+            text = "";
+        }
+
         bool OnKey(Key key, const Meta& meta)
         {
             switch(key)
             {
-                case Key::Return: SelectAll(); on_activated(); break;
                 case Key::Left:  cursor_to = StepCursor(cursor_to, -1); if(meta.shift == false) {cursor_from = cursor_to;} break;
                 case Key::Right: cursor_to = StepCursor(cursor_to, +1); if(meta.shift == false) {cursor_from = cursor_to;} break;
                 case Key::Delete: if(cursor_to != cursor_from) { DeleteToEmptySelection(); } else { if(cursor_from != C(text.length())) { Delete(cursor_from+1);} } break;
                 case Key::Backspace: if(cursor_to != cursor_from) { DeleteToEmptySelection(); } else { Delete(cursor_from); cursor_from = cursor_to = StepCursor(cursor_from, -1); } break;
-                case Key::Escape: if(text.empty()) {on_activated();} else { cursor_to = cursor_from = 0; text = ""; } break;
                 default: return false;
             }
 
@@ -1428,7 +1432,6 @@ namespace ride
             , edit(settings, font)
             , results(d, font, settings)
         {
-            edit.on_activated = [this](){ViewChanged(); this->RunCommand(edit.text);};
             results.on_change.Add([this](){ViewChanged();});
         }
 
@@ -1446,12 +1449,36 @@ namespace ride
 
         void OnKey(Key key, const Meta& meta) override
         {
-            if(edit.OnKey(key, meta))
+            switch(key)
             {
+            case Key::Return:
                 ViewChanged();
+                edit.SelectAll();
+                this->RunCommand(edit.text);
+                break;
+            case Key::Escape:
+                if(edit.text.empty() == false)
+                {
+                    edit.ClearText();
+                    ViewChanged();
+                }
+                else
+                {
+                    enabled = false;
+                    ViewChanged();
+                }
+                break;
+            case Key::Up:
+            case Key::Down:
+                results.OnKey(key, meta);
+                break;
+            default:
+                if(edit.OnKey(key, meta))
+                {
+                    ViewChanged();
+                }
+                break;
             }
-
-            results.OnKey(key, meta);
         }
 
         void OnChar(const std::string& ch) override
