@@ -1196,8 +1196,14 @@ namespace ride
     };
 
 
-    struct CommandGroup
+    struct CommandView : View
     {
+        std::shared_ptr<Settings> settings;
+        std::shared_ptr<Font> font;
+        Rect rect;
+
+        Edit edit;
+
         bool enabled = false;
 
         void RunCommand(const std::string& command)
@@ -1210,30 +1216,18 @@ namespace ride
         {
             enabled = false;
         }
-    };
-
-    struct CommandView : View
-    {
-        std::shared_ptr<Settings> settings;
-        std::shared_ptr<Font> font;
-        Rect rect;
-
-        Edit edit;
-        CommandGroup* group;
 
         CommandView
         (
             std::shared_ptr<Settings> s,
-            std::shared_ptr<Font> f,
-            CommandGroup* g
+            std::shared_ptr<Font> f
         )
             : settings(s)
             , font(f)
             , rect(EmptyRect)
             , edit(settings, font)
-            , group(g)
         {
-            edit.on_activated = [this](){ViewChanged(); this->group->RunCommand(edit.text);};
+            edit.on_activated = [this](){ViewChanged(); this->RunCommand(edit.text);};
         }
 
         Rect GetRect() const override
@@ -1276,7 +1270,7 @@ namespace ride
             }
             else
             {
-                group->OnClickedOutside();
+                OnClickedOutside();
                 ViewChanged();
             }
             
@@ -2054,8 +2048,6 @@ namespace ride
         std::shared_ptr<Document> document;
         std::shared_ptr<Settings> settings;
 
-        CommandGroup command_group;
-
         TextView edit_widget;
         StatusBar statusbar;
         FileSystemView fs_widget;
@@ -2072,7 +2064,6 @@ namespace ride
             , font_code(d->CreateCodeFont(8))
             , document(std::make_shared<Document>())
             , settings(std::make_shared<Settings>())
-            , command_group()
             , edit_widget(driver, font_code, document, settings)
             , statusbar
                 (
@@ -2085,7 +2076,7 @@ namespace ride
                 )
             , fs_widget(font_code, settings, fs, root)
             , tabs(driver, settings, font_code)
-            , command_view(settings, font_code, &command_group)
+            , command_view(settings, font_code)
             , command_results_view(driver, font_code, settings)
             , active_widget(&edit_widget)
         {
@@ -2097,12 +2088,12 @@ namespace ride
                 }
             }
 
-            command_group.enabled = true;
+            command_view.enabled = true;
             for(auto* widget : GetAllViews())
             {
                 widget->on_change.Add([this](){this->Refresh();});
             }
-            command_group.enabled = false;
+            command_view.enabled = false;
         }
 
         void DoLayout()
@@ -2139,9 +2130,10 @@ namespace ride
                 .Inset(settings->commandview_edit_inset)
                 .CreateNorthFromMaxSize(command_view.edit.font->line_height + settings->commandview_edit_extra_height)
                 ;
-            command_view.rect = command_view.edit.rect.Inset(-settings->commandview_edit_inset);
+            const auto command_view_rect = command_view.edit.rect.Inset(-settings->commandview_edit_inset);
+            command_view.rect = command_rect;
             command_results_view.window_rect = command_rect
-                .CreateSouthFromMaxSize(command_rect.size.y - command_view.rect.size.y)
+                .CreateSouthFromMaxSize(command_rect.size.y - command_view_rect.size.y)
                 // .Inset(settings->commandview_edit_inset)
                 ;
         }
@@ -2171,7 +2163,7 @@ namespace ride
             tabs.Draw(painter);
             statusbar.Draw(painter, window_size);
 
-            if(command_group.enabled)
+            if(command_view.enabled)
             {
                 command_view.Draw(painter);
                 command_results_view.Draw(painter);
@@ -2187,7 +2179,7 @@ namespace ride
                 static_cast<View*>(&tabs)
             };
 
-            if(command_group.enabled)
+            if(command_view.enabled)
             {
                 r.push_back(&command_view);
                 r.push_back(&command_results_view);
@@ -2236,7 +2228,7 @@ namespace ride
 
         void OnMouseScroll(float scroll, int lines) override
         {
-            if(command_group.enabled)
+            if(command_view.enabled)
             {
                 command_view.OnScroll(scroll, lines);
                 return;
@@ -2261,7 +2253,7 @@ namespace ride
             {
                 if(key == Key::Tab && ctrl)
                 {
-                    command_group.enabled = true;
+                    command_view.enabled = true;
                     Refresh();
                     return true;
                 }
@@ -2295,9 +2287,8 @@ namespace ride
 
         View* GetActiveOrCmd()
         {
-            if(command_group.enabled)
+            if(command_view.enabled)
             {
-                // todo(Gustav): return command group to enable scroll
                 return &command_view;
             }
             else
