@@ -352,11 +352,11 @@ namespace ride
 
     struct Callbacks
     {
-        using Callback = std::function<void ()>;
+        using CallbackFunction = std::function<void ()>;
 
-        std::vector<Callback> callbacks;
+        std::vector<CallbackFunction> callbacks;
 
-        void Add(Callback&& c)
+        void Add(CallbackFunction&& c)
         {
             callbacks.emplace_back(std::move(c));
         }
@@ -1085,6 +1085,16 @@ namespace ride
     };
 
 
+    struct Dialog : public View
+    {
+        // set to false to remove
+        bool enabled = true;
+
+        virtual void OnLayout(const vec2& window_size) = 0;
+        virtual void BindOnChange(Callbacks::CallbackFunction&& on_change) = 0;
+    };
+
+
     struct Edit
     {
         std::shared_ptr<Settings> settings;
@@ -1422,7 +1432,7 @@ namespace ride
     };
 
 
-    struct CommandView : View
+    struct CommandView : Dialog
     {
         std::shared_ptr<Settings> settings;
         std::shared_ptr<Font> font;
@@ -1430,9 +1440,31 @@ namespace ride
 
         Edit edit;
 
-        bool enabled = false;
-
         CommandResultsView results;
+
+        void OnLayout(const vec2& window_size) override
+        {
+            const auto command_rect =
+                Rect{{0, 0}, window_size}
+                .CreateNorthFromMaxSize(settings->commandview_height)
+                .CreateFromCenterMaxSize(settings->commandview_width)
+                ;
+            edit.rect = command_rect
+                .Inset(settings->commandview_edit_inset)
+                .CreateNorthFromMaxSize(edit.font->line_height + settings->commandview_edit_extra_height)
+                ;
+            const auto command_view_rect = edit.rect.Inset(-settings->commandview_edit_inset);
+            rect = command_rect;
+            results.window_rect = command_rect
+                .CreateSouthFromMaxSize(command_rect.size.y - command_view_rect.size.y)
+                // .Inset(settings->commandview_edit_inset)
+                ;
+        }
+
+        void BindOnChange(Callbacks::CallbackFunction&& on_change_callback) override
+        {
+            on_change.Add(std::move(on_change_callback));
+        }
 
         void RunCommand(const std::string& command)
         {
@@ -2133,7 +2165,8 @@ namespace ride
         StatusBar statusbar;
         FileSystemView fs_widget;
         TabsView tabs;
-        CommandView command_view;
+        
+        std::vector<std::shared_ptr<Dialog>> dialogs;
 
         View* active_widget;
 
@@ -2156,7 +2189,6 @@ namespace ride
                 )
             , fs_widget(font_code, settings, fs, root)
             , tabs(driver, settings, font_code)
-            , command_view(driver, settings, font_code)
             , active_widget(&edit_widget)
         {
             for(const auto& f: fs_widget.entries)
@@ -2167,12 +2199,17 @@ namespace ride
                 }
             }
 
-            command_view.enabled = true;
             for(auto* widget : GetAllViews())
             {
                 widget->on_change.Add([this](){this->Refresh();});
             }
-            command_view.enabled = false;
+        }
+
+        void AddDialog(std::shared_ptr<Dialog> dialog)
+        {
+            dialog->BindOnChange([this](){this->Refresh();});
+            dialog->OnLayout(window_size);
+            dialogs.emplace_back(dialog);
         }
 
         void DoLayout()
@@ -2199,22 +2236,10 @@ namespace ride
                 {window_size.x - (sidebar_width + padding + padding + padding), window_size.y - (status_height + padding + tab_height + padding)}
             };
 
-            const auto command_rect =
-                Rect{{0, 0}, window_size}
-                .CreateNorthFromMaxSize(settings->commandview_height)
-                .CreateFromCenterMaxSize(settings->commandview_width)
-                ;
-            command_view.edit.rect =
-                command_rect
-                .Inset(settings->commandview_edit_inset)
-                .CreateNorthFromMaxSize(command_view.edit.font->line_height + settings->commandview_edit_extra_height)
-                ;
-            const auto command_view_rect = command_view.edit.rect.Inset(-settings->commandview_edit_inset);
-            command_view.rect = command_rect;
-            command_view.results.window_rect = command_rect
-                .CreateSouthFromMaxSize(command_rect.size.y - command_view_rect.size.y)
-                // .Inset(settings->commandview_edit_inset)
-                ;
+            for(auto& d: dialogs)
+            {
+                d->OnLayout(window_size);
+            }
         }
 
         void OnSize(const vec2& new_size) override
@@ -2242,9 +2267,9 @@ namespace ride
             tabs.Draw(painter);
             statusbar.Draw(painter, window_size);
 
-            if(command_view.enabled)
+            for(auto& d: dialogs)
             {
-                command_view.Draw(painter);
+                d->Draw(painter);
             }
         }
 
@@ -2257,9 +2282,9 @@ namespace ride
                 static_cast<View*>(&tabs)
             };
 
-            if(command_view.enabled)
+            for(auto& d: dialogs)
             {
-                r.push_back(&command_view);
+                r.push_back(d.get());
             }
 
             return r;
@@ -2279,11 +2304,29 @@ namespace ride
             return nullptr;
         }
 
+        void ClearClosedDialogs()
+        {
+            dialogs.erase
+            (
+                std::remove_if
+                (
+                    dialogs.begin(), 
+                    dialogs.end(),
+                    [](std::shared_ptr<Dialog> dialog) -> bool
+                    {
+                        return dialog->enabled == false;
+                    }
+                ),
+                dialogs.end()
+            );
+        }
+
         vec2 last_mouse = vec2{0,0};
         void OnMouseMoved(const vec2& new_position) override
         {
             last_mouse = new_position;
             GetActiveOrCmd()->MouseMoved(last_mouse - active_widget->GetRect().position);
+            ClearClosedDialogs();
         }
 
         void OnMouseLeftWindow() override
@@ -2300,14 +2343,22 @@ namespace ride
             if(GetActiveOrCmd() != nullptr)
             {
                 GetActiveOrCmd()->MouseClick(button, state, last_mouse - active_widget->GetRect().position);
+                ClearClosedDialogs();
             }
+        }
+
+        std::shared_ptr<Dialog> GetTopDialog()
+        {
+            if(dialogs.empty()) { return nullptr; }
+            return *dialogs.rbegin();
         }
 
         void OnMouseScroll(float scroll, int lines) override
         {
-            if(command_view.enabled)
+            auto top = GetTopDialog();
+            if(top != nullptr)
             {
-                command_view.OnScroll(scroll, lines);
+                top->OnScroll(scroll, lines);
                 return;
             }
 
@@ -2328,17 +2379,27 @@ namespace ride
 
             if(down)
             {
-                if(key == Key::Tab && ctrl)
+                auto top = GetTopDialog();
+
+                if(top != nullptr)
                 {
-                    command_view.enabled = true;
-                    Refresh();
-                    return true;
+                    top->OnKey(key, {ctrl, shift, alt});
+                    ClearClosedDialogs();
                 }
                 else
                 {
-                    if(GetActiveOrCmd() != nullptr)
+                    if(key == Key::Tab && ctrl)
                     {
-                        GetActiveOrCmd()->OnKey(key, {ctrl, shift, alt});
+                        AddDialog(std::make_shared<CommandView>(driver, settings, font_code));
+                        Refresh();
+                        return true;
+                    }
+                    else
+                    {
+                        if(GetActiveOrCmd() != nullptr)
+                        {
+                            GetActiveOrCmd()->OnKey(key, {ctrl, shift, alt});
+                        }
                     }
                 }
             }
@@ -2359,14 +2420,17 @@ namespace ride
             if(GetActiveOrCmd() != nullptr)
             {
                 GetActiveOrCmd()->OnChar(ch);
+                ClearClosedDialogs();
             }
         }
 
         View* GetActiveOrCmd()
         {
-            if(command_view.enabled)
+            auto top = GetTopDialog();
+            if(top != nullptr)
             {
-                return &command_view;
+                // todo(Gustav): change to return shared ptr when we get multi documents
+                return top.get();
             }
             else
             {
