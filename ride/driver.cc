@@ -8,6 +8,7 @@
 #include <functional>
 #include <algorithm>
 #include <cassert>
+#include <cstring>
 
 #include <filesystem>
 #include <system_error>
@@ -1095,6 +1096,150 @@ namespace ride
     };
 
 
+    struct Entry
+    {
+        virtual ~Entry() {}
+
+        virtual std::string GetName() const = 0;
+    };
+
+
+    struct EntryList
+    {
+        virtual ~EntryList() {}
+
+        virtual std::vector<std::shared_ptr<Entry>> FindEntries(const std::string& name) = 0;
+    };
+
+
+    struct Command : public Entry
+    {
+        using OnExecute = std::function<void ()>;
+        std::string name;
+        OnExecute on_execute;
+
+        Command(std::string n, OnExecute oe)
+            : name(std::move(n))
+            , on_execute(std::move(oe))
+        {
+        }
+
+        std::string GetName() const override { return name; }
+    };
+
+
+    struct CommandWithScore
+    {
+        std::shared_ptr<Command> command;
+        int score;
+
+        CommandWithScore(std::shared_ptr<Command> c, int s)
+            : command(c)
+            , score(s)
+        {
+        }
+    };
+
+    bool operator<(const CommandWithScore& lhs, const CommandWithScore& rhs)
+    {
+        return lhs.score < rhs.score;
+    }
+
+
+    // fuzzy match from https://github.com/rxi/lite
+    int FuzzyMatch(const std::string& n, const std::string& to_find)
+    {
+        const char *str = n.c_str();
+        const char *ptn = to_find.c_str();
+
+        int score = 0;
+        int run = 0;
+
+        while (*str && *ptn)
+        {
+            while (*str == ' ') { str++; }
+            while (*ptn == ' ') { ptn++; }
+            if (tolower(*str) == tolower(*ptn))
+            {
+                score += run * 10 - (*str != *ptn);
+                run++;
+                ptn++;
+            }
+            else
+            {
+                score -= 10;
+                run = 0;
+            }
+            str++;
+        }
+        
+        if (*ptn)
+        {
+            return 0;
+        }
+
+        return score - C(std::strlen(str));
+    }
+
+
+    struct CommandList : public EntryList
+    {
+        std::vector<std::shared_ptr<Command>> commands;
+
+        void Add(std::shared_ptr<Command> command)
+        {
+            commands.emplace_back(command);
+        }
+
+        void Add(std::string name, Command::OnExecute on_execute)
+        {
+            Add(std::make_shared<Command>(std::move(name), std::move(on_execute)));
+        }
+
+        std::vector<std::shared_ptr<Command>> FuzzyFind(const std::string& text)
+        {
+            constexpr const bool debug_matching = false;
+            std::vector<CommandWithScore> scores;
+            if(debug_matching) std::cout << "matching " << text << ":\n";
+            for(auto c: commands)
+            {
+                const auto s = FuzzyMatch(c->name, text);
+                if(debug_matching) std::cout << " - " << c->name << " " << s << "\n";
+                if(s > 0)
+                {
+                    scores.emplace_back(c, s);
+                }
+            }
+            if(debug_matching) std::cout << "Found: " << scores.size() << "\n";
+            if(debug_matching) std::cout << "\n";
+
+            std::sort
+            (
+                scores.begin(),
+                scores.end()
+            );
+
+            std::vector<std::shared_ptr<Command>> r;
+            for(auto c: scores)
+            {
+                r.emplace_back(c.command);
+            }
+            return r;
+        }
+
+        std::vector<std::shared_ptr<Entry>> FindEntries(const std::string& name) override
+        {
+            auto ff = FuzzyFind(name);
+            std::vector<std::shared_ptr<Entry>> r;
+            for(auto f: ff)
+            {
+                r.emplace_back(f);
+            }
+            return r;
+        }
+    };
+
+
     struct Edit
     {
         std::shared_ptr<Settings> settings;
@@ -1104,6 +1249,8 @@ namespace ride
         std::string text;
         int cursor_from = 0;
         int cursor_to = 0;
+
+        Callbacks on_change;
 
         Edit
         (
@@ -1148,6 +1295,7 @@ namespace ride
             cursor_to = 0;
             cursor_from = 0;
             text = "";
+            on_change.Call();
         }
 
         bool OnKey(Key key, const Meta& meta)
@@ -1182,6 +1330,7 @@ namespace ride
             DeleteToEmptySelection();
             text.insert(text.begin() + cursor_from, ch.begin(), ch.end());
             cursor_from = cursor_to = StepCursor(cursor_from, C(ch.length()));
+            on_change.Call();
         }
 
         void Delete(int pos)
@@ -1191,6 +1340,7 @@ namespace ride
             if(text.length() == 0) { return; }
             assert(at < C(text.length()));
             text.erase(text.begin() + at);
+            on_change.Call();
         }
 
         void DeleteToEmptySelection()
@@ -1201,6 +1351,7 @@ namespace ride
             text.erase(text.begin() + cursor_start, text.begin() + cursor_end);
             cursor_from = cursor_start;
             cursor_to = cursor_start;
+            on_change.Call();
         }
 
         void OnMouseClick(const vec2&)
@@ -1215,15 +1366,9 @@ namespace ride
         std::shared_ptr<Driver> driver;
         std::shared_ptr<Font> font;
 
-        std::vector<std::string> results
-        {
-            "hello",
-            "dog",
-            "awesome",
-            "cat"
-        };
+        std::vector<std::shared_ptr<Entry>> results;
 
-        int cursor = -1;
+        int cursor = 0;
 
         CommandResultsView
         (
@@ -1238,7 +1383,7 @@ namespace ride
         {
             const auto i = Cs(ii);
             if(i >= results.size()) { return ""; }
-            else return results[i];
+            else return results[i]->GetName();
         }
 
         vec2 GetDocumentSize() override
@@ -1398,9 +1543,12 @@ namespace ride
             ViewChanged();
         }
 
-        bool HasCursor() const { return cursor >= 0; }
-        std::string GetCursor() const  { return GetResultAt(cursor); }
-        void ClearCursor() { cursor = -1; ViewChanged(); }
+        std::shared_ptr<Entry> GetSelectedOrNull()
+        {
+            if(cursor < 0) { return nullptr; }
+            else if(cursor >= C(results.size())) { return nullptr; }
+            else { return results[Cs(cursor)]; }
+        }
 
         void OnChar(const std::string&) override
         {
@@ -1441,6 +1589,9 @@ namespace ride
         Edit edit;
 
         CommandResultsView results;
+        std::shared_ptr<EntryList> entries;
+
+        std::function<void (std::shared_ptr<Entry>)> run_entry;
 
         void OnLayout(const vec2& window_size) override
         {
@@ -1466,10 +1617,10 @@ namespace ride
             on_change.Add(std::move(on_change_callback));
         }
 
-        void RunCommand(const std::string& command)
+        void RunCommand(const std::shared_ptr<Entry> command)
         {
             enabled = false;
-            std::cout << "Command: " << command << "\n";
+            run_entry(command);
         }
 
         void OnClickedOutside()
@@ -1481,15 +1632,20 @@ namespace ride
         (
             std::shared_ptr<Driver> d,
             std::shared_ptr<Settings> s,
-            std::shared_ptr<Font> f
+            std::shared_ptr<Font> f,
+            std::shared_ptr<EntryList> e,
+            std::function<void (std::shared_ptr<Entry>)> r
         )
             : settings(s)
             , font(f)
             , rect(EmptyRect)
             , edit(settings, font)
             , results(d, font, settings)
+            , entries(e)
+            , run_entry(r)
         {
             results.on_change.Add([this](){ViewChanged();});
+            edit.on_change.Add([this](){results.results = entries->FindEntries(edit.text); ViewChanged();});
         }
 
         Rect GetRect() const override
@@ -1509,21 +1665,16 @@ namespace ride
             switch(key)
             {
             case Key::Return:
-                ViewChanged();
-                if(results.HasCursor())
                 {
-                    edit.text = results.GetCursor();
-                    results.ClearCursor();
+                    auto entry = results.GetSelectedOrNull();
+                    edit.SelectAll();
+                    enabled = false;
+                    ViewChanged();
+                    this->RunCommand(entry);
                 }
-                edit.SelectAll();
-                this->RunCommand(edit.text);
                 break;
             case Key::Escape:
-                if(results.HasCursor())
-                {
-                    results.ClearCursor();
-                }
-                else if(edit.text.empty() == false)
+                if(edit.text.empty() == false)
                 {
                     edit.ClearText();
                     ViewChanged();
@@ -1539,10 +1690,6 @@ namespace ride
                 results.OnKey(key, meta);
                 break;
             default:
-                if(results.HasCursor())
-                {
-                    results.ClearCursor();
-                }
                 if(edit.OnKey(key, meta))
                 {
                     ViewChanged();
@@ -1554,7 +1701,6 @@ namespace ride
         void OnChar(const std::string& ch) override
         {
             edit.OnChar(ch);
-            ViewChanged();
         }
 
         void OnScroll(float delta, int lines) override
@@ -2171,6 +2317,7 @@ namespace ride
         View* active_widget;
 
         vec2 window_size = vec2{0,0};
+        std::shared_ptr<CommandList> commands = std::make_shared<CommandList>();
 
         RideApp(std::shared_ptr<Driver> d, std::shared_ptr<FileSystem> fs, const std::string& root)
             : driver(d)
@@ -2203,6 +2350,15 @@ namespace ride
             {
                 widget->on_change.Add([this](){this->Refresh();});
             }
+
+            commands->Add("say hello", []() {std::cout<< "hello\n";});
+            commands->Add("shout hi", []() {std::cout<< "hi man!\n";});
+            commands->Add("give compliment", []() {std::cout<< "is nice\n";});
+            commands->Add("how are you", []() {std::cout<< "am good\n";});
+            commands->Add("favorite animal", []() {std::cout<< "is cat\n";});
+            commands->Add("other animal", []() {std::cout<< "is dog\n";});
+            commands->Add("whisper secret", []() {std::cout<< "...secret\n";});
+            commands->Add("cat man", []() {std::cout<< "not a man cat\n";});
         }
 
         void AddDialog(std::shared_ptr<Dialog> dialog)
@@ -2390,7 +2546,19 @@ namespace ride
                 {
                     if(key == Key::Tab && ctrl)
                     {
-                        AddDialog(std::make_shared<CommandView>(driver, settings, font_code));
+                        
+                        AddDialog
+                        (
+                            std::make_shared<CommandView>
+                            (
+                                driver, settings, font_code, commands,
+                                [](std::shared_ptr<Entry> entry)
+                                {
+                                    Command* command = static_cast<Command*>(entry.get());
+                                    command->on_execute();
+                                }
+                            )
+                        );
                         Refresh();
                         return true;
                     }
