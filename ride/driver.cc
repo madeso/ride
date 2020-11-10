@@ -1142,7 +1142,7 @@ namespace ride
 
     bool operator<(const CommandWithScore& lhs, const CommandWithScore& rhs)
     {
-        return lhs.score < rhs.score;
+        return lhs.score > rhs.score;
     }
 
 
@@ -1205,7 +1205,7 @@ namespace ride
             {
                 const auto s = FuzzyMatch(c->name, text);
                 if(debug_matching) std::cout << " - " << c->name << " " << s << "\n";
-                if(s > 0)
+                //if(s > 0)
                 {
                     scores.emplace_back(c, s);
                 }
@@ -1645,7 +1645,13 @@ namespace ride
             , run_entry(r)
         {
             results.on_change.Add([this](){ViewChanged();});
-            edit.on_change.Add([this](){results.results = entries->FindEntries(edit.text); ViewChanged();});
+            edit.on_change.Add([this](){UpdateResults(); ViewChanged();});
+            UpdateResults();
+        }
+
+        void UpdateResults()
+        {
+            results.results = entries->FindEntries(edit.text);
         }
 
         Rect GetRect() const override
