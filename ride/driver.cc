@@ -2555,6 +2555,27 @@ namespace ride
                 widget->on_change.Add([this](){this->Refresh();});
             }
 
+            commands->Add
+            (
+                "core.find-command",
+                "Run command",
+                [this]()
+                {
+                    AddDialog
+                    (
+                        std::make_shared<CommandView>
+                        (
+                            driver, settings, font_code, commands,
+                            [](std::shared_ptr<Entry> entry)
+                            {
+                                Command* command = static_cast<Command*>(entry.get());
+                                command->on_execute();
+                            }
+                        )
+                    );
+                    Refresh();
+                }
+            );
             commands->Add("test.hello", "say hello", []() {std::cout<< "hello\n";});
             commands->Add("test.hi", "shout hi", []() {std::cout<< "hi man!\n";});
             commands->Add("test.compliment", "give compliment", []() {std::cout<< "is nice\n";});
@@ -2566,6 +2587,7 @@ namespace ride
 
             keybinds.Add("ctrl+s", "test.hello");
             keybinds.Add("ctrl+space", "test.cat");
+            keybinds.Add("ctrl+tab", "core.find-command");
         }
 
         void AddDialog(std::shared_ptr<Dialog> dialog)
@@ -2752,25 +2774,7 @@ namespace ride
                 else
                 {
                     const auto meta = Meta{ctrl, shift, alt};
-                    if(key == Key::Tab && ctrl)
-                    {
-                        
-                        AddDialog
-                        (
-                            std::make_shared<CommandView>
-                            (
-                                driver, settings, font_code, commands,
-                                [](std::shared_ptr<Entry> entry)
-                                {
-                                    Command* command = static_cast<Command*>(entry.get());
-                                    command->on_execute();
-                                }
-                            )
-                        );
-                        Refresh();
-                        return true;
-                    }
-                    else if(keybinds.Perform(key, meta))
+                    if(keybinds.Perform(key, meta))
                     {
                         // aldready done...
                     }
