@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstring>
+#include <map>
 
 #include <filesystem>
 #include <system_error>
@@ -19,6 +20,13 @@
 
 namespace ride
 {
+    // https://twitter.com/idoccor/status/1314664849276899328
+    // https://gist.github.com/dirocco/0e23867d0ea9ab2a23dd6dcaba065f53
+    template<typename E> constexpr typename std::underlying_type<E>::type cast_to_base(E e) noexcept
+    {
+        return static_cast<typename std::underlying_type<E>::type>(e);
+    }
+
     template<typename T>
     T KeepWithin(T min, T t, T max)
     {
@@ -29,229 +37,295 @@ namespace ride
         else { return t; }
     }
 
+    char ToLowerChar(char b)
+    {
+        if(b >= 'A' && b <= 'Z')
+        {
+            return b - 'A' + 'a';
+        }
+        return b;
+    }
+
+    std::string ToLower(const std::string& str)
+    {
+        std::string result = str;
+        std::transform(result.begin(), result.end(), result.begin(), ToLowerChar);
+        return result;
+    }
+
+    std::string TrimRight(const std::string& string_to_trim, const std::string& trim_characters)
+    {
+        return std::string(string_to_trim).erase(string_to_trim.find_last_not_of(trim_characters) + 1);
+    }
+
+    std::string TrimLeft(const std::string& string_to_trim, const std::string& trim_characters)
+    {
+        return std::string(string_to_trim).erase(0, string_to_trim.find_first_not_of(trim_characters));
+    }
+
+    std::string Trim(const std::string& string_to_trim, const std::string& trim_characters = " \t\r\n")
+    {
+        return TrimRight(TrimLeft(string_to_trim, trim_characters), trim_characters);
+    }
+
+    template <typename Out>
+    void Split(const std::string& s, char delim, Out result)
+    {
+        std::stringstream ss(s);
+        std::string item;
+        while(std::getline(ss, item, delim))
+        {
+            *(result++) = item;
+        }
+    }
+
+    std::vector<std::string> Split(const std::string& s, char delim)
+    {
+        std::vector<std::string> elems;
+        Split(s, delim, std::back_inserter(elems));
+        return elems;
+    }
+
+    struct KeyStringMap
+    {
+        std::map<std::string, Key> string_to_key;
+        std::map<Key, std::string> key_to_string;
+
+        void Bind(Key key, const std::string& name)
+        {
+            const auto id = ToLower(name);
+            assert(key_to_string.find(key) == key_to_string.end());
+            assert(string_to_key.find(id) == string_to_key.end());
+
+            string_to_key[id] = key;
+            key_to_string[key] = name;
+        }
+
+        Key FromString(const std::string& name) const
+        {
+            const auto id = ToLower(name);
+            const auto found_key = string_to_key.find(id);
+            if(found_key == string_to_key.end())
+            {
+                std::cout << "Failed to find key " << name << "\n";
+                return Key::None;
+            }
+            return found_key->second;
+        }
+
+        std::string ToString(Key key) const
+        {
+            const auto found_name = key_to_string.find(key);
+            if(found_name == key_to_string.end())
+            {
+                return "<None>";
+            }
+            return found_name->second;
+        }
+    };
+
+    KeyStringMap BuildKeyStringMap()
+    {
+        KeyStringMap map;
+        map.Bind(Key::None, "None");
+        map.Bind(Key::Backspace, "Backspace");
+        map.Bind(Key::Tab, "Tab");
+        map.Bind(Key::Return, "Return");
+        map.Bind(Key::Escape, "Escape");
+        map.Bind(Key::Space, "Space");
+        map.Bind(Key::Delete, "Delete");
+        map.Bind(Key::Start, "Start");
+        map.Bind(Key::LButton, "LButton");
+        map.Bind(Key::RButton, "RButton");
+        map.Bind(Key::Cancel, "Cancel");
+        map.Bind(Key::MButton, "MButton");
+        map.Bind(Key::Clear, "Clear");
+        map.Bind(Key::Shift, "Shift");
+        map.Bind(Key::Alt, "Alt");
+        map.Bind(Key::Control, "Control");
+        map.Bind(Key::Menu, "Menu");
+        map.Bind(Key::Pause, "Pause");
+        map.Bind(Key::Capital, "Capital");
+        map.Bind(Key::End, "End");
+        map.Bind(Key::Home, "Home");
+        map.Bind(Key::Left, "Left");
+        map.Bind(Key::Up, "Up");
+        map.Bind(Key::Right, "Right");
+        map.Bind(Key::Down, "Down");
+        map.Bind(Key::Select, "Select");
+        map.Bind(Key::Print, "Print");
+        map.Bind(Key::Execute, "Execute");
+        map.Bind(Key::Snapshot, "Snapshot");
+        map.Bind(Key::Insert, "Insert");
+        map.Bind(Key::Help, "Help");
+        map.Bind(Key::Numpad0, "Numpad0");
+        map.Bind(Key::Numpad1, "Numpad1");
+        map.Bind(Key::Numpad2, "Numpad2");
+        map.Bind(Key::Numpad3, "Numpad3");
+        map.Bind(Key::Numpad4, "Numpad4");
+        map.Bind(Key::Numpad5, "Numpad5");
+        map.Bind(Key::Numpad6, "Numpad6");
+        map.Bind(Key::Numpad7, "Numpad7");
+        map.Bind(Key::Numpad8, "Numpad8");
+        map.Bind(Key::Numpad9, "Numpad9");
+        map.Bind(Key::Multiply, "Multiply");
+        map.Bind(Key::Add, "Add");
+        map.Bind(Key::Separator, "Separator");
+        map.Bind(Key::Subtract, "Subtract");
+        map.Bind(Key::Decimal, "Decimal");
+        map.Bind(Key::Divide, "Divide");
+        map.Bind(Key::F1, "F1");
+        map.Bind(Key::F2, "F2");
+        map.Bind(Key::F3, "F3");
+        map.Bind(Key::F4, "F4");
+        map.Bind(Key::F5, "F5");
+        map.Bind(Key::F6, "F6");
+        map.Bind(Key::F7, "F7");
+        map.Bind(Key::F8, "F8");
+        map.Bind(Key::F9, "F9");
+        map.Bind(Key::F10, "F10");
+        map.Bind(Key::F11, "F11");
+        map.Bind(Key::F12, "F12");
+        map.Bind(Key::F13, "F13");
+        map.Bind(Key::F14, "F14");
+        map.Bind(Key::F15, "F15");
+        map.Bind(Key::F16, "F16");
+        map.Bind(Key::F17, "F17");
+        map.Bind(Key::F18, "F18");
+        map.Bind(Key::F19, "F19");
+        map.Bind(Key::F20, "F20");
+        map.Bind(Key::F21, "F21");
+        map.Bind(Key::F22, "F22");
+        map.Bind(Key::F23, "F23");
+        map.Bind(Key::F24, "F24");
+        map.Bind(Key::Numlock, "Numlock");
+        map.Bind(Key::Scroll, "Scroll");
+        map.Bind(Key::PageUp, "PageUp");
+        map.Bind(Key::PageDown, "PageDown");
+        map.Bind(Key::NumpadSpace, "NumpadSpace");
+        map.Bind(Key::NumpadEnter, "NumpadEnter");
+        map.Bind(Key::NumpadF1, "NumpadF1");
+        map.Bind(Key::NumpadF2, "NumpadF2");
+        map.Bind(Key::NumpadF3, "NumpadF3");
+        map.Bind(Key::NumpadF4, "NumpadF4");
+        map.Bind(Key::NumpadHome, "NumpadHome");
+        map.Bind(Key::NumpadLeft, "NumpadLeft");
+        map.Bind(Key::NumpadUp, "NumpadUp");
+        map.Bind(Key::NumpadRight, "NumpadRight");
+        map.Bind(Key::NumpadDown, "NumpadDown");
+        map.Bind(Key::NumpadPageUp, "NumpadPageUp");
+        map.Bind(Key::NumpadPageDown, "NumpadPageDown");
+        map.Bind(Key::NumpadEnd, "NumpadEnd");
+        map.Bind(Key::NumpadBegin, "NumpadBegin");
+        map.Bind(Key::NumpadInsert, "NumpadInsert");
+        map.Bind(Key::NumpadDelete, "NumpadDelete");
+        map.Bind(Key::NupadEqual, "NupadEqual");
+        map.Bind(Key::NumpadMultiply, "NumpadMultiply");
+        map.Bind(Key::NumpadAdd, "NumpadAdd");
+        map.Bind(Key::NumpadSeparator, "NumpadSeparator");
+        map.Bind(Key::NumpadSubtract, "NumpadSubtract");
+        map.Bind(Key::NumpadDecimal, "NumpadDecimal");
+        map.Bind(Key::NumpadDivide, "NumpadDivide");
+        map.Bind(Key::WindowLeft, "WindowLeft");
+        map.Bind(Key::WindowsRight, "WindowsRight");
+        map.Bind(Key::WindowsMenu, "WindowsMenu");
+        map.Bind(Key::Special1, "Special1");
+        map.Bind(Key::Special2, "Special2");
+        map.Bind(Key::Special3, "Special3");
+        map.Bind(Key::Special4, "Special4");
+        map.Bind(Key::Special5, "Special5");
+        map.Bind(Key::Special6, "Special6");
+        map.Bind(Key::Special7, "Special7");
+        map.Bind(Key::Special8, "Special8");
+        map.Bind(Key::Special9, "Special9");
+        map.Bind(Key::Special10, "Special10");
+        map.Bind(Key::Special11, "Special11");
+        map.Bind(Key::Special12, "Special12");
+        map.Bind(Key::Special13, "Special13");
+        map.Bind(Key::Special14, "Special14");
+        map.Bind(Key::Special15, "Special15");
+        map.Bind(Key::Special16, "Special16");
+        map.Bind(Key::Special17, "Special17");
+        map.Bind(Key::Special18, "Special18");
+        map.Bind(Key::Special19, "Special19");
+        map.Bind(Key::Special20, "Special20");
+        map.Bind(Key::ExclamationMark, "!");
+        map.Bind(Key::DoubleQuotes, "\"");
+        map.Bind(Key::Number, "#");
+        map.Bind(Key::Dollar, "$");
+        map.Bind(Key::Percent, "%");
+        map.Bind(Key::Ampersand, "&");
+        map.Bind(Key::SingleQuote, "'");
+        map.Bind(Key::OpenParenthesis, "(");
+        map.Bind(Key::CloseParenthesis, ")");
+        map.Bind(Key::Asterisk, "*");
+        map.Bind(Key::Plus, "+");
+        map.Bind(Key::Comma, ",");
+        map.Bind(Key::Hyphen, "-");
+        map.Bind(Key::Dot, ".");
+        map.Bind(Key::Slash, "/");
+        map.Bind(Key::Zero, "0");
+        map.Bind(Key::One, "1");
+        map.Bind(Key::Two, "2");
+        map.Bind(Key::Three, "3");
+        map.Bind(Key::Four, "4");
+        map.Bind(Key::Five, "5");
+        map.Bind(Key::Six, "6");
+        map.Bind(Key::Seven, "7");
+        map.Bind(Key::Eight, "8");
+        map.Bind(Key::Nine, "9");
+        map.Bind(Key::Colon, ":");
+        map.Bind(Key::Semicolon, ";");
+        map.Bind(Key::LessThan, "<");
+        map.Bind(Key::Equals, "=");
+        map.Bind(Key::GreaterThan, ">");
+        map.Bind(Key::QuestionMark, "?");
+        map.Bind(Key::At, "@");
+        map.Bind(Key::A, "A");
+        map.Bind(Key::B, "B");
+        map.Bind(Key::C, "C");
+        map.Bind(Key::D, "D");
+        map.Bind(Key::E, "E");
+        map.Bind(Key::F, "F");
+        map.Bind(Key::G, "G");
+        map.Bind(Key::H, "H");
+        map.Bind(Key::I, "I");
+        map.Bind(Key::J, "J");
+        map.Bind(Key::K, "K");
+        map.Bind(Key::L, "L");
+        map.Bind(Key::M, "M");
+        map.Bind(Key::N, "N");
+        map.Bind(Key::O, "O");
+        map.Bind(Key::P, "P");
+        map.Bind(Key::Q, "Q");
+        map.Bind(Key::R, "R");
+        map.Bind(Key::S, "S");
+        map.Bind(Key::T, "T");
+        map.Bind(Key::U, "U");
+        map.Bind(Key::V, "V");
+        map.Bind(Key::W, "W");
+        map.Bind(Key::X, "X");
+        map.Bind(Key::Y, "Y");
+        map.Bind(Key::Z, "Z");
+        map.Bind(Key::OpeningBracket, "[");
+        map.Bind(Key::Backslash, "\\");
+        map.Bind(Key::ClosingBracket, "]");
+        map.Bind(Key::Caret, "^");
+        map.Bind(Key::Underscore, "_");
+        map.Bind(Key::GraveAccent, "`");
+        map.Bind(Key::OpeningBrace, "{");
+        map.Bind(Key::VerticalVar, "|");
+        map.Bind(Key::ClosingBrace, "}");
+        map.Bind(Key::Tilde, "~");
+
+        return map;
+    }
+
+    const KeyStringMap key_string_map = BuildKeyStringMap();
 
     std::string ToString(const Key key)
     {
-        switch(key)
-        {
-            case Key::None: return "None";
-            case Key::Backspace: return "Backspace";
-            case Key::Tab: return "Tab";
-            case Key::Return: return "Return";
-            case Key::Escape: return "Escape";
-            case Key::Space: return "Space";
-            case Key::Delete: return "Delete";
-            case Key::Start: return "Start";
-            case Key::LButton: return "LButton";
-            case Key::RButton: return "RButton";
-            case Key::Cancel: return "Cancel";
-            case Key::MButton: return "MButton";
-            case Key::Clear: return "Clear";
-            case Key::Shift: return "Shift";
-            case Key::Alt: return "Alt";
-            case Key::Control: return "Control";
-            case Key::Menu: return "Menu";
-            case Key::Pause: return "Pause";
-            case Key::Capital: return "Capital";
-            case Key::End: return "End";
-            case Key::Home: return "Home";
-            case Key::Left: return "Left";
-            case Key::Up: return "Up";
-            case Key::Right: return "Right";
-            case Key::Down: return "Down";
-            case Key::Select: return "Select";
-            case Key::Print: return "Print";
-            case Key::Execute: return "Execute";
-            case Key::Snapshot: return "Snapshot";
-            case Key::Insert: return "Insert";
-            case Key::Help: return "Help";
-            case Key::Numpad0: return "Numpad0";
-            case Key::Numpad1: return "Numpad1";
-            case Key::Numpad2: return "Numpad2";
-            case Key::Numpad3: return "Numpad3";
-            case Key::Numpad4: return "Numpad4";
-            case Key::Numpad5: return "Numpad5";
-            case Key::Numpad6: return "Numpad6";
-            case Key::Numpad7: return "Numpad7";
-            case Key::Numpad8: return "Numpad8";
-            case Key::Numpad9: return "Numpad9";
-            case Key::Multiply: return "Multiply";
-            case Key::Add: return "Add";
-            case Key::Separator: return "Separator";
-            case Key::Subtract: return "Subtract";
-            case Key::Decimal: return "Decimal";
-            case Key::Divide: return "Divide";
-            case Key::F1: return "F1";
-            case Key::F2: return "F2";
-            case Key::F3: return "F3";
-            case Key::F4: return "F4";
-            case Key::F5: return "F5";
-            case Key::F6: return "F6";
-            case Key::F7: return "F7";
-            case Key::F8: return "F8";
-            case Key::F9: return "F9";
-            case Key::F10: return "F10";
-            case Key::F11: return "F11";
-            case Key::F12: return "F12";
-            case Key::F13: return "F13";
-            case Key::F14: return "F14";
-            case Key::F15: return "F15";
-            case Key::F16: return "F16";
-            case Key::F17: return "F17";
-            case Key::F18: return "F18";
-            case Key::F19: return "F19";
-            case Key::F20: return "F20";
-            case Key::F21: return "F21";
-            case Key::F22: return "F22";
-            case Key::F23: return "F23";
-            case Key::F24: return "F24";
-            case Key::Numlock: return "Numlock";
-            case Key::Scroll: return "Scroll";
-            case Key::PageUp: return "PageUp";
-            case Key::PageDown: return "PageDown";
-            case Key::NumpadSpace: return "NumpadSpace";
-            case Key::NumpadEnter: return "NumpadEnter";
-            case Key::NumpadF1: return "NumpadF1";
-            case Key::NumpadF2: return "NumpadF2";
-            case Key::NumpadF3: return "NumpadF3";
-            case Key::NumpadF4: return "NumpadF4";
-            case Key::NumpadHome: return "NumpadHome";
-            case Key::NumpadLeft: return "NumpadLeft";
-            case Key::NumpadUp: return "NumpadUp";
-            case Key::NumpadRight: return "NumpadRight";
-            case Key::NumpadDown: return "NumpadDown";
-            case Key::NumpadPageUp: return "NumpadPageUp";
-            case Key::NumpadPageDown: return "NumpadPageDown";
-            case Key::NumpadEnd: return "NumpadEnd";
-            case Key::NumpadBegin: return "NumpadBegin";
-            case Key::NumpadInsert: return "NumpadInsert";
-            case Key::NumpadDelete: return "NumpadDelete";
-            case Key::NupadEqual: return "NupadEqual";
-            case Key::NumpadMultiply: return "NumpadMultiply";
-            case Key::NumpadAdd: return "NumpadAdd";
-            case Key::NumpadSeparator: return "NumpadSeparator";
-            case Key::NumpadSubtract: return "NumpadSubtract";
-            case Key::NumpadDecimal: return "NumpadDecimal";
-            case Key::NumpadDivide: return "NumpadDivide";
-            case Key::WindowLeft: return "WindowLeft";
-            case Key::WindowsRight: return "WindowsRight";
-            case Key::WindowsMenu: return "WindowsMenu";
-            case Key::Special1: return "Special1";
-            case Key::Special2: return "Special2";
-            case Key::Special3: return "Special3";
-            case Key::Special4: return "Special4";
-            case Key::Special5: return "Special5";
-            case Key::Special6: return "Special6";
-            case Key::Special7: return "Special7";
-            case Key::Special8: return "Special8";
-            case Key::Special9: return "Special9";
-            case Key::Special10: return "Special10";
-            case Key::Special11: return "Special11";
-            case Key::Special12: return "Special12";
-            case Key::Special13: return "Special13";
-            case Key::Special14: return "Special14";
-            case Key::Special15: return "Special15";
-            case Key::Special16: return "Special16";
-            case Key::Special17: return "Special17";
-            case Key::Special18: return "Special18";
-            case Key::Special19: return "Special19";
-            case Key::Special20: return "Special20";
-
-            case Key::ExclamationMark: return "!";
-            case Key::DoubleQuotes: return "\"";
-            case Key::Number: return "#";
-            case Key::Dollar: return "$";
-            case Key::Percent: return "%";
-            case Key::Ampersand: return "&";
-            case Key::SingleQuote: return "'";
-            case Key::OpenParenthesis: return "(";
-            case Key::CloseParenthesis: return ")";
-            case Key::Asterisk: return "*";
-            case Key::Plus: return "+";
-            case Key::Comma: return ",";
-            case Key::Hyphen: return "-";
-            case Key::Dot: return ".";
-            case Key::Slash: return "/";
-            case Key::Zero: return "0";
-            case Key::One: return "1";
-            case Key::Two: return "2";
-            case Key::Three: return "3";
-            case Key::Four: return "4";
-            case Key::Five: return "5";
-            case Key::Six: return "6";
-            case Key::Seven: return "7";
-            case Key::Eight: return "8";
-            case Key::Nine: return "9";
-            case Key::Colon: return ":";
-            case Key::Semicolon: return ";";
-            case Key::LessThan: return "<";
-            case Key::Equals: return "=";
-            case Key::GreaterThan: return ">";
-            case Key::QuestionMark: return "?";
-            case Key::At: return "@";
-            case Key::UppercaseA: return "A";
-            case Key::UppercaseB: return "B";
-            case Key::UppercaseC: return "C";
-            case Key::UppercaseD: return "D";
-            case Key::UppercaseE: return "E";
-            case Key::UppercaseF: return "F";
-            case Key::UppercaseG: return "G";
-            case Key::UppercaseH: return "H";
-            case Key::UppercaseI: return "I";
-            case Key::UppercaseJ: return "J";
-            case Key::UppercaseK: return "K";
-            case Key::UppercaseL: return "L";
-            case Key::UppercaseM: return "M";
-            case Key::UppercaseN: return "N";
-            case Key::UppercaseO: return "O";
-            case Key::UppercaseP: return "P";
-            case Key::UppercaseQ: return "Q";
-            case Key::UppercaseR: return "R";
-            case Key::UppercaseS: return "S";
-            case Key::UppercaseT: return "T";
-            case Key::UppercaseU: return "U";
-            case Key::UppercaseV: return "V";
-            case Key::UppercaseW: return "W";
-            case Key::UppercaseX: return "X";
-            case Key::UppercaseY: return "Y";
-            case Key::UppercaseZ: return "Z";
-            case Key::OpeningBracket: return "[";
-            case Key::Backslash: return "\\";
-            case Key::ClosingBracket: return "]";
-            case Key::Caret: return "^";
-            case Key::Underscore: return "_";
-            case Key::GraveAccent: return "`";
-            case Key::LowercaseA: return "a";
-            case Key::LowercaseB: return "b";
-            case Key::LowercaseC: return "c";
-            case Key::LowercaseD: return "d";
-            case Key::LowercaseE: return "e";
-            case Key::LowercaseF: return "f";
-            case Key::LowercaseG: return "g";
-            case Key::LowercaseH: return "h";
-            case Key::LowercaseI: return "i";
-            case Key::LowercaseJ: return "j";
-            case Key::LowercaseK: return "k";
-            case Key::LowercaseL: return "l";
-            case Key::LowercaseM: return "m";
-            case Key::LowercaseN: return "n";
-            case Key::LowercaseO: return "o";
-            case Key::LowercaseP: return "p";
-            case Key::LowercaseQ: return "q";
-            case Key::LowercaseR: return "r";
-            case Key::LowercaseS: return "s";
-            case Key::LowercaseT: return "t";
-            case Key::LowercaseU: return "u";
-            case Key::LowercaseV: return "v";
-            case Key::LowercaseW: return "w";
-            case Key::LowercaseX: return "x";
-            case Key::LowercaseY: return "y";
-            case Key::LowercaseZ: return "z";
-            case Key::OpeningBrace: return "{";
-            case Key::VerticalVar: return "|";
-            case Key::ClosingBrace: return "}";
-            case Key::Tilde: return "~";
-        }
+        return key_string_map.ToString(key);
     }
 
     struct Theme
@@ -1115,17 +1189,85 @@ namespace ride
     struct Command : public Entry
     {
         using OnExecute = std::function<void ()>;
+        std::string id;
         std::string name;
         OnExecute on_execute;
 
-        Command(std::string n, OnExecute oe)
-            : name(std::move(n))
+        Command(std::string i, std::string n, OnExecute oe)
+            : id(std::move(i))
+            , name(std::move(n))
             , on_execute(std::move(oe))
         {
         }
 
         std::string GetName() const override { return name; }
     };
+
+
+    struct Keybind
+    {
+        Key key;
+        Meta meta;
+
+        Keybind(Key k, const Meta& m)
+            : key(k)
+            , meta(m)
+        {
+        }
+    };
+
+    bool operator<(const Keybind& lhs, const Keybind& rhs)
+    {
+        if(lhs.meta.alt != rhs.meta.alt) { return lhs.meta.alt; }
+        if(lhs.meta.shift != rhs.meta.shift) { return lhs.meta.shift; }
+        if(lhs.meta.ctrl != rhs.meta.ctrl) { return lhs.meta.ctrl; }
+        return cast_to_base(lhs.key) < cast_to_base(rhs.key);
+    }
+
+
+    void SetStringMeta(Meta* meta, const std::string& name_big)
+    {
+        const auto name = ToLower(name_big);
+
+        if(name == "ctrl" || name == "control")
+        {
+            meta->ctrl = true;
+        }
+        else if(name == "shift")
+        {
+            meta->shift = true;
+        }
+        else if(name == "alt")
+        {
+            meta->alt = true;
+        }
+    }
+
+
+    Keybind ParseKeybind(const std::string& data)
+    {
+        const auto split = Split(data, '+');
+
+        auto key = Key::None;
+        auto meta = Meta{false, false, false};
+
+        const auto size = C(split.size());
+        for(int index=0; index<size; index+=1)
+        {
+            const auto name = Trim(split[Cs(index)]);
+            const auto is_last = index == size-1;
+            if(is_last)
+            {
+                key = key_string_map.FromString(name);
+            }
+            else
+            {
+                SetStringMeta(&meta, name);
+            }
+        }
+
+        return Keybind{key, meta};
+    }
 
 
     struct CommandWithScore
@@ -1185,15 +1327,35 @@ namespace ride
     struct CommandList : public EntryList
     {
         std::vector<std::shared_ptr<Command>> commands;
+        std::map<std::string, std::shared_ptr<Command>> id_to_command;
 
         void Add(std::shared_ptr<Command> command)
         {
+            const auto id = ToLower(command->id);
+            assert(id_to_command.find(id) == id_to_command.end());
+
             commands.emplace_back(command);
+            id_to_command[id] = command;
         }
 
-        void Add(std::string name, Command::OnExecute on_execute)
+        std::shared_ptr<Command> FindCommandById(const std::string& command_id)
         {
-            Add(std::make_shared<Command>(std::move(name), std::move(on_execute)));
+            const auto id = ToLower(command_id);
+            auto found_command = id_to_command.find(id);
+            if(found_command == id_to_command.end())
+            {
+                assert(false && "failed to find command");
+                return nullptr;
+            }
+            else
+            {
+                return found_command->second;
+            }
+        }
+
+        void Add(std::string id, std::string name, Command::OnExecute on_execute)
+        {
+            Add(std::make_shared<Command>(std::move(id), std::move(name), std::move(on_execute)));
         }
 
         std::vector<std::shared_ptr<Command>> FuzzyFind(const std::string& text)
@@ -1236,6 +1398,40 @@ namespace ride
                 r.emplace_back(f);
             }
             return r;
+        }
+    };
+
+
+
+    struct KeybindList
+    {
+        // todo(Gustav): support chords
+        // todo(Gustav): transform to a vector of commands
+        std::map<Keybind, std::shared_ptr<Command>> keybinds;
+
+        std::shared_ptr<CommandList> commands;
+
+        explicit KeybindList(std::shared_ptr<CommandList> c) : commands(c) {}
+
+        void Add(const Keybind& bind, std::shared_ptr<Command> command)
+        {
+            assert(keybinds.find(bind) == keybinds.end());
+            keybinds[bind] = command;
+        }
+
+        void Add(const std::string& bind, const std::string& id)
+        {
+            Add(ParseKeybind(bind), commands->FindCommandById(id));
+        }
+
+        bool Perform(Key key, const Meta& meta)
+        {
+            const auto bind = Keybind{key, meta};
+            auto found = keybinds.find(bind);
+            if(found == keybinds.end()) { return false; }
+
+            found->second->on_execute();
+            return true;
         }
     };
 
@@ -1729,7 +1925,6 @@ namespace ride
             }
             else
             {
-
                 OnClickedOutside();
                 ViewChanged();
             }
@@ -2325,6 +2520,8 @@ namespace ride
         vec2 window_size = vec2{0,0};
         std::shared_ptr<CommandList> commands = std::make_shared<CommandList>();
 
+        KeybindList keybinds;
+
         RideApp(std::shared_ptr<Driver> d, std::shared_ptr<FileSystem> fs, const std::string& root)
             : driver(d)
             , font_code(d->CreateCodeFont(8))
@@ -2343,6 +2540,7 @@ namespace ride
             , fs_widget(font_code, settings, fs, root)
             , tabs(driver, settings, font_code)
             , active_widget(&edit_widget)
+            , keybinds(commands)
         {
             for(const auto& f: fs_widget.entries)
             {
@@ -2357,14 +2555,17 @@ namespace ride
                 widget->on_change.Add([this](){this->Refresh();});
             }
 
-            commands->Add("say hello", []() {std::cout<< "hello\n";});
-            commands->Add("shout hi", []() {std::cout<< "hi man!\n";});
-            commands->Add("give compliment", []() {std::cout<< "is nice\n";});
-            commands->Add("how are you", []() {std::cout<< "am good\n";});
-            commands->Add("favorite animal", []() {std::cout<< "is cat\n";});
-            commands->Add("other animal", []() {std::cout<< "is dog\n";});
-            commands->Add("whisper secret", []() {std::cout<< "...secret\n";});
-            commands->Add("cat man", []() {std::cout<< "not a man cat\n";});
+            commands->Add("test.hello", "say hello", []() {std::cout<< "hello\n";});
+            commands->Add("test.hi", "shout hi", []() {std::cout<< "hi man!\n";});
+            commands->Add("test.compliment", "give compliment", []() {std::cout<< "is nice\n";});
+            commands->Add("test.how", "how are you", []() {std::cout<< "am good\n";});
+            commands->Add("test.favorite", "favorite animal", []() {std::cout<< "is cat\n";});
+            commands->Add("test.other", "other animal", []() {std::cout<< "is dog\n";});
+            commands->Add("test.secret", "whisper secret", []() {std::cout<< "...secret\n";});
+            commands->Add("test.cat", "cat man", []() {std::cout<< "not a man cat\n";});
+
+            keybinds.Add("ctrl+s", "test.hello");
+            keybinds.Add("ctrl+space", "test.cat");
         }
 
         void AddDialog(std::shared_ptr<Dialog> dialog)
@@ -2550,6 +2751,7 @@ namespace ride
                 }
                 else
                 {
+                    const auto meta = Meta{ctrl, shift, alt};
                     if(key == Key::Tab && ctrl)
                     {
                         
@@ -2568,11 +2770,15 @@ namespace ride
                         Refresh();
                         return true;
                     }
+                    else if(keybinds.Perform(key, meta))
+                    {
+                        // aldready done...
+                    }
                     else
                     {
                         if(GetActiveOrCmd() != nullptr)
                         {
-                            GetActiveOrCmd()->OnKey(key, {ctrl, shift, alt});
+                            GetActiveOrCmd()->OnKey(key, meta);
                         }
                     }
                 }
