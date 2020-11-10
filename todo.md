@@ -1,5 +1,4 @@
 # ride todo/roadmap
-* keymap to cmdlet
 * file explorer/tree view and tab control handle documents
 
 * remove and integrate existing sources
