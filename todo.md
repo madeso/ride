@@ -1,5 +1,4 @@
 # ride todo/roadmap
-* cmdlet
 * keymap to cmdlet
 * file explorer/tree view and tab control handle documents
 
