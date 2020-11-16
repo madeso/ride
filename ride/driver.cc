@@ -912,6 +912,11 @@ namespace ride
             if(pixel_scroll.y < 0) { pixel_scroll.y = 0; }
         }
 
+        Rect GetRect() const override
+        {
+            return window_rect;
+        }
+
         void ScrollDownPixels(int y)
         {
             pixel_scroll.y += y;
@@ -2179,15 +2184,25 @@ namespace ride
         else { return std::make_shared<FileNode>(f); }
     }
 
-    struct FileSystemView : public View
+    struct FileSystemView : public ScrollableView
     {
         std::shared_ptr<Font> font;
-        Rect rect;
         std::shared_ptr<Settings> settings;
         std::shared_ptr<FileSystem> filesystem;
         std::string root;
 
         NodeList entries;
+
+
+
+        vec2 GetDocumentSize() override
+        {
+            return
+            {
+                -1,
+                -1
+            };
+        }
 
         FileSystemView
         (
@@ -2195,7 +2210,7 @@ namespace ride
             std::shared_ptr<Settings> s,
             std::shared_ptr<FileSystem> fs,
             const std::string& rt
-        ) : font(f), rect(EmptyRect), settings(s), filesystem(fs), root(rt)
+        ) : ScrollableView(s), font(f), settings(s), filesystem(fs), root(rt)
         {
             auto folders_and_files = filesystem->List(root, *settings);
             if(folders_and_files)
@@ -2204,22 +2219,39 @@ namespace ride
             }
         }
 
-        Rect GetRect() const override
+        int GetLineNumberTop()
         {
-            return rect;
+            int top = GetClientTop();
+            const auto line_top = static_cast<int>(std::floor(static_cast<float>(top) / static_cast<float>(font->line_height)));
+            return line_top;
+        }
+        
+        int GetLineNumberBottom()
+        {
+            int bottom = GetClientBottom();
+            const auto line_bottom = static_cast<int>(std::ceil(static_cast<float>(bottom) / static_cast<float>(font->line_height)));
+            return line_bottom;
+        }
+
+        int LineNumberToY(int line) const
+        {
+            return line * font->line_height;
         }
         
         void Draw(Painter* painter) override
         {
-            painter->Rect(rect, settings->theme.filesys_background_color, std::nullopt);
-            const auto scope = RectScope{painter, rect};
-
-            int index = 0;
-            for(auto p = rect.position; p.y < rect.size.y && index < C(entries.entries.size()); p.y += font->line_height)
+            OnDraw(painter, [this, painter](const Rect& r)
             {
-                const auto e = entries.entries[Cs(index)]; index +=1;
-                painter->Text(font, e->name, p, e->GetColor(settings->theme));
-            }
+                painter->Rect(r, settings->theme.filesys_background_color, std::nullopt);
+
+                for(auto index = GetLineNumberTop(); index <= GetLineNumberBottom(); index += 1)
+                {
+                    if(index >= C(entries.entries.size())) { continue; }
+                    const auto e = entries.entries[Cs(index)];
+                    const auto p = ClientToGlobal({0, LineNumberToY(index)});
+                    painter->Text(font, e->name, p, e->GetColor(settings->theme));
+                }
+            });
         }
 
         void OnKey(Key, const Meta&) override
@@ -2230,16 +2262,19 @@ namespace ride
         {
         }
 
-        void OnScroll(float, int) override
+        void OnScroll(float yscroll, int lines) override
         {
+            OnScrollEvent(yscroll, lines, font->line_height);
         }
 
-        void MouseClick(const MouseButton&, const MouseState, const vec2&) override
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_mouse) override
         {
+            if(OnMouseClick(button, state, local_mouse, settings->lines_to_scroll_for_scrollbar_button * font->line_height)) { return; }
         }
 
-        void MouseMoved(const vec2&) override
+        void MouseMoved(const vec2& local_mouse) override
         {
+            if(OnMouseMoved(local_mouse)) { return; }
         }
     };
 
@@ -2481,11 +2516,6 @@ namespace ride
             };
         }
 
-        Rect GetRect() const override
-        {
-            return window_rect;
-        }
-
         void OnKey(Key key, const Meta& meta) override
         {
             const auto ctrl = meta.ctrl;
@@ -2654,7 +2684,7 @@ namespace ride
             const auto status_height = statusbar.GetHeight();
             const auto padding = settings->window_padding;
 
-            fs_widget.rect =
+            fs_widget.window_rect =
             {
                 {padding, padding},
                 {sidebar_width, window_size.y - (status_height + padding + padding)}
