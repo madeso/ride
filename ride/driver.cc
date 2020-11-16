@@ -2119,6 +2119,65 @@ namespace ride
         }
     };
 
+    struct Node
+    {
+        std::string name;
+        std::string path;
+
+        Node(const std::string& n, const std::string p) : name(n), path(p) {}
+        virtual ~Node() {}
+
+        bool IsHidden() const
+        {
+            if(name.empty()) { return false; }
+            else { return name[0] == '.'; }
+        }
+
+        virtual Rgb GetColor(const Theme&) const = 0;
+    };
+
+    std::shared_ptr<Node> Create(const FileEntry& f);
+
+    struct NodeList
+    {
+        std::vector<std::shared_ptr<Node>> entries;
+
+        NodeList() { }
+
+        explicit NodeList(const std::vector<FileEntry>& files)
+        {
+            for(const auto& e: files)
+            {
+                entries.emplace_back(Create(e));
+            }
+        }
+    };
+
+    struct FileNode : public Node
+    {
+        explicit FileNode(const FileEntry& f) : Node(f.name, f.path) {}
+
+        Rgb GetColor(const Theme& theme) const
+        {
+            return IsHidden() ? theme.filesys_hidden_color : theme.filesys_file_color;
+        }
+    };
+
+    struct DirectoryNode : public Node
+    {
+        explicit DirectoryNode(const FileEntry& f) : Node(Str{} << f.name << "/", f.path) {}
+
+        Rgb GetColor(const Theme& theme) const
+        {
+            return IsHidden() ? theme.filesys_hidden_color : theme.filesys_folder_color;
+        }
+    };
+
+    std::shared_ptr<Node> Create(const FileEntry& f)
+    {
+        if(f.is_directory) { return std::make_shared<DirectoryNode>(f); }
+        else { return std::make_shared<FileNode>(f); }
+    }
 
     struct FileSystemView : public View
     {
@@ -2128,7 +2187,7 @@ namespace ride
         std::shared_ptr<FileSystem> filesystem;
         std::string root;
 
-        std::vector<FileEntry> entries;
+        NodeList entries;
 
         FileSystemView
         (
@@ -2141,7 +2200,7 @@ namespace ride
             auto folders_and_files = filesystem->List(root, *settings);
             if(folders_and_files)
             {
-                entries = *folders_and_files;
+                entries = NodeList{*folders_and_files};
             }
         }
 
@@ -2152,20 +2211,14 @@ namespace ride
         
         void Draw(Painter* painter) override
         {
-            const auto background_color = settings->theme.filesys_background_color;
-            const auto folder_color = settings->theme.filesys_folder_color;
-            const auto file_color = settings->theme.filesys_file_color;
-            const auto hidden_color = settings->theme.filesys_hidden_color;
-
-            painter->Rect(rect, background_color, std::nullopt);
+            painter->Rect(rect, settings->theme.filesys_background_color, std::nullopt);
             const auto scope = RectScope{painter, rect};
 
             int index = 0;
-            for(auto p = rect.position; p.y < rect.size.y && index < C(entries.size()); p.y += font->line_height)
+            for(auto p = rect.position; p.y < rect.size.y && index < C(entries.entries.size()); p.y += font->line_height)
             {
-                const auto e = entries[Cs(index)]; index +=1;
-                const std::string text = e.is_directory ? (Str{} << e.name << "/").ToString() : e.name;
-                painter->Text(font, text, p, e.name[0] == '.' ? hidden_color : (e.is_directory ? folder_color : file_color));
+                const auto e = entries.entries[Cs(index)]; index +=1;
+                painter->Text(font, e->name, p, e->GetColor(settings->theme));
             }
         }
 
@@ -2542,13 +2595,9 @@ namespace ride
             , active_widget(&edit_widget)
             , keybinds(commands)
         {
-            for(const auto& f: fs_widget.entries)
-            {
-                if(f.is_directory == false)
-                {
-                    tabs.AddFile(f.name);
-                }
-            }
+            tabs.AddFile("cat.png");
+            tabs.AddFile("dog.md");
+            tabs.AddFile("fish.txt");
 
             for(auto* widget : GetAllViews())
             {
