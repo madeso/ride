@@ -422,6 +422,9 @@ namespace ride
         int results_padding_top = 6;
         int results_padding_middle = 6;
         int results_internal_padding = 3;
+
+        int filesys_indent = 2;
+        int filesys_left_padding = 6;
     };
 
 
@@ -2129,6 +2132,8 @@ namespace ride
         std::string name;
         std::string path;
 
+        int depth;
+
         Node(const std::string& n, const std::string p) : name(n), path(p) {}
         virtual ~Node() {}
 
@@ -2138,43 +2143,89 @@ namespace ride
             else { return name[0] == '.'; }
         }
 
+        virtual bool OnClick(bool is_doubleclick, std::shared_ptr<FileSystem> fs, const Settings& settings) = 0;
+        virtual void Add(std::vector<Node*>* ret, int depth) = 0;
         virtual Rgb GetColor(const Theme&) const = 0;
     };
 
-    std::shared_ptr<Node> Create(const FileEntry& f);
-
-    struct NodeList
-    {
-        std::vector<std::shared_ptr<Node>> entries;
-
-        NodeList() { }
-
-        explicit NodeList(const std::vector<FileEntry>& files)
-        {
-            for(const auto& e: files)
-            {
-                entries.emplace_back(Create(e));
-            }
-        }
-    };
-
+    
     struct FileNode : public Node
     {
         explicit FileNode(const FileEntry& f) : Node(f.name, f.path) {}
 
-        Rgb GetColor(const Theme& theme) const
+        Rgb GetColor(const Theme& theme) const override
         {
             return IsHidden() ? theme.filesys_hidden_color : theme.filesys_file_color;
         }
+
+        bool OnClick(bool is_doubleclick, std::shared_ptr<FileSystem>, const Settings&) override
+        {
+            if(is_doubleclick)
+            {
+                std::cout << "Open or focus " << path << "\n";
+            }
+            return false;
+        }
+        void Add(std::vector<Node*>* ret, int d) override
+        {
+            ret->emplace_back(this);
+            depth = d;
+        }
     };
+
+    std::vector<std::shared_ptr<Node>> Create(const std::vector<FileEntry>& files);
 
     struct DirectoryNode : public Node
     {
-        explicit DirectoryNode(const FileEntry& f) : Node(Str{} << f.name << "/", f.path) {}
+        std::string base_name;
+        bool is_open = false;
 
-        Rgb GetColor(const Theme& theme) const
+        std::vector<std::shared_ptr<Node>> children;
+
+        explicit DirectoryNode(const FileEntry& f) : Node(f.name, f.path), base_name(Str{} << f.name << "/")
+        {
+            UpdateName();
+        }
+
+        void UpdateName()
+        {
+            if(is_open) { name = Str{} << "- " << base_name; }
+            else        { name = Str{} << "+ " << base_name; }
+        }
+
+        Rgb GetColor(const Theme& theme) const override
         {
             return IsHidden() ? theme.filesys_hidden_color : theme.filesys_folder_color;
+        }
+
+        bool OnClick(bool, std::shared_ptr<FileSystem> filesystem, const Settings& settings) override
+        {
+            if(is_open)
+            {
+                is_open = false;
+                children.clear();
+            }
+            else
+            {
+                is_open = true;
+                auto folders_and_files = filesystem->List(path, settings);
+                if(folders_and_files)
+                {
+                    children = Create(*folders_and_files);
+                }
+            }
+
+            UpdateName();
+            return true;
+        }
+        void Add(std::vector<Node*>* ret, int d) override
+        {
+            ret->emplace_back(this);
+            for(auto c: children)
+            {
+                c->Add(ret, d+1);
+            }
+            depth = d;
         }
     };
 
@@ -2184,6 +2235,18 @@ namespace ride
         else { return std::make_shared<FileNode>(f); }
     }
 
+    std::vector<std::shared_ptr<Node>> Create(const std::vector<FileEntry>& files)
+    {
+        std::vector<std::shared_ptr<Node>> entries;
+
+        for(const auto& e: files)
+        {
+            entries.emplace_back(Create(e));
+        }
+
+        return entries;
+    }
+
     struct FileSystemView : public ScrollableView
     {
         std::shared_ptr<Font> font;
@@ -2191,17 +2254,32 @@ namespace ride
         std::shared_ptr<FileSystem> filesystem;
         std::string root;
 
-        NodeList entries;
-
-
+        std::vector<std::shared_ptr<Node>> roots;
+        std::vector<Node*> entries; // stored in roots
 
         vec2 GetDocumentSize() override
         {
             return
             {
                 -1,
-                -1
+                C(entries.size()) * font->line_height
             };
+        }
+
+        std::vector<Node*> CreateEntries()
+        {
+            std::vector<Node*> ret;
+            for(auto r: roots)
+            {
+                r->Add(&ret, 0);
+            }
+            return ret;
+        }
+
+        void Populate()
+        {
+            entries = CreateEntries();
+            ViewChanged();
         }
 
         FileSystemView
@@ -2215,8 +2293,9 @@ namespace ride
             auto folders_and_files = filesystem->List(root, *settings);
             if(folders_and_files)
             {
-                entries = NodeList{*folders_and_files};
+                roots = Create(*folders_and_files);
             }
+            Populate();
         }
 
         int GetLineNumberTop()
@@ -2246,9 +2325,9 @@ namespace ride
 
                 for(auto index = GetLineNumberTop(); index <= GetLineNumberBottom(); index += 1)
                 {
-                    if(index >= C(entries.entries.size())) { continue; }
-                    const auto e = entries.entries[Cs(index)];
-                    const auto p = ClientToGlobal({0, LineNumberToY(index)});
+                    if(index >= C(entries.size())) { continue; }
+                    const auto e = entries[Cs(index)];
+                    const auto p = ClientToGlobal({settings->filesys_left_padding + e->depth * settings->filesys_indent * font->char_width, LineNumberToY(index)});
                     painter->Text(font, e->name, p, e->GetColor(settings->theme));
                 }
             });
@@ -2267,9 +2346,24 @@ namespace ride
             OnScrollEvent(yscroll, lines, font->line_height);
         }
 
-        void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_mouse) override
+        void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_position) override
         {
-            if(OnMouseClick(button, state, local_mouse, settings->lines_to_scroll_for_scrollbar_button * font->line_height)) { return; }
+            if(OnMouseClick(button, state, local_position, settings->lines_to_scroll_for_scrollbar_button * font->line_height) == true ) { return; }
+            if(button != MouseButton::Left) { return; }
+            if(state == MouseState::Up) { return; }
+
+            const auto global_position = local_position + GetRect().position;
+            const auto client_position = GlobalToClient(global_position);
+            const auto index = static_cast<int>(std::floor(static_cast<float>(client_position.y) / static_cast<float>(font->line_height)));
+
+            if(index >= C(entries.size())) { return; }
+            auto entry = entries[Cs(index)];
+
+            const auto is_doubleclick = state != MouseState::Down;
+            if(entry->OnClick(is_doubleclick, filesystem, *settings))
+            {
+                Populate();
+            }
         }
 
         void MouseMoved(const vec2& local_mouse) override
