@@ -37,5 +37,6 @@ SET(RIDE_BUILD_REPO   "unknown-repo"   CACHE STRING "The repo")
 # message(STATUS "repo: ${RIDE_BUILD_REPO}")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(external)
 add_subdirectory(ride)
 add_subdirectory(runner)
