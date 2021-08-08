@@ -11,3 +11,12 @@ target_link_libraries(sdl2
         ${SDL2_LIBRARY}
         ${CMAKE_DL_LIBS}
 )
+
+add_library(stb_truetype STATIC
+    stb/stb_truetype.c
+    stb/stb_truetype.h
+)
+target_include_directories(stb_truetype
+    PUBLIC
+        stb
+)

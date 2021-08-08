@@ -1,46 +1,106 @@
-#include <iostream>
-#include <array>
+#include <SDL2/SDL.h>
 
 #include "ride/driver.h"
+#include "renderer.h"
+#include "rencache.h"
 
-#include "SDL.h"
+#ifdef _WIN32
+#include <windows.h>
+#elif __linux__
+#include <unistd.h>
+#elif __APPLE__
+#include <mach-o/dyld.h>
+#endif
 
-int main(int argc, char *argv[])
+double get_scale(void)
 {
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Event event;
+    float dpi;
+    SDL_GetDisplayDPI(0, NULL, &dpi, NULL);
+#if _WIN32
+    return dpi / 96.0;
+#else
+    return 1.0;
+#endif
+}
 
-    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+#if 0
+void init_window_icon(void) {
+#ifndef _WIN32
+#include "../icon.inl"
+  (void) icon_rgba_len; /* unused */
+  SDL_Surface *surf = SDL_CreateRGBSurfaceFrom(
+    icon_rgba, 64, 64,
+    32, 64 * 4,
+    0x000000ff,
+    0x0000ff00,
+    0x00ff0000,
+    0xff000000);
+  SDL_SetWindowIcon(window, surf);
+  SDL_FreeSurface(surf);
+#endif
+}
+#else
+void init_window_icon()
+{
+}
+#endif
+
+int main(int argc, char** argv)
+{
+#ifdef _WIN32
+    HINSTANCE lib = LoadLibrary("user32.dll");
+    int (*SetProcessDPIAware)() = (void*)GetProcAddress(lib, "SetProcessDPIAware");
+    SetProcessDPIAware();
+#endif
+
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)
     {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s", SDL_GetError());
         return 3;
     }
+    SDL_EnableScreenSaver();
+    SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 
-    if (SDL_CreateWindowAndRenderer(320, 240, SDL_WINDOW_RESIZABLE, &window, &renderer))
-    {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create window and renderer: %s", SDL_GetError());
-        return 3;
-    }
+#ifdef SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR /* Available since 2.0.8 */
+    SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
+#endif
 
-    while(true)
+#if SDL_VERSION_ATLEAST(2, 0, 5)
+    SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
+#endif
+
+    SDL_DisplayMode dm;
+    SDL_GetCurrentDisplayMode(0, &dm);
+
+    SDL_Window* window = SDL_CreateWindow(
+        "Ride", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, dm.w * 0.8, dm.h * 0.8,
+        SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
+    init_window_icon();
+
+    Ren ren;
+    ren.init(window);
+
+    RenCache cache{&ren};
+
+    cache.show_debug = true;
+
+    while (true)
     {
+        SDL_Event event;
         SDL_PollEvent(&event);
         if (event.type == SDL_QUIT)
         {
             break;
         }
 
-        SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
-        SDL_RenderClear(renderer);
-
-        SDL_RenderPresent(renderer);
+        cache.begin_frame();
+        auto size = ren.get_size();
+        cache.draw_rect(Rect::from_size(size), Color::rgb(255, 255, 255, 255));
+        cache.end_frame();
     }
 
-    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-
     SDL_Quit();
 
-    return 0;
+    return EXIT_SUCCESS;
 }

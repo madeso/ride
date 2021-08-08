@@ -1,8 +1,10 @@
 ###############################################################################
-############# wx version of ride
+############# sdl version of ride
 
 set(src
     main.cc
+    renderer.cc renderer.h
+    rencache.cc rencache.h
 )
 add_executable (
     ride WIN32 MACOSX_BUNDLE
@@ -13,6 +15,7 @@ target_link_libraries(ride
     libride
     project_options
     sdl2
+    stb_truetype
 )
 
 ###############################################################################
