@@ -2,6 +2,7 @@ set(src
     api/renderer.cc api/renderer.h
     api/rencache.cc api/rencache.h
     api/color.cc api/color.h
+    api/scale.cc api/scale.h
 )
 add_library(
     api STATIC

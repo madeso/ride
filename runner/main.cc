@@ -12,17 +12,6 @@
 #include <mach-o/dyld.h>
 #endif
 
-double get_scale(void)
-{
-    float dpi;
-    SDL_GetDisplayDPI(0, NULL, &dpi, NULL);
-#if _WIN32
-    return dpi / 96.0;
-#else
-    return 1.0;
-#endif
-}
-
 #if 0
 void init_window_icon(void) {
 #ifndef _WIN32
