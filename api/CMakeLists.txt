@@ -1,6 +1,7 @@
 set(src
     renderer.cc renderer.h
     rencache.cc rencache.h
+    color.cc color.h
 )
 add_library(
     api STATIC

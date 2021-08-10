@@ -1,5 +1,7 @@
 #pragma once
 
+#include "color.h"
+
 #include <cstdint>
 #include <vector>
 #include <memory>
@@ -19,16 +21,6 @@ struct Font
 
     int get_width(const char* text);
     int get_height();
-};
-
-struct Color
-{
-    std::uint8_t r;
-    std::uint8_t g;
-    std::uint8_t b;
-    std::uint8_t a;
-
-    static Color rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
 };
 
 struct Image
