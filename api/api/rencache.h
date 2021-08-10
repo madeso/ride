@@ -5,7 +5,7 @@
 #include <memory>
 #include <random>
 
-#include "renderer.h"
+#include "api/renderer.h"
 
 constexpr int CELLS_X = 80;
 constexpr int CELLS_Y = 50;

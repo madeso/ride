@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
 
 #include "ride/driver.h"
-#include "renderer.h"
-#include "rencache.h"
+#include "api/renderer.h"
+#include "api/rencache.h"
 
 #ifdef _WIN32
 #include <windows.h>

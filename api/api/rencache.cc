@@ -1,4 +1,4 @@
-#include "rencache.h"
+#include "api/rencache.h"
 
 /* a cache over the software renderer -- all drawing operations are stored as
 ** commands when issued. At the end of the frame we write the commands to a grid
