@@ -1,6 +1,5 @@
 #pragma once
 
-#include "api/color.h"
 
 #include <cstdint>
 #include <vector>
@@ -8,57 +7,14 @@
 
 #include <SDL2/SDL.h>
 
-struct FontImpl;
+#include "api/color.h"
 
-struct Font
-{
-    std::unique_ptr<FontImpl> m;
+#include "api/color.h"
+#include "api/size.h"
+#include "api/rect.h"
 
-    bool load_font(const char* filename, float size);
-
-    void set_tab_width(int n);
-    int get_tab_width();
-
-    int get_width(const char* text);
-    int get_height();
-};
-
-struct Image
-{
-    std::vector<std::uint8_t> pixels;
-    int width;
-    int height;
-
-    void setup(int width, int height);
-
-    void set_color(int x, int y, const Color& c);
-    Color get_color(int x, int y) const;
-};
-
-struct Size
-{
-    int width;
-    int height;
-};
-
-struct Rect
-{
-    int x;
-    int y;
-    int width;
-    int height;
-
-    int get_left() const;
-    int get_top() const;
-    int get_right() const;
-    int get_bottom() const;
-
-    static bool overlap(Rect a, Rect b);
-    static Rect intersect(Rect a, Rect b);
-    static Rect merge(Rect a, Rect b);
-
-    static Rect from_size(const Size& s);
-};
+struct Font;
+struct Image;
 
 struct Clip
 {

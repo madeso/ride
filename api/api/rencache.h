@@ -6,6 +6,7 @@
 #include <random>
 
 #include "api/renderer.h"
+#include "api/font.h"
 
 constexpr int CELLS_X = 80;
 constexpr int CELLS_Y = 50;

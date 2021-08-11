@@ -81,11 +81,13 @@ void RenCache::draw_rect(Rect rect, Color color)
 
 int RenCache::draw_text(std::shared_ptr<Font> font, const char* text, int x, int y, Color color)
 {
-    Rect rect;
-    rect.x = x;
-    rect.y = y;
-    rect.width = font->get_width(text);
-    rect.height = font->get_height();
+    auto rect = Rect
+    {
+        x,
+        y,
+        font->get_width(text),
+        font->get_height()
+    };
 
     if (Rect::overlap(screen_rect, rect))
     {
