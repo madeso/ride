@@ -3,6 +3,7 @@ set(src
     api/file.cc api/file.h
     api/font.cc api/font.h
     api/image.cc api/image.h
+    api/numeric.cc api/numeric.h
     api/rect.cc api/rect.h
     api/rencache.cc api/rencache.h
     api/renderer.cc api/renderer.h
