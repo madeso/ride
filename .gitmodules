@@ -1,0 +1,6 @@
+[submodule "external/embed"]
+	path = external/embed
+	url = git@github.com:madeso/embed.git
+[submodule "external/vscode-codicons"]
+	path = external/vscode-codicons
+	url = git@github.com:microsoft/vscode-codicons.git
