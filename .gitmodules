@@ -4,3 +4,6 @@
 [submodule "external/vscode-codicons"]
 	path = external/vscode-codicons
 	url = git@github.com:microsoft/vscode-codicons.git
+[submodule "tools/buildtools"]
+	path = tools/buildtools
+	url = git@github.com:madeso/build.git

@@ -22,7 +22,7 @@ enable_sanitizers(project_options)
 
 # https://cmake.org/cmake/help/latest/prop_tgt/MSVC_RUNTIME_LIBRARY.html
 function(set_crt_to_static project_name)
-    set_property(TARGET ${project_name} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    # set_property(TARGET ${project_name} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endfunction()
 
 SET(RIDE_BUILD_COMMIT "unknown-commit" CACHE STRING "The current commit")

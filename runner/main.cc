@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include "SDL.h"
 
 #include "ride/driver.h"
 #include "api/renderer.h"
@@ -38,8 +38,12 @@ int main(int argc, char** argv)
 {
 #ifdef _WIN32
     HINSTANCE lib = LoadLibrary("user32.dll");
-    int (*SetProcessDPIAware)() = (void*)GetProcAddress(lib, "SetProcessDPIAware");
-    SetProcessDPIAware();
+    if(lib != nullptr)
+    {
+        using SetProcessDPIAwareFun = int (*)();
+        auto SetProcessDPIAware = (SetProcessDPIAwareFun)GetProcAddress(lib, "SetProcessDPIAware");
+        SetProcessDPIAware();
+    }
 #endif
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0)

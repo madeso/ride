@@ -18,6 +18,7 @@ target_include_directories(api
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
+set_crt_to_static(api)
 target_link_libraries(api
     PRIVATE
         project_options

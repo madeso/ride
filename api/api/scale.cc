@@ -1,6 +1,6 @@
 #include "api/scale.h"
 
-#include <SDL2/SDL.h>
+#include "SDL.h"
 
 double get_scale()
 {

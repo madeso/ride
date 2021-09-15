@@ -1,11 +1,16 @@
 #include "api/rect.h"
 
 #include <cmath>
+#include <algorithm>
 
 #include "api/vec2.h"
 #include "api/size.h"
 
 Rect::Rect()
+    : x(0)
+    , y(0)
+    , width(0)
+    , height(0)
 {
 }
 

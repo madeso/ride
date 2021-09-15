@@ -19,22 +19,23 @@ target_link_libraries(ride
 
 ###############################################################################
 ############# wx version of ride
-
-set(RIDE_WX_COMPONENTS core base stc adv)
-set(wxWidgets_USE_STATIC ON)
-find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
-include( "${wxWidgets_USE_FILE}" )
-set(srcwx main.wx.cc)
-add_executable(
-    ridewx WIN32 MACOSX_BUNDLE
-	${srcwx}
-)
-set_crt_to_static(ridewx)
-target_link_libraries(ridewx
-    ${wxWidgets_LIBRARIES}
-    libride
-    project_options
-)
+if(ride_wx)
+    set(RIDE_WX_COMPONENTS core base stc adv)
+    set(wxWidgets_USE_STATIC ON)
+    find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
+    include( "${wxWidgets_USE_FILE}" )
+    set(srcwx main.wx.cc)
+    add_executable(
+        ridewx WIN32 MACOSX_BUNDLE
+        ${srcwx}
+    )
+    set_crt_to_static(ridewx)
+    target_link_libraries(ridewx
+        ${wxWidgets_LIBRARIES}
+        libride
+        project_options
+    )
+endif()
 
 
 
