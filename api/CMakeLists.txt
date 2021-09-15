@@ -1,4 +1,5 @@
 set(src
+    api/app.cc api/app.h
     api/color.cc api/color.h
     api/file.cc api/file.h
     api/font.cc api/font.h
