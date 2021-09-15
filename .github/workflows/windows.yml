@@ -40,5 +40,5 @@ jobs:
 
         - name: Build
           shell: bash
-          working-directory: ${{github.workspace}}/build/euph
+          working-directory: ${{github.workspace}}/build/proj
           run: cmake --build . --config ${{matrix.build_type}}
