@@ -1,0 +1,37 @@
+name: linux
+
+on: [push, pull_request]
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                cxx: [g++-10, clang++-9, clang++-10]
+                build_type: [Debug, Release]
+
+        runs-on: ubuntu-20.04
+
+        steps:
+        - uses: actions/checkout@v2
+          with:
+            submodules: recursive
+
+        - name: Install Dependencies
+          run: |
+                sudo apt update
+                sudo apt install -y libsdl2-dev libassimp-dev clang-9
+
+        - name: Create Build Environment
+          run: cmake -E make_directory ${{github.workspace}}/build
+
+        - name: Configure
+          shell: bash
+          working-directory: ${{github.workspace}}/build
+          env:
+                CXX: ${{matrix.cxx}}
+          run: cmake -DCMAKE_BUILD_TYPE=${{matrix.build_type}} $GITHUB_WORKSPACE
+
+        - name: Build
+          shell: bash
+          working-directory: ${{github.workspace}}/build
+          run: time cmake --build . --config ${{matrix.build_type}}

@@ -1,0 +1,44 @@
+name: windows
+
+on: [push, pull_request]
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                os: [windows-2019]
+                platform: [Win32, x64]
+                build_type: [Debug, Release]
+
+        runs-on: ${{matrix.os}}
+
+        steps:
+        - uses: actions/checkout@v2
+          with:
+            submodules: recursive
+
+        - uses: actions/setup-python@v2
+          with:
+            python-version: '3.x'
+
+        - name: Debug
+          run: |
+                cmake --help
+
+        - name: Install python dependencies
+          run: |
+                python.exe -m pip install requests
+
+        - name: Install cpp dependencies
+          run: |
+                python.exe ${{github.workspace}}\tools\windows.py install ${{matrix.os}} ${{matrix.platform}}
+
+        - name: Configure
+          working-directory: ${{github.workspace}}
+          run: |
+                python.exe ${{github.workspace}}\tools\windows.py cmake ${{matrix.os}} ${{matrix.platform}}
+
+        - name: Build
+          shell: bash
+          working-directory: ${{github.workspace}}/build/euph
+          run: cmake --build . --config ${{matrix.build_type}}
