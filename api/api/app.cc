@@ -8,10 +8,13 @@
 #include "api/vec2.h"
 
 #include <cassert>
+#include <algorithm>
 
 
 #ifdef _WIN32
 #include <windows.h>
+#undef min
+#undef max
 #elif __linux__
 #include <unistd.h>
 #elif __APPLE__
