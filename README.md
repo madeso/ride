@@ -7,7 +7,7 @@ I'd like to rewrite a revision 2 in rust (rust branch) but can't seem to find a 
 
 In the mean time I still think ride classic (classic branch) is useable but far from good or recomended for any serious rust development.
 
-![screenshot](gfx/logo/256text.png)
+![screenshot](data/logo/256text.png)
 
 Ride is a general text editor like vs code, the name comes from concatenating R from [Rust](http://www.rust-lang.org/) and [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), but that has lost it's meaning, now it's just a name. It's currently not in a usable state.
 If you're looking for something more complete, perhaps [RustDT](http://rustdt.github.io/) for Eclipse, [SolidOak](https://github.com/oakes/SolidOak) or [Rust](https://github.com/rrandom/Brackets-Rust-IDE/) for [brackets](http://brackets.io/) is your thing.
@@ -18,8 +18,8 @@ If you're looking for something more complete, perhaps [RustDT](http://rustdt.gi
 [![Join the chat at https://gitter.im/madeso/ride](https://badges.gitter.im/madeso/ride.svg)](https://gitter.im/madeso/ride?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Screenshots
-![screenshot](gfx/screenshots/3.png)
-![screenshot](gfx/screenshots/2.png)
+![screenshot](data/screenshots/3.png)
+![screenshot](data/screenshots/2.png)
 
 # Getting ride
 This isn't finished. Eventually there should be a installer here, but that isn't finished. [Issue #13](https://github.com/madeso/ride/issues/13) is looking to fix this. If you want to try it, you need to download the source and build it yourself.
