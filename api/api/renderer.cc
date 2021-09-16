@@ -152,37 +152,47 @@ void Ren::draw_rect(Rect rect, Color color)
     SDL_UnlockSurface(surf);
 }
 
-void Ren::draw_image(Image* image, Rect* sub, int x, int y, Color color)
+void Ren::draw_image(Image* image, const Rect& asub, int x, int y, Color color)
 {
     if (color.a == 0)
     {
         return;
     }
 
+    auto sub = asub;
+
     /* clip */
     int n;
-    if ((n = clip.left - x) > 0)
+    
+    n = clip.left - x;
+    if (n > 0)
     {
-        sub->width -= n;
-        sub->x += n;
+        sub.width -= n;
+        sub.x += n;
         x += n;
     }
-    if ((n = clip.top - y) > 0)
+
+    n = clip.top - y;
+    if (n > 0)
     {
-        sub->height -= n;
-        sub->y += n;
+        sub.height -= n;
+        sub.y += n;
         y += n;
     }
-    if ((n = x + sub->width - clip.right) > 0)
+    
+    n = x + sub.width - clip.right;
+    if (n > 0)
     {
-        sub->width -= n;
-    }
-    if ((n = y + sub->height - clip.bottom) > 0)
-    {
-        sub->height -= n;
+        sub.width -= n;
     }
 
-    if (sub->width <= 0 || sub->height <= 0)
+    n = y + sub.height - clip.bottom;
+    if (n > 0)
+    {
+        sub.height -= n;
+    }
+
+    if (sub.width <= 0 || sub.height <= 0)
     {
         return;
     }
@@ -190,12 +200,12 @@ void Ren::draw_image(Image* image, Rect* sub, int x, int y, Color color)
     /* draw */
     SDL_Surface* surf = SDL_GetWindowSurface(window);
 
-    for (int yy = 0; yy < sub->height; yy++)
+    for (int yy = 0; yy < sub.height; yy++)
     {
-        for (int xx = 0; xx < sub->width; xx++)
+        for (int xx = 0; xx < sub.width; xx++)
         {
-            const auto dest_x = sub->x + xx;
-            const auto dest_y = sub->y + yy;
+            const auto dest_x = sub.x + xx;
+            const auto dest_y = sub.y + yy;
             const auto image_color = image->get_color(x + xx, y + yy);
             const auto new_color =
                 blend_pixel2(get_pixel_on_surface(surf, dest_x, dest_y), image_color, color);

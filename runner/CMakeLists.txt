@@ -10,11 +10,14 @@ add_executable (
 )
 set_crt_to_static(ride)
 target_link_libraries(ride
-    libride
-    project_options
-    sdl2
-    stb_truetype
-    api
+    PRIVATE
+        project_options
+    PUBLIC
+        libride
+        sdl2
+        stb_truetype
+        api
+        data_logo
 )
 
 ###############################################################################

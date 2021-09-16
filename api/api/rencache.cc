@@ -1,5 +1,7 @@
 #include "api/rencache.h"
 
+#include <cassert>
+
 /* a cache over the software renderer -- all drawing operations are stored as
 ** commands when issued. At the end of the frame we write the commands to a grid
 ** of hash values, take the cells that have changed since the previous frame,
@@ -49,6 +51,25 @@ int cell_idx(int x, int y)
     return x + y * CELLS_X;
 }
 
+void RenCache::push_clip_rect(const Rect& rect)
+{
+    assert(false && "todo(Gustav): port the lua code");
+    // local x2, y2, w2, h2 = *clip_rect_stack.rbegin();
+    // local r, b, r2, b2 = x+w, y+h, x2+w2, y2+h2
+    // x, y = math.max(x, x2), math.max(y, y2)
+    // b, r = math.min(b, b2), math.min(r, r2)
+    // w, h = r-x, b-y
+    // clip_rect_stack.push_back({ x, y, w, h });
+    // set_clip_rect({x, y, w, h});
+}
+
+void RenCache::pop_clip_rect()
+{
+    clip_rect_stack.pop_back();
+    const auto top = *clip_rect_stack.rbegin();
+    set_clip_rect(top);
+}
+
 Command& RenCache::push_command(CommandType type)
 {
     command_buf.emplace_back();
@@ -62,7 +83,7 @@ void RenCache::set_debug(bool enable)
     show_debug = enable;
 }
 
-void RenCache::set_clip_rect(Rect rect)
+void RenCache::set_clip_rect(const Rect& rect)
 {
     Command& cmd = push_command(SET_CLIP);
     cmd.rect = Rect::intersect(rect, screen_rect);
@@ -76,6 +97,26 @@ void RenCache::draw_rect(Rect rect, Color color)
     }
     Command& cmd = push_command(DRAW_RECT);
     cmd.rect = rect;
+    cmd.color = color;
+}
+
+void RenCache::draw_image(std::shared_ptr<Image> image, int x, int y, Color color)
+{
+    auto rect = Rect
+    {
+        x,
+        y,
+        image->width,
+        image->height
+    };
+
+    if (!Rect::overlap(screen_rect, rect))
+    {
+        return;
+    }
+    Command& cmd = push_command(DRAW_IMAGE);
+    cmd.rect = rect;
+    cmd.image = image;
     cmd.color = color;
 }
 
@@ -117,6 +158,9 @@ void RenCache::begin_frame()
         screen_rect.height = size.height;
         invalidate();
     }
+
+    clip_rect_stack = {Rect::from_size(size)};
+    set_clip_rect(clip_rect_stack[0]);
 }
 
 void RenCache::update_overlapping_cells(Rect r, unsigned h)
@@ -143,6 +187,7 @@ unsigned Command::compute_hash() const
     h << rect;
     h << color;
     h << font.get();
+    h << image.get();
     h << tab_width;
     h.add(text.c_str(), text.length());
     return h.value;
@@ -227,6 +272,11 @@ void RenCache::end_frame()
                 break;
             case DRAW_RECT:
                 ren->draw_rect(cmd.rect, cmd.color);
+                break;
+            case DRAW_IMAGE:
+                {
+                    ren->draw_image(cmd.image.get(), cmd.rect, 0, 0, cmd.color);
+                }
                 break;
             case DRAW_TEXT:
                 cmd.font->set_tab_width(cmd.tab_width);

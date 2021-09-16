@@ -200,7 +200,7 @@ int draw_text(Ren* ren, Font* font, const char* text, int x, int y, Color color)
             g->x1 - g->x0,
             g->y1 - g->y0
         };
-        ren->draw_image(&set->image, &rect, x + g->xoff, y + g->yoff, color);
+        ren->draw_image(&set->image, rect, x + g->xoff, y + g->yoff, color);
         x += g->xadvance;
     }
 

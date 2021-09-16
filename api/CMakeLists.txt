@@ -25,4 +25,6 @@ target_link_libraries(api
         project_options
         sdl2
         stb_truetype
+        stb_image
+        embed
 )

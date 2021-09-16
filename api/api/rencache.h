@@ -7,6 +7,7 @@
 
 #include "api/renderer.h"
 #include "api/font.h"
+#include "api/image.h"
 
 constexpr int CELLS_X = 80;
 constexpr int CELLS_Y = 50;
@@ -16,7 +17,8 @@ enum CommandType
 {
     SET_CLIP,
     DRAW_TEXT,
-    DRAW_RECT
+    DRAW_RECT,
+    DRAW_IMAGE
 };
 
 struct Rng
@@ -41,6 +43,7 @@ struct Command
     Rect rect;
     Color color;
     std::shared_ptr<Font> font;
+    std::shared_ptr<Image> image;
     int tab_width;
     std::string text;
 
@@ -65,14 +68,19 @@ struct RenCache
 
     RenCache(Ren* r);
 
+    std::vector<Rect> clip_rect_stack;
+    void push_clip_rect(const Rect& rect);
+    void pop_clip_rect();
+
     // private
     Command& push_command(CommandType type);
     void update_overlapping_cells(Rect r, unsigned h);
 
     void set_debug(bool enable);
     void free_font(Font* font);
-    void set_clip_rect(Rect rect);
+    void set_clip_rect(const Rect& rect);
     void draw_rect(Rect rect, Color color);
+    void draw_image(std::shared_ptr<Image> image, int x, int y, Color color);
     int draw_text(std::shared_ptr<Font> font, const char* text, int x, int y, Color color);
     void invalidate();
     void begin_frame();
