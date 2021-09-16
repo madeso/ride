@@ -109,17 +109,28 @@ struct FontImpl
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Font
 
+bool Font::load_font(const embedded_binary& data, float size)
+{
+    return impl_load_font(std::make_unique<FontImpl>(), reinterpret_cast<const unsigned char*>(data.data), size);
+}
+
 bool Font::load_font(const std::string& filename, float size)
 {
     auto font = std::make_unique<FontImpl>();
-
-    /* init font */
-    font->data.size = size;
 
     if (read_to_buffer(filename, &font->data.data) == false)
     {
         return false;
     }
+
+    const unsigned char* data = font->data.data.data();
+    return impl_load_font(std::move(font), data, size);
+}
+
+bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, float size)
+{
+    /* init font */
+    font->data.size = size;
 
     /* init stbfont */
     const auto ok = stbtt_InitFont(&font->data.stbfont, font->data.data.data(), 0);
@@ -182,7 +193,20 @@ std::shared_ptr<Font> font_load(const std::string& file, float size)
     }
     else
     {
-        return {};
+        return nullptr;
+    }
+}
+
+std::shared_ptr<Font> font_load(const embedded_binary& data, float size)
+{
+    auto r = std::make_shared<Font>();
+    if(r->load_font(data, size))
+    {
+        return r;
+    }
+    else
+    {
+        return nullptr;
     }
 }
 
