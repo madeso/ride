@@ -21,10 +21,25 @@ target_include_directories(api
 )
 set_crt_to_static(api)
 target_link_libraries(api
+    PUBLIC
+        sdl2
+        embed
     PRIVATE
         project_options
-        sdl2
         stb_truetype
         stb_image
-        embed
+)
+
+
+
+add_executable(
+    example_squares WIN32 MACOSX_BUNDLE
+	examples/squares.cc
+)
+set_crt_to_static(example_squares)
+target_link_libraries(example_squares
+    PRIVATE
+        project_options
+    PUBLIC
+        api
 )

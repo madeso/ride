@@ -1,5 +1,3 @@
-#include "SDL.h"
-
 #include "api/app.h"
 #include "api/rencache.h"
 #include "api/image.h"

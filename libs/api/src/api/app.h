@@ -3,6 +3,8 @@
 #include <functional>
 #include <memory>
 
+#include "SDL.h"
+
 #include "api/vec2.h"
 #include "api/size.h"
 
