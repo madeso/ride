@@ -27,9 +27,20 @@ target_compile_features(fmt PRIVATE cxx_std_17)
 
 add_library(stb_truetype STATIC
     stb/stb_truetype.c
-    stb/stb_truetype.h
+    stb/stb/stb_truetype.h
 )
 target_include_directories(stb_truetype
     PUBLIC
-        stb
+        stb/stb
 )
+
+add_library(stb_image STATIC
+    stb/stb_image.c
+    stb/stb/stb_image.h
+)
+target_include_directories(stb_image
+    PUBLIC
+        stb/stb
+)
+
+add_subdirectory(embed)

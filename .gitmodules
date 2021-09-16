@@ -7,3 +7,6 @@
 [submodule "tools/buildtools"]
 	path = tools/buildtools
 	url = git@github.com:madeso/build.git
+[submodule "external/stb/stb"]
+	path = external/stb/stb
+	url = git@github.com:nothings/stb.git
