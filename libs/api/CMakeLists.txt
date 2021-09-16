@@ -43,3 +43,17 @@ target_link_libraries(example_squares
     PUBLIC
         api
 )
+
+
+add_executable(
+    example_images WIN32 MACOSX_BUNDLE
+	examples/images.cc
+)
+set_crt_to_static(example_images)
+target_link_libraries(example_images
+    PRIVATE
+        project_options
+    PUBLIC
+        api
+        data_logo
+)
