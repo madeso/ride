@@ -1,18 +1,18 @@
 cmake_minimum_required(VERSION 3.15)
 set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
 project(ride C CXX)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/data/cmake/modules")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(RIDE_VERSION_MAJOR "0")
 set(RIDE_VERSION_MINOR "0")
 set(RIDE_VERSION_REVISION "1")
 
-include(install/cpack-config.cmake)
+include(data/install/cpack-config.cmake)
 
-include(cmake/StandardProjectSettings.cmake)
-include(cmake/CompilerWarnings.cmake)
-include(cmake/Sanitizers.cmake)
+include(data/cmake/StandardProjectSettings.cmake)
+include(data/cmake/CompilerWarnings.cmake)
+include(data/cmake/Sanitizers.cmake)
 
 add_library(project_options INTERFACE)
 add_library(project_warnings INTERFACE)
@@ -38,7 +38,6 @@ SET(RIDE_BUILD_REPO   "unknown-repo"   CACHE STRING "The repo")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(external)
-add_subdirectory(ride)
 add_subdirectory(data)
-add_subdirectory(api)
-add_subdirectory(runner)
+add_subdirectory(libs)
+add_subdirectory(apps)

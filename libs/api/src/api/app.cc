@@ -1,6 +1,5 @@
 #include "SDL.h"
 
-#include "ride/driver.h"
 #include "api/renderer.h"
 #include "api/rencache.h"
 #include "api/app.h"
@@ -9,6 +8,7 @@
 
 #include <cassert>
 #include <algorithm>
+#include <optional>
 
 
 #ifdef _WIN32
