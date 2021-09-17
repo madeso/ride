@@ -1,4 +1,5 @@
 set(src
+    src/api/assert.cc src/api/assert.h
     src/api/app.cc src/api/app.h
     src/api/color.cc src/api/color.h
     src/api/file.cc src/api/file.h

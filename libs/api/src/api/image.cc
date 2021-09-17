@@ -1,10 +1,10 @@
 #include "api/image.h"
 
-#include <cassert>
-#include <iostream>
 #include <cstring> // memcpy
 
 #include "stb_image.h"
+
+#include "api/assert.h"
 
 bool Image::load(const embedded_binary& data)
 {
@@ -45,8 +45,6 @@ void Image::set_color(int x, int y, const Color& c)
     pixels[index + 2] = c.b;
     pixels[index + 3] = c.a;
 }
-
-#define xassert(x, m) do { if((x) == false){ std::cerr << "assert failure(" #x "): "<< m << "\n"; assert(false && "failure"); }} while(false)
 
 Color Image::get_color(int x, int y) const
 {
