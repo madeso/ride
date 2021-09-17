@@ -17,7 +17,8 @@
 
 struct LoadedFontData
 {
-    std::vector<unsigned char> data;  // ttf data
+    const unsigned char* data;
+    std::vector<unsigned char> data_storage;  // ttf data
     stbtt_fontinfo stbfont;
     float size;
     int height;
@@ -118,22 +119,23 @@ bool Font::load_font(const std::string& filename, float size)
 {
     auto font = std::make_unique<FontImpl>();
 
-    if (read_to_buffer(filename, &font->data.data) == false)
+    if (read_to_buffer(filename, &font->data.data_storage) == false)
     {
         return false;
     }
 
-    const unsigned char* data = font->data.data.data();
+    const unsigned char* data = font->data.data_storage.data();
     return impl_load_font(std::move(font), data, size);
 }
 
 bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, float size)
 {
     /* init font */
+    font->data.data = data;
     font->data.size = size;
 
     /* init stbfont */
-    const auto ok = stbtt_InitFont(&font->data.stbfont, font->data.data.data(), 0);
+    const auto ok = stbtt_InitFont(&font->data.stbfont, data, 0);
     if (!ok)
     {
         return false;

@@ -58,3 +58,17 @@ target_link_libraries(example_images
         api
         data_logo
 )
+
+
+add_executable(
+    example_font WIN32 MACOSX_BUNDLE
+	examples/font.cc
+)
+set_crt_to_static(example_font)
+target_link_libraries(example_font
+    PRIVATE
+        project_options
+    PUBLIC
+        api
+        data_font
+)
