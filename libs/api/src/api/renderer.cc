@@ -5,7 +5,6 @@
 #include <cmath>
 #include <memory>
 
-
 #include "api/font.h"
 #include "api/image.h"
 
@@ -108,12 +107,26 @@ Size Ren::get_size()
 
 void set_pixel_on_surface(SDL_Surface* surface, int x, int y, const Color& c)
 {
+    assert(surface);
+    const auto inside = x >= 0 && x < surface->w && y >= 0 && y < surface->h;
+    if(!inside)
+    {
+        return;
+    }
+
     auto* pixels = (std::uint32_t*)surface->pixels;
     pixels[y * surface->w + x] = SDL_MapRGB(surface->format, c.r, c.g, c.b);
 }
 
 Color get_pixel_on_surface(SDL_Surface* surface, int x, int y)
 {
+    assert(surface);
+    const auto inside = x >= 0 && x < surface->w && y >= 0 && y < surface->h;
+    if(!inside)
+    {
+        return {255,255,255,255};
+    }
+
     auto* pixels = (std::uint32_t*)surface->pixels;
     const auto pixel = pixels[y * surface->w + x];
 
