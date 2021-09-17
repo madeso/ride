@@ -5,7 +5,7 @@ embed(files
 )
 
 message(STATUS "Files are ${files}")
-add_library(data_logo STATIC ${files})
+add_library(data_logo STATIC empty.cc ${files})
 target_include_directories(data_logo
     PUBLIC
         ${CMAKE_CURRENT_BINARY_DIR}
