@@ -6,7 +6,7 @@ jobs:
     build:
         strategy:
             matrix:
-                cxx: [g++-10, clang++-9, clang++-10]
+                cxx: [g++-10, clang++-10]
                 build_type: [Debug, Release]
 
         runs-on: ubuntu-20.04
