@@ -329,7 +329,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
     cache.show_debug = true;
 
-    auto app = create_app();
+    auto app = create_app({});
     app->size.height = initial_height;
     app->size.width = initial_width;
 

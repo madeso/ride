@@ -24,6 +24,6 @@ struct SquaresApp : App
 
 int main(int argc, char** argv)
 {
-    return run_main(argc, argv, []() -> std::unique_ptr<App> { return std::make_unique<SquaresApp>();});
+    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<SquaresApp>();});
 }
 

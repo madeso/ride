@@ -32,6 +32,6 @@ struct RideApp : App
 
 int main(int argc, char** argv)
 {
-    return run_main(argc, argv, []() -> std::unique_ptr<App> { return std::make_unique<RideApp>();});
+    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<RideApp>();});
 }
 
