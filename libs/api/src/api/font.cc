@@ -71,6 +71,7 @@ struct GlyphSet
             }
         }
 
+        loaded = true;
         return true;
     }
 
