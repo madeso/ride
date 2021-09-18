@@ -331,7 +331,7 @@ namespace
     }
 }
 
-bool operator<(const Keybind& lhs, const Keybind& rhs)
+bool operator<(const Stroke& lhs, const Stroke& rhs)
 {
     if(lhs.meta.alt != rhs.meta.alt) { return lhs.meta.alt; }
     if(lhs.meta.shift != rhs.meta.shift) { return lhs.meta.shift; }
@@ -341,7 +341,7 @@ bool operator<(const Keybind& lhs, const Keybind& rhs)
 
 
 
-std::optional<Keybind> keybind_from_string(const std::string& data)
+std::optional<Stroke> stroke_from_string(const std::string& data)
 {
     const auto split = Split(data, '+');
 
@@ -375,7 +375,7 @@ std::optional<Keybind> keybind_from_string(const std::string& data)
         }
     }
 
-    return Keybind{key, meta};
+    return Stroke{key, meta};
 }
 
 std::optional<Key> key_from_string(const std::string& str)

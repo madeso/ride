@@ -261,20 +261,20 @@ enum class Key
 };
 
 
-struct Keybind
+struct Stroke
 {
     Key key;
     Meta meta;
 
-    constexpr Keybind(Key k, const Meta& m)
+    constexpr Stroke(Key k, const Meta& m)
         : key(k)
         , meta(m)
     {
     }
 };
 
-bool operator<(const Keybind& lhs, const Keybind& rhs);
-std::optional<Keybind> keybind_from_string(const std::string& data);
+bool operator<(const Stroke& lhs, const Stroke& rhs);
+std::optional<Stroke> stroke_from_string(const std::string& data);
 
 std::optional<Key> key_from_string(const std::string& str);
 std::string to_string(Key key);
