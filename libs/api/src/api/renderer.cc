@@ -217,9 +217,9 @@ void Ren::draw_image(Image* image, const Rect& asub, int x, int y, Color color)
     {
         for (int xx = 0; xx < sub.width; xx++)
         {
-            const auto dest_x = sub.x + xx;
-            const auto dest_y = sub.y + yy;
-            const auto image_color = image->get_color(x + xx, y + yy);
+            const auto dest_x = x + xx;
+            const auto dest_y = y + yy;
+            const auto image_color = image->get_color(sub.x + xx, sub.y + yy);
             const auto new_color =
                 blend_pixel2(get_pixel_on_surface(surf, dest_x, dest_y), image_color, color);
             set_pixel_on_surface(surf, dest_x, dest_y, new_color);
