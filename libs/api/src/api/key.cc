@@ -9,45 +9,11 @@
 #include "api/string.h"
 #include "api/cc.h"
 #include "api/c.h"
+#include "api/enumstringmap.h"
 
 namespace
 {
-    struct KeyStringMap
-    {
-        std::map<std::string, Key> string_to_key;
-        std::map<Key, std::string> key_to_string;
-
-        void bind(Key key, const std::string& name)
-        {
-            const auto id = to_lower(name);
-            assert(key_to_string.find(key) == key_to_string.end());
-            assert(string_to_key.find(id) == string_to_key.end());
-
-            string_to_key[id] = key;
-            key_to_string[key] = name;
-        }
-
-        std::optional<Key> from_string(const std::string& name) const
-        {
-            const auto id = to_lower(name);
-            const auto found_key = string_to_key.find(id);
-            if(found_key == string_to_key.end())
-            {
-                return {};
-            }
-            return found_key->second;
-        }
-
-        std::string to_string(Key key) const
-        {
-            const auto found_name = key_to_string.find(key);
-            if(found_name == key_to_string.end())
-            {
-                return "<?>";
-            }
-            return found_name->second;
-        }
-    };
+    using KeyStringMap = EnumStringMap<Key>;
 
     KeyStringMap build_map()
     {

@@ -20,6 +20,8 @@ set(src
     src/api/c.cc src/api/c.h
     src/api/cc.cc src/api/cc.h
     src/api/ints.cc src/api/ints.h
+    src/api/enumstringmap.cc src/api/enumstringmap.h
+    src/api/mouse_button.cc src/api/mouse_button.h
 )
 add_library(api STATIC ${src})
 target_include_directories(api
