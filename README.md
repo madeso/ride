@@ -1,3 +1,10 @@
+![screenshot](data/logo/256text.png)
+
+[![windows](https://github.com/madeso/ride/workflows/windows/badge.svg?branch=master)](https://github.com/madeso/ride/actions/workflows/windows.yml)
+[![linux](https://github.com/madeso/ride/workflows/linux/badge.svg?branch=master)](https://github.com/madeso/ride/actions/workflows/linux.yml)
+[![Project Stats](https://www.openhub.net/p/ride/widgets/project_thin_badge?format=gif&ref=Thin+badge)](https://www.openhub.net/p/ride)
+[![Join the chat at https://gitter.im/madeso/ride](https://badges.gitter.im/madeso/ride.svg)](https://gitter.im/madeso/ride?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 This branch contains the development of a "new ride" that maintain a small impact on the ui library. This is for a few reasons.
 
 * Can customize the colors of the whole ui instead of what the os thinks a list should look like
@@ -7,15 +14,9 @@ I'd like to rewrite a revision 2 in rust (rust branch) but can't seem to find a 
 
 In the mean time I still think ride classic (classic branch) is useable but far from good or recomended for any serious rust development.
 
-![screenshot](data/logo/256text.png)
 
 Ride is a general text editor like vs code, the name comes from concatenating R from [Rust](http://www.rust-lang.org/) and [IDE](https://en.wikipedia.org/wiki/Integrated_development_environment), but that has lost it's meaning, now it's just a name. It's currently not in a usable state.
 If you're looking for something more complete, perhaps [RustDT](http://rustdt.github.io/) for Eclipse, [SolidOak](https://github.com/oakes/SolidOak) or [Rust](https://github.com/rrandom/Brackets-Rust-IDE/) for [brackets](http://brackets.io/) is your thing.
-
-[![Build Status](https://travis-ci.org/madeso/ride.svg)](https://travis-ci.org/madeso/ride)
-[![Build status](https://ci.appveyor.com/api/projects/status/fhb9tsluc2wwqg67/branch/master?svg=true)](https://ci.appveyor.com/project/madeso/ride/branch/master)
-[![Project Stats](https://www.openhub.net/p/ride/widgets/project_thin_badge?format=gif&ref=Thin+badge)](https://www.openhub.net/p/ride)
-[![Join the chat at https://gitter.im/madeso/ride](https://badges.gitter.im/madeso/ride.svg)](https://gitter.im/madeso/ride?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Screenshots
 ![screenshot](data/screenshots/3.png)
