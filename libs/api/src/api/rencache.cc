@@ -309,3 +309,14 @@ RenCache::RenCache(Ren* r)
     : ren(r)
 {
 }
+
+ClipScope::ClipScope(RenCache* c, const Rect& r)
+    : cache(c)
+{
+    cache->push_clip_rect(r);
+}
+
+ClipScope::~ClipScope()
+{
+    cache->pop_clip_rect();
+}

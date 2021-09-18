@@ -6,26 +6,6 @@
 #include "api/vec2.h"
 #include "api/size.h"
 
-Rect::Rect()
-    : x(0)
-    , y(0)
-    , width(0)
-    , height(0)
-{
-}
-
-Rect::Rect(
-    int ax,
-    int ay,
-    int awidth,
-    int aheight)
-    : x(ax)
-    , y(ay)
-    , width(awidth)
-    , height(aheight)
-{
-}
-
 Rect::Rect(const vec2& p, const Size& s)
     : x(p.x)
     , y(p.y)
@@ -83,3 +63,52 @@ Rect Rect::from_size(const Size& s)
     return {0, 0, s.width, s.height};
 }
 
+bool Rect::Contains(const vec2& p) const
+{
+    const auto cx = p.x >= x && x + width >= p.x;
+    const auto cy = p.y >= y && y + width >= p.y;
+    return cx && cy;
+}
+
+
+Rect Rect::CreateWestFromMaxSize(int max_size) const
+{
+    return {x, y, std::min(max_size, width), width};
+}
+
+
+Rect Rect::CreateNorthFromMaxSize(int max_size) const
+{
+    return {x, y, width, std::min(max_size, width)};
+}
+
+Rect Rect::CreateSouthFromMaxSize(int max_size) const
+{
+    const auto s = std::min(max_size, width);
+    return {x, y + width - s, width, s};
+}
+
+Rect Rect::CreateEastFromMaxSize(int max_size) const
+{
+    const auto s = std::min(max_size, width);
+    return {x + width - s, y, s, width};
+}
+
+Rect Rect::Offset(const vec2& offset) const
+{
+    const auto p = vec2{x, y} + offset;
+    return {p.x, p.y, width, height};
+}
+
+Rect Rect::CreateFromCenterMaxSize(int max_size) const
+{
+    const auto s = std::min(max_size, width);
+    const auto h = static_cast<int>(static_cast<float>(width - s) / 2.0f);
+    return {x + h, y, s, width};
+}
+
+Rect Rect::Inset(int inset) const
+{
+    // todo(Gustav): handle when inset is greater than size
+    return {x+inset, y+inset, width - inset*2, width - inset*2};
+}

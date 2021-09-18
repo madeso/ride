@@ -5,18 +5,33 @@ struct Size;
 
 struct Rect
 {
+    // top-left
     int x;
     int y;
     int width;
     int height;
 
-    Rect();
+    constexpr Rect()
+        : x(0)
+        , y(0)
+        , width(0)
+        , height(0)
+    {
+    }
 
-    Rect(
-    int ax,
-    int ay,
-    int awidth,
-    int aheight);
+    constexpr Rect
+    (
+        int ax,
+        int ay,
+        int awidth,
+        int aheight
+    )
+        : x(ax)
+        , y(ay)
+        , width(awidth)
+        , height(aheight)
+    {
+    }
 
     Rect(const vec2& p, const Size& s);
 
@@ -30,4 +45,18 @@ struct Rect
     static Rect merge(Rect a, Rect b);
 
     static Rect from_size(const Size& s);
+
+    bool Contains(const vec2& p) const;
+
+    Rect CreateWestFromMaxSize(int max_size) const;
+    Rect CreateNorthFromMaxSize(int max_size) const;
+    Rect CreateSouthFromMaxSize(int max_size) const;
+    Rect CreateEastFromMaxSize(int max_size) const;
+
+    Rect Offset(const vec2& offset) const;
+
+    Rect CreateFromCenterMaxSize(int max_size) const;
+    Rect Inset(int inset) const;
 };
+
+constexpr const Rect EmptyRect = {0,0, 0,0};

@@ -1,7 +1,5 @@
 set(src
-    src/ride/driver.cc src/ride/driver.h
     src/ride/str.cc src/ride/str.h
-    src/ride/humane_sort.cc src/ride/humane_sort.h
 )
 
 find_package(Filesystem REQUIRED)

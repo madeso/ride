@@ -86,3 +86,11 @@ struct RenCache
     void begin_frame();
     void end_frame();
 };
+
+struct ClipScope
+{
+    RenCache* cache;
+
+    ClipScope(RenCache* c, const Rect& r);
+    ~ClipScope();
+};

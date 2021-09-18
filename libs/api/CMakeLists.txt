@@ -14,6 +14,12 @@ set(src
     src/api/string.cc src/api/string.h
     src/api/utf8.cc src/api/utf8.h
     src/api/vec2.cc src/api/vec2.h
+    src/api/filesystem.cc src/api/filesystem.h
+    src/api/humane_sort.cc src/api/humane_sort.h
+    src/api/key.cc src/api/key.h
+    src/api/c.cc src/api/c.h
+    src/api/cc.cc src/api/cc.h
+    src/api/ints.cc src/api/ints.h
 )
 add_library(api STATIC ${src})
 target_include_directories(api
