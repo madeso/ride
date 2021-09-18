@@ -40,6 +40,8 @@ struct App
     Size size;
     bool run;
 
+    double get_scale() const;
+
     bool* redraw_value;
 };
 
