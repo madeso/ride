@@ -46,11 +46,11 @@ void App::on_resized(int new_width, int new_height)
 {
 }
 
-void App::on_key_pressed(int key)
+void App::on_key_pressed(Key key)
 {
 }
 
-void App::on_key_released(int key)
+void App::on_key_released(Key key)
 {
 }
 
@@ -59,11 +59,11 @@ void App::on_text_input(const std::string& str)
 }
 
 
-void App::on_mouse_pressed(int button, int x, int y, int clicks)
+void App::on_mouse_pressed(MouseButton button, int x, int y, int clicks)
 {
 }
 
-void App::on_mouse_released(int button, int x, int y)
+void App::on_mouse_released(MouseButton button, int x, int y)
 {
 }
 
@@ -160,16 +160,6 @@ bool PollEvent(SDL_Event* event)
     return r;
 }
 
-int key_name(int k)
-{
-    return k;
-}
-
-int button_name(int k)
-{
-    return k;
-}
-
 bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
 {
     std::optional<vec2> mouse_movement;
@@ -212,10 +202,10 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
                 }
                 break;
             case SDL_KEYDOWN:
-                app->on_key_pressed(key_name(event.key.keysym.sym));
+                app->on_key_pressed(key_from_sdl_keycode(event.key.keysym.sym));
                 break;
             case SDL_KEYUP:
-                app->on_key_released(key_name(event.key.keysym.sym));
+                app->on_key_released(key_from_sdl_keycode(event.key.keysym.sym));
                 break;
 
             case SDL_TEXTINPUT:
@@ -224,12 +214,12 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
 
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == 1) { SDL_CaptureMouse(SDL_TRUE); }
-                app->on_mouse_pressed(button_name(event.button.button), event.button.x, event.button.y, event.button.clicks);
+                app->on_mouse_pressed(mousebutton_from_sdl_button(event.button.button), event.button.x, event.button.y, event.button.clicks);
                 break;
 
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == 1) { SDL_CaptureMouse(SDL_FALSE); }
-                app->on_mouse_released(button_name(event.button.button), event.button.x, event.button.y);
+                app->on_mouse_released(mousebutton_from_sdl_button(event.button.button), event.button.x, event.button.y);
                 break;
 
             case SDL_MOUSEMOTION:

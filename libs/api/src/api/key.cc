@@ -37,7 +37,6 @@ namespace
         map.bind(Key::asterisk, "asterisk");
         map.bind(Key::plus, "plus");
         map.bind(Key::comma, "comma");
-        map.bind(Key::comma, "comma");
         map.bind(Key::minus, "minus");
         map.bind(Key::period, "period");
         map.bind(Key::slash, "slash");
@@ -354,7 +353,7 @@ std::string to_string(Key key)
     return global_key_string_map.to_string(key);
 }
 
-Key key_from_sdl_keycode(SDL_KeyCode kc)
+Key key_from_sdl_keycode(i32 kc)
 {
     switch(kc)
     {

@@ -7,6 +7,8 @@
 
 #include "api/vec2.h"
 #include "api/size.h"
+#include "api/key.h"
+#include "api/mouse_button.h"
 
 struct RenCache;
 
@@ -21,12 +23,12 @@ struct App
     virtual void on_file_dropped(const std::string& file, int x, int y);
     virtual void on_resized(int new_width, int new_height);
 
-    virtual void on_key_pressed(int key);
-    virtual void on_key_released(int key);
+    virtual void on_key_pressed(Key key);
+    virtual void on_key_released(Key key);
     virtual void on_text_input(const std::string& str);
 
-    virtual void on_mouse_pressed(int button, int x, int y, int clicks);
-    virtual void on_mouse_released(int button, int x, int y);
+    virtual void on_mouse_pressed(MouseButton button, int x, int y, int clicks);
+    virtual void on_mouse_released(MouseButton button, int x, int y);
     virtual void on_mouse_moved(const vec2& new_mouse, int xrel, int yrel);
     virtual void on_mouse_wheel(int y);
 
