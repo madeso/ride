@@ -36,12 +36,12 @@ struct GlyphSet
     bool load_single_glyphset_or_fail(LoadedFontData* font, int idx, int width, int height)
     {
         std::vector<std::uint8_t> pixels;
-        pixels.reserve(width * height);
+        pixels.resize(width * height);
 
         /* load glyphs */
         const float s = stbtt_ScaleForMappingEmToPixels(&font->stbfont, 1) /
                         stbtt_ScaleForPixelHeight(&font->stbfont, 1);
-        const int res = stbtt_BakeFontBitmap(&font->data[0], 0, font->size * s, &pixels[0], width,
+        const int res = stbtt_BakeFontBitmap(font->data, 0, font->size * s, &pixels[0], width,
                                              height, idx * 256, 256, this->glyphs);
 
         if (res < 0)
