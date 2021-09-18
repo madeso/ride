@@ -275,7 +275,8 @@ void RenCache::end_frame()
                 break;
             case DRAW_IMAGE:
                 {
-                    ren->draw_image(cmd.image.get(), cmd.rect, 0, 0, cmd.color);
+                    const auto r = Rect::from_size({cmd.rect.width, cmd.rect.height});
+                    ren->draw_image(cmd.image.get(), r, cmd.rect.x, cmd.rect.y, cmd.color);
                 }
                 break;
             case DRAW_TEXT:
