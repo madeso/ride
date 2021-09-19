@@ -72,7 +72,7 @@ void App::on_mouse_moved(const vec2& new_mouse, int xrel, int yrel)
 {
 }
 
-void App::on_mouse_wheel(int y)
+void App::on_mouse_wheel(int x, int y)
 {
 }
 
@@ -241,7 +241,10 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
                 break;
 
             case SDL_MOUSEWHEEL:
-                app->on_mouse_wheel(event.wheel.y);
+                {
+                    const auto scale = event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED ? -1:1;
+                    app->on_mouse_wheel(event.wheel.x * scale, event.wheel.y * scale);
+                }
                 break;
             }
 

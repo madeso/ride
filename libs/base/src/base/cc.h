@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <cassert>
 
 // https://twitter.com/idoccor/status/1314664849276899328
 // https://gist.github.com/dirocco/0e23867d0ea9ab2a23dd6dcaba065f53

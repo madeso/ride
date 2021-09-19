@@ -31,7 +31,7 @@ struct App
     virtual void on_mouse_pressed(MouseButton button, int x, int y, int clicks);
     virtual void on_mouse_released(MouseButton button, int x, int y);
     virtual void on_mouse_moved(const vec2& new_mouse, int xrel, int yrel);
-    virtual void on_mouse_wheel(int y);
+    virtual void on_mouse_wheel(int x, int y);
 
     virtual void on_quit();
 
