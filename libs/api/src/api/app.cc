@@ -10,7 +10,7 @@
 #include <cassert>
 #include <algorithm>
 #include <optional>
-
+#include <iostream>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -318,6 +318,23 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     const int initial_width = dm.w * 0.8;
     const int initial_height = dm.h * 0.8;
 
+    bool render_debug = false;
+
+    for(int i=1; i<argc; i+=1)
+    {
+        const std::string arg = argv[i];
+        if(arg == "--debug")
+        {
+            render_debug = true;
+        }
+        else
+        {
+            std::cerr << "Invalid argument at " << (i+1) << ": " << arg << "\n";
+            return -1;
+        }
+        
+    }
+
     SDL_Window* window = SDL_CreateWindow(
         "Ride", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, initial_width, initial_height,
         SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
@@ -328,7 +345,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
     RenCache cache{&ren};
 
-    cache.show_debug = true;
+    cache.show_debug = render_debug;
 
     auto app = create_app({});
     app->size.height = initial_height;
