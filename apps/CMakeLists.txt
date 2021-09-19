@@ -18,6 +18,7 @@ target_link_libraries(ride
         stb_truetype
         api
         data_logo
+        data_font
 )
 
 ###############################################################################

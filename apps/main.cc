@@ -1,18 +1,63 @@
+#include "base/str.h"
+
 #include "api/app.h"
 #include "api/rencache.h"
 #include "api/image.h"
+#include "api/font.h"
+
+#include "ride/document.h"
 
 #include "logo_256text_png.h"
+#include "font.ttf.h"
+
+struct View
+{
+    vec2 position = {0,0};
+    Size size = {0,0};
+
+    Document doc;
+};
+
+struct Theme
+{
+    int line_spacing = 3;
+    int gutter_spacing_left = 3;
+    int gutter_spacing_right = 3;
+
+    Color gutter_color = {0, 0, 0, 255};
+    Color plain_text_color = {0, 0, 0, 255};
+};
+
+void draw(const View& view, const App& app, const Theme& theme, RenCache* cache, std::shared_ptr<Font> font)
+{
+    const auto lines = view.doc.GetNumberOfLines();
+
+    const auto min_gutter_width = font->get_width( (Str{} << (lines+1)).ToString().c_str() );
+    const auto gutter_width = min_gutter_width + theme.gutter_spacing_left + theme.gutter_spacing_right;
+
+    const auto spacing = ( font->get_height() + theme.line_spacing ) * app.get_scale();
+
+    for(int line_index=0; line_index<lines; line_index += 1)
+    {
+        const auto y = line_index * spacing;
+
+        cache->draw_text(font, (Str{} << line_index+1).ToString(), theme.gutter_spacing_left, y, theme.gutter_color);
+        cache->draw_text(font, view.doc.GetLineAt(line_index), gutter_width, y, theme.plain_text_color);
+    }
+}
 
 struct RideApp : App
 {
     vec2 mouse = {0,0};
 
     std::shared_ptr<Image> logo;
+    std::shared_ptr<Font> font;
 
     RideApp()
         : logo(load_shared(LOGO_256TEXT_PNG))
+        , font(font_load(FONT_TTF, 12.0f * get_scale()))
     {
+        root.doc.LoadFile(__FILE__);
     }
 
     void on_mouse_moved(const vec2& new_mouse, int xrel, int yrel) override
@@ -20,11 +65,16 @@ struct RideApp : App
         mouse = new_mouse;
     }
 
+    View root;
+    Theme theme;
+
     void draw(RenCache* cache) override
     {
         cache->draw_rect(Rect::from_size(size), Color::rgb(255, 255, 255, 255));
 
         cache->draw_image(logo, 10, 10, {255, 255, 255, 255});
+
+        ::draw(root, *this, theme, cache, font);
 
         cache->draw_rect(Rect{mouse, Size{10, 10}}, Color::rgb(0, 0, 255, 255));
     }

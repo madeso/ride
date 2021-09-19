@@ -1,5 +1,5 @@
 set(src
-    src/ride/str.cc src/ride/str.h
+    src/ride/document.cc src/ride/document.h
 )
 
 find_package(Filesystem REQUIRED)
@@ -16,6 +16,7 @@ target_link_libraries(libride
         project_options
         project_warnings
         std::filesystem
+        base
 )
 
 set_crt_to_static(libride)
