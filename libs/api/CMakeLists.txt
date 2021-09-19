@@ -34,6 +34,7 @@ set_crt_to_static(example_squares)
 target_link_libraries(example_squares
     PRIVATE
         project_options
+        open_color
     PUBLIC
         api
 )

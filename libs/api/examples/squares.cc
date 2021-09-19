@@ -1,6 +1,8 @@
 #include "api/app.h"
 #include "api/rencache.h"
 
+#include "open-color.h"
+
 struct SquaresApp : App
 {
     vec2 mouse = {0,0};
@@ -12,13 +14,13 @@ struct SquaresApp : App
 
     void draw(RenCache* cache) override
     {
-        cache->draw_rect(Rect::from_size(size), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(Rect::from_size(size), chex(open_color::white));
 
-        cache->draw_rect(Rect{{50, 100}, Size{10, 10}}, Color::rgb(0, 0, 255, 255));
-        cache->draw_rect(Rect{{100, 50}, Size{10, 10}}, Color::rgb(255, 0, 0, 255));
-        cache->draw_rect(Rect{{100, 100}, Size{100, 100}}, Color::rgb(0, 255, 0, 255));
+        cache->draw_rect(Rect{{50, 100}, Size{10, 10}}, chex(open_color::red_500));
+        cache->draw_rect(Rect{{100, 50}, Size{10, 10}}, chex(open_color::blue_500));
+        cache->draw_rect(Rect{{100, 100}, Size{100, 100}}, chex(open_color::teal_500));
 
-        cache->draw_rect(Rect{mouse, Size{10, 10}}, Color::rgb(0, 0, 0, 255));
+        cache->draw_rect(Rect{mouse, Size{10, 10}}, chex(open_color::black));
     }
 };
 

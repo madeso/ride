@@ -13,3 +13,5 @@ struct Color
     static Color from_hex_with_alpha(std::uint32_t r);
     static Color from_hex(std::uint32_t r);
 };
+
+Color chex(std::uint32_t r);

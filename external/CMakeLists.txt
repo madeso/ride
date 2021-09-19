@@ -44,3 +44,10 @@ target_include_directories(stb_image
 )
 
 add_subdirectory(embed)
+
+
+add_library(open_color INTERFACE)
+target_include_directories(open_color
+    INTERFACE
+        open-color/include
+)
