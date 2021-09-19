@@ -24,6 +24,8 @@ struct Theme
     int gutter_spacing_left = 3;
     int gutter_spacing_right = 3;
 
+    Color window_background_color = {255, 255, 255, 255};
+    Color logo_color = {200, 200, 200, 255};
     Color gutter_color = {0, 0, 0, 255};
     Color plain_text_color = {0, 0, 0, 255};
 };
@@ -70,9 +72,9 @@ struct RideApp : App
 
     void draw(RenCache* cache) override
     {
-        cache->draw_rect(Rect::from_size(size), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(Rect::from_size(size), theme.window_background_color);
 
-        cache->draw_image(logo, 10, 10, {255, 255, 255, 255});
+        cache->draw_image(logo, 10, 10, theme.logo_color);
 
         ::draw(root, *this, theme, cache, font);
 

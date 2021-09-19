@@ -1,7 +1,7 @@
-embed_name(256text.png logo_256text_png)
+embed_name(256text-white.png logo_256text_png)
 embed(files
     AS_BINARY
-        256text.png
+        256text-white.png
 )
 
 add_library(data_logo STATIC ../empty.cc ${files})
