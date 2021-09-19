@@ -120,7 +120,7 @@ void RenCache::draw_image(std::shared_ptr<Image> image, int x, int y, Color colo
     cmd.color = color;
 }
 
-int RenCache::draw_text(std::shared_ptr<Font> font, const char* text, int x, int y, Color color)
+int RenCache::draw_text(std::shared_ptr<Font> font, const std::string& text, int x, int y, Color color)
 {
     auto rect = Rect
     {

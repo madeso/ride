@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include <string>
 #include <cstdint>
 #include <vector>
 #include <memory>
@@ -43,5 +43,5 @@ struct Ren
     // sub - screen coordinates
     // x/y - offset into image
     void draw_image(Image* image, const Rect& sub, int x, int y, Color color);
-    int draw_text(Font* font, const char* text, int x, int y, Color color);
+    int draw_text(Font* font, const std::string& text, int x, int y, Color color);
 };

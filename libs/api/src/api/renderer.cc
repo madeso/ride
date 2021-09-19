@@ -227,7 +227,7 @@ void Ren::draw_image(Image* image, const Rect& asub, int x, int y, Color color)
     }
 }
 
-int Ren::draw_text(Font* font, const char* text, int x, int y, Color color)
+int Ren::draw_text(Font* font, const std::string& text, int x, int y, Color color)
 {
     return ::draw_text(this, font, text, x, y, color);
 }

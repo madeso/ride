@@ -170,7 +170,7 @@ int Font::get_tab_width()
     return set->glyphs['\t'].xadvance;
 }
 
-int Font::get_width(const char* text)
+int Font::get_width(const std::string& text)
 {
     int x = 0;
     const auto codepoints = utf8_to_codepoints(text);
@@ -214,7 +214,7 @@ std::shared_ptr<Font> font_load(const embedded_binary& data, float size)
     }
 }
 
-int draw_text(Ren* ren, Font* font, const char* text, int x, int y, Color color)
+int draw_text(Ren* ren, Font* font, const std::string& text, int x, int y, Color color)
 {
     const auto codepoints = utf8_to_codepoints(text);
     for (const auto codepoint : codepoints)

@@ -22,11 +22,11 @@ struct Font
     void set_tab_width(int n);
     int get_tab_width();
 
-    int get_width(const char* text);
+    int get_width(const std::string& text);
     int get_height();
 };
 
 std::shared_ptr<Font> font_load(const embedded_binary& data, float size);
 std::shared_ptr<Font> font_load(const std::string& file, float size);
 
-int draw_text(Ren* ren, Font* font, const char* text, int x, int y, Color color);
+int draw_text(Ren* ren, Font* font, const std::string& text, int x, int y, Color color);

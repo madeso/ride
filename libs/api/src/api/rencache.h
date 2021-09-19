@@ -81,7 +81,7 @@ struct RenCache
     void set_clip_rect(const Rect& rect);
     void draw_rect(Rect rect, Color color);
     void draw_image(std::shared_ptr<Image> image, int x, int y, Color color);
-    int draw_text(std::shared_ptr<Font> font, const char* text, int x, int y, Color color);
+    int draw_text(std::shared_ptr<Font> font, const std::string& text, int x, int y, Color color);
     void invalidate();
     void begin_frame();
     void end_frame();

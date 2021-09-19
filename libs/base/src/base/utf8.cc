@@ -1,10 +1,10 @@
 #include "base/utf8.h"
 
-std::vector<unsigned> utf8_to_codepoints(const char* text)
+std::vector<unsigned> utf8_to_codepoints(const std::string& text)
 {
     std::vector<unsigned> dst;
 
-    const char* p = text;
+    const char* p = text.c_str();
 
     unsigned res, n;
     while (*p)
