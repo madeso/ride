@@ -51,16 +51,22 @@ int cell_idx(int x, int y)
     return x + y * CELLS_X;
 }
 
-void RenCache::push_clip_rect(const Rect& rect)
+void RenCache::push_clip_rect(const Rect& rr)
 {
-    assert(false && "todo(Gustav): port the lua code");
-    // local x2, y2, w2, h2 = *clip_rect_stack.rbegin();
-    // local r, b, r2, b2 = x+w, y+h, x2+w2, y2+h2
-    // x, y = math.max(x, x2), math.max(y, y2)
-    // b, r = math.min(b, b2), math.min(r, r2)
-    // w, h = r-x, b-y
-    // clip_rect_stack.push_back({ x, y, w, h });
-    // set_clip_rect({x, y, w, h});
+    const auto top = *clip_rect_stack.rbegin();
+    auto rect = rr;
+    auto r = rect.x + rect.width;
+    auto b = rect.y + rect.height;
+    const auto r2 = top.x + top.width;
+    const auto b2 = top.y + top.height;
+    rect.x = std::max(rect.x, top.x);
+    rect.y = std::max(rect.y, top.y);
+    b = std::min(b, b2);
+    r = std::min(r, r2);
+    rect.width = r - rect.x;
+    rect.height = b - rect.y;
+    clip_rect_stack.push_back(rect);
+    set_clip_rect(rect);
 }
 
 void RenCache::pop_clip_rect()

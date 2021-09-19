@@ -23,28 +23,41 @@ struct Theme
     int line_spacing = 3;
     int gutter_spacing_left = 3;
     int gutter_spacing_right = 3;
+    int text_spacing = 3;
 
     Color window_background_color = {255, 255, 255, 255};
     Color logo_color = {200, 200, 200, 255};
     Color gutter_color = {0, 0, 0, 255};
     Color plain_text_color = {0, 0, 0, 255};
+
+    Color gutter_background = {150, 150, 150, 255};
+    Color edit_background = {230, 230, 230, 255};
 };
 
 void draw(const View& view, const App& app, const Theme& theme, RenCache* cache, std::shared_ptr<Font> font)
 {
+    const auto view_rect = Rect{view.position, view.size};
+    const auto clip_scope = ClipScope{cache, view_rect};
+
+
     const auto lines = view.doc.GetNumberOfLines();
 
     const auto min_gutter_width = font->get_width( (Str{} << (lines+1)).ToString().c_str() );
     const auto gutter_width = min_gutter_width + theme.gutter_spacing_left + theme.gutter_spacing_right;
 
+    const auto gutter_rect = view_rect.CreateWestFromMaxSize(gutter_width);
+
     const auto spacing = ( font->get_height() + theme.line_spacing ) * app.get_scale();
+
+    cache->draw_rect(view_rect, theme.edit_background);
+    cache->draw_rect(gutter_rect, theme.gutter_background);
 
     for(int line_index=0; line_index<lines; line_index += 1)
     {
         const auto y = line_index * spacing;
 
-        cache->draw_text(font, (Str{} << line_index+1).ToString(), theme.gutter_spacing_left, y, theme.gutter_color);
-        cache->draw_text(font, view.doc.GetLineAt(line_index), gutter_width, y, theme.plain_text_color);
+        cache->draw_text(font, (Str{} << line_index+1).ToString(), view.position.x + theme.gutter_spacing_left, view.position.y + y, theme.gutter_color);
+        cache->draw_text(font, view.doc.GetLineAt(line_index), view.position.x + gutter_width + theme.text_spacing, view.position.y + y, theme.plain_text_color);
     }
 }
 
@@ -60,6 +73,9 @@ struct RideApp : App
         , font(font_load(FONT_TTF, 12.0f * get_scale()))
     {
         root.doc.LoadFile(__FILE__);
+
+        root.position = {50, 50};
+        root.size = {300, 300};
     }
 
     void on_mouse_moved(const vec2& new_mouse, int xrel, int yrel) override
