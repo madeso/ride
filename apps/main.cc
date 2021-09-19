@@ -38,7 +38,7 @@ struct Theme
     Color plain_text_color = {0, 0, 0, 255};
 
     Color gutter_background = {150, 150, 150, 255};
-    Color edit_background = {230, 230, 230, 255};
+    Color edit_background = {230, 230, 230, 190};
 
     Color scroll_through_color = {100, 100, 100, 255};
     Color scroll_thumb_color = {200, 200, 200, 255};
