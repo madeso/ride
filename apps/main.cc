@@ -16,6 +16,12 @@ struct View
     vec2 position = {0,0};
     Size size = {0,0};
 
+    void set_rect(const Rect& r)
+    {
+        position = {r.x, r.y};
+        size = {r.width, r.height};
+    }
+
     Document doc;
 
     vec2 scroll = {0, 0};
@@ -153,9 +159,12 @@ struct RideApp : App
 
     void draw(RenCache* cache) override
     {
-        cache->draw_rect(Rect::from_size(size), theme.window_background_color);
+        const auto rect = Rect::from_size(size);
+        cache->draw_rect(rect, theme.window_background_color);
 
         cache->draw_image(logo, 10, 10, theme.logo_color);
+
+        root.set_rect(rect.Inset(static_cast<int>(20 * get_scale())));
 
         ::draw(root, *this, theme, cache, font);
 
