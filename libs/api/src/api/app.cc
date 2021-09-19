@@ -1,10 +1,11 @@
+#include "api/app.h"
+
 #include "SDL.h"
+
+#include "base/vec2.h"
 
 #include "api/renderer.h"
 #include "api/rencache.h"
-#include "api/app.h"
-
-#include "api/vec2.h"
 
 #include <cassert>
 #include <algorithm>

@@ -6,10 +6,10 @@
 
 #include "SDL.h"
 
-#include "api/string.h"
-#include "api/cc.h"
-#include "api/c.h"
-#include "api/enumstringmap.h"
+#include "base/string.h"
+#include "base/cc.h"
+#include "base/c.h"
+#include "base/enumstringmap.h"
 
 namespace
 {

@@ -5,8 +5,9 @@
 
 #include "SDL.h"
 
-#include "api/vec2.h"
-#include "api/size.h"
+#include "base/vec2.h"
+#include "base/size.h"
+
 #include "api/key.h"
 #include "api/mouse_button.h"
 

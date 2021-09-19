@@ -4,7 +4,7 @@
 
 #include "SDL.h"
 
-#include "api/enumstringmap.h"
+#include "base/enumstringmap.h"
 
 namespace
 {

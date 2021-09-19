@@ -7,11 +7,9 @@
 
 #include "SDL.h"
 
-#include "api/color.h"
-
-#include "api/color.h"
-#include "api/size.h"
-#include "api/rect.h"
+#include "base/color.h"
+#include "base/size.h"
+#include "base/rect.h"
 
 struct Font;
 struct Image;

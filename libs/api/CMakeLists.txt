@@ -1,27 +1,11 @@
 set(src
-    src/api/assert.cc src/api/assert.h
     src/api/app.cc src/api/app.h
-    src/api/color.cc src/api/color.h
-    src/api/file.cc src/api/file.h
     src/api/font.cc src/api/font.h
     src/api/image.cc src/api/image.h
-    src/api/numeric.cc src/api/numeric.h
-    src/api/rect.cc src/api/rect.h
+    src/api/key.cc src/api/key.h
+    src/api/mouse_button.cc src/api/mouse_button.h
     src/api/rencache.cc src/api/rencache.h
     src/api/renderer.cc src/api/renderer.h
-    src/api/scale.cc src/api/scale.h
-    src/api/size.cc src/api/size.h
-    src/api/string.cc src/api/string.h
-    src/api/utf8.cc src/api/utf8.h
-    src/api/vec2.cc src/api/vec2.h
-    src/api/filesystem.cc src/api/filesystem.h
-    src/api/humane_sort.cc src/api/humane_sort.h
-    src/api/key.cc src/api/key.h
-    src/api/c.cc src/api/c.h
-    src/api/cc.cc src/api/cc.h
-    src/api/ints.cc src/api/ints.h
-    src/api/enumstringmap.cc src/api/enumstringmap.h
-    src/api/mouse_button.cc src/api/mouse_button.h
 )
 add_library(api STATIC ${src})
 target_include_directories(api
@@ -33,6 +17,7 @@ target_link_libraries(api
     PUBLIC
         sdl2
         embed
+        base
     PRIVATE
         project_options
         stb_truetype

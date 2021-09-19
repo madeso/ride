@@ -6,7 +6,7 @@
 
 #include "embed/types.h"
 
-#include "api/color.h"
+#include "base/color.h"
 
 struct Image
 {

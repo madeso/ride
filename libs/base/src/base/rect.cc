@@ -1,10 +1,10 @@
-#include "api/rect.h"
+#include "base/rect.h"
 
 #include <cmath>
 #include <algorithm>
 
-#include "api/vec2.h"
-#include "api/size.h"
+#include "base/vec2.h"
+#include "base/size.h"
 
 Rect::Rect(const vec2& p, const Size& s)
     : x(p.x)

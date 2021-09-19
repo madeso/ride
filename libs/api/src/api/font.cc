@@ -4,10 +4,11 @@
 
 #include "stb_truetype.h"
 
+#include "base/file.h"
+#include "base/utf8.h"
+#include "base/rect.h"
+
 #include "api/image.h"
-#include "api/file.h"
-#include "api/utf8.h"
-#include "api/rect.h"
 #include "api/renderer.h"
 
 #define MAX_GLYPHSET 256
