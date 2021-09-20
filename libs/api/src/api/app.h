@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <memory>
+#include <vector>
 
 #include "SDL.h"
 
@@ -9,6 +10,7 @@
 #include "base/size.h"
 
 #include "api/key.h"
+#include "api/font.h"
 #include "api/mouse_button.h"
 
 struct RenCache;
@@ -41,7 +43,15 @@ struct App
     Size size;
     bool run;
 
+
+    std::shared_ptr<Font> load_font(const std::string_view& file, float size);
+    std::shared_ptr<Font> load_font(const std::string& file, float size);
+
+    std::vector<std::shared_ptr<Font>> loaded_fonts;
+
+    double scale;
     double get_scale() const;
+    void set_scale(double d);
 
     bool* redraw_value;
 };

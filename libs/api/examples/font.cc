@@ -2,8 +2,6 @@
 #include "api/rencache.h"
 #include "api/font.h"
 
-#include "font.ttf.h"
-
 struct ImagesApp : App
 {
     vec2 mouse = {0,0};
@@ -11,7 +9,7 @@ struct ImagesApp : App
     std::shared_ptr<Font> font;
 
     ImagesApp()
-        : font(font_load(FONT_TTF, 12.0f * get_scale()))
+        : font(load_font(Font::default_font, 12.0f * get_scale()))
     {
     }
 

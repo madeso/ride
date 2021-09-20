@@ -9,7 +9,6 @@
 #include "ride/document.h"
 
 #include "logo_256text_png.h"
-#include "font.ttf.h"
 
 struct View
 {
@@ -141,7 +140,7 @@ struct RideApp : App
 
     RideApp()
         : logo(load_shared(LOGO_256TEXT_PNG))
-        , font(font_load(FONT_TTF, 12.0f * get_scale()))
+        , font(load_font(Font::default_font, 12.0f))
     {
         root.doc.LoadFile(__FILE__);
 

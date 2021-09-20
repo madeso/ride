@@ -11,6 +11,8 @@
 #include "api/image.h"
 #include "api/renderer.h"
 
+#include "font.ttf.h"
+
 #define MAX_GLYPHSET 256
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -106,11 +108,24 @@ struct FontImpl
         }
         return &sets[idx];
     }
+
+    void mark_as_unloaded()
+    {
+        for(int i=0; i<MAX_GLYPHSET; i+=1)
+        {
+            sets[i].loaded = false;
+        }
+    }
 };
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Font
+
+Font::Font() = default;
+
+Font::~Font() = default;
+
 
 bool Font::load_font(const embedded_binary& data, float size)
 {
@@ -119,6 +134,11 @@ bool Font::load_font(const embedded_binary& data, float size)
 
 bool Font::load_font(const std::string& filename, float size)
 {
+    if(filename == Font::default_font)
+    {
+        return load_font(FONT_TTF, size);
+    }
+
     auto font = std::make_unique<FontImpl>();
 
     if (read_to_buffer(filename, &font->data.data_storage) == false)
@@ -128,6 +148,14 @@ bool Font::load_font(const std::string& filename, float size)
 
     const unsigned char* data = font->data.data_storage.data();
     return impl_load_font(std::move(font), data, size);
+}
+
+void set_size_for_font(FontImpl* font, float size)
+{
+    int ascent, descent, linegap;
+    stbtt_GetFontVMetrics(&font->data.stbfont, &ascent, &descent, &linegap);
+    float scale = stbtt_ScaleForMappingEmToPixels(&font->data.stbfont, size);
+    font->data.height = (ascent - descent + linegap) * scale + 0.5;
 }
 
 bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, float size)
@@ -144,10 +172,7 @@ bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* d
     }
 
     /* get height and scale */
-    int ascent, descent, linegap;
-    stbtt_GetFontVMetrics(&font->data.stbfont, &ascent, &descent, &linegap);
-    float scale = stbtt_ScaleForMappingEmToPixels(&font->data.stbfont, size);
-    font->data.height = (ascent - descent + linegap) * scale + 0.5;
+    set_size_for_font(font.get(), size);
 
     /* make tab and newline glyphs invisible */
     stbtt_bakedchar* g = font->get_glyphset('\n')->glyphs;
@@ -156,6 +181,13 @@ bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* d
 
     m = std::move(font);
     return true;
+}
+
+void Font::set_size(float new_size)
+{
+    m->data.size = new_size;
+    set_size_for_font(m.get(), new_size);
+    m->mark_as_unloaded();
 }
 
 void Font::set_tab_width(int n)
@@ -186,32 +218,6 @@ int Font::get_width(const std::string& text)
 int Font::get_height()
 {
     return m->data.height;
-}
-
-std::shared_ptr<Font> font_load(const std::string& file, float size)
-{
-    auto r = std::make_shared<Font>();
-    if(r->load_font(file.c_str(), size))
-    {
-        return r;
-    }
-    else
-    {
-        return nullptr;
-    }
-}
-
-std::shared_ptr<Font> font_load(const embedded_binary& data, float size)
-{
-    auto r = std::make_shared<Font>();
-    if(r->load_font(data, size))
-    {
-        return r;
-    }
-    else
-    {
-        return nullptr;
-    }
 }
 
 int draw_text(Ren* ren, Font* font, const std::string& text, int x, int y, Color color)

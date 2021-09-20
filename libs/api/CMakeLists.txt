@@ -22,6 +22,7 @@ target_link_libraries(api
         project_options
         stb_truetype
         stb_image
+        data_font
 )
 
 
@@ -64,5 +65,4 @@ target_link_libraries(example_font
         project_options
     PUBLIC
         api
-        data_font
 )

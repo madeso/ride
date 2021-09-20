@@ -6,11 +6,13 @@
 
 #include "api/renderer.h"
 #include "api/rencache.h"
+#include "api/font.h"
 
 #include <cassert>
 #include <algorithm>
 #include <optional>
 #include <iostream>
+#include <sstream>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -22,10 +24,22 @@
 #include <mach-o/dyld.h>
 #endif
 
+double calculate_scale()
+{
+    float dpi;
+    SDL_GetDisplayDPI(0, NULL, &dpi, NULL);
+#if _WIN32
+    return dpi / 96.0;
+#else
+    return 1.0;
+#endif
+}
+
 App::App()
     : size{0,0}
     , run(true)
     , redraw_value(nullptr)
+    , scale(calculate_scale())
 {
 }
 
@@ -87,13 +101,40 @@ void App::update()
 
 double App::get_scale() const
 {
-    float dpi;
-    SDL_GetDisplayDPI(0, NULL, &dpi, NULL);
-#if _WIN32
-    return dpi / 96.0;
-#else
-    return 1.0;
-#endif
+    return scale;
+}
+
+
+void App::set_scale(double d)
+{
+    scale = d;
+
+    for(auto& f: loaded_fonts)
+    {
+        f->set_size(f->unscaled_size * get_scale());
+    }
+
+     // todo(Gustav): invalidate rendercache...
+}
+
+std::shared_ptr<Font> App::load_font(const std::string_view& file, float size)
+{
+    return load_font(std::string(file), size);
+}
+
+std::shared_ptr<Font> App::load_font(const std::string& file, float size)
+{
+    auto r = std::make_shared<Font>();
+    if(r->load_font(file.c_str(), size * get_scale()))
+    {
+        loaded_fonts.emplace_back(r);
+        r->unscaled_size = size;
+        return r;
+    }
+    else
+    {
+        return nullptr;
+    }
 }
 
 
@@ -287,6 +328,15 @@ void wait_event(double seconds)
     SDL_WaitEventTimeout(nullptr, seconds * 1000);
 }
 
+template<typename T>
+T parse(const std::string& str)
+{
+    std::istringstream ss (str);
+    T t;
+    ss >> t;
+    return t;
+}
+
 int run_main(int argc, char** argv, CreateAppFunction create_app)
 {
 #ifdef _WIN32
@@ -322,20 +372,48 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     const int initial_height = dm.h * 0.8;
 
     bool render_debug = false;
+    std::optional<double> custom_scale;
+
+    enum class ParserState
+    {
+        first, custom_scale
+    };
+
+    ParserState state = ParserState::first;
 
     for(int i=1; i<argc; i+=1)
     {
         const std::string arg = argv[i];
-        if(arg == "--debug")
+        switch(state)
         {
-            render_debug = true;
-        }
-        else
-        {
-            std::cerr << "Invalid argument at " << (i+1) << ": " << arg << "\n";
+        case ParserState::first:
+            if(arg == "--debug")
+            {
+                render_debug = true;
+            }
+            else if(arg == "--scale")
+            {
+                state = ParserState::custom_scale;
+            }
+            else
+            {
+                std::cerr << "Invalid argument at " << (i+1) << ": " << arg << "\n";
+                return -1;
+            }
+            break;
+        case ParserState::custom_scale:
+            custom_scale = parse<double>(arg);
+            state = ParserState::first;
+            break;
+        default:
+            assert(false && "unhandled parser state");
             return -1;
         }
-        
+    }
+
+    if(state != ParserState::first)
+    {
+        assert(false && "Invalid parser state");
     }
 
     SDL_Window* window = SDL_CreateWindow(
@@ -353,6 +431,11 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     auto app = create_app({});
     app->size.height = initial_height;
     app->size.width = initial_width;
+
+    if(custom_scale)
+    {
+        app->set_scale(*custom_scale);
+    }
 
     constexpr double config_fps = 60.0;
 
