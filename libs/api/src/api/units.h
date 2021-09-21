@@ -2,6 +2,10 @@
 
 #include "base/number.h"
 
+// todo(Gustav): swap the name for theese...
+// pixel should be the device pixels and 
+// dip (or dp) should be the Device Independent Pixel
+
 //virtual pixel
 struct pixels_tag {};
 using pix = number<double, pixels_tag>;

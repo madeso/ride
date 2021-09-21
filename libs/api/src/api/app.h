@@ -40,6 +40,8 @@ struct App
     virtual void on_quit();
 
     virtual void update();
+
+    // todo(Gustav): wrap RenCache to take virtual sizes to make the usage prettier
     virtual void draw(RenCache* cache) = 0;
 
     size<pix> size;
