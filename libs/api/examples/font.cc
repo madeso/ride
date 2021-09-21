@@ -4,27 +4,27 @@
 
 struct ImagesApp : App
 {
-    vec2 mouse = {0,0};
+    vec2<pix> mouse = {0_px,0_px};
 
     std::shared_ptr<Font> font;
 
     ImagesApp()
-        : font(load_font(Font::default_font, 12.0f * get_scale()))
+        : font(load_font(Font::default_font, 12_px))
     {
     }
 
-    void on_mouse_moved(const vec2& new_mouse, int xrel, int yrel) override
+    void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
     {
         mouse = new_mouse;
     }
 
     void draw(RenCache* cache) override
     {
-        cache->draw_rect(Rect::from_size(size), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(to_dip(rect<pix>::from_size(size)), Color::rgb(255, 255, 255, 255));
 
-        cache->draw_text(font, "Hello world", 20, 20, {0, 0, 0, 255});
+        cache->draw_text(font, "Hello world", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
 
-        cache->draw_text(font, "mouse", mouse.x, mouse.y, {0, 0, 255, 255});
+        cache->draw_text(font, "mouse", to_dip(mouse.x), to_dip(mouse.y), {0, 0, 255, 255});
     }
 };
 

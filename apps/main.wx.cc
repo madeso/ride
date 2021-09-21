@@ -486,14 +486,14 @@ struct WxPainter : public ride::Painter
         dc->DrawRectangle(rect.position.x, rect.position.y, rect.size.x, rect.size.y);
     }
 
-    void Circle(const ride::vec2& point, int radius, std::optional<ride::Rgb> fill, std::optional<ride::Line> line_color) override
+    void Circle(const ride::vec2i& point, int radius, std::optional<ride::Rgb> fill, std::optional<ride::Line> line_color) override
     {
         SetBrush(dc, fill);
         SetPen(dc, line_color);
         dc->DrawCircle(point.x, point.y, radius);
     }
 
-    void Line(const ride::vec2& from, const ride::vec2& to, const ride::Line& line) override
+    void Line(const ride::vec2i& from, const ride::vec2i& to, const ride::Line& line) override
     {
         dc->SetPen(wxPen(C(line.color), line.width));
         dc->DrawLine(from.x, from.y, to.x, to.y);
@@ -504,7 +504,7 @@ struct WxPainter : public ride::Painter
         return GetSizeOfStringFromDC(dc, font, str);
     }
 
-    void Text(std::shared_ptr<ride::Font> font, const std::string& text, const ride::vec2& where, const ride::Rgb& color) override
+    void Text(std::shared_ptr<ride::Font> font, const std::string& text, const ride::vec2i& where, const ride::Rgb& color) override
     {
         const auto str = C(text);
         dc->SetTextForeground(wxColor(C(color)));
@@ -576,13 +576,13 @@ void Pane::OnSize(wxSizeEvent&)
     int width = 0;
     int height = 0;
     GetClientSize(&width, &height);
-    app->OnSize(ride::vec2{width, height});
+    app->OnSize(ride::vec2i{width, height});
 }
 
 
 void Pane::OnMouseMoved(wxMouseEvent& event)
 {
-    app->OnMouseMoved(ride::vec2{event.GetX(), event.GetY()});
+    app->OnMouseMoved(ride::vec2i{event.GetX(), event.GetY()});
 }
 
 
@@ -594,7 +594,7 @@ void Pane::OnMouseLeftWindow(wxMouseEvent&)
 
 void Pane::OnMouseButton(wxMouseEvent& event, ride::MouseState state, ride::MouseButton button)
 {
-    app->OnMouseMoved(ride::vec2{event.GetX(), event.GetY()});
+    app->OnMouseMoved(ride::vec2i{event.GetX(), event.GetY()});
     app->OnMouseButton(state, button);
 }
 

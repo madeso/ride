@@ -245,9 +245,9 @@ namespace ride
             const auto info = information_provider();
 
             const auto draw_height = GetHeight();
-            const auto rect = Rect{{0, window_size.y - draw_height}, {window_size.x, draw_height}};
+            const auto rect = recti{{0, window_size.y - draw_height}, {window_size.x, draw_height}};
 
-            painter->Rect(rect, bkg, std::nullopt);
+            painter->recti(rect, bkg, std::nullopt);
 
             const std::string str = Str{}
                 << "Ln " << info.line << " / " << info.number_of_lines << " | "
@@ -288,7 +288,7 @@ namespace ride
     {
         virtual ~View() = default;
 
-        virtual Rect GetRect() const = 0;
+        virtual recti GetRect() const = 0;
 
         virtual void Draw(Painter* painter) = 0;
         virtual void OnKey(Key key, const Meta& meta) = 0;
@@ -310,20 +310,20 @@ namespace ride
     struct ScrollbarData
     {
         int size_without_buttons;
-        Rect rect;
-        Rect up_button;
-        Rect down_button;
-        Rect scrollbar;
+        recti rect;
+        recti up_button;
+        recti down_button;
+        recti scrollbar;
         int area_to_scroll;
         int max_scroll;
 
         ScrollbarData
         (
             int s,
-            const Rect& re,
-            const Rect& up,
-            const Rect& dw,
-            const Rect& sc,
+            const recti& re,
+            const recti& up,
+            const recti& dw,
+            const recti& sc,
             int as,
             int ms
         )
@@ -342,7 +342,7 @@ namespace ride
     struct FixedSection
     {
         std::function<int ()> get_size = []() -> int {return 0;};
-        std::function<void (Painter*, const Rect&)> on_draw = [](Painter*, const Rect&){};
+        std::function<void (Painter*, const recti&)> on_draw = [](Painter*, const recti&){};
     };
 
 
@@ -350,7 +350,7 @@ namespace ride
     {
         std::shared_ptr<Settings> settings;
 
-        Rect window_rect = EmptyRect;
+        recti window_rect = EmptyRect;
         vec2 pixel_scroll = {0, 0};
 
         ScrollableView(std::shared_ptr<Settings> s) : settings(s) {}
@@ -394,7 +394,7 @@ namespace ride
             if(pixel_scroll.y < 0) { pixel_scroll.y = 0; }
         }
 
-        Rect GetRect() const override
+        recti GetRect() const override
         {
             return window_rect;
         }
@@ -413,7 +413,7 @@ namespace ride
             ViewChanged();
         }
 
-        void ScrollToRectHeight(const Rect& rect)
+        void ScrollToRectHeight(const recti& rect)
         {
             const auto cursor_up = rect.GetTop();
             const auto cursor_down = rect.GetBottom();
@@ -432,7 +432,7 @@ namespace ride
             }
         }
 
-        void ScrollToRectWidth(const Rect& rect)
+        void ScrollToRectWidth(const recti& rect)
         {
             const auto cursor_left = rect.GetLeft();
             const auto cursor_right = rect.GetRight();
@@ -452,7 +452,7 @@ namespace ride
             }
         }
 
-        void ScrollToRect(const Rect& rect)
+        void ScrollToRect(const recti& rect)
         {
             ScrollToRectHeight(rect);
             ScrollToRectWidth(rect);
@@ -463,7 +463,7 @@ namespace ride
         {
             const int scroll = pixel_scroll.y;
             const int document_size = GetDocumentSize().y;
-            const Rect rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
+            const recti rect = window_rect.CreateEastFromMaxSize(settings->scrollbar_width);
 
             const auto button_height = rect.size.x;
 
@@ -483,7 +483,7 @@ namespace ride
             const auto suggest_scroll_position = (static_cast<float>(scroll) / static_cast<float>(max_scroll)) * static_cast<float>(area_to_scroll);
             const auto scroll_position = static_cast<int>(std::floor(suggest_scroll_position));
 
-            const auto scrollbar = Rect{{rect.position.x, rect.position.y + scroll_position + up_button.size.y}, {rect.size.x, scrollbar_size}};
+            const auto scrollbar = recti{{rect.position.x, rect.position.y + scroll_position + up_button.size.y}, {rect.size.x, scrollbar_size}};
 
             return
             {
@@ -510,11 +510,11 @@ namespace ride
 
             const auto line = Line{line_color, 1};
 
-            painter->Rect(data.rect, background_color, line);
-            painter->Rect(data.up_button, button_color, line);
-            painter->Rect(data.down_button, button_color, line);
+            painter->recti(data.rect, background_color, line);
+            painter->recti(data.up_button, button_color, line);
+            painter->recti(data.down_button, button_color, line);
 
-            painter->Rect(data.scrollbar, scrollbar_color, line);
+            painter->recti(data.scrollbar, scrollbar_color, line);
         }
 
         int GetClientTop() const
@@ -549,7 +549,7 @@ namespace ride
             return true;
         }
 
-        void OnDraw(Painter* painter, std::function<void (const Rect& r)> draw_main)
+        void OnDraw(Painter* painter, std::function<void (const recti& r)> draw_main)
         {
             {
                 const auto rect = window_rect.CreateWestFromMaxSize(west.get_size());
@@ -861,7 +861,7 @@ namespace ride
     {
         std::shared_ptr<Settings> settings;
         std::shared_ptr<Font> font;
-        Rect rect;
+        recti rect;
 
         std::string text;
         int cursor_from = 0;
@@ -883,7 +883,7 @@ namespace ride
         void Draw(Painter* painter)
         {
             const auto scope = RectScope(painter, rect);
-            painter->Rect(rect, settings->theme.edit_background, std::nullopt);
+            painter->recti(rect, settings->theme.edit_background, std::nullopt);
 
             const auto start_x = rect.position.x;
             const auto start_y = rect.position.y;
@@ -897,7 +897,7 @@ namespace ride
                 const auto cursor_end = std::max(cursor_from, cursor_to);
                 const auto select_start = index2x(cursor_start);
                 const auto select_end = index2x(cursor_end);
-                painter->Rect({{select_start, start_y}, {select_end - select_start, font->line_height}}, settings->theme.edit_selection_bkg, std::nullopt);
+                painter->recti({{select_start, start_y}, {select_end - select_start, font->line_height}}, settings->theme.edit_selection_bkg, std::nullopt);
             }
             else
             {
@@ -1025,7 +1025,7 @@ namespace ride
                 0,
                 cursor * font->line_height
             };
-            const auto scroll_rect = Rect
+            const auto scroll_rect = recti
             {
                 cursor_top_point,
                 {
@@ -1089,12 +1089,12 @@ namespace ride
             return settings->results_padding_top + line * (font->line_height + settings->results_padding_middle + settings->results_internal_padding * 2);
         }
 
-        void DrawResults(Painter* painter, const Rect& rect)
+        void DrawResults(Painter* painter, const recti& rect)
         {
             const auto top = GetLineNumberTop();
             const auto bottom = GetLineNumberBottom();
 
-            painter->Rect(rect, settings->theme.command_view_background, std::nullopt);
+            painter->recti(rect, settings->theme.command_view_background, std::nullopt);
 
             for(auto line_index=top; line_index<=bottom; line_index +=1)
             {
@@ -1106,7 +1106,7 @@ namespace ride
                 const auto foreground_color = selected ? settings->theme.command_view_selected_foreground : settings->theme.command_view_deselected_foreground;
                 const auto background_color = selected ? settings->theme.command_view_selected_background : settings->theme.command_view_deselected_background;
 
-                painter->Rect
+                painter->recti
                 (
                     {
                         ClientToGlobal
@@ -1127,10 +1127,10 @@ namespace ride
 
         void Draw(Painter* painter) override
         {
-            OnDraw(painter, [this, painter](const Rect& rect){ this->DrawResults(painter, rect); });
+            OnDraw(painter, [this, painter](const recti& rect){ this->DrawResults(painter, rect); });
         }
 
-        Rect GetRect() const override
+        recti GetRect() const override
         {
             return window_rect;
         }
@@ -1201,7 +1201,7 @@ namespace ride
     {
         std::shared_ptr<Settings> settings;
         std::shared_ptr<Font> font;
-        Rect rect;
+        recti rect;
 
         Edit edit;
 
@@ -1213,7 +1213,7 @@ namespace ride
         void OnLayout(const vec2& window_size) override
         {
             const auto command_rect =
-                Rect{{0, 0}, window_size}
+                recti{{0, 0}, window_size}
                 .CreateNorthFromMaxSize(settings->commandview_height)
                 .CreateFromCenterMaxSize(settings->commandview_width)
                 ;
@@ -1271,14 +1271,14 @@ namespace ride
             results.results = entries->FindEntries(edit.text);
         }
 
-        Rect GetRect() const override
+        recti GetRect() const override
         {
             return rect;
         }
 
         void Draw(Painter* painter) override
         {
-            painter->Rect(rect, settings->theme.command_view_background, std::nullopt);
+            painter->recti(rect, settings->theme.command_view_background, std::nullopt);
             edit.Draw(painter);
             results.Draw(painter);
         }
@@ -1373,7 +1373,7 @@ namespace ride
         std::shared_ptr<Driver> driver;
         std::shared_ptr<Settings> settings;
         std::shared_ptr<Font> font;
-        Rect rect;
+        recti rect;
 
         std::vector<Tab> tabs;
 
@@ -1401,7 +1401,7 @@ namespace ride
             ViewChanged();
         }
 
-        Rect GetRect() const override
+        recti GetRect() const override
         {
             return rect;
         }
@@ -1433,7 +1433,7 @@ namespace ride
             const auto tab_selected_background = settings->theme.tabbar_tab_selected_background;
             const auto tab_line_color = settings->theme.tabbar_tab_line_color;
             const auto tab_text_color = settings->theme.tabbar_tab_text_color;
-            painter->Rect(rect, background_color, std::nullopt);
+            painter->recti(rect, background_color, std::nullopt);
 
             auto scope = RectScope{painter, rect};
             
@@ -1451,7 +1451,7 @@ namespace ride
                 const auto tab_height_offset = CalculateTabHeightOffset(tab_index);
                 const auto tab_background = is_selected ? tab_selected_background : tab_inactive_background;
                 const auto tab_rect = CalculateLocalTabRect(tab_index).Offset(rect.position);
-                painter->Rect(tab_rect, tab_background, Line{tab_line_color, 1});
+                painter->recti(tab_rect, tab_background, Line{tab_line_color, 1});
                 painter->Text(font, tab.name, {tab.x + rect.position.x + settings->tab_padding_left - scroll, bottom - (font->line_height + tab_height_offset)}, tab_text_color);
             }
         }
@@ -1461,7 +1461,7 @@ namespace ride
             return selected_tab == tab_index;
         }
 
-        Rect CalculateLocalTabRect(int tab_index) const
+        recti CalculateLocalTabRect(int tab_index) const
         {
             const auto bottom = rect.size.y;
             const auto tab = tabs[Cs(tab_index)];
@@ -1732,9 +1732,9 @@ namespace ride
         
         void Draw(Painter* painter) override
         {
-            OnDraw(painter, [this, painter](const Rect& r)
+            OnDraw(painter, [this, painter](const recti& r)
             {
-                painter->Rect(r, settings->theme.filesys_background_color, std::nullopt);
+                painter->recti(r, settings->theme.filesys_background_color, std::nullopt);
 
                 for(auto index = GetLineNumberTop(); index <= GetLineNumberBottom(); index += 1)
                 {
@@ -1828,7 +1828,7 @@ namespace ride
             };
             const auto scroll_spacing_half_height = settings->scroll_spacing.y * font->line_height;
             const auto scroll_spacing_half_width = settings->scroll_spacing.x * font->char_width;
-            const auto scroll_rect = Rect
+            const auto scroll_rect = recti
             {
                 {
                     cursor_top_point.x - scroll_spacing_half_width,
@@ -1948,9 +1948,9 @@ namespace ride
             return line * font->line_height;
         }
 
-        void DrawGutter(Painter* painter, const Rect& gutter_rect)
+        void DrawGutter(Painter* painter, const recti& gutter_rect)
         {
-            painter->Rect(gutter_rect, settings->theme.text_gutter_color, std::nullopt);
+            painter->recti(gutter_rect, settings->theme.text_gutter_color, std::nullopt);
 
             if(settings->render_linenumber)
             {
@@ -1965,7 +1965,7 @@ namespace ride
             }
         }
 
-        void DrawEdit(Painter* painter, const Rect& rect)
+        void DrawEdit(Painter* painter, const recti& rect)
         {
             const auto foreground_color = settings->theme.text_foreground_color;
             const auto background_color = settings->theme.text_background_color;
@@ -1973,7 +1973,7 @@ namespace ride
             const auto top = GetLineNumberTop();
             const auto bottom = GetLineNumberBottom();
 
-            painter->Rect(rect, background_color, std::nullopt);
+            painter->recti(rect, background_color, std::nullopt);
 
             for(auto line_index=top; line_index<=bottom; line_index +=1)
             {
@@ -2004,12 +2004,12 @@ namespace ride
         ) : ScrollableView(s), driver(d), font(f), document(doc)
         {
             west.get_size = [this]() -> int { return this->GetGutterWidth();};
-            west.on_draw = [this](Painter* painter, const Rect& rect) { this->DrawGutter(painter, rect); };
+            west.on_draw = [this](Painter* painter, const recti& rect) { this->DrawGutter(painter, rect); };
         }
 
         void Draw(Painter* painter) override
         {
-            OnDraw(painter, [this, painter](const Rect& rect){ this->DrawEdit(painter, rect); });
+            OnDraw(painter, [this, painter](const recti& rect){ this->DrawEdit(painter, rect); });
         }
 
         
@@ -2230,7 +2230,7 @@ namespace ride
         {
             if(settings->window_padding != 0)
             {
-                painter->Rect({{0, 0}, window_size}, settings->theme.background, std::nullopt);
+                painter->recti({{0, 0}, window_size}, settings->theme.background, std::nullopt);
             }
 
             edit_widget.Draw(painter);
@@ -2265,7 +2265,7 @@ namespace ride
         {
             for(auto* w: GetAllViews())
             {
-                const Rect r = w->GetRect();
+                const recti r = w->GetRect();
                 if(r.Contains(p))
                 {
                     return w;

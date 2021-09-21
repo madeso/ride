@@ -34,14 +34,14 @@ struct Ren
     bool initial_frame = true;
 
     void init(SDL_Window* win);
-    void update_rects(std::vector<Rect>& rects);
-    void set_clip_rect(Rect rect);
-    Size get_size();
+    void update_rects(std::vector<recti>& rects);
+    void set_clip_rect(recti rect);
+    sizei get_size();
 
-    void draw_rect(Rect rect, Color color);
+    void draw_rect(recti rect, Color color);
 
     // sub - screen coordinates
     // x/y - offset into image
-    void draw_image(Image* image, const Rect& sub, int x, int y, Color color);
+    void draw_image(Image* image, const recti& sub, int x, int y, Color color);
     int draw_text(Font* font, const std::string& text, int x, int y, Color color);
 };

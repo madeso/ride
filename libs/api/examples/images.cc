@@ -6,7 +6,7 @@
 
 struct ImagesApp : App
 {
-    vec2 mouse = {0,0};
+    vec2<pix> mouse = {0_px, 0_px};
 
     std::shared_ptr<Image> logo;
 
@@ -15,18 +15,18 @@ struct ImagesApp : App
     {
     }
 
-    void on_mouse_moved(const vec2& new_mouse, int xrel, int yrel) override
+    void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
     {
         mouse = new_mouse;
     }
 
     void draw(RenCache* cache) override
     {
-        cache->draw_rect(Rect::from_size(size), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(to_dip(rect<pix>::from_size(size)), Color::rgb(255, 255, 255, 255));
 
-        cache->draw_image(logo, 20, 20, {255, 255, 255, 255});
+        cache->draw_image(logo, to_dip(20_px), to_dip(20_px), {255, 255, 255, 255});
 
-        cache->draw_rect(Rect{mouse, Size{10, 10}}, Color::rgb(0, 0, 255, 255));
+        cache->draw_rect(to_dip(rect<pix>{mouse, {10_px, 10_px}}), Color::rgb(0, 0, 255, 255));
     }
 };
 

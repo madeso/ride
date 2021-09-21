@@ -36,7 +36,7 @@ double calculate_scale()
 }
 
 App::App()
-    : size{0,0}
+    : size{pix{0}, pix{0}}
     , run(true)
     , redraw_value(nullptr)
     , scale(calculate_scale())
@@ -53,11 +53,11 @@ void App::on_exposed()
 {
 }
 
-void App::on_file_dropped(const std::string& file, int x, int y)
+void App::on_file_dropped(const std::string& file, pix x, pix y)
 {
 }
 
-void App::on_resized(int new_width, int new_height)
+void App::on_resized(pix new_width, pix new_height)
 {
 }
 
@@ -74,15 +74,15 @@ void App::on_text_input(const std::string& str)
 }
 
 
-void App::on_mouse_pressed(MouseButton button, int x, int y, int clicks)
+void App::on_mouse_pressed(MouseButton button, pix x, pix y, int clicks)
 {
 }
 
-void App::on_mouse_released(MouseButton button, int x, int y)
+void App::on_mouse_released(MouseButton button, pix x, pix y)
 {
 }
 
-void App::on_mouse_moved(const vec2& new_mouse, int xrel, int yrel)
+void App::on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel)
 {
 }
 
@@ -99,9 +99,25 @@ void App::update()
 {
 }
 
-double App::get_scale() const
+dip App::to_dip(pix p) const
 {
-    return scale;
+    return dip{static_cast<dip::type>(p.value * scale)};
+}
+
+rect<dip> App::to_dip(const rect<pix>& p) const
+{
+    return rect<dip>
+    {
+        to_dip(p.x),
+        to_dip(p.y),
+        to_dip(p.width),
+        to_dip(p.height)
+    };
+}
+
+pix App::to_pix(dip p) const
+{
+    return pix{static_cast<pix::type>(p.value / scale)};
 }
 
 
@@ -111,21 +127,21 @@ void App::set_scale(double d)
 
     for(auto& f: loaded_fonts)
     {
-        f->set_size(f->unscaled_size * get_scale());
+        f->set_size(to_dip(f->unscaled_size));
     }
 
      // todo(Gustav): invalidate rendercache...
 }
 
-std::shared_ptr<Font> App::load_font(const std::string_view& file, float size)
+std::shared_ptr<Font> App::load_font(const std::string_view& file, pix size)
 {
     return load_font(std::string(file), size);
 }
 
-std::shared_ptr<Font> App::load_font(const std::string& file, float size)
+std::shared_ptr<Font> App::load_font(const std::string& file, pix size)
 {
     auto r = std::make_shared<Font>();
-    if(r->load_font(file.c_str(), size * get_scale()))
+    if(r->load_font(file.c_str(), to_dip(size)))
     {
         loaded_fonts.emplace_back(r);
         r->unscaled_size = size;
@@ -215,7 +231,7 @@ bool PollEvent(SDL_Event* event)
 
 bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
 {
-    std::optional<vec2> mouse_movement;
+    std::optional<vec2i> mouse_movement;
     int xrel = 0; int yrel = 0;
 
     {
@@ -236,7 +252,11 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
                 switch(event.window.event)
                 {
                     case SDL_WINDOWEVENT_RESIZED:
-                        app->on_resized(event.window.data1, event.window.data2);
+                        app->on_resized
+                        (
+                            app->to_pix(dip{event.window.data1}),
+                            app->to_pix(dip{event.window.data2})
+                        );
                         break;
                     case SDL_WINDOWEVENT_EXPOSED:
                         cache->invalidate();
@@ -250,7 +270,12 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
                     int wx=0; int wy=0;
                     SDL_GetGlobalMouseState(&mx, &my);
                     SDL_GetWindowPosition(window, &wx, &wy);
-                    app->on_file_dropped(event.drop.file, mx - wx, my - wy);
+                    app->on_file_dropped
+                    (
+                        event.drop.file,
+                        app->to_pix(dip{mx - wx}),
+                        app->to_pix(dip{my - wy})
+                    );
                     SDL_free(event.drop.file);
                 }
                 break;
@@ -267,16 +292,27 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
 
             case SDL_MOUSEBUTTONDOWN:
                 if (event.button.button == 1) { SDL_CaptureMouse(SDL_TRUE); }
-                app->on_mouse_pressed(mousebutton_from_sdl_button(event.button.button), event.button.x, event.button.y, event.button.clicks);
+                app->on_mouse_pressed
+                (
+                    mousebutton_from_sdl_button(event.button.button),
+                    app->to_pix(dip{event.button.x}),
+                    app->to_pix(dip{event.button.y}),
+                    event.button.clicks
+                );
                 break;
 
             case SDL_MOUSEBUTTONUP:
                 if (event.button.button == 1) { SDL_CaptureMouse(SDL_FALSE); }
-                app->on_mouse_released(mousebutton_from_sdl_button(event.button.button), event.button.x, event.button.y);
+                app->on_mouse_released
+                (
+                    mousebutton_from_sdl_button(event.button.button),
+                    app->to_pix(dip{event.button.x}),
+                    app->to_pix(dip{event.button.y})
+                );
                 break;
 
             case SDL_MOUSEMOTION:
-                mouse_movement = vec2{event.motion.x, event.motion.y};
+                mouse_movement = vec2i{event.motion.x, event.motion.y};
                 xrel += event.motion.xrel;
                 yrel += event.motion.yrel;
                 break;
@@ -295,7 +331,16 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
 
         if(mouse_movement)
         {
-            app->on_mouse_moved(*mouse_movement, xrel, yrel);
+            app->on_mouse_moved
+            (
+                vec2<pix>
+                {
+                    app->to_pix(dip{mouse_movement->x}),
+                    app->to_pix(dip{mouse_movement->y})
+                },
+                app->to_pix(dip{xrel}),
+                app->to_pix(dip{yrel})
+            );
         }
 
         if(redraw == false)
@@ -305,7 +350,13 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
     }
 
     cache->begin_frame();
-    app->size = ren->get_size();
+
+    const auto ss = ren->get_size();
+    app->size = size<pix>
+    {
+        app->to_pix(dip{ss.width}),
+        app->to_pix(dip{ss.height})
+    };
     app->draw(cache);
     cache->end_frame();
 
@@ -429,8 +480,8 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     cache.show_debug = render_debug;
 
     auto app = create_app({});
-    app->size.height = initial_height;
-    app->size.width = initial_width;
+    app->size.height = app->to_pix(dip{initial_height});
+    app->size.width = app->to_pix(dip{initial_width});
 
     if(custom_scale)
     {

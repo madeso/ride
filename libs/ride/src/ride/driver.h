@@ -87,10 +87,10 @@ namespace ride
     {
         virtual ~Painter();
 
-        virtual void PushClip(const Rect& rect) = 0;
+        virtual void PushClip(const recti& rect) = 0;
         virtual void PopClip() = 0;
         
-        virtual void Rect(const Rect& rect, std::optional<Rgb> fill, std::optional<Line> line_color) = 0;
+        virtual void recti(const recti& rect, std::optional<Rgb> fill, std::optional<Line> line_color) = 0;
         virtual void Circle(const vec2& point, int radius, std::optional<Rgb> fill, std::optional<Line> line_color) = 0;
         virtual void Line(const vec2& from, const vec2& to, const Line& line) = 0;
         virtual void Text(std::shared_ptr<Font> font, const std::string& text, const vec2& where, const Rgb& color) = 0;

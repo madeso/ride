@@ -35,6 +35,28 @@ struct Hash
     }
 };
 
+rect<int> C(const rect<dip>& r)
+{
+    return
+    {
+        r.x.value,
+        r.y.value,
+        r.width.value,
+        r.height.value
+    };
+}
+
+rect<dip> C(const rect<int>& r)
+{
+    return
+    {
+        dip{r.x},
+        dip{r.y},
+        dip{r.width},
+        dip{r.height}
+    };
+}
+
 std::default_random_engine Rng::create()
 {
     std::random_device random_device;
@@ -51,7 +73,7 @@ int cell_idx(int x, int y)
     return x + y * CELLS_X;
 }
 
-void RenCache::push_clip_rect(const Rect& rr)
+void RenCache::push_clip_rect(const rect<dip>& rr)
 {
     const auto top = *clip_rect_stack.rbegin();
     auto rect = rr;
@@ -89,15 +111,15 @@ void RenCache::set_debug(bool enable)
     show_debug = enable;
 }
 
-void RenCache::set_clip_rect(const Rect& rect)
+void RenCache::set_clip_rect(const rect<dip>& rect)
 {
     Command& cmd = push_command(SET_CLIP);
-    cmd.rect = Rect::intersect(rect, screen_rect);
+    cmd.rect = ::rect<dip>::intersect(rect, screen_rect);
 }
 
-void RenCache::draw_rect(Rect rect, Color color)
+void RenCache::draw_rect(rect<dip> rect, Color color)
 {
-    if (!Rect::overlap(screen_rect, rect))
+    if (!::rect<dip>::overlap(screen_rect, rect))
     {
         return;
     }
@@ -106,17 +128,17 @@ void RenCache::draw_rect(Rect rect, Color color)
     cmd.color = color;
 }
 
-void RenCache::draw_image(std::shared_ptr<Image> image, int x, int y, Color color)
+void RenCache::draw_image(std::shared_ptr<Image> image, dip x, dip y, Color color)
 {
-    auto rect = Rect
+    auto rect = ::rect<dip>
     {
         x,
         y,
-        image->width,
-        image->height
+        dip{image->width},
+        dip{image->height}
     };
 
-    if (!Rect::overlap(screen_rect, rect))
+    if (!::rect<dip>::overlap(screen_rect, rect))
     {
         return;
     }
@@ -126,9 +148,9 @@ void RenCache::draw_image(std::shared_ptr<Image> image, int x, int y, Color colo
     cmd.color = color;
 }
 
-int RenCache::draw_text(std::shared_ptr<Font> font, const std::string& text, int x, int y, Color color)
+dip RenCache::draw_text(std::shared_ptr<Font> font, const std::string& text, dip x, dip y, Color color)
 {
-    auto rect = Rect
+    auto rect = ::rect<dip>
     {
         x,
         y,
@@ -136,7 +158,7 @@ int RenCache::draw_text(std::shared_ptr<Font> font, const std::string& text, int
         font->get_height()
     };
 
-    if (Rect::overlap(screen_rect, rect))
+    if (::rect<dip>::overlap(screen_rect, rect))
     {
         Command& cmd = push_command(DRAW_TEXT);
         cmd.text = text;
@@ -157,7 +179,7 @@ void RenCache::invalidate()
 void RenCache::begin_frame()
 {
     /* reset all cells if the screen width/height has changed */
-    const auto size = ren->get_size();
+    const auto size = ren->get_size().as<dip>();
     if (screen_rect.width != size.width || size.height != screen_rect.height)
     {
         screen_rect.width = size.width;
@@ -165,16 +187,16 @@ void RenCache::begin_frame()
         invalidate();
     }
 
-    clip_rect_stack = {Rect::from_size(size)};
+    clip_rect_stack = {rect<dip>::from_size(size)};
     set_clip_rect(clip_rect_stack[0]);
 }
 
-void RenCache::update_overlapping_cells(Rect r, unsigned h)
+void RenCache::update_overlapping_cells(const rect<dip>& r, unsigned h)
 {
-    int x1 = r.x / CELL_SIZE;
-    int y1 = r.y / CELL_SIZE;
-    int x2 = (r.x + r.width) / CELL_SIZE;
-    int y2 = (r.y + r.height) / CELL_SIZE;
+    int x1 = r.x.value / CELL_SIZE;
+    int y1 = r.y.value / CELL_SIZE;
+    int x2 = (r.x + r.width).value / CELL_SIZE;
+    int y2 = (r.y + r.height).value / CELL_SIZE;
 
     for (int y = y1; y <= y2; y++)
     {
@@ -201,16 +223,16 @@ unsigned Command::compute_hash() const
 
 void RenCache::end_frame()
 {
-    std::vector<Rect> rect_buf;
+    std::vector<recti> rect_buf;
     rect_buf.reserve(CELLS_X * CELLS_Y / 2);
 
-    auto push_rect = [&rect_buf](const Rect& r) {
+    auto push_rect = [&rect_buf](const recti& r) {
         // try to merge with existing rectangle
         for (auto& er : rect_buf)
         {
-            if (Rect::overlap(er, r))
+            if (recti::overlap(er, r))
             {
-                er = Rect::merge(er, r);
+                er = recti::merge(er, r);
                 return;
             }
         }
@@ -220,15 +242,15 @@ void RenCache::end_frame()
     };
 
     /* update cells from commands */
-    Rect cr = screen_rect;
+    rect<dip> cr = screen_rect;
     for (const auto& cmd : command_buf)
     {
         if (cmd.type == SET_CLIP)
         {
             cr = cmd.rect;
         }
-        Rect r = Rect::intersect(cmd.rect, cr);
-        if (r.width == 0 || r.height == 0)
+        rect<dip> r = rect<dip>::intersect(cmd.rect, cr);
+        if (r.width.value == 0 || r.height.value == 0)
         {
             continue;
         }
@@ -237,8 +259,8 @@ void RenCache::end_frame()
     }
 
     /* push rects for all cells changed from last frame, reset cells */
-    int max_x = screen_rect.width / CELL_SIZE + 1;
-    int max_y = screen_rect.height / CELL_SIZE + 1;
+    int max_x = screen_rect.width.value / CELL_SIZE + 1;
+    int max_y = screen_rect.height.value / CELL_SIZE + 1;
     for (int y = 0; y < max_y; y++)
     {
         for (int x = 0; x < max_x; x++)
@@ -260,7 +282,7 @@ void RenCache::end_frame()
         r.y *= CELL_SIZE;
         r.width *= CELL_SIZE;
         r.height *= CELL_SIZE;
-        r = Rect::intersect(r, screen_rect);
+        r = recti::intersect(r, C(screen_rect));
     }
 
     /* redraw updated regions */
@@ -274,20 +296,20 @@ void RenCache::end_frame()
             switch (cmd.type)
             {
             case SET_CLIP:
-                ren->set_clip_rect(Rect::intersect(cmd.rect, r));
+                ren->set_clip_rect(recti::intersect(C(cmd.rect), r));
                 break;
             case DRAW_RECT:
-                ren->draw_rect(cmd.rect, cmd.color);
+                ren->draw_rect(C(cmd.rect), cmd.color);
                 break;
             case DRAW_IMAGE:
                 {
-                    const auto r = Rect::from_size({cmd.rect.width, cmd.rect.height});
-                    ren->draw_image(cmd.image.get(), r, cmd.rect.x, cmd.rect.y, cmd.color);
+                    const auto r = rect<dip>::from_size({cmd.rect.width, cmd.rect.height});
+                    ren->draw_image(cmd.image.get(), C(r), cmd.rect.x.value, cmd.rect.y.value, cmd.color);
                 }
                 break;
             case DRAW_TEXT:
                 cmd.font->set_tab_width(cmd.tab_width);
-                ren->draw_text(cmd.font.get(), cmd.text.c_str(), cmd.rect.x, cmd.rect.y, cmd.color);
+                ren->draw_text(cmd.font.get(), cmd.text.c_str(), cmd.rect.x.value, cmd.rect.y.value, cmd.color);
                 break;
             }
         }
@@ -316,7 +338,7 @@ RenCache::RenCache(Ren* r)
 {
 }
 
-ClipScope::ClipScope(RenCache* c, const Rect& r)
+ClipScope::ClipScope(RenCache* c, const rect<dip>& r)
     : cache(c)
 {
     cache->push_clip_rect(r);

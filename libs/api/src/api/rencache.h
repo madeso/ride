@@ -8,6 +8,7 @@
 #include "api/renderer.h"
 #include "api/font.h"
 #include "api/image.h"
+#include "api/units.h"
 
 constexpr int CELLS_X = 80;
 constexpr int CELLS_Y = 50;
@@ -40,11 +41,11 @@ struct Rng
 struct Command
 {
     CommandType type;
-    Rect rect;
+    rect<dip> rect;
     Color color;
     std::shared_ptr<Font> font;
     std::shared_ptr<Image> image;
-    int tab_width;
+    dip tab_width = dip{0};
     std::string text;
 
     unsigned compute_hash() const;
@@ -59,7 +60,7 @@ struct RenCache
     unsigned* cells = cells_buf2;
 
     std::vector<Command> command_buf;
-    Rect screen_rect;
+    rect<dip> screen_rect;
 
     bool show_debug = false;
     Rng rng;
@@ -68,20 +69,20 @@ struct RenCache
 
     RenCache(Ren* r);
 
-    std::vector<Rect> clip_rect_stack;
-    void push_clip_rect(const Rect& rect);
+    std::vector<rect<dip>> clip_rect_stack;
+    void push_clip_rect(const rect<dip>& rect);
     void pop_clip_rect();
 
     // private
     Command& push_command(CommandType type);
-    void update_overlapping_cells(Rect r, unsigned h);
+    void update_overlapping_cells(const rect<dip>& r, unsigned h);
 
     void set_debug(bool enable);
     void free_font(Font* font);
-    void set_clip_rect(const Rect& rect);
-    void draw_rect(Rect rect, Color color);
-    void draw_image(std::shared_ptr<Image> image, int x, int y, Color color);
-    int draw_text(std::shared_ptr<Font> font, const std::string& text, int x, int y, Color color);
+    void set_clip_rect(const rect<dip>& rect);
+    void draw_rect(rect<dip> rect, Color color);
+    void draw_image(std::shared_ptr<Image> image, dip x, dip y, Color color);
+    dip draw_text(std::shared_ptr<Font> font, const std::string& text, dip x, dip y, Color color);
     void invalidate();
     void begin_frame();
     void end_frame();
@@ -91,6 +92,6 @@ struct ClipScope
 {
     RenCache* cache;
 
-    ClipScope(RenCache* c, const Rect& r);
+    ClipScope(RenCache* c, const rect<dip>& r);
     ~ClipScope();
 };

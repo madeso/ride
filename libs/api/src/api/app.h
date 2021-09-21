@@ -12,6 +12,8 @@
 #include "api/key.h"
 #include "api/font.h"
 #include "api/mouse_button.h"
+#include "api/units.h"
+#include "base/rect.h"
 
 struct RenCache;
 
@@ -23,16 +25,16 @@ struct App
     void redraw();
 
     virtual void on_exposed();
-    virtual void on_file_dropped(const std::string& file, int x, int y);
-    virtual void on_resized(int new_width, int new_height);
+    virtual void on_file_dropped(const std::string& file, pix x, pix y);
+    virtual void on_resized(pix new_width, pix new_height);
 
     virtual void on_key_pressed(Key key);
     virtual void on_key_released(Key key);
     virtual void on_text_input(const std::string& str);
 
-    virtual void on_mouse_pressed(MouseButton button, int x, int y, int clicks);
-    virtual void on_mouse_released(MouseButton button, int x, int y);
-    virtual void on_mouse_moved(const vec2& new_mouse, int xrel, int yrel);
+    virtual void on_mouse_pressed(MouseButton button, pix x, pix y, int clicks);
+    virtual void on_mouse_released(MouseButton button, pix x, pix y);
+    virtual void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel);
     virtual void on_mouse_wheel(int x, int y);
 
     virtual void on_quit();
@@ -40,17 +42,19 @@ struct App
     virtual void update();
     virtual void draw(RenCache* cache) = 0;
 
-    Size size;
+    size<pix> size;
     bool run;
 
 
-    std::shared_ptr<Font> load_font(const std::string_view& file, float size);
-    std::shared_ptr<Font> load_font(const std::string& file, float size);
+    std::shared_ptr<Font> load_font(const std::string_view& file, pix size);
+    std::shared_ptr<Font> load_font(const std::string& file, pix size);
 
     std::vector<std::shared_ptr<Font>> loaded_fonts;
 
     double scale;
-    double get_scale() const;
+    dip to_dip(pix p) const;
+    rect<dip> to_dip(const rect<pix>& p) const;
+    pix to_pix(dip p) const;
     void set_scale(double d);
 
     bool* redraw_value;

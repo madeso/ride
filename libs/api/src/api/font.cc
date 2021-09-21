@@ -23,8 +23,8 @@ struct LoadedFontData
     const unsigned char* data;
     std::vector<unsigned char> data_storage;  // ttf data
     stbtt_fontinfo stbfont;
-    float size;
-    int height;
+    dip size = dip{0};
+    dip height = dip{0};
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@ struct GlyphSet
         /* load glyphs */
         const float s = stbtt_ScaleForMappingEmToPixels(&font->stbfont, 1) /
                         stbtt_ScaleForPixelHeight(&font->stbfont, 1);
-        const int res = stbtt_BakeFontBitmap(font->data, 0, font->size * s, &pixels[0], width,
+        const int res = stbtt_BakeFontBitmap(font->data, 0, font->size.value * s, &pixels[0], width,
                                              height, idx * 256, 256, this->glyphs);
 
         if (res < 0)
@@ -55,7 +55,7 @@ struct GlyphSet
         /* adjust glyph yoffsets and xadvance */
         int ascent, descent, linegap;
         stbtt_GetFontVMetrics(&font->stbfont, &ascent, &descent, &linegap);
-        const float scale = stbtt_ScaleForMappingEmToPixels(&font->stbfont, font->size);
+        const float scale = stbtt_ScaleForMappingEmToPixels(&font->stbfont, font->size.value);
         const int scaled_ascent = ascent * scale + 0.5;
         for (int i = 0; i < 256; i++)
         {
@@ -127,12 +127,12 @@ Font::Font() = default;
 Font::~Font() = default;
 
 
-bool Font::load_font(const embedded_binary& data, float size)
+bool Font::load_font(const embedded_binary& data, dip size)
 {
     return impl_load_font(std::make_unique<FontImpl>(), reinterpret_cast<const unsigned char*>(data.data), size);
 }
 
-bool Font::load_font(const std::string& filename, float size)
+bool Font::load_font(const std::string& filename, dip size)
 {
     if(filename == Font::default_font)
     {
@@ -150,15 +150,15 @@ bool Font::load_font(const std::string& filename, float size)
     return impl_load_font(std::move(font), data, size);
 }
 
-void set_size_for_font(FontImpl* font, float size)
+void set_size_for_font(FontImpl* font, dip size)
 {
     int ascent, descent, linegap;
     stbtt_GetFontVMetrics(&font->data.stbfont, &ascent, &descent, &linegap);
-    float scale = stbtt_ScaleForMappingEmToPixels(&font->data.stbfont, size);
-    font->data.height = (ascent - descent + linegap) * scale + 0.5;
+    float scale = stbtt_ScaleForMappingEmToPixels(&font->data.stbfont, size.value);
+    font->data.height = dip{static_cast<int>((ascent - descent + linegap) * scale + 0.5)};
 }
 
-bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, float size)
+bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, dip size)
 {
     /* init font */
     font->data.data = data;
@@ -183,26 +183,26 @@ bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* d
     return true;
 }
 
-void Font::set_size(float new_size)
+void Font::set_size(dip new_size)
 {
     m->data.size = new_size;
     set_size_for_font(m.get(), new_size);
     m->mark_as_unloaded();
 }
 
-void Font::set_tab_width(int n)
+void Font::set_tab_width(dip n)
 {
     GlyphSet* set = m->get_glyphset('\t');
-    set->glyphs['\t'].xadvance = n;
+    set->glyphs['\t'].xadvance = n.value;
 }
 
-int Font::get_tab_width()
+dip Font::get_tab_width()
 {
     GlyphSet* set = m->get_glyphset('\t');
-    return set->glyphs['\t'].xadvance;
+    return dip{static_cast<int>(set->glyphs['\t'].xadvance)};
 }
 
-int Font::get_width(const std::string& text)
+dip Font::get_width(const std::string& text)
 {
     int x = 0;
     const auto codepoints = utf8_to_codepoints(text);
@@ -212,10 +212,10 @@ int Font::get_width(const std::string& text)
         stbtt_bakedchar* g = &set->glyphs[codepoint & 0xff];
         x += g->xadvance;
     }
-    return x;
+    return dip{x};
 }
 
-int Font::get_height()
+dip Font::get_height()
 {
     return m->data.height;
 }
@@ -227,7 +227,7 @@ int draw_text(Ren* ren, Font* font, const std::string& text, int x, int y, Color
     {
         GlyphSet* set = font->m->get_glyphset(codepoint);
         stbtt_bakedchar* g = &set->glyphs[codepoint & 0xff];
-        auto rect = Rect
+        auto rect = recti
         {
             g->x0,
             g->y0,

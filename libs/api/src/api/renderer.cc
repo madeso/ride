@@ -66,7 +66,7 @@ void Ren::init(SDL_Window* win)
     set_clip_rect({0, 0, surf->w, surf->h});
 }
 
-void Ren::update_rects(std::vector<Rect>& rects)
+void Ren::update_rects(std::vector<recti>& rects)
 {
     if (rects.empty() == false)
     {
@@ -91,7 +91,7 @@ void Ren::update_rects(std::vector<Rect>& rects)
     }
 }
 
-void Ren::set_clip_rect(Rect rect)
+void Ren::set_clip_rect(recti rect)
 {
     clip.left = rect.x;
     clip.top = rect.y;
@@ -99,7 +99,7 @@ void Ren::set_clip_rect(Rect rect)
     clip.bottom = rect.y + rect.height;
 }
 
-Size Ren::get_size()
+sizei Ren::get_size()
 {
     SDL_Surface* surf = SDL_GetWindowSurface(window);
     return {surf->w, surf->h};
@@ -136,7 +136,7 @@ Color get_pixel_on_surface(SDL_Surface* surface, int x, int y)
     return c;
 }
 
-void Ren::draw_rect(Rect rect, Color color)
+void Ren::draw_rect(recti rect, Color color)
 {
     if (color.a == 0)
     {
@@ -165,7 +165,7 @@ void Ren::draw_rect(Rect rect, Color color)
     SDL_UnlockSurface(surf);
 }
 
-void Ren::draw_image(Image* image, const Rect& asub, int x, int y, Color color)
+void Ren::draw_image(Image* image, const recti& asub, int x, int y, Color color)
 {
     if (color.a == 0)
     {
