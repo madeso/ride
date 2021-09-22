@@ -68,7 +68,7 @@ pix calculate_line_height(const App& app, const Theme& theme, std::shared_ptr<Fo
     return  app.to_pix(font->get_height()) + theme.line_spacing;
 }
 
-pix get_document_height(const Document& doc, const App& app, const Theme& theme, std::shared_ptr<Font> font)
+pix get_document_height(const Document& doc, const App& app, std::shared_ptr<Font> font, const Theme& theme)
 {
     const auto lines = doc.GetNumberOfLines();
     const auto spacing = calculate_line_height(app, theme, font);
@@ -77,34 +77,53 @@ pix get_document_height(const Document& doc, const App& app, const Theme& theme,
     return spacing * static_cast<double>(lines);
 }
 
+pix get_document_width(const Document& doc, const App& app, std::shared_ptr<Font> f)
+{
+    const auto longest_line = std::max_element
+    (
+        doc.lines.begin(), doc.lines.end(),
+        [](const std::string& lhs, const std::string& rhs) -> bool
+        {
+            return lhs.length() < rhs.length();
+        }
+    );
+
+    if(longest_line == doc.lines.end())
+    {
+        return 0_px;
+    }
+
+    return app.to_pix(f->get_width(*longest_line));
+}
+
 void draw_scrollbar
 (
     const View& view, const App& app, const Theme& theme, RenCache* cache,
-    std::shared_ptr<Font> font, pix document_height, pix scroll
+    std::shared_ptr<Font> font, pix document_height, pix scroll,
+    bool is_vertical, Side through_side, Side top_side, Side bottom_side
 )
 {
     const auto view_rect = rect<pix>{view.position, view.size};
     const auto size = theme.scrollbar_width;
 
-    const auto through_rect = view_rect.get_cut_right(size);
+    const auto through_rect = view_rect.get_cut(through_side, size);
 
     auto track_rect = through_rect;
-    const auto top_button_rect = track_rect.cut_top(size);
-    const auto bottom_button_rect = track_rect.cut_bottom(size);
+    const auto top_button_rect = track_rect.cut(top_side, size);
+    const auto bottom_button_rect = track_rect.cut(bottom_side, size);
 
-    const auto fraction = view.size.height / document_height;
-    const auto thumb_size = track_rect.height * fraction;
+    const auto fraction = (is_vertical ? view_rect.height : view_rect.width) / document_height;
 
-    const auto available_size = track_rect.height - thumb_size;
+    const auto scroll_fraction = scroll / document_height;
 
-    const auto line_height = calculate_line_height(app, theme, font);
-
-    const auto scroll_size = document_height - line_height;
-    const auto scroll_fraction = scroll / scroll_size;
-
-    const auto thumb_position = track_rect.y + available_size * scroll_fraction;
-
-    const auto thumb_rect = rect<pix>{track_rect.x, thumb_position, track_rect.width, thumb_size};
+    const auto size_prop = is_vertical ? track_rect.height : track_rect.width;
+    const auto thumb_size = size_prop * fraction;
+    const auto available_size = size_prop - thumb_size;
+    const auto thumb_offset = available_size * scroll_fraction;
+    const auto thumb_rect = is_vertical
+        ? rect<pix>{track_rect.x               , track_rect.y + thumb_offset, track_rect.width, thumb_size       }
+        : rect<pix>{track_rect.x + thumb_offset, track_rect.y               , thumb_size      , track_rect.height}
+        ;
 
     Color scroll_through_color = {100, 100, 100, 255};
     Color scroll_thumb_color = {200, 200, 200, 255};
@@ -129,7 +148,8 @@ void draw(const View& view, const App& app, const Theme& theme, RenCache* cache,
     auto view_rect = main_view_rect;
     const auto gutter_rect = view_rect.cut_left(gutter_width);
 
-    const auto spacing = calculate_line_height(app, theme, font);
+    const auto line_height = calculate_line_height(app, theme, font);
+    const auto spacing = line_height;
 
     cache->draw_rect(app.to_dip(main_view_rect), theme.edit_background);
     cache->draw_rect(app.to_dip(gutter_rect), theme.gutter_background);
@@ -160,7 +180,19 @@ void draw(const View& view, const App& app, const Theme& theme, RenCache* cache,
         }
     }
 
-    draw_scrollbar(view, app, theme, cache, font, get_document_height(view.doc, app, theme, font), view.scroll.y);
+    
+    draw_scrollbar
+    (
+        view, app, theme, cache, font,
+        get_document_height(view.doc, app, font, theme) - line_height, view.scroll.y,
+        true, Side::right, Side::top, Side::bottom
+    );
+    draw_scrollbar
+    (
+        view, app, theme, cache, font,
+        get_document_width(view.doc, app, font), view.scroll.x,
+        false, Side::bottom, Side::left, Side::right
+    );
 }
 
 struct RideApp : App
@@ -235,7 +267,7 @@ struct RideApp : App
             root.scroll.y - (static_cast<double>(dy) * line_height) * theme.lines_to_scroll,
             get_document_height
             (
-                root.doc, *this, theme, font
+                root.doc, *this, font, theme
             ) - line_height
         );
     }
