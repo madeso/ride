@@ -1,5 +1,6 @@
 #include "base/str.h"
 #include "base/cc.h"
+#include "base/filesystem.h"
 
 #include "api/app.h"
 #include "api/rencache.h"
@@ -201,12 +202,14 @@ struct RideApp : App
 
     std::shared_ptr<Image> logo;
     std::shared_ptr<Font> font;
+    std::unique_ptr<filesystem> fs;
 
     RideApp()
         : logo(load_shared(LOGO_256TEXT_PNG))
         , font(load_font(Font::default_font, pix{12}))
+        , fs(create_local_filesystem())
     {
-        root.doc.LoadFile(__FILE__);
+        root.doc.LoadFile(fs.get(), __FILE__);
 
         root.position = {pix{50}, pix{50}};
         root.size = {pix{300}, pix{300}};

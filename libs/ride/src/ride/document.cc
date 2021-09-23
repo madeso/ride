@@ -1,25 +1,19 @@
 #include "ride/document.h"
 
-#include <fstream>
-
 #include "base/c.h"
+#include "base/filesystem.h"
 
-void Document::LoadFile(const std::string& path)
+bool Document::LoadFile(filesystem* fs, const std::string& path)
 {
     lines.clear();
-
-    std::ifstream file;
-    file.open(path.c_str(), std::ios::in | std::ios::binary);
-    if(file.is_open() == false)
-    {
-        return;
-    }
-
-    std::string line;
-    while(std::getline(file,line))
-    {
-        lines.emplace_back(line);
-    }
+    return fs->load_file
+    (
+        path,
+        [this](const std::string& line)
+        {
+            lines.emplace_back(line);
+        }
+    );
 }
 
 

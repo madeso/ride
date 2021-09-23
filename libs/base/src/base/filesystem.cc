@@ -1,5 +1,6 @@
 #include "base/filesystem.h"
 
+#include <fstream>
 #include <filesystem>
 #include <iostream>
 #include <algorithm>
@@ -12,6 +13,8 @@ FileEntry::FileEntry(const std::string& n, const std::string& p, bool d)
     is_directory(d)
 {
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 std::optional<std::string> GetCurrentDirectory()
 {
@@ -108,4 +111,34 @@ std::optional<std::vector<FileEntry>> List(const std::string& dir, const ListSet
         sort(&folders);
         return folders;
     }
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+struct filesystem_local : filesystem
+{
+    bool load_file(const std::string& path, std::function<void (std::string&)> on_line) override
+    {
+        std::ifstream file;
+        file.open(path.c_str(), std::ios::in | std::ios::binary);
+        if(file.is_open() == false)
+        {
+            return false;
+        }
+
+        std::string line;
+        while(std::getline(file,line))
+        {
+            on_line(line);
+        }
+
+        return true;
+    }
+};
+
+
+std::unique_ptr<filesystem> create_local_filesystem()
+{
+    return std::make_unique<filesystem_local>();
 }

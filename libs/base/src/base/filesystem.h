@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+#include <memory>
+#include <functional>
+
 struct FileEntry
 {
     std::string name;
@@ -19,7 +22,17 @@ struct ListSettings
     bool directories_first = true;
 };
 
-std::optional<std::string> GetCurrentDirectory();
-std::optional<std::string> AsAbsolute(const std::string& p);
-std::optional<bool> Exists(const std::string& p);
-std::optional<std::vector<FileEntry>> List(const std::string& dir, const ListSettings& settings);
+struct filesystem
+{
+    filesystem() = default;
+    virtual ~filesystem() = default;
+
+    virtual bool load_file(const std::string& path, std::function<void (std::string&)> on_line) = 0;
+
+    // virtual std::optional<std::string> get_current_directory() = 0;
+    // virtual std::optional<std::string> as_absolute(const std::string& p) = 0;
+    // virtual std::optional<bool> exists(const std::string& p) = 0;
+    // virtual std::optional<std::vector<FileEntry>> list(const std::string& dir, const ListSettings& settings) = 0;
+};
+
+std::unique_ptr<filesystem> create_local_filesystem();
