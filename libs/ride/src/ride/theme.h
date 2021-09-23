@@ -26,4 +26,15 @@ struct Theme
     Color scroll_through_color = {100, 100, 100, 255};
     Color scroll_thumb_color = {200, 200, 200, 255};
     Color scroll_button_color = {150, 150, 150, 255};
+
+    Color filesys_hidden_color = {100, 100, 100, 255};
+    Color filesys_file_color = {0, 0, 0, 255};
+    Color filesys_folder_color = {0, 0, 255, 255};
+    Color filesys_background_color = {230, 230, 230, 190};
+
+    pix filesys_indent = 12_px;
+    pix filesys_left_padding = 6_px;
+
+    bool sort_files = true;
+    bool directories_first = true;
 };

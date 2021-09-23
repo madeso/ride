@@ -35,7 +35,7 @@ struct Font
     pix unscaled_size = pix{0};
 
     dip get_width(const std::string& text);
-    dip get_height();
+    dip get_height() const;
 };
 
 int draw_text(Ren* ren, Font* font, const std::string& text, int x, int y, Color color);

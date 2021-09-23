@@ -11,13 +11,13 @@
 View::View()
     : position
         ({
-            pix{0},
-            pix{0}
+            50_px,
+            50_px
         })
     , size
         ({
-            pix{0},
-            pix{0}
+            300_px,
+            300_px
         })
     , scroll
         ({
@@ -102,6 +102,7 @@ void View::draw(RenCache* cache)
         );
     }
 
+    const auto clip_scope = ClipScope{cache, app->to_dip(main_view_rect)};
     draw_body(main_view_rect, cache);
 }
 

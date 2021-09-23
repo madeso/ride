@@ -215,7 +215,7 @@ dip Font::get_width(const std::string& text)
     return dip{x};
 }
 
-dip Font::get_height()
+dip Font::get_height() const
 {
     return m->data.height;
 }

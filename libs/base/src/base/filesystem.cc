@@ -16,21 +16,6 @@ FileEntry::FileEntry(const std::string& n, const std::string& p, bool d)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-std::optional<std::string> GetCurrentDirectory()
-{
-    std::error_code error;
-    const auto p = std::filesystem::current_path(error);
-    if(error)
-    {
-        std::cerr << "Error getting current directory: " << error << "\n";
-        return std::nullopt;
-    }
-    else
-    {
-        return p.u8string();
-    }
-}
-
 std::optional<std::string> AsAbsolute(const std::string& p)
 {
     std::error_code error;
@@ -60,58 +45,6 @@ std::optional<bool> Exists(const std::string& p)
     return exists;
 }
 
-std::optional<std::vector<FileEntry>> List(const std::string& dir, const ListSettings& settings)
-{
-    const auto should_sort = settings.sort_files;
-    const auto sort = [should_sort](std::vector<FileEntry>* files)
-    {
-        if(should_sort == false) { return; }
-        std::sort(files->begin(), files->end(), [](const FileEntry& lhs, const FileEntry& rhs) {
-            return humane_strcmp(lhs.name.c_str(), rhs.name.c_str()) < 0;
-        });
-    };
-
-    std::vector<FileEntry> files;
-    std::vector<FileEntry> folders;
-
-    std::error_code error;
-    auto directory_iterator = std::filesystem::directory_iterator(dir, error);
-    if(error)
-    {
-        std::cerr << "Error listing file in " << dir << ": " << error << "\n";
-        return std::nullopt;
-    }
-
-    for(auto& iterator: directory_iterator)
-    {
-        const auto p = iterator.path();
-        const auto file_name = p.filename().u8string();
-        const auto file_path = p.u8string();
-        if(iterator.is_directory())
-        {
-            folders.emplace_back(file_name, file_path, true);
-        }
-        else if(iterator.is_regular_file())
-        {
-            files.emplace_back(file_name, file_path, false);
-        }
-        // ignore other types
-    }
-
-    if(settings.directories_first)
-    {
-        sort(&files);
-        sort(&folders);
-        folders.insert(folders.end(), files.begin(), files.end());
-        return folders;
-    }
-    else
-    {
-        folders.insert(folders.end(), files.begin(), files.end());
-        sort(&folders);
-        return folders;
-    }
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -134,6 +67,74 @@ struct filesystem_local : filesystem
         }
 
         return true;
+    }
+
+    std::optional<std::string> get_current_directory() override
+    {
+        std::error_code error;
+        const auto p = std::filesystem::current_path(error);
+        if(error)
+        {
+            std::cerr << "Error getting current directory: " << error << "\n";
+            return std::nullopt;
+        }
+        else
+        {
+            return p.u8string();
+        }
+    }
+
+    std::optional<std::vector<FileEntry>> list(const std::string& dir, const ListSettings& settings) override
+    {
+        const auto should_sort = settings.sort_files;
+        const auto sort = [should_sort](std::vector<FileEntry>* files)
+        {
+            if(should_sort == false) { return; }
+            std::sort(files->begin(), files->end(), [](const FileEntry& lhs, const FileEntry& rhs) {
+                return humane_strcmp(lhs.name.c_str(), rhs.name.c_str()) < 0;
+            });
+        };
+
+        std::vector<FileEntry> files;
+        std::vector<FileEntry> folders;
+
+        std::error_code error;
+        auto directory_iterator = std::filesystem::directory_iterator(dir, error);
+        if(error)
+        {
+            std::cerr << "Error listing file in " << dir << ": " << error << "\n";
+            return std::nullopt;
+        }
+
+        for(auto& iterator: directory_iterator)
+        {
+            const auto p = iterator.path();
+            const auto file_name = p.filename().u8string();
+            const auto file_path = p.u8string();
+            if(iterator.is_directory())
+            {
+                folders.emplace_back(file_name, file_path, true);
+            }
+            else if(iterator.is_regular_file())
+            {
+                files.emplace_back(file_name, file_path, false);
+            }
+            // ignore other types
+        }
+
+        if(settings.directories_first)
+        {
+            sort(&files);
+            sort(&folders);
+            folders.insert(folders.end(), files.begin(), files.end());
+            return folders;
+        }
+        else
+        {
+            folders.insert(folders.end(), files.begin(), files.end());
+            sort(&folders);
+            return folders;
+        }
     }
 };
 
