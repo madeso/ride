@@ -14,7 +14,7 @@ struct SquaresApp : App
 
     void draw(RenCache* cache) override
     {
-        cache->draw_rect(to_dip(rect<pix>::from_size(size)), chex(open_color::white));
+        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), chex(open_color::white));
 
         cache->draw_rect(to_dip(rect<pix>{{50.0_px, 100.0_px}, ::size<pix>{30.0_px, 30.0_px}}), chex(open_color::red_500));
         cache->draw_rect(to_dip(rect<pix>{{100.0_px, 50.0_px}, ::size<pix>{30.0_px, 30.0_px}}), chex(open_color::blue_500));

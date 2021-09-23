@@ -36,7 +36,7 @@ double calculate_scale()
 }
 
 App::App()
-    : size{pix{0}, pix{0}}
+    : client_size{pix{0}, pix{0}}
     , run(true)
     , redraw_value(nullptr)
     , scale(calculate_scale())
@@ -352,7 +352,7 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
     cache->begin_frame();
 
     const auto ss = ren->get_size();
-    app->size = size<pix>
+    app->client_size = size<pix>
     {
         app->to_pix(dip{ss.width}),
         app->to_pix(dip{ss.height})
@@ -480,8 +480,11 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     cache.show_debug = render_debug;
 
     auto app = create_app({});
-    app->size.height = app->to_pix(dip{initial_height});
-    app->size.width = app->to_pix(dip{initial_width});
+    app->client_size =
+    {
+        app->to_pix(dip{initial_height}),
+        app->to_pix(dip{initial_width})
+    };
 
     if(custom_scale)
     {

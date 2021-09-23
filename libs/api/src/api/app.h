@@ -44,7 +44,7 @@ struct App
     // todo(Gustav): wrap RenCache to take virtual sizes to make the usage prettier
     virtual void draw(RenCache* cache) = 0;
 
-    size<pix> size;
+    size<pix> client_size;
     bool run;
 
 

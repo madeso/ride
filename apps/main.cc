@@ -222,7 +222,7 @@ struct RideApp : App
 
     void draw(RenCache* cache) override
     {
-        const auto rect = ::rect<pix>::from_size(size);
+        const auto rect = ::rect<pix>::from_size(client_size);
         cache->draw_rect(to_dip(rect), theme.window_background_color);
 
         cache->draw_image(logo, to_dip(pix{10}), to_dip(pix{10}), theme.logo_color);

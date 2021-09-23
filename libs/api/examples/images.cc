@@ -22,7 +22,7 @@ struct ImagesApp : App
 
     void draw(RenCache* cache) override
     {
-        cache->draw_rect(to_dip(rect<pix>::from_size(size)), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
 
         cache->draw_image(logo, to_dip(20_px), to_dip(20_px), {255, 255, 255, 255});
 
