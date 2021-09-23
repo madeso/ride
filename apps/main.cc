@@ -7,7 +7,7 @@
 #include "api/image.h"
 #include "api/font.h"
 
-#include "ride/document.h"
+#include "libride/document.h"
 
 #include "logo_256text_png.h"
 

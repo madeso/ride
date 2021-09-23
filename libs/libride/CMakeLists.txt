@@ -1,5 +1,5 @@
 set(src
-    src/ride/document.cc src/ride/document.h
+    src/libride/document.cc src/libride/document.h
 )
 
 find_package(Filesystem REQUIRED)
