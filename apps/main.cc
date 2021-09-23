@@ -83,13 +83,20 @@ struct View
 
         const auto size = theme->scrollbar_width;
 
+        const auto view_prop = is_vertical ? view_rect_height : view_rect_width;
+
+        if(view_prop >= document_height)
+        {
+            return;
+        }
+
+        const auto fraction = view_prop / document_height;
+
         const auto through_rect = view_rect->cut(through_side, size);
 
         auto track_rect = through_rect;
         const auto top_button_rect = track_rect.cut(top_side, size);
         const auto bottom_button_rect = track_rect.cut(bottom_side, size);
-
-        const auto fraction = (is_vertical ? view_rect_height : view_rect_width) / document_height;
 
         const auto scroll_fraction = scroll / document_height;
 
