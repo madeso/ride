@@ -438,9 +438,31 @@ struct RideApp : App
         );
     }
 
+    View* get_mouse_hovering_view()
+    {
+        if( root.get_rect().contains(mouse))
+        {
+            return &root;
+        }
+        else if( browser.get_rect().contains(mouse))
+        {
+            return &browser;
+        }
+        else return nullptr;
+    }
+
     void on_mouse_wheel(int dx, int dy) override
     {
-        root.on_mouse_wheel(dx, dy);
+        View* view = get_mouse_hovering_view();
+        if(view)
+        {
+            view->on_mouse_wheel(dx, dy);
+        }
+        else
+        {
+            std::cout << "Not hovering...\n";
+        }
+        
     }
 };
 

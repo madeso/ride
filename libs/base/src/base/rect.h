@@ -150,10 +150,10 @@ struct rect
         return {T{0}, T{0}, s.width, s.height};
     }
 
-    bool Contains(const vec2_type& p) const
+    bool contains(const vec2_type& p) const
     {
         const auto cx = p.x >= x && x + width >= p.x;
-        const auto cy = p.y >= y && y + width >= p.y;
+        const auto cy = p.y >= y && y + height >= p.y;
         return cx && cy;
     }
 

@@ -33,6 +33,11 @@ void View::set_rect(const rect<pix>& r)
     size = {r.width, r.height};
 }
 
+rect<pix> View::get_rect() const
+{
+    return {position, size};
+}
+
 void View::draw_scrollbar
 (
     rect<pix>* view_rect, RenCache* cache,

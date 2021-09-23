@@ -33,6 +33,7 @@ struct View
     virtual ~View() = default;
 
     void set_rect(const rect<pix>& r);
+    rect<pix> get_rect() const;
 
     void draw_scrollbar
     (
