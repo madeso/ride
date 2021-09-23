@@ -18,7 +18,8 @@ struct Theme
     pix gutter_spacing_right = pix{3};
     pix text_spacing = pix{3};
 
-    double lines_to_scroll = 3.0;
+    pix horizontal_scroll = 21_px;
+    pix vertical_scroll = 41_px;
 
     pix scrollbar_width = pix{12};
 
@@ -144,6 +145,31 @@ struct View
 
         draw_body(main_view_rect, cache);
     }
+
+    void on_mouse_wheel(int dx, int dy)
+    {
+        const auto scroll_size = calculate_scroll_size();
+
+        if(scroll_size.width && dx != 0)
+        {
+            scroll.x = keep_within
+            (
+                pix{0},
+                scroll.x + static_cast<double>(dx) * theme->horizontal_scroll,
+                *scroll_size.width
+            );
+        }
+
+        if(dy != 0 && scroll_size.height)
+        {
+            scroll.y = keep_within
+            (
+                pix{0},
+                scroll.y - static_cast<double>(dy) * theme->vertical_scroll,
+                *scroll_size.height
+            );
+        }
+    }
 };
 
 struct ViewDoc : View
@@ -236,25 +262,6 @@ struct ViewDoc : View
                 );
             }
         }
-    }
-
-    void on_mouse_wheel(int dx, int dy)
-    {
-        const auto line_height = calculate_line_height();
-
-        scroll.x = keep_within
-        (
-            pix{0},
-            scroll.x + pix{dx*20.0},
-            pix{std::numeric_limits<int>::max()}
-        );
-
-        scroll.y = keep_within
-        (
-            pix{0},
-            scroll.y - (static_cast<double>(dy) * line_height) * theme->lines_to_scroll,
-            get_document_height() - line_height
-        );
     }
 };
 
