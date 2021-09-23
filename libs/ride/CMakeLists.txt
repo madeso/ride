@@ -1,5 +1,6 @@
 set(src
     src/ride/theme.cc src/ride/theme.h
+    src/ride/view.cc src/ride/view.h
 )
 
 add_library(rideapp STATIC ${src})

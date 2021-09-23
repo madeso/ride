@@ -1,10 +1,6 @@
 #pragma once
 
-#include <functional>
-#include <memory>
 #include <vector>
-
-#include "SDL.h"
 
 #include "base/vec2.h"
 #include "base/size.h"
@@ -61,10 +57,3 @@ struct App
 
     bool* redraw_value;
 };
-
-struct StartupArguments
-{
-};
-
-using CreateAppFunction = std::function<std::unique_ptr<App> (const StartupArguments&)>;
-int run_main(int argc, char** argv, CreateAppFunction create_app);

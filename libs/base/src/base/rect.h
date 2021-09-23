@@ -164,9 +164,9 @@ struct rect
 
     self cut_left(T a)
     {
-        T x = this->x;
+        T ox = this->x;
         this->set_left(std::min(this->get_right(), this->x + a));
-        return FromL(x, this->y, this->x, this->get_bottom());
+        return FromL(ox, this->y, this->x, this->get_bottom());
     }
 
     self cut_right(T a)
@@ -178,9 +178,9 @@ struct rect
 
     self cut_top(T a)
     {
-        T y = this->y;
+        T oy = this->y;
         this->set_top(std::min(this->get_bottom(), this->y + a));
-        return FromL(this->x, y, this->get_right(), this->y);
+        return FromL(this->x, oy, this->get_right(), this->y);
     }
 
     self cut_bottom(T a)
