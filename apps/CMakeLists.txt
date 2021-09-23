@@ -14,6 +14,7 @@ target_link_libraries(ride
         project_options
     PUBLIC
         libride
+        rideapp
         sdl2
         stb_truetype
         api
