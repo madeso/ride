@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "SDL.h"
+#include "api/sdl_dependency.h"
 
 #include "base/enumstringmap.h"
 

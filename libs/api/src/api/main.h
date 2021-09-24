@@ -3,7 +3,7 @@
 #include <functional>
 #include <memory>
 
-#include "SDL.h"
+#include "api/sdl_dependency.h"
 
 #include "api/app.h"
 

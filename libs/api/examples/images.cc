@@ -1,6 +1,7 @@
 #include "api/app.h"
 #include "api/rencache.h"
 #include "api/image.h"
+#include "api/main.h"
 
 #include "logo_256text_png.h"
 
@@ -15,7 +16,7 @@ struct ImagesApp : App
     {
     }
 
-    void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
+    void on_mouse_moved(const vec2<pix>& new_mouse, pix, pix) override
     {
         mouse = new_mouse;
     }

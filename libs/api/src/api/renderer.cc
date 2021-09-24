@@ -5,6 +5,8 @@
 #include <cmath>
 #include <memory>
 
+#include "base/c.h"
+
 #include "api/font.h"
 #include "api/image.h"
 
@@ -36,22 +38,45 @@ int Clip::get_bottom() const
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Blending
 
+namespace
+{
+    constexpr u8 c_int_to_u8(int i)
+    {
+        return static_cast<u8>(i);
+    }
+
+    constexpr u8 blend(u8 srcc, u8 a, u8 dstc)
+    {
+        const auto ia = 0xff - a;
+        const auto s = srcc * a;
+        const auto d = dstc * ia;
+        return c_int_to_u8((s + d) >> 8);
+    };
+
+    constexpr u8 blend2(u8 srcc, u8 cc, u8 a, u8 dstc)
+    {
+        const auto ia = 0xff - a;
+        const auto s = srcc * cc * a;
+        const auto d = dstc * ia;
+        return c_int_to_u8((s >> 16) + (d >> 8));
+    };
+}
+
 Color blend_pixel(Color dst, Color src)
 {
-    int ia = 0xff - src.a;
-    dst.r = ((src.r * src.a) + (dst.r * ia)) >> 8;
-    dst.g = ((src.g * src.a) + (dst.g * ia)) >> 8;
-    dst.b = ((src.b * src.a) + (dst.b * ia)) >> 8;
+    dst.r = blend(src.r, src.a, dst.r);
+    dst.g = blend(src.g, src.a, dst.g);
+    dst.b = blend(src.b, src.a, dst.b);
     return dst;
 }
 
 Color blend_pixel2(Color dst, Color src, Color color)
 {
     src.a = (src.a * color.a) >> 8;
-    int ia = 0xff - src.a;
-    dst.r = ((src.r * color.r * src.a) >> 16) + ((dst.r * ia) >> 8);
-    dst.g = ((src.g * color.g * src.a) >> 16) + ((dst.g * ia) >> 8);
-    dst.b = ((src.b * color.b * src.a) >> 16) + ((dst.b * ia) >> 8);
+    
+    dst.r = blend2(src.r, color.r, src.a, dst.r);
+    dst.g = blend2(src.g, color.g, src.a, dst.g);
+    dst.b = blend2(src.b, color.b, src.a, dst.b);
     return dst;
 }
 
@@ -81,7 +106,7 @@ void Ren::update_rects(std::vector<recti>& rects)
             rr.h = r.height;
             sdl_rects.emplace_back(rr);
         }
-        SDL_UpdateWindowSurfaceRects(window, sdl_rects.data(), sdl_rects.size());
+        SDL_UpdateWindowSurfaceRects(window, sdl_rects.data(), C(sdl_rects.size()));
     }
 
     if (initial_frame)
@@ -105,6 +130,11 @@ sizei Ren::get_size()
     return {surf->w, surf->h};
 }
 
+u32* get_pixels_from_sdl_surface(SDL_Surface* surface)
+{
+    return static_cast<u32*>(surface->pixels);
+}
+
 void set_pixel_on_surface(SDL_Surface* surface, int x, int y, const Color& c)
 {
     assert(surface);
@@ -114,7 +144,7 @@ void set_pixel_on_surface(SDL_Surface* surface, int x, int y, const Color& c)
         return;
     }
 
-    auto* pixels = (std::uint32_t*)surface->pixels;
+    auto* pixels = get_pixels_from_sdl_surface(surface);
     pixels[y * surface->w + x] = SDL_MapRGB(surface->format, c.r, c.g, c.b);
 }
 
@@ -127,7 +157,7 @@ Color get_pixel_on_surface(SDL_Surface* surface, int x, int y)
         return {255,255,255,255};
     }
 
-    auto* pixels = (std::uint32_t*)surface->pixels;
+    auto* pixels = get_pixels_from_sdl_surface(surface);
     const auto pixel = pixels[y * surface->w + x];
 
     Color c;
@@ -220,8 +250,12 @@ void Ren::draw_image(Image* image, const recti& asub, int x, int y, Color color)
             const auto dest_x = x + xx;
             const auto dest_y = y + yy;
             const auto image_color = image->get_color(sub.x + xx, sub.y + yy);
-            const auto new_color =
-                blend_pixel2(get_pixel_on_surface(surf, dest_x, dest_y), image_color, color);
+            const auto new_color = blend_pixel2
+            (
+                get_pixel_on_surface(surf, dest_x, dest_y),
+                image_color,
+                color
+            );
             set_pixel_on_surface(surf, dest_x, dest_y, new_color);
         }
     }

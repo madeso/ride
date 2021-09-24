@@ -5,12 +5,7 @@
 #include <vector>
 #include <memory>
 
-#include "base/compiler_warning.h"
-
-DISABLE_WARNING_PUSH
-DISABLE_WARNING_OLDSTYLE_CAST
-#include "SDL.h"
-DISABLE_WARNING_POP
+#include "api/sdl_dependency.h"
 
 #include "base/color.h"
 #include "base/size.h"

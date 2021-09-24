@@ -5,6 +5,7 @@
 #include "stb_image.h"
 
 #include "base/assert.h"
+#include "base/c.h"
 
 bool Image::load(const embedded_binary& data)
 {
@@ -14,7 +15,7 @@ bool Image::load(const embedded_binary& data)
 
     unsigned char* loaded_pixels = stbi_load_from_memory
     (
-        reinterpret_cast<const unsigned char*>(data.data), data.size,
+        reinterpret_cast<const stbi_uc*>(data.data), c_uint_to_int(data.size),
         &requested_width, &requested_height, &requested_channels,
         STBI_rgb_alpha
     );
@@ -24,26 +25,26 @@ bool Image::load(const embedded_binary& data)
     }
 
     setup(requested_width, requested_height);
-    std::memcpy(pixels.data(), loaded_pixels, sizeof(std::uint8_t) * requested_width * requested_height * 4);
+    std::memcpy(pixels.data(), loaded_pixels, sizeof(std::uint8_t) * Cs(requested_width) * Cs(requested_height) * 4);
     stbi_image_free(loaded_pixels);
     return true;
 }
 
-void Image::setup(int width, int height)
+void Image::setup(int new_width, int new_height)
 {
-    assert(width > 0 && height > 0);
-    pixels.resize(width * height * 4);
-    this->width = width;
-    this->height = height;
+    assert(new_width > 0 && new_height > 0);
+    pixels.resize(Cs(new_width) * Cs(new_height) * 4);
+    width = new_width;
+    height = new_height;
 }
 
 void Image::set_color(int x, int y, const Color& c)
 {
     const auto index = (x + y * width) * 4;
-    pixels[index + 0] = c.r;
-    pixels[index + 1] = c.g;
-    pixels[index + 2] = c.b;
-    pixels[index + 3] = c.a;
+    pixels[Cs(index + 0)] = c.r;
+    pixels[Cs(index + 1)] = c.g;
+    pixels[Cs(index + 2)] = c.b;
+    pixels[Cs(index + 3)] = c.a;
 }
 
 Color Image::get_color(int x, int y) const
@@ -51,7 +52,13 @@ Color Image::get_color(int x, int y) const
     xassert(x >= 0 && x < width, x << " " << width);
     xassert(y >= 0 && y < height, y << " " << height);
     const auto index = (x + y * width) * 4;
-    return Color::rgb(pixels[index + 0], pixels[index + 1], pixels[index + 2], pixels[index + 3]);
+    return Color::rgb
+    (
+        pixels[Cs(index + 0)],
+        pixels[Cs(index + 1)],
+        pixels[Cs(index + 2)],
+        pixels[Cs(index + 3)]
+    );
 }
 
 std::shared_ptr<Image> load_shared(const embedded_binary& data)

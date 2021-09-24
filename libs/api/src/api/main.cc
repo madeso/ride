@@ -30,7 +30,9 @@ void init_window_icon()
 
 double get_time()
 {
-    return SDL_GetPerformanceCounter() / static_cast<double>(SDL_GetPerformanceFrequency());
+    const auto counter = SDL_GetPerformanceCounter();
+    const auto frequency = SDL_GetPerformanceFrequency();
+    return static_cast<double>(counter) / static_cast<double>(frequency);
 }
 
 template<typename T>
@@ -223,12 +225,12 @@ bool has_focus(SDL_Window* window)
 
 void please_sleep(double seconds)
 {
-    SDL_Delay(seconds * 1000);
+    SDL_Delay(static_cast<Uint32>(seconds * 1000));
 }
 
 void wait_event(double seconds)
 {
-    SDL_WaitEventTimeout(nullptr, seconds * 1000);
+    SDL_WaitEventTimeout(nullptr, static_cast<int>(seconds * 1000));
 }
 
 template<typename T>
@@ -271,8 +273,8 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     SDL_DisplayMode dm;
     SDL_GetCurrentDisplayMode(0, &dm);
 
-    const int initial_width = dm.w * 0.8;
-    const int initial_height = dm.h * 0.8;
+    const int initial_width = static_cast<int>(dm.w * 0.8);
+    const int initial_height = static_cast<int>(dm.h * 0.8);
 
     bool render_debug = false;
     std::optional<double> custom_scale;

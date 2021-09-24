@@ -2,5 +2,7 @@
 
 #include <cstddef>
 
-constexpr int C(std::size_t i)  { return static_cast<int>(i); }
+constexpr int C(std::size_t i) { return static_cast<int>(i); }
 constexpr std::size_t Cs(int i)  { return static_cast<size_t>(i); }
+
+constexpr int c_uint_to_int(unsigned int i) { return static_cast<int>(i); }

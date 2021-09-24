@@ -1,5 +1,12 @@
 #include "base/utf8.h"
 
+constexpr unsigned c_char_to_unsigned(char c)
+{
+    return static_cast<unsigned>(c);
+}
+
+static_assert(c_char_to_unsigned(' ') == 32, "c_char_to_unsigned doesn't work");
+
 std::vector<unsigned> utf8_to_codepoints(const std::string& text)
 {
     std::vector<unsigned> dst;
@@ -25,7 +32,7 @@ std::vector<unsigned> utf8_to_codepoints(const std::string& text)
             n = 1;
             break;
         default:
-            res = *p;
+            res = c_char_to_unsigned(*p);
             n = 0;
             break;
         }

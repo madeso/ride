@@ -1,17 +1,17 @@
 #pragma once
 
-#include <cstdint>
+#include "base/ints.h"
 
 struct Color
 {
-    std::uint8_t r;
-    std::uint8_t g;
-    std::uint8_t b;
-    std::uint8_t a;
+    u8 r;
+    u8 g;
+    u8 b;
+    u8 a;
 
-    static Color rgb(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
-    static Color from_hex_with_alpha(std::uint32_t r);
-    static Color from_hex(std::uint32_t r);
+    static Color rgb(u8 r, u8 g, u8 b, u8 a);
+    static Color from_hex_with_alpha(u32 r);
+    static Color from_hex(u32 r);
 };
 
-Color chex(std::uint32_t r);
+Color chex(u32 r);

@@ -21,6 +21,7 @@ target_link_libraries(api
         base
     PRIVATE
         project_options
+        project_warnings
         stb_truetype
         stb_image
         data_font
@@ -36,6 +37,7 @@ set_crt_to_static(example_squares)
 target_link_libraries(example_squares
     PRIVATE
         project_options
+        project_warnings
         open_color
     PUBLIC
         api
@@ -50,6 +52,7 @@ set_crt_to_static(example_images)
 target_link_libraries(example_images
     PRIVATE
         project_options
+        project_warnings
     PUBLIC
         api
         data_logo
@@ -64,6 +67,7 @@ set_crt_to_static(example_font)
 target_link_libraries(example_font
     PRIVATE
         project_options
+        project_warnings
     PUBLIC
         api
 )

@@ -4,7 +4,7 @@
 #include <cassert>
 #include <iostream>
 
-#include "SDL.h"
+#include "api/sdl_dependency.h"
 
 #include "base/string.h"
 #include "base/cc.h"

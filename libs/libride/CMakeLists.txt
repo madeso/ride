@@ -12,11 +12,12 @@ target_include_directories(libride
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 target_link_libraries(libride
+    PUBLIC
+        base
     PRIVATE
         project_options
         project_warnings
         std::filesystem
-        base
 )
 
 set_crt_to_static(libride)

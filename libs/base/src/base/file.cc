@@ -13,10 +13,11 @@ bool read_to_buffer(const std::string& filename, std::vector<std::uint8_t>* buff
 
     // get length of file
     infile.seekg(0, std::ios::end);
-    size_t length = infile.tellg();
+    const auto length = infile.tellg();
+    const std::size_t length_t = static_cast<std::size_t>(length);
     infile.seekg(0, std::ios::beg);
 
-    buffer->resize(length);
+    buffer->resize(length_t);
     infile.read(reinterpret_cast<char*>(buffer->data()), length);
 
     return true;

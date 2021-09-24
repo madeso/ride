@@ -27,4 +27,5 @@ target_link_libraries(base
         embed
     PRIVATE
         project_options
+        project_warnings
 )

@@ -13,15 +13,15 @@ struct Hash
     static constexpr unsigned INITIAL = 2166136261;
     unsigned value = INITIAL;
 
-    void add(const void* data, int size)
+    void add(const void* data, std::size_t size)
     {
         update(&value, data, size);
     }
 
-    static void update(unsigned* value, const void* data, int size)
+    static void update(unsigned* value, const void* data, std::size_t size)
     {
         const unsigned char* bytes = static_cast<const unsigned char*>(data);
-        for (int i = 0; i < size; i += 1)
+        for (std::size_t i = 0; i < size; i += 1)
         {
             *value = (*value ^ bytes[i]) * 16777619;
         }
@@ -303,8 +303,8 @@ void RenCache::end_frame()
                 break;
             case DRAW_IMAGE:
                 {
-                    const auto r = rect<dip>::from_size({cmd.rect.width, cmd.rect.height});
-                    ren->draw_image(cmd.image.get(), C(r), cmd.rect.x.value, cmd.rect.y.value, cmd.color);
+                    const auto rr = rect<dip>::from_size({cmd.rect.width, cmd.rect.height});
+                    ren->draw_image(cmd.image.get(), C(rr), cmd.rect.x.value, cmd.rect.y.value, cmd.color);
                 }
                 break;
             case DRAW_TEXT:

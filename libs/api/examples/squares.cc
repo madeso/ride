@@ -1,5 +1,6 @@
 #include "api/app.h"
 #include "api/rencache.h"
+#include "api/main.h"
 
 #include "open-color.h"
 
@@ -7,7 +8,7 @@ struct SquaresApp : App
 {
     vec2<pix> mouse = {pix{0}, pix{0}};
 
-    void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
+    void on_mouse_moved(const vec2<pix>& new_mouse, pix, pix) override
     {
         mouse = new_mouse;
     }

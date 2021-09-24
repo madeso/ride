@@ -1,6 +1,6 @@
 #include "api/app.h"
 
-#include "SDL.h"
+#include "api/sdl_dependency.h"
 
 #include "base/vec2.h"
 
@@ -36,10 +36,10 @@ double calculate_scale()
 }
 
 App::App()
-    : client_size{pix{0}, pix{0}}
-    , run(true)
-    , redraw_value(nullptr)
+    : run(true)
+    , client_size{pix{0}, pix{0}}
     , scale(calculate_scale())
+    , redraw_value(nullptr)
 {
 }
 
@@ -53,40 +53,40 @@ void App::on_exposed()
 {
 }
 
-void App::on_file_dropped(const std::string& file, pix x, pix y)
+void App::on_file_dropped(const std::string&, pix, pix)
 {
 }
 
-void App::on_resized(pix new_width, pix new_height)
+void App::on_resized(pix, pix)
 {
 }
 
-void App::on_key_pressed(Key key)
+void App::on_key_pressed(Key)
 {
 }
 
-void App::on_key_released(Key key)
+void App::on_key_released(Key)
 {
 }
 
-void App::on_text_input(const std::string& str)
+void App::on_text_input(const std::string&)
 {
 }
 
 
-void App::on_mouse_pressed(MouseButton button, pix x, pix y, int clicks)
+void App::on_mouse_pressed(MouseButton, pix, pix, int)
 {
 }
 
-void App::on_mouse_released(MouseButton button, pix x, pix y)
+void App::on_mouse_released(MouseButton, pix, pix)
 {
 }
 
-void App::on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel)
+void App::on_mouse_moved(const vec2<pix>&, pix, pix)
 {
 }
 
-void App::on_mouse_wheel(int x, int y)
+void App::on_mouse_wheel(int, int)
 {
 }
 

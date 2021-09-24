@@ -1,19 +1,22 @@
 #include "api/font.h"
 
 #include <cmath>
+#include <array>
 
 #include "stb_truetype.h"
 
 #include "base/file.h"
 #include "base/utf8.h"
 #include "base/rect.h"
+#include "base/c.h"
 
 #include "api/image.h"
 #include "api/renderer.h"
 
 #include "font.ttf.h"
 
-#define MAX_GLYPHSET 256
+constexpr int MAX_GLYPHSET = 256;
+constexpr int NUM_CHARS = 256;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Loaded FontData
@@ -30,22 +33,48 @@ struct LoadedFontData
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // GlyphSet
 
+float c_dip_to_stb_size(dip d)
+{
+    return static_cast<float>(d.value);
+}
+
+// "mirror" of stbtt_bakedchar
+struct Glyph
+{
+    int x0; int y0; 
+    int x1; int y1;
+
+    int xoff; int yoff;
+    int xadvance;
+
+
+    void make_invisible()
+    {
+        x1 = x0;
+    }
+};
+
 struct GlyphSet
 {
     bool loaded = false;
     Image image;
-    stbtt_bakedchar glyphs[256];
+
+    std::array<Glyph, NUM_CHARS> glyphs;
+
+    Glyph* get_glyph(unsigned int c) { return &glyphs[c & 0xff]; }
 
     bool load_single_glyphset_or_fail(LoadedFontData* font, int idx, int width, int height)
     {
         std::vector<std::uint8_t> pixels;
-        pixels.resize(width * height);
+        pixels.resize(Cs(width) * Cs(height));
 
         /* load glyphs */
         const float s = stbtt_ScaleForMappingEmToPixels(&font->stbfont, 1) /
                         stbtt_ScaleForPixelHeight(&font->stbfont, 1);
-        const int res = stbtt_BakeFontBitmap(font->data, 0, font->size.value * s, &pixels[0], width,
-                                             height, idx * 256, 256, this->glyphs);
+
+        std::array<stbtt_bakedchar, NUM_CHARS> stb_glyphs;
+        const int res = stbtt_BakeFontBitmap(font->data, 0, c_dip_to_stb_size(font->size) * s, &pixels[0], width,
+                                             height, idx * NUM_CHARS, NUM_CHARS, stb_glyphs.data());
 
         if (res < 0)
         {
@@ -55,12 +84,17 @@ struct GlyphSet
         /* adjust glyph yoffsets and xadvance */
         int ascent, descent, linegap;
         stbtt_GetFontVMetrics(&font->stbfont, &ascent, &descent, &linegap);
-        const float scale = stbtt_ScaleForMappingEmToPixels(&font->stbfont, font->size.value);
-        const int scaled_ascent = ascent * scale + 0.5;
-        for (int i = 0; i < 256; i++)
+        const auto scale = stbtt_ScaleForMappingEmToPixels(&font->stbfont, c_dip_to_stb_size(font->size));
+        const auto scaled_ascent = static_cast<float>(ascent) * scale + 0.5f;
+        for (int i = 0; i < NUM_CHARS; i++)
         {
-            this->glyphs[i].yoff += scaled_ascent;
-            this->glyphs[i].xadvance = floor(this->glyphs[i].xadvance);
+            this->glyphs[Cs(i)].x0   = stb_glyphs[Cs(i)].x0;
+            this->glyphs[Cs(i)].x1   = stb_glyphs[Cs(i)].x1;
+            this->glyphs[Cs(i)].y0   = stb_glyphs[Cs(i)].y0;
+            this->glyphs[Cs(i)].y1   = stb_glyphs[Cs(i)].y1;
+            this->glyphs[Cs(i)].xoff = static_cast<int>(stb_glyphs[Cs(i)].xoff);
+            this->glyphs[Cs(i)].yoff = static_cast<int>(stb_glyphs[Cs(i)].yoff + scaled_ascent);
+            this->glyphs[Cs(i)].xadvance = static_cast<int>(floor(stb_glyphs[Cs(i)].xadvance));
         }
 
         /* convert 8bit data to 32bit */
@@ -69,7 +103,7 @@ struct GlyphSet
         {
             for (int x = 0; x < width; x += 1)
             {
-                uint8_t n = pixels[y * width + x];
+                uint8_t n = pixels[Cs(y * width + x)];
                 this->image.set_color(x, y, Color::rgb(255, 255, 255, n));
             }
         }
@@ -99,7 +133,7 @@ struct FontImpl
     LoadedFontData data;
     GlyphSet sets[MAX_GLYPHSET];
 
-    GlyphSet* get_glyphset(int codepoint)
+    GlyphSet* get_glyphset(unsigned int codepoint)
     {
         int idx = (codepoint >> 8) % MAX_GLYPHSET;
         if (sets[idx].loaded == false)
@@ -107,6 +141,11 @@ struct FontImpl
             sets[idx].load_glyphset(&data, idx);
         }
         return &sets[idx];
+    }
+
+    Glyph* get_glyph(unsigned int codepoint)
+    {
+        return get_glyphset(codepoint)->get_glyph(codepoint);
     }
 
     void mark_as_unloaded()
@@ -154,8 +193,9 @@ void set_size_for_font(FontImpl* font, dip size)
 {
     int ascent, descent, linegap;
     stbtt_GetFontVMetrics(&font->data.stbfont, &ascent, &descent, &linegap);
-    float scale = stbtt_ScaleForMappingEmToPixels(&font->data.stbfont, size.value);
-    font->data.height = dip{static_cast<int>((ascent - descent + linegap) * scale + 0.5)};
+    const float scale = stbtt_ScaleForMappingEmToPixels(&font->data.stbfont, c_dip_to_stb_size(size));
+    const auto height = static_cast<float>(ascent - descent + linegap);
+    font->data.height = dip{static_cast<int>(height * scale + 0.5f)};
 }
 
 bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, dip size)
@@ -175,9 +215,8 @@ bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* d
     set_size_for_font(font.get(), size);
 
     /* make tab and newline glyphs invisible */
-    stbtt_bakedchar* g = font->get_glyphset('\n')->glyphs;
-    g['\t'].x1 = g['\t'].x0;
-    g['\n'].x1 = g['\n'].x0;
+    font->get_glyph('\t')->make_invisible();
+    font->get_glyph('\n')->make_invisible();
 
     m = std::move(font);
     return true;
@@ -192,14 +231,12 @@ void Font::set_size(dip new_size)
 
 void Font::set_tab_width(dip n)
 {
-    GlyphSet* set = m->get_glyphset('\t');
-    set->glyphs['\t'].xadvance = n.value;
+    m->get_glyph('\t')->xadvance = n.value;
 }
 
 dip Font::get_tab_width()
 {
-    GlyphSet* set = m->get_glyphset('\t');
-    return dip{static_cast<int>(set->glyphs['\t'].xadvance)};
+    return dip{static_cast<int>(m->get_glyph('\t')->xadvance)};
 }
 
 dip Font::get_width(const std::string& text)
@@ -208,9 +245,7 @@ dip Font::get_width(const std::string& text)
     const auto codepoints = utf8_to_codepoints(text);
     for (const auto codepoint : codepoints)
     {
-        GlyphSet* set = m->get_glyphset(codepoint);
-        stbtt_bakedchar* g = &set->glyphs[codepoint & 0xff];
-        x += g->xadvance;
+        x += m->get_glyph(codepoint)->xadvance;
     }
     return dip{x};
 }
@@ -225,8 +260,8 @@ int draw_text(Ren* ren, Font* font, const std::string& text, int x, int y, Color
     const auto codepoints = utf8_to_codepoints(text);
     for (const auto codepoint : codepoints)
     {
-        GlyphSet* set = font->m->get_glyphset(codepoint);
-        stbtt_bakedchar* g = &set->glyphs[codepoint & 0xff];
+        auto* set = font->m->get_glyphset(codepoint);
+        auto* g = set->get_glyph(codepoint);
         auto rect = recti
         {
             g->x0,
