@@ -51,7 +51,7 @@ namespace
         const auto s = srcc * a;
         const auto d = dstc * ia;
         return c_int_to_u8((s + d) >> 8);
-    };
+    }
 
     constexpr u8 blend2(u8 srcc, u8 cc, u8 a, u8 dstc)
     {
@@ -59,7 +59,7 @@ namespace
         const auto s = srcc * cc * a;
         const auto d = dstc * ia;
         return c_int_to_u8((s >> 16) + (d >> 8));
-    };
+    }
 }
 
 Color blend_pixel(Color dst, Color src)
