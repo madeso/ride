@@ -1,20 +1,37 @@
 # ride todo/roadmap
-* file explorer/tree view and tab control handle documents
 
-* remove and integrate existing sources
+## current
 
-* "open with ride" for windows installation
-* some form of basic color/theme editor
+* commandline support for not opening project in cwd
+* icon demo
+* title demo
+* cmd palette backend with keybind support
+* editor component
+* cnd palette
+* run command/compile project
+* tmlanguage/treesitter color support
+
+## basic
+* file explorer/tree view and tab control open documents
 * port i3 or something else so we can have multiple widgets in same window
-* add sdl driver
 
-* rework text editor to use proper data structure
 * make editor behave as expected, including cut/copy/paste support
+* rework document to use proper data structure
+* integrate "classic ride" sources
+* some form of basic color/theme editor
+  - text editor for theme file with hotreload
+  - edit inline: see color, run command and get a color widget inline for the specific entry under the cursor
+* "open with ride" for windows installation
 
-* numbered command "dynamic/temporary keybind"... select command and type keybind to bind it. displayed in statusbar and saved per project(?)
+## advanced
+* preview markdown
+* preview graphviz
+* numbered command "dynamic/temporary keybind"... select command and type keybind to bind it. displayed in statusbar and saved per project(?). (one way to mimic vim macros)
+* open script editor to the side and write "vim macros" and hot-reload instant run on the current buffer without actually running it on the "real" buffer (run/undo)
 * (per project) scripting support
-
-* quick change between highlight modes - one that highlights comments and dims code vs one that highlights code and dims comments
-* highlight todo comments
+* quick change between different highlighting modes
+  - one that highlights comments and dims code
+  - one that highlights code and dims comments
+* highlight todo comments (list of regexes + color/theme)
 * list todo comments in a tasklisk
-* view documentation in a sidebar
+* view documentation for funtion call under the cursor in the sidebar
