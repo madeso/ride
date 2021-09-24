@@ -2,11 +2,14 @@
 
 ## current
 
+* treweview: fix hit on the whole row, not just the text
+* treeview: render different background when hovering
 * commandline support for not opening project in cwd
 * icon demo
 * title demo
 * cmd palette backend with keybind support
 * editor component
+* save, open, close buffers
 * cnd palette
 * run command/compile project
 * tmlanguage/treesitter color support
@@ -26,6 +29,9 @@
 ## advanced
 * preview markdown
 * preview graphviz
+* treeview: change project folder to a new (sub/parent/folder-browser) folder
+* treeview: bookmarks
+  - new setting: running `ride` with no argument means open without project (not cwd)
 * numbered command "dynamic/temporary keybind"... select command and type keybind to bind it. displayed in statusbar and saved per project(?). (one way to mimic vim macros)
 * open script editor to the side and write "vim macros" and hot-reload instant run on the current buffer without actually running it on the "real" buffer (run/undo)
 * (per project) scripting support
