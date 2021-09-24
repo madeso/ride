@@ -7,6 +7,7 @@
 #include "base/rect.h"
 
 #include "api/units.h"
+#include "api/mouse_button.h"
 
 
 struct App;
@@ -47,4 +48,6 @@ struct View
 
     virtual void draw_body(const rect<pix>& main_view_rect, RenCache* cache) = 0;
     virtual scroll_size calculate_scroll_size() = 0;
+
+    virtual void on_mouse_pressed(MouseButton button, pix x, pix y, int clicks);
 };

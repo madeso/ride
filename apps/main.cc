@@ -29,10 +29,16 @@ struct Node
 {
     std::string name;
     std::string path;
+    rect<pix> rect;
 
     int depth;
 
-    Node(const std::string& n, const std::string p) : name(n), path(p) {}
+    Node(const std::string& n, const std::string p)
+        : name(n)
+        , path(p)
+        , rect{0_px, 0_px, 0_px, 0_px}
+    {}
+
     virtual ~Node() {}
 
     bool IsHidden() const
@@ -162,12 +168,32 @@ struct ViewFilesystem : public View
         {
             r->Add(&ret, 0);
         }
+
         return ret;
+    }
+
+    void update_rects_for_entries()
+    {
+        for(std::size_t index = 0; index < entries.size(); index += 1)
+        {
+            auto* e = entries[index];
+            const auto p = vec2<pix>
+            {
+                theme->filesys_left_padding + static_cast<double>(e->depth) * theme->filesys_indent,
+                LineNumberToY(index)
+            };
+
+            const auto width = app->to_pix(font->get_width(e->name));
+            const auto height = app->to_pix(font->get_height());
+
+            e->rect = {p.x, p.y, width, height};
+        }
     }
 
     void Populate()
     {
         entries = CreateEntries();
+        update_rects_for_entries();
         // ViewChanged();
     }
 
@@ -204,21 +230,14 @@ struct ViewFilesystem : public View
     {
         cache->draw_rect(app->to_dip(main_view_rect), theme->filesys_background_color);
 
-        for(std::size_t index = 0; index < entries.size(); index += 1)
+        for(const auto& e: entries)
         {
-            const auto e = entries[index];
-            const auto p = vec2<pix>
-            {
-                theme->filesys_left_padding + static_cast<double>(e->depth) * theme->filesys_indent,
-                LineNumberToY(index)
-            };
-            
             cache->draw_text
             (
                 font,
                 e->name,
-                app->to_dip(main_view_rect.x + p.x - scroll.x),
-                app->to_dip(main_view_rect.y + p.y - scroll.y),
+                app->to_dip(main_view_rect.x + e->rect.x - scroll.x),
+                app->to_dip(main_view_rect.y + e->rect.y - scroll.y),
                 e->GetColor(*theme)
             );
         }
@@ -239,29 +258,28 @@ struct ViewFilesystem : public View
         const auto line_bottom = static_cast<int>(std::ceil(static_cast<float>(bottom) / static_cast<float>(font->line_height)));
         return line_bottom;
     }
+    */
     
-    
-
-    void MouseClick(const MouseButton& button, const MouseState state, const vec2& local_position) override
+    void on_mouse_pressed(MouseButton button, pix x, pix y, int clicks) override
     {
-        if(OnMouseClick(button, state, local_position, theme->lines_to_scroll_for_scrollbar_button * font->line_height) == true ) { return; }
-        if(button != MouseButton::Left) { return; }
-        if(state == MouseState::Up) { return; }
+        if(button != MouseButton::left) { return; }
+        if(clicks > 2) { return; }
 
-        const auto global_position = local_position + GetRect().position;
-        const auto client_position = GlobalToClient(global_position);
-        const auto index = static_cast<int>(std::floor(static_cast<float>(client_position.y) / static_cast<float>(font->line_height)));
+        const auto p = vec2<pix>{x + scroll.x, y + scroll.y};
 
-        if(index >= C(entries.size())) { return; }
-        auto entry = entries[Cs(index)];
-
-        const auto is_doubleclick = state != MouseState::Down;
-        if(entry->OnClick(is_doubleclick, filesystem, *theme))
+        // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
+        for(const auto& e: entries)
         {
-            Populate();
+            if(e->rect.contains(p))
+            {
+                if(e->OnClick(clicks == 2, filesystem, *theme))
+                {
+                    Populate();
+                }
+                return;
+            }
         }
     }
-    */
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -449,6 +467,14 @@ struct RideApp : App
             return &browser;
         }
         else return nullptr;
+    }
+
+    void on_mouse_pressed(MouseButton button, pix x, pix y, int clicks) override
+    {
+        View* view = get_mouse_hovering_view();
+        if(view == nullptr) { return; }
+
+        view->on_mouse_pressed(button, x, y, clicks);
     }
 
     void on_mouse_wheel(int dx, int dy) override

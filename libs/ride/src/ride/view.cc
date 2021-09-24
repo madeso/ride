@@ -135,3 +135,7 @@ void View::on_mouse_wheel(int dx, int dy)
         );
     }
 }
+
+void View::on_mouse_pressed(MouseButton, pix, pix, int)
+{
+}
