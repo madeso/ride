@@ -41,7 +41,7 @@ struct Rng
 struct Command
 {
     CommandType type;
-    rect<dip> rect;
+    rect<dip> rect_arg;
     Color color;
     std::shared_ptr<Font> font;
     std::shared_ptr<Image> image;

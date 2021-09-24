@@ -281,7 +281,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
     enum class ParserState
     {
-        first, custom_scale
+        first, expect_custom_scale
     };
 
     ParserState state = ParserState::first;
@@ -298,7 +298,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
             }
             else if(arg == "--scale")
             {
-                state = ParserState::custom_scale;
+                state = ParserState::expect_custom_scale;
             }
             else
             {
@@ -306,7 +306,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
                 return -1;
             }
             break;
-        case ParserState::custom_scale:
+        case ParserState::expect_custom_scale:
             custom_scale = parse<double>(arg);
             state = ParserState::first;
             break;

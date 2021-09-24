@@ -72,7 +72,7 @@ Color blend_pixel(Color dst, Color src)
 
 Color blend_pixel2(Color dst, Color src, Color color)
 {
-    src.a = (src.a * color.a) >> 8;
+    src.a = static_cast<u8>((src.a * color.a) >> 8);
     
     dst.r = blend2(src.r, color.r, src.a, dst.r);
     dst.g = blend2(src.g, color.g, src.a, dst.g);

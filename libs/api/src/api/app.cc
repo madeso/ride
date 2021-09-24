@@ -117,7 +117,7 @@ rect<dip> App::to_dip(const rect<pix>& p) const
 
 pix App::to_pix(dip p) const
 {
-    return pix{static_cast<pix::type>(p.value / scale)};
+    return pix{static_cast<double>(p.value) / scale};
 }
 
 

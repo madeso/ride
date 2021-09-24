@@ -29,14 +29,16 @@ struct Node
 {
     std::string name;
     std::string path;
-    rect<pix> rect;
+    vec2<pix> position;
+    rect<pix> hit_rect;
 
     int depth;
 
     Node(const std::string& n, const std::string p)
         : name(n)
         , path(p)
-        , rect{0_px, 0_px, 0_px, 0_px}
+        , position{0_px, 0_px}
+        , hit_rect{0_px, 0_px, 0_px, 0_px}
     {}
 
     virtual ~Node() {}
@@ -155,7 +157,7 @@ struct ViewFilesystem : public View
 {
     std::shared_ptr<Font> font;
     //std::shared_ptr<Theme> theme;
-    filesystem* filesystem;
+    filesystem* fs;
     std::string root;
 
     std::vector<std::shared_ptr<Node>> roots;
@@ -186,7 +188,11 @@ struct ViewFilesystem : public View
             const auto width = app->to_pix(font->get_width(e->name));
             const auto height = app->to_pix(font->get_height());
 
-            e->rect = {p.x, p.y, width, height};
+            const auto spacing = theme->line_spacing;
+            const auto half_spacing = spacing / 2.0;
+
+            e->position = p;
+            e->hit_rect = {p.x, p.y - half_spacing, width, height+spacing};
         }
     }
 
@@ -199,7 +205,7 @@ struct ViewFilesystem : public View
 
     void setup()
     {
-        auto folders_and_files = filesystem->list(root, list_settings_from_theme(*theme));
+        auto folders_and_files = fs->list(root, list_settings_from_theme(*theme));
         if(folders_and_files)
         {
             roots = Create(*folders_and_files);
@@ -236,8 +242,8 @@ struct ViewFilesystem : public View
             (
                 font,
                 e->name,
-                app->to_dip(main_view_rect.x + e->rect.x - scroll.x),
-                app->to_dip(main_view_rect.y + e->rect.y - scroll.y),
+                app->to_dip(main_view_rect.x + e->position.x - scroll.x),
+                app->to_dip(main_view_rect.y + e->position.y - scroll.y),
                 e->GetColor(*theme)
             );
         }
@@ -270,9 +276,9 @@ struct ViewFilesystem : public View
         // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
         for(const auto& e: entries)
         {
-            if(e->rect.contains(p))
+            if(e->hit_rect.contains(p))
             {
-                if(e->OnClick(clicks == 2, filesystem, *theme))
+                if(e->OnClick(clicks == 2, fs, *theme))
                 {
                     Populate();
                 }
@@ -408,7 +414,7 @@ struct RideApp : App
 
         setup_view(&browser);
         browser.font = font;
-        browser.filesystem = fs.get();
+        browser.fs = fs.get();
         if(auto cd = fs->get_current_directory(); cd)
         {
             browser.root = *cd;

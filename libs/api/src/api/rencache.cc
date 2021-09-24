@@ -114,7 +114,7 @@ void RenCache::set_debug(bool enable)
 void RenCache::set_clip_rect(const rect<dip>& rect)
 {
     Command& cmd = push_command(SET_CLIP);
-    cmd.rect = ::rect<dip>::intersect(rect, screen_rect);
+    cmd.rect_arg = ::rect<dip>::intersect(rect, screen_rect);
 }
 
 void RenCache::draw_rect(rect<dip> rect, Color color)
@@ -124,7 +124,7 @@ void RenCache::draw_rect(rect<dip> rect, Color color)
         return;
     }
     Command& cmd = push_command(DRAW_RECT);
-    cmd.rect = rect;
+    cmd.rect_arg = rect;
     cmd.color = color;
 }
 
@@ -143,7 +143,7 @@ void RenCache::draw_image(std::shared_ptr<Image> image, dip x, dip y, Color colo
         return;
     }
     Command& cmd = push_command(DRAW_IMAGE);
-    cmd.rect = rect;
+    cmd.rect_arg = rect;
     cmd.image = image;
     cmd.color = color;
 }
@@ -164,7 +164,7 @@ dip RenCache::draw_text(std::shared_ptr<Font> font, const std::string& text, dip
         cmd.text = text;
         cmd.color = color;
         cmd.font = font;
-        cmd.rect = rect;
+        cmd.rect_arg = rect;
         cmd.tab_width = font->get_tab_width();
     }
 
@@ -212,7 +212,7 @@ unsigned Command::compute_hash() const
 {
     Hash h;
     h << type;
-    h << rect;
+    h << rect_arg;
     h << color;
     h << font.get();
     h << image.get();
@@ -247,9 +247,9 @@ void RenCache::end_frame()
     {
         if (cmd.type == SET_CLIP)
         {
-            cr = cmd.rect;
+            cr = cmd.rect_arg;
         }
-        rect<dip> r = rect<dip>::intersect(cmd.rect, cr);
+        rect<dip> r = rect<dip>::intersect(cmd.rect_arg, cr);
         if (r.width.value == 0 || r.height.value == 0)
         {
             continue;
@@ -296,20 +296,20 @@ void RenCache::end_frame()
             switch (cmd.type)
             {
             case SET_CLIP:
-                ren->set_clip_rect(recti::intersect(C(cmd.rect), r));
+                ren->set_clip_rect(recti::intersect(C(cmd.rect_arg), r));
                 break;
             case DRAW_RECT:
-                ren->draw_rect(C(cmd.rect), cmd.color);
+                ren->draw_rect(C(cmd.rect_arg), cmd.color);
                 break;
             case DRAW_IMAGE:
                 {
-                    const auto rr = rect<dip>::from_size({cmd.rect.width, cmd.rect.height});
-                    ren->draw_image(cmd.image.get(), C(rr), cmd.rect.x.value, cmd.rect.y.value, cmd.color);
+                    const auto rr = rect<dip>::from_size({cmd.rect_arg.width, cmd.rect_arg.height});
+                    ren->draw_image(cmd.image.get(), C(rr), cmd.rect_arg.x.value, cmd.rect_arg.y.value, cmd.color);
                 }
                 break;
             case DRAW_TEXT:
                 cmd.font->set_tab_width(cmd.tab_width);
-                ren->draw_text(cmd.font.get(), cmd.text.c_str(), cmd.rect.x.value, cmd.rect.y.value, cmd.color);
+                ren->draw_text(cmd.font.get(), cmd.text.c_str(), cmd.rect_arg.x.value, cmd.rect_arg.y.value, cmd.color);
                 break;
             }
         }

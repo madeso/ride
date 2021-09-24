@@ -236,7 +236,7 @@ void Font::set_tab_width(dip n)
 
 dip Font::get_tab_width()
 {
-    return dip{static_cast<int>(m->get_glyph('\t')->xadvance)};
+    return dip{m->get_glyph('\t')->xadvance};
 }
 
 dip Font::get_width(const std::string& text)

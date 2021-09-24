@@ -27,7 +27,7 @@ struct View
     Theme* theme;
 
     vec2<pix> position;
-    size<pix> size;
+    size<pix> client_size;
     vec2<pix> scroll;
 
     View();

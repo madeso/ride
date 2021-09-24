@@ -14,7 +14,7 @@ View::View()
             50_px,
             50_px
         })
-    , size
+    , client_size
         ({
             300_px,
             300_px
@@ -30,12 +30,12 @@ View::View()
 void View::set_rect(const rect<pix>& r)
 {
     position = {r.x, r.y};
-    size = {r.width, r.height};
+    client_size = {r.width, r.height};
 }
 
 rect<pix> View::get_rect() const
 {
-    return {position, size};
+    return {position, client_size};
 }
 
 void View::draw_scrollbar
@@ -83,7 +83,7 @@ void View::draw_scrollbar
 
 void View::draw(RenCache* cache)
 {
-    auto main_view_rect = rect<pix>{position, size};
+    auto main_view_rect = rect<pix>{position, client_size};
 
     const auto scroll_size = calculate_scroll_size();
     
