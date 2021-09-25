@@ -3,6 +3,7 @@
 ## current
 
 * treweview: fix hit on the whole row, not just the text
+* view: drag scrollbar
 * commandline support for not opening project in cwd
 * icon demo
 * title demo
@@ -30,6 +31,8 @@
 * preview graphviz
 * git blame in editor
 * view diffs
+* debugger/gdb integration
+* LSP support https://microsoft.github.io/language-server-protocol/ https://langserver.org/
 * treeview: change project folder to a new (sub/parent/folder-browser) folder
 * treeview: bookmarks
   - new setting: running `ride` with no argument means open without project (not cwd)
