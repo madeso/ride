@@ -265,24 +265,34 @@ struct ViewFilesystem : public View
         return line_bottom;
     }
     */
-    
-    void on_mouse_pressed(MouseButton button, pix x, pix y, int clicks) override
+   
+    Node* get_node_under_cursor(const vec2<pix> relative_mouse)
     {
-        if(button != MouseButton::left) { return; }
-        if(clicks > 2) { return; }
-
-        const auto p = vec2<pix>{x + scroll.x, y + scroll.y};
+        const auto p = vec2<pix>{relative_mouse.x + scroll.x, relative_mouse.y + scroll.y};
 
         // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
         for(const auto& e: entries)
         {
             if(e->hit_rect.contains(p))
             {
-                if(e->OnClick(clicks == 2, fs, *theme))
-                {
-                    Populate();
-                }
-                return;
+                return e;
+            }
+        }
+
+        return nullptr;
+    }
+    
+    void on_mouse_pressed(MouseButton button, pix x, pix y, int clicks) override
+    {
+        if(button != MouseButton::left) { return; }
+        if(clicks > 2) { return; }
+
+        auto* node = get_node_under_cursor({x, y});
+        if(node)
+        {
+            if(node->OnClick(clicks == 2, fs, *theme))
+            {
+                Populate();
             }
         }
     }
