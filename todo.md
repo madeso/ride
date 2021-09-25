@@ -29,6 +29,8 @@
 ## advanced
 * preview markdown
 * preview graphviz
+* git blame in editor
+* view diffs
 * treeview: change project folder to a new (sub/parent/folder-browser) folder
 * treeview: bookmarks
   - new setting: running `ride` with no argument means open without project (not cwd)
