@@ -435,6 +435,16 @@ struct ViewDoc : View
 };
 
 
+double change_scale(double current, bool increase)
+{
+    return keep_within
+    (
+        0.1,
+        current + 0.1 * (increase ? 1.0 : -1.0),
+        2.0
+    );
+}
+
 struct RideApp : App
 {
     vec2<pix> mouse = {pix{0}, pix{0}};
@@ -481,9 +491,24 @@ struct RideApp : App
         }
 
         commands.add()
-            ("core.quit", [this](){ this->run = false; });
+            ("core.quit", [this](){ this->run = false; })
+            (
+                "scale.+", [this]()
+                {
+                    this->set_scale(change_scale(this->scale, true));
+                }
+            )
+            (
+                "scale.-", [this]()
+                {
+                    this->set_scale(change_scale(this->scale, false));
+                }
+            )
+            ;
 
         keybind.add(*stroke_from_string("ctrl+q"), {"core.quit"});
+        keybind.add(*stroke_from_string("ctrl+up"),   {"scale.+"});
+        keybind.add(*stroke_from_string("ctrl+down"), {"scale.-"});
     }
 
     void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
