@@ -31,12 +31,12 @@ jobs:
 
         - name: Install cpp dependencies
           run: |
-                python.exe ${{github.workspace}}\tools\windows.py install ${{matrix.os}} ${{matrix.platform}}
+                python.exe ${{github.workspace}}\tools\windows.py install --compiler ${{matrix.os}} --platform ${{matrix.platform}}
 
         - name: Configure
           working-directory: ${{github.workspace}}
           run: |
-                python.exe ${{github.workspace}}\tools\windows.py cmake ${{matrix.os}} ${{matrix.platform}}
+                python.exe ${{github.workspace}}\tools\windows.py cmake --compiler ${{matrix.os}} --platform ${{matrix.platform}}
 
         - name: Build
           shell: bash
