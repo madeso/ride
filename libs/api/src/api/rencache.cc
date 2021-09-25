@@ -2,38 +2,12 @@
 
 #include <cassert>
 
+#include "base/hash.h"
+
 /* a cache over the software renderer -- all drawing operations are stored as
 ** commands when issued. At the end of the frame we write the commands to a grid
 ** of hash values, take the cells that have changed since the previous frame,
 ** merge them into dirty rectangles and redraw only those regions */
-
-/* 32bit fnv-1a hash */
-struct Hash
-{
-    static constexpr unsigned INITIAL = 2166136261;
-    unsigned value = INITIAL;
-
-    void add(const void* data, std::size_t size)
-    {
-        update(&value, data, size);
-    }
-
-    static void update(unsigned* value, const void* data, std::size_t size)
-    {
-        const unsigned char* bytes = static_cast<const unsigned char*>(data);
-        for (std::size_t i = 0; i < size; i += 1)
-        {
-            *value = (*value ^ bytes[i]) * 16777619;
-        }
-    }
-
-    template <typename T>
-    Hash& operator<<(const T& t)
-    {
-        add(&t, sizeof(T));
-        return *this;
-    }
-};
 
 rect<int> C(const rect<dip>& r)
 {
@@ -57,16 +31,6 @@ rect<dip> C(const rect<int>& r)
     };
 }
 
-std::default_random_engine Rng::create()
-{
-    std::random_device random_device;
-    return std::default_random_engine(random_device());
-}
-
-Rng::Rng()
-    : engine(create())
-{
-}
 
 int cell_idx(int x, int y)
 {

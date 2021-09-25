@@ -6,10 +6,12 @@ set(src
     src/base/enumstringmap.cc src/base/enumstringmap.h
     src/base/file.cc src/base/file.h
     src/base/filesystem.cc src/base/filesystem.h
+    src/base/hash.cc src/base/hash.h
     src/base/humane_sort.cc src/base/humane_sort.h
     src/base/ints.cc src/base/ints.h
     src/base/numeric.cc src/base/numeric.h
     src/base/rect.cc src/base/rect.h
+    src/base/rng.cc src/base/rng.h
     src/base/size.cc src/base/size.h
     src/base/str.cc src/base/str.h
     src/base/string.cc src/base/string.h
