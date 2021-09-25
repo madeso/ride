@@ -163,6 +163,9 @@ struct ViewFilesystem : public View
     std::vector<std::shared_ptr<Node>> roots;
     std::vector<Node*> entries; // stored in roots
 
+    Node* node_hovering = nullptr;
+    vec2<pix> last_mouse = {0_px, 0_px};
+
     std::vector<Node*> CreateEntries()
     {
         std::vector<Node*> ret;
@@ -198,8 +201,10 @@ struct ViewFilesystem : public View
 
     void Populate()
     {
+        node_hovering = nullptr;
         entries = CreateEntries();
         update_rects_for_entries();
+        update_hover();
         // ViewChanged();
     }
 
@@ -235,6 +240,11 @@ struct ViewFilesystem : public View
     void draw_body(const rect<pix>& main_view_rect, RenCache* cache) override
     {
         cache->draw_rect(app->to_dip(main_view_rect), theme->filesys_background_color);
+
+        if(node_hovering)
+        {
+            cache->draw_rect(app->to_dip(node_hovering->hit_rect), theme->filesys_hover_color);
+        }
 
         for(const auto& e: entries)
         {
@@ -295,6 +305,17 @@ struct ViewFilesystem : public View
                 Populate();
             }
         }
+    }
+
+    void on_mouse_moved(const vec2<pix>& new_mouse) override
+    {
+        last_mouse = new_mouse;
+        update_hover();
+    }
+
+    void update_hover()
+    {
+        node_hovering = get_node_under_cursor(last_mouse);
     }
 };
 
@@ -435,6 +456,10 @@ struct RideApp : App
     void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
     {
         mouse = new_mouse;
+
+        View* view = get_mouse_hovering_view();
+        if(view == nullptr) { return; }
+        view->on_mouse_moved(new_mouse);
     }
 
     void draw(RenCache* cache) override
@@ -454,6 +479,7 @@ struct RideApp : App
         browser.draw(cache);
         root.draw(cache);
 
+        #if 0
         cache->draw_rect
         (
             to_dip
@@ -470,6 +496,7 @@ struct RideApp : App
             ),
             Color::rgb(0, 0, 255, 255)
         );
+        #endif
     }
 
     View* get_mouse_hovering_view()

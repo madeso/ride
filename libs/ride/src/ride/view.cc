@@ -139,3 +139,7 @@ void View::on_mouse_wheel(int dx, int dy)
 void View::on_mouse_pressed(MouseButton, pix, pix, int)
 {
 }
+
+void View::on_mouse_moved(const vec2<pix>&)
+{
+}

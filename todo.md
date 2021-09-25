@@ -3,7 +3,6 @@
 ## current
 
 * treweview: fix hit on the whole row, not just the text
-* treeview: render different background when hovering
 * commandline support for not opening project in cwd
 * icon demo
 * title demo
