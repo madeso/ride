@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef> // std::size_t
+
 #include "base/ints.h"
 
 /** 32bit fnv-1a hash.

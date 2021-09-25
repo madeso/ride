@@ -6,6 +6,16 @@
 #include "api/rencache.h"
 #include "api/renderer.h"
 
+#ifdef _WIN32
+    #include <windows.h>
+    #undef min
+    #undef max
+#elif __linux__
+    #include <unistd.h>
+#elif __APPLE__
+    #include <mach-o/dyld.h>
+#endif
+
 #if 0
 void init_window_icon(void) {
 #ifndef _WIN32
