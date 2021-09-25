@@ -73,7 +73,7 @@ bool CellBufferRef::is_same(const CellBufferRef& lhs, const CellBufferRef& rhs, 
     if(lhs_hash.has_value() && rhs_hash.has_value())
     {
         // both entries have a hash
-        return lhs_hash->value != rhs_hash->value;
+        return lhs_hash->value == rhs_hash->value;
     }
     else
     {
