@@ -1,10 +1,13 @@
 #pragma once
 
+#include <array>
 #include <vector>
 #include <string>
 #include <memory>
+#include <optional>
 
 #include "base/rng.h"
+#include "base/hash.h"
 
 #include "api/renderer.h"
 #include "api/font.h"
@@ -37,13 +40,33 @@ struct Command
     unsigned compute_hash() const;
 };
 
+struct CellBuffer
+{
+    std::array<std::optional<Hash>, CELLS_X * CELLS_Y> data;
+};
+
+struct CellBufferRef
+{
+    CellBuffer* buffer;
+
+    CellBufferRef(CellBuffer* buffer);
+
+    // int idx = cell_idx(x, y); 
+
+    void invalidate_all();
+    void reset_single(int x, int y); // [idx] = Hash::INITIAL;
+    void update_single(int x, int y, const void* data, std::size_t size); // Hash::update(&cells[idx], &h, sizeof(h));
+
+    static bool is_same(const CellBufferRef& lhs, const CellBufferRef& rhs, int x, int y); // cells[idx] == cells_prev[idx]
+};
+
 struct RenCache
 {
-    unsigned cells_buf1[CELLS_X * CELLS_Y];
-    unsigned cells_buf2[CELLS_X * CELLS_Y];
+    CellBuffer cells_buf1;
+    CellBuffer cells_buf2;
 
-    unsigned* cells_prev = cells_buf1;
-    unsigned* cells = cells_buf2;
+    CellBufferRef cells_prev = &cells_buf1;
+    CellBufferRef cells = &cells_buf2;
 
     std::vector<Command> command_buf;
     rect<dip> screen_rect;

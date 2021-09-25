@@ -3,6 +3,7 @@
 #include <cassert>
 
 #include "base/hash.h"
+#include "base/c.h"
 
 /* a cache over the software renderer -- all drawing operations are stored as
 ** commands when issued. At the end of the frame we write the commands to a grid
@@ -32,9 +33,55 @@ rect<dip> C(const rect<int>& r)
 }
 
 
-int cell_idx(int x, int y)
+std::size_t cell_idx(int x, int y)
 {
-    return x + y * CELLS_X;
+    assert(x >= 0 && y>= 0);
+    return Cs(x) + Cs(y) * CELLS_X;
+}
+
+CellBufferRef::CellBufferRef(CellBuffer* b)
+    : buffer(b)
+{
+}
+
+void CellBufferRef::invalidate_all()
+{
+    for(auto& e: buffer->data)
+    {
+        e = {};
+    }
+}
+
+void CellBufferRef::reset_single(int x, int y)
+{
+    const auto idx = cell_idx(x, y);
+    buffer->data[idx] = Hash{};
+}
+
+void CellBufferRef::update_single(int x, int y, const void* data, std::size_t size)
+{
+    const auto idx = cell_idx(x, y); 
+    buffer->data[idx]->add(data, size);
+}
+
+bool CellBufferRef::is_same(const CellBufferRef& lhs, const CellBufferRef& rhs, int x, int y)
+{
+    const auto idx = cell_idx(x, y);
+    const auto& lhs_hash = lhs.buffer->data[idx];
+    const auto& rhs_hash = rhs.buffer->data[idx];
+
+    if(lhs_hash.has_value() && rhs_hash.has_value())
+    {
+        // both entries have a hash
+        return lhs_hash->value != rhs_hash->value;
+    }
+    else
+    {
+        // only one entry has a hash
+        // or
+        // no entries has a hash
+        return false;
+    }
 }
 
 void RenCache::push_clip_rect(const rect<dip>& rr)
@@ -137,7 +184,8 @@ dip RenCache::draw_text(std::shared_ptr<Font> font, const std::string& text, dip
 
 void RenCache::invalidate()
 {
-    memset(cells_prev, 0xff, sizeof(cells_buf1));
+    cells_prev.invalidate_all();
+    // memset(cells_prev, 0xff, sizeof(cells_buf1));
 }
 
 void RenCache::begin_frame()
@@ -166,8 +214,7 @@ void RenCache::update_overlapping_cells(const rect<dip>& r, unsigned h)
     {
         for (int x = x1; x <= x2; x++)
         {
-            int idx = cell_idx(x, y);
-            Hash::update(&cells[idx], &h, sizeof(h));
+            cells.update_single(x, y, &h, sizeof(h));
         }
     }
 }
@@ -230,12 +277,11 @@ void RenCache::end_frame()
         for (int x = 0; x < max_x; x++)
         {
             /* compare previous and current cell for change */
-            int idx = cell_idx(x, y);
-            if (cells[idx] != cells_prev[idx])
+            if (CellBufferRef::is_same(cells, cells_prev, x, y) == false)
             {
                 push_rect({x, y, 1, 1});
             }
-            cells_prev[idx] = Hash::INITIAL;
+            cells_prev.reset_single(x, y);
         }
     }
 
