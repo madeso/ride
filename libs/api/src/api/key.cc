@@ -617,7 +617,8 @@ Key key_from_sdl_keycode(i32 kc)
     case SDLK_AUDIOREWIND: return Key::audiorewind;
     case SDLK_AUDIOFASTFORWARD: return Key::audiofastforward;
     default:
-        assert(false && "unknown key");
+        std::cerr << "Unknown key code: " << kc << "\n";
+        // assert(false && "unknown key");
         return Key::unknown;
     }
 }
