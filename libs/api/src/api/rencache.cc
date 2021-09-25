@@ -326,8 +326,13 @@ void RenCache::end_frame()
 
         if (show_debug)
         {
-            const auto color = Color{rng.generate<std::uint8_t>(), rng.generate<std::uint8_t>(),
-                                     rng.generate<std::uint8_t>(), 50};
+            const auto color = Color
+            {
+                rng.generate_u8(),
+                rng.generate_u8(),
+                rng.generate_u8(),
+                50
+            };
             ren->draw_rect(r, color);
         }
     }
