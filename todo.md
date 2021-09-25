@@ -3,6 +3,8 @@
 ## current
 
 * view: drag scrollbar
+* view: vertical scrollbar needs to account for horizontal scrollbar when calculating view_size
+* view: make it optional to scroll outside the view
 * commandline support for not opening project in cwd
 * icon demo
 * title demo
