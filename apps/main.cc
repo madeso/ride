@@ -30,7 +30,6 @@ struct Node
     std::string name;
     std::string path;
     vec2<pix> position;
-    rect<pix> hit_rect;
 
     int depth;
 
@@ -38,7 +37,7 @@ struct Node
         : name(n)
         , path(p)
         , position{0_px, 0_px}
-        , hit_rect{0_px, 0_px, 0_px, 0_px}
+        , depth{0}
     {}
 
     virtual ~Node() {}
@@ -165,6 +164,7 @@ struct ViewFilesystem : public View
 
     Node* node_hovering = nullptr;
     vec2<pix> last_mouse = {0_px, 0_px};
+    pix body_width = 0_px;
 
     std::vector<Node*> CreateEntries()
     {
@@ -179,6 +179,7 @@ struct ViewFilesystem : public View
 
     void update_rects_for_entries()
     {
+        body_width = 0_px;
         for(std::size_t index = 0; index < entries.size(); index += 1)
         {
             auto* e = entries[index];
@@ -189,13 +190,14 @@ struct ViewFilesystem : public View
             };
 
             const auto width = app->to_pix(font->get_width(e->name));
-            const auto height = app->to_pix(font->get_height());
+            const auto total_width = width + p.x;
 
-            const auto spacing = theme->line_spacing;
-            const auto half_spacing = spacing / 2.0;
+            if(total_width > body_width)
+            {
+                body_width = total_width;
+            }
 
             e->position = p;
-            e->hit_rect = {p.x, p.y - half_spacing, width, height+spacing};
         }
     }
 
@@ -232,8 +234,24 @@ struct ViewFilesystem : public View
     {
         return
         {
-            std::nullopt,
+            body_width,
             static_cast<double>(entries.size()) * calculate_line_height()
+        };
+    }
+
+    rect<pix> hit_rect_for_node(Node* node)
+    {
+        assert(node);
+        const auto height = app->to_pix(font->get_height());
+        const auto spacing = theme->line_spacing;
+        const auto half_spacing = spacing / 2.0;
+
+        return
+        {
+            position.x,
+            node->position.y,
+            client_size.width,
+            height + spacing
         };
     }
 
@@ -243,7 +261,7 @@ struct ViewFilesystem : public View
 
         if(node_hovering)
         {
-            cache->draw_rect(app->to_dip(node_hovering->hit_rect), theme->filesys_hover_color);
+            cache->draw_rect(app->to_dip(hit_rect_for_node(node_hovering)), theme->filesys_hover_color);
         }
 
         for(const auto& e: entries)
@@ -283,7 +301,7 @@ struct ViewFilesystem : public View
         // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
         for(const auto& e: entries)
         {
-            if(e->hit_rect.contains(p))
+            if(hit_rect_for_node(e).contains(p))
             {
                 return e;
             }

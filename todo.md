@@ -2,7 +2,6 @@
 
 ## current
 
-* treweview: fix hit on the whole row, not just the text
 * view: drag scrollbar
 * commandline support for not opening project in cwd
 * icon demo
