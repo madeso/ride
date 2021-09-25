@@ -113,15 +113,24 @@ void View::draw(RenCache* cache)
 
 void do_scroll(pix* scroll, const std::optional<pix>& size, int d, pix change)
 {
-    if(size && d != 0)
+    if(size)
     {
-        *scroll = keep_within
-        (
-            pix{0},
-            *scroll - static_cast<double>(d) * change,
-            *size
-        );
+        if(d != 0)
+        {
+            *scroll = keep_within
+            (
+                pix{0},
+                *scroll - static_cast<double>(d) * change,
+                *size
+            );
+        }
     }
+    else
+    {
+        // if not scroll is requested, make sure the scroll is zero
+        *scroll = 0_px;
+    }
+    
 }
 
 void View::on_mouse_wheel(int dx, int dy)
