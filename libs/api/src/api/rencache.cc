@@ -60,8 +60,11 @@ void CellBufferRef::reset_single(int x, int y)
 
 void CellBufferRef::update_single(int x, int y, const void* data, std::size_t size)
 {
-    const auto idx = cell_idx(x, y); 
-    buffer->data[idx]->add(data, size);
+    const auto idx = cell_idx(x, y);
+    if(buffer->data[idx])
+    {
+        buffer->data[idx]->add(data, size);
+    }
 }
 
 bool CellBufferRef::is_same(const CellBufferRef& lhs, const CellBufferRef& rhs, int x, int y)

@@ -42,6 +42,7 @@ struct View
         pix document_height, pix scroll,
         bool is_vertical, Side through_side, Side top_side, Side bottom_side
     );
+    scroll_size get_scroll_size();
 
     void draw(RenCache* cache);
     void on_mouse_wheel(int dx, int dy);

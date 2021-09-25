@@ -81,11 +81,29 @@ void View::draw_scrollbar
     cache->draw_rect(app->to_dip(bottom_button_rect), theme->scroll_button_color);
 }
 
+std::optional<pix> keep_above_zero(std::optional<pix> p)
+{
+    if(p.has_value() == false) { return p; }
+
+    if(p->value > 0) { return p; }
+    else return 0_px;
+}
+
+scroll_size View::get_scroll_size()
+{
+    const auto r = calculate_scroll_size();
+    return
+    {
+        keep_above_zero(r.width),
+        keep_above_zero(r.height)
+    };
+}
+
 void View::draw(RenCache* cache)
 {
     auto main_view_rect = rect<pix>{position, client_size};
 
-    const auto scroll_size = calculate_scroll_size();
+    const auto scroll_size = get_scroll_size();
     
     if(scroll_size.height)
     {
@@ -135,7 +153,7 @@ void do_scroll(pix* scroll, const std::optional<pix>& size, int d, pix change)
 
 void View::on_mouse_wheel(int dx, int dy)
 {
-    const auto scroll_size = calculate_scroll_size();
+    const auto scroll_size = get_scroll_size();
 
     do_scroll(&scroll.x, scroll_size.width, dx, theme->horizontal_scroll);
     do_scroll(&scroll.y, scroll_size.height, dy, theme->vertical_scroll);

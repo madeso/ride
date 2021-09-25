@@ -152,12 +152,6 @@ std::vector<std::shared_ptr<Node>> Create(const std::vector<FileEntry>& files)
     return entries;
 }
 
-pix keep_above_zero(pix p)
-{
-    if(p.value > 0) { return p; }
-    else return 0_px;
-}
-
 struct ViewFilesystem : public View
 {
     std::shared_ptr<Font> font;
@@ -241,8 +235,8 @@ struct ViewFilesystem : public View
         return
         {
             // todo(Gustav): is this correct?
-            keep_above_zero(body_width - client_size.width),
-            keep_above_zero(static_cast<double>(entries.size()) * calculate_line_height() - client_size.height)
+            body_width,
+            static_cast<double>(entries.size()) * calculate_line_height()
         };
     }
 
