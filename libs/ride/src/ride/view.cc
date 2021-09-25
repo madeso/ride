@@ -111,29 +111,25 @@ void View::draw(RenCache* cache)
     draw_body(main_view_rect, cache);
 }
 
+void do_scroll(pix* scroll, const std::optional<pix>& size, int d, pix change)
+{
+    if(size && d != 0)
+    {
+        *scroll = keep_within
+        (
+            pix{0},
+            *scroll - static_cast<double>(d) * change,
+            *size
+        );
+    }
+}
+
 void View::on_mouse_wheel(int dx, int dy)
 {
     const auto scroll_size = calculate_scroll_size();
 
-    if(scroll_size.width && dx != 0)
-    {
-        scroll.x = keep_within
-        (
-            pix{0},
-            scroll.x + static_cast<double>(dx) * theme->horizontal_scroll,
-            *scroll_size.width
-        );
-    }
-
-    if(dy != 0 && scroll_size.height)
-    {
-        scroll.y = keep_within
-        (
-            pix{0},
-            scroll.y - static_cast<double>(dy) * theme->vertical_scroll,
-            *scroll_size.height
-        );
-    }
+    do_scroll(&scroll.x, scroll_size.width, dx, theme->horizontal_scroll);
+    do_scroll(&scroll.y, scroll_size.height, dy, theme->vertical_scroll);
 }
 
 void View::on_mouse_pressed(MouseButton, pix, pix, int)
