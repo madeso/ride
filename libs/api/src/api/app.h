@@ -23,8 +23,8 @@ struct App
     virtual void on_exposed();
     virtual void on_file_dropped(const std::string& file, pix x, pix y);
     virtual void on_resized(pix new_width, pix new_height);
-    virtual void on_key_pressed(Key key);
-    virtual void on_key_released(Key key);
+    virtual void on_key_pressed(const Stroke& key);
+    virtual void on_key_released(const Stroke& key);
     virtual void on_text_input(const std::string& str);
     virtual void on_mouse_pressed(MouseButton button, pix x, pix y, int clicks);
     virtual void on_mouse_released(MouseButton button, pix x, pix y);

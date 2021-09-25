@@ -343,6 +343,25 @@ std::optional<Stroke> stroke_from_string(const std::string& data)
     return Stroke{key, meta};
 }
 
+std::string to_string(const Stroke& stroke)
+{
+    std::string r;
+
+    const auto add_meta = [&r](bool add, const std::string& s)
+    {
+        if(add)
+        {
+            r += s + "+";
+        }
+    };
+
+    add_meta(stroke.meta.ctrl, "ctrl");
+    add_meta(stroke.meta.shift, "shift");
+    add_meta(stroke.meta.alt, "alt");
+    add_meta(stroke.meta.gui, "gui");
+    return r + to_string(stroke.key);
+}
+
 std::optional<Key> key_from_string(const std::string& str)
 {
     return global_key_string_map.from_string(str);

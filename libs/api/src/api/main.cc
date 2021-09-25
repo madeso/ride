@@ -93,7 +93,46 @@ bool PollEvent(SDL_Event* event)
     return r;
 }
 
-bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
+struct MetaState
+{
+    bool lalt = false;
+    bool lctrl = false;
+    bool lshift = false;
+    bool lgui = false;
+
+    bool ralt = false;
+    bool rctrl = false;
+    bool rshift = false;
+    bool rgui = false;
+
+    Meta to_meta() const
+    {
+        return
+        {
+            lctrl || rctrl,
+            lshift || rshift,
+            lalt || ralt,
+            lgui || rgui
+        };
+    }
+};
+
+void update_meta(MetaState* meta, SDL_Keycode key, bool state)
+{
+    switch(key)
+    {
+    case SDLK_LALT: meta->lalt = state; break;
+    case SDLK_LCTRL: meta->lctrl = state; break;
+    case SDLK_LSHIFT: meta->lshift = state; break;
+    case SDLK_LGUI: meta->lgui = state; break;
+    case SDLK_RALT: meta->ralt = state; break;
+    case SDLK_RCTRL: meta->rctrl = state; break;
+    case SDLK_RSHIFT: meta->rshift = state; break;
+    case SDLK_RGUI: meta->rgui = state; break;
+    }
+}
+
+bool step(SDL_Window* window, MetaState* meta, Ren* ren, RenCache* cache, App* app, bool first)
 {
     std::optional<vec2i> mouse_movement;
     int xrel = 0; int yrel = 0;
@@ -144,10 +183,12 @@ bool step(SDL_Window* window, Ren* ren, RenCache* cache, App* app, bool first)
                 }
                 break;
             case SDL_KEYDOWN:
-                app->on_key_pressed(key_from_sdl_keycode(event.key.keysym.sym));
+                update_meta(meta, event.key.keysym.sym, true);
+                app->on_key_pressed({key_from_sdl_keycode(event.key.keysym.sym), meta->to_meta()});
                 break;
             case SDL_KEYUP:
-                app->on_key_released(key_from_sdl_keycode(event.key.keysym.sym));
+                update_meta(meta, event.key.keysym.sym, false);
+                app->on_key_released({key_from_sdl_keycode(event.key.keysym.sym), meta->to_meta()});
                 break;
 
             case SDL_TEXTINPUT:
@@ -359,10 +400,12 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
     bool first = true;
 
+    MetaState meta;
+
     while (app->run)
     {
         const auto frame_start = get_time();
-        const auto did_redraw = step(window, &ren, &cache, app.get(), first);
+        const auto did_redraw = step(window, &meta, &ren, &cache, app.get(), first);
         first = false;
         if(!did_redraw && !has_focus(window))
         {

@@ -1,4 +1,5 @@
 set(src
+    src/libride/command.cc src/libride/command.h
     src/libride/document.cc src/libride/document.h
 )
 

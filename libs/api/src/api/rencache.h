@@ -27,7 +27,7 @@ enum CommandType
 };
 
 
-struct Command
+struct RenCmd
 {
     CommandType type;
     rect<dip> rect_arg;
@@ -68,7 +68,7 @@ struct RenCache
     CellBufferRef cells_prev = &cells_buf1;
     CellBufferRef cells = &cells_buf2;
 
-    std::vector<Command> command_buf;
+    std::vector<RenCmd> command_buf;
     rect<dip> screen_rect;
 
     bool show_debug = false;
@@ -83,7 +83,7 @@ struct RenCache
     void pop_clip_rect();
 
     // private
-    Command& push_command(CommandType type);
+    RenCmd& push_command(CommandType type);
     void update_overlapping_cells(const rect<dip>& r, unsigned h);
 
     void set_debug(bool enable);

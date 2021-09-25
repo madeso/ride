@@ -10,8 +10,10 @@
 #include "api/image.h"
 #include "api/font.h"
 
+#include "libride/command.h"
 #include "libride/document.h"
 
+#include "ride/keybind.h"
 #include "ride/theme.h"
 #include "ride/view.h"
 
@@ -443,9 +445,16 @@ struct RideApp : App
 
     Theme theme;
 
+    CommandList commands;
     ViewDoc root;
     ViewFilesystem browser;
-    
+    KeyBind keybind;
+
+    void on_key_pressed(const Stroke& key) override
+    {
+        std::cout << "key pressed: " << to_string(key) << "\n";
+        keybind.run(key, &commands);
+    }
 
     void setup_view(View* view)
     {
@@ -470,6 +479,11 @@ struct RideApp : App
             browser.root = *cd;
             browser.setup();
         }
+
+        commands.add()
+            ("core.quit", [this](){ this->run = false; });
+
+        keybind.add(*stroke_from_string("ctrl+q"), {"core.quit"});
     }
 
     void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override

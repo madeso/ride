@@ -8,7 +8,6 @@
 * commandline support for not opening project in cwd
 * icon demo
 * title demo
-* cmd palette backend with keybind support
 * editor component
 * save, open, close buffers
 * cnd palette

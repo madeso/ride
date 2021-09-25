@@ -274,7 +274,9 @@ struct Stroke
 };
 
 bool operator<(const Stroke& lhs, const Stroke& rhs);
+
 std::optional<Stroke> stroke_from_string(const std::string& data);
+std::string to_string(const Stroke& stroke);
 
 std::optional<Key> key_from_string(const std::string& str);
 std::string to_string(Key key);

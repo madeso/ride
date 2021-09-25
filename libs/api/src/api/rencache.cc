@@ -112,7 +112,7 @@ void RenCache::pop_clip_rect()
     set_clip_rect(top);
 }
 
-Command& RenCache::push_command(CommandType type)
+RenCmd& RenCache::push_command(CommandType type)
 {
     command_buf.emplace_back();
     auto& c = *command_buf.rbegin();
@@ -127,7 +127,7 @@ void RenCache::set_debug(bool enable)
 
 void RenCache::set_clip_rect(const rect<dip>& rect)
 {
-    Command& cmd = push_command(SET_CLIP);
+    RenCmd& cmd = push_command(SET_CLIP);
     cmd.rect_arg = ::rect<dip>::intersect(rect, screen_rect);
 }
 
@@ -137,7 +137,7 @@ void RenCache::draw_rect(rect<dip> rect, Color color)
     {
         return;
     }
-    Command& cmd = push_command(DRAW_RECT);
+    RenCmd& cmd = push_command(DRAW_RECT);
     cmd.rect_arg = rect;
     cmd.color = color;
 }
@@ -156,7 +156,7 @@ void RenCache::draw_image(std::shared_ptr<Image> image, dip x, dip y, Color colo
     {
         return;
     }
-    Command& cmd = push_command(DRAW_IMAGE);
+    RenCmd& cmd = push_command(DRAW_IMAGE);
     cmd.rect_arg = rect;
     cmd.image = image;
     cmd.color = color;
@@ -174,7 +174,7 @@ dip RenCache::draw_text(std::shared_ptr<Font> font, const std::string& text, dip
 
     if (::rect<dip>::overlap(screen_rect, rect))
     {
-        Command& cmd = push_command(DRAW_TEXT);
+        RenCmd& cmd = push_command(DRAW_TEXT);
         cmd.text = text;
         cmd.color = color;
         cmd.font = font;
@@ -222,7 +222,7 @@ void RenCache::update_overlapping_cells(const rect<dip>& r, unsigned h)
     }
 }
 
-unsigned Command::compute_hash() const
+unsigned RenCmd::compute_hash() const
 {
     Hash h;
     h << type;

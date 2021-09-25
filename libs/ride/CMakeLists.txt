@@ -1,4 +1,5 @@
 set(src
+    src/ride/keybind.cc src/ride/keybind.h
     src/ride/theme.cc src/ride/theme.h
     src/ride/view.cc src/ride/view.h
 )

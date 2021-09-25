@@ -61,11 +61,11 @@ void App::on_resized(pix, pix)
 {
 }
 
-void App::on_key_pressed(Key)
+void App::on_key_pressed(const Stroke&)
 {
 }
 
-void App::on_key_released(Key)
+void App::on_key_released(const Stroke&)
 {
 }
 
