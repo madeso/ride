@@ -33,6 +33,17 @@ struct Theme
     Color filesys_background_color = {230, 230, 230, 190};
     Color filesys_hover_color = {200, 200, 200, 190};
 
+    Color selection_background = {90, 90, 255, 190};
+
+    Color current_line_background = {255, 255, 200, 200};
+
+    Color caret_color = {0, 0, 0, 255};
+    pix caret_width = 1_px;
+
+    int half_blink_period = 10;
+
+    bool highlight_current_line = true;
+
     pix filesys_indent = 12_px;
     pix filesys_left_padding = 6_px;
 

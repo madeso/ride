@@ -1,6 +1,7 @@
 #include "ride/view.document.h"
 
 #include "base/str.h"
+#include "base/c.h"
 
 #include "api/app.h"
 #include "api/rencache.h"
@@ -54,6 +55,111 @@ scroll_size ViewDoc::calculate_scroll_size()
     return {w, h};
 }
 
+void draw_single_line
+(
+    RenCache* cache,
+    App* app,
+    std::shared_ptr<Font> font,
+    int line_index,
+    Document& doc,
+    Theme* theme,
+    const rect<pix>& view_rect,
+    const vec2<pix>& position
+)
+{
+    const auto font_height = app->to_pix(font->get_height());
+
+    const auto& text = doc.GetLineAt(line_index);
+
+    const auto get_col_x_offset = [&text, font, app](int offset) -> pix
+    {
+        const auto t = text.substr(0, Cs(offset));
+        return app->to_pix(font->get_width(t));
+    };
+
+    // draw selection if it overlaps this line
+    for(const auto& sel: doc.cursors)
+    {
+        auto s = sel.sorted();
+        if( s.a.line <= line_index && line_index <= s.b.line)
+        {
+            if( s.a.line != line_index) { s.a.offset = 0; }
+            if( s.b.line != line_index) { s.b.offset = C(text.length()); }
+
+            const auto x1 = position.x + get_col_x_offset(s.a.offset);
+            const auto x2 = position.x + get_col_x_offset(s.b.offset);
+            const auto lh = font_height; // include line spacing here?
+
+            cache->draw_rect
+            (
+                app->to_dip
+                (
+                    rect<pix>
+                    {
+                        {x1, position.y},
+                        {x2 - x1, lh}
+                    }
+                ),
+                theme->selection_background
+            );
+        }
+    }
+    
+    // draw line highlight if caret is on this line
+    if( theme->highlight_current_line)
+    {
+        for(const auto& sel: doc.cursors)
+        {
+            if(sel.is_selection() && sel.a.line == line_index)
+            {
+                cache->draw_rect
+                (
+                    app->to_dip
+                    (
+                        rect<pix>
+                        {
+                            {view_rect.x, position.y},
+                            {view_rect.width, font_height}
+                        }
+                    ),
+                    theme->current_line_background
+                );
+            }
+        }
+    }
+    
+    // draw the text
+    cache->draw_text
+    (
+        font,
+        doc.GetLineAt(line_index),
+        app->to_dip(position.x),
+        app->to_dip(position.y),
+        theme->plain_text_color
+    );
+
+    // draw caret if it overlaps this line
+    for(const auto& sel: doc.cursors)
+    {
+        if( sel.a.line == line_index && app->blink_timer < theme->half_blink_period)
+        {
+            const auto lh = font_height;
+            const auto x1 = position.x + get_col_x_offset(sel.a.offset);
+            cache->draw_rect
+            (
+                app->to_dip
+                (
+                    rect<pix>
+                    {
+                        {x1, position.y},
+                        {theme->caret_width, lh}
+                    }
+                ),
+                theme->caret_color
+            );
+        }
+    }
+}
 
 void ViewDoc::draw_body(const rect<pix>& main_view_rect, RenCache* cache)
 {
@@ -85,13 +191,13 @@ void ViewDoc::draw_body(const rect<pix>& main_view_rect, RenCache* cache)
 
         {
             const auto text_scope = ClipScope(cache, app->to_dip(view_rect));
-            cache->draw_text
+            draw_single_line
             (
-                font,
-                doc.GetLineAt(line_index),
-                app->to_dip(main_view_rect.x + gutter_width + theme->text_spacing - scroll.x),
-                app->to_dip(main_view_rect.y + y),
-                theme->plain_text_color
+                cache, app, font, line_index, doc, theme, view_rect,
+                {
+                    view_rect.x + theme->text_spacing - scroll.x,
+                    view_rect.y + y
+                }
             );
         }
     }

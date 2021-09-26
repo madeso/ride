@@ -45,6 +45,7 @@ struct App
     void set_scale(double d);
 
 
+    int blink_timer;
     bool run;
     
     size<pix> client_size;
