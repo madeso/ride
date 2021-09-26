@@ -8,9 +8,15 @@
 * commandline support for not opening project in cwd
 * icon demo
 * title demo
+* replace custom colors with open-colors
 * editor component
+  - animate cursor
+  - click to place cursor
+  - drag to select
+  - text input
+  - cmd functions
 * save, open, close buffers
-* cnd palette
+* cmd palette
 * run command/compile project
 * tmlanguage/treesitter color support
 
