@@ -3,6 +3,7 @@ set(src
     src/ride/theme.cc src/ride/theme.h
     src/ride/view.cc src/ride/view.h
     src/ride/view.document.cc src/ride/view.document.h
+    src/ride/view.filesystem.cc src/ride/view.filesystem.h
 )
 
 add_library(rideapp STATIC ${src})
