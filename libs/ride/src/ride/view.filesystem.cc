@@ -289,12 +289,12 @@ Node* ViewFilesystem::get_node_under_cursor(const vec2<pix> relative_mouse)
 }
 
 
-void ViewFilesystem::on_mouse_pressed(MouseButton button, pix x, pix y, int clicks)
+void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const vec2<pix>& new_mouse, int clicks)
 {
     if(button != MouseButton::left) { return; }
     if(clicks > 2) { return; }
 
-    auto* node = get_node_under_cursor({x, y});
+    auto* node = get_node_under_cursor(new_mouse);
     if(node)
     {
         if(node->OnClick(clicks == 2, fs, *theme))

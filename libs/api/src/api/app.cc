@@ -74,11 +74,11 @@ void App::on_text_input(const std::string&)
 }
 
 
-void App::on_mouse_pressed(MouseButton, pix, pix, int)
+void App::on_mouse_pressed(MouseButton, const Meta&, const vec2<pix>&, int)
 {
 }
 
-void App::on_mouse_released(MouseButton, pix, pix)
+void App::on_mouse_released(MouseButton, const Meta&, const vec2<pix>&)
 {
 }
 

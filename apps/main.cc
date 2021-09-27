@@ -107,15 +107,6 @@ struct RideApp : App
         keybind.add(*stroke_from_string("ctrl+down"), {"scale.-"});
     }
 
-    void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
-    {
-        mouse = new_mouse;
-
-        View* view = get_mouse_hovering_view();
-        if(view == nullptr) { return; }
-        view->on_mouse_moved(new_mouse);
-    }
-
     void draw(RenCache* cache) override
     {
         auto rect = ::rect<pix>::from_size(client_size);
@@ -130,27 +121,18 @@ struct RideApp : App
         browser.on_layout(browser_rect.Inset(border_size));
         root.on_layout(rect.Inset(border_size));
 
-        browser.draw(cache);
-        root.draw(cache);
+        draw_view(&browser, cache);
+        draw_view(&root, cache);
+    }
 
-        #if 0
-        cache->draw_rect
-        (
-            to_dip
-            (
-                ::rect<pix>
-                {
-                    mouse,
-                    ::size<pix>
-                    {
-                        pix{10},
-                        pix{10}
-                    }
-                }
-            ),
-            Color::rgb(0, 0, 255, 255)
-        );
-        #endif
+    void draw_view(View* view, RenCache* cache)
+    {
+        view->draw(cache);
+    }
+
+    View* get_active_view()
+    {
+        return get_mouse_hovering_view();
     }
 
     View* get_mouse_hovering_view()
@@ -166,12 +148,33 @@ struct RideApp : App
         else return nullptr;
     }
 
-    void on_mouse_pressed(MouseButton button, pix x, pix y, int clicks) override
+    void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override
     {
-        View* view = get_mouse_hovering_view();
+        mouse = new_mouse;
+        
+        View* view = get_active_view();
         if(view == nullptr) { return; }
 
-        view->on_mouse_pressed(button, x, y, clicks);
+        view->on_mouse_pressed(button, meta, new_mouse, clicks);
+    }
+
+    void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
+    {
+        mouse = new_mouse;
+
+        View* view = get_active_view();
+        if(view == nullptr) { return; }
+        view->on_mouse_moved(new_mouse);
+    }
+
+    void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse) override
+    {
+        mouse = new_mouse;
+
+        View* view = get_active_view();
+        if(view == nullptr) { return; }
+
+        view->on_mouse_released(button, meta, new_mouse);
     }
 
     void on_mouse_wheel(int dx, int dy) override

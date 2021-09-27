@@ -171,10 +171,14 @@ void View::on_mouse_wheel(int dx, int dy)
     do_scroll(&scroll.y, scroll_size.height, dy, theme->vertical_scroll);
 }
 
-void View::on_mouse_pressed(MouseButton, pix, pix, int)
+void View::on_mouse_pressed(MouseButton, const Meta&, const vec2<pix>&, int)
 {
 }
 
 void View::on_mouse_moved(const vec2<pix>&)
+{
+}
+
+void View::on_mouse_released(MouseButton, const Meta&, const vec2<pix>&)
 {
 }

@@ -200,8 +200,8 @@ bool step(SDL_Window* window, MetaState* meta, Ren* ren, RenCache* cache, App* a
                 app->on_mouse_pressed
                 (
                     mousebutton_from_sdl_button(event.button.button),
-                    app->to_pix(dip{event.button.x}),
-                    app->to_pix(dip{event.button.y}),
+                    meta->to_meta(),
+                    {app->to_pix(dip{event.button.x}), app->to_pix(dip{event.button.y})},
                     event.button.clicks
                 );
                 break;
@@ -211,8 +211,8 @@ bool step(SDL_Window* window, MetaState* meta, Ren* ren, RenCache* cache, App* a
                 app->on_mouse_released
                 (
                     mousebutton_from_sdl_button(event.button.button),
-                    app->to_pix(dip{event.button.x}),
-                    app->to_pix(dip{event.button.y})
+                    meta->to_meta(),
+                    {app->to_pix(dip{event.button.x}), app->to_pix(dip{event.button.y})}
                 );
                 break;
 

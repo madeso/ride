@@ -50,6 +50,7 @@ bool selection::is_selection() const
 bool Document::LoadFile(filesystem* fs, const std::string& path)
 {
     lines.clear();
+    
     const auto result = fs->load_file
     (
         path,
@@ -58,16 +59,6 @@ bool Document::LoadFile(filesystem* fs, const std::string& path)
             lines.emplace_back(line);
         }
     );
-
-    // hacky debug    
-    if(result)
-    {
-        cursors =
-        {
-            {{3, 3}, {3, 3}},
-            {{4, 2}, {4, 7}},
-        };
-    }
 
     return result;
 }

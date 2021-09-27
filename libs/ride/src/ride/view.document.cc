@@ -59,6 +59,7 @@ scroll_size ViewDoc::calculate_scroll_size()
     return {w, h};
 }
 
+
 void draw_single_line
 (
     RenCache* cache,
@@ -165,6 +166,7 @@ void draw_single_line
     }
 }
 
+
 pix ViewDoc::get_gutter_width()
 {
     const auto lines = doc.GetNumberOfLines();
@@ -173,11 +175,13 @@ pix ViewDoc::get_gutter_width()
     return gutter_width;
 }
 
+
 void ViewDoc::on_layout_body()
 {
     view_rect = body_rect;
     gutter_rect = view_rect.cut(get_gutter_side(*theme), get_gutter_width());
 }
+
 
 void ViewDoc::draw_body(RenCache* cache)
 {
@@ -217,6 +221,7 @@ void ViewDoc::draw_body(RenCache* cache)
     }
 }
 
+
 minmax<int> ViewDoc::get_line_range()
 {
     const auto fist_line_fraction = (view_rect.y + scroll.y) / calculate_line_height();
@@ -227,6 +232,7 @@ minmax<int> ViewDoc::get_line_range()
 
     return {first_visible_line, last_visible_line};
 }
+
 
 position ViewDoc::translate_view_position(const vec2<pix>& p)
 {
@@ -272,14 +278,39 @@ position ViewDoc::translate_view_position(const vec2<pix>& p)
     return {line, byte_offset};
 }
 
-void ViewDoc::on_mouse_pressed(MouseButton button, pix x, pix y, int)
+
+void ViewDoc::on_mouse_pressed(MouseButton button, const Meta&, const vec2<pix>& new_mouse, int)
 {
     if(button != MouseButton::left) { return; }
 
-    const auto p = translate_view_position({x, y});
+    const auto p = translate_view_position(new_mouse);
 
     doc.cursors.clear();
     doc.cursors.emplace_back(selection{p, p});
 
-    // std::cout << "mouse click " << " (" << p.line << ", " << p.offset << ")\n";
+    dragging = true;
+}
+
+void ViewDoc::drag_to(const vec2<pix>& new_mouse)
+{
+    const auto p = translate_view_position(new_mouse);
+    if(doc.cursors.empty()) { return; }
+
+    doc.cursors.rbegin()->b = p;
+}
+
+void ViewDoc::on_mouse_moved(const vec2<pix>& new_mouse)
+{
+    if(dragging)
+    {
+        drag_to(new_mouse);
+    }
+}
+
+
+void ViewDoc::on_mouse_released(MouseButton button, const Meta&, const vec2<pix>& new_mouse)
+{
+    if(button != MouseButton::left) { return; }
+    drag_to(new_mouse);
+    dragging = false;
 }
