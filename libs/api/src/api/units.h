@@ -23,3 +23,8 @@ constexpr pix operator"" _px ( unsigned long long n )
 // actual pixel (pixel*scale)
 struct device_pixels_tag {};
 using dip = number<int, device_pixels_tag>;
+
+constexpr dip operator"" _dp ( unsigned long long n )
+{
+    return dip{static_cast<int>(n)};
+}

@@ -9,12 +9,15 @@
 * icon demo
 * title demo
 * replace custom colors with open-colors
+* treeview: remember open/close state
 * editor component
   - animate cursor
   - click to place cursor
   - drag to select
   - text input
   - cmd functions
+* option to extend current line to include gutter?
+* option to draw current gutter text with a different color
 * save, open, close buffers
 * cmd palette
 * run command/compile project

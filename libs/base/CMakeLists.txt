@@ -9,9 +9,11 @@ set(src
     src/base/hash.cc src/base/hash.h
     src/base/humane_sort.cc src/base/humane_sort.h
     src/base/ints.cc src/base/ints.h
+    src/base/minmax.cc src/base/minmax.h
     src/base/numeric.cc src/base/numeric.h
     src/base/rect.cc src/base/rect.h
     src/base/rng.cc src/base/rng.h
+    src/base/side.cc src/base/side.h
     src/base/size.cc src/base/size.h
     src/base/str.cc src/base/str.h
     src/base/string.cc src/base/string.h

@@ -9,41 +9,21 @@
 #include "ride/theme.h"
 
 View::View()
-    : position
-        ({
-            50_px,
-            50_px
-        })
-    , client_size
-        ({
-            300_px,
-            300_px
-        })
-    , scroll
-        ({
-            pix{0},
-            pix{0}
-        })
+    : app(nullptr)
+    , theme(nullptr)
+    , client_rect
+    {
+        {50_px, 50_px},
+        {300_px, 300_px}
+    }
+    , scroll{0_px, 0_px}
+    , body_rect(0_px)
 {
 }
 
-void View::set_rect(const rect<pix>& r)
-{
-    position = {r.x, r.y};
-    client_size = {r.width, r.height};
-}
-
-rect<pix> View::get_rect() const
-{
-    return {position, client_size};
-}
-
-void View::draw_scrollbar
-(
-    rect<pix>* view_rect, RenCache* cache,
+std::optional<scrollbar_data> layout_scrollbar(rect<pix>* view_rect, Theme* theme,
     pix document_height, pix current_scroll,
-    bool is_vertical, Side through_side, Side top_side, Side bottom_side
-)
+    bool is_vertical, Side through_side, Side top_side, Side bottom_side)
 {
     const auto view_rect_width = view_rect->width;
     const auto view_rect_height = view_rect->height;
@@ -52,7 +32,7 @@ void View::draw_scrollbar
 
     if(view_prop >= document_height)
     {
-        return;
+        return {};
     }
 
     const auto fraction = view_prop / document_height;
@@ -73,13 +53,59 @@ void View::draw_scrollbar
         ? rect<pix>{track_rect.x               , track_rect.y + thumb_offset, track_rect.width, thumb_size       }
         : rect<pix>{track_rect.x + thumb_offset, track_rect.y               , thumb_size      , track_rect.height}
         ;
-
-    const auto clip_scope = ClipScope{cache, app->to_dip(through_rect)};
-    cache->draw_rect(app->to_dip(through_rect), theme->scroll_through_color);
-    cache->draw_rect(app->to_dip(thumb_rect), theme->scroll_thumb_color);
-    cache->draw_rect(app->to_dip(top_button_rect), theme->scroll_button_color);
-    cache->draw_rect(app->to_dip(bottom_button_rect), theme->scroll_button_color);
+    
+    return scrollbar_data
+    {
+        through_rect,
+        thumb_rect,
+        top_button_rect,
+        bottom_button_rect
+    };
 }
+
+void draw_scrollbar(const scrollbar_data& data, App* app, Theme* theme, RenCache* cache)
+{
+    const auto clip_scope = ClipScope{cache, app->to_dip(data.through_rect)};
+    cache->draw_rect(app->to_dip(data.through_rect), theme->scroll_through_color);
+    cache->draw_rect(app->to_dip(data.thumb_rect), theme->scroll_thumb_color);
+    cache->draw_rect(app->to_dip(data.top_button_rect), theme->scroll_button_color);
+    cache->draw_rect(app->to_dip(data.bottom_button_rect), theme->scroll_button_color);
+}
+
+void View::on_layout(const rect<pix>& new_client_rect)
+{
+    client_rect = new_client_rect;
+    body_rect = new_client_rect;
+
+    const auto scroll_size = get_scroll_size();
+    
+    if(scroll_size.height)
+    {
+        vertical_scrollbar_data = layout_scrollbar
+        (
+            &body_rect, theme, *scroll_size.height, scroll.y,
+            true, get_vertical_scroll_side(*theme), Side::top, Side::bottom
+        );
+    }
+
+    if(scroll_size.width)
+    {
+        horizontal_scrollbar_data = layout_scrollbar
+        (
+            &body_rect, theme,
+            *scroll_size.width, scroll.x,
+            false, get_horizontal_scroll_side(*theme), Side::left, Side::right
+        );
+    }
+
+    on_layout_body();
+}
+
+
+void View::on_layout_body()
+{
+}
+
 
 std::optional<pix> keep_above_zero(std::optional<pix> p)
 {
@@ -101,32 +127,18 @@ scroll_size View::get_scroll_size()
 
 void View::draw(RenCache* cache)
 {
-    auto main_view_rect = rect<pix>{position, client_size};
-
-    const auto scroll_size = get_scroll_size();
-    
-    if(scroll_size.height)
+    if(vertical_scrollbar_data)
     {
-        draw_scrollbar
-        (
-            &main_view_rect, cache,
-            *scroll_size.height, scroll.y,
-            true, Side::right, Side::top, Side::bottom
-        );
+        draw_scrollbar(*vertical_scrollbar_data, app, theme, cache);
     }
 
-    if(scroll_size.width)
+    if(horizontal_scrollbar_data)
     {
-        draw_scrollbar
-        (
-            &main_view_rect, cache,
-            *scroll_size.width, scroll.x,
-            false, Side::bottom, Side::left, Side::right
-        );
+        draw_scrollbar(*horizontal_scrollbar_data, app, theme, cache);
     }
 
-    const auto clip_scope = ClipScope{cache, app->to_dip(main_view_rect)};
-    draw_body(main_view_rect, cache);
+    const auto clip_scope = ClipScope{cache, app->to_dip(body_rect)};
+    draw_body(cache);
 }
 
 void do_scroll(pix* scroll, const std::optional<pix>& size, int d, pix change)

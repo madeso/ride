@@ -30,7 +30,7 @@ enum CommandType
 struct RenCmd
 {
     CommandType type;
-    rect<dip> rect_arg;
+    rect<dip> rect_arg = rect<dip>(0_dp);
     Color color;
     std::shared_ptr<Font> font;
     std::shared_ptr<Image> image;
@@ -69,7 +69,7 @@ struct RenCache
     CellBufferRef cells = &cells_buf2;
 
     std::vector<RenCmd> command_buf;
-    rect<dip> screen_rect;
+    rect<dip> screen_rect = rect<dip>(0_dp);
 
     bool show_debug = false;
     Rng rng;

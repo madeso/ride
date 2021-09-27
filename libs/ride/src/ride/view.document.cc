@@ -1,7 +1,11 @@
 #include "ride/view.document.h"
 
+#include <iostream>
+
 #include "base/str.h"
 #include "base/c.h"
+#include "base/cc.h"
+#include "base/utf8.h"
 
 #include "api/app.h"
 #include "api/rencache.h"
@@ -15,7 +19,7 @@ pix ViewDoc::calculate_line_height()
 }
 
 
-pix ViewDoc::get_document_height()
+pix ViewDoc::get_full_document_height()
 {
     const auto lines = doc.GetNumberOfLines();
     const auto spacing = calculate_line_height();
@@ -25,7 +29,7 @@ pix ViewDoc::get_document_height()
 }
 
 
-pix ViewDoc::get_document_width()
+pix ViewDoc::get_full_document_width()
 {
     const auto longest_line = std::max_element
     (
@@ -49,8 +53,8 @@ scroll_size ViewDoc::calculate_scroll_size()
 {
     const auto line_height = calculate_line_height();
     
-    const auto w = get_document_width();
-    const auto h = get_document_height() - line_height;
+    const auto w = get_full_document_width();
+    const auto h = get_full_document_height() - line_height;
 
     return {w, h};
 }
@@ -161,22 +165,32 @@ void draw_single_line
     }
 }
 
-void ViewDoc::draw_body(const rect<pix>& main_view_rect, RenCache* cache)
+pix ViewDoc::get_gutter_width()
+{
+    const auto lines = doc.GetNumberOfLines();
+    const auto min_gutter_width = app->to_pix(font->get_width( (Str{} << (lines+1)).ToString().c_str() ));
+    const auto gutter_width = min_gutter_width + theme->gutter_spacing_left + theme->gutter_spacing_right;
+    return gutter_width;
+}
+
+void ViewDoc::on_layout_body()
+{
+    view_rect = body_rect;
+    gutter_rect = view_rect.cut(get_gutter_side(*theme), get_gutter_width());
+}
+
+void ViewDoc::draw_body(RenCache* cache)
 {
     const auto lines = doc.GetNumberOfLines();
 
-    const auto min_gutter_width = app->to_pix(font->get_width( (Str{} << (lines+1)).ToString().c_str() ));
-    const auto gutter_width = min_gutter_width + theme->gutter_spacing_left + theme->gutter_spacing_right;
-
-    auto view_rect = main_view_rect;
-    const auto gutter_rect = view_rect.cut_left(gutter_width);
-
     const auto spacing = calculate_line_height();
 
-    cache->draw_rect(app->to_dip(main_view_rect), theme->edit_background);
+    cache->draw_rect(app->to_dip(view_rect), theme->edit_background);
     cache->draw_rect(app->to_dip(gutter_rect), theme->gutter_background);
 
-    for(int line_index=0; line_index<lines; line_index += 1)
+    const auto line_range = get_line_range();
+
+    for(int line_index=line_range.min; line_index<std::min(lines, line_range.max-1); line_index += 1)
     {
         const auto y = static_cast<double>(line_index) * spacing - scroll.y;
 
@@ -184,8 +198,8 @@ void ViewDoc::draw_body(const rect<pix>& main_view_rect, RenCache* cache)
         (
             font,
             (Str{} << line_index+1).ToString(),
-            app->to_dip(main_view_rect.x + theme->gutter_spacing_left),
-            app->to_dip(main_view_rect.y + y),
+            app->to_dip(gutter_rect.x + theme->gutter_spacing_left),
+            app->to_dip(gutter_rect.y + y),
             theme->gutter_color
         );
 
@@ -201,4 +215,71 @@ void ViewDoc::draw_body(const rect<pix>& main_view_rect, RenCache* cache)
             );
         }
     }
+}
+
+minmax<int> ViewDoc::get_line_range()
+{
+    const auto fist_line_fraction = (view_rect.y + scroll.y) / calculate_line_height();
+    const auto first_visible_line = std::max(0, static_cast<int>(std::floor(fist_line_fraction)));
+
+    const auto last_line_fraction = (view_rect.y + view_rect.height + scroll.y) / calculate_line_height();
+    const auto last_visible_line = std::max(0, static_cast<int>(std::ceil(last_line_fraction)));
+
+    return {first_visible_line, last_visible_line};
+}
+
+position ViewDoc::translate_view_position(const vec2<pix>& p)
+{
+    const auto line = keep_within
+    (
+        0,
+        static_cast<int>
+        (
+            std::floor
+            (
+                (p.y - view_rect.y + scroll.y) / calculate_line_height()
+            )
+        ),
+        doc.GetNumberOfLines()
+    );
+
+    const auto byte_offset = [&, this]()
+    {
+        const auto chars = utf8_chars(this->doc.GetLineAt(line));
+        
+        int index = 0;
+        int last_index = 0;
+
+        std::string str;
+
+        for(const auto& ch: chars)
+        {
+            str += ch;
+            const auto w = this->app->to_pix(this->font->get_width(str));
+            
+            if(w >= p.x - view_rect.x + scroll.x)
+            {
+                return last_index;
+            }
+
+            last_index = index;
+            index += 1;
+        }
+
+        return last_index;
+    }();
+
+    return {line, byte_offset};
+}
+
+void ViewDoc::on_mouse_pressed(MouseButton button, pix x, pix y, int)
+{
+    if(button != MouseButton::left) { return; }
+
+    const auto p = translate_view_position({x, y});
+
+    doc.cursors.clear();
+    doc.cursors.emplace_back(selection{p, p});
+
+    // std::cout << "mouse click " << " (" << p.line << ", " << p.offset << ")\n";
 }

@@ -1,19 +1,46 @@
 #include "base/utf8.h"
 
-constexpr unsigned c_char_to_unsigned(char c)
+#include <cassert>
+
+namespace
 {
-    return static_cast<unsigned>(c);
+    bool is_utf8_cont(u8 byte)
+    {
+        return byte >= 0x80 && byte < 0xc0;
+    }
+
+    constexpr u32 c_char_to_unsigned(char c)
+    {
+        return static_cast<unsigned>(c);
+    }
+    static_assert(c_char_to_unsigned(' ') == 32, "c_char_to_unsigned doesn't work");
+
+    constexpr u8 char_to_u8(char c)
+    {
+        return static_cast<u8>(c);
+    }
+    static_assert(char_to_u8(' ') == 32, "char_to_u8 functions doesn't work");
+
+    constexpr bool is_in_range(u8 lower, u8 cc, u8 upper)
+    {
+        return lower <= cc && cc <= upper;
+    };
+
+    constexpr bool is_utf8_char(u8 c, bool first)
+    {
+        if(first) return is_in_range(0x00, c, 0x7f) || is_in_range(0xc2, c, 0xf4);
+        else return is_in_range(0x80, c, 0xbf);
+    };
 }
 
-static_assert(c_char_to_unsigned(' ') == 32, "c_char_to_unsigned doesn't work");
-
-std::vector<unsigned> utf8_to_codepoints(const std::string& text)
+std::vector<u32> utf8_to_codepoints(const std::string& text)
 {
-    std::vector<unsigned> dst;
+    std::vector<u32> dst;
 
     const char* p = text.c_str();
 
-    unsigned res, n;
+    u32 res;
+    u32 n;
     while (*p)
     {
         switch (*p & 0xf0)
@@ -45,4 +72,38 @@ std::vector<unsigned> utf8_to_codepoints(const std::string& text)
     }
 
     return dst;
+}
+
+std::vector<std::string> utf8_chars(const std::string& text)
+{
+    std::vector<std::string> r;
+    std::string buffer;
+    auto clear_buffer = [&]()
+    {
+        if(buffer.empty() == false)
+        {
+            r.emplace_back(buffer);
+            buffer = "";
+        }
+    };
+    for(char c: text)
+    {
+        if(is_utf8_char(char_to_u8(c), true))
+        {
+            clear_buffer();
+            buffer += c;
+        }
+        else if(is_utf8_char(char_to_u8(c), false))
+        {
+            assert(is_utf8_cont(char_to_u8(c)));
+            buffer += c;
+        }
+        else
+        {
+            // invalid utf8 character?
+            clear_buffer();
+        }
+    }
+    clear_buffer();
+    return r;
 }

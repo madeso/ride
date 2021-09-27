@@ -6,14 +6,7 @@
 
 #include "base/vec2.h"
 #include "base/size.h"
-
-enum class Side
-{
-    left,
-    right,
-    top,
-    bottom
-};
+#include "base/side.h"
 
 template<typename T>
 struct rect
@@ -29,11 +22,11 @@ struct rect
     T width;
     T height;
 
-    constexpr rect()
-        : x(0)
-        , y(0)
-        , width(0)
-        , height(0)
+    constexpr explicit rect(T same)
+        : x(same)
+        , y(same)
+        , width(same)
+        , height(same)
     {
     }
 
@@ -225,7 +218,7 @@ struct rect
             case Side::bottom: return cut_bottom( a);
             default:
                 assert(false && "invalid side");
-                return {};
+                return cut_left(a);
         }
     }
 

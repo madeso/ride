@@ -45,11 +45,11 @@ struct App
     void set_scale(double d);
 
 
-    int blink_timer;
-    bool run;
+    int blink_timer = 0;
+    bool run = true;
     
     size<pix> client_size;
-    double scale;
+    double scale = 1.0;
     bool* redraw_value;
 
     std::vector<std::shared_ptr<Font>> loaded_fonts;

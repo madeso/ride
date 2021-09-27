@@ -127,8 +127,8 @@ struct RideApp : App
 
         const auto border_size = 3_px;
 
-        browser.set_rect(browser_rect.Inset(border_size));
-        root.set_rect(rect.Inset(border_size));
+        browser.on_layout(browser_rect.Inset(border_size));
+        root.on_layout(rect.Inset(border_size));
 
         browser.draw(cache);
         root.draw(cache);
@@ -155,11 +155,11 @@ struct RideApp : App
 
     View* get_mouse_hovering_view()
     {
-        if( root.get_rect().contains(mouse))
+        if( root.client_rect.contains(mouse))
         {
             return &root;
         }
-        else if( browser.get_rect().contains(mouse))
+        else if( browser.client_rect.contains(mouse))
         {
             return &browser;
         }

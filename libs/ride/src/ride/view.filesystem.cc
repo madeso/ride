@@ -241,17 +241,17 @@ rect<pix> ViewFilesystem::hit_rect_for_node(Node* node)
 
     return
     {
-        position.x,
+        body_rect.x,
         node->position.y,
-        client_size.width,
+        body_rect.width,
         height + spacing
     };
 }
 
 
-void ViewFilesystem::draw_body(const rect<pix>& main_view_rect, RenCache* cache)
+void ViewFilesystem::draw_body(RenCache* cache)
 {
-    cache->draw_rect(app->to_dip(main_view_rect), theme->filesys_background_color);
+    cache->draw_rect(app->to_dip(body_rect), theme->filesys_background_color);
 
     if(node_hovering)
     {
@@ -264,8 +264,8 @@ void ViewFilesystem::draw_body(const rect<pix>& main_view_rect, RenCache* cache)
         (
             font,
             e->name,
-            app->to_dip(main_view_rect.x + e->position.x - scroll.x),
-            app->to_dip(main_view_rect.y + e->position.y - scroll.y),
+            app->to_dip(body_rect.x + e->position.x - scroll.x),
+            app->to_dip(body_rect.y + e->position.y - scroll.y),
             e->GetColor(*theme)
         );
     }

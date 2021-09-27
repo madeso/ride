@@ -1,6 +1,8 @@
 #pragma once
 
 #include "base/color.h"
+#include "base/side.h"
+
 #include "api/units.h"
 
 struct Theme
@@ -49,4 +51,12 @@ struct Theme
 
     bool sort_files = true;
     bool directories_first = true;
+
+    bool gutter_side_default = true;
+    bool horizontal_scroll_side_default = true;
+    bool vertical_scroll_side_default = true;
 };
+
+Side get_gutter_side(const Theme& theme);
+Side get_horizontal_scroll_side(const Theme& theme);
+Side get_vertical_scroll_side(const Theme& theme);
