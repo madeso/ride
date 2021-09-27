@@ -128,6 +128,14 @@ struct RideApp : App
     void draw_view(View* view, RenCache* cache)
     {
         view->draw(cache);
+
+        if(theme.color_inactive_view)
+        {
+            if(view != get_active_view())
+            {
+                cache->draw_rect( this->to_dip(view->body_rect), theme.inactive_view_color);
+            }
+        }
     }
 
     View* get_active_view()

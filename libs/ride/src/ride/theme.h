@@ -55,6 +55,9 @@ struct Theme
     bool gutter_side_default = true;
     bool horizontal_scroll_side_default = true;
     bool vertical_scroll_side_default = true;
+
+    bool color_inactive_view = true;
+    Color inactive_view_color = {0, 0, 0, 20};
 };
 
 Side get_gutter_side(const Theme& theme);
