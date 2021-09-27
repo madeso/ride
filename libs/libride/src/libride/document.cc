@@ -32,6 +32,16 @@ bool operator>(const position& lhs, const position& rhs)
     return lhs.line > rhs.line || (lhs.line == rhs.line && lhs.offset > rhs.offset);
 }
 
+bool operator<=(const position& lhs, const position& rhs)
+{
+    return lhs.line < rhs.line || (lhs.line == rhs.line && lhs.offset <= rhs.offset);
+}
+
+bool operator>=(const position& lhs, const position& rhs)
+{
+    return lhs.line > rhs.line || (lhs.line == rhs.line && lhs.offset >= rhs.offset);
+}
+
 sorted_selection selection::sorted() const
 {
     if( a > b )
@@ -43,14 +53,14 @@ sorted_selection selection::sorted() const
 
 bool selection::is_selection() const
 {
-    return a == b;
+    return a != b;
 }
 
 
 bool Document::LoadFile(filesystem* fs, const std::string& path)
 {
     lines.clear();
-    
+
     const auto result = fs->load_file
     (
         path,

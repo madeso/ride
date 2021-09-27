@@ -17,6 +17,9 @@ bool operator!=(const position& lhs, const position& rhs);
 bool operator<(const position& lhs, const position& rhs);
 bool operator>(const position& lhs, const position& rhs);
 
+bool operator<=(const position& lhs, const position& rhs);
+bool operator>=(const position& lhs, const position& rhs);
+
 struct sorted_selection
 {
     position a;

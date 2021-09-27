@@ -56,7 +56,7 @@ struct Theme
     bool horizontal_scroll_side_default = true;
     bool vertical_scroll_side_default = true;
 
-    bool color_inactive_view = true;
+    bool color_inactive_view = false;
     Color inactive_view_color = {0, 0, 0, 20};
 };
 
