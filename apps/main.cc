@@ -166,13 +166,13 @@ struct RideApp : App
         view->on_mouse_pressed(button, meta, new_mouse, clicks);
     }
 
-    void on_mouse_moved(const vec2<pix>& new_mouse, pix xrel, pix yrel) override
+    void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse, pix xrel, pix yrel) override
     {
         mouse = new_mouse;
 
         View* view = get_active_view();
         if(view == nullptr) { return; }
-        view->on_mouse_moved(new_mouse);
+        view->on_mouse_moved(meta, new_mouse);
     }
 
     void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse) override

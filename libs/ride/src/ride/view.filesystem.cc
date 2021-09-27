@@ -305,7 +305,7 @@ void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const vec
 }
 
 
-void ViewFilesystem::on_mouse_moved(const vec2<pix>& new_mouse)
+void ViewFilesystem::on_mouse_moved(const Meta&, const vec2<pix>& new_mouse)
 {
     last_mouse = new_mouse;
     update_hover();

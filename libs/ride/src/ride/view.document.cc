@@ -302,6 +302,41 @@ bool is_position_inside(const selection& sel, const position& p)
     return s.a <= p && p <= s.b;
 }
 
+bool destroy_cursors(Document* doc, const position& p, bool include_last)
+{
+    const auto can_toggle = doc->cursors.size() > 1;
+
+    const auto last = include_last
+        ? doc->cursors.size()
+        :
+        (
+            doc->cursors.size() > 0
+                ? Cs(C(doc->cursors.size())-1)
+                : doc->cursors.size()
+        );
+
+    for(std::size_t cursor_index = 0; cursor_index < last; cursor_index += 1)
+    {
+        const auto& s = doc->cursors[cursor_index];
+        if(is_position_inside(s, p))
+        {
+            if(can_toggle)
+            {
+                std::cout << "destroyed selection at "<< cursor_index << " \n";
+                doc->cursors.erase(std::next(doc->cursors.begin(), C(cursor_index)));
+                return true;
+            }
+            else
+            {
+                std::cout << "unable to toggle the last cursor...\n";
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int)
 {
     if(button != MouseButton::left) { return; }
@@ -310,23 +345,10 @@ void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<
 
     if(meta.alt && meta.ctrl == false)
     {
-        const auto can_toggle = doc.cursors.size() > 1;
-        for(std::size_t cursor_index = 0; cursor_index < doc.cursors.size(); cursor_index += 1)
+        if(destroy_cursors(&doc, p, true))
         {
-            const auto& s = doc.cursors[cursor_index];
-            if(is_position_inside(s, p))
-            {
-                if(can_toggle)
-                {
-                    doc.cursors.erase(std::next(doc.cursors.begin(), C(cursor_index)));
-                    return;
-                }
-                else
-                {
-                    std::cout << "unable to toggle the last cursor...\n";
-                    return;
-                }
-            }
+            std::cout << "toggled cursor\n";
+            return;
         }
         doc.cursors.emplace_back(selection{p, p});
     }
@@ -348,29 +370,34 @@ void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<
     dragging = true;
 }
 
-void ViewDoc::drag_to(const vec2<pix>& new_mouse)
+void ViewDoc::drag_to(const Meta& meta, const vec2<pix>& new_mouse)
 {
     if(dragging == false) { return; }
 
     // todo(Gustav): handle alt meta drag-select
     // if meta.alt is false, clear everything but the last one
-    // if meta.alt is true then merge destroy older selections that are hovering
 
     const auto p = translate_view_position(new_mouse);
     if(doc.cursors.empty()) { return; }
 
     doc.cursors.rbegin()->b = p;
+
+    if(meta.alt)
+    {
+        // todo(Gustav): check if last selection overlaps any old selection and if so, remove them
+        destroy_cursors(&doc, p, false);
+    }
 }
 
-void ViewDoc::on_mouse_moved(const vec2<pix>& new_mouse)
+void ViewDoc::on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse)
 {
-    drag_to(new_mouse);
+    drag_to(meta, new_mouse);
 }
 
 
-void ViewDoc::on_mouse_released(MouseButton button, const Meta&, const vec2<pix>& new_mouse)
+void ViewDoc::on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse)
 {
     if(button != MouseButton::left) { return; }
-    drag_to(new_mouse);
+    drag_to(meta, new_mouse);
     dragging = false;
 }

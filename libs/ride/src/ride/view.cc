@@ -175,7 +175,7 @@ void View::on_mouse_pressed(MouseButton, const Meta&, const vec2<pix>&, int)
 {
 }
 
-void View::on_mouse_moved(const vec2<pix>&)
+void View::on_mouse_moved(const Meta&, const vec2<pix>&)
 {
 }
 

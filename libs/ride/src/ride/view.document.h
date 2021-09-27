@@ -34,9 +34,9 @@ struct ViewDoc : View
     void draw_body(RenCache* cache) override;
 
     void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override;
-    void on_mouse_moved(const vec2<pix>& new_mouse) override;
+    void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse) override;
     void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse) override;
     
     bool dragging = false;
-    void drag_to(const vec2<pix>& new_mouse);
+    void drag_to(const Meta& meta, const vec2<pix>& new_mouse);
 };

@@ -8,7 +8,7 @@ struct SquaresApp : App
 {
     vec2<pix> mouse = {pix{0}, pix{0}};
 
-    void on_mouse_moved(const vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta&, const vec2<pix>& new_mouse, pix, pix) override
     {
         mouse = new_mouse;
     }

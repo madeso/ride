@@ -238,6 +238,7 @@ bool step(SDL_Window* window, MetaState* meta, Ren* ren, RenCache* cache, App* a
         {
             app->on_mouse_moved
             (
+                meta->to_meta(),
                 vec2<pix>
                 {
                     app->to_pix(dip{mouse_movement->x}),

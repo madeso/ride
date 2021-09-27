@@ -82,7 +82,7 @@ void App::on_mouse_released(MouseButton, const Meta&, const vec2<pix>&)
 {
 }
 
-void App::on_mouse_moved(const vec2<pix>&, pix, pix)
+void App::on_mouse_moved(const Meta&, const vec2<pix>&, pix, pix)
 {
 }
 

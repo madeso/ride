@@ -16,7 +16,7 @@ struct ImagesApp : App
     {
     }
 
-    void on_mouse_moved(const vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta&, const vec2<pix>& new_mouse, pix, pix) override
     {
         mouse = new_mouse;
     }

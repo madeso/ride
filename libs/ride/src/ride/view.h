@@ -65,6 +65,6 @@ struct View
     void on_layout(const rect<pix>& new_client_rect);
 
     virtual void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks);
-    virtual void on_mouse_moved(const vec2<pix>& new_mouse);
+    virtual void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse);
     virtual void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse);
 };
