@@ -29,6 +29,7 @@
 * rework document to use proper data structure
 * integrate "classic ride" sources
 * some form of basic color/theme editor
+  - add loading/saving via gaf or protobuf
   - text editor for theme file with hotreload
   - edit inline: see color, run command and get a color widget inline for the specific entry under the cursor
 * "open with ride" for windows installation
