@@ -82,6 +82,35 @@ void draw_single_line
         return app->to_pix(font->get_width(t));
     };
 
+    // draw line highlight if caret is on this line
+    if( theme->highlight_current_line)
+    {
+        bool highlight = false;
+        for(const auto& sel: doc.cursors)
+        {
+            if(sel.is_selection()==false && sel.a.line == line_index)
+            {
+                highlight = true;
+            }
+        }
+
+        if(highlight)
+        {
+            cache->draw_rect
+            (
+                app->to_dip
+                (
+                    rect<pix>
+                    {
+                        {view_rect.x, position.y},
+                        {view_rect.width, font_height}
+                    }
+                ),
+                theme->current_line_background
+            );
+        }
+    }
+
     // draw selection if it overlaps this line
     for(const auto& sel: doc.cursors)
     {
@@ -107,29 +136,6 @@ void draw_single_line
                 ),
                 theme->selection_background
             );
-        }
-    }
-    
-    // draw line highlight if caret is on this line
-    if( theme->highlight_current_line)
-    {
-        for(const auto& sel: doc.cursors)
-        {
-            if(sel.is_selection()==false && sel.a.line == line_index)
-            {
-                cache->draw_rect
-                (
-                    app->to_dip
-                    (
-                        rect<pix>
-                        {
-                            {view_rect.x, position.y},
-                            {view_rect.width, font_height}
-                        }
-                    ),
-                    theme->current_line_background
-                );
-            }
         }
     }
     
@@ -258,12 +264,14 @@ position ViewDoc::translate_view_position(const vec2<pix>& p)
 
         std::string str;
 
+        const auto xx = p.x - view_rect.x + scroll.x;
+
         for(const auto& ch: chars)
         {
             str += ch;
             const auto w = this->app->to_pix(this->font->get_width(str));
             
-            if(w >= p.x - view_rect.x + scroll.x)
+            if(w >= xx)
             {
                 return last_index;
             }
@@ -296,13 +304,16 @@ void clear_all_cursors_but_the_last_one(Document* doc)
     );
 }
 
-bool is_position_inside(const selection& sel, const position& p)
+bool is_position_inside(const selection& sel, const sorted_selection& p)
 {
     const auto s = sel.sorted();
-    return s.a <= p && p <= s.b;
+    return 
+        s.a <= p.b &&
+        p.a <= s.b
+        ;
 }
 
-bool destroy_cursors(Document* doc, const position& p, bool include_last)
+bool destroy_cursors(Document* doc, const sorted_selection& p, bool include_last)
 {
     const auto can_toggle = doc->cursors.size() > 1;
 
@@ -322,7 +333,6 @@ bool destroy_cursors(Document* doc, const position& p, bool include_last)
         {
             if(can_toggle)
             {
-                std::cout << "destroyed selection at "<< cursor_index << " \n";
                 doc->cursors.erase(std::next(doc->cursors.begin(), C(cursor_index)));
                 return true;
             }
@@ -345,9 +355,8 @@ void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<
 
     if(meta.alt && meta.ctrl == false)
     {
-        if(destroy_cursors(&doc, p, true))
+        if(destroy_cursors(&doc, {p, p}, true))
         {
-            std::cout << "toggled cursor\n";
             return;
         }
         doc.cursors.emplace_back(selection{p, p});
@@ -380,12 +389,13 @@ void ViewDoc::drag_to(const Meta& meta, const vec2<pix>& new_mouse)
     const auto p = translate_view_position(new_mouse);
     if(doc.cursors.empty()) { return; }
 
-    doc.cursors.rbegin()->b = p;
+    auto& sel = *doc.cursors.rbegin();
+    sel.b = p;
 
     if(meta.alt)
     {
         // todo(Gustav): check if last selection overlaps any old selection and if so, remove them
-        destroy_cursors(&doc, p, false);
+        destroy_cursors(&doc, sel.sorted(), false);
     }
 }
 
