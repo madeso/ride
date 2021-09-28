@@ -3,6 +3,7 @@ set(src
     src/base/c.cc src/base/c.h
     src/base/cc.cc src/base/cc.h
     src/base/color.cc src/base/color.h
+    src/base/cursor.cc src/base/cursor.h
     src/base/enumstringmap.cc src/base/enumstringmap.h
     src/base/file.cc src/base/file.h
     src/base/filesystem.cc src/base/filesystem.h

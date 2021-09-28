@@ -5,6 +5,7 @@
 
 #include "api/rencache.h"
 #include "api/renderer.h"
+#include "api/cursorcache.h"
 
 #ifdef _WIN32
     #include <windows.h>
@@ -382,6 +383,8 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     ren.init(window);
 
     RenCache cache{&ren};
+    std::optional<cursor_type> last_cursor;
+    cursor_cache c_cache;
 
     cache.show_debug = render_debug;
 
@@ -407,6 +410,13 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     {
         const auto frame_start = get_time();
         const auto did_redraw = step(window, &meta, &ren, &cache, app.get(), first);
+
+        if(last_cursor.has_value() == false || *last_cursor != app->cursor)
+        {
+            last_cursor = app->cursor;
+            c_cache.set_cursor(app->cursor);
+        }
+
         first = false;
         if(!did_redraw && !has_focus(window))
         {

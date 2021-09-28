@@ -14,6 +14,8 @@
 
 struct ViewDoc : View
 {
+    ViewDoc();
+    
     Document doc;
     std::shared_ptr<Font> font;
 

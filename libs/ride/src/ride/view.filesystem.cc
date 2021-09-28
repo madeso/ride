@@ -151,6 +151,10 @@ std::vector<std::shared_ptr<Node>> Create(const std::vector<FileEntry>& files)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+ViewFilesystem::ViewFilesystem()
+{
+    cursor = cursor_type::hand;
+}
 
 std::vector<Node*> ViewFilesystem::CreateEntries()
 {
@@ -256,7 +260,13 @@ void ViewFilesystem::draw_body(RenCache* cache)
     if(node_hovering)
     {
         cache->draw_rect(app->to_dip(hit_rect_for_node(node_hovering)), theme->filesys_hover_color);
+        cursor = cursor_type::hand;
     }
+    else
+    {
+        cursor = cursor_type::arrow;
+    }
+    
 
     for(const auto& e: entries)
     {

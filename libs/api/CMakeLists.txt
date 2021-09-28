@@ -1,9 +1,10 @@
 set(src
     src/api/app.cc src/api/app.h
-    src/api/main.cc src/api/main.h
+    src/api/cursorcache.cc src/api/cursorcache.h
     src/api/font.cc src/api/font.h
     src/api/image.cc src/api/image.h
     src/api/key.cc src/api/key.h
+    src/api/main.cc src/api/main.h
     src/api/mouse_button.cc src/api/mouse_button.h
     src/api/rencache.cc src/api/rencache.h
     src/api/renderer.cc src/api/renderer.h

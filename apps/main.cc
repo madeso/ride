@@ -196,7 +196,19 @@ struct RideApp : App
         {
             std::cout << "Not hovering...\n";
         }
-        
+    }
+
+    void update() override
+    {
+        auto* view = get_mouse_hovering_view();
+        if(view)
+        {
+            cursor = view->cursor;
+        }
+        else
+        {
+            cursor = cursor_type::arrow;
+        }
     }
 };
 

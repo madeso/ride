@@ -5,6 +5,7 @@
 #include "base/vec2.h"
 #include "base/size.h"
 #include "base/rect.h"
+#include "base/cursor.h"
 
 #include "api/key.h"
 
@@ -35,6 +36,8 @@ struct View
 {
     App* app;
     Theme* theme;
+
+    cursor_type cursor = cursor_type::arrow;
 
     // includes scrollbar
     rect<pix> client_rect;

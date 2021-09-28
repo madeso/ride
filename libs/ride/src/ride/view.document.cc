@@ -12,6 +12,10 @@
 
 #include "ride/theme.h"
 
+ViewDoc::ViewDoc()
+{
+    cursor = cursor_type::ibeam;
+}
 
 pix ViewDoc::calculate_line_height()
 {
@@ -402,6 +406,21 @@ void ViewDoc::drag_to(const Meta& meta, const vec2<pix>& new_mouse)
 void ViewDoc::on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse)
 {
     drag_to(meta, new_mouse);
+
+    if(gutter_rect.contains(new_mouse))
+    {
+        // toggle breakpoint/flag or folding -> hand
+        cursor = cursor_type::arrow;
+    }
+    else if(view_rect.contains(new_mouse))
+    {
+        cursor = cursor_type::ibeam;
+    }
+    else
+    {
+        cursor = cursor_type::arrow;
+    }
+    
 }
 
 

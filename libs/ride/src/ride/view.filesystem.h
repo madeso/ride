@@ -31,6 +31,8 @@ struct Node
 
 struct ViewFilesystem : public View
 {
+    ViewFilesystem();
+
     std::shared_ptr<Font> font;
     filesystem* fs;
     std::string root;

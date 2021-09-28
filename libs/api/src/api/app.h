@@ -4,12 +4,13 @@
 
 #include "base/vec2.h"
 #include "base/size.h"
+#include "base/rect.h"
+#include "base/cursor.h"
 
 #include "api/key.h"
 #include "api/font.h"
 #include "api/mouse_button.h"
 #include "api/units.h"
-#include "base/rect.h"
 
 struct RenCache;
 
@@ -50,6 +51,7 @@ struct App
     
     size<pix> client_size;
     double scale = 1.0;
+    cursor_type cursor = cursor_type::arrow;
     bool* redraw_value;
 
     std::vector<std::shared_ptr<Font>> loaded_fonts;
