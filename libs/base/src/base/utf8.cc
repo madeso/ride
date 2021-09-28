@@ -24,13 +24,13 @@ namespace
     constexpr bool is_in_range(u8 lower, u8 cc, u8 upper)
     {
         return lower <= cc && cc <= upper;
-    };
+    }
 
     constexpr bool is_utf8_char(u8 c, bool first)
     {
         if(first) return is_in_range(0x00, c, 0x7f) || is_in_range(0xc2, c, 0xf4);
         else return is_in_range(0x80, c, 0xbf);
-    };
+    }
 }
 
 std::vector<u32> utf8_to_codepoints(const std::string& text)
