@@ -261,30 +261,43 @@ position ViewDoc::translate_view_position(const vec2<pix>& p)
 
     const auto byte_offset = [&, this]()
     {
-        const auto chars = utf8_chars(this->doc.GetLineAt(line));
+        /*
+          index         0     1       2     3       4
+                        |     |       |     |       |
+                        │ ┌─┐ │ ┌───┐ │ ┌─┐ │ ┌───┐ │
+          glyph         │ │a│ │ │ b │ │ │c│ │ │ d │ │
+                        │ └─┘ │ └───┘ │ └─┘ │ └───┘ │
+                        |     |   ^   |     |       |
+        */
+
+        const auto text = this->doc.GetLineAt(line);
+        const auto chars = utf8_chars(text);
         
-        int index = 0;
-        int last_index = 0;
-
         std::string str;
+        int index = 0;
 
-        const auto xx = p.x - view_rect.x + scroll.x;
+        const auto xx = p.x - view_rect.x - theme->text_spacing + scroll.x;
+
+        pix last_width = 0_px;
 
         for(const auto& ch: chars)
         {
             str += ch;
-            const auto w = this->app->to_pix(this->font->get_width(str));
+            const auto new_width = this->app->to_pix(this->font->get_width(str));
+            const auto half = (new_width - last_width) / 2.0;
+            const auto middle = last_width + half;
+
+            last_width = new_width;
             
-            if(w >= xx)
+            if(xx <= middle)
             {
-                return last_index;
+                return index;
             }
 
-            last_index = index;
             index += 1;
         }
 
-        return last_index;
+        return C(text.size())+1;
     }();
 
     return {line, byte_offset};
