@@ -4,6 +4,11 @@
 
 namespace
 {
+    bool is_utf8_cont(u8 byte)
+    {
+        return byte >= 0x80 && byte < 0xc0;
+    }
+
     constexpr u32 c_char_to_unsigned(char c)
     {
         return static_cast<unsigned>(c);
@@ -90,6 +95,7 @@ std::vector<std::string> utf8_chars(const std::string& text)
         }
         else if(is_utf8_char(char_to_u8(c), false))
         {
+            assert(is_utf8_cont(char_to_u8(c)));
             buffer += c;
         }
         else
