@@ -321,15 +321,6 @@ void clear_all_cursors_but_the_last_one(Document* doc)
     );
 }
 
-bool is_position_inside(const selection& sel, const sorted_selection& p)
-{
-    const auto s = sel.sorted();
-    return 
-        s.a <= p.b &&
-        p.a <= s.b
-        ;
-}
-
 bool destroy_cursors(Document* doc, const sorted_selection& p, bool include_last)
 {
     const auto can_toggle = doc->cursors.size() > 1;
@@ -346,7 +337,7 @@ bool destroy_cursors(Document* doc, const sorted_selection& p, bool include_last
     for(std::size_t cursor_index = 0; cursor_index < last; cursor_index += 1)
     {
         const auto& s = doc->cursors[cursor_index];
-        if(is_position_inside(s, p))
+        if(are_overlapping(s.sorted(), p))
         {
             if(can_toggle)
             {

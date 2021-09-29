@@ -65,3 +65,17 @@ std::vector<std::string> Split(const std::string& s, char delim)
     Split(s, delim, std::back_inserter(elems));
     return elems;
 }
+
+
+constexpr const char* const WHITESPACE = " \t";
+
+bool is_only_whitepace(const std::string& str)
+{
+    return str.find_first_not_of(WHITESPACE) == std::string::npos;
+}
+
+int index_of_non_whitespace(const std::string& str)
+{
+    const auto index = str.find_first_not_of(WHITESPACE);
+    return index == std::string::npos ? 0 : static_cast<int>(index);
+}

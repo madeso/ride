@@ -4,11 +4,6 @@
 
 namespace
 {
-    bool is_utf8_cont(u8 byte)
-    {
-        return byte >= 0x80 && byte < 0xc0;
-    }
-
     constexpr u32 c_char_to_unsigned(char c)
     {
         return static_cast<unsigned>(c);
@@ -31,6 +26,16 @@ namespace
         if(first) return is_in_range(0x00, c, 0x7f) || is_in_range(0xc2, c, 0xf4);
         else return is_in_range(0x80, c, 0xbf);
     }
+}
+
+bool is_utf8_cont(u8 byte)
+{
+    return byte >= 0x80 && byte < 0xc0;
+}
+
+bool is_utf8_cont_char(char c)
+{
+    return is_utf8_cont(char_to_u8(c));
 }
 
 std::vector<u32> utf8_to_codepoints(const std::string& text)

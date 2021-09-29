@@ -12,3 +12,7 @@ std::string TrimRight(const std::string& string_to_trim, const std::string& trim
 std::string TrimLeft(const std::string& string_to_trim, const std::string& trim_characters);
 std::string Trim(const std::string& string_to_trim, const std::string& trim_characters = " \t\r\n");
 std::vector<std::string> Split(const std::string& s, char delim);
+
+bool is_only_whitepace(const std::string& str);
+
+int index_of_non_whitespace(const std::string& str);

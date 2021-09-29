@@ -12,6 +12,7 @@
 
 #include "libride/command.h"
 #include "libride/document.h"
+#include "libride/document.commands.h"
 
 #include "ride/keybind.h"
 #include "ride/theme.h"
@@ -101,10 +102,48 @@ struct RideApp : App
                 }
             )
             ;
+        add_edit_commands
+        (
+            &commands,
+            [this]() -> Document*
+            {
+                auto* active = this->get_active_view();
+                if(active == nullptr) { return nullptr; }
+                if(active != &root) { return nullptr; }
+                return &root.doc;
+            }
+        );
 
         keybind.add(*stroke_from_string("ctrl+q"), {"core.quit"});
-        keybind.add(*stroke_from_string("ctrl+up"),   {"scale.+"});
-        keybind.add(*stroke_from_string("ctrl+down"), {"scale.-"});
+        
+        // keybind.add(*stroke_from_string("ctrl+up"),   {"scale.+"});
+        // keybind.add(*stroke_from_string("ctrl+down"), {"scale.-"});
+
+        auto add_move_select = [this](const std::string& stroke_name, const std::string& command)
+        {
+            auto stroke = *stroke_from_string(stroke_name);
+            
+            stroke.meta.shift = false;
+            this->keybind.add(stroke, {"doc.move-" + command});
+
+            stroke.meta.shift = true;
+            this->keybind.add(stroke, {"doc.select-" + command});
+        };
+        
+        add_move_select("left", "left-char");
+        add_move_select("right", "right-char");
+        add_move_select("ctrl+left", "left-word");
+        add_move_select("ctrl+right", "right-word");
+        add_move_select("ctrl+up", "prev-block");
+        add_move_select("ctrl+down", "next-block");
+        add_move_select("home", "home");
+        add_move_select("end", "end");
+        add_move_select("ctrl+home", "doc-start");
+        add_move_select("ctrl+end", "doc-end");
+
+        // temporary
+        add_move_select("alt+left", "word-start");
+        add_move_select("alt+right", "word-end");
     }
 
     void draw(RenCache* cache) override

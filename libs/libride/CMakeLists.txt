@@ -1,6 +1,7 @@
 set(src
     src/libride/command.cc src/libride/command.h
-    src/libride/document.cc src/libride/document.h
+    src/libride/document.cc  src/libride/document.h
+    src/libride/document.commands.cc  src/libride/document.commands.h
 )
 
 find_package(Filesystem REQUIRED)

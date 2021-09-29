@@ -61,8 +61,10 @@ bool CommandList::perform(const std::string& name)
     const auto cmd = map.find(name);
     if( cmd != map.end() && cmd->second->predicate())
     {
+        std::cout << "running " << name << "\n";
         cmd->second->perform();
         return true;
     }
+    std::cerr << "failed to evaluate " << name << "\n";
     return false;
 }
