@@ -97,7 +97,11 @@ bool Document::LoadFile(filesystem* fs, const std::string& path)
 char Document::get_char(const position& pp) const
 {
     const auto p = this->sanitize_position(pp);
-    return this->lines[Cs(p.line)][Cs(p.offset)];
+    const auto line = Cs(p.line);
+    const auto offset = Cs(p.offset);
+    const auto text = this->lines[line];
+    if(text.size() == offset) { return '\n'; }
+    return text[offset];
 }
 
 position Document::sanitize_position(const position& p) const
@@ -114,11 +118,11 @@ position Document::position_offset(const position& pp, int offset) const
     while( p.line > 0 && p.offset < 0)
     {
         p.line = p.line - 1;
-        p.offset = p.offset + C(this->lines[Cs(p.line)].size());
+        p.offset = p.offset + C(this->lines[Cs(p.line)].size()+1);
     }
     while(p.line < C(this->lines.size())-1 && p.offset > C(this->lines[Cs(p.line)].size()))
     {
-        p.offset = p.offset - C(this->lines[Cs(p.line)].size());
+        p.offset = p.offset - C(this->lines[Cs(p.line)].size()+1);
         p.line = p.line + 1;
     }
     return sanitize_position(p);

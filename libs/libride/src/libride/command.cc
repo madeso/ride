@@ -38,6 +38,7 @@ void CommandList::add(const std::string& name, predicate_fun predicate, perform_
         std::cerr << "command already exists: " << name << "\n";
         return;
     }
+    std::cout << "adding " << name << "\n";
     map.emplace(name, std::make_shared<Command>(predicate, command));
 }
 

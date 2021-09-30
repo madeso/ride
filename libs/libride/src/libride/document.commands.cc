@@ -1,6 +1,7 @@
 #include "libride/document.commands.h"
 
 #include <iostream>
+#include <string_view>
 
 #include "base/string.h"
 #include "base/utf8.h"
@@ -9,27 +10,16 @@
 #include "libride/document.h"
 #include "libride/command.h"
 
-
-namespace
-{
-    bool is_non_word(char c, const std::string& non_word_chars)
-    {
-        return non_word_chars.find(c) == std::string::npos;
-    }
-}
-
 position previous_char(Document* doc, const position& pp);
 position next_char(Document* doc, const position& pp);
-position previous_word_start(Document* doc, const position& pp, const std::string& non_word_chars);
-position next_word_end(Document* doc, const position& pp, const std::string& non_word_chars);
-position start_of_word(Document* doc, const position& pp, const std::string& non_word_chars);
-position end_of_word(Document* doc, const position& pp, const std::string& non_word_chars);
 position previous_block_start(Document* doc, const position& pp);
 position next_block_end(Document* doc, const position& pp);
 position start_of_line(const position& p);
 position end_of_line(const position& p);
 position start_of_doc();
 position end_of_doc(Document* doc);
+
+using is_word_fun = std::function<bool (char)>;
 
 position previous_char(Document* doc, const position& pp)
 {
@@ -53,93 +43,73 @@ position next_char(Document* doc, const position& pp)
     return p;
 }
 
-position previous_word_start_old(Document* doc, const position& pp, const std::string& non_word_chars)
-{
-    auto p = pp;
-    char prev = 0;
-    while(p.line > 0 || p.offset > 0)
-    {
-        const auto np = doc->position_offset(p, -1);
-        const auto cchar = doc->get_char(np);
-        if( (prev && prev != cchar) || !is_non_word(cchar, non_word_chars))
-        {
-            break;
-        }
-        prev = cchar;
-        p = np;
-    }
-    return start_of_word(doc, p, non_word_chars);
-}
 
-position previous_word_start(Document* doc, const position& pp, const std::function<bool (char)>& is_word_char)
+position previous_word_start(Document* doc, const position& pp, const is_word_fun& is_word_char)
 {
     auto p = pp;
 
-    while(p.line > 0 && p.offset>0 && !is_word_char(doc->get_char(doc->position_offset(p, -1))) )
+    while((p.line >= 0 || p.offset>=0) && !is_word_char(doc->get_char(doc->position_offset(p, -1))) )
     {
+        const auto last = p;
         p = doc->position_offset(p, -1);
+        if(p == last) { return p; }
     }
 
     // skip line if it isn't whitespace
-    auto last_p = p;
-    while(p.line > 0 && p.offset>0 && is_word_char(doc->get_char(p)) )
+    while((p.line >= 0 || p.offset>=0) && is_word_char(doc->get_char(doc->position_offset(p, -1))) )
     {
-        last_p = p;
+        const auto last = p;
         p = doc->position_offset(p, -1);
+        if(p == last) { return p; }
     }
 
-    return last_p;
+    return p;
 }
 
 
-position next_word_end(Document* doc, const position& pp, const std::string& non_word_chars)
+position next_word_end(Document* doc, const position& pp, const is_word_fun& is_word_char)
 {
     auto p = pp;
-    char prev = 0;
-    const auto end = end_of_doc(doc);
-    while(p.line < end.line || p.offset < end.offset)
+
+    while(!is_word_char(doc->get_char(p)) )
     {
-        const auto cchar = doc->get_char(p);
-        if( (prev && prev != cchar) || !is_non_word(cchar, non_word_chars))
-        {
-            break;
-        }
+        const auto last = p;
         p = doc->position_offset(p, 1);
-        prev = cchar;
+        if(p == last) { return p; }
     }
-    return end_of_word(doc, p, non_word_chars);
+
+    while(is_word_char(doc->get_char(p)) )
+    {
+        const auto last = p;
+        p = doc->position_offset(p, 1);
+        if(p == last) { return p; }
+    }
+
+    return p;
 }
 
 
-position start_of_word(Document* doc, const position& pp, const std::string& non_word_chars)
+position start_of_word(Document* doc, const position& pp, const is_word_fun& is_word_char)
 {
     auto p = pp;
-    while(true)
+    while((p.line >= 0 || p.offset>=0) && is_word_char(doc->get_char(doc->position_offset(p, -1))) )
     {
-        const auto nep = doc->position_offset(p, -1);
-        const auto cchar = doc->get_char(nep);
-        if( is_non_word(cchar, non_word_chars) || p == nep)
-        {
-            break;
-        }
-        p = nep;
+        const auto last = p;
+        p = doc->position_offset(p, -1);
+        if(p == last) { return p; }
     }
     return p;
 }
 
 
-position end_of_word(Document* doc, const position& pp, const std::string& non_word_chars)
+position end_of_word(Document* doc, const position& pp, const is_word_fun& is_word_char)
 {
     auto p = pp;
-    while(true)
+    while(is_word_char(doc->get_char(p)) )
     {
-        const auto nep = doc->position_offset(p, 1);
-        const auto cchar = doc->get_char(p);
-        if( is_non_word(cchar, non_word_chars) || p == nep)
-        {
-            break;
-        }
-        p = nep;
+        const auto last = p;
+        p = doc->position_offset(p, 1);
+        if(p == last) { return p; }
     }
     return p;
 }
@@ -310,7 +280,40 @@ void add_edit_commands(CommandList* list, active_document_or_null_getter get_doc
         return next_block_end(doc, p);
     });
 
-    // todo(Gustav): handle both vim word and WORD movements
+    const auto add_word_commands =
+    [
+        &add_complex_command,
+        &get_right_selection,
+        &get_left_selection
+    ]
+    (
+        const std::string& base,
+        const is_word_fun& is_word_char
+    )
+    {
+        add_complex_command("right-word"+base, get_right_selection, [is_word_char](Document* doc, const position& p) -> position{
+            return next_word_end(doc, p, is_word_char);
+        });
+        add_complex_command("left-word"+base, get_left_selection, [is_word_char](Document* doc, const position& p) -> position{
+            return previous_word_start(doc, p, is_word_char);
+        });
+        add_complex_command("word-start"+base, get_right_selection, [is_word_char](Document* doc, const position& p) -> position{
+            return start_of_word(doc, p, is_word_char);
+        });
+        add_complex_command("word-end"+base, get_left_selection, [is_word_char](Document* doc, const position& p) -> position{
+            return end_of_word(doc, p, is_word_char);
+        });
+    };
+    
+    add_word_commands
+    (
+        "",
+        [](char c) -> bool
+        {
+            return is_whitespace(c)==false;
+        }
+    );
+
     /*
         A WORD is always delimited by whitespace.
         A word is delimited by non-keyword characters, which are configurable.
@@ -323,22 +326,25 @@ void add_edit_commands(CommandList* list, active_document_or_null_getter get_doc
 
         https://stackoverflow.com/a/22931259
     */
-
-   constexpr const char* const non_word_characters = " \t\n/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-";
-   const auto is_word_char = [](char c) -> bool { return is_whitespace(c)==false; };
-
-    add_complex_command("right-word", get_right_selection, [](Document* doc, const position& p) -> position{
-        return next_word_end(doc, p, non_word_characters);
-    });
-    add_complex_command("left-word", get_left_selection, [is_word_char](Document* doc, const position& p) -> position{
-        return previous_word_start(doc, p, is_word_char);
-    });
-    add_complex_command("word-start", get_right_selection, [](Document* doc, const position& p) -> position{
-        return start_of_word(doc, p, non_word_characters);
-    });
-    add_complex_command("word-end", get_left_selection, [](Document* doc, const position& p) -> position{
-        return end_of_word(doc, p, non_word_characters);
-    });
+   // todo(Gustav): small word doesn't quite work yet
+    add_word_commands
+    (
+        "-special",
+        [](char c) -> bool
+        {
+            constexpr std::string_view non_word_chars = " \t\n/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-";
+            return non_word_chars.find(c) != std::string::npos;
+        }
+    );
+    add_word_commands
+    (
+        "-abc",
+        [](char c) -> bool
+        {
+            constexpr std::string_view abc = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+            return abc.find(c) == std::string::npos;
+        }
+    );
 
     // todo(Gustav): handle whitespace, home to start-of-line or home to first non-whitespace
     add_complex_command("home", get_left_selection, [](Document*, const position& p) -> position{
