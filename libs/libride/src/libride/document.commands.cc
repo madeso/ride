@@ -57,7 +57,7 @@ position previous_word_start_old(Document* doc, const position& pp, const std::s
 {
     auto p = pp;
     char prev = 0;
-    while(p.line > 0 or p.offset > 0)
+    while(p.line > 0 || p.offset > 0)
     {
         const auto np = doc->position_offset(p, -1);
         const auto cchar = doc->get_char(np);
@@ -100,7 +100,7 @@ position next_word_end(Document* doc, const position& pp, const std::string& non
     while(p.line < end.line || p.offset < end.offset)
     {
         const auto cchar = doc->get_char(p);
-        if( (prev && prev) != cchar || !is_non_word(cchar, non_word_chars))
+        if( (prev && prev != cchar) || !is_non_word(cchar, non_word_chars))
         {
             break;
         }
