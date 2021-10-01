@@ -3,8 +3,8 @@
 #include <functional>
 
 struct CommandList;
-struct Document;
+struct VirtualView;
 
-using active_document_or_null_getter = std::function<Document* ()>;
+using active_view_or_null_getter = std::function<VirtualView* ()>;
 
-void add_edit_commands(CommandList* list, active_document_or_null_getter getter);
+void add_edit_commands(CommandList* list, active_view_or_null_getter getter);

@@ -12,16 +12,14 @@
 #include "ride/view.h"
 
 
-struct ViewDoc : View
+struct ViewDoc : View, VirtualView
 {
     ViewDoc();
     
-    Document doc;
     std::shared_ptr<Font> font;
     rect<pix> view_rect = rect<pix>(0_px);
     rect<pix> gutter_rect = rect<pix>(0_px);
     bool dragging = false;
-    VirtualView virtual_view;
 
     pix calculate_line_height();
     pix get_full_document_height();
@@ -45,6 +43,8 @@ struct ViewDoc : View
         const vec2<pix>& position
     );
     void drag_to(const Meta& meta, const vec2<pix>& new_mouse);
+
+    void scroll_to_cursor(const position& p) override;
 
     void on_layout_body() override;
     scroll_size calculate_scroll_size() override;

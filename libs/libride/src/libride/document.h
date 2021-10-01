@@ -5,6 +5,7 @@
 #include <optional>
 #include <limits>
 #include <functional>
+#include <memory>
 
 struct filesystem;
 
@@ -44,21 +45,12 @@ struct selection
 bool are_overlapping(const sorted_selection& s, const sorted_selection& p);
 bool are_overlapping(const selection& sel, const selection& p);
 
-struct VirtualView
-{
-    std::function<void (const position&)> scroll_to_cursor;
-};
-
 struct Document
 {
     std::optional<std::string> path_or_not;
     std::vector<std::string> lines;
-    std::vector<selection> cursors;
-    std::vector<VirtualView*> views;
     
     bool LoadFile(filesystem* fs, const std::string& path);
-
-    void scroll_to_cursor(const position& p);
 
     char get_char(const position& p) const;
     position sanitize_position(const position& pp) const;
@@ -66,6 +58,14 @@ struct Document
 
     int GetNumberOfLines() const;
     std::string GetLineAt(int y) const;
+};
 
+struct VirtualView
+{
+    std::shared_ptr<Document> doc;
+    std::vector<selection> cursors;
     void merge_all_cursors();
+
+    virtual ~VirtualView() = default;
+    virtual void scroll_to_cursor(const position& p) = 0;
 };

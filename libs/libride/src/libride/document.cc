@@ -133,14 +133,6 @@ int Document::GetNumberOfLines() const
     return C(lines.size());
 }
 
-void Document::scroll_to_cursor(const position& p)
-{
-    for(const auto& view: views)
-    {
-        view->scroll_to_cursor(p);
-    }
-}
-
 std::string Document::GetLineAt(int y) const
 {
     if(y < 0)
@@ -157,7 +149,7 @@ std::string Document::GetLineAt(int y) const
     }
 }
 
-void Document::merge_all_cursors()
+void VirtualView::merge_all_cursors()
 {
     auto new_cursors = cursors;
 

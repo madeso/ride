@@ -76,7 +76,8 @@ struct RideApp : App
     {
         setup_view(&root);
         root.font = font;
-        root.doc.LoadFile(fs.get(), __FILE__);
+        root.doc = std::make_shared<Document>();
+        root.doc->LoadFile(fs.get(), __FILE__);
 
         setup_view(&browser);
         browser.font = font;
@@ -105,12 +106,12 @@ struct RideApp : App
         add_edit_commands
         (
             &commands,
-            [this]() -> Document*
+            [this]() -> VirtualView*
             {
                 auto* active = this->get_active_view();
                 if(active == nullptr) { return nullptr; }
                 if(active != &root) { return nullptr; }
-                return &root.doc;
+                return &root;
             }
         );
 
