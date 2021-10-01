@@ -149,8 +149,17 @@ void do_scroll(pix* scroll, const std::optional<pix>& size, int d, pix change)
         {
             *scroll = keep_within
             (
-                pix{0},
+                0_px,
                 *scroll - static_cast<double>(d) * change,
+                *size
+            );
+        }
+        else
+        {
+            *scroll = keep_within
+            (
+                0_px,
+                *scroll,
                 *size
             );
         }
@@ -169,6 +178,11 @@ void View::on_mouse_wheel(int dx, int dy)
 
     do_scroll(&scroll.x, scroll_size.width, dx, theme->horizontal_scroll);
     do_scroll(&scroll.y, scroll_size.height, dy, theme->vertical_scroll);
+}
+
+void View::keep_scroll_within()
+{
+    on_mouse_wheel(0, 0);
 }
 
 void View::on_mouse_pressed(MouseButton, const Meta&, const vec2<pix>&, int)

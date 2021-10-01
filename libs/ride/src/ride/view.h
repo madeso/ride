@@ -51,6 +51,8 @@ struct View
 
     // get body rect in view space, (0,0) is top of unscrolled document
 
+    void keep_scroll_within();
+
     View();
     virtual ~View() = default;
 

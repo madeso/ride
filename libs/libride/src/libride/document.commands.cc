@@ -231,11 +231,13 @@ void add_edit_commands(CommandList* list, active_document_or_null_getter get_doc
                     {
                         const auto p = get_position(sel);
                         sel = {p, p};
+                        doc->scroll_to_cursor(p);
                     }
                     else
                     {
                         const auto np = modify_position(doc, sel.b);
                         sel = {np, np};
+                        doc->scroll_to_cursor(np);
                     }
                 }
                 doc->merge_all_cursors();
@@ -250,6 +252,7 @@ void add_edit_commands(CommandList* list, active_document_or_null_getter get_doc
                 for(auto& sel: doc->cursors)
                 {
                     sel.b = modify_position(doc, sel.b);
+                    doc->scroll_to_cursor(sel.b);
                 }
                 doc->merge_all_cursors();
             }

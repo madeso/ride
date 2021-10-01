@@ -49,6 +49,8 @@ struct Theme
     pix filesys_indent = 12_px;
     pix filesys_left_padding = 6_px;
 
+    pix miminal_scroll_offset = 40_px; // pixels to keep above and below curser
+
     bool sort_files = true;
     bool directories_first = true;
 

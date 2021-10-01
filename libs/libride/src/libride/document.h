@@ -4,6 +4,7 @@
 #include <string>
 #include <optional>
 #include <limits>
+#include <functional>
 
 struct filesystem;
 
@@ -43,14 +44,21 @@ struct selection
 bool are_overlapping(const sorted_selection& s, const sorted_selection& p);
 bool are_overlapping(const selection& sel, const selection& p);
 
+struct VirtualView
+{
+    std::function<void (const position&)> scroll_to_cursor;
+};
+
 struct Document
 {
     std::optional<std::string> path_or_not;
     std::vector<std::string> lines;
     std::vector<selection> cursors;
+    std::vector<VirtualView*> views;
     
     bool LoadFile(filesystem* fs, const std::string& path);
 
+    void scroll_to_cursor(const position& p);
 
     char get_char(const position& p) const;
     position sanitize_position(const position& pp) const;

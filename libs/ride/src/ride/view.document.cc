@@ -15,6 +15,29 @@
 ViewDoc::ViewDoc()
 {
     cursor = cursor_type::ibeam;
+
+    virtual_view.scroll_to_cursor = [this](const position& p)
+    {
+        // get pixel position of p
+        const auto pt = this->position_to_upper_left_pix(p);
+        const auto pb = this->position_to_lower_right_pix(p);
+        const auto top = pt.y - this->theme->miminal_scroll_offset - view_rect.y;
+        const auto bot = pb.y + this->theme->miminal_scroll_offset - view_rect.y;
+
+        std::cout << "data " << top.value << " " << bot.value << " " << this->view_rect.height.value << " " << view_rect.y.value << "\n";
+        
+        // determine if it's outside of the range
+        auto ychange = 0_px;
+        if(top < 0_px) { std::cout << "top change\n"; ychange -= top; }
+        if(bot > this->view_rect.height) { std::cout << "bot change\n"; ychange -= bot - this->view_rect.height;}
+
+        // change scroll to fix
+        std::cout << "changing scroll " << ychange.value << "\n";
+        this->scroll.y -= ychange;
+
+        this->keep_scroll_within();
+    };
+    doc.views.emplace_back(&virtual_view);
 }
 
 pix ViewDoc::calculate_line_height()
@@ -64,26 +87,18 @@ scroll_size ViewDoc::calculate_scroll_size()
 }
 
 
-void draw_single_line
+void ViewDoc::draw_single_line
 (
     RenCache* cache,
-    App* app,
-    std::shared_ptr<Font> font,
     int line_index,
-    Document& doc,
-    Theme* theme,
-    const rect<pix>& view_rect,
     const vec2<pix>& position
 )
 {
     const auto font_height = app->to_pix(font->get_height());
 
-    const auto& text = doc.GetLineAt(line_index);
-
-    const auto get_col_x_offset = [&text, font, app](int offset) -> pix
+    const auto get_col_x_offset = [this, line_index](int offset) -> pix
     {
-        const auto t = text.substr(0, Cs(offset));
-        return app->to_pix(font->get_width(t));
+        return offset_to_relative_left_pix(line_index, offset);
     };
 
     // draw line highlight if caret is on this line
@@ -116,6 +131,7 @@ void draw_single_line
     }
 
     // draw selection if it overlaps this line
+    const auto& text = doc.GetLineAt(line_index);
     for(const auto& sel: doc.cursors)
     {
         auto s = sel.sorted();
@@ -197,16 +213,14 @@ void ViewDoc::draw_body(RenCache* cache)
 {
     const auto lines = doc.GetNumberOfLines();
 
-    const auto spacing = calculate_line_height();
-
     cache->draw_rect(app->to_dip(view_rect), theme->edit_background);
     cache->draw_rect(app->to_dip(gutter_rect), theme->gutter_background);
 
     const auto line_range = get_line_range();
 
-    for(int line_index=line_range.min; line_index<std::min(lines, line_range.max-1); line_index += 1)
+    for(int line_index=line_range.min; line_index<std::min(lines, line_range.max); line_index += 1)
     {
-        const auto y = static_cast<double>(line_index) * spacing - scroll.y;
+        const auto y = line_to_relative_upper_pix(line_index);
 
         cache->draw_text
         (
@@ -221,7 +235,7 @@ void ViewDoc::draw_body(RenCache* cache)
             const auto text_scope = ClipScope(cache, app->to_dip(view_rect));
             draw_single_line
             (
-                cache, app, font, line_index, doc, theme, view_rect,
+                cache, line_index,
                 {
                     view_rect.x + theme->text_spacing - scroll.x,
                     view_rect.y + y
@@ -229,15 +243,78 @@ void ViewDoc::draw_body(RenCache* cache)
             );
         }
     }
+
+    for(const auto& sel: doc.cursors)
+    {
+        if(sel.is_selection() == false)
+        {
+            const auto draw_p = [this, cache](const vec2<pix> p)
+            {
+                cache->draw_rect(app->to_dip(rect<pix>{p, {8_px, 2_px}
+                }), theme->selection_background);
+            };
+
+            draw_p(position_to_upper_left_pix(sel.a));
+            draw_p(position_to_lower_right_pix(sel.a));
+        }
+    }
 }
+
+
+pix ViewDoc::line_to_relative_upper_pix(int line_index)
+{
+    const auto spacing = calculate_line_height();
+    const auto y = static_cast<double>(line_index) * spacing - scroll.y;
+    return y;
+}
+
+pix ViewDoc::line_to_relative_lower_pix(int line_index)
+{
+    return line_to_relative_upper_pix(line_index + 1);
+}
+
+// offset_to_relative_left_pix
+pix ViewDoc::offset_to_relative_left_pix(int line_index, int offset)
+{
+    const auto& text = doc.GetLineAt(line_index);
+    const auto t = text.substr(0, Cs(offset));
+    return app->to_pix(font->get_width(t));
+}
+
+pix ViewDoc::offset_to_relative_right_pix(int line_index, int offset)
+{
+    const auto next = doc.position_offset({line_index, offset}, 1);
+    const auto next_offset = next.line == line_index ? next.offset : offset;
+    return offset_to_relative_left_pix(line_index, next_offset);
+}
+
+
+vec2<pix> ViewDoc::position_to_upper_left_pix(const position& p)
+{
+    return
+    {
+        view_rect.x + offset_to_relative_left_pix(p.line, p.offset),
+        view_rect.y + line_to_relative_upper_pix(p.line)
+    };
+}
+
+vec2<pix> ViewDoc::position_to_lower_right_pix(const position& p)
+{
+    return
+    {
+        view_rect.x + offset_to_relative_right_pix(p.line, p.offset),
+        view_rect.y + line_to_relative_lower_pix(p.line)
+    };
+}
+
 
 
 minmax<int> ViewDoc::get_line_range()
 {
-    const auto fist_line_fraction = (view_rect.y + scroll.y) / calculate_line_height();
+    const auto fist_line_fraction = (scroll.y) / calculate_line_height();
     const auto first_visible_line = std::max(0, static_cast<int>(std::floor(fist_line_fraction)));
 
-    const auto last_line_fraction = (view_rect.y + view_rect.height + scroll.y) / calculate_line_height();
+    const auto last_line_fraction = (view_rect.height + scroll.y) / calculate_line_height();
     const auto last_visible_line = std::max(0, static_cast<int>(std::ceil(last_line_fraction)));
 
     return {first_visible_line, last_visible_line};
