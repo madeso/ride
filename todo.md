@@ -8,7 +8,6 @@
 * commandline support for not opening project in cwd
 * icon demo
 * title demo
-* replace custom colors with open-colors
 * treeview: remember open/close state
 * editor component
   - animate cursor

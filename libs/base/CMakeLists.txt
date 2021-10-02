@@ -30,6 +30,7 @@ set_crt_to_static(base)
 target_link_libraries(base
     PUBLIC
         embed
+        open_color
     PRIVATE
         project_options
         project_warnings
