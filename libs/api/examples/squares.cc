@@ -1,8 +1,8 @@
+#include "base/color.open-color.h"
 #include "api/app.h"
 #include "api/rencache.h"
 #include "api/main.h"
 
-#include "open-color.h"
 
 struct SquaresApp : App
 {
@@ -15,10 +15,10 @@ struct SquaresApp : App
 
     void draw(RenCache* cache) override
     {
-        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), chex(open_color::white));
+        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), colors::white);
 
-        cache->draw_rect(to_dip(rect<pix>{{50.0_px, 100.0_px}, ::size<pix>{30.0_px, 30.0_px}}), chex(open_color::red_500));
-        cache->draw_rect(to_dip(rect<pix>{{100.0_px, 50.0_px}, ::size<pix>{30.0_px, 30.0_px}}), chex(open_color::blue_500));
+        cache->draw_rect(to_dip(rect<pix>{{50.0_px, 100.0_px}, ::size<pix>{30.0_px, 30.0_px}}), colors::red_500);
+        cache->draw_rect(to_dip(rect<pix>{{100.0_px, 50.0_px}, ::size<pix>{30.0_px, 30.0_px}}), colors::blue_500);
         
         auto r = rect<pix>{{100.0_px, 100.0_px}, ::size<pix>{400.0_px, 400.0_px}};
         
@@ -26,27 +26,27 @@ struct SquaresApp : App
 
         {
             auto title = r.cut_top(size);
-            for(const auto g: open_color::gray)
+            for(const auto g: colors::gray)
             {
-                cache->draw_rect(to_dip(title.cut_left(size)), chex(g));
+                cache->draw_rect(to_dip(title.cut_left(size)), g);
             }
-            cache->draw_rect(to_dip(title), chex(open_color::pink_400));
+            cache->draw_rect(to_dip(title), colors::pink_400);
         }
 
         {
             auto status = r.cut_bottom(size);
-            for(const auto g: open_color::cyan)
+            for(const auto g: colors::cyan)
             {
-                cache->draw_rect(to_dip(status.cut_right(size)), chex(g));
+                cache->draw_rect(to_dip(status.cut_right(size)), g);
             }
-            cache->draw_rect(to_dip(status), chex(open_color::pink_400));
+            cache->draw_rect(to_dip(status), colors::pink_400);
         }
 
-        cache->draw_rect(to_dip(r), chex(open_color::teal_500));
+        cache->draw_rect(to_dip(r), colors::teal_500);
 
-        cache->draw_rect(to_dip(r.Inset(size)), chex(open_color::grape_500));
+        cache->draw_rect(to_dip(r.Inset(size)), colors::grape_500);
 
-        cache->draw_rect(to_dip(rect<pix>{mouse, ::size<pix>{10.0_px, 10.0_px}}), chex(open_color::black));
+        cache->draw_rect(to_dip(rect<pix>{mouse, ::size<pix>{10.0_px, 10.0_px}}), colors::black);
     }
 };
 
