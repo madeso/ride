@@ -39,6 +39,16 @@ void ViewDoc::scroll_to_cursor(const position& p)
     keep_scroll_within();
 }
 
+pix ViewDoc::get_relative_pixel_offset(const position& p)
+{
+    return offset_to_relative_left_pix(p.line, p.offset);
+}
+
+int ViewDoc::get_offset_from_relative_pixel_offset(int line, pix offset)
+{
+    return absolute_pix_x_to_offset(line, offset + view_rect.x);
+}
+
 pix ViewDoc::calculate_line_height()
 {
     return  app->to_pix(font->get_height()) + theme->line_spacing;
@@ -320,62 +330,67 @@ minmax<int> ViewDoc::get_line_range()
 }
 
 
-position ViewDoc::translate_view_position(const vec2<pix>& p)
+int ViewDoc::absolute_pix_y_to_line(pix y)
 {
-    const auto line = keep_within
+    return keep_within
     (
         0,
         static_cast<int>
         (
             std::floor
             (
-                (p.y - view_rect.y + scroll.y) / calculate_line_height()
+                (y - view_rect.y + scroll.y) / calculate_line_height()
             )
         ),
         doc->GetNumberOfLines()
     );
+}
 
-    const auto byte_offset = [&, this]()
+int ViewDoc::absolute_pix_x_to_offset(int line, pix px)
+{
+    /*
+        index       0     1       2     3       4
+                    |     |       |     |       |
+                    │ ┌─┐ │ ┌───┐ │ ┌─┐ │ ┌───┐ │
+        glyph       │ │a│ │ │ b │ │ │c│ │ │ d │ │
+                    │ └─┘ │ └───┘ │ └─┘ │ └───┘ │
+                    |     |   ^   |     |       |
+    */
+
+    const auto text = this->doc->GetLineAt(line);
+    const auto chars = utf8_chars(text);
+    
+    std::string str;
+    int index = 0;
+
+    const auto xx = px - view_rect.x - theme->text_spacing + scroll.x;
+
+    pix last_width = 0_px;
+
+    for(const auto& ch: chars)
     {
-        /*
-          index         0     1       2     3       4
-                        |     |       |     |       |
-                        │ ┌─┐ │ ┌───┐ │ ┌─┐ │ ┌───┐ │
-          glyph         │ │a│ │ │ b │ │ │c│ │ │ d │ │
-                        │ └─┘ │ └───┘ │ └─┘ │ └───┘ │
-                        |     |   ^   |     |       |
-        */
+        str += ch;
+        const auto new_width = this->app->to_pix(this->font->get_width(str));
+        const auto half = (new_width - last_width) / 2.0;
+        const auto middle = last_width + half;
 
-        const auto text = this->doc->GetLineAt(line);
-        const auto chars = utf8_chars(text);
+        last_width = new_width;
         
-        std::string str;
-        int index = 0;
-
-        const auto xx = p.x - view_rect.x - theme->text_spacing + scroll.x;
-
-        pix last_width = 0_px;
-
-        for(const auto& ch: chars)
+        if(xx <= middle)
         {
-            str += ch;
-            const auto new_width = this->app->to_pix(this->font->get_width(str));
-            const auto half = (new_width - last_width) / 2.0;
-            const auto middle = last_width + half;
-
-            last_width = new_width;
-            
-            if(xx <= middle)
-            {
-                return index;
-            }
-
-            index += 1;
+            return index;
         }
 
-        return C(text.size())+1;
-    }();
+        index += 1;
+    }
 
+    return C(text.size())+1;
+}
+
+position ViewDoc::translate_view_position(const vec2<pix>& p)
+{
+    const auto line = absolute_pix_y_to_line(p.y);
+    const auto byte_offset = absolute_pix_x_to_offset(line, p.x);
     return {line, byte_offset};
 }
 

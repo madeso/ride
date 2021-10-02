@@ -10,15 +10,6 @@
 #include "libride/document.h"
 #include "libride/command.h"
 
-position previous_char(std::shared_ptr<Document> doc, const position& pp);
-position next_char(std::shared_ptr<Document> doc, const position& pp);
-position previous_block_start(std::shared_ptr<Document> doc, const position& pp);
-position next_block_end(std::shared_ptr<Document> doc, const position& pp);
-position start_of_line(const position& p);
-position end_of_line(const position& p);
-position start_of_doc();
-position end_of_doc(std::shared_ptr<Document> doc);
-
 using is_word_fun = std::function<bool (char)>;
 
 position previous_char(std::shared_ptr<Document> doc, const position& pp)
@@ -187,6 +178,17 @@ position end_of_doc(std::shared_ptr<Document> doc)
     return {static_cast<int>(doc->lines.size()), position::max_offset};
 }
 
+position change_line(VirtualView* view, const position& p, int change)
+{
+    const auto new_line = view->doc->sanitize_line(p.line + change);
+    if(new_line == p.line) { return p; }
+
+    const auto old_pixel = view->get_relative_pixel_offset(p);
+    const auto new_offset = view->get_offset_from_relative_pixel_offset(new_line, old_pixel);
+    std::cout << "old pixel " << old_pixel.value << " -> " << new_offset << "\n";
+    return {new_line, new_offset};
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -208,7 +210,8 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
     (
         [get_view]() -> bool
         {
-            return get_view() != nullptr;
+            auto* view = get_view();
+            return view != nullptr && view->doc != nullptr;
         }
     );
 
@@ -216,7 +219,7 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
     (
         const std::string& base,
         std::function<position (const selection&)> get_position,
-        std::function<position (std::shared_ptr<Document>, const position&)> modify_position
+        std::function<position (VirtualView*, const position&)> modify_position
     )
     {
         add_edit_command
@@ -239,7 +242,7 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
                     }
                     else
                     {
-                        const auto np = modify_position(doc, sel.b);
+                        const auto np = modify_position(view, sel.b);
                         sel = {np, np};
                         view->scroll_to_cursor(np);
                     }
@@ -259,7 +262,7 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
 
                 for(auto& sel: view->cursors)
                 {
-                    sel.b = modify_position(doc, sel.b);
+                    sel.b = modify_position(view, sel.b);
                     view->scroll_to_cursor(sel.b);
                 }
                 view->merge_all_cursors();
@@ -278,17 +281,39 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
     };
 
     
-    add_complex_command("right-char", get_right_selection, [](std::shared_ptr<Document> doc, const position& p) -> position{
-        return next_char(doc, p);
+    add_complex_command("right-char", get_right_selection, [](VirtualView* view, const position& p) -> position{
+        return next_char(view->doc, p);
     });
-    add_complex_command("left-char", get_left_selection, [](std::shared_ptr<Document> doc, const position& p) -> position{
-        return previous_char(doc, p);
+    add_complex_command("left-char", get_left_selection, [](VirtualView* view, const position& p) -> position{
+        return previous_char(view->doc, p);
     });
-    add_complex_command("prev-block", get_left_selection, [](std::shared_ptr<Document> doc, const position& p) -> position{
-        return previous_block_start(doc, p);
+    add_complex_command("prev-block", get_left_selection, [](VirtualView* view, const position& p) -> position{
+        return previous_block_start(view->doc, p);
     });
-    add_complex_command("next-block", get_right_selection, [](std::shared_ptr<Document> doc, const position& p) -> position{
-        return next_block_end(doc, p);
+    add_complex_command("next-block", get_right_selection, [](VirtualView* view, const position& p) -> position{
+        return next_block_end(view->doc, p);
+    });
+    add_complex_command("prev-line", get_left_selection, [](VirtualView* view, const position& p) -> position{
+        const auto changed = change_line(view, p, -1);
+        if(changed == p)
+        {
+            return start_of_line(p);
+        }
+        else
+        {
+            return changed;
+        }
+    });
+    add_complex_command("next-line", get_right_selection, [](VirtualView* view, const position& p) -> position{
+        const auto changed = change_line(view, p, 1);
+        if(changed == p)
+        {
+            return end_of_line(p);
+        }
+        else
+        {
+            return changed;
+        }
     });
 
     const auto add_word_commands =
@@ -302,17 +327,17 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
         const is_word_fun& is_word_char
     )
     {
-        add_complex_command("right-word"+base, get_right_selection, [is_word_char](std::shared_ptr<Document> doc, const position& p) -> position{
-            return next_word_end(doc, p, is_word_char);
+        add_complex_command("right-word"+base, get_right_selection, [is_word_char](VirtualView* view, const position& p) -> position{
+            return next_word_end(view->doc, p, is_word_char);
         });
-        add_complex_command("left-word"+base, get_left_selection, [is_word_char](std::shared_ptr<Document> doc, const position& p) -> position{
-            return previous_word_start(doc, p, is_word_char);
+        add_complex_command("left-word"+base, get_left_selection, [is_word_char](VirtualView* view, const position& p) -> position{
+            return previous_word_start(view->doc, p, is_word_char);
         });
-        add_complex_command("word-start"+base, get_right_selection, [is_word_char](std::shared_ptr<Document> doc, const position& p) -> position{
-            return start_of_word(doc, p, is_word_char);
+        add_complex_command("word-start"+base, get_right_selection, [is_word_char](VirtualView* view, const position& p) -> position{
+            return start_of_word(view->doc, p, is_word_char);
         });
-        add_complex_command("word-end"+base, get_left_selection, [is_word_char](std::shared_ptr<Document> doc, const position& p) -> position{
-            return end_of_word(doc, p, is_word_char);
+        add_complex_command("word-end"+base, get_left_selection, [is_word_char](VirtualView* view, const position& p) -> position{
+            return end_of_word(view->doc, p, is_word_char);
         });
     };
     
@@ -358,17 +383,17 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
     );
 
     // todo(Gustav): handle whitespace, home to start-of-line or home to first non-whitespace
-    add_complex_command("home", get_left_selection, [](std::shared_ptr<Document>, const position& p) -> position{
+    add_complex_command("home", get_left_selection, [](VirtualView*, const position& p) -> position{
         return start_of_line(p);
     });
-    add_complex_command("end", get_right_selection, [](std::shared_ptr<Document>, const position& p) -> position{
+    add_complex_command("end", get_right_selection, [](VirtualView*, const position& p) -> position{
         return end_of_line(p);
     });
 
-    add_complex_command("doc-start", get_left_selection, [](std::shared_ptr<Document>, const position&) -> position{
+    add_complex_command("doc-start", get_left_selection, [](VirtualView*, const position&) -> position{
         return start_of_doc();
     });
-    add_complex_command("doc-end", get_right_selection, [](std::shared_ptr<Document> doc, const position&) -> position{
-        return end_of_doc(doc);
+    add_complex_command("doc-end", get_right_selection, [](VirtualView* view, const position&) -> position{
+        return end_of_doc(view->doc);
     });
 }

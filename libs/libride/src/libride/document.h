@@ -7,6 +7,8 @@
 #include <functional>
 #include <memory>
 
+#include "base/units.h"
+
 struct filesystem;
 
 struct position
@@ -53,6 +55,8 @@ struct Document
     bool LoadFile(filesystem* fs, const std::string& path);
 
     char get_char(const position& p) const;
+
+    int sanitize_line(int new_line) const;
     position sanitize_position(const position& pp) const;
     position position_offset(const position& pp, int offset) const;
 
@@ -68,4 +72,7 @@ struct VirtualView
 
     virtual ~VirtualView() = default;
     virtual void scroll_to_cursor(const position& p) = 0;
+
+    virtual pix get_relative_pixel_offset(const position& p) = 0;
+    virtual int get_offset_from_relative_pixel_offset(int line, pix offset) = 0;
 };

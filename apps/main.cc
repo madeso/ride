@@ -135,6 +135,8 @@ struct RideApp : App
         add_move_select("right", "right-char");
         add_move_select("ctrl+left", "left-word");
         add_move_select("ctrl+right", "right-word");
+        add_move_select("up", "prev-line");
+        add_move_select("down", "next-line");
         add_move_select("ctrl+up", "prev-block");
         add_move_select("ctrl+down", "next-block");
         add_move_select("home", "home");

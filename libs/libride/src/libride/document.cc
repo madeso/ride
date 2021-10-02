@@ -106,9 +106,14 @@ char Document::get_char(const position& pp) const
     return text[offset];
 }
 
+int Document::sanitize_line(int new_line) const
+{
+    return keep_within(0, new_line, C(this->lines.size()));
+}
+
 position Document::sanitize_position(const position& p) const
 {
-    const auto line = keep_within(0, p.line, C(this->lines.size()));
+    const auto line = sanitize_line(p.line);
     const auto offset = keep_within(0, p.offset, C(this->lines[Cs(line)].size()));
     return {line, offset};
 }

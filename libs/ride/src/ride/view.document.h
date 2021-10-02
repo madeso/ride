@@ -4,7 +4,7 @@
 
 #include "base/minmax.h"
 
-#include "api/units.h"
+#include "base/units.h"
 #include "api/font.h"
 
 #include "libride/document.h"
@@ -36,6 +36,9 @@ struct ViewDoc : View, VirtualView
     pix line_to_relative_upper_pix(int line_index);
     pix line_to_relative_lower_pix(int line_index);
 
+    int absolute_pix_y_to_line(pix y);
+    int absolute_pix_x_to_offset(int line, pix x);
+
     void draw_single_line
     (
         RenCache* cache,
@@ -45,6 +48,8 @@ struct ViewDoc : View, VirtualView
     void drag_to(const Meta& meta, const vec2<pix>& new_mouse);
 
     void scroll_to_cursor(const position& p) override;
+    pix get_relative_pixel_offset(const position& p) override;
+    int get_offset_from_relative_pixel_offset(int line, pix offset) override;
 
     void on_layout_body() override;
     scroll_size calculate_scroll_size() override;
