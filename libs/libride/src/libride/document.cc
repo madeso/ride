@@ -155,24 +155,37 @@ void VirtualView::merge_all_cursors()
 {
     auto new_cursors = std::vector<selection>{};
 
-    auto overlaps_any_cursor = [&new_cursors](const selection& ss) -> bool
+    auto get_index_of_first_overlapping_cursor = [&new_cursors](const selection& ss) -> std::optional<std::size_t>
     {
+        std::size_t index = 0;
         const auto s = ss.sorted();
         for(const auto& c: new_cursors)
         {
             if(are_overlapping(c.sorted(), s))
             {
-                return true;
+                return index;
             }
+
+            index += 1;
         }
 
-        return false;
+        return {};
     };
 
     for(const auto c: cursors)
     {
-        // todo(Gustav): merge, don't just delete one...
-        if(overlaps_any_cursor(c) == false)
+        const auto index = get_index_of_first_overlapping_cursor(c);
+        if(index)
+        {
+            // two selections overlap, merge and use the latest selection for order
+            const auto lhs_cursor = new_cursors[*index].sorted();
+            const auto rhs_cursor = c.sorted();
+            const auto lower = std::min(lhs_cursor.a, rhs_cursor.a);
+            const auto upper = std::max(lhs_cursor.b, rhs_cursor.b);
+            const auto merged = c.a < c.b ? selection{lower, upper} : selection{upper, lower};
+            new_cursors[*index] = merged;
+        }
+        else
         {
             new_cursors.emplace_back(c);
         }
