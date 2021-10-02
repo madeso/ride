@@ -1,5 +1,7 @@
 #include "libride/document.h"
 
+#include <iostream>
+
 #include "base/c.h"
 #include "base/cc.h"
 #include "base/filesystem.h"
@@ -151,7 +153,7 @@ std::string Document::GetLineAt(int y) const
 
 void VirtualView::merge_all_cursors()
 {
-    auto new_cursors = cursors;
+    auto new_cursors = std::vector<selection>{};
 
     auto overlaps_any_cursor = [&new_cursors](const selection& ss) -> bool
     {
@@ -175,6 +177,8 @@ void VirtualView::merge_all_cursors()
             new_cursors.emplace_back(c);
         }
     }
+
+    std::cout << "cursor status: " << cursors.size() << " -> " << new_cursors.size() << "\n";
 
     cursors = new_cursors;
 }
