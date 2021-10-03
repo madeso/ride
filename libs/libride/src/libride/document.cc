@@ -6,6 +6,7 @@
 #include "base/cc.h"
 #include "base/filesystem.h"
 
+#include "libride/document.commands.h"
 
 namespace
 {
@@ -199,4 +200,57 @@ void VirtualView::merge_all_cursors()
     std::cout << "cursor status: " << cursors.size() << " -> " << new_cursors.size() << "\n";
 
     cursors = new_cursors;
+}
+
+void Document::add_text(const std::string& t, const position& pp)
+{
+    const auto p = sanitize_position(pp);
+    auto& l = lines[Cs(p.line)];
+
+    l.insert(Cs(p.offset), t);
+
+    for(auto* view: views)
+    {
+        view->advance_cursors(p, C(t.size()));
+    }
+}
+
+void VirtualView::set_document(std::shared_ptr<Document> new_document)
+{
+    if(doc != nullptr)
+    {
+        erase_remove_if(&doc->views, [this](VirtualView* other) -> bool { return other == this; } );
+    }
+    doc = new_document;
+    doc->views.emplace_back(this);
+}
+
+void VirtualView::advance_cursors(const position& after, int offset)
+{
+    auto advance_position = [&after, &offset, this](position* p)
+    {
+        if(*p >= after && p->line == after.line)
+        {
+            if(*p != end_of_line(*p))
+            {
+                *p = doc->position_offset(*p, offset);
+            }
+        }
+    };
+
+    for(auto& c: cursors)
+    {
+        advance_position(&c.a);
+        advance_position(&c.b);
+    }
+}
+
+void VirtualView::insert_text_at_cursors(const std::string& text)
+{
+    if(doc == nullptr) { return; }
+    if(cursors.empty()) { return; }
+    for(auto& c: cursors)
+    {
+        doc->add_text(text, c.b);
+    }
 }

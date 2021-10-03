@@ -196,3 +196,7 @@ void View::on_mouse_moved(const Meta&, const vec2<pix>&)
 void View::on_mouse_released(MouseButton, const Meta&, const vec2<pix>&)
 {
 }
+
+void View::on_text(const std::string&)
+{
+}

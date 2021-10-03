@@ -57,5 +57,5 @@ struct ViewDoc : View, VirtualView
     void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override;
     void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse) override;
     void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse) override;
-    
+    void on_text(const std::string& t) override;
 };

@@ -10,3 +10,6 @@
 [submodule "external/stb/stb"]
 	path = external/stb/stb
 	url = git@github.com:nothings/stb.git
+[submodule "external/catchy"]
+	path = external/catchy
+	url = git@github.com:madeso/catchy.git

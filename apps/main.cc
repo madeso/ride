@@ -76,7 +76,7 @@ struct RideApp : App
     {
         setup_view(&root);
         root.font = font;
-        root.doc = std::make_shared<Document>();
+        root.set_document(std::make_shared<Document>());
         root.doc->LoadFile(fs.get(), __FILE__);
 
         setup_view(&browser);
@@ -225,6 +225,19 @@ struct RideApp : App
         if(view == nullptr) { return; }
 
         view->on_mouse_released(button, meta, new_mouse);
+    }
+
+    void on_text_input(const std::string& t) override
+    {
+        View* view = get_active_view();
+        if(view)
+        {
+            view->on_text(t);
+        }
+        else
+        {
+            std::cout << "Not hovering...\n";
+        }
     }
 
     void on_mouse_wheel(int dx, int dy) override

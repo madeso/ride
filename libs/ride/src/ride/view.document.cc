@@ -525,3 +525,8 @@ void ViewDoc::on_mouse_released(MouseButton button, const Meta& meta, const vec2
     drag_to(meta, new_mouse);
     dragging = false;
 }
+
+void ViewDoc::on_text(const std::string& t)
+{
+    insert_text_at_cursors(t);
+}
