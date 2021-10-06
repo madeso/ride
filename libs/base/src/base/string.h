@@ -16,3 +16,5 @@ std::vector<std::string> Split(const std::string& s, char delim);
 bool is_only_whitepace(const std::string& str);
 
 int index_of_non_whitespace(const std::string& str);
+
+std::vector<std::string> split_string_by_newline(const std::string& str);

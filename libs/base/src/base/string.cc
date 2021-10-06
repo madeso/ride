@@ -79,3 +79,31 @@ int index_of_non_whitespace(const std::string& str)
     const auto index = str.find_first_not_of(WHITESPACE);
     return index == std::string::npos ? 0 : static_cast<int>(index);
 }
+
+std::vector<std::string> supersplit(const std::string& str, char delim)
+{
+    std::vector<std::string> ret;
+    std::string buffer;
+
+    for(auto c: str)
+    {
+        if(c == delim)
+        {
+            ret.emplace_back(buffer);
+            buffer = "";
+        }
+        else
+        {
+            buffer += c;
+        }
+    }
+
+    ret.emplace_back(buffer);
+
+    return ret;
+}
+
+std::vector<std::string> split_string_by_newline(const std::string& str)
+{
+    return supersplit(str, '\n');
+}

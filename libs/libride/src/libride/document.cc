@@ -5,6 +5,7 @@
 #include "base/c.h"
 #include "base/cc.h"
 #include "base/filesystem.h"
+#include "base/string.h"
 
 #include "libride/document.commands.h"
 
@@ -202,16 +203,30 @@ void VirtualView::merge_all_cursors()
     cursors = new_cursors;
 }
 
-void Document::add_text(const std::string& t, const position& pp)
+void splice(std::vector<std::string>& t, int at, int remove, const std::vector<std::string>& insert)
+{
+    const auto where = [at, &t]() { return std::next(t.begin(), at); };
+    t.erase(where(), std::next(where(), remove));
+    t.insert(where(), insert.begin(), insert.end());
+}
+
+void Document::add_text(const std::string& text, const position& pp)
 {
     const auto p = sanitize_position(pp);
-    auto& l = lines[Cs(p.line)];
 
-    l.insert(Cs(p.offset), t);
+    auto more_lines = split_string_by_newline(text);
+    std::cout << "lines " << more_lines.size() << "\n";
+    const auto before = this->lines[Cs(p.line)].substr(0, Cs(p.offset));
+    const auto after = this->lines[Cs(p.line)].substr(Cs(p.offset));
+    more_lines[0] = before + more_lines[0];
+    *more_lines.rbegin() += after;
+    
+    // splice lines into line array
+    splice(lines, p.line, 1, more_lines);
 
     for(auto* view: views)
     {
-        view->advance_cursors(p, C(t.size()));
+        view->advance_cursors(p, C(text.size()));
     }
 }
 

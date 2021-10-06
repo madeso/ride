@@ -215,6 +215,18 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
         }
     );
 
+    add_edit_command
+    (
+        "doc.insert-newline",
+        [get_view]()
+        {
+            auto* view = get_view();
+            if(view == nullptr) { return; }
+
+            view->insert_text_at_cursors("\n");
+        }
+    );
+
     auto add_complex_command = [get_view, &add_edit_command]
     (
         const std::string& base,

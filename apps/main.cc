@@ -116,6 +116,7 @@ struct RideApp : App
         );
 
         keybind.add(*stroke_from_string("ctrl+q"), {"core.quit"});
+        keybind.add(*stroke_from_string("return"), {"doc.insert-newline"});
         
         // keybind.add(*stroke_from_string("ctrl+up"),   {"scale.+"});
         // keybind.add(*stroke_from_string("ctrl+down"), {"scale.-"});
