@@ -212,6 +212,11 @@ void splice(std::vector<std::string>& t, int at, int remove, const std::vector<s
 
 void Document::add_text(const std::string& text, const position& pp)
 {
+    for(auto* view: views)
+    {
+        view->sanitize_cursors();
+    }
+
     const auto p = sanitize_position(pp);
 
     auto more_lines = split_string_by_newline(text);
@@ -238,6 +243,15 @@ void VirtualView::set_document(std::shared_ptr<Document> new_document)
     }
     doc = new_document;
     doc->views.emplace_back(this);
+}
+
+void VirtualView::sanitize_cursors()
+{
+    for(auto& c: cursors)
+    {
+        c.a = doc->sanitize_position(c.a);
+        c.b = doc->sanitize_position(c.b);
+    }
 }
 
 void VirtualView::advance_cursors(const position& after, int offset)

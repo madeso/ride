@@ -75,6 +75,7 @@ struct VirtualView
 
     std::vector<selection> cursors;
     void merge_all_cursors();
+    void sanitize_cursors();
 
     void advance_cursors(const position& after, int offset);
     void insert_text_at_cursors(const std::string& t);
