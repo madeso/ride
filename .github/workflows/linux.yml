@@ -35,3 +35,8 @@ jobs:
           shell: bash
           working-directory: ${{github.workspace}}/build
           run: time cmake --build . --config ${{matrix.build_type}}
+
+        - name: Test
+          shell: bash
+          working-directory: ${{github.workspace}}/build
+          run: ctest -C ${{matrix.build_type}}

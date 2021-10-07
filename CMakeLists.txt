@@ -8,6 +8,8 @@ set(RIDE_VERSION_MAJOR "0")
 set(RIDE_VERSION_MINOR "0")
 set(RIDE_VERSION_REVISION "1")
 
+enable_testing()
+
 include(data/install/cpack-config.cmake)
 
 include(data/cmake/StandardProjectSettings.cmake)

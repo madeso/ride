@@ -50,3 +50,4 @@ target_link_libraries(base_test
         project_options
         project_warnings
 )
+catch_discover_tests(base_test)
