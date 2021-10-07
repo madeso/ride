@@ -4,7 +4,10 @@
 #include <string>
 #include <string_view>
 
-std::size_t replace_all(std::string& inout, std::string_view what, std::string_view with);
+// returns the number of replacements made
+std::size_t replace_all_inplace(std::string& inout, std::string_view what, std::string_view with);
+
+std::string replace_all_f(const std::string& inout, std::string_view what, std::string_view with);
 
 std::string to_lower(const std::string& str);
 
@@ -17,4 +20,5 @@ bool is_only_whitepace(const std::string& str);
 
 int index_of_non_whitespace(const std::string& str);
 
+std::vector<std::string> supersplit(const std::string& str, char delim);
 std::vector<std::string> split_string_by_newline(const std::string& str);

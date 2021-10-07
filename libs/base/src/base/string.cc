@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <sstream>
 
-std::size_t replace_all(std::string& inout, std::string_view what, std::string_view with)
+std::size_t replace_all_inplace(std::string& inout, std::string_view what, std::string_view with)
 {
     std::size_t count{};
     for (std::string::size_type pos{};
@@ -12,6 +12,13 @@ std::size_t replace_all(std::string& inout, std::string_view what, std::string_v
         inout.replace(pos, what.length(), with.data(), with.length());
     }
     return count;
+}
+
+std::string replace_all_f(const std::string& inout, std::string_view what, std::string_view with)
+{
+    std::string inplace = inout;
+    replace_all_inplace(inplace, what, with);
+    return inplace;
 }
 
 char to_lower_char(char c)
