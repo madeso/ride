@@ -39,6 +39,7 @@ target_link_libraries(base
 
 set(src_test
     src/base/string.test.cc
+    src/base/cc.test.cc
     ../../external/catch/main.cc
 )
 add_executable(base_test ${src_test})

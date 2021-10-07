@@ -203,12 +203,6 @@ void VirtualView::merge_all_cursors()
     cursors = new_cursors;
 }
 
-void splice(std::vector<std::string>& t, int at, int remove, const std::vector<std::string>& insert)
-{
-    const auto where = [at, &t]() { return std::next(t.begin(), at); };
-    t.erase(where(), std::next(where(), remove));
-    t.insert(where(), insert.begin(), insert.end());
-}
 
 void Document::add_text(const std::string& text, const position& pp)
 {
@@ -227,7 +221,7 @@ void Document::add_text(const std::string& text, const position& pp)
     *more_lines.rbegin() += after;
     
     // splice lines into line array
-    splice(lines, p.line, 1, more_lines);
+    splice(&lines, p.line, 1, more_lines);
 
     for(auto* view: views)
     {
