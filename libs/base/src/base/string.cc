@@ -67,7 +67,7 @@ std::vector<std::string> Split(const std::string& s, char delim)
 }
 
 
-constexpr const char* const WHITESPACE = " \t";
+constexpr const char* const WHITESPACE = " \t\r\n";
 
 bool is_only_whitepace(const std::string& str)
 {
