@@ -1,3 +1,5 @@
+add_subdirectory(catchy)
+
 ###################################################################################################
 # SDL2
 find_package(SDL2 REQUIRED)
@@ -11,19 +13,6 @@ target_link_libraries(sdl2
         ${SDL2_LIBRARY}
         ${CMAKE_DL_LIBS}
 )
-
-
-
-add_library(fmt STATIC
-    # fmt-8.0.1/src/fmt.cc
-    fmt-8.0.1/src/format.cc
-    fmt-8.0.1/src/os.cc
-)
-target_include_directories(fmt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/fmt-8.0.1/include)
-target_compile_features(fmt PRIVATE cxx_std_17)
-
-
-
 
 add_library(stb_truetype STATIC
     stb/stb_truetype.c
