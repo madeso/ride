@@ -161,8 +161,12 @@ TEST_CASE("doc-virtual-view", "[doc]")
                 {{0,0}, {0,0}}
             };
             view.insert_text_at_cursors("z");
-            CHECK(StringEq(doc->GetLineAt(0), "zabc def"));
-            CHECK(StringEq(doc->GetLineAt(1), "ghi"));
+            CHECK(StringEq(doc->lines,
+                {
+                    "zabc def",
+                    "ghi"
+                }
+            ));
             // check cursors
             CHECK(VectorEquals(
                 view.cursors,
@@ -193,6 +197,24 @@ TEST_CASE("doc-virtual-view", "[doc]")
                         view.cursors,
                         {
                             {{0,position::max_offset}, {0,position::max_offset}}
+                        }
+                    ));
+                }
+
+                SECTION("type z")
+                {
+                    view.insert_text_at_cursors("z");
+                    CHECK(StringEq(doc->lines,
+                        {
+                            "zabcz def",
+                            "ghi"
+                        }
+                    ));
+                    CHECK(VectorEquals(
+                        view.cursors,
+                        {
+                            {{0,1}, {0,1}},
+                            {{0,5}, {0,5}} // 3 +1 +1
                         }
                     ));
                 }

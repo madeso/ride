@@ -266,7 +266,6 @@ void Document::add_text(const std::string& text, const position& pp)
     const auto p = sanitize_position(pp);
 
     auto more_lines = split_string_by_newline(text);
-    std::cout << "lines " << more_lines.size() << "\n";
     const auto before = this->lines[Cs(p.line)].substr(0, Cs(p.offset));
     const auto after = this->lines[Cs(p.line)].substr(Cs(p.offset));
     more_lines[0] = before + more_lines[0];
