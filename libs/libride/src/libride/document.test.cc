@@ -196,6 +196,17 @@ TEST_CASE("doc-virtual-view", "[doc]")
                         }
                     ));
                 }
+
+                SECTION("select end")
+                {
+                    CHECK(commands.perform("doc.select-end"));
+                    CHECK(VectorEquals(
+                        view.cursors,
+                        {
+                            {{0, 0}, {0,position::max_offset}}
+                        }
+                    ));
+                }
             }
         }
     }
