@@ -20,3 +20,18 @@ target_link_libraries(libride
         std::filesystem
 )
 
+
+set(src_test
+    src/libride/document.test.cc
+    ../../external/catch/main.cc
+)
+add_executable(libride_test ${src_test})
+target_link_libraries(libride_test
+    PUBLIC
+        catchy
+        libride
+    PRIVATE
+        project_options
+        project_warnings
+)
+catch_discover_tests(libride_test)

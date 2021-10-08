@@ -48,6 +48,59 @@ bool operator>=(const position& lhs, const position& rhs)
     return lhs.line > rhs.line || (lhs.line == rhs.line && lhs.offset >= rhs.offset);
 }
 
+std::ostream& operator<<(std::ostream& s, const position& p)
+{
+    s << "(" << p.line << ", ";
+    if(p.offset == position::max_offset)
+    {
+        s << "<max>";
+    }
+    else
+    {
+        s << p.offset;
+    }
+    s << ")";
+    
+    return s;
+}
+
+namespace
+{
+    bool is_same(const selection& lhs, const selection& rhs)
+    {
+        return lhs.a == rhs.a
+            && lhs.b == rhs.b
+        ;
+    }
+}
+
+bool operator==(const selection& lhs, const selection& rhs)
+{
+    return is_same(lhs, rhs) == true;
+}
+
+
+bool operator!=(const selection& lhs, const selection& rhs)
+{
+    return is_same(lhs, rhs) == false;
+}
+
+std::ostream& operator<<(std::ostream& s, const selection& p)
+{
+    s << "(";
+    if(p.a != p.b)
+    {
+        s << p.a << ", " << p.b;
+    }
+    else
+    {
+        s << p.a;
+    }
+    
+    s << ")";
+
+    return s;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -103,8 +156,9 @@ char Document::get_char(const position& pp) const
     const auto p = this->sanitize_position(pp);
     const auto line = Cs(p.line);
     const auto offset = Cs(p.offset);
+    if(line >= lines.size()) { return '\n'; }
     const auto text = this->lines[line];
-    if(text.size() == offset) { return '\n'; }
+    if(offset >= text.size()) { return '\n'; }
     return text[offset];
 }
 
@@ -236,7 +290,15 @@ void VirtualView::set_document(std::shared_ptr<Document> new_document)
         erase_remove_if(&doc->views, [this](VirtualView* other) -> bool { return other == this; } );
     }
     doc = new_document;
-    doc->views.emplace_back(this);
+    if(doc != nullptr)
+    {
+        doc->views.emplace_back(this);
+    }
+}
+
+VirtualView::~VirtualView()
+{
+    set_document(nullptr);
 }
 
 void VirtualView::sanitize_cursors()

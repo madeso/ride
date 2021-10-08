@@ -6,6 +6,7 @@
 #include <limits>
 #include <functional>
 #include <memory>
+#include <ostream>
 
 #include "base/units.h"
 
@@ -29,20 +30,28 @@ bool operator>(const position& lhs, const position& rhs);
 bool operator<=(const position& lhs, const position& rhs);
 bool operator>=(const position& lhs, const position& rhs);
 
+std::ostream& operator<<(std::ostream& s, const position& p);
+
 struct sorted_selection
 {
+    // todo(Gustav): rename to min+max, not something like lower+upper as lower in the file is a higher line index
     position a;
     position b;
 };
 
 struct selection
 {
+    // todo(Gustav): rename to from+to, start+end
     position a;
     position b;
 
     sorted_selection sorted() const;
     bool is_selection() const;
 };
+
+bool operator==(const selection& lhs, const selection& rhs);
+bool operator!=(const selection& lhs, const selection& rhs);
+std::ostream& operator<<(std::ostream& s, const selection& p);
 
 
 bool are_overlapping(const sorted_selection& s, const sorted_selection& p);
@@ -73,6 +82,8 @@ struct VirtualView
     std::shared_ptr<Document> doc;
     void set_document(std::shared_ptr<Document> new_document);
 
+    virtual ~VirtualView();
+
     std::vector<selection> cursors;
     void merge_all_cursors();
     void sanitize_cursors();
@@ -80,7 +91,6 @@ struct VirtualView
     void advance_cursors(const position& after, int offset);
     void insert_text_at_cursors(const std::string& t);
 
-    virtual ~VirtualView() = default;
     virtual void scroll_to_cursor(const position& p) = 0;
 
     virtual pix get_relative_pixel_offset(const position& p) = 0;
