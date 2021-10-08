@@ -22,11 +22,11 @@ set(src
     src/base/vec2.cc src/base/vec2.h
 )
 add_library(base STATIC ${src})
+set_crt_to_static(base)
 target_include_directories(base
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-set_crt_to_static(base)
 target_link_libraries(base
     PUBLIC
         embed
