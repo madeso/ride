@@ -252,8 +252,6 @@ void VirtualView::merge_all_cursors()
         }
     }
 
-    std::cout << "cursor status: " << cursors.size() << " -> " << new_cursors.size() << "\n";
-
     cursors = new_cursors;
 }
 

@@ -38,7 +38,6 @@ void CommandList::add(const std::string& name, predicate_fun predicate, perform_
         std::cerr << "command already exists: " << name << "\n";
         return;
     }
-    std::cout << "adding " << name << "\n";
     map.emplace(name, std::make_shared<Command>(predicate, command));
 }
 
@@ -62,7 +61,6 @@ bool CommandList::perform(const std::string& name)
     const auto cmd = map.find(name);
     if( cmd != map.end() && cmd->second->predicate())
     {
-        std::cout << "running " << name << "\n";
         cmd->second->perform();
         return true;
     }

@@ -115,6 +115,12 @@ struct RideApp : App
             }
         );
 
+        std::cout << "commands:\n";
+        for(const auto c: commands.map)
+        {
+            std::cout << " - " << c.first << "\n";
+        }
+
         keybind.add(*stroke_from_string("ctrl+q"), {"core.quit"});
         keybind.add(*stroke_from_string("return"), {"doc.insert-newline"});
         
