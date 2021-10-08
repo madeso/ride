@@ -5,6 +5,8 @@
 
 #include "base/str.h"
 #include "libride/document.h"
+#include "libride/document.commands.h"
+#include "libride/command.h"
 
 using namespace catchy;
 
@@ -148,8 +150,8 @@ TEST_CASE("doc-virtual-view", "[doc]")
 
         doc->lines =
         {
-            "abc",
-            "def"
+            "abc def",
+            "ghi"
         };
 
         SECTION("insert char")
@@ -159,8 +161,8 @@ TEST_CASE("doc-virtual-view", "[doc]")
                 {{0,0}, {0,0}}
             };
             view.insert_text_at_cursors("z");
-            CHECK(StringEq(doc->GetLineAt(0), "zabc"));
-            CHECK(StringEq(doc->GetLineAt(1), "def"));
+            CHECK(StringEq(doc->GetLineAt(0), "zabc def"));
+            CHECK(StringEq(doc->GetLineAt(1), "ghi"));
             // check cursors
             CHECK(VectorEquals(
                 view.cursors,
@@ -168,6 +170,33 @@ TEST_CASE("doc-virtual-view", "[doc]")
                     {{0,1}, {0,1}}
                 }
             ));
+        }
+
+        SECTION("commands")
+        {
+            CommandList commands;
+
+            add_edit_commands(&commands, [&](){ return &view;});
+
+            SECTION("multi cursors on first line")
+            {
+                view.cursors =
+                {
+                    {{0,0}, {0,0}},
+                    {{0,3}, {0,3}}
+                };
+
+                SECTION("move to end")
+                {
+                    CHECK(commands.perform("doc.move-end"));
+                    CHECK(VectorEquals(
+                        view.cursors,
+                        {
+                            {{0,position::max_offset}, {0,position::max_offset}}
+                        }
+                    ));
+                }
+            }
         }
     }
 
