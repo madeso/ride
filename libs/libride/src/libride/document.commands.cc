@@ -110,7 +110,7 @@ position previous_block_start(std::shared_ptr<Document> doc, const position& pp)
 {
     auto p = pp;
 
-    const auto line_at = [doc](int line) -> std::string { return doc->lines[Cs(line)]; };
+    const auto line_at = [doc](int line) -> std::string { return doc->GetLineAt(line); };
 
     // skip line if it is whitespace
     while(p.line > 0 && is_only_whitepace(line_at(p.line)) )
@@ -134,8 +134,8 @@ position next_block_end(std::shared_ptr<Document> doc, const position& pp)
 {
     auto p = pp;
 
-    const auto lc = C(doc->lines.size());
-    const auto line_at = [doc](int line) -> std::string { return doc->lines[Cs(line)]; };
+    const auto lc = doc->GetNumberOfLines();
+    const auto line_at = [doc](int line) -> std::string { return doc->GetLineAt(line); };
 
     // skip line if it is whitespace
     while(p.line < lc && is_only_whitepace(line_at(p.line)) )
@@ -175,7 +175,7 @@ position start_of_doc()
 
 position end_of_doc(std::shared_ptr<Document> doc)
 {
-    return {static_cast<int>(doc->lines.size()), position::max_offset};
+    return {doc->GetNumberOfLines(), position::max_offset};
 }
 
 position change_line(VirtualView* view, const position& p, int change)

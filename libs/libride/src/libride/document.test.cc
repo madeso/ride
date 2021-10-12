@@ -42,12 +42,14 @@ VectorEquals(const std::vector<T>& lhs, const std::vector<T>& rhs)
 TEST_CASE("doc-get_char", "[doc]")
 {
     Document doc;
-    doc.lines =
-    {
-        "abc",
-        "def",
-        "ghi"
-    };
+    doc.load_lines
+    (
+        {
+            "abc",
+            "def",
+            "ghi"
+        }
+    );
 
     SECTION("inside")
     {
@@ -80,11 +82,13 @@ TEST_CASE("doc-get_char", "[doc]")
 TEST_CASE("doc-get_line_at", "[doc]")
 {
     Document doc;
-    doc.lines =
-    {
-        "abc",
-        "def"
-    };
+    doc.load_lines
+    (
+        {
+            "abc",
+            "def"
+        }
+    );
 
     CHECK(StringEq(doc.GetLineAt(0), "abc"));
     CHECK(StringEq(doc.GetLineAt(1), "def"));
@@ -96,20 +100,24 @@ TEST_CASE("doc-number-of-lines", "[doc]")
 
     SECTION("one line")
     {
-        doc.lines =
-        {
-            "a"
-        };
+        doc.load_lines
+        (
+            {
+                "a"
+            }
+        );
         CHECK(doc.GetNumberOfLines() == 1);
     }
 
     SECTION("one line")
     {
-        doc.lines =
-        {
-            "a",
-            "b"
-        };
+        doc.load_lines
+        (
+            {
+                "a",
+                "b"
+            }
+        );
         CHECK(doc.GetNumberOfLines() == 2);
     }
 }
@@ -134,6 +142,16 @@ namespace
             return static_cast<int>(offset.value / scale);
         }
     };
+
+    std::vector<std::string> get_lines(const Document& d)
+    {
+        std::vector<std::string> ret;
+        for(int i=0; i<d.GetNumberOfLines(); i+=1)
+        {
+            ret.emplace_back(d.GetLineAt(i));
+        }
+        return ret;
+    }
 }
 
 TEST_CASE("doc-virtual-view", "[doc]")
@@ -148,11 +166,13 @@ TEST_CASE("doc-virtual-view", "[doc]")
         view.set_document(doc);
         CHECK(doc->views.size() == 1);
 
-        doc->lines =
-        {
-            "abc def",
-            "ghi"
-        };
+        doc->load_lines
+        (
+            {
+                "abc def",
+                "ghi"
+            }
+        );
 
         SECTION("insert char")
         {
@@ -161,7 +181,7 @@ TEST_CASE("doc-virtual-view", "[doc]")
                 {{0,0}, {0,0}}
             };
             view.insert_text_at_cursors("z");
-            CHECK(StringEq(doc->lines,
+            CHECK(StringEq(get_lines(*doc),
                 {
                     "zabc def",
                     "ghi"
@@ -204,7 +224,7 @@ TEST_CASE("doc-virtual-view", "[doc]")
                 SECTION("type z")
                 {
                     view.insert_text_at_cursors("z");
-                    CHECK(StringEq(doc->lines,
+                    CHECK(StringEq(get_lines(*doc),
                         {
                             "zabcz def",
                             "ghi"

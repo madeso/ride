@@ -280,6 +280,11 @@ void Document::add_text(const std::string& text, const position& pp)
     }
 }
 
+void Document::load_lines(const std::vector<std::string>& new_lines)
+{
+    lines = new_lines;
+}
+
 void VirtualView::set_document(std::shared_ptr<Document> new_document)
 {
     if(doc != nullptr)

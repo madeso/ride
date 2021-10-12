@@ -60,10 +60,13 @@ bool are_overlapping(const selection& sel, const selection& p);
 struct Document
 {
     std::optional<std::string> path_or_not;
+    private:
     std::vector<std::string> lines;
+    public:
     std::vector<VirtualView*> views;
     
     bool LoadFile(filesystem* fs, const std::string& path);
+    void load_lines(const std::vector<std::string>& new_lines);
 
     char get_char(const position& p) const;
 

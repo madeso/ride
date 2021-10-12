@@ -67,21 +67,27 @@ pix ViewDoc::get_full_document_height()
 
 pix ViewDoc::get_full_document_width()
 {
-    const auto longest_line = std::max_element
-    (
-        doc->lines.begin(), doc->lines.end(),
-        [](const std::string& lhs, const std::string& rhs) -> bool
-        {
-            return lhs.length() < rhs.length();
-        }
-    );
-
-    if(longest_line == doc->lines.end())
+    const auto size = doc->GetNumberOfLines();
+    if(size == 0)
     {
         return 0_px;
     }
+    const auto get_length = [this](int index) -> pix
+    {
+        return app->to_pix(font->get_width(doc->GetLineAt(index)));
+    };
 
-    return app->to_pix(font->get_width(*longest_line));
+    pix largest = get_length(0);
+    for(int i=1; i<size; i+=1)
+    {
+        const auto l = get_length(i);
+        if(l > largest)
+        {
+            largest = l;
+        }
+    }
+    
+    return largest;
 }
 
 
