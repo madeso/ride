@@ -10,32 +10,6 @@
 
 using namespace catchy;
 
-template<typename T>
-FalseString
-VectorEquals(const std::vector<T>& lhs, const std::vector<T>& rhs)
-{
-    return VectorEquals
-    (
-        lhs,
-        rhs,
-        [](const T& f) -> std::string { return Str() << f; },
-        [](const T& a, const T& b) -> FalseString
-        {
-            if(a == b)
-            {
-                return FalseString::True();
-            }
-            else
-            {
-                return FalseString::False
-                (
-                    Str() << a << " != " << b
-                );
-            }
-        }
-    );
-}
-
 // position tests
 // selection tests
 

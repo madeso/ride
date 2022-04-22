@@ -7,6 +7,7 @@
 #include <functional>
 #include <memory>
 #include <ostream>
+#include "fmt/format.h"
 
 #include "base/units.h"
 
@@ -21,6 +22,16 @@ struct position
     // static constexpr int max_line = std::numeric_limits<int>::max();
     static constexpr int max_offset = std::numeric_limits<int>::max();
 };
+
+template<> struct fmt::formatter<position>: formatter<string_view>
+{
+    template <typename FormatContext>
+    auto format(position p, FormatContext& ctx)
+    {
+        return format_to(ctx.out(), "{} ({})", p.line, p.offset);
+    }
+};
+
 
 bool operator==(const position& lhs, const position& rhs);
 bool operator!=(const position& lhs, const position& rhs);
@@ -51,7 +62,23 @@ struct selection
 
 bool operator==(const selection& lhs, const selection& rhs);
 bool operator!=(const selection& lhs, const selection& rhs);
-std::ostream& operator<<(std::ostream& s, const selection& p);
+
+
+template<> struct fmt::formatter<selection>: formatter<string_view>
+{
+    template <typename FormatContext>
+    auto format(selection p, FormatContext& ctx)
+    {
+        if(p.a != p.b)
+        {
+            return format_to(ctx.out(), "({}, {})", p.a, p.b);
+        }
+        else
+        {
+            return format_to(ctx.out(), "({})", p.a);
+        }
+    }
+};
 
 
 bool are_overlapping(const sorted_selection& s, const sorted_selection& p);

@@ -85,22 +85,7 @@ bool operator!=(const selection& lhs, const selection& rhs)
     return is_same(lhs, rhs) == false;
 }
 
-std::ostream& operator<<(std::ostream& s, const selection& p)
-{
-    s << "(";
-    if(p.a != p.b)
-    {
-        s << p.a << ", " << p.b;
-    }
-    else
-    {
-        s << p.a;
-    }
-    
-    s << ")";
 
-    return s;
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
