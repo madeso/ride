@@ -6,7 +6,7 @@ find_package(SDL2 REQUIRED)
 add_library(sdl2 INTERFACE)
 target_include_directories(sdl2
     INTERFACE
-        ${SDL2_INCLUDE_DIR}
+        SYSTEM ${SDL2_INCLUDE_DIR}
 )
 target_link_libraries(sdl2
     INTERFACE
@@ -20,7 +20,7 @@ add_library(stb_truetype STATIC
 )
 target_include_directories(stb_truetype
     PUBLIC
-        stb/stb
+        SYSTEM stb/stb
 )
 
 add_library(stb_image STATIC
@@ -29,7 +29,7 @@ add_library(stb_image STATIC
 )
 target_include_directories(stb_image
     PUBLIC
-        stb/stb
+        SYSTEM stb/stb
 )
 
 add_subdirectory(embed)
@@ -38,5 +38,5 @@ add_subdirectory(embed)
 add_library(open_color INTERFACE)
 target_include_directories(open_color
     INTERFACE
-        open-color/include
+        SYSTEM open-color/include
 )
