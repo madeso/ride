@@ -17,6 +17,7 @@ target_link_libraries(rideapp
         base
         api
         libride
+        fmt::fmt
     PRIVATE
         project_options
         project_warnings

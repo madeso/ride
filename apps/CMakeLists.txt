@@ -20,6 +20,7 @@ target_link_libraries(ride
         api
         data_logo
         data_font
+        fmt::fmt
 )
 
 ###############################################################################

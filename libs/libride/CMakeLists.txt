@@ -18,6 +18,7 @@ target_link_libraries(libride
         project_options
         project_warnings
         std::filesystem
+        fmt::fmt
 )
 
 
@@ -33,5 +34,6 @@ target_link_libraries(libride_test
     PRIVATE
         project_options
         project_warnings
+        fmt::fmt
 )
 catch_discover_tests(libride_test)
