@@ -38,5 +38,10 @@ TPL bool operator>=(const NUM& lhs, const NUM& rhs) { return lhs.value >= rhs.va
 TPL bool operator< (const NUM& lhs, const NUM& rhs) { return lhs.value <  rhs.value; }
 TPL bool operator> (const NUM& lhs, const NUM& rhs) { return lhs.value >  rhs.value; }
 
+template<typename S, typename T, typename Tag> S& operator<<(S& s, NUM& rhs)
+{
+    return s << rhs.value;
+}
+
 #undef NUM
 #undef TPL

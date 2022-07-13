@@ -11,7 +11,6 @@
 #include "base/c.h"
 
 #include "api/image.h"
-#include "api/renderer.h"
 
 #include "font.ttf.h"
 

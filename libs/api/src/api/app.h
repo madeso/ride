@@ -8,11 +8,11 @@
 #include "base/cursor.h"
 
 #include "api/key.h"
-#include "api/font.h"
+//#include "api/font.h"
 #include "api/mouse_button.h"
 #include "base/units.h"
 
-struct RenCache;
+struct Renderer;
 
 struct App
 {
@@ -34,17 +34,16 @@ struct App
     virtual void on_quit();
     virtual void update();
 
-    // todo(Gustav): wrap RenCache to take virtual sizes to make the usage prettier
-    virtual void draw(RenCache* cache) = 0;
+    // todo(Gustav): wrap Renderer to take virtual sizes to make the usage prettier
+    virtual void draw(Renderer* cache) = 0;
 
-    std::shared_ptr<Font> load_font(const std::string_view& file, pix size);
-    std::shared_ptr<Font> load_font(const std::string& file, pix size);
+    // std::shared_ptr<Font> load_font(const std::string_view& file, pix size);
+    // std::shared_ptr<Font> load_font(const std::string& file, pix size);
 
     dip to_dip(pix p) const;
     rect<dip> to_dip(const rect<pix>& p) const;
     pix to_pix(dip p) const;
     void set_scale(double d);
-
 
     int blink_timer = 0;
     bool run = true;
@@ -54,5 +53,5 @@ struct App
     cursor_type cursor = cursor_type::arrow;
     bool* redraw_value;
 
-    std::vector<std::shared_ptr<Font>> loaded_fonts;
+    // std::vector<std::shared_ptr<Font>> loaded_fonts;
 };

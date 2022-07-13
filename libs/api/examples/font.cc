@@ -1,5 +1,4 @@
 #include "api/app.h"
-#include "api/rencache.h"
 #include "api/font.h"
 #include "api/main.h"
 
@@ -19,9 +18,9 @@ struct ImagesApp : App
         mouse = new_mouse;
     }
 
-    void draw(RenCache* cache) override
+    void draw(Renderer* cache) override
     {
-        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
+        draw_rect(cache, to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
 
         cache->draw_text(font, "Hello world", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
 

@@ -253,13 +253,13 @@ rect<pix> ViewFilesystem::hit_rect_for_node(Node* node)
 }
 
 
-void ViewFilesystem::draw_body(RenCache* cache)
+void ViewFilesystem::draw_body(Renderer* cache)
 {
-    cache->draw_rect(app->to_dip(body_rect), theme->filesys_background_color);
+    draw_rect(cache, app->to_dip(body_rect), theme->filesys_background_color);
 
     if(node_hovering)
     {
-        cache->draw_rect(app->to_dip(hit_rect_for_node(node_hovering)), theme->filesys_hover_color);
+        draw_rect(cache, app->to_dip(hit_rect_for_node(node_hovering)), theme->filesys_hover_color);
         cursor = cursor_type::hand;
     }
     else

@@ -63,13 +63,13 @@ std::optional<scrollbar_data> layout_scrollbar(rect<pix>* view_rect, Theme* them
     };
 }
 
-void draw_scrollbar(const scrollbar_data& data, App* app, Theme* theme, RenCache* cache)
+void draw_scrollbar(const scrollbar_data& data, App* app, Theme* theme, Renderer* cache)
 {
     const auto clip_scope = ClipScope{cache, app->to_dip(data.through_rect)};
-    cache->draw_rect(app->to_dip(data.through_rect), theme->scroll_through_color);
-    cache->draw_rect(app->to_dip(data.thumb_rect), theme->scroll_thumb_color);
-    cache->draw_rect(app->to_dip(data.top_button_rect), theme->scroll_button_color);
-    cache->draw_rect(app->to_dip(data.bottom_button_rect), theme->scroll_button_color);
+    draw_rect(cache, app->to_dip(data.through_rect), theme->scroll_through_color);
+    draw_rect(cache, app->to_dip(data.thumb_rect), theme->scroll_thumb_color);
+    draw_rect(cache, app->to_dip(data.top_button_rect), theme->scroll_button_color);
+    draw_rect(cache, app->to_dip(data.bottom_button_rect), theme->scroll_button_color);
 }
 
 void View::on_layout(const rect<pix>& new_client_rect)
@@ -125,7 +125,7 @@ scroll_size View::get_scroll_size()
     };
 }
 
-void View::draw(RenCache* cache)
+void View::draw(Renderer* cache)
 {
     if(vertical_scrollbar_data)
     {

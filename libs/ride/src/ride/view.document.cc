@@ -104,7 +104,7 @@ scroll_size ViewDoc::calculate_scroll_size()
 
 void ViewDoc::draw_single_line
 (
-    RenCache* cache,
+    Renderer* cache,
     int line_index,
     const vec2<pix>& position
 )
@@ -224,12 +224,12 @@ void ViewDoc::on_layout_body()
 }
 
 
-void ViewDoc::draw_body(RenCache* cache)
+void ViewDoc::draw_body(Renderer* cache)
 {
     const auto lines = doc->GetNumberOfLines();
 
-    cache->draw_rect(app->to_dip(view_rect), theme->edit_background);
-    cache->draw_rect(app->to_dip(gutter_rect), theme->gutter_background);
+    draw_rect(cache, app->to_dip(view_rect), theme->edit_background);
+    draw_rect(cache, app->to_dip(gutter_rect), theme->gutter_background);
 
     const auto line_range = get_line_range();
 
@@ -265,7 +265,7 @@ void ViewDoc::draw_body(RenCache* cache)
         {
             const auto draw_p = [this, cache](const vec2<pix> p)
             {
-                cache->draw_rect(app->to_dip(rect<pix>{p, {8_px, 2_px}
+                draw_rect(cache, app->to_dip(rect<pix>{p, {8_px, 2_px}
                 }), theme->selection_background);
             };
 

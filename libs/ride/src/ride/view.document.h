@@ -41,7 +41,7 @@ struct ViewDoc : View, VirtualView
 
     void draw_single_line
     (
-        RenCache* cache,
+        Renderer* cache,
         int line_index,
         const vec2<pix>& position
     );
@@ -53,7 +53,7 @@ struct ViewDoc : View, VirtualView
 
     void on_layout_body() override;
     scroll_size calculate_scroll_size() override;
-    void draw_body(RenCache* cache) override;
+    void draw_body(Renderer* cache) override;
     void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override;
     void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse) override;
     void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse) override;

@@ -156,10 +156,10 @@ struct RideApp : App
         add_move_select("alt+right", "word-end");
     }
 
-    void draw(RenCache* cache) override
+    void draw(Renderer* cache) override
     {
         auto rect = ::rect<pix>::from_size(client_size);
-        cache->draw_rect(to_dip(rect), theme.window_background_color);
+        draw_rect(cache, to_dip(rect), theme.window_background_color);
 
         cache->draw_image(logo, to_dip(pix{10}), to_dip(pix{10}), theme.logo_color);
 
@@ -174,7 +174,7 @@ struct RideApp : App
         draw_view(&root, cache);
     }
 
-    void draw_view(View* view, RenCache* cache)
+    void draw_view(View* view, Renderer* cache)
     {
         view->draw(cache);
 
@@ -182,7 +182,7 @@ struct RideApp : App
         {
             if(view != get_active_view())
             {
-                cache->draw_rect( this->to_dip(view->body_rect), theme.inactive_view_color);
+                draw_rect(cache,  this->to_dip(view->body_rect), theme.inactive_view_color);
             }
         }
     }

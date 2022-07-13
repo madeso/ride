@@ -1,11 +1,9 @@
 #include "api/app.h"
 
-#include "api/sdl_dependency.h"
+#include "api/dependency_sdl.h"
 
 #include "base/vec2.h"
 
-#include "api/renderer.h"
-#include "api/rencache.h"
 #include "api/font.h"
 
 #include <cassert>
@@ -125,13 +123,17 @@ void App::set_scale(double d)
 {
     scale = d;
 
+    /*
+
     for(auto& f: loaded_fonts)
     {
         f->set_size(to_dip(f->unscaled_size));
     }
 
-     // todo(Gustav): invalidate rendercache...
+    */
 }
+
+/*
 
 std::shared_ptr<Font> App::load_font(const std::string_view& file, pix size)
 {
@@ -152,3 +154,4 @@ std::shared_ptr<Font> App::load_font(const std::string& file, pix size)
         return nullptr;
     }
 }
+*/

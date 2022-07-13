@@ -1,5 +1,4 @@
 #include "api/app.h"
-#include "api/rencache.h"
 #include "api/image.h"
 #include "api/main.h"
 
@@ -21,13 +20,13 @@ struct ImagesApp : App
         mouse = new_mouse;
     }
 
-    void draw(RenCache* cache) override
+    void draw(Renderer* cache) override
     {
-        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
+        draw_rect(cache, to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
 
         cache->draw_image(logo, to_dip(20_px), to_dip(20_px), {255, 255, 255, 255});
 
-        cache->draw_rect(to_dip(rect<pix>{mouse, {10_px, 10_px}}), Color::rgb(0, 0, 255, 255));
+        draw_rect(cache, to_dip(rect<pix>{mouse, {10_px, 10_px}}), Color::rgb(0, 0, 255, 255));
     }
 };
 

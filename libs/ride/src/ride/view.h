@@ -15,7 +15,7 @@
 
 struct App;
 struct Theme;
-struct RenCache;
+struct Renderer;
 
 
 struct scroll_size
@@ -58,10 +58,10 @@ struct View
 
     scroll_size get_scroll_size();
 
-    void draw(RenCache* cache);
+    void draw(Renderer* cache);
     void on_mouse_wheel(int dx, int dy);
 
-    virtual void draw_body(RenCache* cache) = 0;
+    virtual void draw_body(Renderer* cache) = 0;
     virtual scroll_size calculate_scroll_size() = 0;
     
     // called after client_rect and body_rect is set

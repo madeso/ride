@@ -2,11 +2,12 @@
 
 #include <cmath>
 #include <algorithm>
-#include <cassert>
 
+#include "base/assert.h"
 #include "base/vec2.h"
 #include "base/size.h"
 #include "base/side.h"
+#include "base/c.h"
 
 template<typename T>
 struct rect
@@ -59,7 +60,7 @@ struct rect
 
     T get_top() const
     {
-        return y;
+        return y + height;
     }
 
     T get_right() const
@@ -69,55 +70,67 @@ struct rect
 
     T get_bottom() const
     {
-        return y + height;
+        return y;
     }
 
     void set_left(T new_left)
     {
-        const auto old = get_left();
-        const auto diff = old - new_left;
+        const auto old_left = get_left();
+        const auto old_right = get_right();
+        const auto diff = old_left - new_left;
 
         x -= diff;
         width += diff;
 
         assert(get_left() == new_left);
+        assert(get_right() == old_right);
     }
 
     void set_top(T new_top)
     {
-        const auto old = get_top();
-        const auto diff = old - new_top;
+        const auto old_bottom = get_bottom();
+        const auto old_top = get_top();
+        const auto diff = old_top - new_top;
 
-        y -= diff;
-        height += diff;
+        height -= diff;
 
         assert(get_top() == new_top);
+        assert(get_bottom() == old_bottom);
     }
 
     void set_right(T new_right)
     {
-        const auto old = get_right();
-        const auto diff = new_right - old;
+        const auto old_left = get_left();
+        const auto old_right = get_right();
+        const auto diff = new_right - old_right;
 
         width += diff;
 
         assert(get_right() == new_right);
+        assert(get_left() == old_left);
     }
 
     void set_bottom(T new_bottom)
     {
-        const auto old = get_bottom();
-        const auto diff = new_bottom - old;
+        const auto old_bottom = get_bottom();
+        const auto old_top = get_top();
+        const auto diff = new_bottom - old_bottom;
 
         height += diff;
+        y -= diff;
 
         assert(get_bottom() == new_bottom);
+        assert(get_top() == old_top);
     }
 
+    /*
     static bool overlap(self a, self b)
     {
-        return b.x + b.width >= a.x && b.x <= a.x + a.width && b.y + b.height >= a.y &&
-            b.y <= a.y + a.height;
+        return b.x + b.width >= a.x
+            && b.x <= a.x + a.width
+            && b.y + b.height >= a.y
+            && b.y <= a.y + a.height
+            ;
     }
 
     static self intersect(self a, self b)
@@ -138,49 +151,52 @@ struct rect
         return {x1, y1, x2 - x1, y2 - y1};
     }
 
-    static self from_size(const size_type& s)
-    {
-        return {T{0}, T{0}, s.width, s.height};
-    }
-
     bool contains(const vec2_type& p) const
     {
         const auto cx = p.x >= x && x + width >= p.x;
         const auto cy = p.y >= y && y + height >= p.y;
         return cx && cy;
     }
+    */
+
+    static self from_size(const size_type& s)
+    {
+        return {T{0}, T{0}, s.width, s.height};
+    }
+
 
     static self FromL(T left, T top, T right, T bottom)
     {
-        return {left, top, right - left, bottom - top};
+        xassert(left <= right && top >= bottom, left << " <= " << right << " && " << top << ">= " << bottom);
+        return {left, bottom, right - left, top-bottom};
     }
 
     self cut_left(T a)
     {
-        T ox = this->x;
-        this->set_left(std::min(this->get_right(), this->x + a));
-        return FromL(ox, this->y, this->x, this->get_bottom());
+        T ox = this->get_left();
+        this->set_left(std::min(this->get_right(), this->get_left() + a));
+        return FromL(ox, this->get_top(), this->get_left(), this->get_bottom());
     }
 
     self cut_right(T a)
     {
         T right = this->get_right();
         this->set_right(std::max(this->x, this->get_right() - a));
-        return FromL(this->get_right(), this->y, right, this->get_bottom());
+        return FromL(this->get_right(), this->get_top(), right, this->get_bottom());
     }
 
     self cut_top(T a)
     {
-        T oy = this->y;
-        this->set_top(std::min(this->get_bottom(), this->y + a));
-        return FromL(this->x, oy, this->get_right(), this->y);
+        T oy = this->get_top();
+        this->set_top(std::max(this->get_bottom(), this->get_top() - a));
+        return FromL(this->get_left(), oy, this->get_right(), this->get_top());
     }
 
     self cut_bottom(T a)
     {
         T bottom = this->get_bottom();
-        this->set_bottom(std::max(this->y, this->get_bottom() - a));
-        return FromL(this->x, this->get_bottom(), this->get_right(), bottom);
+        this->set_bottom(std::min(this->y, this->get_bottom() + a));
+        return FromL(this->get_left(), this->get_bottom(), this->get_right(), bottom);
     }
 
     self get_cut_left(T a) const
@@ -228,28 +244,43 @@ struct rect
         return r.cut(side, a);
     }
 
+
     self Offset(const vec2_type& offset) const
     {
         const auto p = vec2_type{x, y} + offset;
         return {p.x, p.y, width, height};
     }
 
+    /*
     self CreateFromCenterMaxSize(T max_size) const
     {
         const auto s = std::min(max_size, width);
         const auto h = static_cast<T>(static_cast<float>(width - s) / 2.0f);
         return {x + h, y, s, width};
     }
+    */
 
     self Inset(T inset) const
     {
-        // todo(Gustav): handle when inset is greater than size
         const auto inset2 = inset + inset;
+        // if(inset2 > width || inset2 > height) { return {x, y, 0, 0}; }
         return {x+inset, y+inset, width - inset2, height - inset2};
     }
 
 };
 
 using recti = rect<int>;
+using Rectf = rect<float>;
+
+constexpr Rectf Cint_to_float(const recti r)
+{
+    return
+    {
+        Cint_to_float(r.x),
+        Cint_to_float(r.y),
+        Cint_to_float(r.width),
+        Cint_to_float(r.height)
+    };
+}
 
 constexpr const recti EmptyRect = {0,0, 0,0};

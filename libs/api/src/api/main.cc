@@ -3,9 +3,14 @@
 #include <iostream>
 #include <sstream>
 
-#include "api/rencache.h"
-#include "api/renderer.h"
+#include "base/c.h"
+
 #include "api/cursorcache.h"
+#include "api/log.h"
+#include "api/spritebatch.h"
+
+#include "api/dependency_opengl.h"
+#include "api/dependency_glm.h"
 
 #ifdef _WIN32
     #include <windows.h>
@@ -44,54 +49,6 @@ double get_time()
     const auto counter = SDL_GetPerformanceCounter();
     const auto frequency = SDL_GetPerformanceFrequency();
     return static_cast<double>(counter) / static_cast<double>(frequency);
-}
-
-template<typename T>
-struct ScopedValue
-{
-    ScopedValue(T* v, T new_value)
-        : value(v)
-        , old_value(*v)
-    {
-        *value = new_value;
-    }
-
-    ~ScopedValue()
-    {
-        *value = old_value;
-    }
-
-
-    T* value;
-    T old_value;
-};
-
-bool PollEvent(SDL_Event* event)
-{
-    const auto r = SDL_PollEvent(event);
-
-    if(r && event->type == SDL_WINDOWEVENT)
-    {
-        switch(event->window.event)
-        {
-        case SDL_WINDOWEVENT_RESIZED:
-        case SDL_WINDOWEVENT_EXPOSED:
-            return r;
-        }
-
-        // on some systems, when alt-tabbing to the window SDL will queue up
-        // several KEYDOWN events for the `tab` key; we flush all keydown
-        // events on focus so these are discarded
-        if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
-        {
-            SDL_FlushEvent(SDL_KEYDOWN);
-        }
-
-        // ignore this event
-        return PollEvent(event);
-    }
-
-    return r;
 }
 
 struct MetaState
@@ -133,158 +90,6 @@ void update_meta(MetaState* meta, SDL_Keycode key, bool state)
     }
 }
 
-bool step(SDL_Window* window, MetaState* meta, Ren* ren, RenCache* cache, App* app, bool first)
-{
-    std::optional<vec2i> mouse_movement;
-    int xrel = 0; int yrel = 0;
-
-    {
-        bool redraw = first;
-        app->redraw_value = nullptr;
-        auto scoped_redraw = ScopedValue<bool*>{&app->redraw_value, &redraw};
-
-        SDL_Event event;
-        while(PollEvent(&event))
-        {
-            switch(event.type)
-            {
-            case SDL_QUIT:
-                app->on_quit();
-                break;
-
-            case SDL_WINDOWEVENT:
-                switch(event.window.event)
-                {
-                    case SDL_WINDOWEVENT_RESIZED:
-                        app->on_resized
-                        (
-                            app->to_pix(dip{event.window.data1}),
-                            app->to_pix(dip{event.window.data2})
-                        );
-                        break;
-                    case SDL_WINDOWEVENT_EXPOSED:
-                        cache->invalidate();
-                        app->on_exposed();
-                        break;
-                }
-                break;
-            case SDL_DROPFILE:
-                {
-                    int mx=0; int my=0;
-                    int wx=0; int wy=0;
-                    SDL_GetGlobalMouseState(&mx, &my);
-                    SDL_GetWindowPosition(window, &wx, &wy);
-                    app->on_file_dropped
-                    (
-                        event.drop.file,
-                        app->to_pix(dip{mx - wx}),
-                        app->to_pix(dip{my - wy})
-                    );
-                    SDL_free(event.drop.file);
-                }
-                break;
-            case SDL_KEYDOWN:
-                update_meta(meta, event.key.keysym.sym, true);
-                app->on_key_pressed({key_from_sdl_keycode(event.key.keysym.sym), meta->to_meta()});
-                break;
-            case SDL_KEYUP:
-                update_meta(meta, event.key.keysym.sym, false);
-                app->on_key_released({key_from_sdl_keycode(event.key.keysym.sym), meta->to_meta()});
-                break;
-
-            case SDL_TEXTINPUT:
-                app->on_text_input(event.text.text);
-                break;
-
-            case SDL_MOUSEBUTTONDOWN:
-                if (event.button.button == 1) { SDL_CaptureMouse(SDL_TRUE); }
-                app->on_mouse_pressed
-                (
-                    mousebutton_from_sdl_button(event.button.button),
-                    meta->to_meta(),
-                    {app->to_pix(dip{event.button.x}), app->to_pix(dip{event.button.y})},
-                    event.button.clicks
-                );
-                break;
-
-            case SDL_MOUSEBUTTONUP:
-                if (event.button.button == 1) { SDL_CaptureMouse(SDL_FALSE); }
-                app->on_mouse_released
-                (
-                    mousebutton_from_sdl_button(event.button.button),
-                    meta->to_meta(),
-                    {app->to_pix(dip{event.button.x}), app->to_pix(dip{event.button.y})}
-                );
-                break;
-
-            case SDL_MOUSEMOTION:
-                mouse_movement = vec2i{event.motion.x, event.motion.y};
-                xrel += event.motion.xrel;
-                yrel += event.motion.yrel;
-                break;
-
-            case SDL_MOUSEWHEEL:
-                {
-                    const auto scale = event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED ? -1:1;
-                    app->on_mouse_wheel(event.wheel.x * scale, event.wheel.y * scale);
-                }
-                break;
-            }
-
-            redraw = true;
-        }
-        app->update();
-
-        if(mouse_movement)
-        {
-            app->on_mouse_moved
-            (
-                meta->to_meta(),
-                vec2<pix>
-                {
-                    app->to_pix(dip{mouse_movement->x}),
-                    app->to_pix(dip{mouse_movement->y})
-                },
-                app->to_pix(dip{xrel}),
-                app->to_pix(dip{yrel})
-            );
-        }
-
-        if(redraw == false)
-        {
-            return false;
-        }
-    }
-
-    cache->begin_frame();
-
-    const auto ss = ren->get_size();
-    app->client_size = size<pix>
-    {
-        app->to_pix(dip{ss.width}),
-        app->to_pix(dip{ss.height})
-    };
-    app->draw(cache);
-    cache->end_frame();
-
-    return true;
-}
-
-bool has_focus(SDL_Window* window)
-{
-    const auto flags = SDL_GetWindowFlags(window);
-    return (flags & SDL_WINDOW_INPUT_FOCUS) != 0;
-}
-
-void please_sleep(double seconds)
-{
-    SDL_Delay(static_cast<Uint32>(seconds * 1000));
-}
-
-void wait_event(double seconds)
-{
-    SDL_WaitEventTimeout(nullptr, static_cast<int>(seconds * 1000));
-}
 
 template<typename T>
 T parse(const std::string& str)
@@ -293,6 +98,159 @@ T parse(const std::string& str)
     T t;
     ss >> t;
     return t;
+}
+
+
+
+struct Renderer
+{
+    Render2 render;
+};
+
+void draw_rect(Renderer* ren, const rect<dip>& r, Color c)
+{
+    // LOG_INFO("Drawing rect {} {} {} {}", r.x.value, r.y.value, r.width.value, r.height.value);
+    ren->render.batch.quad
+    (
+        std::nullopt,
+        {
+            Cint_to_float(r.x.value),
+            Cint_to_float(r.y.value),
+            Cint_to_float(r.width.value),
+            Cint_to_float(r.height.value)
+        },
+        std::nullopt,
+        {c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f}
+    );
+
+    // submit after each quad?
+    ren->render.batch.submit();
+}
+
+
+void on_event
+(
+    const SDL_Event& event, App* app, int* window_width, int* window_height,
+    MetaState& meta, std::optional<cursor_type>& last_cursor, cursor_cache& c_cache,
+    SDL_Window* window
+)
+{
+    // LOG_INFO("Got event {}", event.type);
+    switch(event.type)
+    {
+    case SDL_QUIT:
+        app->on_quit();
+        break;
+
+    case SDL_WINDOWEVENT:
+        switch(event.window.event)
+        {
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+                // lite:
+                // on some systems, when alt-tabbing to the window SDL will queue up
+                // several KEYDOWN events for the `tab` key; we flush all keydown
+                // events on focus so these are discarded
+                SDL_FlushEvent(SDL_KEYDOWN);
+                break;
+            case SDL_WINDOWEVENT_SIZE_CHANGED:
+                *window_width = event.window.data1;
+                *window_height = event.window.data2;
+                app->client_size =
+                {
+                    app->to_pix(dip{*window_width}),
+                    app->to_pix(dip{*window_height})
+                };
+                app->on_resized
+                (
+                    app->to_pix(dip{*window_width}),
+                    app->to_pix(dip{*window_height})
+                );
+                break;
+            case SDL_WINDOWEVENT_EXPOSED:
+                app->on_exposed();
+                break;
+        }
+        break;
+    case SDL_DROPFILE:
+        {
+            // todo(Gustav): is this accurate?
+            int mx=0; int my=0;
+            int wx=0; int wy=0;
+            SDL_GetGlobalMouseState(&mx, &my);
+            SDL_GetWindowPosition(window, &wx, &wy);
+            app->on_file_dropped
+            (
+                event.drop.file,
+                app->to_pix(dip{mx - wx}),
+                app->to_pix(dip{my - wy})
+            );
+            SDL_free(event.drop.file);
+        }
+        break;
+    case SDL_KEYDOWN:
+        update_meta(&meta, event.key.keysym.sym, true);
+        app->on_key_pressed({key_from_sdl_keycode(event.key.keysym.sym), meta.to_meta()});
+        break;
+    case SDL_KEYUP:
+        update_meta(&meta, event.key.keysym.sym, false);
+        app->on_key_released({key_from_sdl_keycode(event.key.keysym.sym), meta.to_meta()});
+        break;
+    case SDL_TEXTINPUT:
+        app->on_text_input(event.text.text);
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == 1) { SDL_CaptureMouse(SDL_TRUE); }
+        app->on_mouse_pressed
+        (
+            mousebutton_from_sdl_button(event.button.button),
+            meta.to_meta(),
+            {app->to_pix(dip{event.button.x}), app->to_pix(dip{*window_height - event.button.y})},
+            event.button.clicks
+        );
+        break;
+    case SDL_MOUSEBUTTONUP:
+        if (event.button.button == 1) { SDL_CaptureMouse(SDL_FALSE); }
+        app->on_mouse_released
+        (
+            mousebutton_from_sdl_button(event.button.button),
+            meta.to_meta(),
+            {app->to_pix(dip{event.button.x}), app->to_pix(dip{*window_height - event.button.y})}
+        );
+        break;
+    case SDL_MOUSEMOTION:
+        {
+        const int mx = event.motion.x;
+        const int my = *window_height - event.motion.y;
+        const int rx = event.motion.xrel;
+        const int ry = -event.motion.yrel;
+
+        // LOG_INFO("Mouse moved to {} {}, ({} {})", mx, my, rx, ry);
+        app->on_mouse_moved
+        (
+            meta.to_meta(),
+            vec2<pix>
+            {
+                app->to_pix(dip{mx}),
+                app->to_pix(dip{my})
+            },
+            app->to_pix(dip{rx}),
+            app->to_pix(dip{ry})
+        );
+        }
+        break;
+    case SDL_MOUSEWHEEL:
+        {
+            const auto scale = event.wheel.direction == SDL_MOUSEWHEEL_FLIPPED ? -1:1;
+            app->on_mouse_wheel(event.wheel.x * scale, event.wheel.y * scale);
+        }
+        break;
+    }
+
+    if(last_cursor.has_value() == false || *last_cursor != app->cursor)
+    {
+        last_cursor = app->cursor;
+        c_cache.set_cursor(app->cursor);
+    }
 }
 
 int run_main(int argc, char** argv, CreateAppFunction create_app)
@@ -315,21 +273,31 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     SDL_EnableScreenSaver();
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 
-#ifdef SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR /* Available since 2.0.8 */
-    SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
-#endif
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 #if SDL_VERSION_ATLEAST(2, 0, 5)
     SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
 #endif
 
+
+    SDL_GL_SetSwapInterval(0);
+
     SDL_DisplayMode dm;
     SDL_GetCurrentDisplayMode(0, &dm);
 
-    const int initial_width = static_cast<int>(dm.w * 0.8);
-    const int initial_height = static_cast<int>(dm.h * 0.8);
+    int window_width = static_cast<int>(dm.w * 0.8);
+    int window_height = static_cast<int>(dm.h * 0.8);
 
-    bool render_debug = false;
     std::optional<double> custom_scale;
 
     enum class ParserState
@@ -345,11 +313,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
         switch(state)
         {
         case ParserState::first:
-            if(arg == "--debug")
-            {
-                render_debug = true;
-            }
-            else if(arg == "--scale")
+            if(arg == "--scale")
             {
                 state = ParserState::expect_custom_scale;
             }
@@ -374,25 +338,50 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
         assert(false && "Invalid parser state");
     }
 
-    SDL_Window* window = SDL_CreateWindow(
-        "Ride", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, initial_width, initial_height,
-        SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN);
+    SDL_Window* window = SDL_CreateWindow
+    (
+        "Ride",
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        window_width, window_height,
+        SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_HIDDEN | SDL_WINDOW_OPENGL
+    );
+    if(window == nullptr)
+    {
+        LOG_ERROR("Failed to create window: {}", SDL_GetError());
+        return -1;
+    }
+
     init_window_icon();
 
-    Ren ren;
-    ren.init(window);
+    SDL_GLContext glcontext = SDL_GL_CreateContext(window);
 
-    RenCache cache{&ren};
-    std::optional<cursor_type> last_cursor;
-    cursor_cache c_cache;
+    if(glcontext == nullptr)
+    {
+        LOG_ERROR("Could not create window: {}", SDL_GetError());
 
-    cache.show_debug = render_debug;
+        SDL_DestroyWindow(window);
+        return -1;
+    }
+
+    if (!gladLoadGLLoader(SDL_GL_GetProcAddress))
+    {
+        LOG_ERROR("Failed to initialize OpenGL context");
+
+        SDL_GL_DeleteContext(glcontext);
+        SDL_DestroyWindow(window);
+        return -1;
+    }
+
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glCullFace(GL_BACK);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     auto app = create_app({});
     app->client_size =
     {
-        app->to_pix(dip{initial_height}),
-        app->to_pix(dip{initial_width})
+        app->to_pix(dip{window_width}),
+        app->to_pix(dip{window_height})
     };
 
     if(custom_scale)
@@ -400,32 +389,70 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
         app->set_scale(*custom_scale);
     }
 
-    constexpr double config_fps = 60.0;
-
-    bool first = true;
-
     MetaState meta;
+    std::optional<cursor_type> last_cursor;
+    cursor_cache c_cache;
+
+    Renderer rc;
+
+    LOG_INFO("Launching window...");
+
+    SDL_ShowWindow(window);
 
     while (app->run)
     {
-        const auto frame_start = get_time();
-        const auto did_redraw = step(window, &meta, &ren, &cache, app.get(), first);
-
-        if(last_cursor.has_value() == false || *last_cursor != app->cursor)
+        SDL_Event event;
+        if(SDL_WaitEvent(&event) == 0)
         {
-            last_cursor = app->cursor;
-            c_cache.set_cursor(app->cursor);
+            LOG_ERROR("Error waiting for event: {} aborting...", SDL_GetError());
+            app->run = false;
+            break;
+        }
+        on_event
+        (
+            event, app.get(), &window_width, &window_height,
+            meta, last_cursor, c_cache,
+            window
+        );
+
+        while (SDL_PollEvent(&event))
+        {
+            on_event
+            (
+                event, app.get(), &window_width, &window_height,
+                meta, last_cursor, c_cache,
+                window
+            );
+        }
+        
+        app->update();
+
+        // render
+
+        const auto error = SDL_GL_MakeCurrent(window, glcontext);
+        if(error != 0)
+        {
+            LOG_ERROR("Unable to make current");
         }
 
-        first = false;
-        if(!did_redraw && !has_focus(window))
+        // todo(Gustav): setup 2d rendering for entire viewport
         {
-            wait_event(0.25);
+            glViewport(0, 0, Cint_to_float(window_width), Cint_to_float(window_height));
+
+            const auto camera = glm::mat4(1.0f);
+            const auto projection = glm::ortho(0.0f, Cint_to_float(window_width), 0.0f, Cint_to_float(window_height));
+            rc.render.quad_shader.use();
+            rc.render.quad_shader.set_mat(rc.render.view_projection_uniform, projection);
+            rc.render.quad_shader.set_mat(rc.render.transform_uniform, camera);
+
         }
-        const auto elapsed = get_time() - frame_start;
-        please_sleep(std::max(0.0, (1.0 / config_fps) - elapsed));
+        glClear(GL_COLOR_BUFFER_BIT);
+        app->draw(&rc);
+        rc.render.batch.submit();
+        glFinish();
+        SDL_GL_SwapWindow(window);
     }
-
+    SDL_GL_DeleteContext(glcontext);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
