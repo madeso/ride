@@ -139,7 +139,7 @@ bind_texture(const Uniform& uniform, const Texture& texture)
 }
 
 
-Texture
+std::optional<Texture>
 LoadImage
 (
     const unsigned char* image_source,
@@ -180,7 +180,7 @@ LoadImage
 }
 
 
-Texture
+std::optional<Texture>
 load_image_from_embedded
 (
     const embedded_binary& image_binary,
@@ -213,4 +213,19 @@ load_image_from_color
     {
         &pixel, 1, 1, te, trs, t
     };
+}
+
+
+std::shared_ptr<Texture>
+load_shared_texture(const embedded_binary& image_binary)
+{
+    auto texture = load_image_from_embedded(image_binary, TextureEdge::clamp, TextureRenderStyle::smooth, Transparency::include);
+    if(texture)
+    {
+        return std::make_shared<Texture>(std::move(*texture));
+    }
+    else
+    {
+        return nullptr;
+    }
 }

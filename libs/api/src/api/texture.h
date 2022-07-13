@@ -1,10 +1,13 @@
 #pragma once
 
+#include <optional>
+#include <memory>
+
 #include "api/uniform.h"
 
 #include "embed/types.h"
 #include "base/ints.h"
-#include "api/dependency_opengl.h"
+// #include "api/dependency_opengl.h"
 
 
 enum class TextureEdge
@@ -60,7 +63,7 @@ struct Texture
 void
 bind_texture(const Uniform& uniform, const Texture& texture);
 
-Texture
+std::optional<Texture>
 load_image_from_embedded
 (
     const embedded_binary& image_binary,
@@ -77,3 +80,6 @@ load_image_from_color
     TextureRenderStyle trs,
     Transparency t
 );
+
+std::shared_ptr<Texture>
+load_shared_texture(const embedded_binary& image_binary);

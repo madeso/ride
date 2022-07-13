@@ -55,21 +55,21 @@ target_link_libraries(example_squares
 )
 
 
-# add_executable(
-#     example_images WIN32 MACOSX_BUNDLE
-# 	examples/images.cc
-# )
-# set_crt_to_static(example_images)
-# target_link_libraries(example_images
-#     PRIVATE
-#         project_options
-#         project_warnings
-#     PUBLIC
-#         api
-#         data_logo
-# )
-# 
-# 
+add_executable(
+    example_images WIN32 MACOSX_BUNDLE
+	examples/images.cc
+)
+set_crt_to_static(example_images)
+target_link_libraries(example_images
+    PRIVATE
+        project_options
+        project_warnings
+    PUBLIC
+        api
+        data_logo
+)
+
+
 # add_executable(
 #     example_font WIN32 MACOSX_BUNDLE
 # 	examples/font.cc

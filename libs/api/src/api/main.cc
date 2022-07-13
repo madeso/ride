@@ -127,6 +127,28 @@ void draw_rect(Renderer* ren, const rect<dip>& r, Color c)
     ren->render.batch.submit();
 }
 
+void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, dip x, dip y, Color c)
+{
+    LOG_INFO("Drawing image {} {} {} {}", x.value, y.value, texture->width, texture->height);
+    ren->render.batch.quad
+    (
+        texture.get(),
+        {
+            Cint_to_float(x.value),
+            Cint_to_float(y.value),
+
+            // todo(Gustav): size of the texture? take rect instead of xy
+            Cint_to_float(texture->width),
+            Cint_to_float(texture->height)
+        },
+        std::nullopt,
+        {c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f}
+    );
+
+    // submit after each quad?
+    ren->render.batch.submit();
+}
+
 
 void on_event
 (

@@ -161,7 +161,7 @@ struct RideApp : App
         auto rect = ::rect<pix>::from_size(client_size);
         draw_rect(cache, to_dip(rect), theme.window_background_color);
 
-        cache->draw_image(logo, to_dip(pix{10}), to_dip(pix{10}), theme.logo_color);
+        draw_image(cache, logo, to_dip(pix{10}), to_dip(pix{10}), theme.logo_color);
 
         const auto browser_rect = rect.cut_left(150_px);
 
