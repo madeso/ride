@@ -2,21 +2,31 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
+
+#include "base/rect.h"
+#include "base/color.h"
 
 #include "api/dependency_sdl.h"
-
 #include "api/app.h"
-#include "base/color.h"
+
+
+struct Renderer;
+struct Texture;
 
 struct StartupArguments
 {
 };
 
-struct Renderer;
-struct Texture;
+enum class Submit
+{
+    no, yes
+};
 
 void draw_rect(Renderer* ren, const rect<dip>& rect, Color color);
-void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, dip x, dip y, Color tint);
+void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, const rect<dip>& rect, Color tint, std::optional<Rectf> sub = {}, Submit submit=Submit::yes);
+void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, dip x, dip y, Color tint, std::optional<Rectf> sub = {}, Submit submit=Submit::yes);
+void submit_renderer(Renderer* ren);
 
 using CreateAppFunction = std::function<std::unique_ptr<App> (const StartupArguments&)>;
 int run_main(int argc, char** argv, CreateAppFunction create_app);

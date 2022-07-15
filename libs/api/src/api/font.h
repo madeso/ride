@@ -9,9 +9,8 @@
 #include "base/units.h"
 
 struct Color;
-struct Ren;
-
 struct FontImpl;
+struct Renderer;
 
 struct Font
 {
@@ -38,4 +37,4 @@ struct Font
     dip get_height() const;
 };
 
-int draw_text(Ren* ren, Font* font, const std::string& text, int x, int y, Color color);
+dip draw_text(Renderer* ren, std::shared_ptr<Font> font, const std::string& text, dip x, dip y, Color color);

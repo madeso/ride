@@ -9,7 +9,7 @@ struct ImagesApp : App
     std::shared_ptr<Font> font;
 
     ImagesApp()
-        : font(load_font(Font::default_font, 12_px))
+        : font(load_font(Font::default_font, 24_px))
     {
     }
 
@@ -22,9 +22,9 @@ struct ImagesApp : App
     {
         draw_rect(cache, to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
 
-        cache->draw_text(font, "Hello world", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
+        draw_text(cache, font, "Hello world", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
 
-        cache->draw_text(font, "mouse", to_dip(mouse.x), to_dip(mouse.y), {0, 0, 255, 255});
+        draw_text(cache, font, "mouse", to_dip(mouse.x), to_dip(mouse.y), {0, 0, 255, 255});
     }
 };
 

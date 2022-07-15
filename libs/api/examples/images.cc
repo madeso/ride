@@ -24,9 +24,9 @@ struct ImagesApp : App
     {
         draw_rect(cache, to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
 
-        draw_image(cache, logo, to_dip(20_px), to_dip(20_px), {255, 0, 0, 255});
-
         draw_rect(cache, to_dip(rect<pix>{mouse, {10_px, 10_px}}), Color::rgb(0, 0, 255, 255));
+        
+        draw_image(cache, logo, to_dip(20_px), to_dip(20_px), {255, 0, 0, 255});
     }
 };
 

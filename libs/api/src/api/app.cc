@@ -133,8 +133,6 @@ void App::set_scale(double d)
     */
 }
 
-/*
-
 std::shared_ptr<Font> App::load_font(const std::string_view& file, pix size)
 {
     return load_font(std::string(file), size);
@@ -154,4 +152,3 @@ std::shared_ptr<Font> App::load_font(const std::string& file, pix size)
         return nullptr;
     }
 }
-*/

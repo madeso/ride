@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "base/vec2.h"
 #include "base/size.h"
@@ -13,6 +14,7 @@
 #include "base/units.h"
 
 struct Renderer;
+struct Font;
 
 struct App
 {
@@ -37,8 +39,8 @@ struct App
     // todo(Gustav): wrap Renderer to take virtual sizes to make the usage prettier
     virtual void draw(Renderer* cache) = 0;
 
-    // std::shared_ptr<Font> load_font(const std::string_view& file, pix size);
-    // std::shared_ptr<Font> load_font(const std::string& file, pix size);
+    std::shared_ptr<Font> load_font(const std::string_view& file, pix size);
+    std::shared_ptr<Font> load_font(const std::string& file, pix size);
 
     dip to_dip(pix p) const;
     rect<dip> to_dip(const rect<pix>& p) const;
@@ -53,5 +55,5 @@ struct App
     cursor_type cursor = cursor_type::arrow;
     bool* redraw_value;
 
-    // std::vector<std::shared_ptr<Font>> loaded_fonts;
+    std::vector<std::shared_ptr<Font>> loaded_fonts;
 };

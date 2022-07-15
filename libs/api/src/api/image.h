@@ -10,7 +10,7 @@
 
 struct Image
 {
-    std::vector<std::uint8_t> pixels;
+    std::vector<std::uint8_t> pixels; // rgba
     int width;
     int height;
 

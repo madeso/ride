@@ -10,7 +10,10 @@
 #include "base/rect.h"
 #include "base/c.h"
 
+#include "api/main.h"
 #include "api/image.h"
+#include "api/texture.h"
+#include "api/log.h"
 
 #include "font.ttf.h"
 
@@ -56,7 +59,7 @@ struct Glyph
 struct GlyphSet
 {
     bool loaded = false;
-    Image image;
+    std::shared_ptr<Texture> texture;
 
     std::array<Glyph, NUM_CHARS> glyphs;
 
@@ -97,16 +100,24 @@ struct GlyphSet
         }
 
         /* convert 8bit data to 32bit */
-        this->image.setup(width, height);
+        Image image;
+        image.setup(width, height);
         for (int y = 0; y < height; y += 1)
         {
             for (int x = 0; x < width; x += 1)
             {
                 uint8_t n = pixels[Cs(y * width + x)];
-                this->image.set_color(x, y, Color::rgb(255, 255, 255, n));
+                image.set_color(x, y, Color::rgb(255, 255, 255, n));
             }
         }
 
+        this->texture = std::make_shared<Texture>
+        (
+            image.pixels.data(), image.width, image.height,
+            TextureEdge::clamp,
+            TextureRenderStyle::pixel,
+            Transparency::include
+        );
         loaded = true;
         return true;
     }
@@ -254,23 +265,45 @@ dip Font::get_height() const
     return m->data.height;
 }
 
-int draw_text(Ren* ren, Font* font, const std::string& text, int x, int y, Color color)
+
+dip draw_text(Renderer* ren, std::shared_ptr<Font> font, const std::string& text, dip x, dip y, Color color)
 {
+    // todo(Gustav): investigate dip usage?
+
     const auto codepoints = utf8_to_codepoints(text);
     for (const auto codepoint : codepoints)
     {
         auto* set = font->m->get_glyphset(codepoint);
         auto* g = set->get_glyph(codepoint);
-        auto rect = recti
+        const float w = set->texture->width;
+        const float h = set->texture->height;
+
+        const auto sx = g->x1 - g->x0;
+        const auto sy = g->y1 - g->y0;
+        const auto px = x + dip{g->xoff};
+        const auto py = y - dip{g->yoff} - dip{sy} + font->m->data.height;
+        
+        const auto texture_rect = Rectf
         {
-            g->x0,
-            g->y0,
-            g->x1 - g->x0,
-            g->y1 - g->y0
+            g->x0 / w ,
+            (g->y0+sy) /h,
+            sx / w,
+            -sy / h
         };
-        ren->draw_image(&set->image, rect, x + g->xoff, y + g->yoff, color);
-        x += g->xadvance;
+        const auto char_rect = rect<dip>
+        {
+            px,
+            py,
+            dip{sx},
+            dip{sy}
+        };
+        
+        draw_image(ren, set->texture, char_rect, color, texture_rect, Submit::no);
+
+        x += dip{g->xadvance};
     }
+
+    submit_renderer(ren);
 
     return x;
 }

@@ -1,7 +1,7 @@
 set(src
     src/api/app.cc src/api/app.h
     src/api/cursorcache.cc src/api/cursorcache.h
-    # src/api/font.cc src/api/font.h
+    src/api/font.cc src/api/font.h
     src/api/image.cc src/api/image.h
     src/api/key.cc src/api/key.h
     src/api/log.cc src/api/log.h
@@ -70,15 +70,15 @@ target_link_libraries(example_images
 )
 
 
-# add_executable(
-#     example_font WIN32 MACOSX_BUNDLE
-# 	examples/font.cc
-# )
-# set_crt_to_static(example_font)
-# target_link_libraries(example_font
-#     PRIVATE
-#         project_options
-#         project_warnings
-#     PUBLIC
-#         api
-# )
+add_executable(
+    example_font WIN32 MACOSX_BUNDLE
+	examples/font.cc
+)
+set_crt_to_static(example_font)
+target_link_libraries(example_font
+    PRIVATE
+        project_options
+        project_warnings
+    PUBLIC
+        api
+)
