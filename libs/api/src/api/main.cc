@@ -105,6 +105,7 @@ T parse(const std::string& str)
 struct Renderer
 {
     Render2 render;
+    std::vector<rect<dip>> rects;
 };
 
 void draw_rect(Renderer* ren, const rect<dip>& r, Color c)
@@ -166,9 +167,69 @@ void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, const rect<dip>
     }
 }
 
+void update_stencil(Renderer* c)
+{
+    if(c->rects.empty())
+    {
+        glDisable(GL_STENCIL_TEST);
+    }
+    else
+    {
+        glEnable(GL_STENCIL_TEST);
+        glClear(GL_STENCIL_BUFFER_BIT);
+
+        // enable writing, increase when succeeded
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF); 
+        glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+        for(const auto& r: c->rects)
+        {
+            c->render.batch.quad
+            (
+                nullptr,
+                {
+                    Cint_to_float(r.x.value),
+                    Cint_to_float(r.y.value),
+                    Cint_to_float(r.width.value),
+                    Cint_to_float(r.height.value),
+                },
+                std::nullopt,
+                {255, 255, 255, 255}
+            );
+        }
+        c->render.batch.submit();
+        glStencilMask(0x00); // disable write
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); 
+        glStencilFunc(GL_EQUAL, c->rects.size(), 0xFF);
+    }
+}
+
+void push_clip_rect(Renderer* c, const rect<dip>& r)
+{
+    c->rects.emplace_back(r);
+    update_stencil(c);
+}
+
+void pop_clip_rect(Renderer* c)
+{
+    c->rects.pop_back();
+    update_stencil(c);
+}
+
 void submit_renderer(Renderer* ren)
 {
     ren->render.batch.submit();
+}
+
+ClipScope::ClipScope(Renderer* c, const rect<dip>& r)
+    : cache(c)
+{
+    push_clip_rect(cache, r);
+}
+
+ClipScope::~ClipScope()
+{
+    pop_clip_rect(cache);
 }
 
 
@@ -490,7 +551,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
             rc.render.quad_shader.set_mat(rc.render.transform_uniform, camera);
 
         }
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         app->draw(&rc);
         rc.render.batch.submit();
         glFinish();

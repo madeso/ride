@@ -82,3 +82,17 @@ target_link_libraries(example_font
     PUBLIC
         api
 )
+
+
+add_executable(
+    example_scope WIN32 MACOSX_BUNDLE
+	examples/scope.cc
+)
+set_crt_to_static(example_scope)
+target_link_libraries(example_scope
+    PRIVATE
+        project_options
+        project_warnings
+    PUBLIC
+        api
+)

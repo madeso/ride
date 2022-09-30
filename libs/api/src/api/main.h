@@ -28,5 +28,13 @@ void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, const rect<dip>
 void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, dip x, dip y, Color tint, std::optional<Rectf> sub = {}, Submit submit=Submit::yes);
 void submit_renderer(Renderer* ren);
 
+struct ClipScope
+{
+    Renderer* cache;
+
+    ClipScope(Renderer* c, const rect<dip>& r);
+    ~ClipScope();
+};
+
 using CreateAppFunction = std::function<std::unique_ptr<App> (const StartupArguments&)>;
 int run_main(int argc, char** argv, CreateAppFunction create_app);
