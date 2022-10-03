@@ -17,14 +17,39 @@ struct App;
 struct Theme;
 struct Renderer;
 
+/*
 
-struct scroll_size
+ body
+
+ +       +---------+       |
+ |       |         |       |
+ |       |         |       | offset (positive)
+ |       |         |       |
+ |       |         |       |
+ |       |         |       V
+ |    +---------------+    +
+ |    |  |         |  |    |
+ |    |  |         |  |    | scroll
+ |    |  |         |  |    |
+ |    +---------------+    +
+ |       |         |
+ |       |         |
+ |       |         |
+ |       |         |
+ |       |         |
+ +       +---------+
+
+
+*/
+
+
+struct ScrollSize
 {
     std::optional<pix> width;
     std::optional<pix> height;
 };
 
-struct scrollbar_data
+struct ScrollbarData
 {
     rect<pix> through_rect;
     rect<pix> thumb_rect;
@@ -46,8 +71,8 @@ struct View
 
     // excluding scrollbar
     rect<pix> body_rect;
-    std::optional<scrollbar_data> vertical_scrollbar_data;
-    std::optional<scrollbar_data> horizontal_scrollbar_data;
+    std::optional<ScrollbarData> vertical_scrollbar_data;
+    std::optional<ScrollbarData> horizontal_scrollbar_data;
 
     // get body rect in view space, (0,0) is top of unscrolled document
 
@@ -56,13 +81,13 @@ struct View
     View();
     virtual ~View() = default;
 
-    scroll_size get_scroll_size();
+    ScrollSize get_scroll_size();
 
     void draw(Renderer* cache);
     void on_mouse_wheel(int dx, int dy);
 
     virtual void draw_body(Renderer* cache) = 0;
-    virtual scroll_size calculate_scroll_size() = 0;
+    virtual ScrollSize calculate_scroll_size() = 0;
     
     // called after client_rect and body_rect is set
     virtual void on_layout_body();

@@ -20,11 +20,11 @@ struct Node
     Node(const std::string& n, const std::string& p);
     virtual ~Node();
 
-    bool IsHidden() const;
+    bool is_hidden() const;
 
-    virtual bool OnClick(bool is_doubleclick, filesystem* fs, const Theme& theme) = 0;
-    virtual void Add(std::vector<Node*>* ret, int depth) = 0;
-    virtual Color GetColor(const Theme&) const = 0;
+    virtual bool on_click(bool is_doubleclick, filesystem* fs, const Theme& theme) = 0;
+    virtual void add_to_list(std::vector<Node*>* ret, int depth) = 0;
+    virtual Color get_text_color(const Theme&) const = 0;
 };
 
 
@@ -48,12 +48,12 @@ struct ViewFilesystem : public View
     void update_rects_for_entries();
     void Populate();
     pix calculate_line_height() const;
-    pix LineNumberToY(std::size_t line) const;
+    pix line_number_to_y(std::size_t line) const;
     rect<pix> hit_rect_for_node(Node* node);
     Node* get_node_under_cursor(const vec2<pix> relative_mouse);
     void update_hover();
 
-    scroll_size calculate_scroll_size() override;
+    ScrollSize calculate_scroll_size() override;
     void draw_body(Renderer* cache) override;
     void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override;
     void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse) override;

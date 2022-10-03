@@ -91,7 +91,7 @@ pix ViewDoc::get_full_document_width()
 }
 
 
-scroll_size ViewDoc::calculate_scroll_size()
+ScrollSize ViewDoc::calculate_scroll_size()
 {
     const auto line_height = calculate_line_height();
     

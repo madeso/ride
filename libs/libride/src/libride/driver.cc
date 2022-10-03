@@ -1550,7 +1550,7 @@ namespace ride
         Node(const std::string& n, const std::string p) : name(n), path(p) {}
         virtual ~Node() {}
 
-        bool IsHidden() const
+        bool is_hidden() const
         {
             if(name.empty()) { return false; }
             else { return name[0] == '.'; }
@@ -1568,7 +1568,7 @@ namespace ride
 
         Rgb GetColor(const Theme& theme) const override
         {
-            return IsHidden() ? theme.filesys_hidden_color : theme.filesys_file_color;
+            return is_hidden() ? theme.filesys_hidden_color : theme.filesys_file_color;
         }
 
         bool OnClick(bool is_doubleclick, std::shared_ptr<FileSystem>, const Settings&) override
@@ -1608,7 +1608,7 @@ namespace ride
 
         Rgb GetColor(const Theme& theme) const override
         {
-            return IsHidden() ? theme.filesys_hidden_color : theme.filesys_folder_color;
+            return is_hidden() ? theme.filesys_hidden_color : theme.filesys_folder_color;
         }
 
         bool OnClick(bool, std::shared_ptr<FileSystem> filesystem, const Settings& settings) override

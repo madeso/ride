@@ -11,9 +11,9 @@
 #include "ride/theme.h"
 
 
-std::vector<std::shared_ptr<Node>> Create(const std::vector<FileEntry>& files);
+std::vector<std::shared_ptr<Node>> create_view_entries(const std::vector<FileEntry>& files);
 
-ListSettings list_settings_from_theme(const Theme& theme)
+ListSettings create_list_settings_from_theme(const Theme& theme)
 {
     return {theme.sort_files, theme.directories_first};
 }
@@ -33,7 +33,7 @@ Node::Node(const std::string& n, const std::string& p)
 Node::~Node() = default;
 
 
-bool Node::IsHidden() const
+bool Node::is_hidden() const
 {
     if(name.empty()) { return false; }
     else { return name[0] == '.'; }
@@ -47,12 +47,12 @@ struct FileNode : public Node
 {
     explicit FileNode(const FileEntry& f) : Node(f.name, f.path) {}
 
-    Color GetColor(const Theme& theme) const override
+    Color get_text_color(const Theme& theme) const override
     {
-        return IsHidden() ? theme.filesys_hidden_color : theme.filesys_file_color;
+        return is_hidden() ? theme.filesys_hidden_color : theme.filesys_file_color;
     }
 
-    bool OnClick(bool is_doubleclick, filesystem*, const Theme&) override
+    bool on_click(bool is_doubleclick, filesystem*, const Theme&) override
     {
         if(is_doubleclick)
         {
@@ -60,7 +60,7 @@ struct FileNode : public Node
         }
         return false;
     }
-    void Add(std::vector<Node*>* ret, int d) override
+    void add_to_list(std::vector<Node*>* ret, int d) override
     {
         ret->emplace_back(this);
         depth = d;
@@ -89,12 +89,12 @@ struct DirectoryNode : public Node
         else        { name = Str{} << "+ " << base_name; }
     }
 
-    Color GetColor(const Theme& theme) const override
+    Color get_text_color(const Theme& theme) const override
     {
-        return IsHidden() ? theme.filesys_hidden_color : theme.filesys_folder_color;
+        return is_hidden() ? theme.filesys_hidden_color : theme.filesys_folder_color;
     }
 
-    bool OnClick(bool, filesystem* filesystem, const Theme& theme) override
+    bool on_click(bool, filesystem* filesystem, const Theme& theme) override
     {
         if(is_open)
         {
@@ -104,22 +104,23 @@ struct DirectoryNode : public Node
         else
         {
             is_open = true;
-            auto folders_and_files = filesystem->list(path, list_settings_from_theme(theme));
+            auto folders_and_files = filesystem->list(path, create_list_settings_from_theme(theme));
             if(folders_and_files)
             {
-                children = Create(*folders_and_files);
+                children = create_view_entries(*folders_and_files);
             }
         }
 
         UpdateName();
         return true;
     }
-    void Add(std::vector<Node*>* ret, int d) override
+
+    void add_to_list(std::vector<Node*>* ret, int d) override
     {
         ret->emplace_back(this);
         for(auto c: children)
         {
-            c->Add(ret, d+1);
+            c->add_to_list(ret, d+1);
         }
         depth = d;
     }
@@ -129,20 +130,20 @@ struct DirectoryNode : public Node
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-std::shared_ptr<Node> Create(const FileEntry& f)
+std::shared_ptr<Node> create_view_entry(const FileEntry& f)
 {
     if(f.is_directory) { return std::make_shared<DirectoryNode>(f); }
     else { return std::make_shared<FileNode>(f); }
 }
 
 
-std::vector<std::shared_ptr<Node>> Create(const std::vector<FileEntry>& files)
+std::vector<std::shared_ptr<Node>> create_view_entries(const std::vector<FileEntry>& files)
 {
     std::vector<std::shared_ptr<Node>> entries;
 
     for(const auto& e: files)
     {
-        entries.emplace_back(Create(e));
+        entries.emplace_back(create_view_entry(e));
     }
 
     return entries;
@@ -161,7 +162,7 @@ std::vector<Node*> ViewFilesystem::CreateEntries()
     std::vector<Node*> ret;
     for(auto r: roots)
     {
-        r->Add(&ret, 0);
+        r->add_to_list(&ret, 0);
     }
 
     return ret;
@@ -177,7 +178,7 @@ void ViewFilesystem::update_rects_for_entries()
         const auto p = vec2<pix>
         {
             theme->filesys_left_padding + static_cast<double>(e->depth) * theme->filesys_indent,
-            LineNumberToY(index)
+            line_number_to_y(index)
         };
 
         const auto width = app->to_pix(font->get_width(e->name));
@@ -205,10 +206,10 @@ void ViewFilesystem::Populate()
 
 void ViewFilesystem::setup()
 {
-    auto folders_and_files = fs->list(root, list_settings_from_theme(*theme));
+    auto folders_and_files = fs->list(root, create_list_settings_from_theme(*theme));
     if(folders_and_files)
     {
-        roots = Create(*folders_and_files);
+        roots = create_view_entries(*folders_and_files);
     }
     Populate();
 }
@@ -220,13 +221,13 @@ pix ViewFilesystem::calculate_line_height() const
 }
 
 
-pix ViewFilesystem::LineNumberToY(std::size_t line) const
+pix ViewFilesystem::line_number_to_y(std::size_t line) const
 {
     return static_cast<double>(line) * calculate_line_height();
 }
 
 
-scroll_size ViewFilesystem::calculate_scroll_size()
+ScrollSize ViewFilesystem::calculate_scroll_size()
 {
     return
     {
@@ -277,7 +278,7 @@ void ViewFilesystem::draw_body(Renderer* cache)
             e->name,
             app->to_dip(body_rect.x + e->position.x - scroll.x),
             app->to_dip(body_rect.y + e->position.y - scroll.y),
-            e->GetColor(*theme)
+            e->get_text_color(*theme)
         );
     }
 }
@@ -308,7 +309,7 @@ void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const vec
     auto* node = get_node_under_cursor(new_mouse);
     if(node)
     {
-        if(node->OnClick(clicks == 2, fs, *theme))
+        if(node->on_click(clicks == 2, fs, *theme))
         {
             Populate();
         }
