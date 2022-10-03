@@ -14,6 +14,11 @@ struct number
 
     constexpr explicit number(T v) : value(v) {}
 
+    constexpr self operator-() const
+    {
+        return self{-value};
+    }
+
     self& operator+=(const self& s) { value += s.value; return *this; }
     self& operator-=(const self& s) { value -= s.value; return *this; }
     self& operator*=(      T     s) { value *= s      ; return *this; }
