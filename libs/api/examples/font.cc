@@ -1,6 +1,7 @@
 #include "api/app.h"
 #include "api/font.h"
 #include "api/main.h"
+#include "api/renderer.h"
 
 struct ImagesApp : App
 {

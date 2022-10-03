@@ -2,6 +2,7 @@
 #include "api/app.h"
 #include "api/main.h"
 #include "api/log.h"
+#include "api/renderer.h"
 
 struct SquaresApp : App
 {

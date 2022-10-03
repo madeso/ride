@@ -10,7 +10,7 @@
 #include "base/rect.h"
 #include "base/c.h"
 
-#include "api/main.h"
+#include "api/renderer.h"
 #include "api/image.h"
 #include "api/texture.h"
 #include "api/log.h"

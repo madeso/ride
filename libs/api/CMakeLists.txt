@@ -8,6 +8,7 @@ set(src
     src/api/main.cc src/api/main.h
     src/api/mouse_button.cc src/api/mouse_button.h
 
+    src/api/renderer.h
     src/api/texture.cc src/api/texture.h
     src/api/shader.cc src/api/shader.h
     src/api/spritebatch.cc src/api/spritebatch.h

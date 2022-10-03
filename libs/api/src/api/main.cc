@@ -5,6 +5,7 @@
 
 #include "base/c.h"
 
+#include "api/renderer.h"
 #include "api/cursorcache.h"
 #include "api/log.h"
 #include "api/spritebatch.h"

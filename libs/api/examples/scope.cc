@@ -3,6 +3,7 @@
 #include "api/main.h"
 #include "api/font.h"
 #include "api/log.h"
+#include "api/renderer.h"
 
 
 struct ScopeApp : App

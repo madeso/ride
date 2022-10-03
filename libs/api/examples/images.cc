@@ -1,6 +1,7 @@
 #include "api/app.h"
 #include "api/texture.h"
 #include "api/main.h"
+#include "api/renderer.h"
 
 #include "logo_256text_png.h"
 
