@@ -6,7 +6,7 @@
 #include "base/filesystem.h"
 
 #include "api/app.h"
-#include "api/rencache.h"
+#include "api/renderer.h"
 
 #include "ride/theme.h"
 
@@ -270,8 +270,9 @@ void ViewFilesystem::draw_body(Renderer* cache)
 
     for(const auto& e: entries)
     {
-        cache->draw_text
+        draw_text
         (
+            cache,
             font,
             e->name,
             app->to_dip(body_rect.x + e->position.x - scroll.x),

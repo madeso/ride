@@ -8,7 +8,6 @@
 #include "base/utf8.h"
 
 #include "api/app.h"
-#include "api/rencache.h"
 
 #include "ride/theme.h"
 

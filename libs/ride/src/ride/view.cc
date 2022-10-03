@@ -3,7 +3,7 @@
 #include "base/cc.h"
 
 #include "api/app.h"
-#include "api/rencache.h"
+#include "api/renderer.h"
 
 
 #include "ride/theme.h"

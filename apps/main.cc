@@ -6,7 +6,7 @@
 
 #include "api/app.h"
 #include "api/main.h"
-#include "api/rencache.h"
+#include "api/renderer.h"
 #include "api/image.h"
 #include "api/font.h"
 
