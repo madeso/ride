@@ -182,12 +182,15 @@ void update_stencil(Renderer* c)
     else
     {
         glEnable(GL_STENCIL_TEST);
+        glStencilMask(0xFF);
+
+        // clear to 0
+        glClearStencil(0);
         glClear(GL_STENCIL_BUFFER_BIT);
 
-        // enable writing, increase when succeeded
-        glStencilMask(0xFF);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF); 
-        glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+        // enable writing, increase when succeeded and write all "scope" rects
+        glStencilOp(GL_INCR, GL_INCR, GL_INCR);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
         for(const auto& r: c->rects)
         {
             c->render.batch.quad
@@ -200,11 +203,13 @@ void update_stencil(Renderer* c)
                     Cint_to_float(r.height.value),
                 },
                 std::nullopt,
-                {255, 255, 255, 255}
+                // hack? use alpha=0 to write to the stencil buffer but the not color buffer
+                {255, 255, 255, 0}
             );
         }
         c->render.batch.submit();
-        glStencilMask(0x00); // disable write
+
+        // disable write to stencil buffer, only render where all rects has been drawn
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); 
         glStencilFunc(GL_EQUAL, Csizet_to_glsizei(c->rects.size()), 0xFF);
     }
@@ -414,6 +419,8 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);

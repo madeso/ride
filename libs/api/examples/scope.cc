@@ -35,16 +35,26 @@ struct ScopeApp : App
     {
         draw_rect(cache, to_dip(rect<pix>::from_size(client_size)), colors::white);
 
-        draw_rect(cache, to_dip(rect<pix>{{50.0_px, 100.0_px}, ::size<pix>{30.0_px, 30.0_px}}), colors::red_500);
-        draw_rect(cache, to_dip(rect<pix>{{100.0_px, 50.0_px}, ::size<pix>{30.0_px, 30.0_px}}), colors::blue_500);
+        draw_rect(cache, to_dip(rect<pix>{{50_px, 100_px}, ::size<pix>{30_px, 30_px}}), colors::red_500);
+        draw_rect(cache, to_dip(rect<pix>{{100_px, 50_px}, ::size<pix>{30_px, 30_px}}), colors::blue_500);
         
-        auto r = rect<pix>{{100.0_px, 100.0_px}, ::size<pix>{400.0_px, 400.0_px}};
+        auto r = rect<pix>{{100_px, 100_px}, ::size<pix>{400_px, 400_px}};
 
         std::optional<ClipScope> scope_a;
 
-        if(scope >= 1)
+        switch (scope)
         {
+        case 0:
+            break;
+        case 1:
             scope_a = ClipScope{cache, to_dip(r)};
+            break;
+        case 2:
+            scope_a = ClipScope{cache, to_dip(rect<pix>{mouse, size<pix>{100_px, 100_px}}.Offset(vec2<pix>{-50_px, -50_px}))};
+            break;
+        default:
+            assert(false && "unhandled case");
+            break;
         }
 
         
@@ -73,7 +83,7 @@ struct ScopeApp : App
 
         draw_rect(cache, to_dip(r.Inset(size)), colors::grape_500);
 
-        draw_text(cache, font, "Hello world", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
+        draw_text(cache, font, "press space", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
     }
 };
 
