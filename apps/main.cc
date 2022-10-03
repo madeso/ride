@@ -9,6 +9,7 @@
 #include "api/renderer.h"
 #include "api/image.h"
 #include "api/font.h"
+#include "api/texture.h"
 
 #include "libride/command.h"
 #include "libride/document.h"
@@ -46,7 +47,7 @@ struct RideApp : App
 {
     vec2<pix> mouse = {pix{0}, pix{0}};
 
-    std::shared_ptr<Image> logo;
+    std::shared_ptr<Texture> logo;
     std::shared_ptr<Font> font;
     std::unique_ptr<filesystem> fs;
 
@@ -70,7 +71,7 @@ struct RideApp : App
     }
 
     RideApp()
-        : logo(load_shared(LOGO_256TEXT_PNG))
+        : logo(load_shared_texture(LOGO_256TEXT_PNG))
         , font(load_font(Font::default_font, pix{12}))
         , fs(create_local_filesystem())
     {
