@@ -17,7 +17,7 @@ struct rect
     using size_type = size<T>;
     using vec2_type = vec2<T>;
 
-    // top-left
+    // bottom-left
     T x;
     T y;
     T width;
@@ -166,6 +166,12 @@ struct rect
 
 
     static self from_ltrb(T left, T top, T right, T bottom)
+    {
+        xassert(left <= right && top >= bottom, left << " <= " << right << " && " << top << ">= " << bottom);
+        return {left, bottom, right - left, top-bottom};
+    }
+
+    static self from_lrtb(T left, T right, T top, T bottom)
     {
         xassert(left <= right && top >= bottom, left << " <= " << right << " && " << top << ">= " << bottom);
         return {left, bottom, right - left, top-bottom};

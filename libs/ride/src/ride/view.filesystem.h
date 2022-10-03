@@ -44,9 +44,8 @@ struct ViewFilesystem : public View
 
     void setup();
 
-    std::vector<Node*> CreateEntries();
     void update_rects_for_entries();
-    void Populate();
+    void recreate_entries_list();
     pix calculate_line_height() const;
     pix line_number_to_y(std::size_t line) const;
     rect<pix> hit_rect_for_node(Node* node);

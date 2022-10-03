@@ -157,17 +157,6 @@ ViewFilesystem::ViewFilesystem()
     cursor = cursor_type::hand;
 }
 
-std::vector<Node*> ViewFilesystem::CreateEntries()
-{
-    std::vector<Node*> ret;
-    for(auto r: roots)
-    {
-        r->add_to_list(&ret, 0);
-    }
-
-    return ret;
-}
-
 
 void ViewFilesystem::update_rects_for_entries()
 {
@@ -194,10 +183,16 @@ void ViewFilesystem::update_rects_for_entries()
 }
 
 
-void ViewFilesystem::Populate()
+void ViewFilesystem::recreate_entries_list()
 {
     node_hovering = nullptr;
-    entries = CreateEntries();
+    
+    entries = {};
+    for(auto r: roots)
+    {
+        r->add_to_list(&entries, 0);
+    }
+
     update_rects_for_entries();
     update_hover();
     // ViewChanged();
@@ -211,7 +206,7 @@ void ViewFilesystem::setup()
     {
         roots = create_view_entries(*folders_and_files);
     }
-    Populate();
+    recreate_entries_list();
 }
 
 
@@ -311,7 +306,7 @@ void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const vec
     {
         if(node->on_click(clicks == 2, fs, *theme))
         {
-            Populate();
+            recreate_entries_list();
         }
     }
 }

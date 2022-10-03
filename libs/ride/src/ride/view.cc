@@ -23,7 +23,7 @@ View::View()
 
 std::optional<ScrollbarData> layout_scrollbar(rect<pix>* view_rect, Theme* theme,
     pix document_height, pix current_scroll,
-    bool is_vertical, Side through_side, Side top_side, Side bottom_side)
+    bool is_vertical, Side scrollbar_on_side, Side top_side, Side bottom_side)
 {
     const auto view_rect_width = view_rect->width;
     const auto view_rect_height = view_rect->height;
@@ -37,11 +37,34 @@ std::optional<ScrollbarData> layout_scrollbar(rect<pix>* view_rect, Theme* theme
 
     const auto fraction = view_prop / document_height;
 
-    const auto through_rect = view_rect->cut(through_side, theme->scrollbar_width);
+    const auto through_rect = view_rect->cut(scrollbar_on_side, theme->scrollbar_width);
 
     auto track_rect = through_rect;
     const auto top_button_rect = track_rect.cut(top_side, theme->scrollbar_width);
     const auto bottom_button_rect = track_rect.cut(bottom_side, theme->scrollbar_width);
+
+    /*
+
+    +---+ ------------------------------+
+    | A | top_button_rect               |
+    +---+ --------------+               |
+    |///|               |               |
+    |///| offset        |               |
+    |///|               |               |
+    +---+               |               |
+    |   |               |               |
+    |   |               |               |
+    |   | thumb_rect    | track_rect    | through_rect
+    |   |               |               |
+    |   |               |               |
+    +---+               |               |
+    |///|               |               |
+    |///|               |               |
+    +---+  -------------+               |
+    | V | bottom_button_rect            |
+    +---+ ------------------------------+
+
+    */
 
     const auto scroll_fraction = current_scroll / document_height;
 
@@ -49,9 +72,13 @@ std::optional<ScrollbarData> layout_scrollbar(rect<pix>* view_rect, Theme* theme
     const auto thumb_size = size_prop * fraction;
     const auto available_size = size_prop - thumb_size;
     const auto thumb_offset = available_size * scroll_fraction;
+    xassert(thumb_offset >= 0_px, thumb_offset.value);
+
+    const auto vtop = track_rect.get_top() - thumb_offset;
+
     const auto thumb_rect = is_vertical
-        ? rect<pix>{track_rect.x               , track_rect.y + thumb_offset, track_rect.width, thumb_size       }
-        : rect<pix>{track_rect.x + thumb_offset, track_rect.y               , thumb_size      , track_rect.height}
+        ? rect<pix>::from_lrtb(track_rect.get_left(), track_rect.get_right(), vtop, vtop - thumb_size)
+        : rect<pix>::from_lrtb(track_rect.get_left() + thumb_offset, track_rect.get_left() + thumb_offset + thumb_size, track_rect.get_top(), track_rect.get_bottom())
         ;
     
     return ScrollbarData
@@ -77,23 +104,23 @@ void View::on_layout(const rect<pix>& new_client_rect)
     client_rect = new_client_rect;
     body_rect = new_client_rect;
 
-    const auto ScrollSize = get_scroll_size();
+    const auto scroll_size = get_scroll_size();
     
-    if(ScrollSize.height)
+    if(scroll_size.height)
     {
         vertical_scrollbar_data = layout_scrollbar
         (
-            &body_rect, theme, *ScrollSize.height, scroll.y,
+            &body_rect, theme, *scroll_size.height, scroll.y,
             true, get_vertical_scroll_side(*theme), Side::top, Side::bottom
         );
     }
 
-    if(ScrollSize.width)
+    if(scroll_size.width)
     {
         horizontal_scrollbar_data = layout_scrollbar
         (
             &body_rect, theme,
-            *ScrollSize.width, scroll.x,
+            *scroll_size.width, scroll.x,
             false, get_horizontal_scroll_side(*theme), Side::left, Side::right
         );
     }
@@ -150,7 +177,7 @@ void do_scroll(pix* scroll, const std::optional<pix>& size, int d, pix change)
             *scroll = keep_within
             (
                 0_px,
-                *scroll - static_cast<double>(d) * change,
+                *scroll + static_cast<double>(d) * change,
                 *size
             );
         }
@@ -174,10 +201,13 @@ void do_scroll(pix* scroll, const std::optional<pix>& size, int d, pix change)
 
 void View::on_mouse_wheel(int dx, int dy)
 {
-    const auto ScrollSize = get_scroll_size();
+    const auto scroll_size = get_scroll_size();
 
-    do_scroll(&scroll.x, ScrollSize.width, dx, theme->horizontal_scroll);
-    do_scroll(&scroll.y, ScrollSize.height, dy, theme->vertical_scroll);
+    // y: scroll+ up => y - scroll
+    // x: scroll+ right =>x + scroll
+
+    do_scroll(&scroll.x, scroll_size.width, dx, theme->horizontal_scroll);
+    do_scroll(&scroll.y, scroll_size.height, -dy, theme->vertical_scroll);
 }
 
 void View::keep_scroll_within()

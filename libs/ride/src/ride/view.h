@@ -19,17 +19,17 @@ struct Renderer;
 
 /*
 
- body
+ scroll_size
 
  +       +---------+       |
  |       |         |       |
- |       |         |       | offset (positive)
+ |       |         |       | scroll (positive)
  |       |         |       |
  |       |         |       |
  |       |         |       V
  |    +---------------+    +
  |    |  |         |  |    |
- |    |  |         |  |    | scroll
+ |    |  |         |  |    | client/body
  |    |  |         |  |    |
  |    +---------------+    +
  |       |         |
