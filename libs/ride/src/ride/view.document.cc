@@ -8,6 +8,7 @@
 #include "base/utf8.h"
 
 #include "api/app.h"
+#include "api/renderer.h"
 
 #include "ride/theme.h"
 
@@ -129,8 +130,9 @@ void ViewDoc::draw_single_line
 
         if(highlight)
         {
-            cache->draw_rect
+            draw_rect
             (
+                cache,
                 app->to_dip
                 (
                     rect<pix>
@@ -158,8 +160,9 @@ void ViewDoc::draw_single_line
             const auto x2 = position.x + get_col_x_offset(s.b.offset);
             const auto lh = font_height; // include line spacing here?
 
-            cache->draw_rect
+            draw_rect
             (
+                cache,
                 app->to_dip
                 (
                     rect<pix>
@@ -174,8 +177,9 @@ void ViewDoc::draw_single_line
     }
     
     // draw the text
-    cache->draw_text
+    draw_text
     (
+        cache,
         font,
         doc->GetLineAt(line_index),
         app->to_dip(position.x),
@@ -190,8 +194,9 @@ void ViewDoc::draw_single_line
         {
             const auto lh = font_height;
             const auto x1 = position.x + get_col_x_offset(sel.a.offset);
-            cache->draw_rect
+            draw_rect
             (
+                cache,
                 app->to_dip
                 (
                     rect<pix>
@@ -236,8 +241,9 @@ void ViewDoc::draw_body(Renderer* cache)
     {
         const auto y = line_to_relative_upper_pix(line_index);
 
-        cache->draw_text
+        draw_text
         (
+            cache,
             font,
             (Str{} << line_index+1).ToString(),
             app->to_dip(gutter_rect.x + theme->gutter_spacing_left),

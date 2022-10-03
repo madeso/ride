@@ -150,14 +150,14 @@ struct rect
         T y2 = std::max(a.y + a.height, b.y + b.height);
         return {x1, y1, x2 - x1, y2 - y1};
     }
+    */
 
     bool contains(const vec2_type& p) const
     {
-        const auto cx = p.x >= x && x + width >= p.x;
-        const auto cy = p.y >= y && y + height >= p.y;
+        const auto cx = get_left() <= x && p.x <= get_right();
+        const auto cy = get_bottom() <= p.y && p.y <= get_top();
         return cx && cy;
     }
-    */
 
     static self from_size(const size_type& s)
     {
