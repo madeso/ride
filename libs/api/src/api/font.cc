@@ -275,8 +275,8 @@ dip draw_text(Renderer* ren, std::shared_ptr<Font> font, const std::string& text
     {
         auto* set = font->m->get_glyphset(codepoint);
         auto* g = set->get_glyph(codepoint);
-        const float w = set->texture->width;
-        const float h = set->texture->height;
+        const float w = Cint_to_float(set->texture->width);
+        const float h = Cint_to_float(set->texture->height);
 
         const auto sx = g->x1 - g->x0;
         const auto sy = g->y1 - g->y0;

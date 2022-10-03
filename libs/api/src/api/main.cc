@@ -44,6 +44,12 @@ void init_window_icon()
 }
 #endif
 
+
+GLint Cint_to_glint(int i)
+{
+    return i;
+}
+
 double get_time()
 {
     const auto counter = SDL_GetPerformanceCounter();
@@ -200,7 +206,7 @@ void update_stencil(Renderer* c)
         c->render.batch.submit();
         glStencilMask(0x00); // disable write
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); 
-        glStencilFunc(GL_EQUAL, c->rects.size(), 0xFF);
+        glStencilFunc(GL_EQUAL, Csizet_to_glsizei(c->rects.size()), 0xFF);
     }
 }
 
@@ -542,7 +548,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
         // todo(Gustav): setup 2d rendering for entire viewport
         {
-            glViewport(0, 0, Cint_to_float(window_width), Cint_to_float(window_height));
+            glViewport(0, 0, Cint_to_glint(window_width), Cint_to_glint(window_height));
 
             const auto camera = glm::mat4(1.0f);
             const auto projection = glm::ortho(0.0f, Cint_to_float(window_width), 0.0f, Cint_to_float(window_height));
