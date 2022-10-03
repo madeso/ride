@@ -116,8 +116,8 @@ struct rect
         const auto old_top = get_top();
         const auto diff = new_bottom - old_bottom;
 
-        height += diff;
-        y -= diff;
+        height -= diff;
+        y += diff;
 
         assert(get_bottom() == new_bottom);
         assert(get_top() == old_top);
@@ -165,7 +165,7 @@ struct rect
     }
 
 
-    static self FromL(T left, T top, T right, T bottom)
+    static self from_ltrb(T left, T top, T right, T bottom)
     {
         xassert(left <= right && top >= bottom, left << " <= " << right << " && " << top << ">= " << bottom);
         return {left, bottom, right - left, top-bottom};
@@ -175,28 +175,30 @@ struct rect
     {
         T ox = this->get_left();
         this->set_left(std::min(this->get_right(), this->get_left() + a));
-        return FromL(ox, this->get_top(), this->get_left(), this->get_bottom());
+        return from_ltrb(ox, this->get_top(), this->get_left(), this->get_bottom());
     }
 
     self cut_right(T a)
     {
         T right = this->get_right();
         this->set_right(std::max(this->x, this->get_right() - a));
-        return FromL(this->get_right(), this->get_top(), right, this->get_bottom());
+        return from_ltrb(this->get_right(), this->get_top(), right, this->get_bottom());
     }
 
     self cut_top(T a)
     {
         T oy = this->get_top();
         this->set_top(std::max(this->get_bottom(), this->get_top() - a));
-        return FromL(this->get_left(), oy, this->get_right(), this->get_top());
+        return from_ltrb(this->get_left(), oy, this->get_right(), this->get_top());
     }
 
     self cut_bottom(T a)
     {
         T bottom = this->get_bottom();
-        this->set_bottom(std::min(this->y, this->get_bottom() + a));
-        return FromL(this->get_left(), this->get_bottom(), this->get_right(), bottom);
+        const auto top = this->get_top();
+        const auto new_bottom = this->get_bottom() + a;
+        this->set_bottom(std::min(top, new_bottom));
+        return from_ltrb(this->get_left(), this->get_bottom(), this->get_right(), bottom);
     }
 
     self get_cut_left(T a) const
