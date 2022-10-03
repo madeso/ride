@@ -34,6 +34,14 @@ struct ClipScope
 
     ClipScope(Renderer* c, const rect<dip>& r);
     ~ClipScope();
+
+    void clear();
+
+    ClipScope(const ClipScope&) = delete;
+    ClipScope& operator = (const ClipScope&) = delete;
+
+    ClipScope(ClipScope&&) noexcept;
+    ClipScope& operator=(ClipScope&&) noexcept;
 };
 
 using CreateAppFunction = std::function<std::unique_ptr<App> (const StartupArguments&)>;

@@ -192,7 +192,7 @@ void update_stencil(Renderer* c)
         {
             c->render.batch.quad
             (
-                nullptr,
+                std::nullopt,
                 {
                     Cint_to_float(r.x.value),
                     Cint_to_float(r.y.value),
@@ -235,7 +235,30 @@ ClipScope::ClipScope(Renderer* c, const rect<dip>& r)
 
 ClipScope::~ClipScope()
 {
+    clear();
+}
+
+void ClipScope::clear()
+{
+    if (cache == nullptr)
+    {
+        return;
+    }
     pop_clip_rect(cache);
+}
+
+ClipScope::ClipScope(ClipScope&& rhs) noexcept
+    : cache(rhs.cache)
+{
+    rhs.cache = nullptr;
+}
+
+ClipScope& ClipScope::operator = (ClipScope&& rhs) noexcept
+{
+    clear();
+    cache = rhs.cache;
+    rhs.cache = nullptr;
+    return *this;
 }
 
 

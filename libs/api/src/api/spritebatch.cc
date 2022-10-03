@@ -119,6 +119,7 @@ Rectf get_sprite(const Texture& texture, const recti& ri)
 void SpriteBatch::quad(std::optional<Texture*> texture_argument, const Vertex2& v0, const Vertex2& v1, const Vertex2& v2, const Vertex2& v3)
 {
     Texture* texture = texture_argument.value_or(&white_texture);
+    assert(texture);
 
     if(quads == max_quads)
     {
