@@ -76,7 +76,7 @@ struct rect
     void set_left(T new_left)
     {
         const auto old_left = get_left();
-        const auto old_right = get_right();
+        [[maybe_unused]] const auto old_right = get_right();
         const auto diff = old_left - new_left;
 
         x -= diff;
@@ -88,7 +88,7 @@ struct rect
 
     void set_top(T new_top)
     {
-        const auto old_bottom = get_bottom();
+        [[maybe_unused]] const auto old_bottom = get_bottom();
         const auto old_top = get_top();
         const auto diff = old_top - new_top;
 
@@ -100,7 +100,7 @@ struct rect
 
     void set_right(T new_right)
     {
-        const auto old_left = get_left();
+        [[maybe_unused]] const auto old_left = get_left();
         const auto old_right = get_right();
         const auto diff = new_right - old_right;
 
@@ -113,7 +113,7 @@ struct rect
     void set_bottom(T new_bottom)
     {
         const auto old_bottom = get_bottom();
-        const auto old_top = get_top();
+        [[maybe_unused]] const auto old_top = get_top();
         const auto diff = new_bottom - old_bottom;
 
         height -= diff;
