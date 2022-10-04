@@ -1,6 +1,6 @@
 embed(files
     AS_BINARY
-        font.ttf
+        Inconsolata-Medium.ttf
 )
 
 add_library(data_font STATIC ../empty.cc ${files})

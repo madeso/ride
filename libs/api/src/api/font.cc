@@ -15,7 +15,7 @@
 #include "api/texture.h"
 #include "api/log.h"
 
-#include "font.ttf.h"
+#include "Inconsolata-Medium.ttf.h"
 
 constexpr int MAX_GLYPHSET = 256;
 constexpr int NUM_CHARS = 256;
@@ -185,7 +185,7 @@ bool Font::load_font(const std::string& filename, dip size)
 {
     if(filename == Font::default_font)
     {
-        return load_font(FONT_TTF, size);
+        return load_font(INCONSOLATA_MEDIUM_TTF, size);
     }
 
     auto font = std::make_unique<FontImpl>();
