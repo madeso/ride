@@ -182,6 +182,10 @@ void ViewFilesystem::update_rects_for_entries()
     }
 }
 
+void ViewFilesystem::on_layout_body()
+{
+    update_rects_for_entries();
+}
 
 void ViewFilesystem::recreate_entries_list()
 {
@@ -218,7 +222,8 @@ pix ViewFilesystem::calculate_line_height() const
 
 pix ViewFilesystem::line_number_to_y(std::size_t line) const
 {
-    return static_cast<double>(line) * calculate_line_height();
+    const auto line_offset = static_cast<double>(line) * calculate_line_height();
+    return client_rect.height - calculate_line_height() - line_offset;
 }
 
 
@@ -255,7 +260,7 @@ void ViewFilesystem::draw_body(Renderer* cache)
 
     if(node_hovering)
     {
-        draw_rect(cache, app->to_dip(hit_rect_for_node(node_hovering)), theme->filesys_hover_color);
+        draw_rect(cache, app->to_dip(hit_rect_for_node(node_hovering).get_offset(scroll)), theme->filesys_hover_color);
         cursor = cursor_type::hand;
     }
     else
@@ -271,8 +276,8 @@ void ViewFilesystem::draw_body(Renderer* cache)
             cache,
             font,
             e->name,
-            app->to_dip(body_rect.x + e->position.x - scroll.x),
-            app->to_dip(body_rect.y + e->position.y - scroll.y),
+            app->to_dip(body_rect.x + e->position.x + scroll.x),
+            app->to_dip(body_rect.y + e->position.y + scroll.y),
             e->get_text_color(*theme)
         );
     }
@@ -281,7 +286,7 @@ void ViewFilesystem::draw_body(Renderer* cache)
 
 Node* ViewFilesystem::get_node_under_cursor(const vec2<pix> relative_mouse)
 {
-    const auto p = vec2<pix>{relative_mouse.x + scroll.x, relative_mouse.y + scroll.y};
+    const auto p = vec2<pix>{relative_mouse.x - scroll.x, relative_mouse.y - scroll.y};
 
     // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
     for(const auto& e: entries)

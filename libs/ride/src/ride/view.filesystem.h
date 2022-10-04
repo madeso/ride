@@ -52,6 +52,8 @@ struct ViewFilesystem : public View
     Node* get_node_under_cursor(const vec2<pix> relative_mouse);
     void update_hover();
 
+    void on_layout_body() override;
+
     ScrollSize calculate_scroll_size() override;
     void draw_body(Renderer* cache) override;
     void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override;
