@@ -239,13 +239,13 @@ rect<pix> ViewFilesystem::hit_rect_for_node(Node* node)
     const auto height = app->to_pix(font->get_height());
     const auto spacing = theme->line_spacing;
 
-    return
-    {
-        body_rect.x,
-        node->position.y,
-        body_rect.width,
-        height + spacing
-    };
+    return rect<pix>::from_ltrb
+    (
+        body_rect.get_left(),
+        node->position.y + height + spacing,
+        body_rect.get_right(),
+        node->position.y
+    );
 }
 
 
@@ -299,7 +299,7 @@ Node* ViewFilesystem::get_node_under_cursor(const vec2<pix> relative_mouse)
 void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const vec2<pix>& new_mouse, int clicks)
 {
     if(button != MouseButton::left) { return; }
-    if(clicks > 2) { return; }
+    // if(clicks > 2) { return; } // file specific
 
     auto* node = get_node_under_cursor(new_mouse);
     if(node)

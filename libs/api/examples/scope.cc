@@ -51,7 +51,7 @@ struct ScopeApp : App
             scope_a = ClipScope{cache, to_dip(r)};
             break;
         case 2:
-            scope_a = ClipScope{cache, to_dip(rect<pix>{mouse, size<pix>{100_px, 100_px}}.Offset(vec2<pix>{-50_px, -50_px}))};
+            scope_a = ClipScope{cache, to_dip(rect<pix>{mouse, size<pix>{100_px, 100_px}}.get_offset(vec2<pix>{-50_px, -50_px}))};
             break;
         default:
             assert(false && "unhandled case");
@@ -82,7 +82,7 @@ struct ScopeApp : App
 
         draw_rect(cache, to_dip(r), colors::teal_500);
 
-        draw_rect(cache, to_dip(r.Inset(size)), colors::grape_500);
+        draw_rect(cache, to_dip(r.get_inset(size)), colors::grape_500);
 
         draw_text(cache, font, "press space", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
     }

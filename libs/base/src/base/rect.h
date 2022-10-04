@@ -154,7 +154,7 @@ struct rect
 
     bool contains(const vec2_type& p) const
     {
-        const auto cx = get_left() <= x && p.x <= get_right();
+        const auto cx = get_left() <= p.x && p.x <= get_right();
         const auto cy = get_bottom() <= p.y && p.y <= get_top();
         return cx && cy;
     }
@@ -253,7 +253,7 @@ struct rect
     }
 
 
-    self Offset(const vec2_type& offset) const
+    self get_offset(const vec2_type& offset) const
     {
         const auto p = vec2_type{x, y} + offset;
         return {p.x, p.y, width, height};
@@ -268,7 +268,7 @@ struct rect
     }
     */
 
-    self Inset(T inset) const
+    self get_inset(T inset) const
     {
         const auto inset2 = inset + inset;
         // if(inset2 > width || inset2 > height) { return {x, y, 0, 0}; }
@@ -292,3 +292,15 @@ constexpr Rectf Cint_to_float(const recti r)
 }
 
 constexpr const recti EmptyRect = {0,0, 0,0};
+
+
+template<typename S, typename T> S& operator<<(S& s, const rect<T>& r)
+{
+    return s
+        << "["
+        << r.get_left() << " " << r.get_right()
+        << "/"
+        << r.get_top() << " " << r.get_bottom()
+        << "]"
+        ;
+}

@@ -17,3 +17,15 @@ TPL VEC operator-(const VEC& lhs, const VEC& rhs) { return {lhs.x - rhs.x, lhs.y
 #undef TPL
 
 using vec2i = vec2<int>;
+
+template<typename S, typename T> S& operator<<(S& s, const vec2<T>& v)
+{
+    return s
+        << "("
+        << v.x
+        << ", "
+        << v.y
+        << ")"
+        ;
+}
+

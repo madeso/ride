@@ -165,11 +165,10 @@ struct RideApp : App
         draw_image(cache, logo, to_dip(pix{10}), to_dip(pix{10}), theme.logo_color);
 
         const auto browser_rect = rect.cut_left(150_px);
-
         const auto border_size = 3_px;
 
-        browser.on_layout(browser_rect.Inset(border_size));
-        root.on_layout(rect.Inset(border_size));
+        browser.on_layout(browser_rect.get_inset(border_size));
+        root.on_layout(rect.get_inset(border_size));
 
         draw_view(&browser, cache);
         draw_view(&root, cache);
@@ -195,15 +194,18 @@ struct RideApp : App
 
     View* get_mouse_hovering_view()
     {
-        if( root.client_rect.contains(mouse))
+        if(root.client_rect.contains(mouse))
         {
             return &root;
         }
-        else if( browser.client_rect.contains(mouse))
+        else if(browser.client_rect.contains(mouse))
         {
             return &browser;
         }
-        else return nullptr;
+        else
+        {
+            return nullptr;
+        }
     }
 
     void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override

@@ -47,7 +47,7 @@ struct SquaresApp : App
 
         draw_rect(cache, to_dip(r), colors::teal_500);
 
-        draw_rect(cache, to_dip(r.Inset(size)), colors::grape_500);
+        draw_rect(cache, to_dip(r.get_inset(size)), colors::grape_500);
 
         draw_rect(cache, to_dip(rect<pix>{mouse, ::size<pix>{10.0_px, 10.0_px}}), colors::black);
     }

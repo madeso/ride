@@ -19,8 +19,8 @@ struct Renderer;
 
 /*
 
- scroll_size
-
+         scroll_size
+       (0,0)
  +       +---------+       |
  |       |         |       |
  |       |         |       | scroll (positive)
@@ -38,7 +38,7 @@ struct Renderer;
  |       |         |
  |       |         |
  +       +---------+
-
+      (0,-height)
 
 */
 
