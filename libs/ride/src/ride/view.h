@@ -83,7 +83,7 @@ struct View
 
     ScrollSize get_scroll_size();
 
-    void draw(Renderer* cache);
+    virtual void draw(Renderer* cache);
     void on_mouse_wheel(int dx, int dy);
 
     virtual void draw_body(Renderer* cache) = 0;

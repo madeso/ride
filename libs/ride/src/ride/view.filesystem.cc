@@ -2,6 +2,11 @@
 
 #include <iostream>
 
+// #include "fmt/format.h"
+// #include "fmt/core.h"
+// #include "fmt/ostream.h"
+// using namespace fmt::literals;
+
 #include "base/str.h"
 #include "base/filesystem.h"
 
@@ -252,7 +257,6 @@ rect<pix> ViewFilesystem::hit_rect_for_node(Node* node)
         node->position.y
     );
 }
-
 
 void ViewFilesystem::draw_body(Renderer* cache)
 {
