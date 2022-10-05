@@ -30,7 +30,6 @@ ListSettings create_list_settings_from_theme(const Theme& theme)
 Node::Node(const std::string& n, const std::string& p)
     : name(n)
     , path(p)
-    , position{0_px, 0_px}
     , depth{0}
 {}
 
@@ -162,6 +161,10 @@ ViewFilesystem::ViewFilesystem()
     cursor = cursor_type::hand;
 }
 
+pix get_x_position(Theme* theme, int depth)
+{
+    return theme->filesys_left_padding + static_cast<double>(depth) * theme->filesys_indent;
+}
 
 void ViewFilesystem::update_rects_for_entries()
 {
@@ -169,21 +172,15 @@ void ViewFilesystem::update_rects_for_entries()
     for(std::size_t index = 0; index < entries.size(); index += 1)
     {
         auto* e = entries[index];
-        const auto p = vec2<pix>
-        {
-            theme->filesys_left_padding + static_cast<double>(e->depth) * theme->filesys_indent,
-            line_number_to_y(index)
-        };
+        const auto xp = get_x_position(theme, e->depth);
 
         const auto width = app->to_pix(font->get_width(e->name));
-        const auto total_width = width + p.x;
+        const auto total_width = width + xp;
 
         if(total_width > body_width)
         {
             body_width = total_width;
         }
-
-        e->position = p;
     }
 }
 
@@ -194,7 +191,7 @@ void ViewFilesystem::on_layout_body()
 
 void ViewFilesystem::recreate_entries_list()
 {
-    node_hovering = nullptr;
+    node_hovering = std::nullopt;
     
     entries = {};
     for(auto r: roots)
@@ -218,45 +215,16 @@ void ViewFilesystem::setup()
     recreate_entries_list();
 }
 
-
-pix ViewFilesystem::calculate_line_height() const
+pix ViewFilesystem::get_document_width() const
 {
-    return app->to_pix(font->get_height()) + theme->line_spacing;
+    return body_width;
 }
 
-
-pix ViewFilesystem::line_number_to_y(std::size_t line) const
+std::size_t ViewFilesystem::get_number_of_lines() const
 {
-    const auto line_offset = static_cast<double>(line) * calculate_line_height();
-    return client_rect.height - calculate_line_height() - line_offset;
+    return entries.size();
 }
 
-
-ScrollSize ViewFilesystem::calculate_scroll_size()
-{
-    return
-    {
-        // todo(Gustav): is this correct?
-        body_width,
-        static_cast<double>(entries.size()) * calculate_line_height()
-    };
-}
-
-
-rect<pix> ViewFilesystem::hit_rect_for_node(Node* node)
-{
-    assert(node);
-    const auto height = app->to_pix(font->get_height());
-    const auto spacing = theme->line_spacing;
-
-    return rect<pix>::from_ltrb
-    (
-        body_rect.get_left(),
-        node->position.y + height + spacing,
-        body_rect.get_right(),
-        node->position.y
-    );
-}
 
 void ViewFilesystem::draw_body(Renderer* cache)
 {
@@ -264,7 +232,7 @@ void ViewFilesystem::draw_body(Renderer* cache)
 
     if(node_hovering)
     {
-        draw_rect(cache, app->to_dip(hit_rect_for_node(node_hovering).get_offset(scroll)), theme->filesys_hover_color);
+        draw_rect(cache, app->to_dip(hit_rect_for_line(line_number_to_y(*node_hovering)).get_offset(scroll)), theme->filesys_hover_color);
         cursor = cursor_type::hand;
     }
     else
@@ -272,36 +240,23 @@ void ViewFilesystem::draw_body(Renderer* cache)
         cursor = cursor_type::arrow;
     }
     
-
-    for(const auto& e: entries)
-    {
-        draw_text
-        (
-            cache,
-            font,
-            e->name,
-            app->to_dip(body_rect.x + e->position.x + scroll.x),
-            app->to_dip(body_rect.y + e->position.y + scroll.y),
-            e->get_text_color(*theme)
-        );
-    }
+    draw_lines(cache);
 }
 
 
-Node* ViewFilesystem::get_node_under_cursor(const vec2<pix> relative_mouse)
+void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const pix& x, const dip& y)
 {
-    const auto p = vec2<pix>{relative_mouse.x - scroll.x, relative_mouse.y - scroll.y};
-
-    // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
-    for(const auto& e: entries)
-    {
-        if(hit_rect_for_node(e).contains(p))
-        {
-            return e;
-        }
-    }
-
-    return nullptr;
+    const auto& e = entries[index];
+    const auto xp = get_x_position(theme, e->depth);
+    draw_text
+    (
+        cache,
+        font,
+        e->name,
+        app->to_dip(x + xp),
+        y,
+        e->get_text_color(*theme)
+    );
 }
 
 
@@ -310,10 +265,9 @@ void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const vec
     if(button != MouseButton::left) { return; }
     // if(clicks > 2) { return; } // file specific
 
-    auto* node = get_node_under_cursor(new_mouse);
-    if(node)
+    if(auto node_index = get_index_under_view_position(new_mouse); node_index)
     {
-        if(node->on_click(clicks == 2, fs, *theme))
+        if(entries[*node_index]->on_click(clicks == 2, fs, *theme))
         {
             recreate_entries_list();
         }
@@ -330,5 +284,5 @@ void ViewFilesystem::on_mouse_moved(const Meta&, const vec2<pix>& new_mouse)
 
 void ViewFilesystem::update_hover()
 {
-    node_hovering = get_node_under_cursor(last_mouse);
+    node_hovering = get_index_under_view_position(last_mouse);
 }

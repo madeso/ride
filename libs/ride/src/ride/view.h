@@ -6,10 +6,10 @@
 #include "base/size.h"
 #include "base/rect.h"
 #include "base/cursor.h"
+#include "base/units.h"
 
 #include "api/key.h"
-
-#include "base/units.h"
+#include "api/font.h"
 #include "api/mouse_button.h"
 
 
@@ -98,4 +98,23 @@ struct View
     virtual void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse);
     virtual void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse);
     virtual void on_text(const std::string& t);
+};
+
+
+struct LineView : View
+{
+    std::shared_ptr<Font> font;
+
+    rect<pix> hit_rect_for_line(const pix& ypos) const;
+
+    pix calculate_line_height() const;
+    pix line_number_to_y(std::size_t line) const;
+    ScrollSize calculate_scroll_size() override;
+    std::optional<std::size_t> get_index_under_view_position(const vec2<pix> relative_mouse);
+
+    void draw_lines(Renderer* cache);
+
+    virtual void draw_line(Renderer* cache, std::size_t index, const pix& x, const dip& y) = 0;
+    virtual pix get_document_width() const = 0;
+    virtual std::size_t get_number_of_lines() const = 0;
 };

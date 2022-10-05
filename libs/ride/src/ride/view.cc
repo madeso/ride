@@ -230,3 +230,74 @@ void View::on_mouse_released(MouseButton, const Meta&, const vec2<pix>&)
 void View::on_text(const std::string&)
 {
 }
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+rect<pix> LineView::hit_rect_for_line(const pix& ypos) const
+{
+    const auto height = app->to_pix(font->get_height());
+    const auto spacing = theme->line_spacing;
+
+    return rect<pix>::from_ltrb
+    (
+        body_rect.get_left(),
+        ypos + height + spacing,
+        body_rect.get_right(),
+        ypos
+    );
+}
+
+
+pix LineView::calculate_line_height() const
+{
+    return app->to_pix(font->get_height()) + theme->line_spacing;
+}
+
+
+pix LineView::line_number_to_y(std::size_t line) const
+{
+    const auto line_offset = static_cast<double>(line) * calculate_line_height();
+    return client_rect.height - calculate_line_height() - line_offset;
+}
+
+
+ScrollSize LineView::calculate_scroll_size()
+{
+    return
+    {
+        // todo(Gustav): is this correct?
+        get_document_width(),
+        static_cast<double>(get_number_of_lines()) * calculate_line_height()
+    };
+}
+
+
+std::optional<std::size_t> LineView::get_index_under_view_position(const vec2<pix> relative_mouse)
+{
+    const auto p = vec2<pix>{relative_mouse.x - scroll.x, relative_mouse.y - scroll.y};
+
+    // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
+    for(std::size_t index  = 0; index < get_number_of_lines(); index += 1)
+    {
+        if(hit_rect_for_line(line_number_to_y(index)).contains(p))
+        {
+            return index;
+        }
+    }
+
+    return std::nullopt;
+}
+
+void LineView::draw_lines(Renderer* cache)
+{
+    // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
+    for(std::size_t index = 0; index < get_number_of_lines(); index+=1)
+    {
+        draw_line(cache, index,
+            body_rect.x + scroll.x,
+            app->to_dip(body_rect.y + line_number_to_y(index) + scroll.y)
+        );
+    }
+}
