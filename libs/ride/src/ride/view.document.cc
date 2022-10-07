@@ -12,6 +12,9 @@
 
 #include "ride/theme.h"
 
+#include <fmt/format.h>
+using namespace fmt::literals;
+
 ViewDoc::ViewDoc()
 {
     cursor = cursor_type::ibeam;
@@ -91,15 +94,13 @@ pix ViewDoc::get_full_document_width() const
 }
 
 
-void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix& x, const pix& y)
+void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix&, const pix& y)
 {
-    // const auto y = line_to_relative_upper_pix(line_index);
-
     draw_text
     (
         cache,
         font,
-        (Str{} << line_index+1).ToString(),
+        "{0: >{1}}"_format(line_index+1, gutter_char_length),
         app->to_dip(gutter_rect.x + theme->gutter_spacing_left),
         app->to_dip(gutter_rect.y + y),
         theme->gutter_color
@@ -111,9 +112,9 @@ void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix& x, c
         (
             cache, line_index,
             {
-                // view_rect.x + theme->text_spacing - scroll.x,
-                x + theme->text_spacing,
-                view_rect.y + y
+                // calculate x instead of using passed x to automatically include gutter width...
+                view_rect.x + theme->text_spacing - scroll.x,
+                y
             }
         );
     }
@@ -241,19 +242,16 @@ void ViewDoc::draw_single_line
 }
 
 
-pix ViewDoc::get_gutter_width()
-{
-    const auto lines = doc->GetNumberOfLines();
-    const auto min_gutter_width = app->to_pix(font->get_width( (Str{} << (lines+1)).ToString().c_str() ));
-    const auto gutter_width = min_gutter_width + theme->gutter_spacing_left + theme->gutter_spacing_right;
-    return gutter_width;
-}
-
-
 void ViewDoc::on_layout_body()
 {
+    const auto lines = doc->GetNumberOfLines();
+    const auto max_gutter_text = (Str{} << (lines+1)).ToString();
+    const auto min_gutter_width = app->to_pix(font->get_width( max_gutter_text.c_str() ));
+    const auto gutter_width = min_gutter_width + theme->gutter_spacing_left + theme->gutter_spacing_right;
+
     view_rect = body_rect;
-    gutter_rect = view_rect.cut(get_gutter_side(*theme), get_gutter_width());
+    gutter_rect = view_rect.cut(get_gutter_side(*theme), gutter_width);
+    gutter_char_length = max_gutter_text.length();
 }
 
 

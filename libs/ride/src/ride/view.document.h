@@ -20,6 +20,7 @@ struct ViewDoc : LineView, VirtualView
     rect<pix> view_rect = rect<pix>(0_px);
     rect<pix> gutter_rect = rect<pix>(0_px);
     bool dragging = false;
+    std::size_t gutter_char_length = 1;
 
     void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) override;
     pix get_document_width() const override;
@@ -28,7 +29,6 @@ struct ViewDoc : LineView, VirtualView
     pix calculate_line_height();
     pix get_full_document_height();
     pix get_full_document_width() const;
-    pix get_gutter_width();
     minmax<int> get_line_range();
     position translate_view_position(const vec2<pix>& p);
 
