@@ -269,7 +269,7 @@ ScrollSize LineView::calculate_scroll_size()
     {
         // todo(Gustav): is this correct?
         get_document_width(),
-        static_cast<double>(get_number_of_lines()) * calculate_line_height()
+        static_cast<double>(get_number_of_lines()) * calculate_line_height() - calculate_line_height()
     };
 }
 
