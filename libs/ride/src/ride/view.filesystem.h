@@ -52,7 +52,7 @@ struct ViewFilesystem : public LineView
     void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse) override;
 
 
-    void draw_line(Renderer* cache, std::size_t index, const pix& x, const dip& y) override;
+    void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) override;
     pix get_document_width() const override;
     std::size_t get_number_of_lines() const override;
 };

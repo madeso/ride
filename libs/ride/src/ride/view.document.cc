@@ -65,7 +65,7 @@ pix ViewDoc::get_full_document_height()
 }
 
 
-pix ViewDoc::get_full_document_width()
+pix ViewDoc::get_full_document_width() const
 {
     const auto size = doc->GetNumberOfLines();
     if(size == 0)
@@ -91,15 +91,44 @@ pix ViewDoc::get_full_document_width()
 }
 
 
-ScrollSize ViewDoc::calculate_scroll_size()
+void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix& x, const pix& y)
 {
-    const auto line_height = calculate_line_height();
-    
-    const auto w = get_full_document_width();
-    const auto h = get_full_document_height() - line_height;
+    // const auto y = line_to_relative_upper_pix(line_index);
 
-    return {w, h};
+    draw_text
+    (
+        cache,
+        font,
+        (Str{} << line_index+1).ToString(),
+        app->to_dip(gutter_rect.x + theme->gutter_spacing_left),
+        app->to_dip(gutter_rect.y + y),
+        theme->gutter_color
+    );
+
+    {
+        const auto text_scope = ClipScope(cache, app->to_dip(view_rect));
+        draw_single_line
+        (
+            cache, line_index,
+            {
+                // view_rect.x + theme->text_spacing - scroll.x,
+                x + theme->text_spacing,
+                view_rect.y + y
+            }
+        );
+    }
 }
+
+pix ViewDoc::get_document_width() const
+{
+    return get_full_document_width();
+}
+
+std::size_t ViewDoc::get_number_of_lines() const
+{
+    return static_cast<std::size_t>(doc->GetNumberOfLines());
+}
+
 
 
 void ViewDoc::draw_single_line
@@ -230,39 +259,10 @@ void ViewDoc::on_layout_body()
 
 void ViewDoc::draw_body(Renderer* cache)
 {
-    const auto lines = doc->GetNumberOfLines();
-
     draw_rect(cache, app->to_dip(view_rect), theme->edit_background);
     draw_rect(cache, app->to_dip(gutter_rect), theme->gutter_background);
 
-    const auto line_range = get_line_range();
-
-    for(int line_index=line_range.min; line_index<std::min(lines, line_range.max); line_index += 1)
-    {
-        const auto y = line_to_relative_upper_pix(line_index);
-
-        draw_text
-        (
-            cache,
-            font,
-            (Str{} << line_index+1).ToString(),
-            app->to_dip(gutter_rect.x + theme->gutter_spacing_left),
-            app->to_dip(gutter_rect.y + y),
-            theme->gutter_color
-        );
-
-        {
-            const auto text_scope = ClipScope(cache, app->to_dip(view_rect));
-            draw_single_line
-            (
-                cache, line_index,
-                {
-                    view_rect.x + theme->text_spacing - scroll.x,
-                    view_rect.y + y
-                }
-            );
-        }
-    }
+    draw_lines(cache);
 
     for(const auto& sel: cursors)
     {

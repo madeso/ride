@@ -244,7 +244,7 @@ void ViewFilesystem::draw_body(Renderer* cache)
 }
 
 
-void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const pix& x, const dip& y)
+void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y)
 {
     const auto& e = entries[index];
     const auto xp = get_x_position(theme, e->depth);
@@ -254,7 +254,7 @@ void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const pix& x,
         font,
         e->name,
         app->to_dip(x + xp),
-        y,
+        app->to_dip(y),
         e->get_text_color(*theme)
     );
 }

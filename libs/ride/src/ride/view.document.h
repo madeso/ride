@@ -12,18 +12,22 @@
 #include "ride/view.h"
 
 
-struct ViewDoc : View, VirtualView
+struct ViewDoc : LineView, VirtualView
 {
     ViewDoc();
     
-    std::shared_ptr<Font> font;
+    // std::shared_ptr<Font> font;
     rect<pix> view_rect = rect<pix>(0_px);
     rect<pix> gutter_rect = rect<pix>(0_px);
     bool dragging = false;
 
+    void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) override;
+    pix get_document_width() const override;
+    std::size_t get_number_of_lines() const override;
+
     pix calculate_line_height();
     pix get_full_document_height();
-    pix get_full_document_width();
+    pix get_full_document_width() const;
     pix get_gutter_width();
     minmax<int> get_line_range();
     position translate_view_position(const vec2<pix>& p);
@@ -52,7 +56,7 @@ struct ViewDoc : View, VirtualView
     int get_offset_from_relative_pixel_offset(int line, pix offset) override;
 
     void on_layout_body() override;
-    ScrollSize calculate_scroll_size() override;
+    // ScrollSize calculate_scroll_size() override;
     void draw_body(Renderer* cache) override;
     void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override;
     void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse) override;

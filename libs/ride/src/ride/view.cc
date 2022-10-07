@@ -297,7 +297,7 @@ void LineView::draw_lines(Renderer* cache)
     {
         draw_line(cache, index,
             body_rect.x + scroll.x,
-            app->to_dip(body_rect.y + line_number_to_y(index) + scroll.y)
+            body_rect.y + line_number_to_y(index) + scroll.y
         );
     }
 }

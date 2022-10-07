@@ -114,7 +114,7 @@ struct LineView : View
 
     void draw_lines(Renderer* cache);
 
-    virtual void draw_line(Renderer* cache, std::size_t index, const pix& x, const dip& y) = 0;
+    virtual void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) = 0;
     virtual pix get_document_width() const = 0;
     virtual std::size_t get_number_of_lines() const = 0;
 };
