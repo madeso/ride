@@ -296,7 +296,7 @@ void LineView::draw_lines(Renderer* cache)
     for(std::size_t index = 0; index < get_number_of_lines(); index+=1)
     {
         draw_line(cache, index,
-            body_rect.x + scroll.x,
+            body_rect.x - scroll.x,
             body_rect.y + line_number_to_y(index) + scroll.y
         );
     }
