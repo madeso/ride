@@ -297,9 +297,9 @@ constexpr const recti EmptyRect = {0,0, 0,0};
 template<typename S, typename T> S& operator<<(S& s, const rect<T>& r)
 {
     return s
-        << "["
+        << "[l/r "
         << r.get_left() << " " << r.get_right()
-        << "/"
+        << "/ tb "
         << r.get_top() << " " << r.get_bottom()
         << "]"
         ;

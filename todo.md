@@ -2,8 +2,14 @@
 
 ## current
 
+* verify correct coordinate spaces
+* update build/dependencies with pch
+* add unit tests for core
 * view: drag scrollbar
 * view: vertical scrollbar needs to account for horizontal scrollbar when calculating view_size
+* save, open, close buffers
+* tab bar
+
 * view: make it optional to scroll outside the view
 * commandline support for not opening project in cwd
 * icon demo
@@ -15,7 +21,6 @@
   - cmd functions
 * option to extend current line to include gutter?
 * option to draw current gutter text with a different color
-* save, open, close buffers
 * cmd palette
 * run command/compile project
 * tmlanguage/treesitter color support

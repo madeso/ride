@@ -104,6 +104,9 @@ struct View
 struct LineView : View
 {
     std::shared_ptr<Font> font;
+    rect<pix> view_rect = rect<pix>(0_px);
+
+    void on_layout_body() override;
 
     rect<pix> hit_rect_for_line(const pix& ypos) const;
 
@@ -113,6 +116,7 @@ struct LineView : View
     std::optional<std::size_t> get_index_under_view_position(const vec2<pix> relative_mouse);
 
     void draw_lines(Renderer* cache);
+    int absolute_pix_y_to_line(pix y);
 
     virtual void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) = 0;
     virtual pix get_document_width() const = 0;

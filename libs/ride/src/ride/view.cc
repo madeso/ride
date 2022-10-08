@@ -259,7 +259,7 @@ pix LineView::calculate_line_height() const
 pix LineView::line_number_to_y(std::size_t line) const
 {
     const auto line_offset = static_cast<double>(line) * calculate_line_height();
-    return client_rect.height - calculate_line_height() - line_offset;
+    return view_rect.height - calculate_line_height() - line_offset;
 }
 
 
@@ -290,6 +290,11 @@ std::optional<std::size_t> LineView::get_index_under_view_position(const vec2<pi
     return std::nullopt;
 }
 
+void LineView::on_layout_body()
+{
+    view_rect = body_rect;
+}
+
 void LineView::draw_lines(Renderer* cache)
 {
     // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
@@ -300,4 +305,20 @@ void LineView::draw_lines(Renderer* cache)
             body_rect.y + line_number_to_y(index) + scroll.y
         );
     }
+}
+
+int LineView::absolute_pix_y_to_line(pix y)
+{
+    return keep_within
+    (
+        0,
+        static_cast<int>
+        (
+            std::floor
+            (
+                ((view_rect.height - y) + view_rect.y + scroll.y) / calculate_line_height()
+            )
+        ),
+        static_cast<int>(get_number_of_lines())
+    );
 }

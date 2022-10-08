@@ -13,6 +13,7 @@
 #include "ride/theme.h"
 
 #include <fmt/format.h>
+#include "fmt/ostream.h"
 using namespace fmt::literals;
 
 ViewDoc::ViewDoc()
@@ -102,7 +103,7 @@ void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix&, con
         font,
         "{0: >{1}}"_format(line_index+1, gutter_char_length),
         app->to_dip(gutter_rect.x + theme->gutter_spacing_left),
-        app->to_dip(gutter_rect.y + y),
+        app->to_dip(y),
         theme->gutter_color
     );
 
@@ -239,17 +240,23 @@ void ViewDoc::draw_single_line
             );
         }
     }
+
+    // if(line_index == 0)
+    // {
+    //     std::cout << "first line(" << text <<") at " << position << ": "<< view_rect << "\n";
+    // }
 }
 
 
 void ViewDoc::on_layout_body()
 {
+    LineView::on_layout_body();
+
     const auto lines = doc->GetNumberOfLines();
     const auto max_gutter_text = (Str{} << (lines+1)).ToString();
     const auto min_gutter_width = app->to_pix(font->get_width( max_gutter_text.c_str() ));
     const auto gutter_width = min_gutter_width + theme->gutter_spacing_left + theme->gutter_spacing_right;
 
-    view_rect = body_rect;
     gutter_rect = view_rect.cut(get_gutter_side(*theme), gutter_width);
     gutter_char_length = max_gutter_text.length();
 }
@@ -276,6 +283,10 @@ void ViewDoc::draw_body(Renderer* cache)
             draw_p(position_to_lower_right_pix(sel.a));
         }
     }
+
+    // const auto line = absolute_pix_y_to_line(last_mouse.y);
+    // const auto offset = absolute_pix_x_to_offset(line, last_mouse.x);
+    // draw_text(cache, font, "{} {}: {}"_format(line+1, offset, last_mouse), app->to_dip(view_rect.x + 10_px), app->to_dip(view_rect.y + 10_px), {0,0,0});
 }
 
 
@@ -339,21 +350,7 @@ minmax<int> ViewDoc::get_line_range()
 }
 
 
-int ViewDoc::absolute_pix_y_to_line(pix y)
-{
-    return keep_within
-    (
-        0,
-        static_cast<int>
-        (
-            std::floor
-            (
-                (y - view_rect.y + scroll.y) / calculate_line_height()
-            )
-        ),
-        doc->GetNumberOfLines()
-    );
-}
+
 
 int ViewDoc::absolute_pix_x_to_offset(int line, pix px)
 {
@@ -457,6 +454,7 @@ bool destroy_cursors(VirtualView* vview, const sorted_selection& p, bool include
 
 void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int)
 {
+    last_mouse = new_mouse;
     if(button != MouseButton::left) { return; }
 
     const auto p = translate_view_position(new_mouse);
@@ -509,6 +507,8 @@ void ViewDoc::drag_to(const Meta& meta, const vec2<pix>& new_mouse)
 
 void ViewDoc::on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse)
 {
+    last_mouse = new_mouse;
+
     drag_to(meta, new_mouse);
 
     if(gutter_rect.contains(new_mouse))
@@ -530,6 +530,8 @@ void ViewDoc::on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse)
 
 void ViewDoc::on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse)
 {
+    last_mouse = new_mouse;
+
     if(button != MouseButton::left) { return; }
     drag_to(meta, new_mouse);
     dragging = false;

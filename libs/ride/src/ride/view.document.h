@@ -16,11 +16,11 @@ struct ViewDoc : LineView, VirtualView
 {
     ViewDoc();
     
-    // std::shared_ptr<Font> font;
-    rect<pix> view_rect = rect<pix>(0_px);
     rect<pix> gutter_rect = rect<pix>(0_px);
     bool dragging = false;
     std::size_t gutter_char_length = 1;
+
+    vec2<pix> last_mouse = {0_px, 0_px};
 
     void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) override;
     pix get_document_width() const override;
@@ -40,7 +40,6 @@ struct ViewDoc : LineView, VirtualView
     pix line_to_relative_upper_pix(int line_index);
     pix line_to_relative_lower_pix(int line_index);
 
-    int absolute_pix_y_to_line(pix y);
     int absolute_pix_x_to_offset(int line, pix x);
 
     void draw_single_line
