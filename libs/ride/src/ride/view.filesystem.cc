@@ -186,6 +186,7 @@ void ViewFilesystem::update_rects_for_entries()
 
 void ViewFilesystem::on_layout_body()
 {
+    LineView::on_layout_body();
     update_rects_for_entries();
 }
 
