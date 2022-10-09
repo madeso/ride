@@ -233,7 +233,7 @@ void ViewFilesystem::draw_body(Renderer* cache)
 
     if(node_hovering)
     {
-        draw_rect(cache, app->to_dip(hit_rect_for_line(line_number_to_y(*node_hovering)).get_offset(scroll)), theme->filesys_hover_color);
+        draw_rect(cache, app->to_dip(hit_rect_for_line(line_number_to_y(*node_hovering)).get_offset({0_px, scroll.y})), theme->filesys_hover_color);
         cursor = cursor_type::hand;
     }
     else

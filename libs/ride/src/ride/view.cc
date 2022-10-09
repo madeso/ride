@@ -258,8 +258,8 @@ pix LineView::calculate_line_height() const
 
 pix LineView::line_number_to_y(std::size_t line) const
 {
-    const auto line_offset = static_cast<double>(line) * calculate_line_height();
-    return view_rect.height - calculate_line_height() - line_offset;
+    const auto line_offset = static_cast<double>(line + 1) * calculate_line_height();
+    return view_rect.height - line_offset;
 }
 
 
@@ -276,7 +276,7 @@ ScrollSize LineView::calculate_scroll_size()
 
 std::optional<std::size_t> LineView::get_index_under_view_position(const vec2<pix> relative_mouse)
 {
-    const auto p = vec2<pix>{relative_mouse.x - scroll.x, relative_mouse.y - scroll.y};
+    const auto p = vec2<pix>{relative_mouse.x, relative_mouse.y - scroll.y};
 
     // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
     for(std::size_t index  = 0; index < get_number_of_lines(); index += 1)
@@ -301,8 +301,8 @@ void LineView::draw_lines(Renderer* cache)
     for(std::size_t index = 0; index < get_number_of_lines(); index+=1)
     {
         draw_line(cache, index,
-            body_rect.x - scroll.x,
-            body_rect.y + line_number_to_y(index) + scroll.y
+            view_rect.x - scroll.x,
+            view_rect.y + line_number_to_y(index) + scroll.y
         );
     }
 }
