@@ -40,6 +40,7 @@ target_link_libraries(base
 set(src_test
     src/base/string.test.cc
     src/base/cc.test.cc
+    src/base/rect.test.cc
     ../../external/catch/main.cc
 )
 add_executable(base_test ${src_test})
@@ -52,3 +53,4 @@ target_link_libraries(base_test
         project_warnings
 )
 catch_discover_tests(base_test)
+

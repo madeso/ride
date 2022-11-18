@@ -252,6 +252,9 @@ void ViewDoc::on_layout_body()
 {
     LineView::on_layout_body();
 
+    // layout debug
+    view_rect = view_rect.get_inset(30_px);
+
     const auto lines = doc->GetNumberOfLines();
     const auto max_gutter_text = (Str{} << (lines+1)).ToString();
     const auto min_gutter_width = app->to_pix(font->get_width( max_gutter_text.c_str() ));
