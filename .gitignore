@@ -58,3 +58,5 @@ dist/
 
 .vscode
 junk
+.lite_workspace.lua
+
