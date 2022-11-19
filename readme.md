@@ -17,5 +17,5 @@ Ride is a general text editor like vs code, the name comes from concatenating R 
 If you're looking for something more complete, perhaps [RustDT](http://rustdt.github.io/) for Eclipse, [SolidOak](https://github.com/oakes/SolidOak) or [Rust](https://github.com/rrandom/Brackets-Rust-IDE/) for [brackets](http://brackets.io/) is your thing.
 
 # Code layout
-![code layout of ride](data/layout/ride.excalidraw.svg)
+![code layout of ride](data/ride.excalidraw.svg)
 
