@@ -3,11 +3,12 @@
 #include <optional>
 #include <memory>
 
-#include "api/uniform.h"
-
 #include "embed/types.h"
+
 #include "base/ints.h"
-// #include "api/dependency_opengl.h"
+
+#include "apigl/uniform.h"
+// #include "apigl/dependency_opengl.h"
 
 
 enum class TextureEdge
@@ -35,7 +36,7 @@ struct Texture
     int height;
 
     Texture(); // invalid texture
-    
+
     // "internal"
     Texture
     (
@@ -50,7 +51,7 @@ struct Texture
 
     Texture(const Texture&) = delete;
     void operator=(const Texture&) = delete;
-    
+
     Texture(Texture&&);
     void operator=(Texture&&);
 

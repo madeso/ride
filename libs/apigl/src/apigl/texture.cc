@@ -1,12 +1,13 @@
-#include "api/texture.h"
+#include "apigl/texture.h"
 
 #include "stb_image.h"
 
 #include "assert/assert.h"
 
 #include "base/c.h"
-#include "api/dependency_opengl.h"
-#include "api/log.h"
+
+#include "apigl/dependency_opengl.h"
+#include "apigl/log.h"
 
 
 namespace

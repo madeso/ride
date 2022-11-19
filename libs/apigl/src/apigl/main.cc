@@ -1,17 +1,17 @@
-#include "api/main.h"
+#include "apigl/main.h"
 
 #include <iostream>
 #include <sstream>
 
 #include "base/c.h"
 
-#include "api/renderer.h"
-#include "api/cursorcache.h"
-#include "api/log.h"
-#include "api/spritebatch.h"
+#include "apigl/renderer.h"
+#include "apigl/cursorcache.h"
+#include "apigl/log.h"
+#include "apigl/spritebatch.h"
 
-#include "api/dependency_opengl.h"
-#include "api/dependency_glm.h"
+#include "apigl/dependency_opengl.h"
+#include "apigl/dependency_glm.h"
 
 #ifdef _WIN32
     #include <windows.h>
@@ -211,7 +211,7 @@ void update_stencil(Renderer* c)
         c->render.batch.submit();
 
         // disable write to stencil buffer, only render where all rects has been drawn
-        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); 
+        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
         glStencilFunc(GL_EQUAL, Csizet_to_glsizei(c->rects.size()), 0xFF);
     }
 }
@@ -566,7 +566,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
                 window
             );
         }
-        
+
         app->update();
 
         // render

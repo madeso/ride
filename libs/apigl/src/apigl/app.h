@@ -7,11 +7,11 @@
 #include "base/size.h"
 #include "base/rect.h"
 #include "base/cursor.h"
-
-#include "api/key.h"
-//#include "api/font.h"
-#include "api/mouse_button.h"
 #include "base/units.h"
+
+#include "apigl/key.h"
+//#include "apigl/font.h"
+#include "apigl/mouse_button.h"
 
 struct Renderer;
 struct Font;
@@ -49,7 +49,7 @@ struct App
 
     int blink_timer = 0;
     bool run = true;
-    
+
     size<pix> client_size;
     double scale = 1.0;
     cursor_type cursor = cursor_type::arrow;

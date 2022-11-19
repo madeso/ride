@@ -1,4 +1,4 @@
-#include "api/font.h"
+#include "apigl/font.h"
 
 #include <cmath>
 #include <array>
@@ -10,10 +10,10 @@
 #include "base/rect.h"
 #include "base/c.h"
 
-#include "api/renderer.h"
-#include "api/image.h"
-#include "api/texture.h"
-#include "api/log.h"
+#include "apigl/renderer.h"
+#include "apigl/image.h"
+#include "apigl/texture.h"
+#include "apigl/log.h"
 
 #include "Inconsolata-Medium.ttf.h"
 
@@ -43,7 +43,7 @@ float c_dip_to_stb_size(dip d)
 // "mirror" of stbtt_bakedchar
 struct Glyph
 {
-    int x0; int y0; 
+    int x0; int y0;
     int x1; int y1;
 
     int xoff; int yoff;
@@ -282,7 +282,7 @@ dip draw_text(Renderer* ren, std::shared_ptr<Font> font, const std::string& text
         const auto sy = g->y1 - g->y0;
         const auto px = x + dip{g->xoff};
         const auto py = y - dip{g->yoff} - dip{sy} + font->m->data.height;
-        
+
         const auto texture_rect = Rectf
         {
             g->x0 / w ,
@@ -297,7 +297,7 @@ dip draw_text(Renderer* ren, std::shared_ptr<Font> font, const std::string& text
             dip{sx},
             dip{sy}
         };
-        
+
         draw_image(ren, set->texture, char_rect, color, texture_rect, Submit::no);
 
         x += dip{g->xadvance};

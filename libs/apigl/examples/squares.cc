@@ -1,8 +1,9 @@
 #include "base/color.open-color.h"
-#include "api/app.h"
-#include "api/main.h"
-#include "api/log.h"
-#include "api/renderer.h"
+
+#include "apigl/app.h"
+#include "apigl/main.h"
+#include "apigl/log.h"
+#include "apigl/renderer.h"
 
 struct SquaresApp : App
 {
@@ -19,9 +20,9 @@ struct SquaresApp : App
 
         draw_rect(cache, to_dip(rect<pix>{{50.0_px, 100.0_px}, ::size<pix>{30.0_px, 30.0_px}}), colors::red_500);
         draw_rect(cache, to_dip(rect<pix>{{100.0_px, 50.0_px}, ::size<pix>{30.0_px, 30.0_px}}), colors::blue_500);
-        
+
         auto r = rect<pix>{{100.0_px, 100.0_px}, ::size<pix>{400.0_px, 400.0_px}};
-        
+
         const auto size = pix{20};
 
         {
@@ -33,8 +34,8 @@ struct SquaresApp : App
             draw_rect(cache, to_dip(title), colors::pink_400);
         }
 
-        
-        
+
+
 
         {
             auto status = r.cut_bottom(size);

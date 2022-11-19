@@ -1,9 +1,10 @@
 #include "base/color.open-color.h"
-#include "api/app.h"
-#include "api/main.h"
-#include "api/font.h"
-#include "api/log.h"
-#include "api/renderer.h"
+
+#include "apigl/app.h"
+#include "apigl/main.h"
+#include "apigl/font.h"
+#include "apigl/log.h"
+#include "apigl/renderer.h"
 
 
 struct ScopeApp : App
@@ -11,7 +12,7 @@ struct ScopeApp : App
     std::shared_ptr<Font> font;
 
     vec2<pix> mouse = {pix{0}, pix{0}};
-    
+
     ScopeApp()
         : font(load_font(Font::default_font, 24_px))
     {
@@ -38,7 +39,7 @@ struct ScopeApp : App
 
         draw_rect(cache, to_dip(rect<pix>{{50_px, 100_px}, ::size<pix>{30_px, 30_px}}), colors::red_500);
         draw_rect(cache, to_dip(rect<pix>{{100_px, 50_px}, ::size<pix>{30_px, 30_px}}), colors::blue_500);
-        
+
         auto r = rect<pix>{{100_px, 100_px}, ::size<pix>{400_px, 400_px}};
 
         std::optional<ClipScope> scope_a;
@@ -58,7 +59,7 @@ struct ScopeApp : App
             break;
         }
 
-        
+
         const auto size = pix{20};
 
         {

@@ -1,11 +1,12 @@
 #include "spritebatch.h"
 
-#include "api/dependency_opengl.h"
-
-#include "api/shader.h"
-#include "api/texture.h"
-#include "base/c.h"
 #include "assert/assert.h"
+
+#include "base/c.h"
+
+#include "apigl/dependency_opengl.h"
+#include "apigl/shader.h"
+#include "apigl/texture.h"
 
 
 using namespace std::literals;

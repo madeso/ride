@@ -1,9 +1,11 @@
-#include "api/shader.h"
+#include "apigl/shader.h"
 
 #include "assert/assert.h"
-#include "api/dependency_opengl.h"
-#include "api/log.h"
+
 #include "base/c.h"
+
+#include "apigl/dependency_opengl.h"
+#include "apigl/log.h"
 
 
 bool

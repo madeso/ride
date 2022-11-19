@@ -1,28 +1,28 @@
 set(src
-    src/api/app.cc src/api/app.h
-    src/api/cursorcache.cc src/api/cursorcache.h
-    src/api/font.cc src/api/font.h
-    src/api/image.cc src/api/image.h
-    src/api/key.cc src/api/key.h
-    src/api/log.cc src/api/log.h
-    src/api/main.cc src/api/main.h
-    src/api/mouse_button.cc src/api/mouse_button.h
+    src/apigl/app.cc src/apigl/app.h
+    src/apigl/cursorcache.cc src/apigl/cursorcache.h
+    src/apigl/font.cc src/apigl/font.h
+    src/apigl/image.cc src/apigl/image.h
+    src/apigl/key.cc src/apigl/key.h
+    src/apigl/log.cc src/apigl/log.h
+    src/apigl/main.cc src/apigl/main.h
+    src/apigl/mouse_button.cc src/apigl/mouse_button.h
 
-    src/api/renderer.h
-    src/api/texture.cc src/api/texture.h
-    src/api/shader.cc src/api/shader.h
-    src/api/spritebatch.cc src/api/spritebatch.h
-    src/api/vertex_layout.cc src/api/vertex_layout.h
-    src/api/uniform.cc src/api/uniform.h
-    src/api/dependency_opengl.cc src/api/dependency_opengl.h
+    src/apigl/renderer.h
+    src/apigl/texture.cc src/apigl/texture.h
+    src/apigl/shader.cc src/apigl/shader.h
+    src/apigl/spritebatch.cc src/apigl/spritebatch.h
+    src/apigl/vertex_layout.cc src/apigl/vertex_layout.h
+    src/apigl/uniform.cc src/apigl/uniform.h
+    src/apigl/dependency_opengl.cc src/apigl/dependency_opengl.h
 )
-add_library(api STATIC ${src})
-target_include_directories(api
+add_library(apigl STATIC ${src})
+target_include_directories(apigl
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-set_crt_to_static(api)
-target_link_libraries(api
+set_crt_to_static(apigl)
+target_link_libraries(apigl
     PUBLIC
         sdl2
         embed
@@ -52,7 +52,7 @@ target_link_libraries(example_squares
         project_warnings
         open_color
     PUBLIC
-        api
+        apigl
 )
 
 
@@ -66,7 +66,7 @@ target_link_libraries(example_images
         project_options
         project_warnings
     PUBLIC
-        api
+        apigl
         data_logo
 )
 
@@ -81,7 +81,7 @@ target_link_libraries(example_font
         project_options
         project_warnings
     PUBLIC
-        api
+        apigl
 )
 
 
@@ -95,5 +95,5 @@ target_link_libraries(example_scope
         project_options
         project_warnings
     PUBLIC
-        api
+        apigl
 )

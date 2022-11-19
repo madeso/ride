@@ -4,7 +4,7 @@
 
 #include "base/cursor.h"
 
-#include "api/dependency_sdl.h"
+#include "apigl/dependency_sdl.h"
 
 
 struct cursor_cache

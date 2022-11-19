@@ -1,15 +1,15 @@
-#include "api/key.h"
+#include "apigl/key.h"
 
 #include <map>
 #include <cassert>
 #include <iostream>
 
-#include "api/dependency_sdl.h"
-
 #include "base/string.h"
 #include "base/cc.h"
 #include "base/c.h"
 #include "base/enumstringmap.h"
+
+#include "apigl/dependency_sdl.h"
 
 namespace
 {
@@ -329,7 +329,7 @@ std::optional<Stroke> stroke_from_string(const std::string& data)
             {
                 return {};
             }
-            
+
         }
         else
         {

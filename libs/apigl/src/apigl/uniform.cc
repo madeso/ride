@@ -1,4 +1,4 @@
-#include "api/uniform.h"
+#include "apigl/uniform.h"
 
 
 Uniform::Uniform()

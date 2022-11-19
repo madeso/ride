@@ -2,10 +2,10 @@
 
 #include <unordered_set>
 
-#include "api/vertex_layout.h"
-#include "api/uniform.h"
+#include "apigl/vertex_layout.h"
+#include "apigl/uniform.h"
 
-#include "api/dependency_glm.h"
+#include "apigl/dependency_glm.h"
 
 struct ShaderProgram
 {

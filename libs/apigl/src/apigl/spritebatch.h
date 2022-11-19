@@ -3,8 +3,8 @@
 #include "base/ints.h"
 #include "base/rect.h"
 
-#include "api/shader.h"
-#include "api/texture.h"
+#include "apigl/shader.h"
+#include "apigl/texture.h"
 
 struct Texture;
 struct ShaderProgram;

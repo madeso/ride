@@ -1,7 +1,7 @@
-#include "api/app.h"
-#include "api/font.h"
-#include "api/main.h"
-#include "api/renderer.h"
+#include "apigl/app.h"
+#include "apigl/font.h"
+#include "apigl/main.h"
+#include "apigl/renderer.h"
 
 struct ImagesApp : App
 {

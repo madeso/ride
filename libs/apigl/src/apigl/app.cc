@@ -1,10 +1,10 @@
-#include "api/app.h"
+#include "apigl/app.h"
 
-#include "api/dependency_sdl.h"
+#include "apigl/dependency_sdl.h"
 
 #include "base/vec2.h"
 
-#include "api/font.h"
+#include "apigl/font.h"
 
 #include <cassert>
 #include <algorithm>

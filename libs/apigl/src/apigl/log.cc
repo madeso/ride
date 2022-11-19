@@ -1,6 +1,6 @@
-#include "api/log.h"
+#include "apigl/log.h"
 
-#include "api/dependency_sdl.h"
+#include "apigl/dependency_sdl.h"
 
 namespace
 {

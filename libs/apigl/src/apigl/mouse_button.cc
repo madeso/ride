@@ -1,10 +1,11 @@
-#include "api/mouse_button.h"
+#include "apigl/mouse_button.h"
 
 #include <cassert>
 
-#include "api/dependency_sdl.h"
-
 #include "base/enumstringmap.h"
+
+#include "apigl/dependency_sdl.h"
+
 
 namespace
 {
