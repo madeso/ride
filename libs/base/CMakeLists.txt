@@ -41,6 +41,7 @@ set(src_test
     src/base/string.test.cc
     src/base/cc.test.cc
     src/base/rect.test.cc
+    src/base/vec2.test.cc
     ../../external/catch/main.cc
 )
 add_executable(base_test ${src_test})
