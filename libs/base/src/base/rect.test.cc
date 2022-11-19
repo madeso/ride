@@ -185,6 +185,34 @@ TEST_CASE("rect-test", "[rect]")
     ///////////////////////////////////////////////////////////////////////////
     // get_offset
 
+    SECTION("get offset (0,0)")
+    {
+        const auto off = r.get_offset({0, 0});
+        CHECK(off.get_left() == 1);
+        CHECK(off.get_right() == 4);
+        CHECK(off.get_bottom() == 2);
+        CHECK(off.get_top() == 6);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 6);
+    }
+
+    SECTION("get offset (...)")
+    {
+        const auto off = r.get_offset({1, 2});
+        CHECK(off.get_left() == 2);
+        CHECK(off.get_right() == 5);
+        CHECK(off.get_bottom() == 4);
+        CHECK(off.get_top() == 8);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 6);
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     // get_inset
 
