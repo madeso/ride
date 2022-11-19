@@ -1,6 +1,6 @@
 #include "api/vertex_layout.h"
 
-#include "base/assert.h"
+#include "assert/assert.h"
 
 
 std::optional<VertexType> parse_vertex_type(const std::string& name)

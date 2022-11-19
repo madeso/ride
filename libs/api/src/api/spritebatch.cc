@@ -5,7 +5,7 @@
 #include "api/shader.h"
 #include "api/texture.h"
 #include "base/c.h"
-#include "base/assert.h"
+#include "assert/assert.h"
 
 
 using namespace std::literals;

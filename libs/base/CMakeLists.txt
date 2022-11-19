@@ -1,5 +1,4 @@
 set(src
-    src/base/assert.cc src/base/assert.h
     src/base/c.cc src/base/c.h
     src/base/cc.cc src/base/cc.h
     src/base/color.cc src/base/color.h
@@ -31,6 +30,7 @@ target_link_libraries(base
     PUBLIC
         embed
         open_color
+        assert
     PRIVATE
         project_options
         project_warnings

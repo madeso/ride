@@ -4,7 +4,7 @@
 
 #include "stb_image.h"
 
-#include "base/assert.h"
+#include "assert/assert.h"
 #include "base/c.h"
 
 bool Image::load(const embedded_binary& data)

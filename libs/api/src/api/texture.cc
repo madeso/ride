@@ -2,7 +2,7 @@
 
 #include "stb_image.h"
 
-#include "base/assert.h"
+#include "assert/assert.h"
 
 #include "base/c.h"
 #include "api/dependency_opengl.h"
@@ -154,7 +154,7 @@ LoadImage
     int width = 0;
     int height = 0;
     int junk_channels = 0;
-    
+
     stbi_set_flip_vertically_on_load(true);
     auto* pixel_data = stbi_load_from_memory
     (

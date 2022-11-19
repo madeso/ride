@@ -1,6 +1,6 @@
 #include "api/shader.h"
 
-#include "base/assert.h"
+#include "assert/assert.h"
 #include "api/dependency_opengl.h"
 #include "api/log.h"
 #include "base/c.h"

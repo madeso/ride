@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-#include "base/assert.h"
+#include "assert/assert.h"
 #include "base/vec2.h"
 #include "base/size.h"
 #include "base/side.h"
