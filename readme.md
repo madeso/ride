@@ -3,7 +3,6 @@
 [![windows](https://github.com/madeso/ride/workflows/windows/badge.svg?branch=master)](https://github.com/madeso/ride/actions/workflows/windows.yml)
 [![linux](https://github.com/madeso/ride/workflows/linux/badge.svg?branch=master)](https://github.com/madeso/ride/actions/workflows/linux.yml)
 [![Project Stats](https://www.openhub.net/p/ride/widgets/project_thin_badge?format=gif&ref=Thin+badge)](https://www.openhub.net/p/ride)
-[![Join the chat at https://gitter.im/madeso/ride](https://badges.gitter.im/madeso/ride.svg)](https://gitter.im/madeso/ride?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This branch contains the development of a "new ride" that maintain a small impact on the ui library. This is for a few reasons.
 
