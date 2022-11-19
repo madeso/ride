@@ -30,7 +30,7 @@ void ViewDoc::scroll_to_cursor(const position& p)
     const auto bot = pb.y + theme->miminal_scroll_offset - view_rect.y;
 
     std::cout << "data " << top.value << " " << bot.value << " " << view_rect.height.value << " " << view_rect.y.value << "\n";
-    
+
     // determine if it's outside of the range
     auto ychange = 0_px;
     if(top < 0_px) { std::cout << "top change\n"; ychange -= top; }
@@ -90,7 +90,7 @@ pix ViewDoc::get_full_document_width() const
             largest = l;
         }
     }
-    
+
     return largest;
 }
 
@@ -111,7 +111,7 @@ void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix&, con
         const auto text_scope = ClipScope(cache, app->to_dip(view_rect));
         draw_single_line
         (
-            cache, line_index,
+            cache, Csizet_to_int(line_index),
             {
                 // calculate x instead of using passed x to automatically include gutter width...
                 view_rect.x + theme->text_spacing - scroll.x,
@@ -206,7 +206,7 @@ void ViewDoc::draw_single_line
             );
         }
     }
-    
+
     // draw the text
     draw_text
     (
@@ -368,7 +368,7 @@ int ViewDoc::absolute_pix_x_to_offset(int line, pix px)
 
     const auto text = this->doc->GetLineAt(line);
     const auto chars = utf8_chars(text);
-    
+
     std::string str;
     int index = 0;
 
@@ -384,7 +384,7 @@ int ViewDoc::absolute_pix_x_to_offset(int line, pix px)
         const auto middle = last_width + half;
 
         last_width = new_width;
-        
+
         if(xx <= middle)
         {
             return index;
@@ -527,7 +527,7 @@ void ViewDoc::on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse)
     {
         cursor = cursor_type::arrow;
     }
-    
+
 }
 
 
