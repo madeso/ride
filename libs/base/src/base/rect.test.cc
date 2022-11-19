@@ -2,7 +2,6 @@
 
 #include "base/rect.h"
 
-using R = recti;
 
 TEST_CASE("rect-test", "[rect]")
 {
@@ -16,7 +15,7 @@ TEST_CASE("rect-test", "[rect]")
         -----------
       (1,2)       (4, 2)
     */
-    R r = R{1, 2, 3, 4};
+    auto r = recti{1, 2, 3, 4};
     CHECK(r.x == 1);
     CHECK(r.y == 2);
     CHECK(r.width == 3);
@@ -67,7 +66,124 @@ TEST_CASE("rect-test", "[rect]")
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // @todo(Gustav)
+    // cut
+
+    SECTION("cut left")
+    {
+        const auto cut = r.cut_left(1);
+        CHECK(cut.get_left() == 1);
+        CHECK(cut.get_right() == 2);
+        CHECK(cut.get_bottom() == 2);
+        CHECK(cut.get_top() == 6);
+
+        CHECK(r.get_left() == 2);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 6);
+    }
+
+    SECTION("cut right")
+    {
+        const auto cut = r.cut_right(1);
+        CHECK(cut.get_left() == 3);
+        CHECK(cut.get_right() == 4);
+        CHECK(cut.get_bottom() == 2);
+        CHECK(cut.get_top() == 6);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 3);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 6);
+    }
+
+    SECTION("cut top")
+    {
+        const auto cut = r.cut_top(1);
+        CHECK(cut.get_left() == 1);
+        CHECK(cut.get_right() == 4);
+        CHECK(cut.get_bottom() == 5);
+        CHECK(cut.get_top() == 6);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 5);
+    }
+
+    SECTION("cut bottom")
+    {
+        const auto cut = r.cut_bottom(1);
+        CHECK(cut.get_left() == 1);
+        CHECK(cut.get_right() == 4);
+        CHECK(cut.get_bottom() == 2);
+        CHECK(cut.get_top() == 3);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 3);
+        CHECK(r.get_top() == 6);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // get_cut
+    SECTION("get cut left")
+    {
+        const auto cut = r.get_cut_left(1);
+        CHECK(cut.get_left() == 1);
+        CHECK(cut.get_right() == 2);
+        CHECK(cut.get_bottom() == 2);
+        CHECK(cut.get_top() == 6);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 6);
+    }
+
+    SECTION("get cut right")
+    {
+        const auto cut = r.get_cut_right(1);
+        CHECK(cut.get_left() == 3);
+        CHECK(cut.get_right() == 4);
+        CHECK(cut.get_bottom() == 2);
+        CHECK(cut.get_top() == 6);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 6);
+    }
+
+    SECTION("get cut top")
+    {
+        const auto cut = r.get_cut_top(1);
+        CHECK(cut.get_left() == 1);
+        CHECK(cut.get_right() == 4);
+        CHECK(cut.get_bottom() == 5);
+        CHECK(cut.get_top() == 6);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 6);
+    }
+
+    SECTION("get cut bottom")
+    {
+        const auto cut = r.get_cut_bottom(1);
+        CHECK(cut.get_left() == 1);
+        CHECK(cut.get_right() == 4);
+        CHECK(cut.get_bottom() == 2);
+        CHECK(cut.get_top() == 3);
+
+        CHECK(r.get_left() == 1);
+        CHECK(r.get_right() == 4);
+        CHECK(r.get_bottom() == 2);
+        CHECK(r.get_top() == 6);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // get_offset
 
     ///////////////////////////////////////////////////////////////////////////
     // get_inset
