@@ -277,6 +277,25 @@ struct Renderer : ::Renderer
 };
 
 
+#if 0
+// register this somewhere
+int filterEvent(void* userdata, SDL_Event* event)
+{
+    if (event->type == SDL_WINDOWEVENT && event->window.event == SDL_WINDOWEVENT_RESIZED)
+    {
+        // convert userdata pointer to yours and trigger your own draw function
+        // this is called very often now
+        // IMPORTANT: Might be called from a different thread, see SDL_SetEventFilter docs
+        App* app = static_cast<App*>(userdata);
+        app->draw();
+
+        // return 0 if you don't want to handle this event twice
+        return 0;
+    }
+
+    return 1;
+}
+#endif
 
 void on_event
 (
