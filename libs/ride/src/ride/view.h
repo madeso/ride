@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <memory>
 
 #include "base/vec2.h"
 #include "base/size.h"
@@ -88,7 +89,7 @@ struct View
 
     virtual void draw_body(Renderer* cache) = 0;
     virtual ScrollSize calculate_scroll_size() = 0;
-    
+
     // called after client_rect and body_rect is set
     virtual void on_layout_body();
 

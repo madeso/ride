@@ -10,6 +10,9 @@
 #include "apigl/log.h"
 
 
+namespace ride::apigl
+{
+
 namespace
 {
     constexpr unsigned int invalid_id = 0;
@@ -31,6 +34,15 @@ Texture::Texture()
 {
 }
 
+int Texture::get_width() const
+{
+    return width;
+}
+
+int Texture::get_height() const
+{
+    return height;
+}
 
 Texture::Texture
 (
@@ -218,7 +230,7 @@ load_image_from_color
 
 
 std::shared_ptr<Texture>
-load_shared_texture(const embedded_binary& image_binary)
+load_shared_texture_impl(const embedded_binary& image_binary)
 {
     auto texture = load_image_from_embedded(image_binary, TextureEdge::clamp, TextureRenderStyle::smooth, Transparency::include);
     if(texture)
@@ -230,3 +242,7 @@ load_shared_texture(const embedded_binary& image_binary)
         return nullptr;
     }
 }
+
+}
+
+

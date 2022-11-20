@@ -80,7 +80,7 @@ std::optional<ScrollbarData> layout_scrollbar(rect<pix>* view_rect, Theme* theme
         ? rect<pix>::from_lrtb(track_rect.get_left(), track_rect.get_right(), vtop, vtop - thumb_size)
         : rect<pix>::from_lrtb(track_rect.get_left() + thumb_offset, track_rect.get_left() + thumb_offset + thumb_size, track_rect.get_top(), track_rect.get_bottom())
         ;
-    
+
     return ScrollbarData
     {
         through_rect,
@@ -93,10 +93,10 @@ std::optional<ScrollbarData> layout_scrollbar(rect<pix>* view_rect, Theme* theme
 void draw_scrollbar(const ScrollbarData& data, App* app, Theme* theme, Renderer* cache)
 {
     const auto clip_scope = ClipScope{cache, app->to_dip(data.through_rect)};
-    draw_rect(cache, app->to_dip(data.through_rect), theme->scroll_through_color);
-    draw_rect(cache, app->to_dip(data.thumb_rect), theme->scroll_thumb_color);
-    draw_rect(cache, app->to_dip(data.top_button_rect), theme->scroll_button_color);
-    draw_rect(cache, app->to_dip(data.bottom_button_rect), theme->scroll_button_color);
+    cache->draw_rect(app->to_dip(data.through_rect), theme->scroll_through_color);
+    cache->draw_rect(app->to_dip(data.thumb_rect), theme->scroll_thumb_color);
+    cache->draw_rect(app->to_dip(data.top_button_rect), theme->scroll_button_color);
+    cache->draw_rect(app->to_dip(data.bottom_button_rect), theme->scroll_button_color);
 }
 
 void View::on_layout(const rect<pix>& new_client_rect)
@@ -105,7 +105,7 @@ void View::on_layout(const rect<pix>& new_client_rect)
     body_rect = new_client_rect;
 
     const auto scroll_size = get_scroll_size();
-    
+
     if(scroll_size.height)
     {
         vertical_scrollbar_data = layout_scrollbar
@@ -196,7 +196,7 @@ void do_scroll(pix* scroll, const std::optional<pix>& size, int d, pix change)
         // if not scroll is requested, make sure the scroll is zero
         *scroll = 0_px;
     }
-    
+
 }
 
 void View::on_mouse_wheel(int dx, int dy)

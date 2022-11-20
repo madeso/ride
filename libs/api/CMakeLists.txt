@@ -1,0 +1,25 @@
+set(src
+    src/api/app.cc src/api/app.h
+    src/api/font.cc src/api/font.h
+    src/api/image.cc src/api/image.h
+    src/api/key.cc src/api/key.h
+    src/api/mouse_button.cc src/api/mouse_button.h
+    src/api/renderer.cc src/api/renderer.h
+)
+add_library(api STATIC ${src})
+target_include_directories(api
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+set_crt_to_static(api)
+target_link_libraries(api
+    PUBLIC
+        embed
+        base
+        fmt::fmt
+    PRIVATE
+        project_options
+        project_warnings
+        stb_truetype
+        stb_image
+)

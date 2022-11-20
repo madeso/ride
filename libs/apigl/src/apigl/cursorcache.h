@@ -6,6 +6,8 @@
 
 #include "apigl/dependency_sdl.h"
 
+namespace ride::apigl
+{
 
 struct cursor_cache
 {
@@ -14,3 +16,6 @@ struct cursor_cache
 
     std::map<cursor_type, SDL_Cursor*> cache;
 };
+
+}
+

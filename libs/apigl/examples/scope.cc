@@ -4,17 +4,20 @@
 #include "apigl/main.h"
 #include "apigl/font.h"
 #include "apigl/log.h"
-#include "apigl/renderer.h"
+#include "api/renderer.h"
+
+using namespace ride::apigl;
 
 
 struct ScopeApp : App
 {
-    std::shared_ptr<Font> font;
+    std::shared_ptr<::Font> font;
 
     vec2<pix> mouse = {pix{0}, pix{0}};
 
-    ScopeApp()
-        : font(load_font(Font::default_font, 24_px))
+    ScopeApp(PlatformArg p)
+        : App(p)
+        , font(load_font(default_font, 24_px))
     {
     }
 
@@ -33,12 +36,12 @@ struct ScopeApp : App
         }
     }
 
-    void draw(Renderer* cache) override
+    void draw(::Renderer* cache) override
     {
-        draw_rect(cache, to_dip(rect<pix>::from_size(client_size)), colors::white);
+        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), colors::white);
 
-        draw_rect(cache, to_dip(rect<pix>{{50_px, 100_px}, ::size<pix>{30_px, 30_px}}), colors::red_500);
-        draw_rect(cache, to_dip(rect<pix>{{100_px, 50_px}, ::size<pix>{30_px, 30_px}}), colors::blue_500);
+        cache->draw_rect(to_dip(rect<pix>{{50_px, 100_px}, ::size<pix>{30_px, 30_px}}), colors::red_500);
+        cache->draw_rect(to_dip(rect<pix>{{100_px, 50_px}, ::size<pix>{30_px, 30_px}}), colors::blue_500);
 
         auto r = rect<pix>{{100_px, 100_px}, ::size<pix>{400_px, 400_px}};
 
@@ -66,9 +69,9 @@ struct ScopeApp : App
             auto title = r.cut_top(size);
             for(const auto g: colors::gray)
             {
-                draw_rect(cache, to_dip(title.cut_left(size)), g);
+                cache->draw_rect(to_dip(title.cut_left(size)), g);
             }
-            draw_rect(cache, to_dip(title), colors::pink_400);
+            cache->draw_rect(to_dip(title), colors::pink_400);
         }
 
 
@@ -76,21 +79,21 @@ struct ScopeApp : App
             auto status = r.cut_bottom(size);
             for(const auto g: colors::cyan)
             {
-                draw_rect(cache, to_dip(status.cut_right(size)), g);
+                cache->draw_rect(to_dip(status.cut_right(size)), g);
             }
-            draw_rect(cache, to_dip(status), colors::pink_400);
+            cache->draw_rect(to_dip(status), colors::pink_400);
         }
 
-        draw_rect(cache, to_dip(r), colors::teal_500);
+        cache->draw_rect(to_dip(r), colors::teal_500);
 
-        draw_rect(cache, to_dip(r.get_inset(size)), colors::grape_500);
+        cache->draw_rect(to_dip(r.get_inset(size)), colors::grape_500);
 
-        draw_text(cache, font, "press space", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
+        cache->draw_text(font, "press space", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
     }
 };
 
 int main(int argc, char** argv)
 {
-    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<ScopeApp>();});
+    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<ScopeApp>(create_platform());});
 }
 

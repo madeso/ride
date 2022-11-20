@@ -1,4 +1,5 @@
 set(src
+    src/ride/app.cc src/ride/app.h
     src/ride/keybind.cc src/ride/keybind.h
     src/ride/theme.cc src/ride/theme.h
     src/ride/view.cc src/ride/view.h
@@ -18,7 +19,10 @@ target_link_libraries(rideapp
         api
         libride
         fmt::fmt
+        
     PRIVATE
+        data_logo
+        data_font
         project_options
         project_warnings
 )

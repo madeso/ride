@@ -7,6 +7,9 @@
 
 #include "apigl/dependency_glm.h"
 
+namespace ride::apigl
+{
+
 struct ShaderProgram
 {
     ShaderProgram
@@ -83,3 +86,7 @@ is_shader_bound(unsigned int program);
 
 void
 clear_shader_program();
+
+}
+
+

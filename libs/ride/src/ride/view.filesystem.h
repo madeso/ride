@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "base/units.h"
+#include "base/color.h"
 
 #include "ride/view.h"
 

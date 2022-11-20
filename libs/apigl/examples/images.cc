@@ -1,9 +1,12 @@
+#include "api/texture.h"
+#include "api/renderer.h"
+
 #include "apigl/app.h"
-#include "apigl/texture.h"
 #include "apigl/main.h"
-#include "apigl/renderer.h"
 
 #include "logo_256text_png.h"
+
+using namespace ride::apigl;
 
 struct ImagesApp : App
 {
@@ -11,8 +14,9 @@ struct ImagesApp : App
 
     std::shared_ptr<Texture> logo;
 
-    ImagesApp()
-        : logo(load_shared_texture(LOGO_256TEXT_PNG))
+    ImagesApp(PlatformArg p)
+        : App(p)
+        , logo(p->load_shared_texture(LOGO_256TEXT_PNG))
     {
     }
 
@@ -23,16 +27,14 @@ struct ImagesApp : App
 
     void draw(Renderer* cache) override
     {
-        draw_rect(cache, to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
-
-        draw_rect(cache, to_dip(rect<pix>{mouse, {10_px, 10_px}}), Color::rgb(0, 0, 255, 255));
-
-        draw_image(cache, logo, to_dip(20_px), to_dip(20_px), {255, 0, 0, 255});
+        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(to_dip(rect<pix>{mouse, {10_px, 10_px}}), Color::rgb(0, 0, 255, 255));
+        cache->draw_image(logo, to_dip(20_px), to_dip(20_px), {255, 0, 0, 255});
     }
 };
 
 int main(int argc, char** argv)
 {
-    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<ImagesApp>();});
+    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<ImagesApp>(create_platform());});
 }
 

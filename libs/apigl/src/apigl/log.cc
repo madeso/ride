@@ -2,6 +2,9 @@
 
 #include "apigl/dependency_sdl.h"
 
+namespace ride::apigl
+{
+
 namespace
 {
     void
@@ -32,5 +35,7 @@ void
 log_warning_implementation(fmt::string_view format, fmt::format_args args)
 {
     log_implementation(SDL_LOG_PRIORITY_WARN, format, args);
+}
+
 }
 

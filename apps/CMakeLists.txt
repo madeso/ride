@@ -13,14 +13,9 @@ target_link_libraries(ride
     PRIVATE
         project_options
     PUBLIC
-        libride
         rideapp
+        apigl
         sdl2
-        stb_truetype
-        api
-        data_logo
-        data_font
-        fmt::fmt
 )
 
 ###############################################################################

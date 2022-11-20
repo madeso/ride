@@ -1,6 +1,9 @@
 #include "apigl/dependency_opengl.h"
 
 
+namespace ride::apigl
+{
+
 GLenum
 Cint_to_glenum(int i)
 {
@@ -27,3 +30,6 @@ Csizet_to_glsizei(std::size_t t)
 {
     return static_cast<GLsizei>(t);
 }
+
+}
+

@@ -2,13 +2,11 @@ set(src
     src/apigl/app.cc src/apigl/app.h
     src/apigl/cursorcache.cc src/apigl/cursorcache.h
     src/apigl/font.cc src/apigl/font.h
-    src/apigl/image.cc src/apigl/image.h
     src/apigl/key.cc src/apigl/key.h
     src/apigl/log.cc src/apigl/log.h
     src/apigl/main.cc src/apigl/main.h
     src/apigl/mouse_button.cc src/apigl/mouse_button.h
 
-    src/apigl/renderer.h
     src/apigl/texture.cc src/apigl/texture.h
     src/apigl/shader.cc src/apigl/shader.h
     src/apigl/spritebatch.cc src/apigl/spritebatch.h
@@ -27,6 +25,7 @@ target_link_libraries(apigl
         sdl2
         embed
         base
+        api
         fmt::fmt
     PRIVATE
         project_options

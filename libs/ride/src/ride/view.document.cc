@@ -97,9 +97,8 @@ pix ViewDoc::get_full_document_width() const
 
 void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix&, const pix& y)
 {
-    draw_text
+    cache->draw_text
     (
-        cache,
         font,
         "{0: >{1}}"_format(line_index+1, gutter_char_length),
         app->to_dip(gutter_rect.x + theme->gutter_spacing_left),
@@ -161,9 +160,8 @@ void ViewDoc::draw_single_line
 
         if(highlight)
         {
-            draw_rect
+            cache->draw_rect
             (
-                cache,
                 app->to_dip
                 (
                     rect<pix>
@@ -191,9 +189,8 @@ void ViewDoc::draw_single_line
             const auto x2 = position.x + get_col_x_offset(s.b.offset);
             const auto lh = font_height; // include line spacing here?
 
-            draw_rect
+            cache->draw_rect
             (
-                cache,
                 app->to_dip
                 (
                     rect<pix>
@@ -208,9 +205,8 @@ void ViewDoc::draw_single_line
     }
 
     // draw the text
-    draw_text
+    cache->draw_text
     (
-        cache,
         font,
         doc->GetLineAt(line_index),
         app->to_dip(position.x),
@@ -225,9 +221,8 @@ void ViewDoc::draw_single_line
         {
             const auto lh = font_height;
             const auto x1 = position.x + get_col_x_offset(sel.a.offset);
-            draw_rect
+            cache->draw_rect
             (
-                cache,
                 app->to_dip
                 (
                     rect<pix>
@@ -267,8 +262,8 @@ void ViewDoc::on_layout_body()
 
 void ViewDoc::draw_body(Renderer* cache)
 {
-    draw_rect(cache, app->to_dip(view_rect), theme->edit_background);
-    draw_rect(cache, app->to_dip(gutter_rect), theme->gutter_background);
+    cache->draw_rect(app->to_dip(view_rect), theme->edit_background);
+    cache->draw_rect(app->to_dip(gutter_rect), theme->gutter_background);
 
     draw_lines(cache);
 
@@ -278,7 +273,7 @@ void ViewDoc::draw_body(Renderer* cache)
         {
             const auto draw_p = [this, cache](const vec2<pix> p)
             {
-                draw_rect(cache, app->to_dip(rect<pix>{p, {8_px, 2_px}
+                cache->draw_rect(app->to_dip(rect<pix>{p, {8_px, 2_px}
                 }), theme->selection_background);
             };
 

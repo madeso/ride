@@ -6,6 +6,9 @@
 #include "apigl/shader.h"
 #include "apigl/texture.h"
 
+namespace ride::apigl
+{
+
 struct Texture;
 struct ShaderProgram;
 struct Render2;
@@ -58,3 +61,7 @@ struct Render2
 
     SpriteBatch batch;
 };
+
+}
+
+

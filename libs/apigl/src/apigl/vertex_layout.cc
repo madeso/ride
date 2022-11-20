@@ -3,6 +3,9 @@
 #include "assert/assert.h"
 
 
+namespace ride::apigl
+{
+
 std::optional<VertexType> parse_vertex_type(const std::string& name)
 {
     #define NAME(x) if(name == #x) { return VertexType::x; }
@@ -128,3 +131,6 @@ compile_attribute_layouts(const std::vector<ShaderVertexAttributes>& description
 {
     return compile_attribute_layouts({}, descriptions);
 }
+
+}
+

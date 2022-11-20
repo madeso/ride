@@ -1,7 +1,10 @@
+#include "api/font.h"
+#include "api/renderer.h"
+
 #include "apigl/app.h"
-#include "apigl/font.h"
 #include "apigl/main.h"
-#include "apigl/renderer.h"
+
+using namespace ride::apigl;
 
 struct ImagesApp : App
 {
@@ -9,8 +12,9 @@ struct ImagesApp : App
 
     std::shared_ptr<Font> font;
 
-    ImagesApp()
-        : font(load_font(Font::default_font, 24_px))
+    ImagesApp(PlatformArg p)
+        : App(p)
+        , font(load_font(default_font, 24_px))
     {
     }
 
@@ -19,18 +23,18 @@ struct ImagesApp : App
         mouse = new_mouse;
     }
 
-    void draw(Renderer* cache) override
+    void draw(::Renderer* cache) override
     {
-        draw_rect(cache, to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
 
-        draw_text(cache, font, "Hello world", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
+        cache->draw_text(font, "Hello world", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
 
-        draw_text(cache, font, "mouse", to_dip(mouse.x), to_dip(mouse.y), {0, 0, 255, 255});
+        cache->draw_text(font, "mouse", to_dip(mouse.x), to_dip(mouse.y), {0, 0, 255, 255});
     }
 };
 
 int main(int argc, char** argv)
 {
-    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<ImagesApp>();});
+    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<ImagesApp>(create_platform());});
 }
 

@@ -1,16 +1,18 @@
 #include "apigl/app.h"
 
-#include "apigl/dependency_sdl.h"
-
-#include "base/vec2.h"
-
-#include "apigl/font.h"
-
 #include <cassert>
 #include <algorithm>
 #include <optional>
 #include <iostream>
 #include <sstream>
+
+#include "apigl/dependency_sdl.h"
+
+#include "base/vec2.h"
+
+#include "apigl/font.h"
+#include "apigl/texture.h"
+
 
 #ifdef _WIN32
 #include <windows.h>
@@ -21,6 +23,9 @@
 #elif __APPLE__
 #include <mach-o/dyld.h>
 #endif
+
+namespace ride::apigl
+{
 
 double calculate_scale()
 {
@@ -33,122 +38,28 @@ double calculate_scale()
 #endif
 }
 
-App::App()
-    : run(true)
-    , client_size{pix{0}, pix{0}}
-    , scale(calculate_scale())
-    , redraw_value(nullptr)
+struct PlatformImpl : ::Platform
 {
-}
-
-void App::redraw()
-{
-    assert(redraw_value);
-    *redraw_value = true;
-}
-
-void App::on_exposed()
-{
-}
-
-void App::on_file_dropped(const std::string&, pix, pix)
-{
-}
-
-void App::on_resized(pix, pix)
-{
-}
-
-void App::on_key_pressed(const Stroke&)
-{
-}
-
-void App::on_key_released(const Stroke&)
-{
-}
-
-void App::on_text_input(const std::string&)
-{
-}
-
-
-void App::on_mouse_pressed(MouseButton, const Meta&, const vec2<pix>&, int)
-{
-}
-
-void App::on_mouse_released(MouseButton, const Meta&, const vec2<pix>&)
-{
-}
-
-void App::on_mouse_moved(const Meta&, const vec2<pix>&, pix, pix)
-{
-}
-
-void App::on_mouse_wheel(int, int)
-{
-}
-
-void App::on_quit()
-{
-    run = false;
-}
-
-void App::update()
-{
-}
-
-dip App::to_dip(pix p) const
-{
-    return dip{static_cast<dip::type>(p.value * scale)};
-}
-
-rect<dip> App::to_dip(const rect<pix>& p) const
-{
-    return rect<dip>
+    double get_default_scale() override
     {
-        to_dip(p.x),
-        to_dip(p.y),
-        to_dip(p.width),
-        to_dip(p.height)
-    };
-}
-
-pix App::to_pix(dip p) const
-{
-    return pix{static_cast<double>(p.value) / scale};
-}
-
-
-void App::set_scale(double d)
-{
-    scale = d;
-
-    /*
-
-    for(auto& f: loaded_fonts)
-    {
-        f->set_size(to_dip(f->unscaled_size));
+        return calculate_scale();
     }
 
-    */
+    std::shared_ptr<::Font> make_font() override
+    {
+        return std::make_shared<Font>();
+    }
+
+    std::shared_ptr<::Texture> load_shared_texture(const embedded_binary& image_binary) override
+    {
+        return load_shared_texture_impl(image_binary);
+    }
+};
+
+PlatformArg create_platform()
+{
+    return std::make_shared<PlatformImpl>();
 }
 
-std::shared_ptr<Font> App::load_font(const std::string_view& file, pix size)
-{
-    return load_font(std::string(file), size);
 }
 
-std::shared_ptr<Font> App::load_font(const std::string& file, pix size)
-{
-    auto r = std::make_shared<Font>();
-    if(r->load_font(file.c_str(), to_dip(size)))
-    {
-        loaded_fonts.emplace_back(r);
-        r->unscaled_size = size;
-        return r;
-    }
-    else
-    {
-        return nullptr;
-    }
-}

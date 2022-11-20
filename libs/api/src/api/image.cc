@@ -1,4 +1,4 @@
-#include "apigl/image.h"
+#include "api/image.h"
 
 #include <cstring> // memcpy
 

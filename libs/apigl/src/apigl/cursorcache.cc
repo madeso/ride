@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+namespace ride::apigl
+{
 
 namespace
 {
@@ -37,3 +39,6 @@ void cursor_cache::set_cursor(cursor_type new_cursor)
 {
     SDL_SetCursor(get_or_create(new_cursor));
 }
+
+}
+

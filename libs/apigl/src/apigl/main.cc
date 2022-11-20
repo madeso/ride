@@ -4,11 +4,16 @@
 #include <sstream>
 
 #include "base/c.h"
+#include "base/utf8.h"
 
-#include "apigl/renderer.h"
+#include "api/renderer.h"
+
 #include "apigl/cursorcache.h"
 #include "apigl/log.h"
 #include "apigl/spritebatch.h"
+#include "apigl/key.h"
+#include "apigl/mouse_button.h"
+#include "apigl/font.h"
 
 #include "apigl/dependency_opengl.h"
 #include "apigl/dependency_glm.h"
@@ -22,6 +27,9 @@
 #elif __APPLE__
     #include <mach-o/dyld.h>
 #endif
+
+namespace ride::apigl
+{
 
 #if 0
 void init_window_icon(void) {
@@ -109,163 +117,165 @@ T parse(const std::string& str)
 
 
 
-struct Renderer
+struct Renderer : ::Renderer
 {
     Render2 render;
     std::vector<rect<dip>> rects;
-};
 
-void draw_rect(Renderer* ren, const rect<dip>& r, Color c)
-{
-    // LOG_INFO("Drawing rect {} {} {} {}", r.x.value, r.y.value, r.width.value, r.height.value);
-    ren->render.batch.quad
-    (
-        std::nullopt,
-        {
-            Cint_to_float(r.x.value),
-            Cint_to_float(r.y.value),
-            Cint_to_float(r.width.value),
-            Cint_to_float(r.height.value)
-        },
-        std::nullopt,
-        {c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f}
-    );
-
-    // submit after each quad?
-    ren->render.batch.submit();
-}
-
-void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, dip x, dip y, Color c, std::optional<Rectf> sub, Submit submit)
-{
-    draw_image
-    (
-        ren, texture,
-        {
-            x,
-            y,
-            dip{texture->width},
-            dip{texture->height}
-        },
-        c,
-        sub,
-        submit
-    );
-}
-void draw_image(Renderer* ren, std::shared_ptr<Texture> texture, const rect<dip>& rect, Color c, std::optional<Rectf> sub, Submit submit)
-{
-    // LOG_INFO("Drawing image {} {} {} {}", x.value, y.value, texture->width, texture->height);
-    ren->render.batch.quad
-    (
-        texture.get(),
-        {
-            Cint_to_float(rect.x.value),
-            Cint_to_float(rect.y.value),
-            Cint_to_float(rect.width.value),
-            Cint_to_float(rect.height.value),
-        },
-        sub,
-        {c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f}
-    );
-
-    // submit after each quad?
-    if(submit == Submit::yes)
+    void update_stencil()
     {
+        Renderer* c = this;
+
+        if(c->rects.empty())
+        {
+            glDisable(GL_STENCIL_TEST);
+        }
+        else
+        {
+            glEnable(GL_STENCIL_TEST);
+            glStencilMask(0xFF);
+
+            // clear to 0
+            glClearStencil(0);
+            glClear(GL_STENCIL_BUFFER_BIT);
+
+            // enable writing, increase when succeeded and write all "scope" rects
+            glStencilOp(GL_INCR, GL_INCR, GL_INCR);
+            glStencilFunc(GL_ALWAYS, 1, 0xFF);
+            for(const auto& r: c->rects)
+            {
+                c->render.batch.quad
+                (
+                    std::nullopt,
+                    {
+                        Cint_to_float(r.x.value),
+                        Cint_to_float(r.y.value),
+                        Cint_to_float(r.width.value),
+                        Cint_to_float(r.height.value),
+                    },
+                    std::nullopt,
+                    // hack? use alpha=0 to write to the stencil buffer but the not color buffer
+                    {255, 255, 255, 0}
+                );
+            }
+            c->render.batch.submit();
+
+            // disable write to stencil buffer, only render where all rects has been drawn
+            glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+            glStencilFunc(GL_EQUAL, Csizet_to_glsizei(c->rects.size()), 0xFF);
+        }
+    }
+
+    void push_clip_rect(const rect<dip>& r) override
+    {
+        Renderer* c = this;
+        c->rects.emplace_back(r);
+        update_stencil();
+    }
+
+    void pop_clip_rect() override
+    {
+        Renderer* c = this;
+        c->rects.pop_back();
+        update_stencil();
+    }
+
+    void draw_rect(const rect<dip>& r, Color c) override
+    {
+        Renderer* ren = this;
+        // LOG_INFO("Drawing rect {} {} {} {}", r.x.value, r.y.value, r.width.value, r.height.value);
+        ren->render.batch.quad
+        (
+            std::nullopt,
+            {
+                Cint_to_float(r.x.value),
+                Cint_to_float(r.y.value),
+                Cint_to_float(r.width.value),
+                Cint_to_float(r.height.value)
+            },
+            std::nullopt,
+            {c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f}
+        );
+
+        // submit after each quad?
         ren->render.batch.submit();
     }
-}
 
-void update_stencil(Renderer* c)
-{
-    if(c->rects.empty())
+    void draw_image(std::shared_ptr<::Texture> the_texture, const rect<dip>& rect, Color c, std::optional<Rectf> sub, Submit submit) override
     {
-        glDisable(GL_STENCIL_TEST);
-    }
-    else
-    {
-        glEnable(GL_STENCIL_TEST);
-        glStencilMask(0xFF);
+        auto texture = std::static_pointer_cast<Texture>(the_texture);
+        Renderer* ren = this;
+        // LOG_INFO("Drawing image {} {} {} {}", x.value, y.value, texture->width, texture->height);
+        ren->render.batch.quad
+        (
+            texture.get(),
+            {
+                Cint_to_float(rect.x.value),
+                Cint_to_float(rect.y.value),
+                Cint_to_float(rect.width.value),
+                Cint_to_float(rect.height.value),
+            },
+            sub,
+            {c.r/255.0f, c.g/255.0f, c.b/255.0f, c.a/255.0f}
+        );
 
-        // clear to 0
-        glClearStencil(0);
-        glClear(GL_STENCIL_BUFFER_BIT);
-
-        // enable writing, increase when succeeded and write all "scope" rects
-        glStencilOp(GL_INCR, GL_INCR, GL_INCR);
-        glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        for(const auto& r: c->rects)
+        // submit after each quad?
+        if(submit == Submit::yes)
         {
-            c->render.batch.quad
-            (
-                std::nullopt,
-                {
-                    Cint_to_float(r.x.value),
-                    Cint_to_float(r.y.value),
-                    Cint_to_float(r.width.value),
-                    Cint_to_float(r.height.value),
-                },
-                std::nullopt,
-                // hack? use alpha=0 to write to the stencil buffer but the not color buffer
-                {255, 255, 255, 0}
-            );
+            ren->render.batch.submit();
         }
-        c->render.batch.submit();
-
-        // disable write to stencil buffer, only render where all rects has been drawn
-        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-        glStencilFunc(GL_EQUAL, Csizet_to_glsizei(c->rects.size()), 0xFF);
     }
-}
 
-void push_clip_rect(Renderer* c, const rect<dip>& r)
-{
-    c->rects.emplace_back(r);
-    update_stencil(c);
-}
 
-void pop_clip_rect(Renderer* c)
-{
-    c->rects.pop_back();
-    update_stencil(c);
-}
-
-void submit_renderer(Renderer* ren)
-{
-    ren->render.batch.submit();
-}
-
-ClipScope::ClipScope(Renderer* c, const rect<dip>& r)
-    : cache(c)
-{
-    push_clip_rect(cache, r);
-}
-
-ClipScope::~ClipScope()
-{
-    clear();
-}
-
-void ClipScope::clear()
-{
-    if (cache == nullptr)
+    dip draw_text(std::shared_ptr<::Font> the_font, const std::string& text, dip x, dip y, Color color) override
     {
-        return;
+        auto font = std::static_pointer_cast<Font>(the_font);
+        // todo(Gustav): investigate dip usage?
+
+        const auto codepoints = utf8_to_codepoints(text);
+        for (const auto codepoint : codepoints)
+        {
+            auto* set = font->m->get_glyphset(codepoint);
+            auto* g = set->get_glyph(codepoint);
+            const float w = Cint_to_float(set->texture->width);
+            const float h = Cint_to_float(set->texture->height);
+
+            const auto sx = g->x1 - g->x0;
+            const auto sy = g->y1 - g->y0;
+            const auto px = x + dip{g->xoff};
+            const auto py = y - dip{g->yoff} - dip{sy} + font->m->get_data_height();
+
+            const auto texture_rect = Rectf
+            {
+                g->x0 / w ,
+                (g->y0+sy) /h,
+                sx / w,
+                -sy / h
+            };
+            const auto char_rect = rect<dip>
+            {
+                px,
+                py,
+                dip{sx},
+                dip{sy}
+            };
+
+            draw_image(set->texture, char_rect, color, texture_rect, Submit::no);
+
+            x += dip{g->xadvance};
+        }
+
+        submit_renderer();
+
+        return x;
     }
-    pop_clip_rect(cache);
-}
 
-ClipScope::ClipScope(ClipScope&& rhs) noexcept
-    : cache(rhs.cache)
-{
-    rhs.cache = nullptr;
-}
+    void submit_renderer() override
+    {
+        render.batch.submit();
+    }
+};
 
-ClipScope& ClipScope::operator = (ClipScope&& rhs) noexcept
-{
-    clear();
-    cache = rhs.cache;
-    rhs.cache = nullptr;
-    return *this;
-}
 
 
 void on_event
@@ -600,3 +610,6 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
     return EXIT_SUCCESS;
 }
+
+}
+

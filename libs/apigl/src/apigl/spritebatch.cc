@@ -11,6 +11,8 @@
 
 using namespace std::literals;
 
+namespace ride::apigl
+{
 
 SpriteBatch::SpriteBatch(ShaderProgram* quad_shader, Render2* r)
     : render(r)
@@ -251,5 +253,7 @@ void SpriteBatch::submit()
     data.resize(0);
     quads = 0;
     current_texture = nullptr;
+}
+
 }
 

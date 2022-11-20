@@ -2,6 +2,9 @@
 
 #include <string>
 
+namespace ride::apigl
+{
+
 /** Represents a found shader uniform and created via ShaderProgram::GetUniform()
  */
 struct Uniform
@@ -21,3 +24,6 @@ struct Uniform
     bool
     is_valid() const;
 };
+
+}
+

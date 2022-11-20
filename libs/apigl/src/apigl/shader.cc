@@ -7,6 +7,8 @@
 #include "apigl/dependency_opengl.h"
 #include "apigl/log.h"
 
+namespace ride::apigl
+{
 
 bool
 check_shader_compilation_error(const char* name, unsigned int shader)
@@ -354,3 +356,6 @@ clear_shader_program()
 {
     set_shader_program(0, {});
 }
+
+}
+

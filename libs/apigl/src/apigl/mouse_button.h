@@ -1,20 +1,13 @@
 #pragma once
 
-#include <string>
-#include <optional>
-
 #include "base/ints.h"
 
-enum class MouseButton
-{
-    none,
-    left,
-    middle,
-    right,
-    x1,
-    x2
-};
+#include "api/mouse_button.h"
 
-std::optional<MouseButton> mousebutton_from_string(const std::string& str);
-std::string to_string(MouseButton key);
+namespace ride::apigl
+{
+
 MouseButton mousebutton_from_sdl_button(i32 btn);
+
+}
+

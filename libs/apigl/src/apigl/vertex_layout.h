@@ -6,7 +6,8 @@
 #include <vector>
 #include <optional>
 
-
+namespace ride::apigl
+{
 
 /** Vertex source type, position, normal etc. */
 enum class VertexType
@@ -94,3 +95,7 @@ compile_attribute_layouts
 
 CompiledVertexTypeList
 compile_attribute_layouts(const std::vector<ShaderVertexAttributes>& descriptions);
+
+}
+
+

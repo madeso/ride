@@ -7,9 +7,14 @@
 
 #include "base/ints.h"
 
+#include "api/texture.h"
+
 #include "apigl/uniform.h"
 // #include "apigl/dependency_opengl.h"
 
+
+namespace ride::apigl
+{
 
 enum class TextureEdge
 {
@@ -29,11 +34,14 @@ enum class Transparency
 };
 
 
-struct Texture
+struct Texture : ::Texture
 {
     unsigned int id;
     int width;
     int height;
+
+    int get_width() const override;
+    int get_height() const override;
 
     Texture(); // invalid texture
 
@@ -83,4 +91,8 @@ load_image_from_color
 );
 
 std::shared_ptr<Texture>
-load_shared_texture(const embedded_binary& image_binary);
+load_shared_texture_impl(const embedded_binary& image_binary);
+
+}
+
+

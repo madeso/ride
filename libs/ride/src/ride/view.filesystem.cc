@@ -193,7 +193,7 @@ void ViewFilesystem::on_layout_body()
 void ViewFilesystem::recreate_entries_list()
 {
     node_hovering = std::nullopt;
-    
+
     entries = {};
     for(auto r: roots)
     {
@@ -229,18 +229,18 @@ std::size_t ViewFilesystem::get_number_of_lines() const
 
 void ViewFilesystem::draw_body(Renderer* cache)
 {
-    draw_rect(cache, app->to_dip(body_rect), theme->filesys_background_color);
+    cache->draw_rect(app->to_dip(body_rect), theme->filesys_background_color);
 
     if(node_hovering)
     {
-        draw_rect(cache, app->to_dip(hit_rect_for_line(line_number_to_y(*node_hovering)).get_offset({0_px, scroll.y})), theme->filesys_hover_color);
+        cache->draw_rect(app->to_dip(hit_rect_for_line(line_number_to_y(*node_hovering)).get_offset({0_px, scroll.y})), theme->filesys_hover_color);
         cursor = cursor_type::hand;
     }
     else
     {
         cursor = cursor_type::arrow;
     }
-    
+
     draw_lines(cache);
 }
 
@@ -249,9 +249,8 @@ void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const pix& x,
 {
     const auto& e = entries[index];
     const auto xp = get_x_position(theme, e->depth);
-    draw_text
+    cache->draw_text
     (
-        cache,
         font,
         e->name,
         app->to_dip(x + xp),

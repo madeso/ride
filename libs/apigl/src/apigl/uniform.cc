@@ -1,5 +1,7 @@
 #include "apigl/uniform.h"
 
+namespace ride::apigl
+{
 
 Uniform::Uniform()
     : name("<unknown>")
@@ -28,3 +30,6 @@ Uniform::is_valid() const
 {
     return location >= 0;
 }
+
+}
+
