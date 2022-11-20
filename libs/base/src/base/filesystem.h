@@ -22,10 +22,10 @@ struct ListSettings
     bool directories_first = true;
 };
 
-struct filesystem
+struct FileSystem
 {
-    filesystem() = default;
-    virtual ~filesystem() = default;
+    FileSystem() = default;
+    virtual ~FileSystem() = default;
 
     virtual bool load_file(const std::string& path, std::function<void (std::string&)> on_line) = 0;
     virtual std::optional<std::vector<FileEntry>> list(const std::string& dir, const ListSettings& settings) = 0;
@@ -35,4 +35,4 @@ struct filesystem
     // virtual std::optional<bool> exists(const std::string& p) = 0;
 };
 
-std::unique_ptr<filesystem> create_local_filesystem();
+std::unique_ptr<FileSystem> create_local_filesystem();

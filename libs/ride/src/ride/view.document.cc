@@ -18,7 +18,7 @@ using namespace fmt::literals;
 
 ViewDoc::ViewDoc()
 {
-    cursor = cursor_type::ibeam;
+    cursor = CursorType::ibeam;
 }
 
 void ViewDoc::scroll_to_cursor(const position& p)
@@ -136,7 +136,7 @@ void ViewDoc::draw_single_line
 (
     Renderer* cache,
     int line_index,
-    const vec2<pix>& position
+    const Vec2<pix>& position
 )
 {
     const auto font_height = app->to_pix(font->get_height());
@@ -164,7 +164,7 @@ void ViewDoc::draw_single_line
             (
                 app->to_dip
                 (
-                    rect<pix>
+                    Rect<pix>
                     {
                         {view_rect.x, position.y},
                         {view_rect.width, font_height}
@@ -193,7 +193,7 @@ void ViewDoc::draw_single_line
             (
                 app->to_dip
                 (
-                    rect<pix>
+                    Rect<pix>
                     {
                         {x1, position.y},
                         {x2 - x1, lh}
@@ -225,7 +225,7 @@ void ViewDoc::draw_single_line
             (
                 app->to_dip
                 (
-                    rect<pix>
+                    Rect<pix>
                     {
                         {x1, position.y},
                         {theme->caret_width, lh}
@@ -271,9 +271,9 @@ void ViewDoc::draw_body(Renderer* cache)
     {
         if(sel.is_selection() == false)
         {
-            const auto draw_p = [this, cache](const vec2<pix> p)
+            const auto draw_p = [this, cache](const Vec2<pix> p)
             {
-                cache->draw_rect(app->to_dip(rect<pix>{p, {8_px, 2_px}
+                cache->draw_rect(app->to_dip(Rect<pix>{p, {8_px, 2_px}
                 }), theme->selection_background);
             };
 
@@ -316,7 +316,7 @@ pix ViewDoc::offset_to_relative_right_pix(int line_index, int offset)
 }
 
 
-vec2<pix> ViewDoc::position_to_upper_left_pix(const position& p)
+Vec2<pix> ViewDoc::position_to_upper_left_pix(const position& p)
 {
     return
     {
@@ -325,7 +325,7 @@ vec2<pix> ViewDoc::position_to_upper_left_pix(const position& p)
     };
 }
 
-vec2<pix> ViewDoc::position_to_lower_right_pix(const position& p)
+Vec2<pix> ViewDoc::position_to_lower_right_pix(const position& p)
 {
     return
     {
@@ -336,7 +336,7 @@ vec2<pix> ViewDoc::position_to_lower_right_pix(const position& p)
 
 
 
-minmax<int> ViewDoc::get_line_range()
+MinMax<int> ViewDoc::get_line_range()
 {
     const auto fist_line_fraction = (scroll.y) / calculate_line_height();
     const auto first_visible_line = std::max(0, static_cast<int>(std::floor(fist_line_fraction)));
@@ -391,7 +391,7 @@ int ViewDoc::absolute_pix_x_to_offset(int line, pix px)
     return C(text.size())+1;
 }
 
-position ViewDoc::translate_view_position(const vec2<pix>& p)
+position ViewDoc::translate_view_position(const Vec2<pix>& p)
 {
     const auto line = absolute_pix_y_to_line(p.y);
     const auto byte_offset = absolute_pix_x_to_offset(line, p.x);
@@ -450,7 +450,7 @@ bool destroy_cursors(VirtualView* vview, const sorted_selection& p, bool include
     return false;
 }
 
-void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int)
+void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse, int)
 {
     last_mouse = new_mouse;
     if(button != MouseButton::left) { return; }
@@ -483,7 +483,7 @@ void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<
     dragging = true;
 }
 
-void ViewDoc::drag_to(const Meta& meta, const vec2<pix>& new_mouse)
+void ViewDoc::drag_to(const Meta& meta, const Vec2<pix>& new_mouse)
 {
     if(dragging == false) { return; }
 
@@ -503,7 +503,7 @@ void ViewDoc::drag_to(const Meta& meta, const vec2<pix>& new_mouse)
     }
 }
 
-void ViewDoc::on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse)
+void ViewDoc::on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse)
 {
     last_mouse = new_mouse;
 
@@ -512,21 +512,21 @@ void ViewDoc::on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse)
     if(gutter_rect.contains(new_mouse))
     {
         // toggle breakpoint/flag or folding -> hand
-        cursor = cursor_type::arrow;
+        cursor = CursorType::arrow;
     }
     else if(view_rect.contains(new_mouse))
     {
-        cursor = cursor_type::ibeam;
+        cursor = CursorType::ibeam;
     }
     else
     {
-        cursor = cursor_type::arrow;
+        cursor = CursorType::arrow;
     }
 
 }
 
 
-void ViewDoc::on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse)
+void ViewDoc::on_mouse_released(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse)
 {
     last_mouse = new_mouse;
 

@@ -33,19 +33,19 @@ TEST_CASE("strings-supersplit", "[strings]")
 
 TEST_CASE("strings-trim", "[strings]")
 {
-    CHECK(StringEq(Trim(""), ""));
-    CHECK(StringEq(Trim(" abc "), "abc"));
-    CHECK(StringEq(Trim(" a b c "), "a b c"));
+    CHECK(StringEq(trim(""), ""));
+    CHECK(StringEq(trim(" abc "), "abc"));
+    CHECK(StringEq(trim(" a b c "), "a b c"));
 
     const std::string only_space = " ";
 
-    CHECK(StringEq(TrimLeft("", only_space), ""));
-    CHECK(StringEq(TrimLeft(" abc ", only_space), "abc "));
-    CHECK(StringEq(TrimLeft(" a b c ", only_space), "a b c "));
+    CHECK(StringEq(trim_left("", only_space), ""));
+    CHECK(StringEq(trim_left(" abc ", only_space), "abc "));
+    CHECK(StringEq(trim_left(" a b c ", only_space), "a b c "));
 
-    CHECK(StringEq(TrimRight("", only_space), ""));
-    CHECK(StringEq(TrimRight(" abc ", only_space), " abc"));
-    CHECK(StringEq(TrimRight(" a b c ", only_space), " a b c"));
+    CHECK(StringEq(trim_right("", only_space), ""));
+    CHECK(StringEq(trim_right(" abc ", only_space), " abc"));
+    CHECK(StringEq(trim_right(" a b c ", only_space), " a b c"));
 }
 
 

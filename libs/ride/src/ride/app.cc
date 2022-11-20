@@ -45,11 +45,11 @@ double change_scale(double current, bool increase)
 
 struct RideApp : App
 {
-    vec2<pix> mouse = {pix{0}, pix{0}};
+    Vec2<pix> mouse = {pix{0}, pix{0}};
 
     std::shared_ptr<Texture> logo;
     std::shared_ptr<Font> font;
-    std::unique_ptr<filesystem> fs;
+    std::unique_ptr<FileSystem> fs;
 
     Theme theme;
 
@@ -160,7 +160,7 @@ struct RideApp : App
 
     void draw(Renderer* cache) override
     {
-        auto rect = ::rect<pix>::from_size(client_size);
+        auto rect = ::Rect<pix>::from_size(client_size);
         cache->draw_rect(to_dip(rect), theme.window_background_color);
 
         cache->draw_image(logo, to_dip(pix{10}), to_dip(pix{10}), theme.logo_color);
@@ -209,7 +209,7 @@ struct RideApp : App
         }
     }
 
-    void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks) override
+    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse, int clicks) override
     {
         mouse = new_mouse;
 
@@ -219,7 +219,7 @@ struct RideApp : App
         view->on_mouse_pressed(button, meta, new_mouse, clicks);
     }
 
-    void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse, pix, pix) override
     {
         mouse = new_mouse;
 
@@ -228,7 +228,7 @@ struct RideApp : App
         view->on_mouse_moved(meta, new_mouse);
     }
 
-    void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse) override
+    void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse) override
     {
         mouse = new_mouse;
 
@@ -273,7 +273,7 @@ struct RideApp : App
         }
         else
         {
-            cursor = cursor_type::arrow;
+            cursor = CursorType::arrow;
         }
     }
 };

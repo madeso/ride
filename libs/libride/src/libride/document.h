@@ -11,7 +11,7 @@
 
 #include "base/units.h"
 
-struct filesystem;
+struct FileSystem;
 struct VirtualView;
 
 struct position
@@ -92,7 +92,7 @@ struct Document
     public:
     std::vector<VirtualView*> views;
     
-    bool LoadFile(filesystem* fs, const std::string& path);
+    bool LoadFile(FileSystem* fs, const std::string& path);
     void load_lines(const std::vector<std::string>& new_lines);
 
     char get_char(const position& p) const;

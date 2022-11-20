@@ -1,5 +1,6 @@
 #include "base/str.h"
 
+
 Str::operator std::string() const
 {
     return ToString();

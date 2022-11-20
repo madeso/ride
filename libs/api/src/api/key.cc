@@ -306,7 +306,7 @@ bool operator<(const Stroke& lhs, const Stroke& rhs)
 
 std::optional<Stroke> stroke_from_string(const std::string& data)
 {
-    const auto split = Split(data, '+');
+    const auto split = split_on_delim(data, '+');
 
     auto key = Key::unknown;
     auto meta = Meta{};
@@ -314,7 +314,7 @@ std::optional<Stroke> stroke_from_string(const std::string& data)
     const auto size = C(split.size());
     for(int index=0; index<size; index+=1)
     {
-        const auto name = Trim(split[Cs(index)]);
+        const auto name = trim(split[Cs(index)]);
         const auto is_last = index == size-1;
         if(is_last)
         {

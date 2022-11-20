@@ -40,23 +40,23 @@ std::string to_lower(const std::string& str)
     return s;
 }
 
-std::string TrimRight(const std::string& string_to_trim, const std::string& trim_characters)
+std::string trim_right(const std::string& string_to_trim, const std::string& trim_characters)
 {
     return std::string(string_to_trim).erase(string_to_trim.find_last_not_of(trim_characters) + 1);
 }
 
-std::string TrimLeft(const std::string& string_to_trim, const std::string& trim_characters)
+std::string trim_left(const std::string& string_to_trim, const std::string& trim_characters)
 {
     return std::string(string_to_trim).erase(0, string_to_trim.find_first_not_of(trim_characters));
 }
 
-std::string Trim(const std::string& string_to_trim, const std::string& trim_characters)
+std::string trim(const std::string& string_to_trim, const std::string& trim_characters)
 {
-    return TrimRight(TrimLeft(string_to_trim, trim_characters), trim_characters);
+    return trim_right(trim_left(string_to_trim, trim_characters), trim_characters);
 }
 
 template <typename Out>
-void Split(const std::string& s, char delim, Out result)
+void split_on_delim(const std::string& s, char delim, Out result)
 {
     std::stringstream ss(s);
     std::string item;
@@ -66,10 +66,10 @@ void Split(const std::string& s, char delim, Out result)
     }
 }
 
-std::vector<std::string> Split(const std::string& s, char delim)
+std::vector<std::string> split_on_delim(const std::string& s, char delim)
 {
     std::vector<std::string> elems;
-    Split(s, delim, std::back_inserter(elems));
+    split_on_delim(s, delim, std::back_inserter(elems));
     return elems;
 }
 

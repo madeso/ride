@@ -1,14 +1,14 @@
 #pragma once
 
 template<typename T>
-struct vec2
+struct Vec2
 {
     T x;
     T y;
 };
 
 #define TPL template<typename T>
-#define VEC vec2<T>
+#define VEC Vec2<T>
 
 TPL VEC operator+(const VEC& lhs, const VEC& rhs) { return {lhs.x + rhs.x, lhs.y + rhs.y}; }
 TPL VEC operator-(const VEC& lhs, const VEC& rhs) { return {lhs.x - rhs.x, lhs.y - rhs.y}; }
@@ -16,9 +16,9 @@ TPL VEC operator-(const VEC& lhs, const VEC& rhs) { return {lhs.x - rhs.x, lhs.y
 #undef VEC
 #undef TPL
 
-using vec2i = vec2<int>;
+using vec2i = Vec2<int>;
 
-template<typename S, typename T> S& operator<<(S& s, const vec2<T>& v)
+template<typename S, typename T> S& operator<<(S& s, const Vec2<T>& v)
 {
     return s
         << "("

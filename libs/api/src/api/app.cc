@@ -42,15 +42,15 @@ void App::on_text_input(const std::string&)
 }
 
 
-void App::on_mouse_pressed(MouseButton, const Meta&, const vec2<pix>&, int)
+void App::on_mouse_pressed(MouseButton, const Meta&, const Vec2<pix>&, int)
 {
 }
 
-void App::on_mouse_released(MouseButton, const Meta&, const vec2<pix>&)
+void App::on_mouse_released(MouseButton, const Meta&, const Vec2<pix>&)
 {
 }
 
-void App::on_mouse_moved(const Meta&, const vec2<pix>&, pix, pix)
+void App::on_mouse_moved(const Meta&, const Vec2<pix>&, pix, pix)
 {
 }
 
@@ -69,12 +69,12 @@ void App::update()
 
 dip App::to_dip(pix p) const
 {
-    return dip{static_cast<dip::type>(p.value * scale)};
+    return dip{static_cast<dip::Type>(p.value * scale)};
 }
 
-rect<dip> App::to_dip(const rect<pix>& p) const
+Rect<dip> App::to_dip(const Rect<pix>& p) const
 {
-    return rect<dip>
+    return Rect<dip>
     {
         to_dip(p.x),
         to_dip(p.y),

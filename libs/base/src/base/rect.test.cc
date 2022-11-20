@@ -15,7 +15,7 @@ TEST_CASE("rect-test", "[rect]")
         -----------
       (1,2)       (4, 2)
     */
-    auto r = recti{1, 2, 3, 4};
+    auto r = Recti{1, 2, 3, 4};
     CHECK(r.x == 1);
     CHECK(r.y == 2);
     CHECK(r.width == 3);

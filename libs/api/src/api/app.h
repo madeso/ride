@@ -44,9 +44,9 @@ struct App
     virtual void on_key_pressed(const Stroke& key);
     virtual void on_key_released(const Stroke& key);
     virtual void on_text_input(const std::string& str);
-    virtual void on_mouse_pressed(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse, int clicks);
-    virtual void on_mouse_released(MouseButton button, const Meta& meta, const vec2<pix>& new_mouse);
-    virtual void on_mouse_moved(const Meta& meta, const vec2<pix>& new_mouse, pix xrel, pix yrel);
+    virtual void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse, int clicks);
+    virtual void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse);
+    virtual void on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse, pix xrel, pix yrel);
     virtual void on_mouse_wheel(int x, int y);
     virtual void on_quit();
     virtual void update();
@@ -59,16 +59,16 @@ struct App
 
     // todo(Gustav): move dips to scale struct
     dip to_dip(pix p) const;
-    rect<dip> to_dip(const rect<pix>& p) const;
+    Rect<dip> to_dip(const Rect<pix>& p) const;
     pix to_pix(dip p) const;
     void set_scale(double d);
 
     PlatformArg platform;
     int blink_timer = 0;
     bool run = true;
-    size<pix> client_size;
+    Size<pix> client_size;
     double scale = 1.0;
-    cursor_type cursor = cursor_type::arrow;
+    CursorType cursor = CursorType::arrow;
     bool* redraw_value;
     std::vector<std::shared_ptr<Font>> loaded_fonts;
 };

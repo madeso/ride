@@ -1,16 +1,16 @@
 #pragma once
 
 template<typename T>
-struct size
+struct Size
 {
     T width;
     T height;
 
     template<typename Y>
-    size<Y> as() const
+    Size<Y> as() const
     {
-        return size<Y> { Y{width}, Y{height} };
+        return Size<Y> { Y{width}, Y{height} };
     }
 };
 
-using sizei = size<int>;
+using Sizei = Size<int>;

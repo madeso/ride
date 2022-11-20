@@ -17,7 +17,7 @@ void Renderer::draw_image(std::shared_ptr<Texture> texture, dip x, dip y, Color 
     );
 }
 
-ClipScope::ClipScope(Renderer* c, const rect<dip>& r)
+ClipScope::ClipScope(Renderer* c, const Rect<dip>& r)
     : cache(c)
 {
     cache->push_clip_rect(r);

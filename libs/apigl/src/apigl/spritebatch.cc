@@ -111,7 +111,7 @@ void add_vertex(SpriteBatch* batch, const Vertex2& v)
     batch->data.push_back(v.texturecoord.y);
 }
 
-Rectf get_sprite(const Texture& texture, const recti& ri)
+Rectf get_sprite(const Texture& texture, const Recti& ri)
 {
     const auto r = Cint_to_float(ri);
     const auto w = 1.0f/static_cast<float>(texture.width);
@@ -160,7 +160,7 @@ void SpriteBatch::quad(std::optional<Texture*> texture, const Rectf& scr, const 
     );
 }
 
-void SpriteBatch::quad(std::optional<Texture*> texture_argument, const Rectf& scr, const recti& texturecoord, const glm::vec4& tint)
+void SpriteBatch::quad(std::optional<Texture*> texture_argument, const Rectf& scr, const Recti& texturecoord, const glm::vec4& tint)
 {
     Texture* texture = texture_argument.value_or(&white_texture);
     quad(texture, scr, get_sprite(*texture, texturecoord), tint);

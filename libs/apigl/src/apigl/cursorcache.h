@@ -11,10 +11,10 @@ namespace ride::apigl
 
 struct cursor_cache
 {
-    SDL_Cursor* get_or_create(cursor_type cursor);
-    void set_cursor(cursor_type new_cursor);
+    SDL_Cursor* get_or_create(CursorType cursor);
+    void set_cursor(CursorType new_cursor);
 
-    std::map<cursor_type, SDL_Cursor*> cache;
+    std::map<CursorType, SDL_Cursor*> cache;
 };
 
 }

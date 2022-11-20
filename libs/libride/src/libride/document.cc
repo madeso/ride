@@ -120,7 +120,7 @@ bool are_overlapping(const selection& sel, const selection& p)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-bool Document::LoadFile(filesystem* fs, const std::string& path)
+bool Document::LoadFile(FileSystem* fs, const std::string& path)
 {
     lines.clear();
 

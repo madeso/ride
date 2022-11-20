@@ -49,7 +49,7 @@ std::optional<bool> Exists(const std::string& p)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-struct filesystem_local : filesystem
+struct filesystem_local : FileSystem
 {
     bool load_file(const std::string& path, std::function<void (std::string&)> on_line) override
     {
@@ -139,7 +139,7 @@ struct filesystem_local : filesystem
 };
 
 
-std::unique_ptr<filesystem> create_local_filesystem()
+std::unique_ptr<FileSystem> create_local_filesystem()
 {
     return std::make_unique<filesystem_local>();
 }

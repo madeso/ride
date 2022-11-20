@@ -43,7 +43,7 @@ struct SpriteBatch
 
     void quad(std::optional<Texture*> texture, const Vertex2& v0, const Vertex2& v1, const Vertex2& v2, const Vertex2& v3);
     void quad(std::optional<Texture*> texture, const Rectf& scr, const std::optional<Rectf>& texturecoord, const glm::vec4& tint = glm::vec4(1.0f));
-    void quad(std::optional<Texture*> texture, const Rectf& scr, const recti& texturecoord, const glm::vec4& tint = glm::vec4(1.0f));
+    void quad(std::optional<Texture*> texture, const Rectf& scr, const Recti& texturecoord, const glm::vec4& tint = glm::vec4(1.0f));
 
     void submit();
 };

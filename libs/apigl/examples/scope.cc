@@ -13,7 +13,7 @@ struct ScopeApp : App
 {
     std::shared_ptr<::Font> font;
 
-    vec2<pix> mouse = {pix{0}, pix{0}};
+    Vec2<pix> mouse = {pix{0}, pix{0}};
 
     ScopeApp(PlatformArg p)
         : App(p)
@@ -21,7 +21,7 @@ struct ScopeApp : App
     {
     }
 
-    void on_mouse_moved(const Meta&, const vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta&, const Vec2<pix>& new_mouse, pix, pix) override
     {
         mouse = new_mouse;
     }
@@ -38,12 +38,12 @@ struct ScopeApp : App
 
     void draw(::Renderer* cache) override
     {
-        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), colors::white);
+        cache->draw_rect(to_dip(Rect<pix>::from_size(client_size)), colors::white);
 
-        cache->draw_rect(to_dip(rect<pix>{{50_px, 100_px}, ::size<pix>{30_px, 30_px}}), colors::red_500);
-        cache->draw_rect(to_dip(rect<pix>{{100_px, 50_px}, ::size<pix>{30_px, 30_px}}), colors::blue_500);
+        cache->draw_rect(to_dip(Rect<pix>{{50_px, 100_px}, ::Size<pix>{30_px, 30_px}}), colors::red_500);
+        cache->draw_rect(to_dip(Rect<pix>{{100_px, 50_px}, ::Size<pix>{30_px, 30_px}}), colors::blue_500);
 
-        auto r = rect<pix>{{100_px, 100_px}, ::size<pix>{400_px, 400_px}};
+        auto r = Rect<pix>{{100_px, 100_px}, ::Size<pix>{400_px, 400_px}};
 
         std::optional<ClipScope> scope_a;
 
@@ -55,7 +55,7 @@ struct ScopeApp : App
             scope_a = ClipScope{cache, to_dip(r)};
             break;
         case 2:
-            scope_a = ClipScope{cache, to_dip(rect<pix>{mouse, size<pix>{100_px, 100_px}}.get_offset(vec2<pix>{-50_px, -50_px}))};
+            scope_a = ClipScope{cache, to_dip(Rect<pix>{mouse, Size<pix>{100_px, 100_px}}.get_offset(Vec2<pix>{-50_px, -50_px}))};
             break;
         default:
             assert(false && "unhandled case");

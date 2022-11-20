@@ -56,7 +56,7 @@ struct FileNode : public Node
         return is_hidden() ? theme.filesys_hidden_color : theme.filesys_file_color;
     }
 
-    bool on_click(bool is_doubleclick, filesystem*, const Theme&) override
+    bool on_click(bool is_doubleclick, FileSystem*, const Theme&) override
     {
         if(is_doubleclick)
         {
@@ -98,7 +98,7 @@ struct DirectoryNode : public Node
         return is_hidden() ? theme.filesys_hidden_color : theme.filesys_folder_color;
     }
 
-    bool on_click(bool, filesystem* filesystem, const Theme& theme) override
+    bool on_click(bool, FileSystem* FileSystem, const Theme& theme) override
     {
         if(is_open)
         {
@@ -108,7 +108,7 @@ struct DirectoryNode : public Node
         else
         {
             is_open = true;
-            auto folders_and_files = filesystem->list(path, create_list_settings_from_theme(theme));
+            auto folders_and_files = FileSystem->list(path, create_list_settings_from_theme(theme));
             if(folders_and_files)
             {
                 children = create_view_entries(*folders_and_files);
@@ -158,7 +158,7 @@ std::vector<std::shared_ptr<Node>> create_view_entries(const std::vector<FileEnt
 
 ViewFilesystem::ViewFilesystem()
 {
-    cursor = cursor_type::hand;
+    cursor = CursorType::hand;
 }
 
 pix get_x_position(Theme* theme, int depth)
@@ -234,11 +234,11 @@ void ViewFilesystem::draw_body(Renderer* cache)
     if(node_hovering)
     {
         cache->draw_rect(app->to_dip(hit_rect_for_line(line_number_to_y(*node_hovering)).get_offset({0_px, scroll.y})), theme->filesys_hover_color);
-        cursor = cursor_type::hand;
+        cursor = CursorType::hand;
     }
     else
     {
-        cursor = cursor_type::arrow;
+        cursor = CursorType::arrow;
     }
 
     draw_lines(cache);
@@ -260,7 +260,7 @@ void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const pix& x,
 }
 
 
-void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const vec2<pix>& new_mouse, int clicks)
+void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const Vec2<pix>& new_mouse, int clicks)
 {
     if(button != MouseButton::left) { return; }
     // if(clicks > 2) { return; } // file specific
@@ -275,7 +275,7 @@ void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const vec
 }
 
 
-void ViewFilesystem::on_mouse_moved(const Meta&, const vec2<pix>& new_mouse)
+void ViewFilesystem::on_mouse_moved(const Meta&, const Vec2<pix>& new_mouse)
 {
     last_mouse = new_mouse;
     update_hover();

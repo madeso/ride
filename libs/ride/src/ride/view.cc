@@ -21,7 +21,7 @@ View::View()
 {
 }
 
-std::optional<ScrollbarData> layout_scrollbar(rect<pix>* view_rect, Theme* theme,
+std::optional<ScrollbarData> layout_scrollbar(Rect<pix>* view_rect, Theme* theme,
     pix document_height, pix current_scroll,
     bool is_vertical, Side scrollbar_on_side, Side top_side, Side bottom_side)
 {
@@ -77,8 +77,8 @@ std::optional<ScrollbarData> layout_scrollbar(rect<pix>* view_rect, Theme* theme
     const auto vtop = track_rect.get_top() - thumb_offset;
 
     const auto thumb_rect = is_vertical
-        ? rect<pix>::from_lrtb(track_rect.get_left(), track_rect.get_right(), vtop, vtop - thumb_size)
-        : rect<pix>::from_lrtb(track_rect.get_left() + thumb_offset, track_rect.get_left() + thumb_offset + thumb_size, track_rect.get_top(), track_rect.get_bottom())
+        ? Rect<pix>::from_lrtb(track_rect.get_left(), track_rect.get_right(), vtop, vtop - thumb_size)
+        : Rect<pix>::from_lrtb(track_rect.get_left() + thumb_offset, track_rect.get_left() + thumb_offset + thumb_size, track_rect.get_top(), track_rect.get_bottom())
         ;
 
     return ScrollbarData
@@ -99,7 +99,7 @@ void draw_scrollbar(const ScrollbarData& data, App* app, Theme* theme, Renderer*
     cache->draw_rect(app->to_dip(data.bottom_button_rect), theme->scroll_button_color);
 }
 
-void View::on_layout(const rect<pix>& new_client_rect)
+void View::on_layout(const Rect<pix>& new_client_rect)
 {
     client_rect = new_client_rect;
     body_rect = new_client_rect;
@@ -215,15 +215,15 @@ void View::keep_scroll_within()
     on_mouse_wheel(0, 0);
 }
 
-void View::on_mouse_pressed(MouseButton, const Meta&, const vec2<pix>&, int)
+void View::on_mouse_pressed(MouseButton, const Meta&, const Vec2<pix>&, int)
 {
 }
 
-void View::on_mouse_moved(const Meta&, const vec2<pix>&)
+void View::on_mouse_moved(const Meta&, const Vec2<pix>&)
 {
 }
 
-void View::on_mouse_released(MouseButton, const Meta&, const vec2<pix>&)
+void View::on_mouse_released(MouseButton, const Meta&, const Vec2<pix>&)
 {
 }
 
@@ -235,12 +235,12 @@ void View::on_text(const std::string&)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-rect<pix> LineView::hit_rect_for_line(const pix& ypos) const
+Rect<pix> LineView::hit_rect_for_line(const pix& ypos) const
 {
     const auto height = app->to_pix(font->get_height());
     const auto spacing = theme->line_spacing;
 
-    return rect<pix>::from_ltrb
+    return Rect<pix>::from_ltrb
     (
         body_rect.get_left(),
         ypos + height + spacing,
@@ -274,9 +274,9 @@ ScrollSize LineView::calculate_scroll_size()
 }
 
 
-std::optional<std::size_t> LineView::get_index_under_view_position(const vec2<pix> relative_mouse)
+std::optional<std::size_t> LineView::get_index_under_view_position(const Vec2<pix> relative_mouse)
 {
-    const auto p = vec2<pix>{relative_mouse.x, relative_mouse.y - scroll.y};
+    const auto p = Vec2<pix>{relative_mouse.x, relative_mouse.y - scroll.y};
 
     // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
     for(std::size_t index  = 0; index < get_number_of_lines(); index += 1)

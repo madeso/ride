@@ -10,12 +10,12 @@
 #include "base/c.h"
 
 template<typename T>
-struct rect
+struct Rect
 {
-    using self = rect<T>;
+    using Self = Rect<T>;
 
-    using size_type = size<T>;
-    using vec2_type = vec2<T>;
+    using SizeT = Size<T>;
+    using Vec2T = Vec2<T>;
 
     // bottom-left
     T x;
@@ -23,7 +23,7 @@ struct rect
     T width;
     T height;
 
-    constexpr explicit rect(T same)
+    constexpr explicit Rect(T same)
         : x(same)
         , y(same)
         , width(same)
@@ -31,7 +31,7 @@ struct rect
     {
     }
 
-    constexpr rect
+    constexpr Rect
     (
         T ax,
         T ay,
@@ -45,7 +45,7 @@ struct rect
     {
     }
 
-    rect(const vec2_type& p, const size_type& s)
+    Rect(const Vec2T& p, const SizeT& s)
         : x(p.x)
         , y(p.y)
         , width(s.width)
@@ -124,7 +124,7 @@ struct rect
     }
 
     /*
-    static bool overlap(self a, self b)
+    static bool overlap(Self a, Self b)
     {
         return b.x + b.width >= a.x
             && b.x <= a.x + a.width
@@ -133,7 +133,7 @@ struct rect
             ;
     }
 
-    static self intersect(self a, self b)
+    static Self intersect(Self a, Self b)
     {
         T x1 = std::max(a.x, b.x);
         T y1 = std::max(a.y, b.y);
@@ -142,7 +142,7 @@ struct rect
         return {x1, y1, std::max(T{0}, x2 - x1), std::max(T{0}, y2 - y1)};
     }
 
-    static self merge(self a, self b)
+    static Self merge(Self a, Self b)
     {
         T x1 = std::min(a.x, b.x);
         T y1 = std::min(a.y, b.y);
@@ -152,53 +152,53 @@ struct rect
     }
     */
 
-    bool contains(const vec2_type& p) const
+    bool contains(const Vec2T& p) const
     {
         const auto cx = get_left() <= p.x && p.x <= get_right();
         const auto cy = get_bottom() <= p.y && p.y <= get_top();
         return cx && cy;
     }
 
-    static self from_size(const size_type& s)
+    static Self from_size(const SizeT& s)
     {
         return {T{0}, T{0}, s.width, s.height};
     }
 
 
-    static self from_ltrb(T left, T top, T right, T bottom)
+    static Self from_ltrb(T left, T top, T right, T bottom)
     {
         xassert(left <= right && top >= bottom, left << " <= " << right << " && " << top << ">= " << bottom);
         return {left, bottom, right - left, top-bottom};
     }
 
-    static self from_lrtb(T left, T right, T top, T bottom)
+    static Self from_lrtb(T left, T right, T top, T bottom)
     {
         xassert(left <= right && top >= bottom, left << " <= " << right << " && " << top << ">= " << bottom);
         return {left, bottom, right - left, top-bottom};
     }
 
-    self cut_left(T a)
+    Self cut_left(T a)
     {
         T ox = this->get_left();
         this->set_left(std::min(this->get_right(), this->get_left() + a));
         return from_ltrb(ox, this->get_top(), this->get_left(), this->get_bottom());
     }
 
-    self cut_right(T a)
+    Self cut_right(T a)
     {
         T right = this->get_right();
         this->set_right(std::max(this->x, this->get_right() - a));
         return from_ltrb(this->get_right(), this->get_top(), right, this->get_bottom());
     }
 
-    self cut_top(T a)
+    Self cut_top(T a)
     {
         T oy = this->get_top();
         this->set_top(std::max(this->get_bottom(), this->get_top() - a));
         return from_ltrb(this->get_left(), oy, this->get_right(), this->get_top());
     }
 
-    self cut_bottom(T a)
+    Self cut_bottom(T a)
     {
         T bottom = this->get_bottom();
         const auto top = this->get_top();
@@ -207,32 +207,32 @@ struct rect
         return from_ltrb(this->get_left(), this->get_bottom(), this->get_right(), bottom);
     }
 
-    self get_cut_left(T a) const
+    Self get_cut_left(T a) const
     {
         auto r = *this;
         return r.cut_left(a);
     }
 
-    self get_cut_right(T a) const
+    Self get_cut_right(T a) const
     {
         auto r = *this;
         return r.cut_right(a);
     }
 
-    self get_cut_top(T a) const
+    Self get_cut_top(T a) const
     {
         auto r = *this;
         return r.cut_top(a);
     }
 
-    self get_cut_bottom(T a) const
+    Self get_cut_bottom(T a) const
     {
         auto r = *this;
         return r.cut_bottom(a);
     }
 
 
-    self cut(Side side, T a)
+    Self cut(Side side, T a)
     {
         switch(side)
         {
@@ -246,21 +246,21 @@ struct rect
         }
     }
 
-    self get_cut(Side side, T a) const
+    Self get_cut(Side side, T a) const
     {
         auto r = *this;
         return r.cut(side, a);
     }
 
 
-    self get_offset(const vec2_type& offset) const
+    Self get_offset(const Vec2T& offset) const
     {
-        const auto p = vec2_type{x, y} + offset;
+        const auto p = Vec2T{x, y} + offset;
         return {p.x, p.y, width, height};
     }
 
     /*
-    self CreateFromCenterMaxSize(T max_size) const
+    Self CreateFromCenterMaxSize(T max_size) const
     {
         const auto s = std::min(max_size, width);
         const auto h = static_cast<T>(static_cast<float>(width - s) / 2.0f);
@@ -268,7 +268,7 @@ struct rect
     }
     */
 
-    self get_inset(T inset) const
+    Self get_inset(T inset) const
     {
         const auto inset2 = inset + inset;
         // if(inset2 > width || inset2 > height) { return {x, y, 0, 0}; }
@@ -277,10 +277,10 @@ struct rect
 
 };
 
-using recti = rect<int>;
-using Rectf = rect<float>;
+using Recti = Rect<int>;
+using Rectf = Rect<float>;
 
-constexpr Rectf Cint_to_float(const recti r)
+constexpr Rectf Cint_to_float(const Recti r)
 {
     return
     {
@@ -291,10 +291,10 @@ constexpr Rectf Cint_to_float(const recti r)
     };
 }
 
-constexpr const recti EmptyRect = {0,0, 0,0};
+constexpr const Recti EmptyRect = {0,0, 0,0};
 
 
-template<typename S, typename T> S& operator<<(S& s, const rect<T>& r)
+template<typename S, typename T> S& operator<<(S& s, const Rect<T>& r)
 {
     return s
         << "[l/r "

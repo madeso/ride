@@ -1,7 +1,7 @@
 #pragma once
 
 template<typename T>
-struct minmax
+struct MinMax
 {
     T min;
     T max;

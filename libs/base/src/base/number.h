@@ -1,32 +1,32 @@
 #pragma once
 
-// a "tagged arithmetic" type so we don't accidentally mix types
+// a "tagged arithmetic" Type so we don't accidentally mix types
 // to get safety of "apps hungarian" but not using cryptic prefixes
 // and let the compiler check the "types"
 
 template<typename T, typename Tag>
-struct number
+struct Number
 {
-    using type = T;
-    using self = number<T, Tag>;
+    using Type = T;
+    using Self = Number<T, Tag>;
 
     T value;
 
-    constexpr explicit number(T v) : value(v) {}
+    constexpr explicit Number(T v) : value(v) {}
 
-    constexpr self operator-() const
+    constexpr Self operator-() const
     {
-        return self{-value};
+        return Self{-value};
     }
 
-    self& operator+=(const self& s) { value += s.value; return *this; }
-    self& operator-=(const self& s) { value -= s.value; return *this; }
-    self& operator*=(      T     s) { value *= s      ; return *this; }
-    self& operator/=(      T     s) { value /= s      ; return *this; }
+    Self& operator+=(const Self& s) { value += s.value; return *this; }
+    Self& operator-=(const Self& s) { value -= s.value; return *this; }
+    Self& operator*=(      T     s) { value *= s      ; return *this; }
+    Self& operator/=(      T     s) { value /= s      ; return *this; }
 };
 
 #define TPL template<typename T, typename Tag>
-#define NUM number  <         T,          Tag>
+#define NUM Number  <         T,          Tag>
 
 TPL NUM operator+(const NUM& lhs, const NUM& rhs) { return NUM{lhs.value + rhs.value}; }
 TPL NUM operator-(const NUM& lhs, const NUM& rhs) { return NUM{lhs.value - rhs.value}; }

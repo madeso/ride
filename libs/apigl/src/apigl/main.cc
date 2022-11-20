@@ -120,7 +120,7 @@ T parse(const std::string& str)
 struct Renderer : ::Renderer
 {
     Render2 render;
-    std::vector<rect<dip>> rects;
+    std::vector<Rect<dip>> rects;
 
     void update_stencil()
     {
@@ -166,7 +166,7 @@ struct Renderer : ::Renderer
         }
     }
 
-    void push_clip_rect(const rect<dip>& r) override
+    void push_clip_rect(const Rect<dip>& r) override
     {
         Renderer* c = this;
         c->rects.emplace_back(r);
@@ -180,7 +180,7 @@ struct Renderer : ::Renderer
         update_stencil();
     }
 
-    void draw_rect(const rect<dip>& r, Color c) override
+    void draw_rect(const Rect<dip>& r, Color c) override
     {
         Renderer* ren = this;
         // LOG_INFO("Drawing rect {} {} {} {}", r.x.value, r.y.value, r.width.value, r.height.value);
@@ -201,7 +201,7 @@ struct Renderer : ::Renderer
         ren->render.batch.submit();
     }
 
-    void draw_image(std::shared_ptr<::Texture> the_texture, const rect<dip>& rect, Color c, std::optional<Rectf> sub, Submit submit) override
+    void draw_image(std::shared_ptr<::Texture> the_texture, const Rect<dip>& rect, Color c, std::optional<Rectf> sub, Submit submit) override
     {
         auto texture = std::static_pointer_cast<Texture>(the_texture);
         Renderer* ren = this;
@@ -252,7 +252,7 @@ struct Renderer : ::Renderer
                 sx / w,
                 -sy / h
             };
-            const auto char_rect = rect<dip>
+            const auto char_rect = Rect<dip>
             {
                 px,
                 py,
@@ -300,7 +300,7 @@ int filterEvent(void* userdata, SDL_Event* event)
 void on_event
 (
     const SDL_Event& event, App* app, int* window_width, int* window_height,
-    MetaState& meta, std::optional<cursor_type>& last_cursor, cursor_cache& c_cache,
+    MetaState& meta, std::optional<CursorType>& last_cursor, cursor_cache& c_cache,
     SDL_Window* window
 )
 {
@@ -397,7 +397,7 @@ void on_event
         app->on_mouse_moved
         (
             meta.to_meta(),
-            vec2<pix>
+            Vec2<pix>
             {
                 app->to_pix(dip{mx}),
                 app->to_pix(dip{my})
@@ -561,7 +561,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     }
 
     MetaState meta;
-    std::optional<cursor_type> last_cursor;
+    std::optional<CursorType> last_cursor;
     cursor_cache c_cache;
 
     Renderer rc;

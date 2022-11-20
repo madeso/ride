@@ -7,15 +7,15 @@ namespace ride::apigl
 
 namespace
 {
-    SDL_SystemCursor get_sdl_cursor(cursor_type cursor)
+    SDL_SystemCursor get_sdl_cursor(CursorType cursor)
     {
         switch(cursor)
         {
-            case cursor_type::arrow: return SDL_SYSTEM_CURSOR_ARROW;
-            case cursor_type::ibeam: return SDL_SYSTEM_CURSOR_IBEAM;
-            case cursor_type::size_horizontal: return SDL_SYSTEM_CURSOR_SIZEWE;
-            case cursor_type::size_vertical: return SDL_SYSTEM_CURSOR_SIZENS;
-            case cursor_type::hand: return SDL_SYSTEM_CURSOR_HAND;
+            case CursorType::arrow: return SDL_SYSTEM_CURSOR_ARROW;
+            case CursorType::ibeam: return SDL_SYSTEM_CURSOR_IBEAM;
+            case CursorType::size_horizontal: return SDL_SYSTEM_CURSOR_SIZEWE;
+            case CursorType::size_vertical: return SDL_SYSTEM_CURSOR_SIZENS;
+            case CursorType::hand: return SDL_SYSTEM_CURSOR_HAND;
             default:
                 assert(false && "unhandled cursor type");
                 return SDL_SYSTEM_CURSOR_ARROW;
@@ -24,7 +24,7 @@ namespace
 }
 
 
-SDL_Cursor* cursor_cache::get_or_create(cursor_type cursor)
+SDL_Cursor* cursor_cache::get_or_create(CursorType cursor)
 {
     auto found = cache.find(cursor);
     if(found != cache.end()) { return found->second; }
@@ -35,7 +35,7 @@ SDL_Cursor* cursor_cache::get_or_create(cursor_type cursor)
 }
 
 
-void cursor_cache::set_cursor(cursor_type new_cursor)
+void cursor_cache::set_cursor(CursorType new_cursor)
 {
     SDL_SetCursor(get_or_create(new_cursor));
 }

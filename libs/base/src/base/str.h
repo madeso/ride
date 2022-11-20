@@ -3,6 +3,8 @@
 #include <string>
 #include <sstream>
 
+// todo(Gustav): remove and replace with fmt
+
 struct Str
 {
     operator std::string() const;
@@ -18,3 +20,4 @@ struct Str
     
     std::ostringstream stream;
 };
+

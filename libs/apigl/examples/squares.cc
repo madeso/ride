@@ -9,26 +9,26 @@ using namespace ride::apigl;
 
 struct SquaresApp : App
 {
-    vec2<pix> mouse = {pix{0}, pix{0}};
+    Vec2<pix> mouse = {pix{0}, pix{0}};
 
     SquaresApp(PlatformArg p)
         : App(p)
     {
     }
 
-    void on_mouse_moved(const Meta&, const vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta&, const Vec2<pix>& new_mouse, pix, pix) override
     {
         mouse = new_mouse;
     }
 
     void draw(::Renderer* cache) override
     {
-        cache->draw_rect(to_dip(rect<pix>::from_size(client_size)), colors::white);
+        cache->draw_rect(to_dip(Rect<pix>::from_size(client_size)), colors::white);
 
-        cache->draw_rect(to_dip(rect<pix>{{50.0_px, 100.0_px}, ::size<pix>{30.0_px, 30.0_px}}), colors::red_500);
-        cache->draw_rect(to_dip(rect<pix>{{100.0_px, 50.0_px}, ::size<pix>{30.0_px, 30.0_px}}), colors::blue_500);
+        cache->draw_rect(to_dip(Rect<pix>{{50.0_px, 100.0_px}, ::Size<pix>{30.0_px, 30.0_px}}), colors::red_500);
+        cache->draw_rect(to_dip(Rect<pix>{{100.0_px, 50.0_px}, ::Size<pix>{30.0_px, 30.0_px}}), colors::blue_500);
 
-        auto r = rect<pix>{{100.0_px, 100.0_px}, ::size<pix>{400.0_px, 400.0_px}};
+        auto r = Rect<pix>{{100.0_px, 100.0_px}, ::Size<pix>{400.0_px, 400.0_px}};
 
         const auto size = pix{20};
 
@@ -54,7 +54,7 @@ struct SquaresApp : App
 
         cache->draw_rect(to_dip(r.get_inset(size)), colors::grape_500);
 
-        cache->draw_rect(to_dip(rect<pix>{mouse, ::size<pix>{10.0_px, 10.0_px}}), colors::black);
+        cache->draw_rect(to_dip(Rect<pix>{mouse, ::Size<pix>{10.0_px, 10.0_px}}), colors::black);
     }
 };
 
