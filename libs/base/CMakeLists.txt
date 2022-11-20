@@ -1,4 +1,11 @@
-set(src
+set(headeronly_src
+    src/base/color.open-color.h
+    src/base/compiler_warning.h
+    src/base/undef_windows.h
+    src/base/units.h
+)
+
+set(file_src    
     src/base/c.cc src/base/c.h
     src/base/cc.cc src/base/cc.h
     src/base/color.cc src/base/color.h
@@ -10,6 +17,7 @@ set(src
     src/base/humane_sort.cc src/base/humane_sort.h
     src/base/ints.cc src/base/ints.h
     src/base/minmax.cc src/base/minmax.h
+    src/base/number.cc src/base/number.h
     src/base/numeric.cc src/base/numeric.h
     src/base/rect.cc src/base/rect.h
     src/base/rng.cc src/base/rng.h
@@ -20,7 +28,9 @@ set(src
     src/base/utf8.cc src/base/utf8.h
     src/base/vec2.cc src/base/vec2.h
 )
-source_group("" FILES ${src})
+set(src ${file_src} ${headeronly_src})
+source_group("" FILES ${file_src})
+source_group("Headers" FILES ${headeronly_src})
 add_library(base STATIC ${src})
 set_crt_to_static(base)
 target_include_directories(base
