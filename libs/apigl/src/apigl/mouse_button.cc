@@ -17,7 +17,7 @@ MouseButton mousebutton_from_sdl_button(i32 button)
     case SDL_BUTTON_X1: return MouseButton::x1;
     case SDL_BUTTON_X2: return MouseButton::x2;
     default:
-        ASSERT(false && "Unknwon mouse button");
+        DIE("Unknwon mouse button");
         return MouseButton::none;
     }
 }
