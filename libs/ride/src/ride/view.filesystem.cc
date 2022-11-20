@@ -2,12 +2,11 @@
 
 #include <iostream>
 
-// #include "fmt/format.h"
+#include "fmt/format.h"
 // #include "fmt/core.h"
 // #include "fmt/ostream.h"
 // using namespace fmt::literals;
 
-#include "base/str.h"
 #include "base/filesystem.h"
 
 #include "api/app.h"
@@ -82,15 +81,14 @@ struct DirectoryNode : public Node
 
     std::vector<std::shared_ptr<Node>> children;
 
-    explicit DirectoryNode(const FileEntry& f) : Node(f.name, f.path), base_name(Str{} << f.name << "/")
+    explicit DirectoryNode(const FileEntry& f) : Node(f.name, f.path), base_name(fmt::format("{}/", f.name))
     {
         UpdateName();
     }
 
     void UpdateName()
     {
-        if(is_open) { name = Str{} << "- " << base_name; }
-        else        { name = Str{} << "+ " << base_name; }
+        name = fmt::format("{} {}", is_open ? "-" : "+", base_name);
     }
 
     Color get_text_color(const Theme& theme) const override

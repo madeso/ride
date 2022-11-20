@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include "base/str.h"
 #include "base/c.h"
 #include "base/cc.h"
 #include "base/utf8.h"
@@ -251,7 +250,7 @@ void ViewDoc::on_layout_body()
     view_rect = view_rect.get_inset(30_dp);
 
     const auto lines = doc->get_number_of_lines();
-    const auto max_gutter_text = (Str{} << (lines+1)).ToString();
+    const auto max_gutter_text = fmt::format("{}", lines+1);
     const auto min_gutter_width = app->Cdp(font->get_width( max_gutter_text.c_str() ));
     const auto gutter_width = min_gutter_width + theme->gutter_spacing_left + theme->gutter_spacing_right;
 

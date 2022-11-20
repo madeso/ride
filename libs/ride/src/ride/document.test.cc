@@ -3,8 +3,6 @@
 #include "catchy/stringeq.h"
 #include "catchy/vectorequals.h"
 
-#include "base/str.h"
-
 #include "ride/document.h"
 #include "ride/document.commands.h"
 #include "ride/command.h"

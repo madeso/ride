@@ -25,7 +25,6 @@ set(file_src
     src/base/rng.cc src/base/rng.h
     src/base/side.cc src/base/side.h
     src/base/size.cc src/base/size.h
-    src/base/str.cc src/base/str.h
     src/base/string.cc src/base/string.h
     src/base/utf8.cc src/base/utf8.h
     src/base/vec2.cc src/base/vec2.h
