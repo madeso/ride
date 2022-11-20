@@ -6,6 +6,7 @@ set(src
     src/ride/view.document.cc src/ride/view.document.h
     src/ride/view.filesystem.cc src/ride/view.filesystem.h
 )
+source_group("" FILES ${src})
 
 add_library(rideapp STATIC ${src})
 
@@ -26,5 +27,5 @@ target_link_libraries(rideapp
         project_options
         project_warnings
 )
-
 set_crt_to_static(rideapp)
+set_target_properties(rideapp PROPERTIES FOLDER "Libraries")

@@ -6,6 +6,7 @@ set(src
     src/api/mouse_button.cc src/api/mouse_button.h
     src/api/renderer.cc src/api/renderer.h
 )
+source_group("" FILES ${src})
 add_library(api STATIC ${src})
 target_include_directories(api
     PUBLIC
@@ -23,3 +24,4 @@ target_link_libraries(api
         stb_truetype
         stb_image
 )
+set_target_properties(api PROPERTIES FOLDER "Libraries")

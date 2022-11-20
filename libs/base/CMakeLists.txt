@@ -20,6 +20,7 @@ set(src
     src/base/utf8.cc src/base/utf8.h
     src/base/vec2.cc src/base/vec2.h
 )
+source_group("" FILES ${src})
 add_library(base STATIC ${src})
 set_crt_to_static(base)
 target_include_directories(base
@@ -35,7 +36,7 @@ target_link_libraries(base
         project_options
         project_warnings
 )
-
+set_target_properties(base PROPERTIES FOLDER "Libraries")
 
 set(src_test
     src/base/string.test.cc
@@ -44,6 +45,7 @@ set(src_test
     src/base/vec2.test.cc
     ../../external/catch/main.cc
 )
+source_group("" FILES ${src_test})
 add_executable(base_test ${src_test})
 target_link_libraries(base_test
     PUBLIC
@@ -54,4 +56,4 @@ target_link_libraries(base_test
         project_warnings
 )
 catch_discover_tests(base_test)
-
+set_target_properties(base_test PROPERTIES FOLDER "Tests")

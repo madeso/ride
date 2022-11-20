@@ -5,6 +5,7 @@ set(src
     src/libride/document.cc  src/libride/document.h
     src/libride/document.commands.cc  src/libride/document.commands.h
 )
+source_group("" FILES ${src})
 add_library(libride STATIC ${src})
 set_crt_to_static(libride)
 target_include_directories(libride
@@ -20,12 +21,13 @@ target_link_libraries(libride
         std::filesystem
         fmt::fmt
 )
-
+set_target_properties(libride PROPERTIES FOLDER "Libraries")
 
 set(src_test
     src/libride/document.test.cc
     ../../external/catch/main.cc
 )
+source_group("" FILES ${src_test})
 add_executable(libride_test ${src_test})
 target_link_libraries(libride_test
     PUBLIC
@@ -37,3 +39,4 @@ target_link_libraries(libride_test
         fmt::fmt
 )
 catch_discover_tests(libride_test)
+set_target_properties(libride_test PROPERTIES FOLDER "Tests")

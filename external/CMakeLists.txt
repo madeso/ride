@@ -6,10 +6,14 @@ add_subdirectory(catchy)
 
 ###################################################################################################
 # glad
-add_library(glad STATIC
+set(glad_src
     glad/src/glad.c
     glad/include/glad/glad.h
 )
+add_library(glad STATIC
+    ${glad_src}
+)
+source_group("" FILES ${glad_src})
 target_include_directories(glad SYSTEM
     PUBLIC
         glad/include
@@ -18,7 +22,7 @@ target_link_libraries(glad
     PUBLIC
         ${CMAKE_DL_LIBS}
 )
-
+set_target_properties(glad PROPERTIES FOLDER "External")
 
 
 ###################################################################################################
@@ -48,28 +52,36 @@ target_link_libraries(sdl2
 
 ###################################################################################################
 # stb truetype
-add_library(stb_truetype STATIC
+set(stb_truetype_src
     stb/stb_truetype.c
     stb/stb/stb_truetype.h
 )
+add_library(stb_truetype STATIC
+    ${stb_truetype_src}
+)
+source_group("" FILES ${stb_truetype_src})
 target_include_directories(stb_truetype
     PUBLIC
         SYSTEM stb/stb
 )
-
+set_target_properties(stb_truetype PROPERTIES FOLDER "External")
 
 
 ###################################################################################################
 # stb image
-add_library(stb_image STATIC
+set(stb_image_src
     stb/stb_image.c
     stb/stb/stb_image.h
 )
+add_library(stb_image STATIC
+    ${stb_image_src}
+)
+source_group("" FILES ${stb_image_src})
 target_include_directories(stb_image
     PUBLIC
         SYSTEM stb/stb
 )
-
+set_target_properties(stb_image PROPERTIES FOLDER "External")
 
 
 ###################################################################################################

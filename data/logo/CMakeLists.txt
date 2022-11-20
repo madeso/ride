@@ -13,3 +13,4 @@ target_link_libraries(data_logo
     PUBLIC
         embed
 )
+set_target_properties(data_logo PROPERTIES FOLDER "Embedded files")

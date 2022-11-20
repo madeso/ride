@@ -12,3 +12,4 @@ target_link_libraries(data_font
     PUBLIC
         embed
 )
+set_target_properties(data_font PROPERTIES FOLDER "Embedded files")

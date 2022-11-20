@@ -14,6 +14,7 @@ set(src
     src/apigl/uniform.cc src/apigl/uniform.h
     src/apigl/dependency_opengl.cc src/apigl/dependency_opengl.h
 )
+source_group("" FILES ${src})
 add_library(apigl STATIC ${src})
 target_include_directories(apigl
     PUBLIC
@@ -37,13 +38,14 @@ target_link_libraries(apigl
         glad
         glm
 )
+set_target_properties(apigl PROPERTIES FOLDER "Libraries")
 
 
-
-add_executable(
-    example_squares WIN32 MACOSX_BUNDLE
+set(example_squares_src
 	examples/squares.cc
 )
+source_group("" FILES ${example_squares_src})
+add_executable(example_squares WIN32 MACOSX_BUNDLE ${example_squares_src})
 set_crt_to_static(example_squares)
 target_link_libraries(example_squares
     PRIVATE
@@ -53,12 +55,13 @@ target_link_libraries(example_squares
     PUBLIC
         apigl
 )
+set_target_properties(example_squares PROPERTIES FOLDER "Examples")
 
-
-add_executable(
-    example_images WIN32 MACOSX_BUNDLE
+set(example_images_src
 	examples/images.cc
 )
+source_group("" FILES ${example_images_src})
+add_executable(example_images WIN32 MACOSX_BUNDLE ${example_images_src})
 set_crt_to_static(example_images)
 target_link_libraries(example_images
     PRIVATE
@@ -68,12 +71,13 @@ target_link_libraries(example_images
         apigl
         data_logo
 )
+set_target_properties(example_images PROPERTIES FOLDER "Examples")
 
-
-add_executable(
-    example_font WIN32 MACOSX_BUNDLE
+set(example_font_src
 	examples/font.cc
 )
+source_group("" FILES ${example_font_src})
+add_executable(example_font WIN32 MACOSX_BUNDLE ${example_font_src})
 set_crt_to_static(example_font)
 target_link_libraries(example_font
     PRIVATE
@@ -82,12 +86,13 @@ target_link_libraries(example_font
     PUBLIC
         apigl
 )
+set_target_properties(example_font PROPERTIES FOLDER "Examples")
 
-
-add_executable(
-    example_scope WIN32 MACOSX_BUNDLE
+set(example_scope_src
 	examples/scope.cc
 )
+source_group("" FILES ${example_scope_src})
+add_executable(example_scope WIN32 MACOSX_BUNDLE ${example_scope_src})
 set_crt_to_static(example_scope)
 target_link_libraries(example_scope
     PRIVATE
@@ -96,3 +101,4 @@ target_link_libraries(example_scope
     PUBLIC
         apigl
 )
+set_target_properties(example_scope PROPERTIES FOLDER "Examples")

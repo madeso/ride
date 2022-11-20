@@ -4,6 +4,7 @@
 set(src
     main.cc
 )
+source_group("" FILES ${src})
 add_executable (
     ride WIN32 MACOSX_BUNDLE
 	${src}
@@ -17,6 +18,7 @@ target_link_libraries(ride
         apigl
         sdl2
 )
+set_target_properties(ride PROPERTIES FOLDER "Applications")
 
 ###############################################################################
 ############# wx version of ride
