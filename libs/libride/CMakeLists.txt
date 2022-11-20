@@ -21,7 +21,7 @@ target_link_libraries(libride
         std::filesystem
         fmt::fmt
 )
-set_target_properties(libride PROPERTIES FOLDER "Libraries")
+set_target_properties(libride PROPERTIES FOLDER "Libraries/libride")
 
 set(src_test
     src/libride/document.test.cc
@@ -39,4 +39,4 @@ target_link_libraries(libride_test
         fmt::fmt
 )
 catch_discover_tests(libride_test)
-set_target_properties(libride_test PROPERTIES FOLDER "Tests")
+set_target_properties(libride_test PROPERTIES FOLDER "Libraries/libride")

@@ -36,7 +36,7 @@ target_link_libraries(base
         project_options
         project_warnings
 )
-set_target_properties(base PROPERTIES FOLDER "Libraries")
+set_target_properties(base PROPERTIES FOLDER "Libraries/base")
 
 set(src_test
     src/base/string.test.cc
@@ -56,4 +56,4 @@ target_link_libraries(base_test
         project_warnings
 )
 catch_discover_tests(base_test)
-set_target_properties(base_test PROPERTIES FOLDER "Tests")
+set_target_properties(base_test PROPERTIES FOLDER "Libraries/base")
