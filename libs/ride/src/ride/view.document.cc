@@ -32,8 +32,8 @@ void ViewDoc::scroll_to_cursor(const position& p)
     std::cout << "data " << top.value << " " << bot.value << " " << view_rect.height.value << " " << view_rect.y.value << "\n";
 
     // determine if it's outside of the range
-    auto ychange = 0_px;
-    if(top < 0_px) { std::cout << "top change\n"; ychange -= top; }
+    auto ychange = 0_dp;
+    if(top < 0_dp) { std::cout << "top change\n"; ychange -= top; }
     if(bot > view_rect.height) { std::cout << "bot change\n"; ychange -= bot - view_rect.height;}
 
     // change scroll to fix
@@ -43,23 +43,23 @@ void ViewDoc::scroll_to_cursor(const position& p)
     keep_scroll_within();
 }
 
-pix ViewDoc::get_relative_pixel_offset(const position& p)
+Dp ViewDoc::get_relative_pixel_offset(const position& p)
 {
     return offset_to_relative_left_pix(p.line, p.offset);
 }
 
-int ViewDoc::get_offset_from_relative_pixel_offset(int line, pix offset)
+int ViewDoc::get_offset_from_relative_pixel_offset(int line, Dp offset)
 {
     return absolute_pix_x_to_offset(line, offset + view_rect.x);
 }
 
-pix ViewDoc::calculate_line_height()
+Dp ViewDoc::calculate_line_height()
 {
-    return  app->to_pix(font->get_height()) + theme->line_spacing;
+    return  app->Cdp(font->get_height()) + theme->line_spacing;
 }
 
 
-pix ViewDoc::get_full_document_height()
+Dp ViewDoc::get_full_document_height()
 {
     const auto lines = doc->GetNumberOfLines();
     const auto spacing = calculate_line_height();
@@ -69,19 +69,19 @@ pix ViewDoc::get_full_document_height()
 }
 
 
-pix ViewDoc::get_full_document_width() const
+Dp ViewDoc::get_full_document_width() const
 {
     const auto size = doc->GetNumberOfLines();
     if(size == 0)
     {
-        return 0_px;
+        return 0_dp;
     }
-    const auto get_length = [this](int index) -> pix
+    const auto get_length = [this](int index) -> Dp
     {
-        return app->to_pix(font->get_width(doc->GetLineAt(index)));
+        return app->Cdp(font->get_width(doc->GetLineAt(index)));
     };
 
-    pix largest = get_length(0);
+    Dp largest = get_length(0);
     for(int i=1; i<size; i+=1)
     {
         const auto l = get_length(i);
@@ -95,19 +95,19 @@ pix ViewDoc::get_full_document_width() const
 }
 
 
-void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix&, const pix& y)
+void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const Dp&, const Dp& y)
 {
     cache->draw_text
     (
         font,
         "{0: >{1}}"_format(line_index+1, gutter_char_length),
-        app->to_dip(gutter_rect.x + theme->gutter_spacing_left),
-        app->to_dip(y),
+        app->Cpx(gutter_rect.x + theme->gutter_spacing_left),
+        app->Cpx(y),
         theme->gutter_color
     );
 
     {
-        const auto text_scope = ClipScope(cache, app->to_dip(view_rect));
+        const auto text_scope = ClipScope(cache, app->Cpx(view_rect));
         draw_single_line
         (
             cache, Csizet_to_int(line_index),
@@ -120,7 +120,7 @@ void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const pix&, con
     }
 }
 
-pix ViewDoc::get_document_width() const
+Dp ViewDoc::get_document_width() const
 {
     return get_full_document_width();
 }
@@ -136,12 +136,12 @@ void ViewDoc::draw_single_line
 (
     Renderer* cache,
     int line_index,
-    const Vec2<pix>& position
+    const Vec2<Dp>& position
 )
 {
-    const auto font_height = app->to_pix(font->get_height());
+    const auto font_height = app->Cdp(font->get_height());
 
-    const auto get_col_x_offset = [this, line_index](int offset) -> pix
+    const auto get_col_x_offset = [this, line_index](int offset) -> Dp
     {
         return offset_to_relative_left_pix(line_index, offset);
     };
@@ -162,9 +162,9 @@ void ViewDoc::draw_single_line
         {
             cache->draw_rect
             (
-                app->to_dip
+                app->Cpx
                 (
-                    Rect<pix>
+                    Rect<Dp>
                     {
                         {view_rect.x, position.y},
                         {view_rect.width, font_height}
@@ -191,9 +191,9 @@ void ViewDoc::draw_single_line
 
             cache->draw_rect
             (
-                app->to_dip
+                app->Cpx
                 (
-                    Rect<pix>
+                    Rect<Dp>
                     {
                         {x1, position.y},
                         {x2 - x1, lh}
@@ -209,8 +209,8 @@ void ViewDoc::draw_single_line
     (
         font,
         doc->GetLineAt(line_index),
-        app->to_dip(position.x),
-        app->to_dip(position.y),
+        app->Cpx(position.x),
+        app->Cpx(position.y),
         theme->plain_text_color
     );
 
@@ -223,9 +223,9 @@ void ViewDoc::draw_single_line
             const auto x1 = position.x + get_col_x_offset(sel.a.offset);
             cache->draw_rect
             (
-                app->to_dip
+                app->Cpx
                 (
-                    Rect<pix>
+                    Rect<Dp>
                     {
                         {x1, position.y},
                         {theme->caret_width, lh}
@@ -248,11 +248,11 @@ void ViewDoc::on_layout_body()
     LineView::on_layout_body();
 
     // layout debug
-    view_rect = view_rect.get_inset(30_px);
+    view_rect = view_rect.get_inset(30_dp);
 
     const auto lines = doc->GetNumberOfLines();
     const auto max_gutter_text = (Str{} << (lines+1)).ToString();
-    const auto min_gutter_width = app->to_pix(font->get_width( max_gutter_text.c_str() ));
+    const auto min_gutter_width = app->Cdp(font->get_width( max_gutter_text.c_str() ));
     const auto gutter_width = min_gutter_width + theme->gutter_spacing_left + theme->gutter_spacing_right;
 
     gutter_rect = view_rect.cut(get_gutter_side(*theme), gutter_width);
@@ -262,8 +262,8 @@ void ViewDoc::on_layout_body()
 
 void ViewDoc::draw_body(Renderer* cache)
 {
-    cache->draw_rect(app->to_dip(view_rect), theme->edit_background);
-    cache->draw_rect(app->to_dip(gutter_rect), theme->gutter_background);
+    cache->draw_rect(app->Cpx(view_rect), theme->edit_background);
+    cache->draw_rect(app->Cpx(gutter_rect), theme->gutter_background);
 
     draw_lines(cache);
 
@@ -271,9 +271,9 @@ void ViewDoc::draw_body(Renderer* cache)
     {
         if(sel.is_selection() == false)
         {
-            const auto draw_p = [this, cache](const Vec2<pix> p)
+            const auto draw_p = [this, cache](const Vec2<Dp> p)
             {
-                cache->draw_rect(app->to_dip(Rect<pix>{p, {8_px, 2_px}
+                cache->draw_rect(app->Cpx(Rect<Dp>{p, {8_dp, 2_dp}
                 }), theme->selection_background);
             };
 
@@ -284,31 +284,31 @@ void ViewDoc::draw_body(Renderer* cache)
 
     // const auto line = absolute_pix_y_to_line(last_mouse.y);
     // const auto offset = absolute_pix_x_to_offset(line, last_mouse.x);
-    // draw_text(cache, font, "{} {}: {}"_format(line+1, offset, last_mouse), app->to_dip(view_rect.x + 10_px), app->to_dip(view_rect.y + 10_px), {0,0,0});
+    // draw_text(cache, font, "{} {}: {}"_format(line+1, offset, last_mouse), app->Cpx(view_rect.x + 10_dp), app->Cpx(view_rect.y + 10_dp), {0,0,0});
 }
 
 
-pix ViewDoc::line_to_relative_upper_pix(int line_index)
+Dp ViewDoc::line_to_relative_upper_pix(int line_index)
 {
     const auto spacing = calculate_line_height();
     const auto y = static_cast<double>(line_index) * spacing - scroll.y;
     return y;
 }
 
-pix ViewDoc::line_to_relative_lower_pix(int line_index)
+Dp ViewDoc::line_to_relative_lower_pix(int line_index)
 {
     return line_to_relative_upper_pix(line_index + 1);
 }
 
 // offset_to_relative_left_pix
-pix ViewDoc::offset_to_relative_left_pix(int line_index, int offset)
+Dp ViewDoc::offset_to_relative_left_pix(int line_index, int offset)
 {
     const auto& text = doc->GetLineAt(line_index);
     const auto t = text.substr(0, Cs(offset));
-    return app->to_pix(font->get_width(t));
+    return app->Cdp(font->get_width(t));
 }
 
-pix ViewDoc::offset_to_relative_right_pix(int line_index, int offset)
+Dp ViewDoc::offset_to_relative_right_pix(int line_index, int offset)
 {
     const auto next = doc->position_offset({line_index, offset}, 1);
     const auto next_offset = next.line == line_index ? next.offset : offset;
@@ -316,7 +316,7 @@ pix ViewDoc::offset_to_relative_right_pix(int line_index, int offset)
 }
 
 
-Vec2<pix> ViewDoc::position_to_upper_left_pix(const position& p)
+Vec2<Dp> ViewDoc::position_to_upper_left_pix(const position& p)
 {
     return
     {
@@ -325,7 +325,7 @@ Vec2<pix> ViewDoc::position_to_upper_left_pix(const position& p)
     };
 }
 
-Vec2<pix> ViewDoc::position_to_lower_right_pix(const position& p)
+Vec2<Dp> ViewDoc::position_to_lower_right_pix(const position& p)
 {
     return
     {
@@ -350,7 +350,7 @@ MinMax<int> ViewDoc::get_line_range()
 
 
 
-int ViewDoc::absolute_pix_x_to_offset(int line, pix px)
+int ViewDoc::absolute_pix_x_to_offset(int line, Dp px)
 {
     /*
         index       0     1       2     3       4
@@ -369,12 +369,12 @@ int ViewDoc::absolute_pix_x_to_offset(int line, pix px)
 
     const auto xx = px - view_rect.x - theme->text_spacing + scroll.x;
 
-    pix last_width = 0_px;
+    Dp last_width = 0_dp;
 
     for(const auto& ch: chars)
     {
         str += ch;
-        const auto new_width = this->app->to_pix(this->font->get_width(str));
+        const auto new_width = this->app->Cdp(this->font->get_width(str));
         const auto half = (new_width - last_width) / 2.0;
         const auto middle = last_width + half;
 
@@ -391,7 +391,7 @@ int ViewDoc::absolute_pix_x_to_offset(int line, pix px)
     return C(text.size())+1;
 }
 
-position ViewDoc::translate_view_position(const Vec2<pix>& p)
+position ViewDoc::translate_view_position(const Vec2<Dp>& p)
 {
     const auto line = absolute_pix_y_to_line(p.y);
     const auto byte_offset = absolute_pix_x_to_offset(line, p.x);
@@ -450,7 +450,7 @@ bool destroy_cursors(VirtualView* vview, const sorted_selection& p, bool include
     return false;
 }
 
-void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse, int)
+void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int)
 {
     last_mouse = new_mouse;
     if(button != MouseButton::left) { return; }
@@ -483,7 +483,7 @@ void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<
     dragging = true;
 }
 
-void ViewDoc::drag_to(const Meta& meta, const Vec2<pix>& new_mouse)
+void ViewDoc::drag_to(const Meta& meta, const Vec2<Dp>& new_mouse)
 {
     if(dragging == false) { return; }
 
@@ -503,7 +503,7 @@ void ViewDoc::drag_to(const Meta& meta, const Vec2<pix>& new_mouse)
     }
 }
 
-void ViewDoc::on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse)
+void ViewDoc::on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse)
 {
     last_mouse = new_mouse;
 
@@ -526,7 +526,7 @@ void ViewDoc::on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse)
 }
 
 
-void ViewDoc::on_mouse_released(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse)
+void ViewDoc::on_mouse_released(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse)
 {
     last_mouse = new_mouse;
 

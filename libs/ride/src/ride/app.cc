@@ -45,7 +45,7 @@ double change_scale(double current, bool increase)
 
 struct RideApp : App
 {
-    Vec2<pix> mouse = {pix{0}, pix{0}};
+    Vec2<Dp> mouse = {Dp{0}, Dp{0}};
 
     std::shared_ptr<Texture> logo;
     std::shared_ptr<Font> font;
@@ -73,7 +73,7 @@ struct RideApp : App
     RideApp(PlatformArg p)
         : App(p)
         , logo(p->load_shared_texture(LOGO_256TEXT_PNG))
-        , font(load_font(default_font, pix{12}))
+        , font(load_font(default_font, Dp{12}))
         , fs(create_local_filesystem())
     {
         setup_view(&root);
@@ -160,13 +160,13 @@ struct RideApp : App
 
     void draw(Renderer* cache) override
     {
-        auto rect = ::Rect<pix>::from_size(client_size);
-        cache->draw_rect(to_dip(rect), theme.window_background_color);
+        auto rect = ::Rect<Dp>::from_size(client_size);
+        cache->draw_rect(Cpx(rect), theme.window_background_color);
 
-        cache->draw_image(logo, to_dip(pix{10}), to_dip(pix{10}), theme.logo_color);
+        cache->draw_image(logo, Cpx(Dp{10}), Cpx(Dp{10}), theme.logo_color);
 
-        const auto browser_rect = rect.cut_left(150_px);
-        const auto border_size = 3_px;
+        const auto browser_rect = rect.cut_left(150_dp);
+        const auto border_size = 3_dp;
 
         browser.on_layout(browser_rect.get_inset(border_size));
         root.on_layout(rect.get_inset(border_size));
@@ -183,7 +183,7 @@ struct RideApp : App
         {
             if(view != get_active_view())
             {
-                cache->draw_rect(this->to_dip(view->body_rect), theme.inactive_view_color);
+                cache->draw_rect(this->Cpx(view->body_rect), theme.inactive_view_color);
             }
         }
     }
@@ -209,7 +209,7 @@ struct RideApp : App
         }
     }
 
-    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse, int clicks) override
+    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override
     {
         mouse = new_mouse;
 
@@ -219,7 +219,7 @@ struct RideApp : App
         view->on_mouse_pressed(button, meta, new_mouse, clicks);
     }
 
-    void on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse, Dp, Dp) override
     {
         mouse = new_mouse;
 
@@ -228,7 +228,7 @@ struct RideApp : App
         view->on_mouse_moved(meta, new_mouse);
     }
 
-    void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse) override
+    void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse) override
     {
         mouse = new_mouse;
 

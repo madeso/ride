@@ -120,7 +120,7 @@ T parse(const std::string& str)
 struct Renderer : ::Renderer
 {
     Render2 render;
-    std::vector<Rect<dip>> rects;
+    std::vector<Rect<Px>> rects;
 
     void update_stencil()
     {
@@ -166,7 +166,7 @@ struct Renderer : ::Renderer
         }
     }
 
-    void push_clip_rect(const Rect<dip>& r) override
+    void push_clip_rect(const Rect<Px>& r) override
     {
         Renderer* c = this;
         c->rects.emplace_back(r);
@@ -180,7 +180,7 @@ struct Renderer : ::Renderer
         update_stencil();
     }
 
-    void draw_rect(const Rect<dip>& r, Color c) override
+    void draw_rect(const Rect<Px>& r, Color c) override
     {
         Renderer* ren = this;
         // LOG_INFO("Drawing rect {} {} {} {}", r.x.value, r.y.value, r.width.value, r.height.value);
@@ -201,7 +201,7 @@ struct Renderer : ::Renderer
         ren->render.batch.submit();
     }
 
-    void draw_image(std::shared_ptr<::Texture> the_texture, const Rect<dip>& rect, Color c, std::optional<Rectf> sub, Submit submit) override
+    void draw_image(std::shared_ptr<::Texture> the_texture, const Rect<Px>& rect, Color c, std::optional<Rectf> sub, Submit submit) override
     {
         auto texture = std::static_pointer_cast<Texture>(the_texture);
         Renderer* ren = this;
@@ -227,7 +227,7 @@ struct Renderer : ::Renderer
     }
 
 
-    dip draw_text(std::shared_ptr<::Font> the_font, const std::string& text, dip x, dip y, Color color) override
+    Px draw_text(std::shared_ptr<::Font> the_font, const std::string& text, Px x, Px y, Color color) override
     {
         auto font = std::static_pointer_cast<Font>(the_font);
         // todo(Gustav): investigate dip usage?
@@ -242,8 +242,8 @@ struct Renderer : ::Renderer
 
             const auto sx = g->x1 - g->x0;
             const auto sy = g->y1 - g->y0;
-            const auto px = x + dip{g->xoff};
-            const auto py = y - dip{g->yoff} - dip{sy} + font->m->get_data_height();
+            const auto px = x + Px{g->xoff};
+            const auto py = y - Px{g->yoff} - Px{sy} + font->m->get_data_height();
 
             const auto texture_rect = Rectf
             {
@@ -252,17 +252,17 @@ struct Renderer : ::Renderer
                 sx / w,
                 -sy / h
             };
-            const auto char_rect = Rect<dip>
+            const auto char_rect = Rect<Px>
             {
                 px,
                 py,
-                dip{sx},
-                dip{sy}
+                Px{sx},
+                Px{sy}
             };
 
             draw_image(set->texture, char_rect, color, texture_rect, Submit::no);
 
-            x += dip{g->xadvance};
+            x += Px{g->xadvance};
         }
 
         submit_renderer();
@@ -326,13 +326,13 @@ void on_event
                 *window_height = event.window.data2;
                 app->client_size =
                 {
-                    app->to_pix(dip{*window_width}),
-                    app->to_pix(dip{*window_height})
+                    app->Cdp(Px{*window_width}),
+                    app->Cdp(Px{*window_height})
                 };
                 app->on_resized
                 (
-                    app->to_pix(dip{*window_width}),
-                    app->to_pix(dip{*window_height})
+                    app->Cdp(Px{*window_width}),
+                    app->Cdp(Px{*window_height})
                 );
                 break;
             case SDL_WINDOWEVENT_EXPOSED:
@@ -350,8 +350,8 @@ void on_event
             app->on_file_dropped
             (
                 event.drop.file,
-                app->to_pix(dip{mx - wx}),
-                app->to_pix(dip{my - wy})
+                app->Cdp(Px{mx - wx}),
+                app->Cdp(Px{my - wy})
             );
             SDL_free(event.drop.file);
         }
@@ -373,7 +373,7 @@ void on_event
         (
             mousebutton_from_sdl_button(event.button.button),
             meta.to_meta(),
-            {app->to_pix(dip{event.button.x}), app->to_pix(dip{*window_height - event.button.y})},
+            {app->Cdp(Px{event.button.x}), app->Cdp(Px{*window_height - event.button.y})},
             event.button.clicks
         );
         break;
@@ -383,7 +383,7 @@ void on_event
         (
             mousebutton_from_sdl_button(event.button.button),
             meta.to_meta(),
-            {app->to_pix(dip{event.button.x}), app->to_pix(dip{*window_height - event.button.y})}
+            {app->Cdp(Px{event.button.x}), app->Cdp(Px{*window_height - event.button.y})}
         );
         break;
     case SDL_MOUSEMOTION:
@@ -397,13 +397,13 @@ void on_event
         app->on_mouse_moved
         (
             meta.to_meta(),
-            Vec2<pix>
+            Vec2<Dp>
             {
-                app->to_pix(dip{mx}),
-                app->to_pix(dip{my})
+                app->Cdp(Px{mx}),
+                app->Cdp(Px{my})
             },
-            app->to_pix(dip{rx}),
-            app->to_pix(dip{ry})
+            app->Cdp(Px{rx}),
+            app->Cdp(Px{ry})
         );
         }
         break;
@@ -551,8 +551,8 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     auto app = create_app({});
     app->client_size =
     {
-        app->to_pix(dip{window_width}),
-        app->to_pix(dip{window_height})
+        app->Cdp(Px{window_width}),
+        app->Cdp(Px{window_height})
     };
 
     if(custom_scale)

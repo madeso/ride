@@ -46,16 +46,16 @@ struct Renderer;
 
 struct ScrollSize
 {
-    std::optional<pix> width;
-    std::optional<pix> height;
+    std::optional<Dp> width;
+    std::optional<Dp> height;
 };
 
 struct ScrollbarData
 {
-    Rect<pix> through_rect;
-    Rect<pix> thumb_rect;
-    Rect<pix> top_button_rect;
-    Rect<pix> bottom_button_rect;
+    Rect<Dp> through_rect;
+    Rect<Dp> thumb_rect;
+    Rect<Dp> top_button_rect;
+    Rect<Dp> bottom_button_rect;
 };
 
 struct View
@@ -66,12 +66,12 @@ struct View
     CursorType cursor = CursorType::arrow;
 
     // includes scrollbar
-    Rect<pix> client_rect;
+    Rect<Dp> client_rect;
 
-    Vec2<pix> scroll;
+    Vec2<Dp> scroll;
 
     // excluding scrollbar
-    Rect<pix> body_rect;
+    Rect<Dp> body_rect;
     std::optional<ScrollbarData> vertical_scrollbar_data;
     std::optional<ScrollbarData> horizontal_scrollbar_data;
 
@@ -93,11 +93,11 @@ struct View
     // called after client_rect and body_rect is set
     virtual void on_layout_body();
 
-    void on_layout(const Rect<pix>& new_client_rect);
+    void on_layout(const Rect<Dp>& new_client_rect);
 
-    virtual void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse, int clicks);
-    virtual void on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse);
-    virtual void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse);
+    virtual void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int clicks);
+    virtual void on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse);
+    virtual void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse);
     virtual void on_text(const std::string& t);
 };
 
@@ -105,21 +105,21 @@ struct View
 struct LineView : View
 {
     std::shared_ptr<Font> font;
-    Rect<pix> view_rect = Rect<pix>(0_px);
+    Rect<Dp> view_rect = Rect<Dp>(0_dp);
 
     void on_layout_body() override;
 
-    Rect<pix> hit_rect_for_line(const pix& ypos) const;
+    Rect<Dp> hit_rect_for_line(const Dp& ypos) const;
 
-    pix calculate_line_height() const;
-    pix line_number_to_y(std::size_t line) const;
+    Dp calculate_line_height() const;
+    Dp line_number_to_y(std::size_t line) const;
     ScrollSize calculate_scroll_size() override;
-    std::optional<std::size_t> get_index_under_view_position(const Vec2<pix> relative_mouse);
+    std::optional<std::size_t> get_index_under_view_position(const Vec2<Dp> relative_mouse);
 
     void draw_lines(Renderer* cache);
-    int absolute_pix_y_to_line(pix y);
+    int absolute_pix_y_to_line(Dp y);
 
-    virtual void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) = 0;
-    virtual pix get_document_width() const = 0;
+    virtual void draw_line(Renderer* cache, std::size_t index, const Dp& x, const Dp& y) = 0;
+    virtual Dp get_document_width() const = 0;
     virtual std::size_t get_number_of_lines() const = 0;
 };

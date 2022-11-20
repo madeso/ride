@@ -1,6 +1,6 @@
 #include "api/renderer.h"
 
-void Renderer::draw_image(std::shared_ptr<Texture> texture, dip x, dip y, Color c, std::optional<Rectf> sub, Submit submit)
+void Renderer::draw_image(std::shared_ptr<Texture> texture, Px x, Px y, Color c, std::optional<Rectf> sub, Submit submit)
 {
     draw_image
     (
@@ -8,8 +8,8 @@ void Renderer::draw_image(std::shared_ptr<Texture> texture, dip x, dip y, Color 
         {
             x,
             y,
-            dip{texture->get_width()},
-            dip{texture->get_height()}
+            Px{texture->get_width()},
+            Px{texture->get_height()}
         },
         c,
         sub,
@@ -17,7 +17,7 @@ void Renderer::draw_image(std::shared_ptr<Texture> texture, dip x, dip y, Color 
     );
 }
 
-ClipScope::ClipScope(Renderer* c, const Rect<dip>& r)
+ClipScope::ClipScope(Renderer* c, const Rect<Px>& r)
     : cache(c)
 {
     cache->push_clip_rect(r);

@@ -13,15 +13,15 @@ struct ScopeApp : App
 {
     std::shared_ptr<::Font> font;
 
-    Vec2<pix> mouse = {pix{0}, pix{0}};
+    Vec2<Dp> mouse = {Dp{0}, Dp{0}};
 
     ScopeApp(PlatformArg p)
         : App(p)
-        , font(load_font(default_font, 24_px))
+        , font(load_font(default_font, 24_dp))
     {
     }
 
-    void on_mouse_moved(const Meta&, const Vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta&, const Vec2<Dp>& new_mouse, Dp, Dp) override
     {
         mouse = new_mouse;
     }
@@ -38,12 +38,12 @@ struct ScopeApp : App
 
     void draw(::Renderer* cache) override
     {
-        cache->draw_rect(to_dip(Rect<pix>::from_size(client_size)), colors::white);
+        cache->draw_rect(Cpx(Rect<Dp>::from_size(client_size)), colors::white);
 
-        cache->draw_rect(to_dip(Rect<pix>{{50_px, 100_px}, ::Size<pix>{30_px, 30_px}}), colors::red_500);
-        cache->draw_rect(to_dip(Rect<pix>{{100_px, 50_px}, ::Size<pix>{30_px, 30_px}}), colors::blue_500);
+        cache->draw_rect(Cpx(Rect<Dp>{{50_dp, 100_dp}, ::Size<Dp>{30_dp, 30_dp}}), colors::red_500);
+        cache->draw_rect(Cpx(Rect<Dp>{{100_dp, 50_dp}, ::Size<Dp>{30_dp, 30_dp}}), colors::blue_500);
 
-        auto r = Rect<pix>{{100_px, 100_px}, ::Size<pix>{400_px, 400_px}};
+        auto r = Rect<Dp>{{100_dp, 100_dp}, ::Size<Dp>{400_dp, 400_dp}};
 
         std::optional<ClipScope> scope_a;
 
@@ -52,10 +52,10 @@ struct ScopeApp : App
         case 0:
             break;
         case 1:
-            scope_a = ClipScope{cache, to_dip(r)};
+            scope_a = ClipScope{cache, Cpx(r)};
             break;
         case 2:
-            scope_a = ClipScope{cache, to_dip(Rect<pix>{mouse, Size<pix>{100_px, 100_px}}.get_offset(Vec2<pix>{-50_px, -50_px}))};
+            scope_a = ClipScope{cache, Cpx(Rect<Dp>{mouse, Size<Dp>{100_dp, 100_dp}}.get_offset(Vec2<Dp>{-50_dp, -50_dp}))};
             break;
         default:
             assert(false && "unhandled case");
@@ -63,15 +63,15 @@ struct ScopeApp : App
         }
 
 
-        const auto size = pix{20};
+        const auto size = Dp{20};
 
         {
             auto title = r.cut_top(size);
             for(const auto g: colors::gray)
             {
-                cache->draw_rect(to_dip(title.cut_left(size)), g);
+                cache->draw_rect(Cpx(title.cut_left(size)), g);
             }
-            cache->draw_rect(to_dip(title), colors::pink_400);
+            cache->draw_rect(Cpx(title), colors::pink_400);
         }
 
 
@@ -79,16 +79,16 @@ struct ScopeApp : App
             auto status = r.cut_bottom(size);
             for(const auto g: colors::cyan)
             {
-                cache->draw_rect(to_dip(status.cut_right(size)), g);
+                cache->draw_rect(Cpx(status.cut_right(size)), g);
             }
-            cache->draw_rect(to_dip(status), colors::pink_400);
+            cache->draw_rect(Cpx(status), colors::pink_400);
         }
 
-        cache->draw_rect(to_dip(r), colors::teal_500);
+        cache->draw_rect(Cpx(r), colors::teal_500);
 
-        cache->draw_rect(to_dip(r.get_inset(size)), colors::grape_500);
+        cache->draw_rect(Cpx(r.get_inset(size)), colors::grape_500);
 
-        cache->draw_text(font, "press space", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
+        cache->draw_text(font, "press space", Cpx(20_dp), Cpx(20_dp), {0, 0, 0, 255});
     }
 };
 

@@ -37,8 +37,8 @@ struct ViewFilesystem : public LineView
     std::vector<std::shared_ptr<Node>> roots;
     std::vector<Node*> entries; // stored in roots
     std::optional<std::size_t> node_hovering;
-    Vec2<pix> last_mouse = {0_px, 0_px};
-    pix body_width = 0_px;
+    Vec2<Dp> last_mouse = {0_dp, 0_dp};
+    Dp body_width = 0_dp;
 
     void setup();
 
@@ -49,11 +49,11 @@ struct ViewFilesystem : public LineView
     void on_layout_body() override;
 
     void draw_body(Renderer* cache) override;
-    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse, int clicks) override;
-    void on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse) override;
+    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override;
+    void on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse) override;
 
 
-    void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) override;
-    pix get_document_width() const override;
+    void draw_line(Renderer* cache, std::size_t index, const Dp& x, const Dp& y) override;
+    Dp get_document_width() const override;
     std::size_t get_number_of_lines() const override;
 };

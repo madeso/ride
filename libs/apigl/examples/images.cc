@@ -10,7 +10,7 @@ using namespace ride::apigl;
 
 struct ImagesApp : App
 {
-    Vec2<pix> mouse = {0_px, 0_px};
+    Vec2<Dp> mouse = {0_dp, 0_dp};
 
     std::shared_ptr<Texture> logo;
 
@@ -20,16 +20,16 @@ struct ImagesApp : App
     {
     }
 
-    void on_mouse_moved(const Meta&, const Vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta&, const Vec2<Dp>& new_mouse, Dp, Dp) override
     {
         mouse = new_mouse;
     }
 
     void draw(Renderer* cache) override
     {
-        cache->draw_rect(to_dip(Rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
-        cache->draw_rect(to_dip(Rect<pix>{mouse, {10_px, 10_px}}), Color::rgb(0, 0, 255, 255));
-        cache->draw_image(logo, to_dip(20_px), to_dip(20_px), {255, 0, 0, 255});
+        cache->draw_rect(Cpx(Rect<Dp>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(Cpx(Rect<Dp>{mouse, {10_dp, 10_dp}}), Color::rgb(0, 0, 255, 255));
+        cache->draw_image(logo, Cpx(20_dp), Cpx(20_dp), {255, 0, 0, 255});
     }
 };
 

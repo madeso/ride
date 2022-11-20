@@ -161,20 +161,20 @@ ViewFilesystem::ViewFilesystem()
     cursor = CursorType::hand;
 }
 
-pix get_x_position(Theme* theme, int depth)
+Dp get_x_position(Theme* theme, int depth)
 {
     return theme->filesys_left_padding + static_cast<double>(depth) * theme->filesys_indent;
 }
 
 void ViewFilesystem::update_rects_for_entries()
 {
-    body_width = 0_px;
+    body_width = 0_dp;
     for(std::size_t index = 0; index < entries.size(); index += 1)
     {
         auto* e = entries[index];
         const auto xp = get_x_position(theme, e->depth);
 
-        const auto width = app->to_pix(font->get_width(e->name));
+        const auto width = app->Cdp(font->get_width(e->name));
         const auto total_width = width + xp;
 
         if(total_width > body_width)
@@ -216,7 +216,7 @@ void ViewFilesystem::setup()
     recreate_entries_list();
 }
 
-pix ViewFilesystem::get_document_width() const
+Dp ViewFilesystem::get_document_width() const
 {
     return body_width;
 }
@@ -229,11 +229,11 @@ std::size_t ViewFilesystem::get_number_of_lines() const
 
 void ViewFilesystem::draw_body(Renderer* cache)
 {
-    cache->draw_rect(app->to_dip(body_rect), theme->filesys_background_color);
+    cache->draw_rect(app->Cpx(body_rect), theme->filesys_background_color);
 
     if(node_hovering)
     {
-        cache->draw_rect(app->to_dip(hit_rect_for_line(line_number_to_y(*node_hovering)).get_offset({0_px, scroll.y})), theme->filesys_hover_color);
+        cache->draw_rect(app->Cpx(hit_rect_for_line(line_number_to_y(*node_hovering)).get_offset({0_dp, scroll.y})), theme->filesys_hover_color);
         cursor = CursorType::hand;
     }
     else
@@ -245,7 +245,7 @@ void ViewFilesystem::draw_body(Renderer* cache)
 }
 
 
-void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y)
+void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const Dp& x, const Dp& y)
 {
     const auto& e = entries[index];
     const auto xp = get_x_position(theme, e->depth);
@@ -253,14 +253,14 @@ void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const pix& x,
     (
         font,
         e->name,
-        app->to_dip(x + xp),
-        app->to_dip(y),
+        app->Cpx(x + xp),
+        app->Cpx(y),
         e->get_text_color(*theme)
     );
 }
 
 
-void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const Vec2<pix>& new_mouse, int clicks)
+void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const Vec2<Dp>& new_mouse, int clicks)
 {
     if(button != MouseButton::left) { return; }
     // if(clicks > 2) { return; } // file specific
@@ -275,7 +275,7 @@ void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const Vec
 }
 
 
-void ViewFilesystem::on_mouse_moved(const Meta&, const Vec2<pix>& new_mouse)
+void ViewFilesystem::on_mouse_moved(const Meta&, const Vec2<Dp>& new_mouse)
 {
     last_mouse = new_mouse;
     update_hover();

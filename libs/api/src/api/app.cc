@@ -5,7 +5,7 @@
 App::App(PlatformArg p)
     : platform(p)
     , run(true)
-    , client_size{pix{0}, pix{0}}
+    , client_size{Dp{0}, Dp{0}}
     , scale(platform->get_default_scale())
     , redraw_value(nullptr)
 {
@@ -21,11 +21,11 @@ void App::on_exposed()
 {
 }
 
-void App::on_file_dropped(const std::string&, pix, pix)
+void App::on_file_dropped(const std::string&, Dp, Dp)
 {
 }
 
-void App::on_resized(pix, pix)
+void App::on_resized(Dp, Dp)
 {
 }
 
@@ -42,15 +42,15 @@ void App::on_text_input(const std::string&)
 }
 
 
-void App::on_mouse_pressed(MouseButton, const Meta&, const Vec2<pix>&, int)
+void App::on_mouse_pressed(MouseButton, const Meta&, const Vec2<Dp>&, int)
 {
 }
 
-void App::on_mouse_released(MouseButton, const Meta&, const Vec2<pix>&)
+void App::on_mouse_released(MouseButton, const Meta&, const Vec2<Dp>&)
 {
 }
 
-void App::on_mouse_moved(const Meta&, const Vec2<pix>&, pix, pix)
+void App::on_mouse_moved(const Meta&, const Vec2<Dp>&, Dp, Dp)
 {
 }
 
@@ -67,25 +67,25 @@ void App::update()
 {
 }
 
-dip App::to_dip(pix p) const
+Px App::Cpx(Dp p) const
 {
-    return dip{static_cast<dip::Type>(p.value * scale)};
+    return Px{static_cast<Px::Type>(p.value * scale)};
 }
 
-Rect<dip> App::to_dip(const Rect<pix>& p) const
+Rect<Px> App::Cpx(const Rect<Dp>& p) const
 {
-    return Rect<dip>
+    return Rect<Px>
     {
-        to_dip(p.x),
-        to_dip(p.y),
-        to_dip(p.width),
-        to_dip(p.height)
+        Cpx(p.x),
+        Cpx(p.y),
+        Cpx(p.width),
+        Cpx(p.height)
     };
 }
 
-pix App::to_pix(dip p) const
+Dp App::Cdp(Px p) const
 {
-    return pix{static_cast<double>(p.value) / scale};
+    return Dp{static_cast<double>(p.value) / scale};
 }
 
 
@@ -97,21 +97,21 @@ void App::set_scale(double d)
 
     for(auto& f: loaded_fonts)
     {
-        f->set_size(to_dip(f->unscaled_size));
+        f->set_size(Cpx(f->unscaled_size));
     }
 
     */
 }
 
-std::shared_ptr<Font> App::load_font(const std::string_view& file, pix size)
+std::shared_ptr<Font> App::load_font(const std::string_view& file, Dp size)
 {
     return load_font(std::string(file), size);
 }
 
-std::shared_ptr<Font> App::load_font(const std::string& file, pix size)
+std::shared_ptr<Font> App::load_font(const std::string& file, Dp size)
 {
     auto r = platform->make_font();
-    if(r->load_font(file.c_str(), to_dip(size)))
+    if(r->load_font(file.c_str(), Cpx(size)))
     {
         loaded_fonts.emplace_back(r);
         r->unscaled_size = size;

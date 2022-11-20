@@ -9,15 +9,15 @@
 
 struct Theme
 {
-    pix line_spacing = pix{3};
-    pix gutter_spacing_left = pix{3};
-    pix gutter_spacing_right = pix{3};
-    pix text_spacing = pix{3};
+    Dp line_spacing = Dp{3};
+    Dp gutter_spacing_left = Dp{3};
+    Dp gutter_spacing_right = Dp{3};
+    Dp text_spacing = Dp{3};
 
-    pix horizontal_scroll = 21_px;
-    pix vertical_scroll = 41_px;
+    Dp horizontal_scroll = 21_dp;
+    Dp vertical_scroll = 41_dp;
 
-    pix scrollbar_width = pix{12};
+    Dp scrollbar_width = Dp{12};
 
     Color window_background_color = colors::white;
     Color logo_color = colors::gray_500;
@@ -42,16 +42,16 @@ struct Theme
     Color current_line_background = colors::yellow_200;
 
     Color caret_color = colors::black;
-    pix caret_width = 1_px;
+    Dp caret_width = 1_dp;
 
     int half_blink_period = 10;
 
     bool highlight_current_line = true;
 
-    pix filesys_indent = 12_px;
-    pix filesys_left_padding = 6_px;
+    Dp filesys_indent = 12_dp;
+    Dp filesys_left_padding = 6_dp;
 
-    pix miminal_scroll_offset = 40_px; // pixels to keep above and below curser
+    Dp miminal_scroll_offset = 40_dp; // pixels to keep above and below curser
 
     bool sort_files = true;
     bool directories_first = true;

@@ -106,12 +106,12 @@ namespace
 
         double scale = 1.0;
 
-        pix get_relative_pixel_offset(const position& p) override
+        Dp get_relative_pixel_offset(const position& p) override
         {
-            return pix{static_cast<double>(p.offset) * scale};
+            return Dp{static_cast<double>(p.offset) * scale};
         }
 
-        int get_offset_from_relative_pixel_offset(int, pix offset) override
+        int get_offset_from_relative_pixel_offset(int, Dp offset) override
         {
             return static_cast<int>(offset.value / scale);
         }

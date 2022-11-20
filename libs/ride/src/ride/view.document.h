@@ -16,49 +16,49 @@ struct ViewDoc : LineView, VirtualView
 {
     ViewDoc();
     
-    Rect<pix> gutter_rect = Rect<pix>(0_px);
+    Rect<Dp> gutter_rect = Rect<Dp>(0_dp);
     bool dragging = false;
     std::size_t gutter_char_length = 1;
 
-    Vec2<pix> last_mouse = {0_px, 0_px};
+    Vec2<Dp> last_mouse = {0_dp, 0_dp};
 
-    void draw_line(Renderer* cache, std::size_t index, const pix& x, const pix& y) override;
-    pix get_document_width() const override;
+    void draw_line(Renderer* cache, std::size_t index, const Dp& x, const Dp& y) override;
+    Dp get_document_width() const override;
     std::size_t get_number_of_lines() const override;
 
-    pix calculate_line_height();
-    pix get_full_document_height();
-    pix get_full_document_width() const;
+    Dp calculate_line_height();
+    Dp get_full_document_height();
+    Dp get_full_document_width() const;
     MinMax<int> get_line_range();
-    position translate_view_position(const Vec2<pix>& p);
+    position translate_view_position(const Vec2<Dp>& p);
 
-    Vec2<pix> position_to_upper_left_pix(const position& p);
-    Vec2<pix> position_to_lower_right_pix(const position& p);
+    Vec2<Dp> position_to_upper_left_pix(const position& p);
+    Vec2<Dp> position_to_lower_right_pix(const position& p);
 
-    pix offset_to_relative_left_pix(int line_index, int offset);
-    pix offset_to_relative_right_pix(int line_index, int offset);
-    pix line_to_relative_upper_pix(int line_index);
-    pix line_to_relative_lower_pix(int line_index);
+    Dp offset_to_relative_left_pix(int line_index, int offset);
+    Dp offset_to_relative_right_pix(int line_index, int offset);
+    Dp line_to_relative_upper_pix(int line_index);
+    Dp line_to_relative_lower_pix(int line_index);
 
-    int absolute_pix_x_to_offset(int line, pix x);
+    int absolute_pix_x_to_offset(int line, Dp x);
 
     void draw_single_line
     (
         Renderer* cache,
         int line_index,
-        const Vec2<pix>& position
+        const Vec2<Dp>& position
     );
-    void drag_to(const Meta& meta, const Vec2<pix>& new_mouse);
+    void drag_to(const Meta& meta, const Vec2<Dp>& new_mouse);
 
     void scroll_to_cursor(const position& p) override;
-    pix get_relative_pixel_offset(const position& p) override;
-    int get_offset_from_relative_pixel_offset(int line, pix offset) override;
+    Dp get_relative_pixel_offset(const position& p) override;
+    int get_offset_from_relative_pixel_offset(int line, Dp offset) override;
 
     void on_layout_body() override;
     // ScrollSize calculate_scroll_size() override;
     void draw_body(Renderer* cache) override;
-    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse, int clicks) override;
-    void on_mouse_moved(const Meta& meta, const Vec2<pix>& new_mouse) override;
-    void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<pix>& new_mouse) override;
+    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override;
+    void on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse) override;
+    void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse) override;
     void on_text(const std::string& t) override;
 };

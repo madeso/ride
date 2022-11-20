@@ -28,14 +28,14 @@ struct LoadedFontData
     const unsigned char* data;
     std::vector<unsigned char> data_storage;  // ttf data
     stbtt_fontinfo stbfont;
-    dip size = dip{0};
-    dip height = dip{0};
+    Px size = Px{0};
+    Px height = Px{0};
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // GlyphSet
 
-float c_dip_to_stb_size(dip d)
+float c_dip_to_stb_size(Px d)
 {
     return static_cast<float>(d.value);
 }
@@ -126,7 +126,7 @@ void GlyphSet::load_glyphset(LoadedFontData* font, int idx)
 FontImpl::FontImpl() = default;
 FontImpl::~FontImpl() = default;
 
-dip FontImpl::get_data_height() const
+Px FontImpl::get_data_height() const
 {
     return data->height;
 }
@@ -164,12 +164,12 @@ Font::Font() = default;
 Font::~Font() = default;
 
 
-bool Font::load_font(const embedded_binary& data, dip size)
+bool Font::load_font(const embedded_binary& data, Px size)
 {
     return impl_load_font(std::make_unique<FontImpl>(), reinterpret_cast<const unsigned char*>(data.data), size);
 }
 
-bool Font::load_font(const std::string& filename, dip size)
+bool Font::load_font(const std::string& filename, Px size)
 {
     if(filename == default_font)
     {
@@ -187,16 +187,16 @@ bool Font::load_font(const std::string& filename, dip size)
     return impl_load_font(std::move(font), data, size);
 }
 
-void set_size_for_font(FontImpl* font, dip size)
+void set_size_for_font(FontImpl* font, Px size)
 {
     int ascent, descent, linegap;
     stbtt_GetFontVMetrics(&font->data->stbfont, &ascent, &descent, &linegap);
     const float scale = stbtt_ScaleForMappingEmToPixels(&font->data->stbfont, c_dip_to_stb_size(size));
     const auto height = static_cast<float>(ascent - descent + linegap);
-    font->data->height = dip{static_cast<int>(height * scale + 0.5f)};
+    font->data->height = Px{static_cast<int>(height * scale + 0.5f)};
 }
 
-bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, dip size)
+bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, Px size)
 {
     /* init font */
     font->data->data = data;
@@ -220,24 +220,24 @@ bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* d
     return true;
 }
 
-void Font::set_size(dip new_size)
+void Font::set_size(Px new_size)
 {
     m->data->size = new_size;
     set_size_for_font(m.get(), new_size);
     m->mark_as_unloaded();
 }
 
-void Font::set_tab_width(dip n)
+void Font::set_tab_width(Px n)
 {
     m->get_glyph('\t')->xadvance = n.value;
 }
 
-dip Font::get_tab_width()
+Px Font::get_tab_width()
 {
-    return dip{m->get_glyph('\t')->xadvance};
+    return Px{m->get_glyph('\t')->xadvance};
 }
 
-dip Font::get_width(const std::string& text)
+Px Font::get_width(const std::string& text)
 {
     int x = 0;
     const auto codepoints = utf8_to_codepoints(text);
@@ -245,10 +245,10 @@ dip Font::get_width(const std::string& text)
     {
         x += m->get_glyph(codepoint)->xadvance;
     }
-    return dip{x};
+    return Px{x};
 }
 
-dip Font::get_height() const
+Px Font::get_height() const
 {
     return m->data->height;
 }

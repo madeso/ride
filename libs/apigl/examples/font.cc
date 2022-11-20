@@ -8,28 +8,28 @@ using namespace ride::apigl;
 
 struct ImagesApp : App
 {
-    Vec2<pix> mouse = {0_px,0_px};
+    Vec2<Dp> mouse = {0_dp,0_dp};
 
     std::shared_ptr<Font> font;
 
     ImagesApp(PlatformArg p)
         : App(p)
-        , font(load_font(default_font, 24_px))
+        , font(load_font(default_font, 24_dp))
     {
     }
 
-    void on_mouse_moved(const Meta&, const Vec2<pix>& new_mouse, pix, pix) override
+    void on_mouse_moved(const Meta&, const Vec2<Dp>& new_mouse, Dp, Dp) override
     {
         mouse = new_mouse;
     }
 
     void draw(::Renderer* cache) override
     {
-        cache->draw_rect(to_dip(Rect<pix>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
+        cache->draw_rect(Cpx(Rect<Dp>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
 
-        cache->draw_text(font, "Hello world", to_dip(20_px), to_dip(20_px), {0, 0, 0, 255});
+        cache->draw_text(font, "Hello world", Cpx(20_dp), Cpx(20_dp), {0, 0, 0, 255});
 
-        cache->draw_text(font, "mouse", to_dip(mouse.x), to_dip(mouse.y), {0, 0, 255, 255});
+        cache->draw_text(font, "mouse", Cpx(mouse.x), Cpx(mouse.y), {0, 0, 255, 255});
     }
 };
 

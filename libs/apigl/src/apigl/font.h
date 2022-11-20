@@ -59,7 +59,7 @@ struct FontImpl
     Glyph* get_glyph(unsigned int codepoint);
     void mark_as_unloaded();
 
-    dip get_data_height() const;
+    Px get_data_height() const;
 };
 
 struct Font : ::Font
@@ -69,18 +69,18 @@ struct Font : ::Font
 
     std::unique_ptr<FontImpl> m;
 
-    bool load_font(const std::string& filename, dip size) override;
+    bool load_font(const std::string& filename, Px size) override;
 
-    bool load_font(const embedded_binary& data, dip size);
-    bool impl_load_font(std::unique_ptr<FontImpl> f, const unsigned char* data, dip size);
+    bool load_font(const embedded_binary& data, Px size);
+    bool impl_load_font(std::unique_ptr<FontImpl> f, const unsigned char* data, Px size);
 
-    void set_size(dip new_size);
+    void set_size(Px new_size);
 
-    void set_tab_width(dip n);
-    dip get_tab_width();
+    void set_tab_width(Px n);
+    Px get_tab_width();
 
-    dip get_width(const std::string& text) override;
-    dip get_height() const override;
+    Px get_width(const std::string& text) override;
+    Px get_height() const override;
 };
 
 }

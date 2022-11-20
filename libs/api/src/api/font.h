@@ -11,10 +11,10 @@ struct Font
     Font() = default;
     virtual ~Font() = default;
 
-    virtual bool load_font(const std::string& filename, dip size) = 0;
-    pix unscaled_size = pix{0};
+    virtual bool load_font(const std::string& filename, Px size) = 0;
+    Dp unscaled_size = Dp{0};
 
-    virtual dip get_width(const std::string& text) = 0;
-    virtual dip get_height() const = 0;
+    virtual Px get_width(const std::string& text) = 0;
+    virtual Px get_height() const = 0;
 };
 

@@ -123,6 +123,6 @@ struct VirtualView
 
     virtual void scroll_to_cursor(const position& p) = 0;
 
-    virtual pix get_relative_pixel_offset(const position& p) = 0;
-    virtual int get_offset_from_relative_pixel_offset(int line, pix offset) = 0;
+    virtual Dp get_relative_pixel_offset(const position& p) = 0;
+    virtual int get_offset_from_relative_pixel_offset(int line, Dp offset) = 0;
 };
