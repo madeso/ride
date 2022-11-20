@@ -4,9 +4,10 @@
 #include "catchy/vectorequals.h"
 
 #include "base/str.h"
-#include "libride/document.h"
-#include "libride/document.commands.h"
-#include "libride/command.h"
+
+#include "ride/document.h"
+#include "ride/document.commands.h"
+#include "ride/command.h"
 
 using namespace catchy;
 

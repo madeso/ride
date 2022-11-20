@@ -3,12 +3,11 @@
 #include <memory>
 
 #include "base/minmax.h"
-
 #include "base/units.h"
+
 #include "api/font.h"
 
-#include "libride/document.h"
-
+#include "ride/document.h"
 #include "ride/view.h"
 
 

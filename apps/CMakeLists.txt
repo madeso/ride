@@ -14,7 +14,7 @@ target_link_libraries(ride
     PRIVATE
         project_options
     PUBLIC
-        rideapp
+        libride
         apigl
         sdl2
 )

@@ -1,6 +1,6 @@
 #include "ride/keybind.h"
 
-#include "libride/command.h"
+#include "ride/command.h"
 
 void KeyBind::add(const Stroke& stroke, std::vector<std::string> command_order)
 {

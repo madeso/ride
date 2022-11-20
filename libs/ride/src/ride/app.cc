@@ -11,14 +11,12 @@
 #include "api/font.h"
 #include "api/texture.h"
 
-#include "libride/command.h"
-#include "libride/document.h"
-#include "libride/document.commands.h"
-
+#include "ride/command.h"
+#include "ride/document.h"
+#include "ride/document.commands.h"
 #include "ride/keybind.h"
 #include "ride/theme.h"
 #include "ride/view.h"
-
 #include "ride/view.document.h"
 #include "ride/view.filesystem.h"
 

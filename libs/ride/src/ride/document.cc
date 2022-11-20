@@ -1,4 +1,4 @@
-#include "libride/document.h"
+#include "ride/document.h"
 
 #include <iostream>
 
@@ -7,7 +7,7 @@
 #include "base/filesystem.h"
 #include "base/string.h"
 
-#include "libride/document.commands.h"
+#include "ride/document.commands.h"
 
 namespace
 {

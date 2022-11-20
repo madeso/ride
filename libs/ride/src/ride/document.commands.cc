@@ -1,4 +1,4 @@
-#include "libride/document.commands.h"
+#include "ride/document.commands.h"
 
 #include <iostream>
 #include <string_view>
@@ -7,8 +7,8 @@
 #include "base/utf8.h"
 #include "base/c.h"
 
-#include "libride/document.h"
-#include "libride/command.h"
+#include "ride/document.h"
+#include "ride/command.h"
 
 using is_word_fun = std::function<bool (char)>;
 
