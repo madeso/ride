@@ -13,6 +13,9 @@ set(src
     src/apigl/vertex_layout.cc src/apigl/vertex_layout.h
     src/apigl/uniform.cc src/apigl/uniform.h
     src/apigl/dependency_opengl.cc src/apigl/dependency_opengl.h
+
+    src/apigl/pch.public.h
+    src/apigl/pch.private.h
 )
 source_group("" FILES ${src})
 add_library(apigl STATIC ${src})
@@ -39,7 +42,10 @@ target_link_libraries(apigl
         glm
 )
 set_target_properties(apigl PROPERTIES FOLDER "Libraries")
-
+target_precompile_headers(apigl
+    PUBLIC src/apigl/pch.public.h
+    PRIVATE src/apigl/pch.private.h
+)
 
 set(example_squares_src
 	examples/squares.cc

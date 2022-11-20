@@ -3,6 +3,8 @@ set(headeronly_src
     src/base/compiler_warning.h
     src/base/undef_windows.h
     src/base/units.h
+    src/base/pch.public.h
+    src/base/pch.private.h
 )
 
 set(file_src    
@@ -45,6 +47,10 @@ target_link_libraries(base
     PRIVATE
         project_options
         project_warnings
+)
+target_precompile_headers(base
+    PUBLIC src/base/pch.public.h
+    PRIVATE src/base/pch.private.h
 )
 set_target_properties(base PROPERTIES FOLDER "Libraries/base")
 

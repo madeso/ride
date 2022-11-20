@@ -10,6 +10,9 @@ set(src
     src/ride/view.cc src/ride/view.h
     src/ride/view.document.cc src/ride/view.document.h
     src/ride/view.filesystem.cc src/ride/view.filesystem.h
+
+    src/ride/pch.public.h
+    src/ride/pch.private.h
 )
 source_group("" FILES ${src})
 
@@ -33,7 +36,10 @@ target_link_libraries(libride
 )
 set_crt_to_static(libride)
 set_target_properties(libride PROPERTIES FOLDER "Libraries/ride")
-
+target_precompile_headers(libride
+    PUBLIC src/ride/pch.public.h
+    PRIVATE src/ride/pch.private.h
+)
 
 set(src_test
     src/ride/document.test.cc
