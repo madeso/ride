@@ -21,7 +21,7 @@ ViewDoc::ViewDoc()
     cursor = CursorType::ibeam;
 }
 
-void ViewDoc::scroll_to_cursor(const position& p)
+void ViewDoc::scroll_to_cursor(const Position& p)
 {
     // get pixel position of p
     const auto pt = position_to_upper_left_pix(p);
@@ -43,7 +43,7 @@ void ViewDoc::scroll_to_cursor(const position& p)
     keep_scroll_within();
 }
 
-Dp ViewDoc::get_relative_pixel_offset(const position& p)
+Dp ViewDoc::get_relative_pixel_offset(const Position& p)
 {
     return offset_to_relative_left_pix(p.line, p.offset);
 }
@@ -61,7 +61,7 @@ Dp ViewDoc::calculate_line_height()
 
 Dp ViewDoc::get_full_document_height()
 {
-    const auto lines = doc->GetNumberOfLines();
+    const auto lines = doc->get_number_of_lines();
     const auto spacing = calculate_line_height();
 
     // todo(Gustav): fix cast here
@@ -71,14 +71,14 @@ Dp ViewDoc::get_full_document_height()
 
 Dp ViewDoc::get_full_document_width() const
 {
-    const auto size = doc->GetNumberOfLines();
+    const auto size = doc->get_number_of_lines();
     if(size == 0)
     {
         return 0_dp;
     }
     const auto get_length = [this](int index) -> Dp
     {
-        return app->Cdp(font->get_width(doc->GetLineAt(index)));
+        return app->Cdp(font->get_width(doc->get_line_at(index)));
     };
 
     Dp largest = get_length(0);
@@ -127,7 +127,7 @@ Dp ViewDoc::get_document_width() const
 
 std::size_t ViewDoc::get_number_of_lines() const
 {
-    return static_cast<std::size_t>(doc->GetNumberOfLines());
+    return static_cast<std::size_t>(doc->get_number_of_lines());
 }
 
 
@@ -176,10 +176,10 @@ void ViewDoc::draw_single_line
     }
 
     // draw selection if it overlaps this line
-    const auto& text = doc->GetLineAt(line_index);
+    const auto& text = doc->get_line_at(line_index);
     for(const auto& sel: cursors)
     {
-        auto s = sel.sorted();
+        auto s = sel.as_sorted();
         if( s.a.line <= line_index && line_index <= s.b.line)
         {
             if( s.a.line != line_index) { s.a.offset = 0; }
@@ -208,7 +208,7 @@ void ViewDoc::draw_single_line
     cache->draw_text
     (
         font,
-        doc->GetLineAt(line_index),
+        doc->get_line_at(line_index),
         app->Cpx(position.x),
         app->Cpx(position.y),
         theme->plain_text_color
@@ -250,7 +250,7 @@ void ViewDoc::on_layout_body()
     // layout debug
     view_rect = view_rect.get_inset(30_dp);
 
-    const auto lines = doc->GetNumberOfLines();
+    const auto lines = doc->get_number_of_lines();
     const auto max_gutter_text = (Str{} << (lines+1)).ToString();
     const auto min_gutter_width = app->Cdp(font->get_width( max_gutter_text.c_str() ));
     const auto gutter_width = min_gutter_width + theme->gutter_spacing_left + theme->gutter_spacing_right;
@@ -303,7 +303,7 @@ Dp ViewDoc::line_to_relative_lower_pix(int line_index)
 // offset_to_relative_left_pix
 Dp ViewDoc::offset_to_relative_left_pix(int line_index, int offset)
 {
-    const auto& text = doc->GetLineAt(line_index);
+    const auto& text = doc->get_line_at(line_index);
     const auto t = text.substr(0, Cs(offset));
     return app->Cdp(font->get_width(t));
 }
@@ -316,7 +316,7 @@ Dp ViewDoc::offset_to_relative_right_pix(int line_index, int offset)
 }
 
 
-Vec2<Dp> ViewDoc::position_to_upper_left_pix(const position& p)
+Vec2<Dp> ViewDoc::position_to_upper_left_pix(const Position& p)
 {
     return
     {
@@ -325,7 +325,7 @@ Vec2<Dp> ViewDoc::position_to_upper_left_pix(const position& p)
     };
 }
 
-Vec2<Dp> ViewDoc::position_to_lower_right_pix(const position& p)
+Vec2<Dp> ViewDoc::position_to_lower_right_pix(const Position& p)
 {
     return
     {
@@ -361,7 +361,7 @@ int ViewDoc::absolute_pix_x_to_offset(int line, Dp px)
                     |     |   ^   |     |       |
     */
 
-    const auto text = this->doc->GetLineAt(line);
+    const auto text = this->doc->get_line_at(line);
     const auto chars = utf8_chars(text);
 
     std::string str;
@@ -391,7 +391,7 @@ int ViewDoc::absolute_pix_x_to_offset(int line, Dp px)
     return C(text.size())+1;
 }
 
-position ViewDoc::translate_view_position(const Vec2<Dp>& p)
+Position ViewDoc::translate_view_position(const Vec2<Dp>& p)
 {
     const auto line = absolute_pix_y_to_line(p.y);
     const auto byte_offset = absolute_pix_x_to_offset(line, p.x);
@@ -416,7 +416,7 @@ void clear_all_cursors_but_the_last_one(VirtualView* vview)
     );
 }
 
-bool destroy_cursors(VirtualView* vview, const sorted_selection& p, bool include_last)
+bool destroy_cursors(VirtualView* vview, const SortedSelection& p, bool include_last)
 {
     const auto can_toggle = vview->cursors.size() > 1;
 
@@ -432,7 +432,7 @@ bool destroy_cursors(VirtualView* vview, const sorted_selection& p, bool include
     for(std::size_t cursor_index = 0; cursor_index < last; cursor_index += 1)
     {
         const auto& s = vview->cursors[cursor_index];
-        if(are_overlapping(s.sorted(), p))
+        if(are_overlapping(s.as_sorted(), p))
         {
             if(can_toggle)
             {
@@ -463,7 +463,7 @@ void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<
         {
             return;
         }
-        cursors.emplace_back(selection{p, p});
+        cursors.emplace_back(Selection{p, p});
     }
     else if(meta.ctrl)
     {
@@ -477,7 +477,7 @@ void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<
     else
     {
         cursors.clear();
-        cursors.emplace_back(selection{p, p});
+        cursors.emplace_back(Selection{p, p});
     }
 
     dragging = true;
@@ -499,7 +499,7 @@ void ViewDoc::drag_to(const Meta& meta, const Vec2<Dp>& new_mouse)
     if(meta.alt)
     {
         // todo(Gustav): check if last selection overlaps any old selection and if so, remove them
-        destroy_cursors(this, sel.sorted(), false);
+        destroy_cursors(this, sel.as_sorted(), false);
     }
 }
 

@@ -11,47 +11,47 @@
 
 namespace
 {
-    bool is_same(const position& lhs, const position& rhs)
+    bool is_same(const Position& lhs, const Position& rhs)
     {
         return lhs.line == rhs.line
             && lhs.offset == rhs.offset;
     }
 }
 
-bool operator==(const position& lhs, const position& rhs)
+bool operator==(const Position& lhs, const Position& rhs)
 {
     return is_same(lhs, rhs) == true;
 }
 
-bool operator!=(const position& lhs, const position& rhs)
+bool operator!=(const Position& lhs, const Position& rhs)
 {
     return is_same(lhs, rhs) == false;
 }
 
-bool operator<(const position& lhs, const position& rhs)
+bool operator<(const Position& lhs, const Position& rhs)
 {
     return lhs.line < rhs.line || (lhs.line == rhs.line && lhs.offset < rhs.offset);
 }
 
-bool operator>(const position& lhs, const position& rhs)
+bool operator>(const Position& lhs, const Position& rhs)
 {
     return lhs.line > rhs.line || (lhs.line == rhs.line && lhs.offset > rhs.offset);
 }
 
-bool operator<=(const position& lhs, const position& rhs)
+bool operator<=(const Position& lhs, const Position& rhs)
 {
     return lhs.line < rhs.line || (lhs.line == rhs.line && lhs.offset <= rhs.offset);
 }
 
-bool operator>=(const position& lhs, const position& rhs)
+bool operator>=(const Position& lhs, const Position& rhs)
 {
     return lhs.line > rhs.line || (lhs.line == rhs.line && lhs.offset >= rhs.offset);
 }
 
-std::ostream& operator<<(std::ostream& s, const position& p)
+std::ostream& operator<<(std::ostream& s, const Position& p)
 {
     s << "(" << p.line << ", ";
-    if(p.offset == position::max_offset)
+    if(p.offset == Position::max_offset)
     {
         s << "<max>";
     }
@@ -66,7 +66,7 @@ std::ostream& operator<<(std::ostream& s, const position& p)
 
 namespace
 {
-    bool is_same(const selection& lhs, const selection& rhs)
+    bool is_same(const Selection& lhs, const Selection& rhs)
     {
         return lhs.a == rhs.a
             && lhs.b == rhs.b
@@ -74,13 +74,13 @@ namespace
     }
 }
 
-bool operator==(const selection& lhs, const selection& rhs)
+bool operator==(const Selection& lhs, const Selection& rhs)
 {
     return is_same(lhs, rhs) == true;
 }
 
 
-bool operator!=(const selection& lhs, const selection& rhs)
+bool operator!=(const Selection& lhs, const Selection& rhs)
 {
     return is_same(lhs, rhs) == false;
 }
@@ -90,7 +90,7 @@ bool operator!=(const selection& lhs, const selection& rhs)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-sorted_selection selection::sorted() const
+SortedSelection Selection::as_sorted() const
 {
     if( a > b )
     {
@@ -99,12 +99,12 @@ sorted_selection selection::sorted() const
     return {a, b};
 }
 
-bool selection::is_selection() const
+bool Selection::is_selection() const
 {
     return a != b;
 }
 
-bool are_overlapping(const sorted_selection& s, const sorted_selection& p)
+bool are_overlapping(const SortedSelection& s, const SortedSelection& p)
 {
     return 
         s.a <= p.b &&
@@ -112,15 +112,15 @@ bool are_overlapping(const sorted_selection& s, const sorted_selection& p)
         ;
 }
 
-bool are_overlapping(const selection& sel, const selection& p)
+bool are_overlapping(const Selection& sel, const Selection& p)
 {
-    return are_overlapping(sel.sorted(), p.sorted());
+    return are_overlapping(sel.as_sorted(), p.as_sorted());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-bool Document::LoadFile(FileSystem* fs, const std::string& path)
+bool Document::load_file(FileSystem* fs, const std::string& path)
 {
     lines.clear();
 
@@ -136,7 +136,7 @@ bool Document::LoadFile(FileSystem* fs, const std::string& path)
     return result;
 }
 
-char Document::get_char(const position& pp) const
+char Document::get_char(const Position& pp) const
 {
     const auto p = this->sanitize_position(pp);
     const auto line = Cs(p.line);
@@ -152,14 +152,14 @@ int Document::sanitize_line(int new_line) const
     return keep_within(0, new_line, C(this->lines.size()));
 }
 
-position Document::sanitize_position(const position& p) const
+Position Document::sanitize_position(const Position& p) const
 {
     const auto line = sanitize_line(p.line);
     const auto offset = keep_within(0, p.offset, C(this->lines[Cs(line)].size()));
     return {line, offset};
 }
 
-position Document::position_offset(const position& pp, int offset) const
+Position Document::position_offset(const Position& pp, int offset) const
 {
     auto p = sanitize_position(pp);
     p.offset = p.offset + offset;
@@ -176,12 +176,12 @@ position Document::position_offset(const position& pp, int offset) const
     return sanitize_position(p);
 }
 
-int Document::GetNumberOfLines() const
+int Document::get_number_of_lines() const
 {
     return C(lines.size());
 }
 
-std::string Document::GetLineAt(int y) const
+std::string Document::get_line_at(int y) const
 {
     if(y < 0)
     {
@@ -199,15 +199,15 @@ std::string Document::GetLineAt(int y) const
 
 void VirtualView::merge_all_cursors()
 {
-    auto new_cursors = std::vector<selection>{};
+    auto new_cursors = std::vector<Selection>{};
 
-    auto get_index_of_first_overlapping_cursor = [&new_cursors](const selection& ss) -> std::optional<std::size_t>
+    auto get_index_of_first_overlapping_cursor = [&new_cursors](const Selection& ss) -> std::optional<std::size_t>
     {
         std::size_t index = 0;
-        const auto s = ss.sorted();
+        const auto s = ss.as_sorted();
         for(const auto& c: new_cursors)
         {
-            if(are_overlapping(c.sorted(), s))
+            if(are_overlapping(c.as_sorted(), s))
             {
                 return index;
             }
@@ -224,11 +224,11 @@ void VirtualView::merge_all_cursors()
         if(index)
         {
             // two selections overlap, merge and use the latest selection for order
-            const auto lhs_cursor = new_cursors[*index].sorted();
-            const auto rhs_cursor = c.sorted();
+            const auto lhs_cursor = new_cursors[*index].as_sorted();
+            const auto rhs_cursor = c.as_sorted();
             const auto lower = std::min(lhs_cursor.a, rhs_cursor.a);
             const auto upper = std::max(lhs_cursor.b, rhs_cursor.b);
-            const auto merged = c.a < c.b ? selection{lower, upper} : selection{upper, lower};
+            const auto merged = c.a < c.b ? Selection{lower, upper} : Selection{upper, lower};
             new_cursors[*index] = merged;
         }
         else
@@ -241,7 +241,7 @@ void VirtualView::merge_all_cursors()
 }
 
 
-void Document::add_text(const std::string& text, const position& pp)
+void Document::add_text(const std::string& text, const Position& pp)
 {
     for(auto* view: views)
     {
@@ -297,9 +297,9 @@ void VirtualView::sanitize_cursors()
     }
 }
 
-void VirtualView::advance_cursors(const position& after, int offset)
+void VirtualView::advance_cursors(const Position& after, int offset)
 {
-    auto advance_position = [&after, &offset, this](position* p)
+    auto advance_position = [&after, &offset, this](Position* p)
     {
         if(*p >= after && p->line == after.line)
         {

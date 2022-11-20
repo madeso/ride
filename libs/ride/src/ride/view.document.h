@@ -30,10 +30,10 @@ struct ViewDoc : LineView, VirtualView
     Dp get_full_document_height();
     Dp get_full_document_width() const;
     MinMax<int> get_line_range();
-    position translate_view_position(const Vec2<Dp>& p);
+    Position translate_view_position(const Vec2<Dp>& p);
 
-    Vec2<Dp> position_to_upper_left_pix(const position& p);
-    Vec2<Dp> position_to_lower_right_pix(const position& p);
+    Vec2<Dp> position_to_upper_left_pix(const Position& p);
+    Vec2<Dp> position_to_lower_right_pix(const Position& p);
 
     Dp offset_to_relative_left_pix(int line_index, int offset);
     Dp offset_to_relative_right_pix(int line_index, int offset);
@@ -50,8 +50,8 @@ struct ViewDoc : LineView, VirtualView
     );
     void drag_to(const Meta& meta, const Vec2<Dp>& new_mouse);
 
-    void scroll_to_cursor(const position& p) override;
-    Dp get_relative_pixel_offset(const position& p) override;
+    void scroll_to_cursor(const Position& p) override;
+    Dp get_relative_pixel_offset(const Position& p) override;
     int get_offset_from_relative_pixel_offset(int line, Dp offset) override;
 
     void on_layout_body() override;

@@ -79,7 +79,7 @@ struct RideApp : App
         setup_view(&root);
         root.font = font;
         root.set_document(std::make_shared<Document>());
-        root.doc->LoadFile(fs.get(), __FILE__);
+        root.doc->load_file(fs.get(), __FILE__);
 
         setup_view(&browser);
         browser.font = font;

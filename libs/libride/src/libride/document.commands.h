@@ -2,11 +2,11 @@
 
 #include <functional>
 
-struct position;
+struct Position;
 struct CommandList;
 struct VirtualView;
 
-position end_of_line(const position& p);
+Position end_of_line(const Position& p);
 
 using active_view_or_null_getter = std::function<VirtualView* ()>;
 

@@ -64,8 +64,8 @@ TEST_CASE("doc-get_line_at", "[doc]")
         }
     );
 
-    CHECK(StringEq(doc.GetLineAt(0), "abc"));
-    CHECK(StringEq(doc.GetLineAt(1), "def"));
+    CHECK(StringEq(doc.get_line_at(0), "abc"));
+    CHECK(StringEq(doc.get_line_at(1), "def"));
 }
 
 TEST_CASE("doc-number-of-lines", "[doc]")
@@ -80,7 +80,7 @@ TEST_CASE("doc-number-of-lines", "[doc]")
                 "a"
             }
         );
-        CHECK(doc.GetNumberOfLines() == 1);
+        CHECK(doc.get_number_of_lines() == 1);
     }
 
     SECTION("one line")
@@ -92,7 +92,7 @@ TEST_CASE("doc-number-of-lines", "[doc]")
                 "b"
             }
         );
-        CHECK(doc.GetNumberOfLines() == 2);
+        CHECK(doc.get_number_of_lines() == 2);
     }
 }
 
@@ -100,13 +100,13 @@ namespace
 {
     struct TestView : VirtualView
     {
-        void scroll_to_cursor(const position&) override
+        void scroll_to_cursor(const Position&) override
         {
         }
 
         double scale = 1.0;
 
-        Dp get_relative_pixel_offset(const position& p) override
+        Dp get_relative_pixel_offset(const Position& p) override
         {
             return Dp{static_cast<double>(p.offset) * scale};
         }
@@ -120,9 +120,9 @@ namespace
     std::vector<std::string> get_lines(const Document& d)
     {
         std::vector<std::string> ret;
-        for(int i=0; i<d.GetNumberOfLines(); i+=1)
+        for(int i=0; i<d.get_number_of_lines(); i+=1)
         {
-            ret.emplace_back(d.GetLineAt(i));
+            ret.emplace_back(d.get_line_at(i));
         }
         return ret;
     }
@@ -190,7 +190,7 @@ TEST_CASE("doc-virtual-view", "[doc]")
                     CHECK(VectorEquals(
                         view.cursors,
                         {
-                            {{0,position::max_offset}, {0,position::max_offset}}
+                            {{0,Position::max_offset}, {0,Position::max_offset}}
                         }
                     ));
                 }
@@ -219,7 +219,7 @@ TEST_CASE("doc-virtual-view", "[doc]")
                     CHECK(VectorEquals(
                         view.cursors,
                         {
-                            {{0, 0}, {0,position::max_offset}}
+                            {{0, 0}, {0,Position::max_offset}}
                         }
                     ));
                 }
