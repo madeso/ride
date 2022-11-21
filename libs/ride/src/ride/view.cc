@@ -72,7 +72,7 @@ std::optional<ScrollbarData> layout_scrollbar(Rect<Dp>* view_rect, Theme* theme,
     const auto thumb_size = size_prop * fraction;
     const auto available_size = size_prop - thumb_size;
     const auto thumb_offset = available_size * scroll_fraction;
-    xassert(thumb_offset >= 0_dp, thumb_offset.value);
+    XASSERT(thumb_offset >= 0_dp, thumb_offset.value);
 
     const auto vtop = track_rect.get_top() - thumb_offset;
 

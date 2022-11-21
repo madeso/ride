@@ -43,10 +43,17 @@ TPL bool operator>=(const NUM& lhs, const NUM& rhs) { return lhs.value >= rhs.va
 TPL bool operator< (const NUM& lhs, const NUM& rhs) { return lhs.value <  rhs.value; }
 TPL bool operator> (const NUM& lhs, const NUM& rhs) { return lhs.value >  rhs.value; }
 
-template<typename S, typename T, typename Tag> S& operator<<(S& s, const NUM& rhs)
+
+template<typename T, typename Tag>
+struct fmt::formatter<NUM> : formatter<string_view>
 {
-    return s << rhs.value;
-}
+    template <typename FormatContext>
+    auto format(const NUM& num, FormatContext& ctx)
+    {
+        return format_to(ctx.out(), "{}", num.value);
+    }
+};
+
 
 #undef NUM
 #undef TPL

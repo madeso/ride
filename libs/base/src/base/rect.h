@@ -167,13 +167,13 @@ struct Rect
 
     static Self from_ltrb(T left, T top, T right, T bottom)
     {
-        xassert(left <= right && top >= bottom, left << " <= " << right << " && " << top << ">= " << bottom);
+        XASSERT(left <= right && top >= bottom, "{} <= {} && {} >= {}"_format(left, right, top, bottom));
         return {left, bottom, right - left, top-bottom};
     }
 
     static Self from_lrtb(T left, T right, T top, T bottom)
     {
-        xassert(left <= right && top >= bottom, left << " <= " << right << " && " << top << ">= " << bottom);
+        XASSERT(left <= right && top >= bottom, "{} <= {} && {} >= {}"_format(left, right, top, bottom));
         return {left, bottom, right - left, top-bottom};
     }
 
@@ -294,13 +294,12 @@ constexpr Rectf Cint_to_float(const Recti r)
 constexpr const Recti EmptyRect = {0,0, 0,0};
 
 
-template<typename S, typename T> S& operator<<(S& s, const Rect<T>& r)
+template <typename T>
+struct fmt::formatter<Rect<T>> : formatter<string_view>
 {
-    return s
-        << "[l/r "
-        << r.get_left() << " " << r.get_right()
-        << "/ tb "
-        << r.get_top() << " " << r.get_bottom()
-        << "]"
-        ;
-}
+    template <typename FormatContext>
+    auto format(const Rect<T>& r, FormatContext& ctx)
+    {
+        return format_to(ctx.out(), "[l/r {} {} / tb {} {}]", r.get_left(), r.get_right(), r.get_top(), r.get_bottom());
+    }
+};

@@ -1,8 +1,6 @@
 #include "apigl/app.h"
 
 #include <algorithm>
-#include <iostream>
-#include <sstream>
 
 #include "apigl/dependency_sdl.h"
 

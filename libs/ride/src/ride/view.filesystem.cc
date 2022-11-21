@@ -2,11 +2,6 @@
 
 #include <iostream>
 
-#include "fmt/format.h"
-// #include "fmt/core.h"
-// #include "fmt/ostream.h"
-// using namespace fmt::literals;
-
 #include "base/filesystem.h"
 
 #include "api/app.h"

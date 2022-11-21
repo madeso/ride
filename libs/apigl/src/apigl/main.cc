@@ -570,6 +570,12 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
     SDL_ShowWindow(window);
 
+    const auto error = SDL_GL_MakeCurrent(window, glcontext);
+    if (error != 0)
+    {
+        LOG_ERROR("Unable to make current");
+    }
+
     while (app->run)
     {
         SDL_Event event;
@@ -600,12 +606,6 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
         // render
 
-        const auto error = SDL_GL_MakeCurrent(window, glcontext);
-        if(error != 0)
-        {
-            LOG_ERROR("Unable to make current");
-        }
-
         // todo(Gustav): setup 2d rendering for entire viewport
         {
             glViewport(0, 0, Cint_to_glint(window_width), Cint_to_glint(window_height));
@@ -615,11 +615,11 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
             rc.render.quad_shader.use();
             rc.render.quad_shader.set_mat(rc.render.view_projection_uniform, projection);
             rc.render.quad_shader.set_mat(rc.render.transform_uniform, camera);
-
         }
         glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
         app->draw(&rc);
         rc.render.batch.submit();
+        glFlush();
         glFinish();
         SDL_GL_SwapWindow(window);
     }

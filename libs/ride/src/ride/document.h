@@ -4,7 +4,6 @@
 #include <functional>
 #include <memory>
 #include <ostream>
-#include "fmt/format.h"
 
 #include "base/units.h"
 

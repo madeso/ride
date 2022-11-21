@@ -136,7 +136,6 @@ GlyphSet* FontImpl::get_glyphset(unsigned int codepoint)
     int idx = (codepoint >> 8) % MAX_GLYPHSET;
     if (sets[idx].loaded == false)
     {
-        data = std::make_unique<LoadedFontData>();
         sets[idx].load_glyphset(data.get(), idx);
     }
     return &sets[idx];
@@ -199,6 +198,7 @@ void set_size_for_font(FontImpl* font, Px size)
 bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, Px size)
 {
     /* init font */
+    font->data = std::make_unique<LoadedFontData>();
     font->data->data = data;
     font->data->size = size;
 

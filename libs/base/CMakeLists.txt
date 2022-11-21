@@ -43,6 +43,7 @@ target_link_libraries(base
         embed
         open_color
         assert
+        fmt::fmt
     PRIVATE
         project_options
         project_warnings
