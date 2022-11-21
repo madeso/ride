@@ -5,6 +5,9 @@ set(src
     src/api/key.cc src/api/key.h
     src/api/mouse_button.cc src/api/mouse_button.h
     src/api/renderer.cc src/api/renderer.h
+
+    src/api/pch.public.h
+    src/api/pch.private.h
 )
 source_group("" FILES ${src})
 add_library(api STATIC ${src})
@@ -23,5 +26,9 @@ target_link_libraries(api
         project_warnings
         stb_truetype
         stb_image
+)
+target_precompile_headers(api
+    PUBLIC src/api/pch.public.h
+    PRIVATE src/api/pch.private.h
 )
 set_target_properties(api PROPERTIES FOLDER "Libraries")

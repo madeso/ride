@@ -1,8 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <memory>
-
 #include "embed/types.h"
 
 #include "base/vec2.h"

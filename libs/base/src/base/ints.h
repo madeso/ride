@@ -1,4 +1,4 @@
-#include <cstdint>
+#pragma once
 
 using u8 = std::uint8_t;
 

@@ -1,10 +1,9 @@
 #pragma once
 
 #include <type_traits>
-#include <cassert>
-#include <vector>
-#include <optional>
 #include <algorithm>
+
+#include "assert/assert.h"
 
 #include "base/c.h"
 
@@ -18,7 +17,7 @@ template<typename E> constexpr typename std::underlying_type<E>::type cast_to_ba
 template<typename T>
 T keep_within(T min, T t, T max)
 {
-    assert(min <= max);
+    ASSERT(min <= max);
 
     if(t < min) { return min; }
     else if(t > max) { return max; }

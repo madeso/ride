@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <optional>
-
 #include "base/ints.h"
 
 struct Meta

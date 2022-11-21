@@ -1,8 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <string>
-#include <string_view>
 #include <array>
 
 #include "embed/types.h"

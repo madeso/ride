@@ -2,8 +2,6 @@
 
 #include <functional>
 #include <map>
-#include <string>
-#include <vector>
 #include <memory>
 
 using predicate_fun = std::function<bool ()>;

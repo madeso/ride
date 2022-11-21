@@ -1,6 +1,5 @@
 #pragma once
 
-#include <optional>
 #include <memory>
 
 #include "embed/types.h"

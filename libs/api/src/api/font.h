@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 #include "base/units.h"
 
 static constexpr std::string_view default_font = "<default>";

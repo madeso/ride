@@ -1,8 +1,6 @@
 #include "apigl/app.h"
 
-#include <cassert>
 #include <algorithm>
-#include <optional>
 #include <iostream>
 #include <sstream>
 

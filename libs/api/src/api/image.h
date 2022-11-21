@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <cstdint>
 #include <memory>
 
 #include "embed/types.h"

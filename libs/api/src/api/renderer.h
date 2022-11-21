@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <optional>
 
 #include "base/rect.h"
 #include "base/color.h"

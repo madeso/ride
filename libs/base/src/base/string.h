@@ -1,9 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <string>
-#include <string_view>
-
 // returns the number of replacements made
 std::size_t replace_all_inplace(std::string& inout, std::string_view what, std::string_view with);
 
