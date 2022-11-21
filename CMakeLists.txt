@@ -22,6 +22,8 @@ add_library(project_warnings INTERFACE)
 target_compile_features(project_options INTERFACE cxx_std_17)
 set_project_warnings(project_warnings)
 enable_sanitizers(project_options)
+add_library(ride::options ALIAS project_options)
+add_library(ride::warnings ALIAS project_warnings)
 
 # https://cmake.org/cmake/help/latest/prop_tgt/MSVC_RUNTIME_LIBRARY.html
 function(set_crt_to_static project_name)

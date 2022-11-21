@@ -18,17 +18,19 @@ target_include_directories(api
 set_crt_to_static(api)
 target_link_libraries(api
     PUBLIC
-        embed
-        base
+        embed::embed
+        ride::base
         fmt::fmt
     PRIVATE
-        project_options
-        project_warnings
-        stb_truetype
-        stb_image
+        ride::options
+        ride::warnings
+        external::stb_truetype
+        external::stb_image
 )
 target_precompile_headers(api
     PUBLIC src/api/pch.public.h
     PRIVATE src/api/pch.private.h
 )
 set_target_properties(api PROPERTIES FOLDER "Libraries")
+add_library(ride::api ALIAS api)
+

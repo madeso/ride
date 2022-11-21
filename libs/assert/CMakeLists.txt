@@ -10,7 +10,9 @@ target_include_directories(assert
 )
 target_link_libraries(assert
     PRIVATE
-        project_options
-        project_warnings
+        ride::options
+        ride::warnings
 )
 set_target_properties(assert PROPERTIES FOLDER "Libraries")
+add_library(ride::assert ALIAS assert)
+

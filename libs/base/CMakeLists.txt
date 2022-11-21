@@ -7,7 +7,7 @@ set(headeronly_src
     src/base/pch.private.h
 )
 
-set(file_src    
+set(file_src
     src/base/c.cc src/base/c.h
     src/base/cc.cc src/base/cc.h
     src/base/color.cc src/base/color.h
@@ -40,19 +40,22 @@ target_include_directories(base
 )
 target_link_libraries(base
     PUBLIC
-        embed
-        open_color
-        assert
+        embed::embed
+        external::open_color
+        ride::assert
         fmt::fmt
     PRIVATE
-        project_options
-        project_warnings
+        ride::options
+        ride::warnings
 )
 target_precompile_headers(base
     PUBLIC src/base/pch.public.h
     PRIVATE src/base/pch.private.h
 )
 set_target_properties(base PROPERTIES FOLDER "Libraries/base")
+add_library(ride::base ALIAS base)
+
+
 
 set(src_test
     src/base/string.test.cc
@@ -65,11 +68,12 @@ source_group("" FILES ${src_test})
 add_executable(base_test ${src_test})
 target_link_libraries(base_test
     PUBLIC
-        catchy
-        base
+        catchy::catchy
+        ride::base
     PRIVATE
-        project_options
-        project_warnings
+        ride::options
+        ride::warnings
 )
 catch_discover_tests(base_test)
 set_target_properties(base_test PROPERTIES FOLDER "Libraries/base")
+

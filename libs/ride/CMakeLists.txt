@@ -24,15 +24,15 @@ target_include_directories(libride
 )
 target_link_libraries(libride
     PUBLIC
-        base
-        api
+        ride::base
+        ride::api
         fmt::fmt
-        
+
     PRIVATE
-        data_logo
-        data_font
-        project_options
-        project_warnings
+        data::data_logo
+        data::data_font
+        ride::options
+        ride::warnings
 )
 set_crt_to_static(libride)
 set_target_properties(libride PROPERTIES FOLDER "Libraries/ride")
@@ -40,6 +40,9 @@ target_precompile_headers(libride
     PUBLIC src/ride/pch.public.h
     PRIVATE src/ride/pch.private.h
 )
+add_library(ride::libride ALIAS libride)
+
+
 
 set(src_test
     src/ride/document.test.cc
@@ -49,12 +52,13 @@ source_group("" FILES ${src_test})
 add_executable(libride_test ${src_test})
 target_link_libraries(libride_test
     PUBLIC
-        catchy
-        libride
+        catchy::catchy
+        ride::libride
     PRIVATE
-        project_options
-        project_warnings
+        ride::options
+        ride::warnings
         fmt::fmt
 )
 catch_discover_tests(libride_test)
 set_target_properties(libride_test PROPERTIES FOLDER "Libraries/ride")
+

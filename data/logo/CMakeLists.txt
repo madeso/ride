@@ -14,3 +14,5 @@ target_link_libraries(data_logo
         embed
 )
 set_target_properties(data_logo PROPERTIES FOLDER "Embedded files")
+add_library(data::data_logo ALIAS data_logo)
+

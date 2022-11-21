@@ -13,3 +13,5 @@ target_link_libraries(data_font
         embed
 )
 set_target_properties(data_font PROPERTIES FOLDER "Embedded files")
+add_library(data::data_font ALIAS data_font)
+

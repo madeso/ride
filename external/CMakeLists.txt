@@ -23,6 +23,8 @@ target_link_libraries(glad
         ${CMAKE_DL_LIBS}
 )
 set_target_properties(glad PROPERTIES FOLDER "External")
+add_library(external::glad ALIAS glad)
+
 
 
 ###################################################################################################
@@ -31,6 +33,7 @@ set(OpenGL_GL_PREFERENCE "GLVND")
 find_package(OpenGL REQUIRED)
 add_library(opengl INTERFACE)
 target_link_libraries(opengl INTERFACE OpenGL::GL)
+add_library(external::opengl ALIAS opengl)
 
 
 
@@ -47,6 +50,7 @@ target_link_libraries(sdl2
         ${SDL2_LIBRARY}
         ${CMAKE_DL_LIBS}
 )
+add_library(external::sdl2 ALIAS sdl2)
 
 
 
@@ -65,6 +69,8 @@ target_include_directories(stb_truetype
         SYSTEM stb/stb
 )
 set_target_properties(stb_truetype PROPERTIES FOLDER "External")
+add_library(external::stb_truetype ALIAS stb_truetype)
+
 
 
 ###################################################################################################
@@ -82,6 +88,7 @@ target_include_directories(stb_image
         SYSTEM stb/stb
 )
 set_target_properties(stb_image PROPERTIES FOLDER "External")
+add_library(external::stb_image ALIAS stb_image)
 
 
 ###################################################################################################
@@ -91,6 +98,9 @@ target_include_directories(open_color
     INTERFACE
         SYSTEM open-color/include
 )
+add_library(external::open_color ALIAS open_color)
+
+
 
 ###################################################################################################
 # glm
@@ -99,3 +109,8 @@ target_include_directories(glm SYSTEM
     INTERFACE
         glm
 )
+add_library(external::glm ALIAS glm)
+
+
+
+
