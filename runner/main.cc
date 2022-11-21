@@ -278,9 +278,9 @@ struct Pane : public wxPanel
     Pane(wxFrame* parent, const ride::Arguments& arguments);
 
     std::shared_ptr<ride::App> app;
-    
+
     void paintEvent(wxPaintEvent & evt);
-    
+
     void render(wxBufferedPaintDC& dc);
 
 
@@ -289,7 +289,7 @@ struct Pane : public wxPanel
     void OnMouseLeftWindow(wxMouseEvent& event);
     void OnMouseButton(wxMouseEvent& e, ride::MouseState state, ride::MouseButton button);
     void OnMouseWheel(wxMouseEvent& event);
-    
+
     void OnKeyPressed(wxKeyEvent& event);
     void OnKeyReleased(wxKeyEvent& event);
     void OnChar(wxKeyEvent& event);
@@ -321,13 +321,13 @@ bool MyApp::OnInit()
 
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
     auto* frame = new wxFrame(nullptr, -1,  DISPLAY_NAME, wxPoint(50,50), wxSize(800,600));
-	
+
     auto* pane = new Pane{frame, CollectArguments(argc, argv)};
     sizer->Add(pane, 1, wxEXPAND);
-	
+
     frame->SetSizer(sizer);
     frame->SetAutoLayout(true);
-	
+
     frame->Show(true);
     return true;
 }
@@ -406,7 +406,7 @@ struct WxDriver : ride::Driver
         (
             wxFont
             {
-                wxFontInfo{point_size}
+                wxFontInfo{static_cast<double>(point_size)}
                 .Family(wxFONTFAMILY_TELETYPE)
             }
         );
@@ -425,7 +425,7 @@ struct WxDriver : ride::Driver
         (
             wxFont
             {
-                wxFontInfo{point_size}
+                wxFontInfo{static_cast<double>(point_size)}
                 .Family(wxFONTFAMILY_ROMAN)
             }
         );
