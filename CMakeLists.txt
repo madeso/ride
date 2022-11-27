@@ -5,6 +5,8 @@ project(ride C CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/data/cmake/modules")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(ride_wx OFF)
+
 set(RIDE_VERSION_MAJOR "0")
 set(RIDE_VERSION_MINOR "0")
 set(RIDE_VERSION_REVISION "1")
@@ -43,6 +45,26 @@ SET(RIDE_BUILD_REPO   "unknown-repo"   CACHE STRING "The repo")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(external)
+
+####
+## wxWidgets
+if(ride_wx)
+    set(RIDE_WX_COMPONENTS core base stc adv)
+    set(wxWidgets_USE_STATIC ON)
+    find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
+    include("${wxWidgets_USE_FILE}")
+    message(STATUS "including ${wxWidgets_USE_FILE}")
+    set(srcwx main.wx.cc)
+
+    add_library(external_wx INTERFACE)
+    # target_include_directories(external_wx INTEFACE ${wxWidgets_INCLUDE_DIRS})
+    target_link_libraries(external_wx INTERFACE
+        ${wxWidgets_LIBRARIES}
+    )
+    add_library(external::wx ALIAS external_wx)
+endif()
+
+
 add_subdirectory(data)
 add_subdirectory(libs)
 add_subdirectory(apps)

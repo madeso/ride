@@ -1,7 +1,7 @@
 #include "ride/app.h"
 
-#include "apigl/app.h"
-#include "apigl/main.h"
+#include "apiact/app.h"
+#include "apiact/main.h"
 
 using namespace ride::apigl;
 

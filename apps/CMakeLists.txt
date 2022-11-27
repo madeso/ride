@@ -1,44 +1,54 @@
+function(create_app ARG_NAME)
+    set(options)
+    set(oneValueArgs)
+    set(multiValueArgs SOURCES LIBRARIES)
+    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    set(src
+        ${ARG_SOURCES}
+    )
+    source_group("" FILES ${src})
+
+    # sdl
+    add_executable(
+        ${ARG_NAME} WIN32 MACOSX_BUNDLE
+    	${src}
+    )
+    set_crt_to_static(${ARG_NAME})
+    target_link_libraries(${ARG_NAME}
+        PRIVATE
+            ride::options
+        PUBLIC
+            ${ARG_LIBRARIES}
+            ride::apigl
+            external::sdl2
+    )
+    set_target_properties(${ARG_NAME} PROPERTIES FOLDER "Applications")
+
+    if(ride_wx)
+        add_executable(${ARG_NAME}wx WIN32 MACOSX_BUNDLE ${src})
+        set_crt_to_static(${ARG_NAME}wx)
+        target_link_libraries(${ARG_NAME}wx
+            PRIVATE
+                ride::options
+            PUBLIC
+                ride::apiwx
+                ${ARG_LIBRARIES}
+        )
+    endif()
+endfunction()
+
 ###############################################################################
 ############# sdl version of ride
 
-set(src
-    main.cc
+create_app(ride
+    SOURCES main.cc
+    LIBRARIES ride::libride
 )
-source_group("" FILES ${src})
-add_executable (
-    ride WIN32 MACOSX_BUNDLE
-	${src}
-)
-set_crt_to_static(ride)
-target_link_libraries(ride
-    PRIVATE
-        project_options
-    PUBLIC
-        libride
-        apigl
-        sdl2
-)
-set_target_properties(ride PROPERTIES FOLDER "Applications")
 
 ###############################################################################
 ############# wx version of ride
-if(ride_wx)
-    set(RIDE_WX_COMPONENTS core base stc adv)
-    set(wxWidgets_USE_STATIC ON)
-    find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
-    include( "${wxWidgets_USE_FILE}" )
-    set(srcwx main.wx.cc)
-    add_executable(
-        ridewx WIN32 MACOSX_BUNDLE
-        ${srcwx}
-    )
-    set_crt_to_static(ridewx)
-    target_link_libraries(ridewx
-        ${wxWidgets_LIBRARIES}
-        libride
-        project_options
-    )
-endif()
+
 
 
 
