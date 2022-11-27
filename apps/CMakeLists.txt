@@ -1,54 +1,7 @@
-function(create_app ARG_NAME)
-    set(options)
-    set(oneValueArgs)
-    set(multiValueArgs SOURCES LIBRARIES)
-    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-
-    set(src
-        ${ARG_SOURCES}
-    )
-    source_group("" FILES ${src})
-
-    # sdl
-    add_executable(
-        ${ARG_NAME} WIN32 MACOSX_BUNDLE
-    	${src}
-    )
-    set_crt_to_static(${ARG_NAME})
-    target_link_libraries(${ARG_NAME}
-        PRIVATE
-            ride::options
-        PUBLIC
-            ${ARG_LIBRARIES}
-            ride::apigl
-            external::sdl2
-    )
-    set_target_properties(${ARG_NAME} PROPERTIES FOLDER "Applications")
-
-    if(ride_wx)
-        add_executable(${ARG_NAME}wx WIN32 MACOSX_BUNDLE ${src})
-        set_crt_to_static(${ARG_NAME}wx)
-        target_link_libraries(${ARG_NAME}wx
-            PRIVATE
-                ride::options
-            PUBLIC
-                ride::apiwx
-                ${ARG_LIBRARIES}
-        )
-    endif()
-endfunction()
-
-###############################################################################
-############# sdl version of ride
-
-create_app(ride
+create_app(ride "Applications"
     SOURCES main.cc
     LIBRARIES ride::libride
 )
-
-###############################################################################
-############# wx version of ride
-
 
 
 
