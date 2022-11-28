@@ -28,6 +28,15 @@
     #include <mach-o/dyld.h>
 #endif
 
+
+
+namespace
+{
+    constexpr bool render_for_each_event = false;
+    constexpr bool use_vsynced_rendering = false;
+}
+
+
 namespace ride::apigl
 {
 
@@ -460,8 +469,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
     SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
 #endif
 
-
-    SDL_GL_SetSwapInterval(0);
+    SDL_GL_SetSwapInterval(use_vsynced_rendering ? 1 : 0);
 
     SDL_DisplayMode dm;
     SDL_GetCurrentDisplayMode(0, &dm);
@@ -576,6 +584,27 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
         LOG_ERROR("Unable to make current");
     }
 
+    auto render = [&]()
+    {
+        // todo(Gustav): setup 2d rendering for entire viewport (including titlebar)
+        {
+            glViewport(0, 0, Cint_to_glint(window_width), Cint_to_glint(window_height));
+
+            const auto camera = glm::mat4(1.0f);
+            const auto projection =
+                glm::ortho(0.0f, Cint_to_float(window_width), 0.0f, Cint_to_float(window_height));
+            rc.render.quad_shader.use();
+            rc.render.quad_shader.set_mat(rc.render.view_projection_uniform, projection);
+            rc.render.quad_shader.set_mat(rc.render.transform_uniform, camera);
+        }
+        glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        app->draw(&rc);
+        rc.render.batch.submit();
+        glFlush();
+        glFinish();
+        SDL_GL_SwapWindow(window);
+    };
+
     while (app->run)
     {
         SDL_Event event;
@@ -592,36 +621,34 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
             window
         );
 
-        while (SDL_PollEvent(&event))
+        if (render_for_each_event)
         {
-            on_event
-            (
-                event, app.get(), &window_width, &window_height,
-                meta, last_cursor, c_cache,
-                window
-            );
+            while (SDL_PollEvent(&event))
+            {
+                on_event
+                (
+                    event, app.get(), &window_width, &window_height,
+                    meta, last_cursor, c_cache,
+                    window
+                );
+                app->update();
+                render();
+            }
         }
-
-        app->update();
-
-        // render
-
-        // todo(Gustav): setup 2d rendering for entire viewport
+        else
         {
-            glViewport(0, 0, Cint_to_glint(window_width), Cint_to_glint(window_height));
-
-            const auto camera = glm::mat4(1.0f);
-            const auto projection = glm::ortho(0.0f, Cint_to_float(window_width), 0.0f, Cint_to_float(window_height));
-            rc.render.quad_shader.use();
-            rc.render.quad_shader.set_mat(rc.render.view_projection_uniform, projection);
-            rc.render.quad_shader.set_mat(rc.render.transform_uniform, camera);
+            while (SDL_PollEvent(&event))
+            {
+                on_event
+                (
+                    event, app.get(), &window_width, &window_height,
+                    meta, last_cursor, c_cache,
+                    window
+                );
+            }
+            app->update();
+            render();
         }
-        glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-        app->draw(&rc);
-        rc.render.batch.submit();
-        glFlush();
-        glFinish();
-        SDL_GL_SwapWindow(window);
     }
     SDL_GL_DeleteContext(glcontext);
     SDL_DestroyWindow(window);
