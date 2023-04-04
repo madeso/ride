@@ -4,12 +4,12 @@
 
 // #include "apiact/dependency_sdl.h"
 
+#include "assert/assert.h"
+
 #include "base/vec2.h"
 
 #include "apiact/font.h"
 #include "apiact/texture.h"
-
-/*
 
 namespace ride::apigl
 {
@@ -23,12 +23,16 @@ struct PlatformImpl : ::Platform
 
     std::shared_ptr<::Font> make_font() override
     {
-        return std::make_shared<Font>();
+        // return std::make_shared<Font>();
+        DIE("not implemented");
+        return nullptr;
     }
 
-    std::shared_ptr<::Texture> load_shared_texture(const embedded_binary& image_binary) override
+    std::shared_ptr<::Texture> load_shared_texture(const embedded_binary&) override
     {
-        return load_shared_texture_impl(image_binary);
+        // return load_shared_texture_impl(image_binary);
+        DIE("not implemented");
+        return nullptr;
     }
 };
 
@@ -38,5 +42,3 @@ PlatformArg create_platform()
 }
 
 }
-
-*/

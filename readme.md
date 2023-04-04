@@ -18,3 +18,18 @@ If you're looking for something more complete, perhaps [RustDT](http://rustdt.gi
 # Code layout
 ![code layout of ride](data/ride.excalidraw.svg)
 
+## libraries
+To support many "backends", each backend is generealized to a single API (virtual interface)
+with each backend implementing a specialization (derived class) and calling a app class.
+Each backend is launched via a macro and a cmake function and is selected upon config/build.
+This should hopefully allow the backend to to be seperated from the app but also use all
+features that the backend can provide.
+
+| library | description                               |
+|---------|-------------------------------------------|
+| assert  | assert library                            |
+| base    | base library (not related to rendering)   |
+| api     | API for creating applications             |
+| ride    | ride logic                                |
+| apiact  | actual backends like wxWidgets and OpenGL |
+

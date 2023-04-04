@@ -58,8 +58,5 @@ struct SquaresApp : App
     }
 };
 
-int main(int argc, char** argv)
-{
-    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<SquaresApp>(create_platform());});
-}
 
+IMPLMENT_APP(, std::make_unique<SquaresApp>(create_platform()))

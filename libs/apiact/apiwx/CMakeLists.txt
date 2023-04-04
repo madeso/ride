@@ -4,6 +4,7 @@ set(src
     src/apiact/key.cc src/apiact/key.h
     src/apiact/main.cc src/apiact/main.h
     src/apiact/mouse_button.cc src/apiact/mouse_button.h
+    src/apiact/renderer.cc src/apiact/renderer.h
     src/apiact/texture.cc src/apiact/texture.h
     src/apiact/dependency_wx.h
 
