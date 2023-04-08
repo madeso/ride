@@ -1,0 +1,7 @@
+{
+    "name": "ride",
+    "dependencies":
+    [
+        "sdl-2.0.8"
+    ]
+}
