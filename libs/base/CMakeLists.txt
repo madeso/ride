@@ -52,8 +52,10 @@ target_precompile_headers(base
     PUBLIC src/base/pch.public.h
     PRIVATE src/base/pch.private.h
 )
-set_target_properties(base PROPERTIES FOLDER "Libraries/base")
+set_target_properties(base PROPERTIES FOLDER "Libraries")
 add_library(ride::base ALIAS base)
+
+
 
 
 
@@ -75,5 +77,5 @@ target_link_libraries(base_test
         ride::warnings
 )
 catch_discover_tests(base_test)
-set_target_properties(base_test PROPERTIES FOLDER "Libraries/base")
+set_target_properties(base_test PROPERTIES FOLDER "Tests")
 

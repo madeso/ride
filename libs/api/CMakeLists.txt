@@ -32,7 +32,7 @@ target_precompile_headers(api
     PUBLIC src/api/pch.public.h
     PRIVATE src/api/pch.private.h
 )
-set_target_properties(api PROPERTIES FOLDER "Libraries")
+set_target_properties(api PROPERTIES FOLDER "Libraries/Backends")
 add_library(ride::api ALIAS api)
 
 

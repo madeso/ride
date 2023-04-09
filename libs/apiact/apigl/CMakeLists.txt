@@ -41,7 +41,7 @@ target_link_libraries(apigl
         external::glad
         external::glm
 )
-set_target_properties(apigl PROPERTIES FOLDER "Libraries")
+set_target_properties(apigl PROPERTIES FOLDER "Libraries/Backends")
 target_precompile_headers(apigl
     PUBLIC src/apiact/pch.public.h
     PRIVATE src/apiact/pch.private.h

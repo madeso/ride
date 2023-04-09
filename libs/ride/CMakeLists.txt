@@ -35,7 +35,7 @@ target_link_libraries(libride
         ride::warnings
 )
 set_crt_to_static(libride)
-set_target_properties(libride PROPERTIES FOLDER "Libraries/ride")
+set_target_properties(libride PROPERTIES FOLDER "Libraries")
 target_precompile_headers(libride
     PUBLIC src/ride/pch.public.h
     PRIVATE src/ride/pch.private.h
@@ -60,5 +60,5 @@ target_link_libraries(libride_test
         fmt::fmt
 )
 catch_discover_tests(libride_test)
-set_target_properties(libride_test PROPERTIES FOLDER "Libraries/ride")
+set_target_properties(libride_test PROPERTIES FOLDER "Tests")
 

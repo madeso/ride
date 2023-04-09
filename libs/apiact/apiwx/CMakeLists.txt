@@ -32,7 +32,7 @@ target_link_libraries(apiwx
         external::stb_image
         data::data_font
 )
-set_target_properties(apiwx PROPERTIES FOLDER "Libraries")
+set_target_properties(apiwx PROPERTIES FOLDER "Libraries/Backends")
 target_precompile_headers(apiwx
     PUBLIC src/apiact/pch.public.h
     PRIVATE src/apiact/pch.private.h

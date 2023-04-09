@@ -1,7 +1,6 @@
 # ride todo/roadmap
 
 ## initial
-* group projects in msvc based on backend
 * verify correct coordinate spaces with tests and documentation
 * add unit tests for core
 * bring back blit rendering/support for multiple backends

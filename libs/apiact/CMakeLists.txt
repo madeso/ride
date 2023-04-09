@@ -31,7 +31,7 @@ function(create_app ARG_NAME FOLDER)
             ride::apigl
             external::sdl2
     )
-    set_target_properties(${ARG_NAME} PROPERTIES FOLDER "${FOLDER}")
+    set_target_properties(${ARG_NAME} PROPERTIES FOLDER "Apps/SDL OpenGL/${FOLDER}")
 
     if(ride_wx)
         add_executable(${ARG_NAME}wx WIN32 MACOSX_BUNDLE ${src})
@@ -43,7 +43,7 @@ function(create_app ARG_NAME FOLDER)
                 ride::apiwx
                 ${ARG_LIBRARIES}
         )
-        set_target_properties(${ARG_NAME}wx PROPERTIES FOLDER "${FOLDER}")
+        set_target_properties(${ARG_NAME}wx PROPERTIES FOLDER "Apps/wxWidgets/${FOLDER}")
     endif()
 endfunction()
 
