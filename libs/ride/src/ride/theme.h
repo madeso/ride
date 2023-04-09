@@ -1,11 +1,11 @@
 #pragma once
 
-#include "base/color.h"
-#include "base/side.h"
+#include "core/color.h"
+#include "core/side.h"
 
-#include "base/units.h"
+#include "core/units.h"
 
-#include "base/color.open-color.h"
+#include "core/color.open-color.h"
 
 struct Theme
 {

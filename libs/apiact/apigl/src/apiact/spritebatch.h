@@ -1,7 +1,7 @@
 #pragma once
 
-#include "base/ints.h"
-#include "base/rect.h"
+#include "core/ints.h"
+#include "core/rect.h"
 
 #include "apiact/shader.h"
 #include "apiact/texture.h"

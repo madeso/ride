@@ -1,6 +1,6 @@
 #include "apiact/main.h"
 
-#include "base/color.h"
+#include "core/color.h"
 
 #include "apiact/key.h"
 #include "apiact/mouse_button.h"

@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "base/minmax.h"
-#include "base/units.h"
+#include "core/minmax.h"
+#include "core/units.h"
 
 #include "api/font.h"
 

@@ -1,6 +1,6 @@
 #include "ride/view.h"
 
-#include "base/cc.h"
+#include "core/cc.h"
 
 #include "api/app.h"
 #include "api/renderer.h"

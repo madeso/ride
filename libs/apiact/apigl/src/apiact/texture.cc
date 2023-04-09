@@ -4,7 +4,7 @@
 
 #include "assert/assert.h"
 
-#include "base/c.h"
+#include "core/c.h"
 
 #include "apiact/dependency_opengl.h"
 #include "apiact/log.h"

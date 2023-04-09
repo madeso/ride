@@ -3,7 +3,7 @@
 #include <cstddef> // sizet
 
 #include "glad/glad.h"
-#include "base/undef_windows.h"
+#include "core/undef_windows.h"
 
 namespace ride::apigl
 {

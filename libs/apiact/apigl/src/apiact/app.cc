@@ -4,7 +4,7 @@
 
 #include "apiact/dependency_sdl.h"
 
-#include "base/vec2.h"
+#include "core/vec2.h"
 
 #include "apiact/font.h"
 #include "apiact/texture.h"

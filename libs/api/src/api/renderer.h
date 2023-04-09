@@ -2,9 +2,9 @@
 
 #include <memory>
 
-#include "base/rect.h"
-#include "base/color.h"
-#include "base/units.h"
+#include "core/rect.h"
+#include "core/color.h"
+#include "core/units.h"
 
 #include "api/texture.h"
 

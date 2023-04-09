@@ -4,7 +4,7 @@
 
 #include "embed/types.h"
 
-#include "base/color.h"
+#include "core/color.h"
 
 struct Image
 {

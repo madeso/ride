@@ -2,8 +2,8 @@
 
 #include <memory>
 
-#include "base/units.h"
-#include "base/color.h"
+#include "core/units.h"
+#include "core/color.h"
 
 #include "ride/view.h"
 

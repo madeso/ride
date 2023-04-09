@@ -4,7 +4,7 @@
 
 #include "embed/types.h"
 
-#include "base/ints.h"
+#include "core/ints.h"
 
 #include "api/texture.h"
 

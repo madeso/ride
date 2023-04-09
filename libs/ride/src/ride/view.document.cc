@@ -2,9 +2,9 @@
 
 #include <iostream>
 
-#include "base/c.h"
-#include "base/cc.h"
-#include "base/utf8.h"
+#include "core/c.h"
+#include "core/cc.h"
+#include "core/utf8.h"
 
 #include "api/app.h"
 #include "api/renderer.h"

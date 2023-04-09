@@ -2,10 +2,10 @@
 
 #include <iostream>
 
-#include "base/c.h"
-#include "base/cc.h"
-#include "base/filesystem.h"
-#include "base/string.h"
+#include "core/c.h"
+#include "core/cc.h"
+#include "core/filesystem.h"
+#include "core/string.h"
 
 #include "ride/document.commands.h"
 

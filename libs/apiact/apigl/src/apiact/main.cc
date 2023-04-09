@@ -3,8 +3,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "base/c.h"
-#include "base/utf8.h"
+#include "core/c.h"
+#include "core/utf8.h"
 
 #include "api/renderer.h"
 

@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "base/enumstringmap.h"
+#include "core/enumstringmap.h"
 
 namespace
 {

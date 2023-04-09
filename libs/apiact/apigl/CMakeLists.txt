@@ -28,7 +28,7 @@ target_link_libraries(apigl
     PUBLIC
         external::sdl2
         embed::embed
-        ride::base
+        ride::core
         ride::api
         fmt::fmt
     PRIVATE

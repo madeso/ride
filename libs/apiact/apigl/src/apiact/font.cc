@@ -5,10 +5,10 @@
 
 #include "stb_truetype.h"
 
-#include "base/file.h"
-#include "base/utf8.h"
-#include "base/rect.h"
-#include "base/c.h"
+#include "core/file.h"
+#include "core/utf8.h"
+#include "core/rect.h"
+#include "core/c.h"
 
 #include "api/image.h"
 

@@ -20,7 +20,7 @@ set_crt_to_static(api)
 target_link_libraries(api
     PUBLIC
         embed::embed
-        ride::base
+        ride::core
         fmt::fmt
     PRIVATE
         ride::options

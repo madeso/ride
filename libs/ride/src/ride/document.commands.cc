@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string_view>
 
-#include "base/string.h"
-#include "base/utf8.h"
-#include "base/c.h"
+#include "core/string.h"
+#include "core/utf8.h"
+#include "core/c.h"
 
 #include "ride/document.h"
 #include "ride/command.h"

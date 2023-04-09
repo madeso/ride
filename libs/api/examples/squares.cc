@@ -1,4 +1,4 @@
-#include "base/color.open-color.h"
+#include "core/color.open-color.h"
 
 #include "api/renderer.h"
 #include "apiact/app.h"

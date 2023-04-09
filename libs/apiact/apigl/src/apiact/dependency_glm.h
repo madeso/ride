@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base/compiler_warning.h"
+#include "core/compiler_warning.h"
 
 DISABLE_WARNING_PUSH
 DISABLE_WARNING_NONSTANDARD_NAMELESS_STRUCT_UNION

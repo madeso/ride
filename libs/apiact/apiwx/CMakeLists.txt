@@ -22,7 +22,7 @@ target_link_libraries(apiwx
     PUBLIC
         external::wx
         embed::embed
-        ride::base
+        ride::core
         ride::api
         fmt::fmt
     PRIVATE

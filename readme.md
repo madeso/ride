@@ -28,7 +28,7 @@ features that the backend can provide.
 | library | description                               |
 |---------|-------------------------------------------|
 | assert  | assert library                            |
-| base    | base library (not related to rendering)   |
+| core    | core library (not related to rendering)   |
 | api     | API for creating applications             |
 | ride    | ride logic                                |
 | apiact  | actual backends like wxWidgets and OpenGL |

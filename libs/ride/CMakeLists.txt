@@ -24,7 +24,7 @@ target_include_directories(libride
 )
 target_link_libraries(libride
     PUBLIC
-        ride::base
+        ride::core
         ride::api
         fmt::fmt
 

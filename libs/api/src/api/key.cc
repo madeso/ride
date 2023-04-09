@@ -4,10 +4,10 @@
 #include <cassert>
 #include <iostream>
 
-#include "base/string.h"
-#include "base/cc.h"
-#include "base/c.h"
-#include "base/enumstringmap.h"
+#include "core/string.h"
+#include "core/cc.h"
+#include "core/c.h"
+#include "core/enumstringmap.h"
 
 namespace
 {

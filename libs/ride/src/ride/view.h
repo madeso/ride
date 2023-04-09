@@ -2,11 +2,11 @@
 
 #include <memory>
 
-#include "base/vec2.h"
-#include "base/size.h"
-#include "base/rect.h"
-#include "base/cursor.h"
-#include "base/units.h"
+#include "core/vec2.h"
+#include "core/size.h"
+#include "core/rect.h"
+#include "core/cursor.h"
+#include "core/units.h"
 
 #include "api/key.h"
 #include "api/font.h"

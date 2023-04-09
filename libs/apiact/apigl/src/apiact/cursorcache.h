@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "base/cursor.h"
+#include "core/cursor.h"
 
 #include "apiact/dependency_sdl.h"
 
