@@ -1,3 +1,4 @@
+## api library
 set(src
     src/api/app.cc src/api/app.h
     src/api/font.cc src/api/font.h
@@ -34,3 +35,36 @@ target_precompile_headers(api
 set_target_properties(api PROPERTIES FOLDER "Libraries")
 add_library(ride::api ALIAS api)
 
+
+
+# api samples
+create_app(example_squares "Examples"
+    SOURCES examples/squares.cc
+    LIBRARIES 
+        ride::options
+        ride::warnings
+        external::open_color
+)
+
+create_app(example_images "Examples"
+    SOURCES examples/images.cc
+    LIBRARIES 
+        ride::options
+        ride::warnings
+        data::data_logo
+)
+
+create_app(example_font "Examples"
+    SOURCES examples/font.cc
+    LIBRARIES 
+        ride::options
+        ride::warnings
+        external::open_color
+)
+
+create_app(example_scope "Examples"
+    SOURCES examples/scope.cc
+    LIBRARIES 
+        ride::options
+        ride::warnings
+)

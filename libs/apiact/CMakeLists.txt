@@ -47,36 +47,3 @@ function(create_app ARG_NAME FOLDER)
     endif()
 endfunction()
 
-
-
-
-create_app(example_squares "Examples"
-    SOURCES examples/squares.cc
-    LIBRARIES 
-        ride::options
-        ride::warnings
-        external::open_color
-)
-
-create_app(example_images "Examples"
-    SOURCES examples/images.cc
-    LIBRARIES 
-        ride::options
-        ride::warnings
-        data::data_logo
-)
-
-create_app(example_font "Examples"
-    SOURCES examples/font.cc
-    LIBRARIES 
-        ride::options
-        ride::warnings
-        external::open_color
-)
-
-create_app(example_scope "Examples"
-    SOURCES examples/scope.cc
-    LIBRARIES 
-        ride::options
-        ride::warnings
-)
