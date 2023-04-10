@@ -16,6 +16,7 @@ function(create_app ARG_NAME FOLDER)
         ${ARG_SOURCES}
     )
     source_group("" FILES ${src})
+    source_group_pch(${ARG_NAME})
 
     # sdl
     add_executable(

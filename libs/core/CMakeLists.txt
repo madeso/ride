@@ -32,6 +32,7 @@ set(file_src
 set(src ${file_src} ${headeronly_src})
 source_group("" FILES ${file_src})
 source_group("Headers" FILES ${headeronly_src})
+source_group_pch(core)
 add_library(core STATIC ${src})
 set_crt_to_static(core)
 target_include_directories(core

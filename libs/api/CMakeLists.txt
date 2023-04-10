@@ -28,6 +28,7 @@ target_link_libraries(api
         external::stb_truetype
         external::stb_image
 )
+source_group_pch(api)
 target_precompile_headers(api
     PUBLIC src/api/pch.public.h
     PRIVATE src/api/pch.private.h

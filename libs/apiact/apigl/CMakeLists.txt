@@ -24,6 +24,7 @@ target_include_directories(apigl
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 set_crt_to_static(apigl)
+source_group_pch(apigl)
 target_link_libraries(apigl
     PUBLIC
         external::sdl2

@@ -16,6 +16,13 @@ enable_testing()
  # mvoe cmake generated things to a cmake folder
 source_group("_cmake/rules" REGULAR_EXPRESSION "\\.rule$")
 source_group("_cmake" REGULAR_EXPRESSION "CMakeLists\.txt")
+FUNCTION(source_group_pch TARGET)
+    SOURCE_GROUP("_cmake/pch" FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${TARGET}.dir/cmake_pch.cxx)
+    SOURCE_GROUP("_cmake/pch" FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${TARGET}.dir/Debug/cmake_pch.hxx)
+    SOURCE_GROUP("_cmake/pch" FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${TARGET}.dir/MinSizeRel/cmake_pch.hxx)
+    SOURCE_GROUP("_cmake/pch" FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${TARGET}.dir/Release/cmake_pch.hxx)
+    SOURCE_GROUP("_cmake/pch" FILES ${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/${TARGET}.dir/RelWithDebInfo/cmake_pch.hxx)
+ENDFUNCTION()
 
 include(data/install/cpack-config.cmake)
 

@@ -40,6 +40,7 @@ target_precompile_headers(libride
     PUBLIC src/ride/pch.public.h
     PRIVATE src/ride/pch.private.h
 )
+source_group_pch(libride)
 add_library(ride::libride ALIAS libride)
 
 
