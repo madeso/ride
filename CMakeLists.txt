@@ -13,6 +13,10 @@ set(RIDE_VERSION_REVISION "1")
 
 enable_testing()
 
+ # mvoe cmake generated things to a cmake folder
+source_group("_cmake/rules" REGULAR_EXPRESSION "\\.rule$")
+source_group("_cmake" REGULAR_EXPRESSION "CMakeLists\.txt")
+
 include(data/install/cpack-config.cmake)
 
 include(data/cmake/StandardProjectSettings.cmake)
