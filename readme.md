@@ -25,11 +25,11 @@ Each backend is launched via a macro and a cmake function and is selected upon c
 This should hopefully allow the backend to to be seperated from the app but also use all
 features that the backend can provide.
 
-| library | description                               |
-|---------|-------------------------------------------|
-| assert  | assert library                            |
-| core    | core library (not related to rendering)   |
-| api     | API for creating applications             |
-| ride    | ride logic                                |
-| apiact  | actual backends like wxWidgets and OpenGL |
+| library   | description                               |
+|-----------|-------------------------------------------|
+| assert    | assert library                            |
+| core      | core library (not related to rendering)   |
+| api       | API for creating applications             |
+| ride      | ride logic                                |
+| backends  | actual backends like wxWidgets and OpenGL |
 

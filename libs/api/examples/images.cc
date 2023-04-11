@@ -1,8 +1,8 @@
 #include "api/texture.h"
 #include "api/renderer.h"
 
-#include "apiact/app.h"
-#include "apiact/main.h"
+#include "backend/app.h"
+#include "backend/main.h"
 
 #include "logo_256text_png.h"
 
