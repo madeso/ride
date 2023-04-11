@@ -3,7 +3,7 @@
 #include "backend/app.h"
 #include "backend/main.h"
 
-using namespace ride::apigl;
+using namespace ride::backends::gl;
 
 int main(int argc, char** argv)
 {

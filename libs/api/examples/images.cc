@@ -6,7 +6,7 @@
 
 #include "logo_256text_png.h"
 
-using namespace ride::apigl;
+using namespace ride::backends::gl;
 
 struct ImagesApp : App
 {

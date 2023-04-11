@@ -5,7 +5,7 @@
 #include "backend/main.h"
 #include "backend/log.h"
 
-using namespace ride::apigl;
+using namespace ride::backends::gl;
 
 struct SquaresApp : App
 {

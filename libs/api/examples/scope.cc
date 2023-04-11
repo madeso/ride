@@ -6,7 +6,7 @@
 #include "backend/log.h"
 #include "api/renderer.h"
 
-using namespace ride::apigl;
+using namespace ride::backends::gl;
 
 
 struct ScopeApp : App

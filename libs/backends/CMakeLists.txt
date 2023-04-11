@@ -1,6 +1,6 @@
-add_subdirectory(apigl)
+add_subdirectory(gl)
 if(ride_wx)
-    add_subdirectory(apiwx)
+    add_subdirectory(wx)
 endif()
 
 
@@ -29,7 +29,7 @@ function(create_app ARG_NAME FOLDER)
             ride::options
         PUBLIC
             ${ARG_LIBRARIES}
-            ride::apigl
+            ride::backend_gl
             external::sdl2
     )
     set_target_properties(${ARG_NAME} PROPERTIES FOLDER "Apps/SDL OpenGL/${FOLDER}")
@@ -41,7 +41,7 @@ function(create_app ARG_NAME FOLDER)
             PRIVATE
                 ride::options
             PUBLIC
-                ride::apiwx
+                ride::backend_wx
                 ${ARG_LIBRARIES}
         )
         set_target_properties(${ARG_NAME}wx PROPERTIES FOLDER "Apps/wxWidgets/${FOLDER}")
