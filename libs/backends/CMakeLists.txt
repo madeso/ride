@@ -1,3 +1,4 @@
+add_subdirectory(sdl_base)
 add_subdirectory(gl)
 if(ride_wx)
     add_subdirectory(wx)

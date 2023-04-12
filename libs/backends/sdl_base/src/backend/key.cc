@@ -4,7 +4,7 @@
 
 #include "backend/dependency_sdl.h"
 
-namespace ride::backends::gl
+namespace ride::backends::sdl
 {
 
 Key key_from_sdl_keycode(i32 kc)

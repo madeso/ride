@@ -4,7 +4,7 @@
 
 #include "backend/dependency_sdl.h"
 
-namespace ride::backends::gl
+namespace ride::backends::sdl
 {
 
 MouseButton mousebutton_from_sdl_button(i32 button)

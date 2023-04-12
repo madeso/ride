@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace ride::backends::gl
+namespace ride::backends::sdl
 {
 
 namespace

@@ -309,7 +309,7 @@ int filterEvent(void* userdata, SDL_Event* event)
 void on_event
 (
     const SDL_Event& event, App* app, int* window_width, int* window_height,
-    MetaState& meta, std::optional<CursorType>& last_cursor, cursor_cache& c_cache,
+    MetaState& meta, std::optional<CursorType>& last_cursor, sdl::cursor_cache& c_cache,
     SDL_Window* window
 )
 {
@@ -367,11 +367,11 @@ void on_event
         break;
     case SDL_KEYDOWN:
         update_meta(&meta, event.key.keysym.sym, true);
-        app->on_key_pressed({key_from_sdl_keycode(event.key.keysym.sym), meta.to_meta()});
+        app->on_key_pressed({sdl::key_from_sdl_keycode(event.key.keysym.sym), meta.to_meta()});
         break;
     case SDL_KEYUP:
         update_meta(&meta, event.key.keysym.sym, false);
-        app->on_key_released({key_from_sdl_keycode(event.key.keysym.sym), meta.to_meta()});
+        app->on_key_released({sdl::key_from_sdl_keycode(event.key.keysym.sym), meta.to_meta()});
         break;
     case SDL_TEXTINPUT:
         app->on_text_input(event.text.text);
@@ -380,7 +380,7 @@ void on_event
         if (event.button.button == 1) { SDL_CaptureMouse(SDL_TRUE); }
         app->on_mouse_pressed
         (
-            mousebutton_from_sdl_button(event.button.button),
+            sdl::mousebutton_from_sdl_button(event.button.button),
             meta.to_meta(),
             {app->Cdp(Px{event.button.x}), app->Cdp(Px{*window_height - event.button.y})},
             event.button.clicks
@@ -390,7 +390,7 @@ void on_event
         if (event.button.button == 1) { SDL_CaptureMouse(SDL_FALSE); }
         app->on_mouse_released
         (
-            mousebutton_from_sdl_button(event.button.button),
+            sdl::mousebutton_from_sdl_button(event.button.button),
             meta.to_meta(),
             {app->Cdp(Px{event.button.x}), app->Cdp(Px{*window_height - event.button.y})}
         );
@@ -570,7 +570,7 @@ int run_main(int argc, char** argv, CreateAppFunction create_app)
 
     MetaState meta;
     std::optional<CursorType> last_cursor;
-    cursor_cache c_cache;
+    sdl::cursor_cache c_cache;
 
     Renderer rc;
 

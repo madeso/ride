@@ -1,7 +1,7 @@
 #pragma once
 
 
-namespace ride::backends::gl
+namespace ride::backends::sdl
 {
 
 void
@@ -41,9 +41,9 @@ log_warning(const S& format, Args&&... args) {
     #define LOG_INFO(format, ...) LogInfo(FMT_STRING(format), ##__VA_ARGS__)
     #define LOG_ERROR(format, ...) LogError(FMT_STRING(format), ##__VA_ARGS__)
 #else
-    #define LOG_INFO(...) ::ride::backends::gl::log_info(__VA_ARGS__)
-    #define LOG_ERROR(...) ::ride::backends::gl::log_error(__VA_ARGS__)
-    #define LOG_WARNING(...) ::ride::backends::gl::log_warning(__VA_ARGS__)
+    #define LOG_INFO(...) ::ride::backends::sdl::log_info(__VA_ARGS__)
+    #define LOG_ERROR(...) ::ride::backends::sdl::log_error(__VA_ARGS__)
+    #define LOG_WARNING(...) ::ride::backends::sdl::log_warning(__VA_ARGS__)
 #endif
 
 

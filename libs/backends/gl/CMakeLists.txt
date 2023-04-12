@@ -1,12 +1,8 @@
 set(src
     src/backend/app.cc src/backend/app.h
-    src/backend/cursorcache.cc src/backend/cursorcache.h
     src/backend/font.cc src/backend/font.h
-    src/backend/key.cc src/backend/key.h
-    src/backend/log.cc src/backend/log.h
     src/backend/main.cc src/backend/main.h
-    src/backend/mouse_button.cc src/backend/mouse_button.h
-
+    
     src/backend/texture.cc src/backend/texture.h
     src/backend/shader.cc src/backend/shader.h
     src/backend/spritebatch.cc src/backend/spritebatch.h
@@ -32,6 +28,7 @@ target_link_libraries(gl
         ride::core
         ride::api
         fmt::fmt
+        ride::sdl_base
     PRIVATE
         ride::options
         ride::warnings
