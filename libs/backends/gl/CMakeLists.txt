@@ -1,6 +1,5 @@
 set(src
     src/backend/app.cc src/backend/app.h
-    src/backend/font.cc src/backend/font.h
     src/backend/main.cc src/backend/main.h
     
     src/backend/texture.cc src/backend/texture.h
@@ -9,6 +8,7 @@ set(src
     src/backend/vertex_layout.cc src/backend/vertex_layout.h
     src/backend/uniform.cc src/backend/uniform.h
     src/backend/dependency_opengl.cc src/backend/dependency_opengl.h
+    src/backend/font.cc src/backend/font.h
 
     src/backend/pch.public.h
     src/backend/pch.private.h
@@ -32,9 +32,7 @@ target_link_libraries(gl
     PRIVATE
         ride::options
         ride::warnings
-        external::stb_truetype
         external::stb_image
-        data::data_font
         external::opengl
         external::glad
         external::glm

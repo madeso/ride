@@ -46,7 +46,7 @@ int Texture::get_height() const
 
 Texture::Texture
 (
-    void* pixel_data, int w, int h,
+    const void* pixel_data, int w, int h,
     TextureEdge te,
     TextureRenderStyle trs,
     Transparency t

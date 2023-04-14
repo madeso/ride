@@ -244,10 +244,11 @@ struct Renderer : ::Renderer
         const auto codepoints = utf8_to_codepoints(text);
         for (const auto codepoint : codepoints)
         {
-            auto* set = font->m->get_glyphset(codepoint);
+            auto* set = font->m->get_glyphset(codepoint, *font);
             auto* g = set->get_glyph(codepoint);
-            const float w = Cint_to_float(set->texture->width);
-            const float h = Cint_to_float(set->texture->height);
+            auto texture = font->get_texture(set);
+            const float w = Cint_to_float(texture->width);
+            const float h = Cint_to_float(texture->height);
 
             const auto sx = g->x1 - g->x0;
             const auto sy = g->y1 - g->y0;
@@ -269,7 +270,7 @@ struct Renderer : ::Renderer
                 Px{sy}
             };
 
-            draw_image(set->texture, char_rect, color, texture_rect, Submit::no);
+            draw_image(texture, char_rect, color, texture_rect, Submit::no);
 
             x += Px{g->xadvance};
         }
