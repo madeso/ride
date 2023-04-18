@@ -242,9 +242,9 @@ void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const Dp& x, 
 {
     const auto& e = entries[index];
     const auto xp = get_x_position(theme, e->depth);
-    cache->draw_text
+    font->draw
     (
-        font,
+        cache,
         e->name,
         app->Cpx(x + xp),
         app->Cpx(y),

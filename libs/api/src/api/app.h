@@ -14,6 +14,7 @@
 
 struct Renderer;
 struct Font;
+struct Image;
 
 struct Platform
 {
@@ -24,6 +25,7 @@ struct Platform
     virtual std::shared_ptr<Font> make_font() = 0;
 
     virtual std::shared_ptr<Texture> load_shared_texture(const embedded_binary& image_binary) = 0;
+    virtual std::shared_ptr<Texture> load_texture(const Image& image) const = 0;
 };
 
 using PlatformArg = std::shared_ptr<Platform>;

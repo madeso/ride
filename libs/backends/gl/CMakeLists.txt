@@ -8,7 +8,6 @@ set(src
     src/backend/vertex_layout.cc src/backend/vertex_layout.h
     src/backend/uniform.cc src/backend/uniform.h
     src/backend/dependency_opengl.cc src/backend/dependency_opengl.h
-    src/backend/font.cc src/backend/font.h
 
     src/backend/pch.public.h
     src/backend/pch.private.h

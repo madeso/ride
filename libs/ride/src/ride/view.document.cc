@@ -95,9 +95,9 @@ Dp ViewDoc::get_full_document_width() const
 
 void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const Dp&, const Dp& y)
 {
-    cache->draw_text
+    font->draw
     (
-        font,
+        cache,
         "{0: >{1}}"_format(line_index+1, gutter_char_length),
         app->Cpx(gutter_rect.x + theme->gutter_spacing_left),
         app->Cpx(y),
@@ -203,9 +203,9 @@ void ViewDoc::draw_single_line
     }
 
     // draw the text
-    cache->draw_text
+    font->draw
     (
-        font,
+        cache,
         doc->get_line_at(line_index),
         app->Cpx(position.x),
         app->Cpx(position.y),

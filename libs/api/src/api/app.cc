@@ -111,7 +111,7 @@ std::shared_ptr<Font> App::load_font(const std::string_view& file, Dp size)
 std::shared_ptr<Font> App::load_font(const std::string& file, Dp size)
 {
     auto r = platform->make_font();
-    if(r->load_font(file.c_str(), Cpx(size)))
+    if(r->load_font(file.c_str(), Cpx(size), platform.get()))
     {
         loaded_fonts.emplace_back(r);
         r->unscaled_size = size;

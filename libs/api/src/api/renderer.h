@@ -22,7 +22,6 @@ struct Renderer
     virtual ~Renderer() = default;
 
     virtual void draw_rect(const Rect<Px>& rect, Color color) = 0;
-    virtual Px draw_text(std::shared_ptr<Font> font, const std::string& text, Px x, Px y, Color color) = 0;
 
     virtual void push_clip_rect(const Rect<Px>& r) = 0;
     virtual void pop_clip_rect() = 0;

@@ -235,51 +235,6 @@ struct Renderer : ::Renderer
         }
     }
 
-
-    Px draw_text(std::shared_ptr<::Font> the_font, const std::string& text, Px x, Px y, Color color) override
-    {
-        auto font = std::static_pointer_cast<Font>(the_font);
-        // todo(Gustav): investigate dip usage?
-
-        const auto codepoints = utf8_to_codepoints(text);
-        for (const auto codepoint : codepoints)
-        {
-            auto* set = font->m->get_glyphset(codepoint, *font);
-            auto* g = set->get_glyph(codepoint);
-            auto texture = font->get_texture(set);
-            const float w = Cint_to_float(texture->width);
-            const float h = Cint_to_float(texture->height);
-
-            const auto sx = g->x1 - g->x0;
-            const auto sy = g->y1 - g->y0;
-            const auto px = x + Px{g->xoff};
-            const auto py = y - Px{g->yoff} - Px{sy} + font->m->get_data_height();
-
-            const auto texture_rect = Rectf
-            {
-                g->x0 / w ,
-                (g->y0+sy) /h,
-                sx / w,
-                -sy / h
-            };
-            const auto char_rect = Rect<Px>
-            {
-                px,
-                py,
-                Px{sx},
-                Px{sy}
-            };
-
-            draw_image(texture, char_rect, color, texture_rect, Submit::no);
-
-            x += Px{g->xadvance};
-        }
-
-        submit_renderer();
-
-        return x;
-    }
-
     void submit_renderer() override
     {
         render.batch.submit();

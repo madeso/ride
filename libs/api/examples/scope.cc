@@ -88,7 +88,7 @@ struct ScopeApp : App
 
         cache->draw_rect(Cpx(r.get_inset(size)), colors::grape_500);
 
-        cache->draw_text(font, "press space", Cpx(20_dp), Cpx(20_dp), {0, 0, 0, 255});
+        font->draw(cache, "press space", Cpx(20_dp), Cpx(20_dp), {0, 0, 0, 255});
     }
 };
 

@@ -3,7 +3,7 @@ set(src
     src/backend/key.cc src/backend/key.h
     src/backend/log.cc src/backend/log.h
     src/backend/mouse_button.cc src/backend/mouse_button.h
-    src/backend/fontbase.cc src/backend/fontbase.h
+    src/backend/font.cc src/backend/font.h
 
     src/backend/pch.public.h
     src/backend/pch.private.h

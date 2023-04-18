@@ -6,6 +6,8 @@
 
 #include "core/vec2.h"
 
+#include "api/image.h"
+
 #include "backend/font.h"
 #include "backend/texture.h"
 
@@ -43,14 +45,21 @@ struct PlatformImpl : ::Platform
 
     std::shared_ptr<::Font> make_font() override
     {
-        return std::make_shared<Font>();
+        return std::make_shared<sdl::Font>();
     }
 
     std::shared_ptr<::Texture> load_shared_texture(const embedded_binary& image_binary) override
     {
         return load_shared_texture_impl(image_binary);
     }
+
+    std::shared_ptr<::Texture> load_texture(const Image& image) const override
+    {
+        return std::make_shared<Texture>(image.pixels.data(), image.width, image.height,
+            TextureEdge::clamp, TextureRenderStyle::pixel, Transparency::include);
+    }
 };
+
 
 PlatformArg create_platform()
 {

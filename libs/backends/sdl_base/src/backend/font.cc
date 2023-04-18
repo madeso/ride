@@ -1,4 +1,4 @@
-#include "backend/fontbase.h"
+#include "backend/font.h"
 
 #include <cmath>
 #include <array>
@@ -11,6 +11,8 @@
 #include "core/c.h"
 
 #include "api/image.h"
+#include "api/app.h"
+#include "api/renderer.h"
 
 #include "backend/log.h"
 
@@ -50,7 +52,7 @@ Glyph* GlyphSet::get_glyph(unsigned int c)
     return &glyphs[c & 0xff];
 }
 
-bool GlyphSet::load_single_glyphset_or_fail(LoadedFontData* font, int idx, int width, int height, const FontBase& loader)
+bool GlyphSet::load_single_glyphset_or_fail(LoadedFontData* font, int idx, int width, int height, const Platform& loader)
 {
     std::vector<std::uint8_t> pixels;
     pixels.resize(Cs(width) * Cs(height));
@@ -101,7 +103,7 @@ bool GlyphSet::load_single_glyphset_or_fail(LoadedFontData* font, int idx, int w
     return true;
 }
 
-void GlyphSet::load_glyphset(LoadedFontData* font, int idx, const FontBase& loader)
+void GlyphSet::load_glyphset(LoadedFontData* font, int idx, const Platform& loader)
 {
     int width = 128;
     int height = 128;
@@ -116,7 +118,11 @@ void GlyphSet::load_glyphset(LoadedFontData* font, int idx, const FontBase& load
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FontImpl
-FontImpl::FontImpl() = default;
+FontImpl::FontImpl(Platform* a)
+    : app(a)
+{
+}
+
 FontImpl::~FontImpl() = default;
 
 Px FontImpl::get_data_height() const
@@ -124,19 +130,19 @@ Px FontImpl::get_data_height() const
     return data->height;
 }
 
-GlyphSet* FontImpl::get_glyphset(unsigned int codepoint, const FontBase& loader)
+GlyphSet* FontImpl::get_glyphset(unsigned int codepoint)
 {
     int idx = (codepoint >> 8) % MAX_GLYPHSET;
     if (sets[idx].loaded == false)
     {
-        sets[idx].load_glyphset(data.get(), idx, loader);
+        sets[idx].load_glyphset(data.get(), idx, *app);
     }
     return &sets[idx];
 }
 
-Glyph* FontImpl::get_glyph(unsigned int codepoint, const FontBase& loader)
+Glyph* FontImpl::get_glyph(unsigned int codepoint)
 {
-    return get_glyphset(codepoint, loader)->get_glyph(codepoint);
+    return get_glyphset(codepoint)->get_glyph(codepoint);
 }
 
 void FontImpl::mark_as_unloaded()
@@ -149,26 +155,26 @@ void FontImpl::mark_as_unloaded()
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// FontBase
+// Font
 
-FontBase::FontBase() = default;
+Font::Font() = default;
 
-FontBase::~FontBase() = default;
+Font::~Font() = default;
 
 
-bool FontBase::load_font(const embedded_binary& data, Px size)
+bool Font::load_font(const embedded_binary& data, Px size, Platform* app)
 {
-    return impl_load_font(std::make_unique<FontImpl>(), reinterpret_cast<const unsigned char*>(data.data), size);
+    return impl_load_font(std::make_unique<FontImpl>(app), reinterpret_cast<const unsigned char*>(data.data), size);
 }
 
-bool FontBase::load_font(const std::string& filename, Px size)
+bool Font::load_font(const std::string& filename, Px size, Platform* app)
 {
     if(filename == default_font)
     {
-        return load_font(INCONSOLATA_MEDIUM_TTF, size);
+        return load_font(INCONSOLATA_MEDIUM_TTF, size, app);
     }
 
-    auto font = std::make_unique<FontImpl>();
+    auto font = std::make_unique<FontImpl>(app);
 
     if (read_to_buffer(filename, &font->data->data_storage) == false)
     {
@@ -188,7 +194,7 @@ void set_size_for_font(FontImpl* font, Px size)
     font->data->height = Px{static_cast<int>(height * scale + 0.5f)};
 }
 
-bool FontBase::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, Px size)
+bool Font::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned char* data, Px size)
 {
     /* init font */
     font->data = std::make_unique<LoadedFontData>();
@@ -206,44 +212,89 @@ bool FontBase::impl_load_font(std::unique_ptr<FontImpl> font, const unsigned cha
     set_size_for_font(font.get(), size);
 
     /* make tab and newline glyphs invisible */
-    font->get_glyph('\t', *this)->make_invisible();
-    font->get_glyph('\n', *this)->make_invisible();
+    font->get_glyph('\t')->make_invisible();
+    font->get_glyph('\n')->make_invisible();
 
     m = std::move(font);
     return true;
 }
 
-void FontBase::set_size(Px new_size)
+void Font::set_size(Px new_size)
 {
     m->data->size = new_size;
     set_size_for_font(m.get(), new_size);
     m->mark_as_unloaded();
 }
 
-void FontBase::set_tab_width(Px n)
+void Font::set_tab_width(Px n)
 {
-    m->get_glyph('\t', *this)->xadvance = n.value;
+    m->get_glyph('\t')->xadvance = n.value;
 }
 
-Px FontBase::get_tab_width()
+Px Font::get_tab_width()
 {
-    return Px{m->get_glyph('\t', *this)->xadvance};
+    return Px{m->get_glyph('\t')->xadvance};
 }
 
-Px FontBase::get_width(const std::string& text)
+Px Font::get_width(const std::string& text)
 {
     int x = 0;
     const auto codepoints = utf8_to_codepoints(text);
     for (const auto codepoint : codepoints)
     {
-        x += m->get_glyph(codepoint, *this)->xadvance;
+        x += m->get_glyph(codepoint)->xadvance;
     }
     return Px{x};
 }
 
-Px FontBase::get_height() const
+Px Font::get_height() const
 {
     return m->data->height;
+}
+
+Px Font::draw(Renderer* rend, const std::string& text, Px x, Px y, Color color)
+{
+    auto* font = this;
+    // auto font = std::static_pointer_cast<Font>(the_font);
+    // todo(Gustav): investigate dip usage?
+
+    const auto codepoints = utf8_to_codepoints(text);
+    for (const auto codepoint : codepoints)
+    {
+        auto* set = font->m->get_glyphset(codepoint);
+        auto* g = set->get_glyph(codepoint);
+        auto texture = set->texture;
+        const float w = Cint_to_float(texture->get_width());
+        const float h = Cint_to_float(texture->get_height());
+
+        const auto sx = g->x1 - g->x0;
+        const auto sy = g->y1 - g->y0;
+        const auto px = x + Px{g->xoff};
+        const auto py = y - Px{g->yoff} - Px{sy} + font->m->get_data_height();
+
+        const auto texture_rect = Rectf
+        {
+            g->x0 / w ,
+            (g->y0+sy) /h,
+            sx / w,
+            -sy / h
+        };
+        const auto char_rect = Rect<Px>
+        {
+            px,
+            py,
+            Px{sx},
+            Px{sy}
+        };
+
+        rend->draw_image(texture, char_rect, color, texture_rect, Submit::no);
+
+        x += Px{g->xadvance};
+    }
+
+    rend->submit_renderer();
+
+    return x;
 }
 
 }

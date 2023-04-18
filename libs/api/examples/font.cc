@@ -27,9 +27,8 @@ struct ImagesApp : App
     {
         cache->draw_rect(Cpx(Rect<Dp>::from_size(client_size)), Color::rgb(255, 255, 255, 255));
 
-        cache->draw_text(font, "Hello world", Cpx(20_dp), Cpx(20_dp), {0, 0, 0, 255});
-
-        cache->draw_text(font, "mouse", Cpx(mouse.x), Cpx(mouse.y), {0, 0, 255, 255});
+        font->draw(cache, "Hello world", Cpx(20_dp), Cpx(20_dp), {0, 0, 0, 255});
+        font->draw(cache, "mouse", Cpx(mouse.x), Cpx(mouse.y), {0, 0, 255, 255});
     }
 };
 
