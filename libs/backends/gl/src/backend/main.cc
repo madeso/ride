@@ -87,7 +87,7 @@ struct MetaState
     bool rshift = false;
     bool rgui = false;
 
-    Meta to_meta() const
+    api::Meta to_meta() const
     {
         return
         {
@@ -126,7 +126,7 @@ T parse(const std::string& str)
 
 
 
-struct Renderer : ::Renderer
+struct Renderer : api::Renderer
 {
     Render2 render;
     std::vector<Rect<Px>> rects;
@@ -210,7 +210,7 @@ struct Renderer : ::Renderer
         ren->render.batch.submit();
     }
 
-    void draw_image(std::shared_ptr<::Texture> the_texture, const Rect<Px>& rect, Color c, std::optional<Rectf> sub, Submit submit) override
+    void draw_image(std::shared_ptr<api::Texture> the_texture, const Rect<Px>& rect, Color c, std::optional<Rectf> sub, api::Submit submit) override
     {
         auto texture = std::static_pointer_cast<Texture>(the_texture);
         Renderer* ren = this;
@@ -229,7 +229,7 @@ struct Renderer : ::Renderer
         );
 
         // submit after each quad?
-        if(submit == Submit::yes)
+        if(submit == api::Submit::yes)
         {
             ren->render.batch.submit();
         }
@@ -264,7 +264,7 @@ int filterEvent(void* userdata, SDL_Event* event)
 
 void on_event
 (
-    const SDL_Event& event, App* app, int* window_width, int* window_height,
+    const SDL_Event& event, api::App* app, int* window_width, int* window_height,
     MetaState& meta, std::optional<CursorType>& last_cursor, sdl::cursor_cache& c_cache,
     SDL_Window* window
 )

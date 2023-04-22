@@ -13,9 +13,19 @@
 #include "api/mouse_button.h"
 
 
-struct App;
+namespace ride::api
+{
+    struct App;
+    struct Renderer;
+}
+
+
+namespace ride::libride
+{
+
+
+
 struct Theme;
-struct Renderer;
 
 /*
 
@@ -59,7 +69,7 @@ struct ScrollbarData
 
 struct View
 {
-    App* app;
+    api::App* app;
     Theme* theme;
 
     CursorType cursor = CursorType::arrow;
@@ -83,10 +93,10 @@ struct View
 
     ScrollSize get_scroll_size();
 
-    virtual void draw(Renderer* cache);
+    virtual void draw(api::Renderer* cache);
     void on_mouse_wheel(int dx, int dy);
 
-    virtual void draw_body(Renderer* cache) = 0;
+    virtual void draw_body(api::Renderer* cache) = 0;
     virtual ScrollSize calculate_scroll_size() = 0;
 
     // called after client_rect and body_rect is set
@@ -94,16 +104,16 @@ struct View
 
     void on_layout(const Rect<Dp>& new_client_rect);
 
-    virtual void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int clicks);
-    virtual void on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse);
-    virtual void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse);
+    virtual void on_mouse_pressed(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse, int clicks);
+    virtual void on_mouse_moved(const api::Meta& meta, const Vec2<Dp>& new_mouse);
+    virtual void on_mouse_released(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse);
     virtual void on_text(const std::string& t);
 };
 
 
 struct LineView : View
 {
-    std::shared_ptr<Font> font;
+    std::shared_ptr<api::Font> font;
     Rect<Dp> view_rect = Rect<Dp>(0_dp);
 
     void on_layout_body() override;
@@ -115,10 +125,14 @@ struct LineView : View
     ScrollSize calculate_scroll_size() override;
     std::optional<std::size_t> get_index_under_view_position(const Vec2<Dp> relative_mouse);
 
-    void draw_lines(Renderer* cache);
+    void draw_lines(api::Renderer* cache);
     int absolute_pix_y_to_line(Dp y);
 
-    virtual void draw_line(Renderer* cache, std::size_t index, const Dp& x, const Dp& y) = 0;
+    virtual void draw_line(api::Renderer* cache, std::size_t index, const Dp& x, const Dp& y) = 0;
     virtual Dp get_document_width() const = 0;
     virtual std::size_t get_number_of_lines() const = 0;
 };
+
+
+}
+

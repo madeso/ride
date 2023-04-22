@@ -9,6 +9,11 @@
 
 #include "ride/document.commands.h"
 
+
+namespace ride::libride
+{
+
+
 namespace
 {
     bool is_same(const Position& lhs, const Position& rhs)
@@ -326,3 +331,7 @@ void VirtualView::insert_text_at_cursors(const std::string& text)
         doc->add_text(text, c.b);
     }
 }
+
+
+}
+

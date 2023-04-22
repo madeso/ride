@@ -8,6 +8,10 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+
+namespace ride
+{
+
 int humane_strcmp(const char* str1, const char* str2)
 {
     unsigned long long num1;
@@ -82,5 +86,8 @@ int humane_strcmp(const char* str1, const char* str2)
         }
     }
     // We should never get here
+}
+
+
 }
 

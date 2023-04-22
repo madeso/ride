@@ -2,10 +2,19 @@
 
 #include "core/units.h"
 
+namespace ride
+{
+struct Color;
+}
+
+
+
+namespace ride::api
+{
+
 static constexpr std::string_view default_font = "<default>";
 
 struct Platform;
-struct Color;
 struct Renderer;
 
 struct Font
@@ -21,4 +30,7 @@ struct Font
 
     virtual Px draw(Renderer* rend, const std::string& text, Px x, Px y, Color color) = 0;
 };
+
+
+}
 

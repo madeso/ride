@@ -7,8 +7,10 @@
 namespace ride::backends::sdl
 {
 
-MouseButton mousebutton_from_sdl_button(i32 button)
+api::MouseButton mousebutton_from_sdl_button(i32 button)
 {
+    using api::MouseButton;
+
     switch (button)
     {
     case SDL_BUTTON_LEFT: return MouseButton::left;

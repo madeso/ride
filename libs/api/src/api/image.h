@@ -6,6 +6,11 @@
 
 #include "core/color.h"
 
+
+namespace ride::api
+{
+
+
 struct Image
 {
     std::vector<std::uint8_t> pixels; // rgba
@@ -20,3 +25,7 @@ struct Image
 };
 
 std::shared_ptr<Image> load_shared(const embedded_binary& data);
+
+
+}
+

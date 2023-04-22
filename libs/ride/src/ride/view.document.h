@@ -11,6 +11,11 @@
 #include "ride/view.h"
 
 
+namespace ride::libride
+{
+
+
+
 struct ViewDoc : LineView, VirtualView
 {
     ViewDoc();
@@ -21,7 +26,7 @@ struct ViewDoc : LineView, VirtualView
 
     Vec2<Dp> last_mouse = {0_dp, 0_dp};
 
-    void draw_line(Renderer* cache, std::size_t index, const Dp& x, const Dp& y) override;
+    void draw_line(api::Renderer* cache, std::size_t index, const Dp& x, const Dp& y) override;
     Dp get_document_width() const override;
     std::size_t get_number_of_lines() const override;
 
@@ -43,11 +48,11 @@ struct ViewDoc : LineView, VirtualView
 
     void draw_single_line
     (
-        Renderer* cache,
+        api::Renderer* cache,
         int line_index,
         const Vec2<Dp>& position
     );
-    void drag_to(const Meta& meta, const Vec2<Dp>& new_mouse);
+    void drag_to(const api::Meta& meta, const Vec2<Dp>& new_mouse);
 
     void scroll_to_cursor(const Position& p) override;
     Dp get_relative_pixel_offset(const Position& p) override;
@@ -55,9 +60,13 @@ struct ViewDoc : LineView, VirtualView
 
     void on_layout_body() override;
     // ScrollSize calculate_scroll_size() override;
-    void draw_body(Renderer* cache) override;
-    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override;
-    void on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse) override;
-    void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse) override;
+    void draw_body(api::Renderer* cache) override;
+    void on_mouse_pressed(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override;
+    void on_mouse_moved(const api::Meta& meta, const Vec2<Dp>& new_mouse) override;
+    void on_mouse_released(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse) override;
     void on_text(const std::string& t) override;
 };
+
+
+}
+

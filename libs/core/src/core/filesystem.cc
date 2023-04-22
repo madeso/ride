@@ -7,6 +7,10 @@
 
 #include "core/humane_sort.h"
 
+namespace ride
+{
+
+
 FileEntry::FileEntry(const std::string& n, const std::string& p, bool d)
     : name(n),
     path(p),
@@ -143,3 +147,7 @@ std::unique_ptr<FileSystem> create_local_filesystem()
 {
     return std::make_unique<filesystem_local>();
 }
+
+
+}
+

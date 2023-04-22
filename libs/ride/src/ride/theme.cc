@@ -1,5 +1,10 @@
 #include "ride/theme.h"
 
+
+namespace ride::libride
+{
+
+
 Side get_gutter_side(const Theme& theme)
 {
     return theme.gutter_side_default ? Side::left : Side::right;
@@ -14,3 +19,8 @@ Side get_vertical_scroll_side(const Theme& theme)
 {
     return theme.vertical_scroll_side_default ? Side::right : Side::left;
 }
+
+
+
+}
+

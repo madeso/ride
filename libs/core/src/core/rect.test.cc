@@ -2,6 +2,10 @@
 
 #include "core/rect.h"
 
+using namespace ride;
+
+
+
 
 TEST_CASE("rect-test", "[rect]")
 {

@@ -7,7 +7,7 @@
 namespace ride::backends::sdl
 {
 
-MouseButton mousebutton_from_sdl_button(i32 btn);
+api::MouseButton mousebutton_from_sdl_button(i32 btn);
 
 }
 

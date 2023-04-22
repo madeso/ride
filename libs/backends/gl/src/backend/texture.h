@@ -33,7 +33,7 @@ enum class Transparency
 };
 
 
-struct Texture : ::Texture
+struct Texture : api::Texture
 {
     unsigned int id;
     int width;

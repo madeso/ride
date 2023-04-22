@@ -2,6 +2,11 @@
 
 #include "core/ints.h"
 
+
+namespace ride::api
+{
+
+
 struct Meta
 {
     bool ctrl = false;
@@ -278,4 +283,6 @@ std::string to_string(const Stroke& stroke);
 std::optional<Key> key_from_string(const std::string& str);
 std::string to_string(Key key);
 
+
+}
 

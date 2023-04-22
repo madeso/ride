@@ -9,6 +9,11 @@ namespace
     }
 }
 
+
+namespace ride
+{
+
+
 Rng::Rng()
     : engine(create())
 {
@@ -31,3 +36,7 @@ u8 Rng::generate_u8()
     const auto r = uniform_dist(engine);
     return static_cast<u8>(r);
 }
+
+
+}
+

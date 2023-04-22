@@ -7,7 +7,16 @@
 
 #include "ride/view.h"
 
-struct FileSystem;
+
+namespace ride
+{
+    struct FileSystem;
+}
+
+
+namespace ride::libride
+{
+
 
 struct Node
 {
@@ -47,12 +56,16 @@ struct ViewFilesystem : public LineView
 
     void on_layout_body() override;
 
-    void draw_body(Renderer* cache) override;
-    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override;
-    void on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse) override;
+    void draw_body(api::Renderer* cache) override;
+    void on_mouse_pressed(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override;
+    void on_mouse_moved(const api::Meta& meta, const Vec2<Dp>& new_mouse) override;
 
 
-    void draw_line(Renderer* cache, std::size_t index, const Dp& x, const Dp& y) override;
+    void draw_line(api::Renderer* cache, std::size_t index, const Dp& x, const Dp& y) override;
     Dp get_document_width() const override;
     std::size_t get_number_of_lines() const override;
 };
+
+
+}
+

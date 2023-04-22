@@ -7,6 +7,9 @@
 
 #include "core/c.h"
 
+namespace ride
+{
+
 // https://twitter.com/idoccor/status/1314664849276899328
 // https://gist.github.com/dirocco/0e23867d0ea9ab2a23dd6dcaba065f53
 template<typename E> constexpr typename std::underlying_type<E>::type cast_to_base(E e) noexcept
@@ -58,3 +61,6 @@ std::vector<T> splice(std::vector<T>* vec, int at, std::optional<int> items_to_r
     vec->insert(where(), insert.begin(), insert.end());
     return removed;
 }
+
+}
+

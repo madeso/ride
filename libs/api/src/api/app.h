@@ -12,6 +12,9 @@
 #include "api/mouse_button.h"
 #include "api/texture.h"
 
+namespace ride::api
+{
+
 struct Renderer;
 struct Font;
 struct Image;
@@ -72,3 +75,4 @@ struct App
     std::vector<std::shared_ptr<Font>> loaded_fonts;
 };
 
+}

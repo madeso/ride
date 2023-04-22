@@ -1,5 +1,9 @@
 #pragma once
 
+
+namespace ride
+{
+
 template<typename T>
 struct Size
 {
@@ -14,3 +18,7 @@ struct Size
 };
 
 using Sizei = Size<int>;
+
+
+}
+

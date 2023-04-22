@@ -8,6 +8,12 @@
 
 #include "ride/theme.h"
 
+
+
+namespace ride::libride
+{
+
+
 View::View()
     : app(nullptr)
     , theme(nullptr)
@@ -90,9 +96,9 @@ std::optional<ScrollbarData> layout_scrollbar(Rect<Dp>* view_rect, Theme* theme,
     };
 }
 
-void draw_scrollbar(const ScrollbarData& data, App* app, Theme* theme, Renderer* cache)
+void draw_scrollbar(const ScrollbarData& data, api::App* app, Theme* theme, api::Renderer* cache)
 {
-    const auto clip_scope = ClipScope{cache, app->Cpx(data.through_rect)};
+    const auto clip_scope = api::ClipScope{cache, app->Cpx(data.through_rect)};
     cache->draw_rect(app->Cpx(data.through_rect), theme->scroll_through_color);
     cache->draw_rect(app->Cpx(data.thumb_rect), theme->scroll_thumb_color);
     cache->draw_rect(app->Cpx(data.top_button_rect), theme->scroll_button_color);
@@ -152,7 +158,7 @@ ScrollSize View::get_scroll_size()
     };
 }
 
-void View::draw(Renderer* cache)
+void View::draw(api::Renderer* cache)
 {
     if(vertical_scrollbar_data)
     {
@@ -164,7 +170,7 @@ void View::draw(Renderer* cache)
         draw_scrollbar(*horizontal_scrollbar_data, app, theme, cache);
     }
 
-    const auto clip_scope = ClipScope{cache, app->Cpx(body_rect)};
+    const auto clip_scope = api::ClipScope{cache, app->Cpx(body_rect)};
     draw_body(cache);
 }
 
@@ -215,15 +221,15 @@ void View::keep_scroll_within()
     on_mouse_wheel(0, 0);
 }
 
-void View::on_mouse_pressed(MouseButton, const Meta&, const Vec2<Dp>&, int)
+void View::on_mouse_pressed(api::MouseButton, const api::Meta&, const Vec2<Dp>&, int)
 {
 }
 
-void View::on_mouse_moved(const Meta&, const Vec2<Dp>&)
+void View::on_mouse_moved(const api::Meta&, const Vec2<Dp>&)
 {
 }
 
-void View::on_mouse_released(MouseButton, const Meta&, const Vec2<Dp>&)
+void View::on_mouse_released(api::MouseButton, const api::Meta&, const Vec2<Dp>&)
 {
 }
 
@@ -295,7 +301,7 @@ void LineView::on_layout_body()
     view_rect = body_rect;
 }
 
-void LineView::draw_lines(Renderer* cache)
+void LineView::draw_lines(api::Renderer* cache)
 {
     // todo(Gustav): guesstimate entry from y coordinate and then do the checks to avoid checking all the items...
     for(std::size_t index = 0; index < get_number_of_lines(); index+=1)
@@ -321,4 +327,7 @@ int LineView::absolute_pix_y_to_line(Dp y)
         ),
         static_cast<int>(get_number_of_lines())
     );
+}
+
+
 }

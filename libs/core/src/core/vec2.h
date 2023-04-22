@@ -1,5 +1,10 @@
 #pragma once
 
+
+namespace ride
+{
+
+
 template<typename T>
 struct Vec2
 {
@@ -27,5 +32,8 @@ template<typename S, typename T> S& operator<<(S& s, const Vec2<T>& v)
         << v.y
         << ")"
         ;
+}
+
+
 }
 

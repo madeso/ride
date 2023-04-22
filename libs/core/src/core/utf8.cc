@@ -28,6 +28,11 @@ namespace
     }
 }
 
+
+
+namespace ride
+{
+
 bool is_utf8_cont(u8 byte)
 {
     return byte >= 0x80 && byte < 0xc0;
@@ -112,3 +117,7 @@ std::vector<std::string> utf8_chars(const std::string& text)
     clear_buffer();
     return r;
 }
+
+
+}
+

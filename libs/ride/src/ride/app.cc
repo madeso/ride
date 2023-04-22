@@ -29,6 +29,11 @@
 
 
 
+namespace ride::libride
+{
+
+
+
 
 double change_scale(double current, bool increase)
 {
@@ -40,12 +45,12 @@ double change_scale(double current, bool increase)
     );
 }
 
-struct RideApp : App
+struct RideApp : api::App
 {
     Vec2<Dp> mouse = {Dp{0}, Dp{0}};
 
-    std::shared_ptr<Texture> logo;
-    std::shared_ptr<Font> font;
+    std::shared_ptr<api::Texture> logo;
+    std::shared_ptr<api::Font> font;
     std::unique_ptr<FileSystem> fs;
 
     Theme theme;
@@ -55,7 +60,7 @@ struct RideApp : App
     ViewFilesystem browser;
     KeyBind keybind;
 
-    void on_key_pressed(const Stroke& key) override
+    void on_key_pressed(const api::Stroke& key) override
     {
         std::cout << "key pressed: " << to_string(key) << "\n";
         keybind.run(key, &commands);
@@ -67,10 +72,10 @@ struct RideApp : App
         view->app = this;
     }
 
-    RideApp(PlatformArg p)
+    RideApp(api::PlatformArg p)
         : App(p)
         , logo(p->load_shared_texture(LOGO_256TEXT_PNG))
-        , font(load_font(default_font, Dp{12}))
+        , font(load_font(api::default_font, Dp{12}))
         , fs(create_local_filesystem())
     {
         setup_view(&root);
@@ -120,15 +125,15 @@ struct RideApp : App
             std::cout << " - " << c.first << "\n";
         }
 
-        keybind.add(*stroke_from_string("ctrl+q"), {"core.quit"});
-        keybind.add(*stroke_from_string("return"), {"doc.insert-newline"});
+        keybind.add(*api::stroke_from_string("ctrl+q"), {"core.quit"});
+        keybind.add(*api::stroke_from_string("return"), {"doc.insert-newline"});
 
         // keybind.add(*stroke_from_string("ctrl+up"),   {"scale.+"});
         // keybind.add(*stroke_from_string("ctrl+down"), {"scale.-"});
 
         auto add_move_select = [this](const std::string& stroke_name, const std::string& command)
         {
-            auto stroke = *stroke_from_string(stroke_name);
+            auto stroke = *api::stroke_from_string(stroke_name);
 
             stroke.meta.shift = false;
             this->keybind.add(stroke, {"doc.move-" + command});
@@ -155,9 +160,9 @@ struct RideApp : App
         add_move_select("alt+right", "word-end");
     }
 
-    void draw(Renderer* cache) override
+    void draw(api::Renderer* cache) override
     {
-        auto rect = ::Rect<Dp>::from_size(client_size);
+        auto rect = Rect<Dp>::from_size(client_size);
         cache->draw_rect(Cpx(rect), theme.window_background_color);
 
         cache->draw_image(logo, Cpx(Dp{10}), Cpx(Dp{10}), theme.logo_color);
@@ -172,7 +177,7 @@ struct RideApp : App
         draw_view(&root, cache);
     }
 
-    void draw_view(View* view, Renderer* cache)
+    void draw_view(View* view, api::Renderer* cache)
     {
         view->draw(cache);
 
@@ -206,7 +211,7 @@ struct RideApp : App
         }
     }
 
-    void on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override
+    void on_mouse_pressed(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse, int clicks) override
     {
         mouse = new_mouse;
 
@@ -216,7 +221,7 @@ struct RideApp : App
         view->on_mouse_pressed(button, meta, new_mouse, clicks);
     }
 
-    void on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse, Dp, Dp) override
+    void on_mouse_moved(const api::Meta& meta, const Vec2<Dp>& new_mouse, Dp, Dp) override
     {
         mouse = new_mouse;
 
@@ -225,7 +230,7 @@ struct RideApp : App
         view->on_mouse_moved(meta, new_mouse);
     }
 
-    void on_mouse_released(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse) override
+    void on_mouse_released(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse) override
     {
         mouse = new_mouse;
 
@@ -275,8 +280,10 @@ struct RideApp : App
     }
 };
 
-std::unique_ptr<App> create_ride_app(PlatformArg arg)
+std::unique_ptr<api::App> create_ride_app(api::PlatformArg arg)
 {
     return std::make_unique<RideApp>(arg);
+}
+
 }
 

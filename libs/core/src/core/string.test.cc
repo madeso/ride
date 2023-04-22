@@ -5,6 +5,7 @@
 #include "core/string.h"
 
 using namespace catchy;
+using namespace ride;
 
 
 TEST_CASE("strings-whitespace-test", "[strings]")

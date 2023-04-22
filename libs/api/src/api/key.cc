@@ -9,9 +9,11 @@
 #include "core/c.h"
 #include "core/enumstringmap.h"
 
+using namespace ride::api;
+
 namespace
 {
-    using KeyStringMap = EnumStringMap<Key>;
+    using KeyStringMap = ride::EnumStringMap<Key>;
 
     KeyStringMap build_map()
     {
@@ -265,7 +267,7 @@ namespace
 
     bool set_string_meta(Meta* meta, const std::string& name_big)
     {
-        const auto name = to_lower(name_big);
+        const auto name = ride::to_lower(name_big);
 
         if(name == "ctrl" || name == "control")
         {
@@ -293,6 +295,10 @@ namespace
         }
     }
 }
+
+
+namespace ride::api
+{
 
 bool operator<(const Stroke& lhs, const Stroke& rhs)
 {
@@ -368,5 +374,8 @@ std::optional<Key> key_from_string(const std::string& str)
 std::string to_string(Key key)
 {
     return global_key_string_map.to_string(key);
+}
+
+
 }
 

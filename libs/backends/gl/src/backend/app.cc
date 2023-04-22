@@ -36,24 +36,24 @@ double calculate_scale()
 #endif
 }
 
-struct PlatformImpl : ::Platform
+struct PlatformImpl : api::Platform
 {
     double get_default_scale() override
     {
         return calculate_scale();
     }
 
-    std::shared_ptr<::Font> make_font() override
+    std::shared_ptr<api::Font> make_font() override
     {
         return std::make_shared<sdl::Font>();
     }
 
-    std::shared_ptr<::Texture> load_shared_texture(const embedded_binary& image_binary) override
+    std::shared_ptr<api::Texture> load_shared_texture(const embedded_binary& image_binary) override
     {
         return load_shared_texture_impl(image_binary);
     }
 
-    std::shared_ptr<::Texture> load_texture(const Image& image) const override
+    std::shared_ptr<api::Texture> load_texture(const api::Image& image) const override
     {
         return std::make_shared<Texture>(image.pixels.data(), image.width, image.height,
             TextureEdge::clamp, TextureRenderStyle::pixel, Transparency::include);
@@ -61,7 +61,7 @@ struct PlatformImpl : ::Platform
 };
 
 
-PlatformArg create_platform()
+api::PlatformArg create_platform()
 {
     return std::make_shared<PlatformImpl>();
 }

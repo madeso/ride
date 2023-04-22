@@ -7,7 +7,15 @@
 
 #include "core/units.h"
 
-struct FileSystem;
+
+namespace ride
+{
+    struct FileSystem;
+}
+
+namespace ride::libride
+{
+
 struct VirtualView;
 
 struct Position
@@ -19,14 +27,6 @@ struct Position
     static constexpr int max_offset = std::numeric_limits<int>::max();
 };
 
-template<> struct fmt::formatter<Position>: formatter<string_view>
-{
-    template <typename FormatContext>
-    auto format(Position p, FormatContext& ctx)
-    {
-        return format_to(ctx.out(), "{} ({})", p.line, p.offset);
-    }
-};
 
 
 bool operator==(const Position& lhs, const Position& rhs);
@@ -58,23 +58,6 @@ struct Selection
 
 bool operator==(const Selection& lhs, const Selection& rhs);
 bool operator!=(const Selection& lhs, const Selection& rhs);
-
-
-template<> struct fmt::formatter<Selection>: formatter<string_view>
-{
-    template <typename FormatContext>
-    auto format(Selection p, FormatContext& ctx)
-    {
-        if(p.a != p.b)
-        {
-            return format_to(ctx.out(), "({}, {})", p.a, p.b);
-        }
-        else
-        {
-            return format_to(ctx.out(), "({})", p.a);
-        }
-    }
-};
 
 
 bool are_overlapping(const SortedSelection& s, const SortedSelection& p);
@@ -121,4 +104,35 @@ struct VirtualView
 
     virtual Dp get_relative_pixel_offset(const Position& p) = 0;
     virtual int get_offset_from_relative_pixel_offset(int line, Dp offset) = 0;
+};
+
+
+}
+
+
+template <>
+struct fmt::formatter<ride::libride::Position> : formatter<string_view>
+{
+    template <typename FormatContext>
+auto format(ride::libride::Position p, FormatContext& ctx)
+    {
+        return format_to(ctx.out(), "{} ({})", p.line, p.offset);
+    }
+};
+
+
+template<> struct fmt::formatter<ride::libride::Selection>: formatter<string_view>
+{
+    template <typename FormatContext>
+    auto format(ride::libride::Selection p, FormatContext& ctx)
+    {
+        if(p.a != p.b)
+        {
+            return format_to(ctx.out(), "({}, {})", p.a, p.b);
+        }
+        else
+        {
+            return format_to(ctx.out(), "({})", p.a);
+        }
+    }
 };

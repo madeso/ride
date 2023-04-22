@@ -10,6 +10,14 @@
 #include "ride/document.h"
 #include "ride/command.h"
 
+
+
+namespace ride::libride
+{
+
+
+
+
 using is_word_fun = std::function<bool (char)>;
 
 Position previous_char(std::shared_ptr<Document> doc, const Position& pp)
@@ -409,3 +417,6 @@ void add_edit_commands(CommandList* list, active_view_or_null_getter get_view)
         return end_of_doc(view->doc);
     });
 }
+
+}
+

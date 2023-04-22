@@ -3,13 +3,18 @@
 #include <iostream>
 
 
+
+namespace ride::libride
+{
+
+
 Command::Command
 (
     predicate_fun pe,
     perform_fun pm
 )
-: predicate(pe)
-, perform(pm)
+    : predicate(pe)
+    , perform(pm)
 {
 }
 
@@ -66,4 +71,7 @@ bool CommandList::perform(const std::string& name)
     }
     std::cerr << "failed to evaluate " << name << "\n";
     return false;
+}
+
+
 }

@@ -2,12 +2,18 @@
 
 #include "ride/command.h"
 
-void KeyBind::add(const Stroke& stroke, std::vector<std::string> command_order)
+
+
+namespace ride::libride
 {
+
+
+void KeyBind::add(const api::Stroke& stroke, std::vector<std::string> command_order)
+    {
     commands.insert({stroke, command_order});
 }
 
-bool KeyBind::run(const Stroke& stroke, CommandList* command_list)
+bool KeyBind::run(const api::Stroke& stroke, CommandList* command_list)
 {
     const auto found = commands.find(stroke);
     if(found != commands.end())
@@ -23,3 +29,7 @@ bool KeyBind::run(const Stroke& stroke, CommandList* command_list)
 
     return false;
 }
+
+
+}
+

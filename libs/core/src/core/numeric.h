@@ -1,17 +1,22 @@
 #pragma once
 
-namespace api
+namespace ride
 {
-    template<typename T>
-    T abs(T t)
+
+
+template<typename T>
+T abs(T t)
+{
+    if( t >= 0)
     {
-        if( t >= 0)
-        {
-            return t;
-        }
-        else
-        {
-            return -t;
-        }
+        return t;
+    }
+    else
+    {
+        return -t;
     }
 }
+
+
+}
+

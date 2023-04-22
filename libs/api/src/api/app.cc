@@ -2,6 +2,10 @@
 
 #include "api/font.h"
 
+
+namespace ride::api
+{
+
 App::App(PlatformArg p)
     : platform(p)
     , run(true)
@@ -121,5 +125,8 @@ std::shared_ptr<Font> App::load_font(const std::string& file, Dp size)
     {
         return nullptr;
     }
+}
+
+
 }
 

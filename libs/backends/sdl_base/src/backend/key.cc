@@ -7,8 +7,10 @@
 namespace ride::backends::sdl
 {
 
-Key key_from_sdl_keycode(i32 kc)
+api::Key key_from_sdl_keycode(i32 kc)
 {
+    using api::Key;
+
     switch(kc)
     {
     case SDLK_UNKNOWN: return Key::unknown;

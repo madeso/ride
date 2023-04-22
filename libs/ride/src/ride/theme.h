@@ -7,6 +7,11 @@
 
 #include "core/color.open-color.h"
 
+
+
+namespace ride::libride
+{
+
 struct Theme
 {
     Dp line_spacing = Dp{3};
@@ -67,3 +72,6 @@ struct Theme
 Side get_gutter_side(const Theme& theme);
 Side get_horizontal_scroll_side(const Theme& theme);
 Side get_vertical_scroll_side(const Theme& theme);
+
+}
+

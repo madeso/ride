@@ -3,6 +3,10 @@
 #include <memory>
 #include <functional>
 
+
+namespace ride
+{
+
 struct FileEntry
 {
     std::string name;
@@ -32,3 +36,6 @@ struct FileSystem
 };
 
 std::unique_ptr<FileSystem> create_local_filesystem();
+
+}
+

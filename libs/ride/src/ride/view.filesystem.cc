@@ -10,6 +10,11 @@
 #include "ride/theme.h"
 
 
+namespace ride::libride
+{
+
+
+
 std::vector<std::shared_ptr<Node>> create_view_entries(const std::vector<FileEntry>& files);
 
 ListSettings create_list_settings_from_theme(const Theme& theme)
@@ -220,7 +225,7 @@ std::size_t ViewFilesystem::get_number_of_lines() const
 }
 
 
-void ViewFilesystem::draw_body(Renderer* cache)
+void ViewFilesystem::draw_body(api::Renderer* cache)
 {
     cache->draw_rect(app->Cpx(body_rect), theme->filesys_background_color);
 
@@ -238,7 +243,7 @@ void ViewFilesystem::draw_body(Renderer* cache)
 }
 
 
-void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const Dp& x, const Dp& y)
+void ViewFilesystem::draw_line(api::Renderer* cache, std::size_t index, const Dp& x, const Dp& y)
 {
     const auto& e = entries[index];
     const auto xp = get_x_position(theme, e->depth);
@@ -253,9 +258,9 @@ void ViewFilesystem::draw_line(Renderer* cache, std::size_t index, const Dp& x, 
 }
 
 
-void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const Vec2<Dp>& new_mouse, int clicks)
+void ViewFilesystem::on_mouse_pressed(api::MouseButton button, const api::Meta&, const Vec2<Dp>& new_mouse, int clicks)
 {
-    if(button != MouseButton::left) { return; }
+    if(button != api::MouseButton::left) { return; }
     // if(clicks > 2) { return; } // file specific
 
     if(auto node_index = get_index_under_view_position(new_mouse); node_index)
@@ -268,7 +273,7 @@ void ViewFilesystem::on_mouse_pressed(MouseButton button, const Meta&, const Vec
 }
 
 
-void ViewFilesystem::on_mouse_moved(const Meta&, const Vec2<Dp>& new_mouse)
+void ViewFilesystem::on_mouse_moved(const api::Meta&, const Vec2<Dp>& new_mouse)
 {
     last_mouse = new_mouse;
     update_hover();
@@ -279,3 +284,7 @@ void ViewFilesystem::update_hover()
 {
     node_hovering = get_index_under_view_position(last_mouse);
 }
+
+
+}
+

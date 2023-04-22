@@ -1,5 +1,8 @@
 #pragma once
 
+namespace ride
+{
+
 // a "tagged arithmetic" Type so we don't accidentally mix types
 // to get safety of "apps hungarian" but not using cryptic prefixes
 // and let the compiler check the "types"
@@ -25,8 +28,12 @@ struct Number
     Self& operator/=(      T     s) { value /= s      ; return *this; }
 };
 
-#define TPL template<typename T, typename Tag>
-#define NUM Number  <         T,          Tag>
+
+
+
+
+#define TPL template     <typename T, typename Tag>
+#define NUM Number <         T,          Tag>
 
 TPL NUM operator+(const NUM& lhs, const NUM& rhs) { return NUM{lhs.value + rhs.value}; }
 TPL NUM operator-(const NUM& lhs, const NUM& rhs) { return NUM{lhs.value - rhs.value}; }
@@ -42,13 +49,13 @@ TPL bool operator<=(const NUM& lhs, const NUM& rhs) { return lhs.value <= rhs.va
 TPL bool operator>=(const NUM& lhs, const NUM& rhs) { return lhs.value >= rhs.value; }
 TPL bool operator< (const NUM& lhs, const NUM& rhs) { return lhs.value <  rhs.value; }
 TPL bool operator> (const NUM& lhs, const NUM& rhs) { return lhs.value >  rhs.value; }
+}
 
-
-template<typename T, typename Tag>
-struct fmt::formatter<NUM> : formatter<string_view>
+TPL
+struct fmt::formatter<ride::NUM> : formatter<string_view>
 {
     template <typename FormatContext>
-    auto format(const NUM& num, FormatContext& ctx)
+    auto format(const ride::NUM& num, FormatContext& ctx)
     {
         return format_to(ctx.out(), "{}", num.value);
     }

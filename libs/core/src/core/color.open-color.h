@@ -6,7 +6,7 @@
 
 #include "core/color.h"
 
-namespace colors
+namespace ride::colors
 {
     using ColorList = std::array<Color, 10>;
 

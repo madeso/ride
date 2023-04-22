@@ -2,6 +2,10 @@
 
 #include <fstream>
 
+
+namespace ride
+{
+
 bool read_to_buffer(const std::string& filename, std::vector<std::uint8_t>* buffer)
 {
     std::ifstream infile(filename.c_str());
@@ -22,3 +26,6 @@ bool read_to_buffer(const std::string& filename, std::vector<std::uint8_t>* buff
 
     return true;
 }
+
+}
+

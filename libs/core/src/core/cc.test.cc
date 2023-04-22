@@ -5,6 +5,8 @@
 #include "core/cc.h"
 
 using namespace catchy;
+using namespace ride;
+
 
 TEST_CASE("cc-splice", "[cc]")
 {

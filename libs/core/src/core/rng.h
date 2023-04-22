@@ -4,6 +4,11 @@
 
 #include "core/ints.h"
 
+
+namespace ride
+{
+
+
 struct Rng
 {
     std::default_random_engine engine;
@@ -12,3 +17,7 @@ struct Rng
 
     u8 generate_u8();
 };
+
+
+}
+

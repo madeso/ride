@@ -4,6 +4,9 @@
 
 #include "core/string.h"
 
+namespace ride
+{
+
 template<typename Enum>
 struct EnumStringMap
 {
@@ -41,3 +44,7 @@ struct EnumStringMap
         return found_name->second;
     }
 };
+
+
+}
+

@@ -1,5 +1,9 @@
 #pragma once
 
+
+namespace ride
+{
+
 enum class Side
 {
     left,
@@ -7,3 +11,7 @@ enum class Side
     top,
     bottom
 };
+
+
+}
+

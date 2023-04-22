@@ -2,6 +2,9 @@
 
 #include "core/ints.h"
 
+namespace ride
+{
+
 struct Color
 {
     u8 r;
@@ -61,3 +64,6 @@ struct Color
     }
 
 };
+
+}
+

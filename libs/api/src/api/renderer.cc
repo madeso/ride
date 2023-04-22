@@ -1,5 +1,10 @@
 #include "api/renderer.h"
 
+
+namespace ride::api
+{
+
+
 void Renderer::draw_image(std::shared_ptr<Texture> texture, Px x, Px y, Color c, std::optional<Rectf> sub, Submit submit)
 {
     draw_image
@@ -49,5 +54,8 @@ ClipScope& ClipScope::operator = (ClipScope&& rhs) noexcept
     cache = rhs.cache;
     rhs.cache = nullptr;
     return *this;
+}
+
+
 }
 

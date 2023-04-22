@@ -7,6 +7,10 @@
 #include "assert/assert.h"
 #include "core/c.h"
 
+namespace ride::api
+{
+
+
 bool Image::load(const embedded_binary& data)
 {
     int requested_width = 0;
@@ -74,3 +78,7 @@ std::shared_ptr<Image> load_shared(const embedded_binary& data)
         return r;
     }
 }
+
+
+}
+

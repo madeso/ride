@@ -4,6 +4,10 @@
 
 #include "core/ints.h"
 
+
+namespace ride
+{
+
 /** 32bit fnv-1a hash.
 */
 struct Hash
@@ -22,4 +26,7 @@ struct Hash
         return *this;
     }
 };
+
+
+}
 

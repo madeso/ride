@@ -9,6 +9,9 @@
 #include "api/texture.h"
 
 
+namespace ride::api
+{
+
 struct Font;
 
 enum class Submit
@@ -47,4 +50,7 @@ struct ClipScope
     ClipScope(ClipScope&&) noexcept;
     ClipScope& operator=(ClipScope&&) noexcept;
 };
+
+
+}
 

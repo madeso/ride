@@ -9,6 +9,10 @@
 
 using namespace catchy;
 
+using namespace ride;
+using namespace ride::libride;
+
+
 // position tests
 // selection tests
 
@@ -228,3 +232,4 @@ TEST_CASE("doc-virtual-view", "[doc]")
 
     CHECK(doc->views.size() == 0);
 }
+

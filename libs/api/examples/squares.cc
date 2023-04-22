@@ -6,6 +6,9 @@
 #include "backend/log.h"
 
 using namespace ride::backends::gl;
+using namespace ride;
+using namespace ride::api;
+
 
 struct SquaresApp : App
 {

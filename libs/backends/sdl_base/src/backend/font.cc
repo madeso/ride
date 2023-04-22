@@ -9,6 +9,7 @@
 #include "core/utf8.h"
 #include "core/rect.h"
 #include "core/c.h"
+#include "core/number.h"
 
 #include "api/image.h"
 #include "api/app.h"
@@ -52,7 +53,7 @@ Glyph* GlyphSet::get_glyph(unsigned int c)
     return &glyphs[c & 0xff];
 }
 
-bool GlyphSet::load_single_glyphset_or_fail(LoadedFontData* font, int idx, int width, int height, const Platform& loader)
+bool GlyphSet::load_single_glyphset_or_fail(LoadedFontData* font, int idx, int width, int height, const api::Platform& loader)
 {
     std::vector<std::uint8_t> pixels;
     pixels.resize(Cs(width) * Cs(height));
@@ -87,7 +88,7 @@ bool GlyphSet::load_single_glyphset_or_fail(LoadedFontData* font, int idx, int w
     }
 
     /* convert 8bit data to 32bit */
-    Image image;
+    api::Image image;
     image.setup(width, height);
     for (int y = 0; y < height; y += 1)
     {
@@ -103,7 +104,7 @@ bool GlyphSet::load_single_glyphset_or_fail(LoadedFontData* font, int idx, int w
     return true;
 }
 
-void GlyphSet::load_glyphset(LoadedFontData* font, int idx, const Platform& loader)
+void GlyphSet::load_glyphset(LoadedFontData* font, int idx, const api::Platform& loader)
 {
     int width = 128;
     int height = 128;
@@ -118,7 +119,7 @@ void GlyphSet::load_glyphset(LoadedFontData* font, int idx, const Platform& load
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FontImpl
-FontImpl::FontImpl(Platform* a)
+FontImpl::FontImpl(api::Platform* a)
     : app(a)
 {
 }
@@ -162,14 +163,14 @@ Font::Font() = default;
 Font::~Font() = default;
 
 
-bool Font::load_font(const embedded_binary& data, Px size, Platform* app)
+bool Font::load_font(const embedded_binary& data, Px size, api::Platform* app)
 {
     return impl_load_font(std::make_unique<FontImpl>(app), reinterpret_cast<const unsigned char*>(data.data), size);
 }
 
-bool Font::load_font(const std::string& filename, Px size, Platform* app)
+bool Font::load_font(const std::string& filename, Px size, api::Platform* app)
 {
-    if(filename == default_font)
+    if(filename == api::default_font)
     {
         return load_font(INCONSOLATA_MEDIUM_TTF, size, app);
     }
@@ -252,7 +253,7 @@ Px Font::get_height() const
     return m->data->height;
 }
 
-Px Font::draw(Renderer* rend, const std::string& text, Px x, Px y, Color color)
+Px Font::draw(api::Renderer* rend, const std::string& text, Px x, Px y, Color color)
 {
     auto* font = this;
     // auto font = std::static_pointer_cast<Font>(the_font);
@@ -287,7 +288,7 @@ Px Font::draw(Renderer* rend, const std::string& text, Px x, Px y, Color color)
             Px{sy}
         };
 
-        rend->draw_image(texture, char_rect, color, texture_rect, Submit::no);
+        rend->draw_image(texture, char_rect, color, texture_rect, api::Submit::no);
 
         x += Px{g->xadvance};
     }

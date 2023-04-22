@@ -2,6 +2,11 @@
 
 #include "core/number.h"
 
+
+namespace ride
+{
+
+
 //virtual pixel (unscaled by user settings and dpi)
 struct DeviceIndependentPixel_Tag {};
 using Dp = Number<double, DeviceIndependentPixel_Tag>;
@@ -24,3 +29,7 @@ constexpr Px operator"" _px ( unsigned long long n )
 {
     return Px{static_cast<int>(n)};
 }
+
+
+}
+

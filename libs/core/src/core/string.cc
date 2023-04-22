@@ -3,6 +3,12 @@
 #include <algorithm>
 #include <sstream>
 
+
+
+namespace ride
+{
+
+
 std::size_t replace_all_inplace(std::string& inout, std::string_view what, std::string_view with)
 {
     std::size_t count{};
@@ -114,3 +120,7 @@ std::vector<std::string> split_string_by_newline(const std::string& str)
 {
     return supersplit(str, '\n');
 }
+
+
+}
+

@@ -14,6 +14,12 @@
 #include "fmt/ostream.h"
 using namespace fmt::literals;
 
+
+
+namespace ride::libride
+{
+
+
 ViewDoc::ViewDoc()
 {
     cursor = CursorType::ibeam;
@@ -93,7 +99,7 @@ Dp ViewDoc::get_full_document_width() const
 }
 
 
-void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const Dp&, const Dp& y)
+void ViewDoc::draw_line(api::Renderer* cache, std::size_t line_index, const Dp&, const Dp& y)
 {
     font->draw
     (
@@ -105,7 +111,7 @@ void ViewDoc::draw_line(Renderer* cache, std::size_t line_index, const Dp&, cons
     );
 
     {
-        const auto text_scope = ClipScope(cache, app->Cpx(view_rect));
+        const auto text_scope = api::ClipScope(cache, app->Cpx(view_rect));
         draw_single_line
         (
             cache, Csizet_to_int(line_index),
@@ -132,7 +138,7 @@ std::size_t ViewDoc::get_number_of_lines() const
 
 void ViewDoc::draw_single_line
 (
-    Renderer* cache,
+    api::Renderer* cache,
     int line_index,
     const Vec2<Dp>& position
 )
@@ -258,7 +264,7 @@ void ViewDoc::on_layout_body()
 }
 
 
-void ViewDoc::draw_body(Renderer* cache)
+void ViewDoc::draw_body(api::Renderer* cache)
 {
     cache->draw_rect(app->Cpx(view_rect), theme->edit_background);
     cache->draw_rect(app->Cpx(gutter_rect), theme->gutter_background);
@@ -448,10 +454,10 @@ bool destroy_cursors(VirtualView* vview, const SortedSelection& p, bool include_
     return false;
 }
 
-void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse, int)
+void ViewDoc::on_mouse_pressed(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse, int)
 {
     last_mouse = new_mouse;
-    if(button != MouseButton::left) { return; }
+    if(button != api::MouseButton::left) { return; }
 
     const auto p = translate_view_position(new_mouse);
 
@@ -481,7 +487,7 @@ void ViewDoc::on_mouse_pressed(MouseButton button, const Meta& meta, const Vec2<
     dragging = true;
 }
 
-void ViewDoc::drag_to(const Meta& meta, const Vec2<Dp>& new_mouse)
+void ViewDoc::drag_to(const api::Meta& meta, const Vec2<Dp>& new_mouse)
 {
     if(dragging == false) { return; }
 
@@ -501,7 +507,7 @@ void ViewDoc::drag_to(const Meta& meta, const Vec2<Dp>& new_mouse)
     }
 }
 
-void ViewDoc::on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse)
+void ViewDoc::on_mouse_moved(const api::Meta& meta, const Vec2<Dp>& new_mouse)
 {
     last_mouse = new_mouse;
 
@@ -524,11 +530,11 @@ void ViewDoc::on_mouse_moved(const Meta& meta, const Vec2<Dp>& new_mouse)
 }
 
 
-void ViewDoc::on_mouse_released(MouseButton button, const Meta& meta, const Vec2<Dp>& new_mouse)
+void ViewDoc::on_mouse_released(api::MouseButton button, const api::Meta& meta, const Vec2<Dp>& new_mouse)
 {
     last_mouse = new_mouse;
 
-    if(button != MouseButton::left) { return; }
+    if(button != api::MouseButton::left) { return; }
     drag_to(meta, new_mouse);
     dragging = false;
 }
@@ -537,3 +543,6 @@ void ViewDoc::on_text(const std::string& t)
 {
     insert_text_at_cursors(t);
 }
+
+}
+

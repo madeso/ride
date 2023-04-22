@@ -9,6 +9,11 @@
 #include "core/side.h"
 #include "core/c.h"
 
+
+namespace ride
+{
+
+
 template<typename T>
 struct Rect
 {
@@ -294,12 +299,19 @@ constexpr Rectf Cint_to_float(const Recti r)
 constexpr const Recti EmptyRect = {0,0, 0,0};
 
 
+
+}
+
+
+
+
 template <typename T>
-struct fmt::formatter<Rect<T>> : formatter<string_view>
+struct fmt::formatter<ride::Rect<T>> : formatter<string_view>
 {
     template <typename FormatContext>
-    auto format(const Rect<T>& r, FormatContext& ctx)
+    auto format(const ride::Rect<T>& r, FormatContext& ctx)
     {
         return format_to(ctx.out(), "[l/r {} {} / tb {} {}]", r.get_left(), r.get_right(), r.get_top(), r.get_bottom());
     }
 };
+

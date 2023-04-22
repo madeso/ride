@@ -4,9 +4,11 @@
 
 #include "core/enumstringmap.h"
 
+using namespace ride::api;
+
 namespace
 {
-    using ButtonStringMap = EnumStringMap<MouseButton>;
+    using ButtonStringMap = ride::EnumStringMap<MouseButton>;
 
     ButtonStringMap build_map()
     {
@@ -25,6 +27,10 @@ namespace
 }
 
 
+namespace ride::api
+{
+
+
 std::optional<MouseButton> mousebutton_from_string(const std::string& str)
 {
     return global_button_string_map.from_string(str);
@@ -33,5 +39,8 @@ std::optional<MouseButton> mousebutton_from_string(const std::string& str)
 std::string to_string(MouseButton key)
 {
     return global_button_string_map.to_string(key);
+}
+
+
 }
 

@@ -6,7 +6,7 @@
 namespace ride::backends::gl
 {
 
-PlatformArg create_platform();
+api::PlatformArg create_platform();
 
 }
 

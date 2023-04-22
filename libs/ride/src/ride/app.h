@@ -2,5 +2,11 @@
 
 #include "api/app.h"
 
-std::unique_ptr<App> create_ride_app(PlatformArg arg);
+
+namespace ride::libride
+{
+
+std::unique_ptr<api::App> create_ride_app(api::PlatformArg arg);
+
+}
 

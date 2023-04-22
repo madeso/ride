@@ -4,6 +4,12 @@
 #include <map>
 #include <memory>
 
+
+
+namespace ride::libride
+{
+
+
 using predicate_fun = std::function<bool ()>;
 using perform_fun = std::function<void ()>;
 
@@ -42,3 +48,7 @@ struct CommandList
 
     bool perform(const std::string& name);
 };
+
+
+}
+

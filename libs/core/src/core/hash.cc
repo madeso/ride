@@ -1,5 +1,9 @@
 #include "core/hash.h"
 
+
+namespace ride
+{
+
 void Hash::add(const void* data, std::size_t size)
 {
     update(&value, data, size);
@@ -12,4 +16,7 @@ void Hash::update(u32* value, const void* data, std::size_t size)
     {
         *value = (*value ^ bytes[i]) * 16777619;
     }
+}
+
+
 }

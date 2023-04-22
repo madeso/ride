@@ -1,5 +1,9 @@
 #pragma once
 
+namespace ride::api
+{
+
+
 struct Texture
 {
     Texture() = default;
@@ -8,4 +12,7 @@ struct Texture
     virtual int get_width() const = 0;
     virtual int get_height() const = 0;
 };
+
+
+}
 
