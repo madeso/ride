@@ -207,7 +207,7 @@ struct Renderer : api::Renderer
         );
 
         // submit after each quad?
-        ren->render.batch.submit();
+        // ren->render.batch.submit();
     }
 
     void draw_image(std::shared_ptr<api::Texture> the_texture, const Rect<Px>& rect, Color c, std::optional<Rectf> sub, api::Submit submit) override
@@ -231,13 +231,13 @@ struct Renderer : api::Renderer
         // submit after each quad?
         if(submit == api::Submit::yes)
         {
-            ren->render.batch.submit();
+            // ren->render.batch.submit();
         }
     }
 
     void submit_renderer() override
     {
-        render.batch.submit();
+        // render.batch.submit();
     }
 };
 

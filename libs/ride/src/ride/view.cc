@@ -98,7 +98,7 @@ std::optional<ScrollbarData> layout_scrollbar(Rect<Dp>* view_rect, Theme* theme,
 
 void draw_scrollbar(const ScrollbarData& data, api::App* app, Theme* theme, api::Renderer* cache)
 {
-    const auto clip_scope = api::ClipScope{cache, app->Cpx(data.through_rect)};
+    // const auto clip_scope = api::ClipScope{cache, app->Cpx(data.through_rect)};
     cache->draw_rect(app->Cpx(data.through_rect), theme->scroll_through_color);
     cache->draw_rect(app->Cpx(data.thumb_rect), theme->scroll_thumb_color);
     cache->draw_rect(app->Cpx(data.top_button_rect), theme->scroll_button_color);

@@ -111,7 +111,7 @@ void ViewDoc::draw_line(api::Renderer* cache, std::size_t line_index, const Dp&,
     );
 
     {
-        const auto text_scope = api::ClipScope(cache, app->Cpx(view_rect));
+        // const auto text_scope = api::ClipScope(cache, app->Cpx(view_rect));
         draw_single_line
         (
             cache, Csizet_to_int(line_index),
