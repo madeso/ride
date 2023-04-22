@@ -128,7 +128,6 @@ struct Rect
         assert(get_top() == old_top);
     }
 
-    /*
     static bool overlap(Self a, Self b)
     {
         return b.x + b.width >= a.x
@@ -155,7 +154,6 @@ struct Rect
         T y2 = std::max(a.y + a.height, b.y + b.height);
         return {x1, y1, x2 - x1, y2 - y1};
     }
-    */
 
     bool contains(const Vec2T& p) const
     {

@@ -1,5 +1,6 @@
 add_subdirectory(sdl_base)
 add_subdirectory(gl)
+add_subdirectory(blit)
 if(ride_wx)
     add_subdirectory(wx)
 endif()
@@ -19,13 +20,13 @@ function(create_app ARG_NAME FOLDER)
     source_group("" FILES ${src})
     source_group_pch(${ARG_NAME})
 
-    # sdl
+    # sdl - opengl
     add_executable(
-        ${ARG_NAME} WIN32 MACOSX_BUNDLE
+        ${ARG_NAME}-gl WIN32 MACOSX_BUNDLE
     	${src}
     )
-    set_crt_to_static(${ARG_NAME})
-    target_link_libraries(${ARG_NAME}
+    set_crt_to_static(${ARG_NAME}-gl)
+    target_link_libraries(${ARG_NAME}-gl
         PRIVATE
             ride::options
         PUBLIC
@@ -33,7 +34,24 @@ function(create_app ARG_NAME FOLDER)
             ride::backend_gl
             external::sdl2
     )
-    set_target_properties(${ARG_NAME} PROPERTIES FOLDER "Apps/SDL OpenGL/${FOLDER}")
+    set_target_properties(${ARG_NAME}-gl PROPERTIES FOLDER "Apps/SDL OpenGL/${FOLDER}")
+
+
+    # sdl - blit
+    add_executable(
+        ${ARG_NAME}-blit WIN32 MACOSX_BUNDLE
+    	${src}
+    )
+    set_crt_to_static(${ARG_NAME}-blit)
+    target_link_libraries(${ARG_NAME}-blit
+        PRIVATE
+            ride::options
+        PUBLIC
+            ${ARG_LIBRARIES}
+            ride::backend_blit
+            external::sdl2
+    )
+    set_target_properties(${ARG_NAME}-blit PROPERTIES FOLDER "Apps/SDL Blit/${FOLDER}")
 
     if(ride_wx)
         add_executable(${ARG_NAME}wx WIN32 MACOSX_BUNDLE ${src})

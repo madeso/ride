@@ -6,7 +6,7 @@
 
 #include "logo_256text_png.h"
 
-using namespace ride::backends::gl;
+
 using namespace ride;
 using namespace ride::api;
 
@@ -36,8 +36,5 @@ struct ImagesApp : App
     }
 };
 
-int main(int argc, char** argv)
-{
-    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<ImagesApp>(create_platform());});
-}
 
+IMPLMENT_APP(, std::make_unique<ImagesApp>(APP_NAMESPACE::create_platform()))

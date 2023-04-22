@@ -5,7 +5,6 @@
 #include "backend/main.h"
 #include "backend/log.h"
 
-using namespace ride::backends::gl;
 using namespace ride;
 using namespace ride::api;
 
@@ -62,4 +61,4 @@ struct SquaresApp : App
 };
 
 
-IMPLMENT_APP(, std::make_unique<SquaresApp>(create_platform()))
+IMPLMENT_APP(, std::make_unique<SquaresApp>(APP_NAMESPACE::create_platform()))

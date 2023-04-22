@@ -6,7 +6,6 @@
 #include "backend/log.h"
 #include "api/renderer.h"
 
-using namespace ride::backends::gl;
 using namespace ride;
 using namespace ride::api;
 
@@ -94,8 +93,5 @@ struct ScopeApp : App
     }
 };
 
-int main(int argc, char** argv)
-{
-    return run_main(argc, argv, [](const StartupArguments&) -> std::unique_ptr<App> { return std::make_unique<ScopeApp>(create_platform());});
-}
 
+IMPLMENT_APP(, std::make_unique<ScopeApp>(APP_NAMESPACE::create_platform()))
