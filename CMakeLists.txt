@@ -5,7 +5,9 @@ project(ride C CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/data/cmake/modules")
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# neither of theese work... remove fully>
 set(ride_wx OFF)
+set(ride_blit OFF)
 
 set(RIDE_VERSION_MAJOR "0")
 set(RIDE_VERSION_MINOR "0")
