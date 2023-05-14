@@ -3,7 +3,6 @@
 ## initial
 * verify correct coordinate spaces with tests and documentation
 * add unit tests for core
-* bring back blit rendering/support for multiple backends
 
 ## basic
 * vertical scrollbar needs to account for horizontal scrollbar when calculating view_size
@@ -32,6 +31,8 @@
 * import build result from a log
 * command to switch beteen header and source file
 * command to switch between test and implementation file
+* remove concept for backend
+* add support for gutter icons/buttons and extra line information (for compiler errors/warnings)
 
 ## first version
 * extenstion/mutator support (c++ plugins)
