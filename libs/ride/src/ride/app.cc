@@ -60,12 +60,6 @@ struct RideApp : api::App
     ViewFilesystem browser;
     KeyBind keybind;
 
-    void on_key_pressed(const api::Stroke& key) override
-    {
-        std::cout << "key pressed: " << to_string(key) << "\n";
-        keybind.run(key, &commands);
-    }
-
     void setup_view(View* view)
     {
         view->theme = &theme;
@@ -158,6 +152,12 @@ struct RideApp : api::App
         // temporary
         add_move_select("alt+left", "word-start");
         add_move_select("alt+right", "word-end");
+    }
+
+    void on_key_released(const api::Stroke& stroke) override
+    {
+        std::cout << "key pressed: " << to_string(stroke) << "\n";
+        this->keybind.run(stroke, &commands);
     }
 
     void draw(api::Renderer* cache) override
