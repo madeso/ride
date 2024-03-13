@@ -17,19 +17,19 @@ log_warning_implementation(fmt::string_view format, fmt::format_args args);
 template <typename S, typename... Args>
 void
 log_info(const S& format, Args&&... args) {
-    log_info_implementation(format, fmt::make_args_checked<Args...>(format, args...));
+    log_info_implementation(format, fmt::make_format_args(format, args...));
 }
 
 template <typename S, typename... Args>
 void
 log_error(const S& format, Args&&... args) {
-    log_error_implementation(format, fmt::make_args_checked<Args...>(format, args...));
+    log_error_implementation(format, fmt::make_format_args(format, args...));
 }
 
 template <typename S, typename... Args>
 void
 log_warning(const S& format, Args&&... args) {
-    log_warning_implementation(format, fmt::make_args_checked<Args...>(format, args...));
+    log_warning_implementation(format, fmt::make_format_args(format, args...));
 }
 
 

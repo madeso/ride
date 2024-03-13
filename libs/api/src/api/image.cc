@@ -53,8 +53,8 @@ void Image::set_color(int x, int y, const Color& c)
 
 Color Image::get_color(int x, int y) const
 {
-    XASSERT(x >= 0 && x < width, "{} {}"_format(x, width));
-    XASSERT(y >= 0 && y < height, "{} {}"_format(y, height));
+    XASSERT(x >= 0 && x < width, fmt::format("{} {}", x, width));
+    XASSERT(y >= 0 && y < height, fmt::format("{} {}", y, height));
     const auto index = (x + y * width) * 4;
     return Color::rgb
     (

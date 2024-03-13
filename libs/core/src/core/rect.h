@@ -170,13 +170,13 @@ struct Rect
 
     static Self from_ltrb(T left, T top, T right, T bottom)
     {
-        XASSERT(left <= right && top >= bottom, "{} <= {} && {} >= {}"_format(left, right, top, bottom));
+        XASSERT(left <= right && top >= bottom, fmt::format("{} <= {} && {} >= {}", left, right, top, bottom));
         return {left, bottom, right - left, top-bottom};
     }
 
     static Self from_lrtb(T left, T right, T top, T bottom)
     {
-        XASSERT(left <= right && top >= bottom, "{} <= {} && {} >= {}"_format(left, right, top, bottom));
+        XASSERT(left <= right && top >= bottom, fmt::format("{} <= {} && {} >= {}", left, right, top, bottom));
         return {left, bottom, right - left, top-bottom};
     }
 

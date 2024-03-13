@@ -104,7 +104,7 @@ void ViewDoc::draw_line(api::Renderer* cache, std::size_t line_index, const Dp&,
     font->draw
     (
         cache,
-        "{0: >{1}}"_format(line_index+1, gutter_char_length),
+        fmt::format("{0: >{1}}", line_index+1, gutter_char_length),
         app->Cpx(gutter_rect.x + theme->gutter_spacing_left),
         app->Cpx(y),
         theme->gutter_color
@@ -288,7 +288,7 @@ void ViewDoc::draw_body(api::Renderer* cache)
 
     // const auto line = absolute_pix_y_to_line(last_mouse.y);
     // const auto offset = absolute_pix_x_to_offset(line, last_mouse.x);
-    // draw_text(cache, font, "{} {}: {}"_format(line+1, offset, last_mouse), app->Cpx(view_rect.x + 10_dp), app->Cpx(view_rect.y + 10_dp), {0,0,0});
+    // draw_text(cache, font, fmt::format("{} {}: {}", line+1, offset, last_mouse), app->Cpx(view_rect.x + 10_dp), app->Cpx(view_rect.y + 10_dp), {0,0,0});
 }
 
 
