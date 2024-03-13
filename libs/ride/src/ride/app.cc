@@ -122,8 +122,8 @@ struct RideApp : api::App
         keybind.add(*api::stroke_from_string("ctrl+q"), {"core.quit"});
         keybind.add(*api::stroke_from_string("return"), {"doc.insert-newline"});
 
-        // keybind.add(*stroke_from_string("ctrl+up"),   {"scale.+"});
-        // keybind.add(*stroke_from_string("ctrl+down"), {"scale.-"});
+        keybind.add(*api::stroke_from_string("ctrl+j"),   {"scale.+"});
+        keybind.add(*api::stroke_from_string("ctrl+k"), {"scale.-"});
 
         auto add_move_select = [this](const std::string& stroke_name, const std::string& command)
         {
