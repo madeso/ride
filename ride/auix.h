@@ -9,6 +9,8 @@
 
 #include <wx/generic/statusbr.h>
 
+#if 0
+
 class AuiGenericTabArt : public wxAuiTabArt {
  public:
   AuiGenericTabArt();
@@ -16,7 +18,7 @@ class AuiGenericTabArt : public wxAuiTabArt {
 
   wxAuiTabArt* Clone() override;
   void SetFlags(unsigned int flags) override;
-  void SetSizingInfo(const wxSize& tabCtrlSize, size_t tabCount) override;
+  void SetSizingInfo(const wxSize& tabCtrlSize, size_t tabCount, wxWindow* wnd = nullptr) override;
 
   void SetNormalFont(const wxFont& font) override;
   void SetSelectedFont(const wxFont& font) override;
@@ -42,7 +44,7 @@ class AuiGenericTabArt : public wxAuiTabArt {
   int GetAdditionalBorderSpace(wxWindow* wnd) override;
 
   wxSize GetTabSize(wxDC& dc, wxWindow* wnd, const wxString& caption,
-                    const wxBitmap& bitmap, bool active, int closeButtonState,
+                    const wxBitmapBundle& bitmap, bool active, int closeButtonState,
                     int* xExtent) override;
 
   int ShowDropDown(wxWindow* wnd, const wxAuiNotebookPageArray& items,
@@ -108,5 +110,6 @@ class StatusBarGeneric : public wxStatusBarGeneric {
 
   void DrawFieldText(wxDC& dc, const wxRect& rect, int i, int textHeight);
 };
+#endif
 
 #endif  // RIDE_AUIX_H_

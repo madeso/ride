@@ -556,7 +556,7 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
 
   int sbstyle =
       wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
-  statusbar_ = new StatusBarGeneric(this, wxID_ANY, sbstyle);
+  statusbar_ = new wxStatusBarGeneric(this, wxID_ANY, sbstyle);
   wxFrame::SetStatusBar(reinterpret_cast<wxStatusBar*>(statusbar_));
   statusbar_->SetFieldsCount(STATUSBAR_MAXCOUNT);
 
@@ -653,16 +653,16 @@ void MainWindow::UpdateTheme() {
 
   // we have to create a new tab art each time as wx copies it around
   // like crazy and out new values are not set if we just change a member
-  auto tab_art = new AuiGenericTabArt();
+  auto tab_art = new wxAuiGenericTabArt();
   // tab_art->SetColour(wxColor(255, 0, 0, 0));
   // tab_art->SetActiveColour(wxColor(255, 0, 0));
-  tab_art->set_backgroundColor(C(c.tab_background()));
-  tab_art->set_activeTabBackground(C(c.tab_active_tab()));
-  tab_art->set_inactiveTabBackground(C(c.tab_inactive_tab()));
-  tab_art->set_activeBorderColor(C(c.tab_active_border()));
-  tab_art->set_inactiveBorderColor(C(c.tab_inactive_border()));
-  tab_art->set_activeTabText(C(c.tab_active_text()));
-  tab_art->set_inactiveTabText(C(c.tab_inactive_text()));
+  // tab_art->set_backgroundColor(C(c.tab_background()));
+  // tab_art->set_activeTabBackground(C(c.tab_active_tab()));
+  // tab_art->set_inactiveTabBackground(C(c.tab_inactive_tab()));
+  // tab_art->set_activeBorderColor(C(c.tab_active_border()));
+  // tab_art->set_inactiveBorderColor(C(c.tab_inactive_border()));
+  // tab_art->set_activeTabText(C(c.tab_active_text()));
+  // tab_art->set_inactiveTabText(C(c.tab_inactive_text()));
   notebook_->SetArtProvider(tab_art);
   notebook_->GetAuiManager().GetArtProvider()->SetColour(
       wxAUI_DOCKART_BORDER_COLOUR, C(c.tab_border()));
@@ -670,11 +670,11 @@ void MainWindow::UpdateTheme() {
       wxAUI_DOCKART_SASH_COLOUR, C(c.tab_sash()));
 
   // TODO(Gustav) Add style
-  statusbar_->set_highlight(C(c.statusbar_highlight()));
-  statusbar_->set_shadow(C(c.statusbar_shadow()));
+  // statusbar_->set_highlight(C(c.statusbar_highlight()));
+  // statusbar_->set_shadow(C(c.statusbar_shadow()));
   statusbar_->SetForegroundColour(C(c.statusbar_foreground()));
   statusbar_->SetBackgroundColour(C(c.statusbar_background()));
-  statusbar_->InitColours();
+  // statusbar_->InitColours();
 
   wxFrame::SetForegroundColour(wxColor(255, 0, 0));
   wxFrame::SetBackgroundColour(C(c.dock_background()));

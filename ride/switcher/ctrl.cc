@@ -214,7 +214,7 @@ bool Ctrl::Create(wxWindow* parent, wxWindowID id, const wxPoint& pos,
   wxControl::Create(parent, id, pos, size, style);
 
   CalculateLayout();
-  SetInitialBestSize(overall_size_);
+  SetInitialSize(overall_size_);
   SetMinClientSize(overall_size_);
 
   return true;

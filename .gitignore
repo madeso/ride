@@ -55,3 +55,6 @@ ride.kdev4
 dist/
 /install/
 /install-dist/
+
+.vscode/
+junk/

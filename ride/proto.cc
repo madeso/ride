@@ -3,6 +3,7 @@
 #include "ride/proto.h"
 
 #include <google/protobuf/text_format.h>
+#include <google/protobuf/json/json.h>
 
 #include <wx/utils.h>
 
@@ -14,7 +15,6 @@
 #include <string>
 
 #include "tinyxml2.h"  // NOLINT this is how we use tinyxml2
-#include "pbjson.hpp"  // NOLINT this is how we use tinyxml2
 
 #include "ride/stringutils.h"
 
@@ -93,10 +93,13 @@ wxString LoadProtoJson(google::protobuf::Message* message,
     return "file is not readable";
   }
 
-  std::string err;
-  int load_result = pbjson::json2pb_file(path.c_str().AsChar(), message, err);
-  if (load_result < 0) {
-    return err.c_str();
+  std::ifstream file(path.char_str());
+  if (!file) return "Failed to open file for reading";
+  std::string data((std::istreambuf_iterator<char>(file)),
+                   std::istreambuf_iterator<char>());
+  const auto load_result = google::protobuf::json::JsonStringToMessage(data, message);
+  if (load_result.ok() == false) {
+    return "Failed to parse json";
   }
 
   return "";
@@ -110,9 +113,15 @@ wxString SaveProtoJson(const google::protobuf::Message& t,
 
   wxString path = file_name.GetFullPath();
 
-  bool write_result = pbjson::pb2json_file(&t, path.c_str().AsChar(), true);
-  if (write_result == false) {
-    return "Unable to write to file";
+  std::string data;
+  const auto write_result = google::protobuf::json::MessageToJsonString(t, &data);
+  if (write_result.ok() == false) {
+    return "Failed to write proto";
+  }
+
+  {
+    std::ofstream output(path.char_str());
+    output << data;
   }
 
   return "";

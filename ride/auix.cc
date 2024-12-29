@@ -7,6 +7,8 @@
 #include <wx/aui/dockart.h>
 #include <wx/aui/auibook.h>
 
+#if 0
+
 namespace {
 
 // wxAuiBitmapFromBits() is a utility function that creates a
@@ -171,7 +173,7 @@ wxAuiTabArt* AuiGenericTabArt::Clone() { return new AuiGenericTabArt(*this); }
 void AuiGenericTabArt::SetFlags(unsigned int flags) { m_flags = flags; }
 
 void AuiGenericTabArt::SetSizingInfo(const wxSize& tab_ctrl_size,
-                                     size_t tab_count) {
+                                     size_t tab_count, wxWindow* wnd) {
   m_fixedTabWidth = 100;
 
   int tot_width = static_cast<int>(tab_ctrl_size.x - GetIndentSize() - 4);
@@ -489,7 +491,7 @@ int AuiGenericTabArt::GetAdditionalBorderSpace(wxWindow* wnd) { return 0; }
 
 wxSize AuiGenericTabArt::GetTabSize(wxDC& dc,  // NOLINT
                                     wxWindow* wnd, const wxString& caption,
-                                    const wxBitmap& bitmap, bool active,
+                                    const wxBitmapBundle& bitmap, bool active,
                                     int close_button_state, int* x_extent) {
   wxCoord measured_textx, measured_texty, tmp;
 
@@ -835,3 +837,5 @@ void StatusBarGeneric::DrawFieldText(wxDC& dc, const wxRect& rect, int i,
 
   if (ellmode == static_cast<wxEllipsizeMode>(-1)) dc.DestroyClippingRegion();
 }
+
+#endif

@@ -1,8 +1,6 @@
-set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/c_flag_overrides.cmake)
-set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cxx_flag_overrides.cmake)
+cmake_minimum_required(VERSION 3.10.0)
 
 project(ride)
-cmake_minimum_required(VERSION 3.0.2)
 set_property(GLOBAL PROPERTY USE_FOLDERS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -10,17 +8,10 @@ set(RIDE_VERSION_MAJOR "0")
 set(RIDE_VERSION_MINOR "0")
 set(RIDE_VERSION_REVISION "0")
 
-option(BUILD_USE_CLANG_FORMAT "Add clang format to the build" OFF)
-option(BUILD_USE_CPPLINT "Add cpplint to the build" OFF)
-option(BUILD_USE_DOXYGEN "Add doxygen to the build" OFF)
-option(BUILD_USE_CLANG_TIDY "Add clang-tidy to the build" OFF)
 set(BUILD_CLANG_TIDY_NAME "clang-tidy" CACHE STRING "The name of clang-tidy")
 option(BUILD_USE_DOXYGEN_GLOBAL "Add doxygen as a seperate build" OFF)
-option(BUILD_USE_CPPCHECK "run cppcheck on all source" OFF)
-option(BUILD_USE_INCLUDECHECK "run custom script to include order problems" OFF)
+
 option(BUILD_USE_ALL_COMPILER_WARNINGS "enable all compiler warnings" OFF)
-option(BUILD_USE_CLOC "Update code stat files" OFF)
-option(BUILD_USE_SIMIAN "Create simian project" OFF)
 option(RIDE_USE_WEBVIEW "Use the webview of wxWidgets" OFF)
 option(USE_WXWIDGETS_LEGACY_FINDTEXT "use the old wxwidgets findtext" ON)
 option(USE_CPP_AS_RUST "fallback to use c++ lexer instead of the rust lexer" OFF)
@@ -33,7 +24,7 @@ SET(RIDE_BUILD_REPO   "unknown-repo"   CACHE STRING "The repo")
 
 include(cpack-config.cmake)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(${UNIX})
@@ -86,10 +77,6 @@ if(${MSVC})
 	SET(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} /SAFESEH:NO")
 endif()
 
-if(BUILD_USE_DOXYGEN OR BUILD_USE_DOXYGEN_GLOBAL)
-    find_package(Doxygen REQUIRED)
-endif()
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.ini ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 if(BUILD_USE_DOXYGEN_GLOBAL)
 	add_custom_target(doxygen ALL
@@ -103,35 +90,3 @@ message(STATUS "Cmake cxx flags ${CMAKE_CXX_FLAGS}")
 include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/external/cpptoml/include)
 add_subdirectory(ride)
-
-IF(BUILD_USE_CLOC)
-	add_custom_target(codestat-everything ALL
-					   run-cloc.py ride CMakeLists.txt --out code-stat-everything.txt
-					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-					   COMMENT "Running cloc on everything" VERBATIM)
-
-	add_custom_target(codestat-everything-switcher ALL
-					   run-cloc.py --out code-stat-switcher.txt ride/switcher
-					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-					   COMMENT "Running cloc on switcher" VERBATIM)
-
-	# add_custom_target(codestat-switcher-only ALL
-	# 				   cloc --by-file ride/switcher/* --quiet --out code-stat-switcher.txt
-	# 				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-	# 				   COMMENT "Running cloc on switcher only" VERBATIM)
-ENDIF(BUILD_USE_CLOC)
-
-if(BUILD_USE_CLANG_TIDY)
-	add_custom_target(run-clang-tidy ALL
-				   ./call-clang-tidy.py -name ${BUILD_CLANG_TIDY_NAME} -build ${CMAKE_CURRENT_BINARY_DIR} ride/*.cc ride/*.h ride/switcher/*.cc ride/switcher/*.h
-				   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-				   COMMENT "Running clang-tidy" VERBATIM)
-endif(BUILD_USE_CLANG_TIDY)
-
-IF(BUILD_USE_SIMIAN)
-	# http://www.harukizaemon.com/simian/
-	add_custom_target(simian-everything ALL
-					   simian-2.4.0.exe -formatter=vs -language=cpp -threshold=4 ${CMAKE_SOURCE_DIR}/ride/*.cc
-					   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-					   COMMENT "Running simian" VERBATIM)
-ENDIF(BUILD_USE_SIMIAN)

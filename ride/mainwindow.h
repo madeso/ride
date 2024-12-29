@@ -209,7 +209,7 @@ class MainWindow : public wxFrame {
   wxMenuItem* menuItemViewBuild_;
   wxMenuItem* menuItemViewCompile_;
 
-  StatusBarGeneric* statusbar_;
+  wxStatusBarGeneric* statusbar_;
 
   Languages languages_;
   std::vector<OpenDocument> mru_;
