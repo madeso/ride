@@ -23,9 +23,6 @@ message(STATUS "repo: ${RIDE_BUILD_REPO}")
 
 include(cpack-config.cmake)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 if(${UNIX})
 	set(RIDE_OS_UNIX "1")
 endif()
@@ -34,5 +31,9 @@ if(${APPLE})
 	set(RIDE_OS_UNIX "0")
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR}/external/cpptoml/include)
+add_library(project_options INTERFACE)
+add_library(common::options ALIAS project_options)
+target_compile_features(project_options INTERFACE cxx_std_17)
+
+add_subdirectory(external)
 add_subdirectory(src)
