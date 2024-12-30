@@ -68,7 +68,7 @@ void SettingsThemesTab::OnThemeExportSelected(wxCommandEvent& event)
 	if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
 
 	const auto saved
-		= SaveProtoJson(common_->current_settings().themes[selected], saveFileDialog.GetPath());
+		= SaveProtoJson(&common_->current_settings().themes[selected], saveFileDialog.GetPath());
 	if (saved != "")
 	{
 		ShowError(this, "Failed to save theme: " + saved, "Failed to save");

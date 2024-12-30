@@ -62,7 +62,7 @@ bool SaveProto(const T& message, const wxFileName file, wxWindow* main, const wx
 {
 	wxFileName json = file;
 	json.SetExt("json");
-	const wxString jsonerr = SaveProtoJson(message, json);
+	const wxString jsonerr = SaveProtoJson(&message, json);
 	if (jsonerr != "")
 	{
 		ShowError(main, "Error while saving " + name + " as json: " + jsonerr, "Unable to save");

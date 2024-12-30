@@ -68,7 +68,7 @@ const wxString& Project::root_folder() const
 bool Project::Save()
 {
 	if (root_folder_.IsEmpty()) return false;
-	bool project_saved = SaveProtoJson(project_, GetProjectFile()) != "";
+	bool project_saved = SaveProtoJson(&project_, GetProjectFile()) != "";
 	bool user_saved = SaveUser();
 	return project_saved && user_saved;
 }
@@ -366,7 +366,7 @@ void Project::RunCmd(const wxString& cmd)
 
 bool Project::SaveUser()
 {
-	return SaveProtoJson(user_, GetUserFile()) != "";
+	return SaveProtoJson(&user_, GetUserFile()) != "";
 }
 
 int Project::GetSelectedBuildIndex()

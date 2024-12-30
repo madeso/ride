@@ -5,7 +5,7 @@ wxString LoadProtoJson(ride::MachineSettings* mess, const wxFileName& file)
 	return "not implemented";
 }
 
-wxString SaveProtoJson(const ride::MachineSettings& mess, const wxFileName& file)
+wxString SaveProtoJson(const ride::MachineSettings* mess, const wxFileName& file)
 {
 	return "not implemented";
 }
@@ -15,7 +15,7 @@ wxString LoadProtoJson(ride::Settings* mess, const wxFileName& file)
 	return "not implemented";
 }
 
-wxString SaveProtoJson(const ride::Settings& mess, const wxFileName& file)
+wxString SaveProtoJson(const ride::Settings* mess, const wxFileName& file)
 {
 	return "not implemented";
 }
@@ -25,7 +25,7 @@ wxString LoadProtoJson(ride::Session* mess, const wxFileName& file)
 	return "not implemented";
 }
 
-wxString SaveProtoJson(const ride::Session& mess, const wxFileName& file)
+wxString SaveProtoJson(const ride::Session* mess, const wxFileName& file)
 {
 	return "not implemented";
 }
@@ -35,7 +35,7 @@ wxString LoadProtoJson(ride::Project* mess, const wxFileName& file)
 	return "not implemented";
 }
 
-wxString SaveProtoJson(const ride::Project& mess, const wxFileName& file)
+wxString SaveProtoJson(const ride::Project* mess, const wxFileName& file)
 {
 	return "not implemented";
 }
@@ -45,7 +45,7 @@ wxString LoadProtoJson(ride::UserProject* mess, const wxFileName& file)
 	return "not implemented";
 }
 
-wxString SaveProtoJson(const ride::UserProject& mess, const wxFileName& file)
+wxString SaveProtoJson(const ride::UserProject* mess, const wxFileName& file)
 {
 	return "not implemented";
 }
@@ -55,7 +55,7 @@ wxString LoadProtoJson(ride::Theme* mess, const wxFileName& file)
 	return "not implemented";
 }
 
-wxString SaveProtoJson(const ride::Theme& mess, const wxFileName& file)
+wxString SaveProtoJson(const ride::Theme* mess, const wxFileName& file)
 {
 	return "not implemented";
 }
@@ -132,7 +132,7 @@ bool LoadProtoBinary(google::protobuf::Message* message,
   return false;
 }
 
-bool SaveProtoBinary(const google::protobuf::Message& message,
+bool SaveProtoBinary(const google::protobuf::Message* message,
                      const wxFileName& file_name) {
   if (false == VerifyFileForWriting(file_name)) return false;
   const wxString config_path = file_name.GetFullPath();
