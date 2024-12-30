@@ -53,8 +53,8 @@ void SettingsCommon::Revert()
 void SettingsCommon::Apply(wxWindow* main)
 {
 	main_window_->set_settings(current_settings_);
-	SaveSettings(main, current_settings_);
+	SaveSettings(main, &current_settings_);
 
 	main_window_->set_machine(current_machine_);
-	SaveSettings(main, current_machine_);
+	SaveSettings(main, &current_machine_);
 }

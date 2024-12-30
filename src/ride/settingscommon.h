@@ -21,8 +21,6 @@ public:
 	void Revert();
 	void Apply(wxWindow* main);
 
-private:
-
 	MainWindow* main_window_;
 	ride::Settings global_settings_;
 	ride::Settings current_settings_;

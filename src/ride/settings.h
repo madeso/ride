@@ -8,13 +8,13 @@
 class wxWindow;
 
 bool LoadSettings(wxWindow* main, ::ride::MachineSettings* settings);
-bool SaveSettings(wxWindow* main, const ::ride::MachineSettings& settings);
+bool SaveSettings(wxWindow* main, ::ride::MachineSettings* settings);
 
 bool LoadSettings(wxWindow* main, ::ride::Settings* settings);
-bool SaveSettings(wxWindow* main, const ::ride::Settings& settings);
+bool SaveSettings(wxWindow* main, ::ride::Settings* settings);
 
 bool LoadSession(wxWindow* main, ::ride::Session* session);
-bool SaveSession(wxWindow* main, const ::ride::Session& session);
+bool SaveSession(wxWindow* main, ::ride::Session* session);
 
 wxColor C(const ride::Color& c);
 ride::Color C(const wxColor& c);

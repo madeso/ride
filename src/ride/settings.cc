@@ -58,11 +58,11 @@ bool LoadProto(T* message, const wxFileName& file, wxWindow* main, const wxStrin
 }
 
 template<typename T>
-bool SaveProto(const T& message, const wxFileName file, wxWindow* main, const wxString& name)
+bool SaveProto(T* message, const wxFileName file, wxWindow* main, const wxString& name)
 {
 	wxFileName json = file;
 	json.SetExt("json");
-	const wxString jsonerr = SaveProtoJson(&message, json);
+	const wxString jsonerr = SaveProtoJson(message, json);
 	if (jsonerr != "")
 	{
 		ShowError(main, "Error while saving " + name + " as json: " + jsonerr, "Unable to save");
@@ -77,7 +77,7 @@ bool LoadSettings(wxWindow* main, ::ride::MachineSettings* settings)
 	return LoadProto(settings, GetMachineFile(), main, "machine settings");
 }
 
-bool SaveSettings(wxWindow* main, const ::ride::MachineSettings& settings)
+bool SaveSettings(wxWindow* main, ::ride::MachineSettings* settings)
 {
 	return SaveProto(settings, GetMachineFile(), main, "machine settings");
 }
@@ -89,7 +89,7 @@ bool LoadSettings(wxWindow* main, ::ride::Settings* settings)
 	return r;
 }
 
-bool SaveSettings(wxWindow* main, const ::ride::Settings& settings)
+bool SaveSettings(wxWindow* main, ::ride::Settings* settings)
 {
 	return SaveProto(settings, GetSettingsFile(), main, "settings");
 }
@@ -99,7 +99,7 @@ bool LoadSession(wxWindow* main, ::ride::Session* settings)
 	return LoadProto(settings, GetSessionFile(), main, "last session");
 }
 
-bool SaveSession(wxWindow* main, const ::ride::Session& settings)
+bool SaveSession(wxWindow* main, ::ride::Session* settings)
 {
 	return SaveProto(settings, GetSessionFile(), main, "current session");
 }

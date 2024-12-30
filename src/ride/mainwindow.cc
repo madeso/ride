@@ -1647,7 +1647,7 @@ void MainWindow::SaveSession()
 		session.files.emplace_back(f);
 	}
 
-	::SaveSession(this, session);
+	::SaveSession(this, &session);
 }
 
 void MainWindow::RestoreSession()
