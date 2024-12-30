@@ -10,43 +10,47 @@
 #include "item.h"
 #include "group.h"
 
-namespace switcher {
+namespace switcher
+{
 
 typedef std::pair<int, int> Index;
 #define SWITCHER_NOT_FOUND std::pair<int, int>(-1, -1)
 
-class ItemList {
- public:
-  ItemList();
+class ItemList
+{
+public:
 
-  Group& AddGroup(const Group& group, int* index = NULL);
+	ItemList();
 
-  // Find the index for the item associated with the current focus
-  Index GetIndexForFocus() const;
+	Group& AddGroup(const Group& group, int* index = NULL);
 
-  // Hit test, returning an index or -1
-  Index HitTest(const wxPoint& pt) const;
+	// Find the index for the item associated with the current focus
+	Index GetIndexForFocus() const;
 
-  const Item& GetItem(Index i) const;
-  Item& GetItem(Index i);
+	// Hit test, returning an index or -1
+	Index HitTest(const wxPoint& pt) const;
 
-  int GetItemCount() const;
+	const Item& GetItem(Index i) const;
+	Item& GetItem(Index i);
 
-  const Group& GetGroup(int i) const;
-  Group& GetGroup(int i);
-  int GetGroupCount() const;
+	int GetItemCount() const;
 
-  void set_column_count(int cols);
-  int column_count() const;
+	const Group& GetGroup(int i) const;
+	Group& GetGroup(int i);
+	int GetGroupCount() const;
 
-  void PaintItems(wxDC* dc, const Style& style, Index selection, wxWindow* win);
-  wxSize CalculateItemSize(wxDC* dc, const Style& style);
+	void set_column_count(int cols);
+	int column_count() const;
 
- protected:
-  std::vector<Group> items_;
-  int column_count_;
+	void PaintItems(wxDC* dc, const Style& style, Index selection, wxWindow* win);
+	wxSize CalculateItemSize(wxDC* dc, const Style& style);
+
+protected:
+
+	std::vector<Group> items_;
+	int column_count_;
 };
 
-}  // switcher
+}  //  namespace switcher
 
-#endif  // RIDE_SWITCHERITEMLIST_H_
+#endif	// RIDE_SWITCHERITEMLIST_H_

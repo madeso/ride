@@ -36,48 +36,68 @@ const int NumCards = 2 * PackSize;
 
 class FortyFrame;
 
-
 //----------------------------------------------------------------//
 // A class defining a pile of cards with a position on the screen //
 //----------------------------------------------------------------//
-class Pile {
+class Pile
+{
 public:
-  Pile(FortyFrame* frame, int x, int y, int dx = 0, int dy = 0);
-    virtual ~Pile(){};
 
-    // General functions
-    virtual void ResetPile() { m_topCard = -1; }
-    virtual void Redraw(wxDC& pDC);
+	Pile(FortyFrame* frame, int x, int y, int dx = 0, int dy = 0);
+	virtual ~Pile() {};
 
-    // Card query functions
-    virtual Card* GetCard(int x, int y); // Get pointer to card at x, y
-    Card* GetTopCard();                     // Get pointer to top card
-    virtual void GetCardPos(Card* card, int& x, int& y);
-    // Get position of a card
-    virtual void GetTopCardPos(int& x, int& y);
-    // Get position of the top card
-    int GetNumCards() { return m_topCard + 1; } // Number of cards in pile
-    bool Overlap(int x, int y); // does card at x,y overlap the pile?
-    int CalcDistance(int x, int y); // calculates the square of the distance
-                                    // of a card at (x,y) from the top of the pile
+	// General functions
+	virtual void ResetPile()
+	{
+		m_topCard = -1;
+	}
 
-    // Functions removing one or more cards from the top of a pile
-    virtual bool CanCardLeave(Card* card);
-    Card* RemoveTopCard();
-    virtual Card* RemoveTopCard(wxDC& pDC, int xOffset = 0, int yOffset = 0);
+	virtual void Redraw(wxDC& pDC);
 
-    // Functions to add a card to the top of a pile
-    virtual bool AcceptCard(Card*) { return false; }
-    virtual void AddCard(Card* card); // Add card to top of pile
-    virtual void AddCard(wxDC& pDC, Card* card); // Add card + redraw it
-        void SetPos(int x,int y) {m_x = x;m_y = y;};
+	// Card query functions
+	virtual Card* GetCard(int x, int y);  // Get pointer to card at x, y
+	Card* GetTopCard();	 // Get pointer to top card
+	virtual void GetCardPos(Card* card, int& x, int& y);
+	// Get position of a card
+	virtual void GetTopCardPos(int& x, int& y);
+
+	// Get position of the top card
+	int GetNumCards()
+	{
+		return m_topCard + 1;
+	}  // Number of cards in pile
+
+	bool Overlap(int x, int y);	 // does card at x,y overlap the pile?
+	int CalcDistance(int x, int y);	 // calculates the square of the distance
+		// of a card at (x,y) from the top of the pile
+
+	// Functions removing one or more cards from the top of a pile
+	virtual bool CanCardLeave(Card* card);
+	Card* RemoveTopCard();
+	virtual Card* RemoveTopCard(wxDC& pDC, int xOffset = 0, int yOffset = 0);
+
+	// Functions to add a card to the top of a pile
+	virtual bool AcceptCard(Card*)
+	{
+		return false;
+	}
+
+	virtual void AddCard(Card* card);  // Add card to top of pile
+	virtual void AddCard(wxDC& pDC, Card* card);  // Add card + redraw it
+
+	void SetPos(int x, int y)
+	{
+		m_x = x;
+		m_y = y;
+	};
 
 protected:
-  FortyFrame* frame_;
-    int   m_x, m_y; // Position of the pile on the screen
-    int   m_dx, m_dy; // Offset when drawing the pile
-    Card* m_cards[NumCards]; // Array of cards in this pile
-    int   m_topCard; // Array index of the top card
+
+	FortyFrame* frame_;
+	int m_x, m_y;  // Position of the pile on the screen
+	int m_dx, m_dy;	 // Offset when drawing the pile
+	Card* m_cards[NumCards];  // Array of cards in this pile
+	int m_topCard;	// Array index of the top card
 };
 
-#endif // _PILE_H_
+#endif	// _PILE_H_

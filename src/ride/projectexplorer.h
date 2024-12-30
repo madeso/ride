@@ -14,55 +14,60 @@ class MainWindow;
 
 typedef std::map<wxString, wxTreeItemId> StringIdMap;
 
-struct FilesAndFolders {
-  StringIdMap files;
-  StringIdMap folders;
+struct FilesAndFolders
+{
+	StringIdMap files;
+	StringIdMap folders;
 };
 
-class ProjectExplorer : public wxTreeCtrl {
- public:
-  explicit ProjectExplorer(MainWindow* main);
+class ProjectExplorer : public wxTreeCtrl
+{
+public:
 
-  void UpdateColors();
+	explicit ProjectExplorer(MainWindow* main);
 
-  void SetFolder(const wxString& folder);
-  void UpdateFolderStructure();
-  void HighlightOpenFile(const wxString& file_path);
+	void UpdateColors();
 
-  wxString GetPathOfSelected() const;
-  wxString GetRelativePathOfSelected() const;
+	void SetFolder(const wxString& folder);
+	void UpdateFolderStructure();
+	void HighlightOpenFile(const wxString& file_path);
 
-  std::vector<wxString> GetFiles();
+	wxString GetPathOfSelected() const;
+	wxString GetRelativePathOfSelected() const;
 
- private:
-  void OnDoubleClick(wxMouseEvent& event);
-  void OnContextMenu(wxContextMenuEvent& event);
+	std::vector<wxString> GetFiles();
 
-  void OnCreateNewFolder(wxCommandEvent& event);
-  void OnCreateNewFile(wxCommandEvent& event);
-  void OnFolderCollapse(wxCommandEvent& event);
-  void OnFolderExpand(wxCommandEvent& event);
-  void OnFolderCollapseAllChildren(wxCommandEvent& event);
-  void OnFolderExpandAllChildren(wxCommandEvent& event);
-  void OnCollapseAll(wxCommandEvent& event);
-  void OnExpandAll(wxCommandEvent& event);
-  void OnOpenFile(wxCommandEvent& event);
-  void OnDeleteFileOrFolder(wxCommandEvent& event);
-  void OnRename(wxCommandEvent& event);
-  void OnOpenExplorer(wxCommandEvent& event);
+private:
 
-  void OnEditLabelStart(wxTreeEvent& event);
-  void OnEditLabelEnd(wxTreeEvent& event);
+	void OnDoubleClick(wxMouseEvent& event);
+	void OnContextMenu(wxContextMenuEvent& event);
 
-  void BindEvents();
+	void OnCreateNewFolder(wxCommandEvent& event);
+	void OnCreateNewFile(wxCommandEvent& event);
+	void OnFolderCollapse(wxCommandEvent& event);
+	void OnFolderExpand(wxCommandEvent& event);
+	void OnFolderCollapseAllChildren(wxCommandEvent& event);
+	void OnFolderExpandAllChildren(wxCommandEvent& event);
+	void OnCollapseAll(wxCommandEvent& event);
+	void OnExpandAll(wxCommandEvent& event);
+	void OnOpenFile(wxCommandEvent& event);
+	void OnDeleteFileOrFolder(wxCommandEvent& event);
+	void OnRename(wxCommandEvent& event);
+	void OnOpenExplorer(wxCommandEvent& event);
 
- private:
-  wxImageList images_;
-  MainWindow* main_;
-  wxString folder_;
-  wxTreeItemId last_highlighted_item_;
+	void OnEditLabelStart(wxTreeEvent& event);
+	void OnEditLabelEnd(wxTreeEvent& event);
 
-  FilesAndFolders files_;
+	void BindEvents();
+
+private:
+
+	wxImageList images_;
+	MainWindow* main_;
+	wxString folder_;
+	wxTreeItemId last_highlighted_item_;
+
+	FilesAndFolders files_;
 };
 
-#endif  // RIDE_PROJECTEXPLORER_H_
+#endif	// RIDE_PROJECTEXPLORER_H_

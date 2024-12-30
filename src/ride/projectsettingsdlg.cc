@@ -24,428 +24,500 @@
 #include "ride/runconfigurationsdlg.h"
 #include "ride/variableeditor.h"
 
-struct FeatureFunctions {
-  static const wxString ADD_TEXT;
-  static const wxString EDIT_TEXT;
+struct FeatureFunctions
+{
+	static const wxString ADD_TEXT;
+	static const wxString EDIT_TEXT;
 
-  static int Size(ride::BuildSetting* bs) { return bs->features.size(); }
+	static int Size(ride::BuildSetting* bs)
+	{
+		return bs->features.size();
+	}
 
-  static wxString GetDisplayString(ride::BuildSetting* bs, int i) {
-    return bs->features[i].c_str();
-  }
+	static wxString GetDisplayString(ride::BuildSetting* bs, int i)
+	{
+		return bs->features[i].c_str();
+	}
 
-  static void SetDisplayString(ride::BuildSetting* bs, int i,
-                               const wxString& new_string) {
-    bs->features[i] = new_string.c_str().AsChar();
-  }
+	static void SetDisplayString(ride::BuildSetting* bs, int i, const wxString& new_string)
+	{
+		bs->features[i] = new_string.c_str().AsChar();
+	}
 
-  static void Add(ride::BuildSetting* bs, const wxString& name) {
-    bs->features.push_back(name.c_str().AsChar());
-  }
+	static void Add(ride::BuildSetting* bs, const wxString& name)
+	{
+		bs->features.push_back(name.c_str().AsChar());
+	}
 
-  static void Remove(ride::BuildSetting* bs, int i) {
-    bs->features.erase(bs->features.begin() + i);
-  }
+	static void Remove(ride::BuildSetting* bs, int i)
+	{
+		bs->features.erase(bs->features.begin() + i);
+	}
 
-  static void Swap(ride::BuildSetting* bs, int selection, int next_index) {
-    std::swap(bs->features[selection],
-              bs->features[next_index]);
-  }
+	static void Swap(ride::BuildSetting* bs, int selection, int next_index)
+	{
+		std::swap(bs->features[selection], bs->features[next_index]);
+	}
 };
 
 const wxString FeatureFunctions::ADD_TEXT = "Name of the feature to add";
-const wxString FeatureFunctions::EDIT_TEXT =
-    "Please specify the new feature name";
+const wxString FeatureFunctions::EDIT_TEXT = "Please specify the new feature name";
 
-class ProjectSettingsDlg : public ui::ProjectSettings {
- public:
-  ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
-                     Project* project);
+class ProjectSettingsDlg : public ui::ProjectSettings
+{
+public:
 
- protected:
-  void OnApply(wxCommandEvent& event) override;
-  void OnCancel(wxCommandEvent& event) override;
-  void OnOk(wxCommandEvent& event) override;
+	ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project);
 
- protected:
-  bool Apply();
-  void AllToGui(bool togui);
-  void CargoToGui(bool togui);
-  void EditorToGui(bool togui);
-  void BuildToGui(bool togui);
-  void RunToGui(bool togui);
+protected:
 
-  ride::BuildSetting* GetSelectedBuildSetting();
-  ride::RunSetting* GetSelectedRunSetting();
+	void OnApply(wxCommandEvent& event) override;
+	void OnCancel(wxCommandEvent& event) override;
+	void OnOk(wxCommandEvent& event) override;
 
- protected:
-  void OnlyAllowNumberChars(wxKeyEvent& event) override;
-  void OnTabWdithChanged(wxCommandEvent& event) override;
-  void OnEditorUseTabsClicked(wxCommandEvent& event) override;
+protected:
 
-  void OnBuildConfiguration(wxCommandEvent& event) override;
-  void OnBuildConfigurationModify(wxCommandEvent& event) override;
-  void OnBuildCheckbox(wxCommandEvent& event) override;
-  void OnBuildText(wxCommandEvent& event) override;
-  void OnBuildTargetHelp(wxCommandEvent& event) override;
-  void OnBuildCustomArgHelp(wxCommandEvent& event) override;
+	bool Apply();
+	void AllToGui(bool togui);
+	void CargoToGui(bool togui);
+	void EditorToGui(bool togui);
+	void BuildToGui(bool togui);
+	void RunToGui(bool togui);
 
-  void OnBuildFeatureAdd(wxCommandEvent& event) override;
-  void OnBuildFeatureEdit(wxCommandEvent& event) override;
-  void OnBuildFeatureRemove(wxCommandEvent& event) override;
-  void OnBuildFeatureUp(wxCommandEvent& event) override;
-  void OnBuildFeatureDown(wxCommandEvent& event) override;
+	ride::BuildSetting* GetSelectedBuildSetting();
+	ride::RunSetting* GetSelectedRunSetting();
 
-  void OnRunConfiguration(wxCommandEvent& event) override;
-  void OnRunConfigurationModify(wxCommandEvent& event) override;
-  void OnRunText(wxCommandEvent& event) override;
-  void OnRunApplication(wxCommandEvent& event) override;
-  void OnRunArguments(wxCommandEvent& event) override;
-  void OnRunFolder(wxCommandEvent& event) override;
-  void OnCmdBeforeLaunch(wxCommandEvent& event) override;
-  void OnRunCheck(wxCommandEvent& event) override;
+protected:
 
- protected:
-  Cargo cargo_;
+	void OnlyAllowNumberChars(wxKeyEvent& event) override;
+	void OnTabWdithChanged(wxCommandEvent& event) override;
+	void OnEditorUseTabsClicked(wxCommandEvent& event) override;
 
- private:
-  MainWindow* main_window_;
-  Project* project_;
-  ride::Project project_backup_;
-  ride::UserProject user_backup_;
-  bool allow_editor_to_gui_;
-  bool allow_build_to_gui_;
-  bool allow_run_to_gui_;
-  GuiList<ride::BuildSetting, FeatureFunctions> feature_list_;
+	void OnBuildConfiguration(wxCommandEvent& event) override;
+	void OnBuildConfigurationModify(wxCommandEvent& event) override;
+	void OnBuildCheckbox(wxCommandEvent& event) override;
+	void OnBuildText(wxCommandEvent& event) override;
+	void OnBuildTargetHelp(wxCommandEvent& event) override;
+	void OnBuildCustomArgHelp(wxCommandEvent& event) override;
+
+	void OnBuildFeatureAdd(wxCommandEvent& event) override;
+	void OnBuildFeatureEdit(wxCommandEvent& event) override;
+	void OnBuildFeatureRemove(wxCommandEvent& event) override;
+	void OnBuildFeatureUp(wxCommandEvent& event) override;
+	void OnBuildFeatureDown(wxCommandEvent& event) override;
+
+	void OnRunConfiguration(wxCommandEvent& event) override;
+	void OnRunConfigurationModify(wxCommandEvent& event) override;
+	void OnRunText(wxCommandEvent& event) override;
+	void OnRunApplication(wxCommandEvent& event) override;
+	void OnRunArguments(wxCommandEvent& event) override;
+	void OnRunFolder(wxCommandEvent& event) override;
+	void OnCmdBeforeLaunch(wxCommandEvent& event) override;
+	void OnRunCheck(wxCommandEvent& event) override;
+
+protected:
+
+	Cargo cargo_;
+
+private:
+
+	MainWindow* main_window_;
+	Project* project_;
+	ride::Project project_backup_;
+	ride::UserProject user_backup_;
+	bool allow_editor_to_gui_;
+	bool allow_build_to_gui_;
+	bool allow_run_to_gui_;
+	GuiList<ride::BuildSetting, FeatureFunctions> feature_list_;
 };
 
-void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
-                          Project* project) {
-  ProjectSettingsDlg dlg(parent, mainwindow, project);
-  dlg.ShowModal();
+void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project)
+{
+	ProjectSettingsDlg dlg(parent, mainwindow, project);
+	dlg.ShowModal();
 }
 
-bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo,
-                   wxStaticText* error_display) {
-  if (cargo_file.IsEmpty()) {
-    error_display->SetLabelText("No project loaded");
-    return false;
-  }
-  const auto result = cargo->Load(cargo_file);
-  if (result.IsOk()) {
-    error_display->SetLabelText("");
-    return true;
-  }
+bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo, wxStaticText* error_display)
+{
+	if (cargo_file.IsEmpty())
+	{
+		error_display->SetLabelText("No project loaded");
+		return false;
+	}
+	const auto result = cargo->Load(cargo_file);
+	if (result.IsOk())
+	{
+		error_display->SetLabelText("");
+		return true;
+	}
 
-  error_display->SetLabelText(result.message());
-  return false;
+	error_display->SetLabelText(result.message());
+	return false;
 }
 
-ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
-                                       Project* project)
-    : ::ui::ProjectSettings(parent, wxID_ANY),
-      main_window_(mainwindow),
-      project_(project),
-      project_backup_(project->project()),
-      user_backup_(project->user()),
-      allow_editor_to_gui_(true),
-      allow_build_to_gui_(true),
-      allow_run_to_gui_(true),
-      feature_list_(uiBuildFeatures, this) {
-  LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
+ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project)
+	: ::ui::ProjectSettings(parent, wxID_ANY)
+	, main_window_(mainwindow)
+	, project_(project)
+	, project_backup_(project->project())
+	, user_backup_(project->user())
+	, allow_editor_to_gui_(true)
+	, allow_build_to_gui_(true)
+	, allow_run_to_gui_(true)
+	, feature_list_(uiBuildFeatures, this)
+{
+	LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
 
-  AllToGui(true);
+	AllToGui(true);
 
-  // disable all cargo related gui as we can't save toml files yet
-  EnableDisable(false) << uiCargoName << uiCargoVersion;
-  // we can't select or scroll in disabled listboxes
-  // so lets keep them enabled since we can't really do anything in them
-  // << uiCargoAuthors
-  // << uiCargoDependencies
+	// disable all cargo related gui as we can't save toml files yet
+	EnableDisable(false) << uiCargoName << uiCargoVersion;
+	// we can't select or scroll in disabled listboxes
+	// so lets keep them enabled since we can't really do anything in them
+	// << uiCargoAuthors
+	// << uiCargoDependencies
 
-  SetImageAndRemoveText(uiBuildConfigurationTargetHelp, wxART_HELP);
-  SetImageAndRemoveText(uiBuildConfigurationCustomArgsHelp, wxART_TIP);
+	SetImageAndRemoveText(uiBuildConfigurationTargetHelp, wxART_HELP);
+	SetImageAndRemoveText(uiBuildConfigurationCustomArgsHelp, wxART_TIP);
 
-  feature_list_.Setup(uiBuildFeatureAdd, uiBuildFeatureRemove,
-                      uiBuildFeatureEdit, uiBuildFeatureUp, uiBuildFeatureDown);
+	feature_list_.Setup(
+		uiBuildFeatureAdd,
+		uiBuildFeatureRemove,
+		uiBuildFeatureEdit,
+		uiBuildFeatureUp,
+		uiBuildFeatureDown
+	);
 }
 
-void ProjectSettingsDlg::OnApply(wxCommandEvent& event) { Apply(); }
-
-void ProjectSettingsDlg::OnCancel(wxCommandEvent& event) {
-  project_->set_project(project_backup_);
-  project_->set_user(user_backup_);
-  EditorToGui(true);
-  EndModal(wxCANCEL);
+void ProjectSettingsDlg::OnApply(wxCommandEvent& event)
+{
+	Apply();
 }
 
-void ProjectSettingsDlg::OnOk(wxCommandEvent& event) {
-  if (Apply()) {
-    EndModal(wxOK);
-  }
+void ProjectSettingsDlg::OnCancel(wxCommandEvent& event)
+{
+	project_->set_project(project_backup_);
+	project_->set_user(user_backup_);
+	EditorToGui(true);
+	EndModal(wxCANCEL);
 }
 
-void ProjectSettingsDlg::AllToGui(bool togui) {
-  CargoToGui(togui);
-  EditorToGui(togui);
-  BuildToGui(togui);
-  RunToGui(togui);
+void ProjectSettingsDlg::OnOk(wxCommandEvent& event)
+{
+	if (Apply())
+	{
+		EndModal(wxOK);
+	}
 }
 
-//////////////////////////////////////////////////////////////////////////
-
-bool ProjectSettingsDlg::Apply() {
-  AllToGui(false);
-
-  project_backup_ = project_->project();
-  user_backup_ = project_->user();
-
-  project_->SetMainStatusbarText();
-  return project_->Save();
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-void ProjectSettingsDlg::CargoToGui(bool togui) {
-  DIALOG_DATA(cargo_, name_, uiCargoName, _Str);
-  DIALOG_DATA(cargo_, version_, uiCargoVersion, _Str);
-  DIALOG_DATA(cargo_, authors_, uiCargoAuthors, _Content);
-  DIALOG_DATA(cargo_, dependencies_, uiCargoDependencies, _Content);
-  DIALOG_DATA(cargo_, features_, uiCargoFeatures, _Content);
+void ProjectSettingsDlg::AllToGui(bool togui)
+{
+	CargoToGui(togui);
+	EditorToGui(togui);
+	BuildToGui(togui);
+	RunToGui(togui);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-void ProjectSettingsDlg::EditorToGui(bool togui) {
-  if (allow_editor_to_gui_ == false) return;
-  allow_editor_to_gui_ = false;
-  ride::Project& project = *project_->project_ptr();
-  DIALOG_DATA(project, tabWidth, uiEditorTabWidth, _I32);
-  DIALOG_DATA(project, useTabs, uiEditorUseTabs, );
+bool ProjectSettingsDlg::Apply()
+{
+	AllToGui(false);
 
-  if (togui == false) {
-    main_window_->ProjectSettingsHasChanged();
-    main_window_->ProjectSettingsHasChanged();
-  }
-  allow_editor_to_gui_ = true;
-}
+	project_backup_ = project_->project();
+	user_backup_ = project_->user();
 
-void ProjectSettingsDlg::OnlyAllowNumberChars(wxKeyEvent& event) {
-  ::OnlyAllowNumberChars(event);
-}
-void ProjectSettingsDlg::OnTabWdithChanged(wxCommandEvent& event) {
-  EditorToGui(false);
-}
-void ProjectSettingsDlg::OnEditorUseTabsClicked(wxCommandEvent& event) {
-  EditorToGui(false);
+	project_->SetMainStatusbarText();
+	return project_->Save();
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-void ProjectSettingsDlg::OnBuildConfiguration(wxCommandEvent& event) {
-  BuildToGui(true);
-}
-
-void ProjectSettingsDlg::OnBuildConfigurationModify(wxCommandEvent& event) {
-  const bool need_update = DoBuildConfigurationsDlg(
-      this, main_window_, project_, uiBuildConfiguration->GetSelection());
-  if (need_update == false) return;
-  uiBuildConfiguration->Clear();
-  BuildToGui(true);
-}
-
-void ProjectSettingsDlg::OnBuildCheckbox(wxCommandEvent& event) {
-  BuildToGui(false);
-}
-
-void ProjectSettingsDlg::OnBuildText(wxCommandEvent& event) {
-  BuildToGui(false);
-}
-
-void ProjectSettingsDlg::OnBuildTargetHelp(wxCommandEvent& event) {
-  ShowInfo(this, "this is a build target info", "info");
-}
-
-void ProjectSettingsDlg::OnBuildCustomArgHelp(wxCommandEvent& event) {
-  ShowInfo(this, "this is a custom argument info", "info");
-}
-
-void ProjectSettingsDlg::BuildToGui(bool togui) {
-  if (togui && static_cast<wxItemContainer*>(uiBuildConfiguration)->IsEmpty()) {
-    for (int i = 0; i < project_->project().build_settings.size(); ++i) {
-      ride::BuildSetting* bs = &project_->project_ptr()->build_settings[i];
-      uiBuildConfiguration->Append(bs->name.c_str(), reinterpret_cast<void*>(bs));
-    }
-    uiBuildConfiguration->Select(project_->user().build_setting);
-  }
-
-  ride::BuildSetting* setting_ptr = GetSelectedBuildSetting();
-  EnableDisable(setting_ptr != nullptr)
-      << uiBuildConfigurationRelease << uiBuildConfigurationDefaultFeatures
-      << uiBuildConfigurationVerbose << uiBuildConfigurationTarget
-      << uiBuildConfigurationTargetHelp << uiBuildConfigurationCustomArgs
-      << uiBuildConfigurationCustomArgsHelp << uiBuildFeatures
-      << uiBuildFeatureAdd << uiBuildFeatureRemove << uiBuildFeatureUp
-      << uiBuildFeatureDown << uiBuildFeatureEdit;
-
-  if (setting_ptr == nullptr) return;
-
-  ride::BuildSetting& setting = *setting_ptr;
-
-  DIALOG_DATA(setting, release, uiBuildConfigurationRelease, );
-  DIALOG_DATA(setting, default_features, uiBuildConfigurationDefaultFeatures, );
-  DIALOG_DATA(setting, verbose, uiBuildConfigurationVerbose, );
-
-  DIALOG_DATA(setting, target, uiBuildConfigurationTarget, _Str);
-  DIALOG_DATA(setting, custom_arguments, uiBuildConfigurationCustomArgs, _Str);
-
-  feature_list_.ToGui(&setting, togui);
-
-  if (togui == false) {
-    // since this is for display only, use the default shorter path
-    uiBuildCommandLine->SetValue(
-        BuildCommandLine(ride::MachineSettings(), setting));
-  }
-}
-
-ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting() {
-  const int selection = uiBuildConfiguration->GetSelection();
-  const bool found = selection != wxNOT_FOUND;
-
-  if (!found) return nullptr;
-  void* d = uiBuildConfiguration->GetClientData(selection);
-  ride::BuildSetting* setting = reinterpret_cast<ride::BuildSetting*>(d);
-
-  return setting;
-}
-
-void ProjectSettingsDlg::OnBuildFeatureAdd(wxCommandEvent& event) {
-  if (false == feature_list_.Add(GetSelectedBuildSetting())) {
-    return;
-  }
-  BuildToGui(true);
-}
-
-void ProjectSettingsDlg::OnBuildFeatureEdit(wxCommandEvent& event) {
-  if (false == feature_list_.Edit(GetSelectedBuildSetting())) {
-    return;
-  }
-  BuildToGui(true);
-}
-
-void ProjectSettingsDlg::OnBuildFeatureRemove(wxCommandEvent& event) {
-  if (false == feature_list_.Remove(GetSelectedBuildSetting())) {
-    return;
-  }
-
-  BuildToGui(true);
-}
-
-void ProjectSettingsDlg::OnBuildFeatureUp(wxCommandEvent& event) {
-  if (false == feature_list_.Up(GetSelectedBuildSetting())) {
-    return;
-  }
-  BuildToGui(true);
-}
-
-void ProjectSettingsDlg::OnBuildFeatureDown(wxCommandEvent& event) {
-  if (false == feature_list_.Down(GetSelectedBuildSetting())) {
-    return;
-  }
-  BuildToGui(true);
+void ProjectSettingsDlg::CargoToGui(bool togui)
+{
+	DIALOG_DATA(cargo_, name_, uiCargoName, _Str);
+	DIALOG_DATA(cargo_, version_, uiCargoVersion, _Str);
+	DIALOG_DATA(cargo_, authors_, uiCargoAuthors, _Content);
+	DIALOG_DATA(cargo_, dependencies_, uiCargoDependencies, _Content);
+	DIALOG_DATA(cargo_, features_, uiCargoFeatures, _Content);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-ride::RunSetting* ProjectSettingsDlg::GetSelectedRunSetting() {
-  const int selection = uiRunConfigurations->GetSelection();
-  const bool found = selection != wxNOT_FOUND;
+void ProjectSettingsDlg::EditorToGui(bool togui)
+{
+	if (allow_editor_to_gui_ == false) return;
+	allow_editor_to_gui_ = false;
+	ride::Project& project = *project_->project_ptr();
+	DIALOG_DATA(project, tabWidth, uiEditorTabWidth, _I32);
+	DIALOG_DATA(project, useTabs, uiEditorUseTabs, );
 
-  if (!found) return nullptr;
-  void* d = uiRunConfigurations->GetClientData(selection);
-  ride::RunSetting* setting = reinterpret_cast<ride::RunSetting*>(d);
-
-  return setting;
+	if (togui == false)
+	{
+		main_window_->ProjectSettingsHasChanged();
+		main_window_->ProjectSettingsHasChanged();
+	}
+	allow_editor_to_gui_ = true;
 }
 
-void ProjectSettingsDlg::RunToGui(bool togui) {
-  if (allow_run_to_gui_ == false) return;
-  allow_run_to_gui_ = false;
-
-  if (togui && static_cast<wxItemContainer*>(uiRunConfigurations)->IsEmpty()) {
-    for (int i = 0; i < project_->user().run.size(); ++i) {
-      ride::RunSetting* rs = &project_->user_ptr()->run[i];
-      uiRunConfigurations->Append(rs->name.c_str(), reinterpret_cast<void*>(rs));
-    }
-    uiRunConfigurations->Select(project_->user().run_setting);
-  }
-
-  ride::RunSetting* setting_ptr = GetSelectedRunSetting();
-  EnableDisable(setting_ptr != nullptr)
-      << uiRunApplication << uiRunApplicationCmd << uiRunArguments
-      << uiRunArgumentsCmd << uiRunFolder << uiRunFolderCmd << uiCmdBeforeLaunch
-      << uiCmdBeforeLaunchCmd << uiRunWaitForExit;
-
-  if (setting_ptr == nullptr) {
-    allow_run_to_gui_ = true;
-    return;
-  }
-
-  ride::RunSetting& setting = *setting_ptr;
-
-  DIALOG_DATA(setting, application, uiRunApplication, _Str);
-  DIALOG_DATA(setting, arguments, uiRunArguments, _Str);
-  DIALOG_DATA(setting, folder, uiRunFolder, _Str);
-  DIALOG_DATA(setting, cmd_before_launch, uiCmdBeforeLaunch, _Str);
-  DIALOG_DATA(setting, wait_for_exit, uiRunWaitForExit, );
-
-  allow_run_to_gui_ = true;
+void ProjectSettingsDlg::OnlyAllowNumberChars(wxKeyEvent& event)
+{
+	::OnlyAllowNumberChars(event);
 }
 
-void ProjectSettingsDlg::OnRunConfiguration(wxCommandEvent& event) {
-  RunToGui(true);
+void ProjectSettingsDlg::OnTabWdithChanged(wxCommandEvent& event)
+{
+	EditorToGui(false);
 }
 
-void ProjectSettingsDlg::OnRunConfigurationModify(wxCommandEvent& event) {
-  const bool need_update = DoRunConfigurationsDlg(
-      this, main_window_, project_, uiRunConfigurations->GetSelection());
-  if (need_update == false) return;
-  uiRunConfigurations->Clear();
-  RunToGui(true);
+void ProjectSettingsDlg::OnEditorUseTabsClicked(wxCommandEvent& event)
+{
+	EditorToGui(false);
 }
 
-void ProjectSettingsDlg::OnRunText(wxCommandEvent& event) { RunToGui(false); }
+//////////////////////////////////////////////////////////////////////////
 
-void ProjectSettingsDlg::OnRunApplication(wxCommandEvent& event) {
-  ride::RunSetting* r = GetSelectedRunSetting();
-  std::string s = r->application;
-  if (false == DoVariableEditor(this, &s)) return;
-  r->application = s;
-  RunToGui(true);
+void ProjectSettingsDlg::OnBuildConfiguration(wxCommandEvent& event)
+{
+	BuildToGui(true);
 }
 
-void ProjectSettingsDlg::OnRunArguments(wxCommandEvent& event) {
-  ride::RunSetting* r = GetSelectedRunSetting();
-  std::string s = r->arguments;
-  if (false == DoVariableEditor(this, &s)) return;
-  r->arguments = s;
-  RunToGui(true);
+void ProjectSettingsDlg::OnBuildConfigurationModify(wxCommandEvent& event)
+{
+	const bool need_update = DoBuildConfigurationsDlg(
+		this, main_window_, project_, uiBuildConfiguration->GetSelection()
+	);
+	if (need_update == false) return;
+	uiBuildConfiguration->Clear();
+	BuildToGui(true);
 }
 
-void ProjectSettingsDlg::OnRunFolder(wxCommandEvent& event) {
-  ride::RunSetting* r = GetSelectedRunSetting();
-  std::string s = r->folder;
-  if (false == DoVariableEditor(this, &s)) return;
-  r->folder = s;
-  RunToGui(true);
+void ProjectSettingsDlg::OnBuildCheckbox(wxCommandEvent& event)
+{
+	BuildToGui(false);
 }
 
-void ProjectSettingsDlg::OnCmdBeforeLaunch(wxCommandEvent& event) {
-  ride::RunSetting* r = GetSelectedRunSetting();
-  std::string s = r->cmd_before_launch;
-  if (false == DoVariableEditor(this, &s)) return;
-  r->cmd_before_launch = s;
-  RunToGui(true);
+void ProjectSettingsDlg::OnBuildText(wxCommandEvent& event)
+{
+	BuildToGui(false);
 }
 
-void ProjectSettingsDlg::OnRunCheck(wxCommandEvent& event) { RunToGui(false); }
+void ProjectSettingsDlg::OnBuildTargetHelp(wxCommandEvent& event)
+{
+	ShowInfo(this, "this is a build target info", "info");
+}
+
+void ProjectSettingsDlg::OnBuildCustomArgHelp(wxCommandEvent& event)
+{
+	ShowInfo(this, "this is a custom argument info", "info");
+}
+
+void ProjectSettingsDlg::BuildToGui(bool togui)
+{
+	if (togui && static_cast<wxItemContainer*>(uiBuildConfiguration)->IsEmpty())
+	{
+		for (int i = 0; i < project_->project().build_settings.size(); ++i)
+		{
+			ride::BuildSetting* bs = &project_->project_ptr()->build_settings[i];
+			uiBuildConfiguration->Append(bs->name.c_str(), reinterpret_cast<void*>(bs));
+		}
+		uiBuildConfiguration->Select(project_->user().build_setting);
+	}
+
+	ride::BuildSetting* setting_ptr = GetSelectedBuildSetting();
+	EnableDisable(setting_ptr != nullptr)
+		<< uiBuildConfigurationRelease << uiBuildConfigurationDefaultFeatures
+		<< uiBuildConfigurationVerbose << uiBuildConfigurationTarget
+		<< uiBuildConfigurationTargetHelp << uiBuildConfigurationCustomArgs
+		<< uiBuildConfigurationCustomArgsHelp << uiBuildFeatures << uiBuildFeatureAdd
+		<< uiBuildFeatureRemove << uiBuildFeatureUp << uiBuildFeatureDown << uiBuildFeatureEdit;
+
+	if (setting_ptr == nullptr) return;
+
+	ride::BuildSetting& setting = *setting_ptr;
+
+	DIALOG_DATA(setting, release, uiBuildConfigurationRelease, );
+	DIALOG_DATA(setting, default_features, uiBuildConfigurationDefaultFeatures, );
+	DIALOG_DATA(setting, verbose, uiBuildConfigurationVerbose, );
+
+	DIALOG_DATA(setting, target, uiBuildConfigurationTarget, _Str);
+	DIALOG_DATA(setting, custom_arguments, uiBuildConfigurationCustomArgs, _Str);
+
+	feature_list_.ToGui(&setting, togui);
+
+	if (togui == false)
+	{
+		// since this is for display only, use the default shorter path
+		uiBuildCommandLine->SetValue(BuildCommandLine(ride::MachineSettings(), setting));
+	}
+}
+
+ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting()
+{
+	const int selection = uiBuildConfiguration->GetSelection();
+	const bool found = selection != wxNOT_FOUND;
+
+	if (! found) return nullptr;
+	void* d = uiBuildConfiguration->GetClientData(selection);
+	ride::BuildSetting* setting = reinterpret_cast<ride::BuildSetting*>(d);
+
+	return setting;
+}
+
+void ProjectSettingsDlg::OnBuildFeatureAdd(wxCommandEvent& event)
+{
+	if (false == feature_list_.Add(GetSelectedBuildSetting()))
+	{
+		return;
+	}
+	BuildToGui(true);
+}
+
+void ProjectSettingsDlg::OnBuildFeatureEdit(wxCommandEvent& event)
+{
+	if (false == feature_list_.Edit(GetSelectedBuildSetting()))
+	{
+		return;
+	}
+	BuildToGui(true);
+}
+
+void ProjectSettingsDlg::OnBuildFeatureRemove(wxCommandEvent& event)
+{
+	if (false == feature_list_.Remove(GetSelectedBuildSetting()))
+	{
+		return;
+	}
+
+	BuildToGui(true);
+}
+
+void ProjectSettingsDlg::OnBuildFeatureUp(wxCommandEvent& event)
+{
+	if (false == feature_list_.Up(GetSelectedBuildSetting()))
+	{
+		return;
+	}
+	BuildToGui(true);
+}
+
+void ProjectSettingsDlg::OnBuildFeatureDown(wxCommandEvent& event)
+{
+	if (false == feature_list_.Down(GetSelectedBuildSetting()))
+	{
+		return;
+	}
+	BuildToGui(true);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+ride::RunSetting* ProjectSettingsDlg::GetSelectedRunSetting()
+{
+	const int selection = uiRunConfigurations->GetSelection();
+	const bool found = selection != wxNOT_FOUND;
+
+	if (! found) return nullptr;
+	void* d = uiRunConfigurations->GetClientData(selection);
+	ride::RunSetting* setting = reinterpret_cast<ride::RunSetting*>(d);
+
+	return setting;
+}
+
+void ProjectSettingsDlg::RunToGui(bool togui)
+{
+	if (allow_run_to_gui_ == false) return;
+	allow_run_to_gui_ = false;
+
+	if (togui && static_cast<wxItemContainer*>(uiRunConfigurations)->IsEmpty())
+	{
+		for (int i = 0; i < project_->user().run.size(); ++i)
+		{
+			ride::RunSetting* rs = &project_->user_ptr()->run[i];
+			uiRunConfigurations->Append(rs->name.c_str(), reinterpret_cast<void*>(rs));
+		}
+		uiRunConfigurations->Select(project_->user().run_setting);
+	}
+
+	ride::RunSetting* setting_ptr = GetSelectedRunSetting();
+	EnableDisable(setting_ptr != nullptr)
+		<< uiRunApplication << uiRunApplicationCmd << uiRunArguments << uiRunArgumentsCmd
+		<< uiRunFolder << uiRunFolderCmd << uiCmdBeforeLaunch << uiCmdBeforeLaunchCmd
+		<< uiRunWaitForExit;
+
+	if (setting_ptr == nullptr)
+	{
+		allow_run_to_gui_ = true;
+		return;
+	}
+
+	ride::RunSetting& setting = *setting_ptr;
+
+	DIALOG_DATA(setting, application, uiRunApplication, _Str);
+	DIALOG_DATA(setting, arguments, uiRunArguments, _Str);
+	DIALOG_DATA(setting, folder, uiRunFolder, _Str);
+	DIALOG_DATA(setting, cmd_before_launch, uiCmdBeforeLaunch, _Str);
+	DIALOG_DATA(setting, wait_for_exit, uiRunWaitForExit, );
+
+	allow_run_to_gui_ = true;
+}
+
+void ProjectSettingsDlg::OnRunConfiguration(wxCommandEvent& event)
+{
+	RunToGui(true);
+}
+
+void ProjectSettingsDlg::OnRunConfigurationModify(wxCommandEvent& event)
+{
+	const bool need_update
+		= DoRunConfigurationsDlg(this, main_window_, project_, uiRunConfigurations->GetSelection());
+	if (need_update == false) return;
+	uiRunConfigurations->Clear();
+	RunToGui(true);
+}
+
+void ProjectSettingsDlg::OnRunText(wxCommandEvent& event)
+{
+	RunToGui(false);
+}
+
+void ProjectSettingsDlg::OnRunApplication(wxCommandEvent& event)
+{
+	ride::RunSetting* r = GetSelectedRunSetting();
+	std::string s = r->application;
+	if (false == DoVariableEditor(this, &s)) return;
+	r->application = s;
+	RunToGui(true);
+}
+
+void ProjectSettingsDlg::OnRunArguments(wxCommandEvent& event)
+{
+	ride::RunSetting* r = GetSelectedRunSetting();
+	std::string s = r->arguments;
+	if (false == DoVariableEditor(this, &s)) return;
+	r->arguments = s;
+	RunToGui(true);
+}
+
+void ProjectSettingsDlg::OnRunFolder(wxCommandEvent& event)
+{
+	ride::RunSetting* r = GetSelectedRunSetting();
+	std::string s = r->folder;
+	if (false == DoVariableEditor(this, &s)) return;
+	r->folder = s;
+	RunToGui(true);
+}
+
+void ProjectSettingsDlg::OnCmdBeforeLaunch(wxCommandEvent& event)
+{
+	ride::RunSetting* r = GetSelectedRunSetting();
+	std::string s = r->cmd_before_launch;
+	if (false == DoVariableEditor(this, &s)) return;
+	r->cmd_before_launch = s;
+	RunToGui(true);
+}
+
+void ProjectSettingsDlg::OnRunCheck(wxCommandEvent& event)
+{
+	RunToGui(false);
+}

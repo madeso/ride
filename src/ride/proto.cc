@@ -4,84 +4,80 @@
 
 wxString LoadProtoJson(ride::MachineSettings* mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
 
 wxString SaveProtoJson(const ride::MachineSettings& mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
-
 
 wxString LoadProtoJson(ride::Settings* mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
 
 wxString SaveProtoJson(const ride::Settings& mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
-
 
 wxString LoadProtoJson(ride::Session* mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
 
 wxString SaveProtoJson(const ride::Session& mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
 
 wxString LoadProtoJson(ride::Project* mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
 
 wxString SaveProtoJson(const ride::Project& mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
-
 
 wxString LoadProtoJson(ride::UserProject* mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
 
 wxString SaveProtoJson(const ride::UserProject& mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
-
 
 wxString LoadProtoJson(ride::Theme* mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
 
 wxString SaveProtoJson(const ride::Theme& mess, const wxFileName& file)
 {
-  return "not implemented";
+	return "not implemented";
 }
 
 
 #if 0
 
 
-#include <wx/utils.h>
+	#include <wx/utils.h>
 
-#include <streambuf>
-#include <cassert>
-#include <fstream>  // NOLINT this is how we use fstrean
-#include <sstream>  // NOLINT this is how we use sstream
+	#include <streambuf>
+	#include <cassert>
+	#include <fstream>	// NOLINT this is how we use fstrean
+	#include <sstream>	// NOLINT this is how we use sstream
 
-#include <string>
+	#include <string>
 
-#include "tinyxml2.h"  // NOLINT this is how we use tinyxml2
+	#include "tinyxml2.h"  // NOLINT this is how we use tinyxml2
 
-#include "ride/stringutils.h"
+	#include "ride/stringutils.h"
 
 bool LoadProtoText(google::protobuf::Message* t, const wxFileName& file_name) {
   assert(t);

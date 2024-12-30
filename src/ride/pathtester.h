@@ -6,25 +6,28 @@
 #include <ride/wx.h>
 #include "ride/settings.h"
 
-class PathTester {
- public:
-  explicit PathTester(const ride::MachineSettings& machine);
+class PathTester
+{
+public:
 
-  const wxString cargo() const;
-  const wxString rustc() const;
-  const wxString racer() const;
-  const wxString protoc() const;
+	explicit PathTester(const ride::MachineSettings& machine);
 
-  bool CargoIsValid() const;
-  bool RustcIsValid() const;
-  bool RacerIsValid() const;
-  bool ProtocIsValid() const;
+	const wxString cargo() const;
+	const wxString rustc() const;
+	const wxString racer() const;
+	const wxString protoc() const;
 
- private:
-  wxString cargo_;
-  wxString rustc_;
-  wxString racer_;
-  wxString protoc_;
+	bool CargoIsValid() const;
+	bool RustcIsValid() const;
+	bool RacerIsValid() const;
+	bool ProtocIsValid() const;
+
+private:
+
+	wxString cargo_;
+	wxString rustc_;
+	wxString racer_;
+	wxString protoc_;
 };
 
-#endif  // RIDE_PATHTESTER_H_
+#endif	// RIDE_PATHTESTER_H_

@@ -5,23 +5,27 @@
 
 #include <ride/wx.h>
 
-class CreateNewFileDlgHandler {
- public:
-  CreateNewFileDlgHandler(wxWindow* parent, const wxString& project_folder,
-                          const wxString& fodler_hint);
+class CreateNewFileDlgHandler
+{
+public:
 
-  bool ShowModal();
+	CreateNewFileDlgHandler(
+		wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint
+	);
 
-  const wxString file_path() const;
-  const wxString template_source() const;
+	bool ShowModal();
 
- private:
-  wxWindow* parent_;
-  const wxString& project_folder_;
-  const wxString& fodler_hint_;
+	const wxString file_path() const;
+	const wxString template_source() const;
 
-  wxString file_path_;
-  wxString template_source_;
+private:
+
+	wxWindow* parent_;
+	const wxString& project_folder_;
+	const wxString& fodler_hint_;
+
+	wxString file_path_;
+	wxString template_source_;
 };
 
-#endif  // RIDE_CREATENEWFILEDLG_H_
+#endif	// RIDE_CREATENEWFILEDLG_H_

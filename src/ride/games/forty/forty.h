@@ -17,51 +17,62 @@ const wxBrush BackgroundBrush();
 const wxColour TextColour();
 
 class FortyCanvas;
-class FortyFrame: public wxPanel
+
+class FortyFrame : public wxPanel
 {
 public:
-    FortyFrame(wxWindow* frame);
-    virtual ~FortyFrame(){};
 
-    void SetupFortyMenu(wxMenuBar* menuBar);
+	FortyFrame(wxWindow* frame);
+	virtual ~FortyFrame() {};
 
-    // Menu callbacks
-    void NewGame(wxCommandEvent& event);
-    void Exit(wxCommandEvent& event);
-    void About(wxCommandEvent& event);
-    void Help(wxCommandEvent& event);
-    void Undo(wxCommandEvent& event);
-    void Redo(wxCommandEvent& event);
-    void ToggleRightButtonUndo(wxCommandEvent& event);
-    void ToggleHelpingHand(wxCommandEvent& event);
-    void ToggleCardSize(wxCommandEvent& event);
+	void SetupFortyMenu(wxMenuBar* menuBar);
 
-    FortyCanvas* GetCanvas() { return m_canvas; }
+	// Menu callbacks
+	void NewGame(wxCommandEvent& event);
+	void Exit(wxCommandEvent& event);
+	void About(wxCommandEvent& event);
+	void Help(wxCommandEvent& event);
+	void Undo(wxCommandEvent& event);
+	void Redo(wxCommandEvent& event);
+	void ToggleRightButtonUndo(wxCommandEvent& event);
+	void ToggleHelpingHand(wxCommandEvent& event);
+	void ToggleCardSize(wxCommandEvent& event);
 
-    void SetupSize(bool large);
+	FortyCanvas* GetCanvas()
+	{
+		return m_canvas;
+	}
+
+	void SetupSize(bool large);
 
 private:
-  wxWindow* parent_;
-    wxMenuBar* m_menuBar;
-    FortyCanvas* m_canvas;
+
+	wxWindow* parent_;
+	wxMenuBar* m_menuBar;
+	FortyCanvas* m_canvas;
 };
 
 //----------------------------------------------------------------------------
 // stAboutDialog
 //----------------------------------------------------------------------------
 
-class FortyAboutDialog: public wxDialog
+class FortyAboutDialog : public wxDialog
 {
 public:
-    // constructors and destructors
-    FortyAboutDialog( wxWindow *parent, wxWindowID id, const wxString &title,
-        const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        long style = wxDEFAULT_DIALOG_STYLE );
 
-    bool AddControls(wxWindow* parent);
+	// constructors and destructors
+	FortyAboutDialog(
+		wxWindow* parent,
+		wxWindowID id,
+		const wxString& title,
+		const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize,
+		long style = wxDEFAULT_DIALOG_STYLE
+	);
+
+	bool AddControls(wxWindow* parent);
 };
 
-#define ID_ABOUT_HTML_WINDOW    1000
+#define ID_ABOUT_HTML_WINDOW 1000
 
 #endif

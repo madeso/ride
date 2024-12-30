@@ -5,44 +5,66 @@
 
 #include <ride/wx.h>
 
-class CompilerMessage {
- public:
-  enum Type { TYPE_UNKNOWN, TYPE_NOTE, TYPE_WARNING, TYPE_ERROR, TYPE_RELATED };
+class CompilerMessage
+{
+public:
 
-  enum Source { SOURCE_RUSTC, SOURCE_PROTOC };
+	enum Type
+	{
+		TYPE_UNKNOWN,
+		TYPE_NOTE,
+		TYPE_WARNING,
+		TYPE_ERROR,
+		TYPE_RELATED
+	};
 
-  CompilerMessage();
-  CompilerMessage(const wxString& file, int start_line, int start_index,
-                  int end_line, int end_index, Type type, wxString message);
-  static bool Parse(const Source source, const wxString& root,
-                    const wxString& text, CompilerMessage* output);
+	enum Source
+	{
+		SOURCE_RUSTC,
+		SOURCE_PROTOC
+	};
 
-  wxString ToStringRepresentation(const Source source);
+	CompilerMessage();
+	CompilerMessage(
+		const wxString& file,
+		int start_line,
+		int start_index,
+		int end_line,
+		int end_index,
+		Type type,
+		wxString message
+	);
+	static bool Parse(
+		const Source source, const wxString& root, const wxString& text, CompilerMessage* output
+	);
 
-  const wxString& file() const;
+	wxString ToStringRepresentation(const Source source);
 
-  // 1 based
-  int start_line() const;
+	const wxString& file() const;
 
-  // 1 based
-  int start_index() const;
+	// 1 based
+	int start_line() const;
 
-  // 1 based
-  int end_line() const;
+	// 1 based
+	int start_index() const;
 
-  // 1 based
-  int end_index() const;
-  Type type() const;
-  const wxString& message() const;
+	// 1 based
+	int end_line() const;
 
- private:
-  wxString file_;
-  int start_line_;
-  int start_index_;
-  int end_line_;
-  int end_index_;
-  Type type_;
-  wxString message_;
+	// 1 based
+	int end_index() const;
+	Type type() const;
+	const wxString& message() const;
+
+private:
+
+	wxString file_;
+	int start_line_;
+	int start_index_;
+	int end_line_;
+	int end_index_;
+	Type type_;
+	wxString message_;
 };
 
-#endif  // RIDE_COMPILERMESSAGE_H_
+#endif	// RIDE_COMPILERMESSAGE_H_

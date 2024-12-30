@@ -20,4 +20,4 @@
 
 #define VER_COMPANYDOMAIN_STR "madeso.me"
 
-#endif  // RIDE_VERSION_H_
+#endif	// RIDE_VERSION_H_

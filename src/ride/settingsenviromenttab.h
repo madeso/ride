@@ -9,25 +9,29 @@
 
 class MainWindow;
 
-class SettingsEnviromentTab : public ui::SettingsEnviromentPanel {
- public:
-  SettingsEnviromentTab(wxWindow* parent, SettingsCommon* common);
+class SettingsEnviromentTab : public ui::SettingsEnviromentPanel
+{
+public:
 
-  void SettingsToGui(bool togui);
+	SettingsEnviromentTab(wxWindow* parent, SettingsCommon* common);
 
- protected:
-  void OnCargo(wxCommandEvent& event);
-  void OnRustc(wxCommandEvent& event);
-  void OnRacer(wxCommandEvent& event);
-  void OnProtoc(wxCommandEvent& event);
-  void OnRustSrc(wxCommandEvent& event);
-  void OnRefresh(wxCommandEvent& event);
+	void SettingsToGui(bool togui);
 
-  void OnText(wxCommandEvent& event);
+protected:
 
- private:
-  SettingsCommon* common_;
-  bool update_settings_;
+	void OnCargo(wxCommandEvent& event);
+	void OnRustc(wxCommandEvent& event);
+	void OnRacer(wxCommandEvent& event);
+	void OnProtoc(wxCommandEvent& event);
+	void OnRustSrc(wxCommandEvent& event);
+	void OnRefresh(wxCommandEvent& event);
+
+	void OnText(wxCommandEvent& event);
+
+private:
+
+	SettingsCommon* common_;
+	bool update_settings_;
 };
 
-#endif  // RIDE_SETTINGSENVIROMENTTAB_H_
+#endif	// RIDE_SETTINGSENVIROMENTTAB_H_

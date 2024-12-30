@@ -11,60 +11,65 @@
 
 class wxStyledTextCtrl;
 
-class Language {
- public:
-  // internal
-  // todo: move to protected/private
-  bool MatchPattern(const wxString& file) const;
+class Language
+{
+public:
 
-  const wxString& language_name() const;
+	// internal
+	// todo: move to protected/private
+	bool MatchPattern(const wxString& file) const;
 
-  // internal
-  // todo: move to protected/private
-  void AddExtension(const wxString& ext);
+	const wxString& language_name() const;
 
-  bool IsKeyword(const wxString word) const;
+	// internal
+	// todo: move to protected/private
+	void AddExtension(const wxString& ext);
 
-  void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
-  wxString GetFilePattern() const;
+	bool IsKeyword(const wxString word) const;
 
-  const std::vector<wxString>& GetKeywords() const;
+	void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
+	wxString GetFilePattern() const;
 
- public:
-  void SetProperty(wxStyledTextCtrl* text, const wxString& name,
-                   const wxString& value);
+	const std::vector<wxString>& GetKeywords() const;
 
- protected:
-  Language(const wxString& name, int style);
-  virtual void DoStyleDocument(wxStyledTextCtrl* text,
-                               const ride::Settings& settings) = 0;
-  void SetKeys(wxStyledTextCtrl* text, unsigned int id,
-               const wxString& keywords);
+public:
 
-  std::vector<wxString> keywords_;
+	void SetProperty(wxStyledTextCtrl* text, const wxString& name, const wxString& value);
 
- private:
-  wxString language_name_;
-  int lexer_style_;
-  std::vector<wxString> file_patterns_;
+protected:
+
+	Language(const wxString& name, int style);
+	virtual void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) = 0;
+	void SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords);
+
+	std::vector<wxString> keywords_;
+
+private:
+
+	wxString language_name_;
+	int lexer_style_;
+	std::vector<wxString> file_patterns_;
 #ifdef _DEBUG
-  std::set<wxString> used_properties_;
-  std::set<unsigned int> used_keywords_;
+	std::set<wxString> used_properties_;
+	std::set<unsigned int> used_keywords_;
 #endif
 };
 
-class Languages {
- public:
-  Languages();
-  ~Languages();
+class Languages
+{
+public:
 
-  Language* GetNullLanguage();
-  Language* DetermineLanguage(const wxString& filepath);
-  wxString GetFilePattern();
+	Languages();
+	~Languages();
 
- private:
-  struct LanguagesPimpl;
-  std::unique_ptr<LanguagesPimpl> pimpl_;
+	Language* GetNullLanguage();
+	Language* DetermineLanguage(const wxString& filepath);
+	wxString GetFilePattern();
+
+private:
+
+	struct LanguagesPimpl;
+	std::unique_ptr<LanguagesPimpl> pimpl_;
 };
 
-#endif  // RIDE_LANGUAGE_H_
+#endif	// RIDE_LANGUAGE_H_

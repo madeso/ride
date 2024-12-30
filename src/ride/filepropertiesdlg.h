@@ -8,4 +8,4 @@ class FileEdit;
 
 void ShowFilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl);
 
-#endif  // RIDE_FILEPROPERTIESDLG_H_
+#endif	// RIDE_FILEPROPERTIESDLG_H_

@@ -10,43 +10,56 @@
 #include "itemlist.h"
 #include "ctrl.h"
 
-namespace switcher {
+namespace switcher
+{
 
-class Dialog : public wxDialog {
- public:
-  Dialog(const ItemList& items, Index index, int group, bool forward,
-         const Style& sstyle, wxWindow* parent, wxWindowID id = -1,
-         const wxString& title = _("Pane Switcher"),
-         const wxPoint& pos = wxDefaultPosition,
-         const wxSize& size = wxDefaultSize,
-         long style  // NOLINT
-         = wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxBORDER_SIMPLE);
+class Dialog : public wxDialog
+{
+public:
 
-  void OnCloseWindow(wxCloseEvent& event);
-  void OnActivate(wxActivateEvent& event);
-  void OnSelectItem(wxCommandEvent& event);
+	Dialog(
+		const ItemList& items,
+		Index index,
+		int group,
+		bool forward,
+		const Style& sstyle,
+		wxWindow* parent,
+		wxWindowID id = -1,
+		const wxString& title = _("Pane Switcher"),
+		const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize,
+		long style	// NOLINT
+		= wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxBORDER_SIMPLE
+	);
 
-  // Get the selected item
-  Index GetSelection() const;
+	void OnCloseWindow(wxCloseEvent& event);
+	void OnActivate(wxActivateEvent& event);
+	void OnSelectItem(wxCommandEvent& event);
 
-  void ShowDescription(const Item& item);
+	// Get the selected item
+	Index GetSelection() const;
 
- private:
-  void UpdateDescription();
+	void ShowDescription(const Item& item);
 
- private:
-  Dialog();
+private:
 
- private:
-  wxStaticText* title_ctrl_;
-  wxStaticText* description_ctrl_;
-  Ctrl* list_ctrl_;
-  wxStaticText* path_ctrl_;
-  bool is_closing_;
-  long switcher_border_style_;  // NOLINT
-  Style style_;
+	void UpdateDescription();
+
+private:
+
+	Dialog();
+
+private:
+
+	wxStaticText* title_ctrl_;
+	wxStaticText* description_ctrl_;
+	Ctrl* list_ctrl_;
+	wxStaticText* path_ctrl_;
+	bool is_closing_;
+	long switcher_border_style_;  // NOLINT
+	Style style_;
 };
 
-}  // switcher
+}  //  namespace switcher
 
-#endif  // RIDE_SWITCHERDLG_H_
+#endif	// RIDE_SWITCHERDLG_H_

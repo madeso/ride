@@ -44,4 +44,4 @@
 #include "icons/icon_ac_module.xpm"
 #include "icons/icon_ac_fnarg.xpm"
 
-#endif  // RIDE_RIDE_RESOURCES_ICON_H
+#endif	// RIDE_RIDE_RESOURCES_ICON_H

@@ -4,77 +4,81 @@
 #define RIDE_PROJECT_H_
 
 #include <ride/wx.h>
-#include "settings.proto.h"  // NOLINT this is how we include it
+#include "settings.proto.h"	 // NOLINT this is how we include it
 #include "ride/runner.h"
 
 class MainWindow;
 
-class Project : public MultiRunner {
- public:
-  Project(MainWindow* output, const wxString& root_folder);
-  ~Project();
-  const wxString& root_folder() const;
+class Project : public MultiRunner
+{
+public:
 
-  bool Save();
+	Project(MainWindow* output, const wxString& root_folder);
+	~Project();
+	const wxString& root_folder() const;
 
-  int tabwidth() const;
-  bool usetabs() const;
+	bool Save();
 
-  void set_tabwidth(int tabwidth);
-  void set_usetabs(bool usetabs);
+	int tabwidth() const;
+	bool usetabs() const;
 
-  const ride::Project& project() const;
-  ride::Project* project_ptr();
-  void set_project(const ride::Project& project);
+	void set_tabwidth(int tabwidth);
+	void set_usetabs(bool usetabs);
 
-  const ride::UserProject& user() const;
-  ride::UserProject* user_ptr();
-  void set_user(const ride::UserProject& user);
+	const ride::Project& project() const;
+	ride::Project* project_ptr();
+	void set_project(const ride::Project& project);
 
-  const wxString GetCargoFile() const;
-  const wxString GetProjectFile() const;
-  const wxString GetUserFile() const;
+	const ride::UserProject& user() const;
+	ride::UserProject* user_ptr();
+	void set_user(const ride::UserProject& user);
 
-  bool IsPartOfProject(const wxString& filename);
+	const wxString GetCargoFile() const;
+	const wxString GetProjectFile() const;
+	const wxString GetUserFile() const;
 
-  void Settings();
-  void SelectActiveBuild();
-  void SelectActiveRun();
-  void SetMainStatusbarText();
+	bool IsPartOfProject(const wxString& filename);
 
-  void Build(bool origin_main = true);
-  void Clean(bool origin_main = true);
-  void Rebuild(bool origin_main = true);
-  void Doc(bool origin_main = true);
-  void Run(bool origin_main = true);
-  void Test(bool origin_main = true);
-  void Bench(bool origin_main = true);
-  void Update(bool origin_main = true);
+	void Settings();
+	void SelectActiveBuild();
+	void SelectActiveRun();
+	void SetMainStatusbarText();
 
- public:
-  void Append(const wxString& str);
+	void Build(bool origin_main = true);
+	void Clean(bool origin_main = true);
+	void Rebuild(bool origin_main = true);
+	void Doc(bool origin_main = true);
+	void Run(bool origin_main = true);
+	void Test(bool origin_main = true);
+	void Bench(bool origin_main = true);
+	void Update(bool origin_main = true);
 
- private:
-  void SaveAllFiles();
-  void CleanOutput();
-  void RunCmd(const wxString& cmd);
+public:
 
-  bool SaveUser();
-  int GetSelectedBuildIndex();
-  const ride::BuildSetting& GetCurrentBuildSetting();
+	void Append(const wxString& str);
 
-  int GetSelectedRunIndex();
-  const ride::RunSetting& GetCurrentRunSetting();
+private:
 
- private:
-  MainWindow* main_;
-  wxString root_folder_;
+	void SaveAllFiles();
+	void CleanOutput();
+	void RunCmd(const wxString& cmd);
 
-  ride::Project project_;
-  ride::UserProject user_;
+	bool SaveUser();
+	int GetSelectedBuildIndex();
+	const ride::BuildSetting& GetCurrentBuildSetting();
+
+	int GetSelectedRunIndex();
+	const ride::RunSetting& GetCurrentRunSetting();
+
+private:
+
+	MainWindow* main_;
+	wxString root_folder_;
+
+	ride::Project project_;
+	ride::UserProject user_;
 };
 
-wxString BuildCommandLine(const ride::MachineSettings& machine,
-                          const ride::BuildSetting& build);
+wxString BuildCommandLine(const ride::MachineSettings& machine, const ride::BuildSetting& build);
 
-#endif  // RIDE_PROJECT_H_
+#endif	// RIDE_PROJECT_H_

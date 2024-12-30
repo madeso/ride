@@ -12,62 +12,72 @@
 class MultiRunner;
 
 /// a command to run
-class Command {
- public:
-  Command(const wxString& root, const wxString& cmd,
-          const std::map<wxString, wxString>& env);
+class Command
+{
+public:
 
-  wxString root;
-  wxString cmd;
-  std::map<wxString, wxString> enviroment;
+	Command(const wxString& root, const wxString& cmd, const std::map<wxString, wxString>& env);
+
+	wxString root;
+	wxString cmd;
+	std::map<wxString, wxString> enviroment;
 };
 
 /// only runs a single command
-class SingleRunner {
- public:
-  SingleRunner();
-  ~SingleRunner();
+class SingleRunner
+{
+public:
 
-  SingleRunner(const SingleRunner&) = delete;
-  bool operator=(const SingleRunner&) = delete;
+	SingleRunner();
+	~SingleRunner();
 
-  bool IsRunning() const;
+	SingleRunner(const SingleRunner&) = delete;
+	bool operator=(const SingleRunner&) = delete;
 
- protected:
-  bool RunCmd(const Command& cmd);
-  virtual void Append(const wxString& str) = 0;
-  virtual void Completed();
-  int GetExitCode();
+	bool IsRunning() const;
 
- public:
-  struct Pimpl;
+protected:
 
- private:
-  friend struct Pimpl;
-  std::unique_ptr<Pimpl> pimpl;
+	bool RunCmd(const Command& cmd);
+	virtual void Append(const wxString& str) = 0;
+	virtual void Completed();
+	int GetExitCode();
+
+public:
+
+	struct Pimpl;
+
+private:
+
+	friend struct Pimpl;
+	std::unique_ptr<Pimpl> pimpl;
 };
 
 /// Run multiple commands by queuing them
-class MultiRunner {
- public:
-  MultiRunner();
-  ~MultiRunner();
+class MultiRunner
+{
+public:
 
-  MultiRunner(const MultiRunner&) = delete;
-  bool operator=(const MultiRunner&) = delete;
+	MultiRunner();
+	~MultiRunner();
 
- protected:
-  bool RunCmd(const Command& cmd);
-  bool IsRunning() const;
-  virtual void Append(const wxString& str) = 0;
+	MultiRunner(const MultiRunner&) = delete;
+	bool operator=(const MultiRunner&) = delete;
 
- private:
-  class Runner;
-  friend class Runner;
-  bool RunNext(int last_exit_code);
-  std::shared_ptr<Runner> runner_;
-  std::shared_ptr<Runner> last_runner_;
-  std::vector<Command> commands_;
+protected:
+
+	bool RunCmd(const Command& cmd);
+	bool IsRunning() const;
+	virtual void Append(const wxString& str) = 0;
+
+private:
+
+	class Runner;
+	friend class Runner;
+	bool RunNext(int last_exit_code);
+	std::shared_ptr<Runner> runner_;
+	std::shared_ptr<Runner> last_runner_;
+	std::vector<Command> commands_;
 };
 
-#endif  // RIDE_RUNNER_H_
+#endif	// RIDE_RUNNER_H_

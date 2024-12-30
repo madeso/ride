@@ -8,4 +8,4 @@ class MainWindow;
 
 void ShowSettingsDlg(wxWindow* parent, MainWindow* mainwindow);
 
-#endif  // RIDE_SETTINGSDLG_H_
+#endif	// RIDE_SETTINGSDLG_H_

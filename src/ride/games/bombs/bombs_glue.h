@@ -6,4 +6,4 @@ class MainWindow;
 
 void CreateBombGame(wxAuiNotebook* anotebook, MainWindow* parent);
 
-#endif // RIDE_GAMES_BOMBS_GLUE_
+#endif	// RIDE_GAMES_BOMBS_GLUE_

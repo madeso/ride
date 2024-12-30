@@ -10,6 +10,7 @@
 #include "ride/settings.h"
 
 const std::map<wxString, wxString> CollectRideSpecificEnviroment(
-    const ride::MachineSettings& settings);
+	const ride::MachineSettings& settings
+);
 
-#endif  // RIDE_ENVIROMENT_H_
+#endif	// RIDE_ENVIROMENT_H_

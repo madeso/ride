@@ -5,13 +5,16 @@
 
 class wxWindowBase;
 
-class EnableDisable {
- public:
-  explicit EnableDisable(bool enable);
-  const EnableDisable& operator<<(wxWindowBase* b) const;
+class EnableDisable
+{
+public:
 
- private:
-  bool enable_;
+	explicit EnableDisable(bool enable);
+	const EnableDisable& operator<<(wxWindowBase* b) const;
+
+private:
+
+	bool enable_;
 };
 
-#endif  // RIDE_ENABLEDISABLE_H_
+#endif	// RIDE_ENABLEDISABLE_H_

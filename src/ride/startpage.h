@@ -9,14 +9,17 @@
 class wxAuiNotebook;
 class MainWindow;
 
-class StartPageTab : public wxControl {
- public:
-  StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent);
-  ~StartPageTab();
+class StartPageTab : public wxControl
+{
+public:
 
- private:
-  Tab tab_;
-  wxAuiNotebook* notebook_;
+	StartPageTab(wxAuiNotebook* anotebook, MainWindow* parent);
+	~StartPageTab();
+
+private:
+
+	Tab tab_;
+	wxAuiNotebook* notebook_;
 };
 
-#endif  // RIDE_STARTPAGE_H_
+#endif	// RIDE_STARTPAGE_H_

@@ -19,200 +19,225 @@ class OutputControl;
 class ProjectExplorer;
 class StatusBarGeneric;
 
-struct FoundEdit {
-  FoundEdit(size_t i, FileEdit* e) : index(i), edit(e) {}
+struct FoundEdit
+{
+	FoundEdit(size_t i, FileEdit* e)
+		: index(i)
+		, edit(e)
+	{
+	}
 
-  // has a edit been found?
-  operator bool() const { return edit != NULL; }
+	// has a edit been found?
+	operator bool() const
+	{
+		return edit != NULL;
+	}
 
-  static FoundEdit NOT_FOUND;
+	static FoundEdit NOT_FOUND;
 
-  size_t index;
-  FileEdit* edit;
+	size_t index;
+	FileEdit* edit;
 };
 
-void CreateNewFile(const wxString& project_root, MainWindow* main,
-                   ProjectExplorer* project_explorer);
+void CreateNewFile(
+	const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer
+);
 
-enum StatusBarWidgets {
-  STATUSBAR_GENERAL,
-  STATUSBAR_BUILD_CONF,
-  STATUSBAR_RUN_CONF,
-  STATUSBAR_LINE,
-  STATUSBAR_COL,
-  STATUSBAR_CH,
-  STATUSBAR_INS,
-  STATUSBAR_MAXCOUNT
+enum StatusBarWidgets
+{
+	STATUSBAR_GENERAL,
+	STATUSBAR_BUILD_CONF,
+	STATUSBAR_RUN_CONF,
+	STATUSBAR_LINE,
+	STATUSBAR_COL,
+	STATUSBAR_CH,
+	STATUSBAR_INS,
+	STATUSBAR_MAXCOUNT
 };
 
-struct OpenDocument {
-  OpenDocument(const wxString& i, const wxString& p, const wxString& d)
-      : id(i), path(p), description(d) {}
-  wxString id;
-  wxString path;
-  wxString description;
+struct OpenDocument
+{
+	OpenDocument(const wxString& i, const wxString& p, const wxString& d)
+		: id(i)
+		, path(p)
+		, description(d)
+	{
+	}
+
+	wxString id;
+	wxString path;
+	wxString description;
 };
 
-class MainWindow : public wxFrame {
- public:
-  MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
-  ~MainWindow();
+class MainWindow : public wxFrame
+{
+public:
 
-  const ride::Settings& settings() const;
-  void set_settings(const ride::Settings& settings);
+	MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
+	~MainWindow();
 
-  const ride::MachineSettings& machine() const;
-  void set_machine(const ride::MachineSettings& machine);
+	const ride::Settings& settings() const;
+	void set_settings(const ride::Settings& settings);
 
-  void UpdateTheme();
+	const ride::MachineSettings& machine() const;
+	void set_machine(const ride::MachineSettings& machine);
 
-  void SetStatusBarText(const wxString& text, StatusBarWidgets widget);
+	void UpdateTheme();
 
-  void OpenCompilerMessage(const CompilerMessage& message);
-  void FileHasBeenRenamed(const wxString& old_path, const wxString& new_path);
-  void ProjectSettingsHasChanged();
+	void SetStatusBarText(const wxString& text, StatusBarWidgets widget);
 
-  void SaveAllChangedProjectFiles();
-  void ReloadFilesIfNeeded();
+	void OpenCompilerMessage(const CompilerMessage& message);
+	void FileHasBeenRenamed(const wxString& old_path, const wxString& new_path);
+	void ProjectSettingsHasChanged();
 
-  FileEdit* OpenFile(const wxString& file, int start_line = -1,
-                     int start_index = -1, int end_line = -1,
-                     int end_index = -1);
-  FileEdit* GetFile(const wxString& file);
+	void SaveAllChangedProjectFiles();
+	void ReloadFilesIfNeeded();
 
-  const wxString& root_folder() const;
+	FileEdit* OpenFile(
+		const wxString& file,
+		int start_line = -1,
+		int start_index = -1,
+		int end_line = -1,
+		int end_index = -1
+	);
+	FileEdit* GetFile(const wxString& file);
 
-  FoundEdit GetEditFromFileName(const wxString& file);
+	const wxString& root_folder() const;
 
-  OutputDirector& build_output();
-  OutputDirector& compiler_output();
+	FoundEdit GetEditFromFileName(const wxString& file);
 
-  Project* project();
+	OutputDirector& build_output();
+	OutputDirector& compiler_output();
 
- private:
-  void OnActivated(wxActivateEvent& event);
+	Project* project();
 
-  void OnFileOpen(wxCommandEvent& event);
-  void OnFileSave(wxCommandEvent& event);
-  void OnFileSaveAs(wxCommandEvent& event);
+private:
 
-  void OnEditUndo(wxCommandEvent& event);
-  void OnEditRedo(wxCommandEvent& event);
-  void OnEditCut(wxCommandEvent& event);
-  void OnEditCopy(wxCommandEvent& event);
-  void OnEditPaste(wxCommandEvent& event);
-  void OnEditDuplicate(wxCommandEvent& event);
-  void OnEditDelete(wxCommandEvent& event);
-  void OnEditFind(wxCommandEvent& event);
-  void OnEditReplace(wxCommandEvent& event);
-  void OnEditMatchBrace(wxCommandEvent& event);
-  void OnEditSelectBrace(wxCommandEvent& event);
-  void OnEditGotoLine(wxCommandEvent& event);
-  void OnEditIndent(wxCommandEvent& event);
-  void OnEditUnIndent(wxCommandEvent& event);
-  void OnEditSelectAll(wxCommandEvent& event);
-  void OnEditSelectLine(wxCommandEvent& event);
-  void OnEditToUpper(wxCommandEvent& event);
-  void OnEditToLower(wxCommandEvent& event);
-  void OnEditMoveLinesUp(wxCommandEvent& event);
-  void OnEditMoveLinesDown(wxCommandEvent& event);
-  void OnEditOpenInOnlineDocumentation(wxCommandEvent& event);
-  void OnEditShowProperties(wxCommandEvent& event);
-  void OnEditShowAutocomplete(wxCommandEvent& event);
+	void OnActivated(wxActivateEvent& event);
 
-  void OnProjectNew(wxCommandEvent& event);
-  void OnProjectOpen(wxCommandEvent& event);
-  void OnProjectSettings(wxCommandEvent& event);
-  void OnProjectBuild(wxCommandEvent& event);
-  void OnProjectSelectActiveBuild(wxCommandEvent& event);
-  void OnProjectClean(wxCommandEvent& event);
-  void OnProjectRebuild(wxCommandEvent& event);
-  void OnProjectDoc(wxCommandEvent& event);
-  void OnProjectRun(wxCommandEvent& event);
-  void OnProjectSelectActiveRun(wxCommandEvent& event);
-  void OnProjectTest(wxCommandEvent& event);
-  void OnProjectBench(wxCommandEvent& event);
-  void OnProjectUpdate(wxCommandEvent& event);
-  void OnProjectFileNew(wxCommandEvent& event);
-  void OnProjectQuickOpen(wxCommandEvent& event);
-  void OnProjectFindInFiles(wxCommandEvent& event);
-  void OnProjectReplaceInFiles(wxCommandEvent& event);
+	void OnFileOpen(wxCommandEvent& event);
+	void OnFileSave(wxCommandEvent& event);
+	void OnFileSaveAs(wxCommandEvent& event);
 
-  void OnViewRestoreWindows(wxCommandEvent& event);
-  void OnViewSaveLayout(wxCommandEvent& event);
-  void OnViewLoadLayout(wxCommandEvent& event);
-  void OnViewShowStart(wxCommandEvent& event);
-  void OnViewShowFindResult(wxCommandEvent& event);
-  void OnViewShowBuild(wxCommandEvent& event);
-  void OnViewShowCompile(wxCommandEvent& event);
-  void OnViewShowProject(wxCommandEvent& event);
+	void OnEditUndo(wxCommandEvent& event);
+	void OnEditRedo(wxCommandEvent& event);
+	void OnEditCut(wxCommandEvent& event);
+	void OnEditCopy(wxCommandEvent& event);
+	void OnEditPaste(wxCommandEvent& event);
+	void OnEditDuplicate(wxCommandEvent& event);
+	void OnEditDelete(wxCommandEvent& event);
+	void OnEditFind(wxCommandEvent& event);
+	void OnEditReplace(wxCommandEvent& event);
+	void OnEditMatchBrace(wxCommandEvent& event);
+	void OnEditSelectBrace(wxCommandEvent& event);
+	void OnEditGotoLine(wxCommandEvent& event);
+	void OnEditIndent(wxCommandEvent& event);
+	void OnEditUnIndent(wxCommandEvent& event);
+	void OnEditSelectAll(wxCommandEvent& event);
+	void OnEditSelectLine(wxCommandEvent& event);
+	void OnEditToUpper(wxCommandEvent& event);
+	void OnEditToLower(wxCommandEvent& event);
+	void OnEditMoveLinesUp(wxCommandEvent& event);
+	void OnEditMoveLinesDown(wxCommandEvent& event);
+	void OnEditOpenInOnlineDocumentation(wxCommandEvent& event);
+	void OnEditShowProperties(wxCommandEvent& event);
+	void OnEditShowAutocomplete(wxCommandEvent& event);
 
-  void OnGamesBombs(wxCommandEvent& event);
-  void OnGamesForty(wxCommandEvent& event);
+	void OnProjectNew(wxCommandEvent& event);
+	void OnProjectOpen(wxCommandEvent& event);
+	void OnProjectSettings(wxCommandEvent& event);
+	void OnProjectBuild(wxCommandEvent& event);
+	void OnProjectSelectActiveBuild(wxCommandEvent& event);
+	void OnProjectClean(wxCommandEvent& event);
+	void OnProjectRebuild(wxCommandEvent& event);
+	void OnProjectDoc(wxCommandEvent& event);
+	void OnProjectRun(wxCommandEvent& event);
+	void OnProjectSelectActiveRun(wxCommandEvent& event);
+	void OnProjectTest(wxCommandEvent& event);
+	void OnProjectBench(wxCommandEvent& event);
+	void OnProjectUpdate(wxCommandEvent& event);
+	void OnProjectFileNew(wxCommandEvent& event);
+	void OnProjectQuickOpen(wxCommandEvent& event);
+	void OnProjectFindInFiles(wxCommandEvent& event);
+	void OnProjectReplaceInFiles(wxCommandEvent& event);
 
-  void SendTabEventToTab(wxCommandEvent& event);
+	void OnViewRestoreWindows(wxCommandEvent& event);
+	void OnViewSaveLayout(wxCommandEvent& event);
+	void OnViewLoadLayout(wxCommandEvent& event);
+	void OnViewShowStart(wxCommandEvent& event);
+	void OnViewShowFindResult(wxCommandEvent& event);
+	void OnViewShowBuild(wxCommandEvent& event);
+	void OnViewShowCompile(wxCommandEvent& event);
+	void OnViewShowProject(wxCommandEvent& event);
 
-  void OnFileExit(wxCommandEvent& event);
-  void OnAbout(wxCommandEvent& event);
-  void OnFileShowSettings(wxCommandEvent& event);
+	void OnGamesBombs(wxCommandEvent& event);
+	void OnGamesForty(wxCommandEvent& event);
 
-  void OnClose(wxCloseEvent& event);
+	void SendTabEventToTab(wxCommandEvent& event);
 
-  void OnNotebookPageClose(wxAuiNotebookEvent& event);
-  void OnNotebookPageChanged(wxAuiNotebookEvent& event);
+	void OnFileExit(wxCommandEvent& event);
+	void OnAbout(wxCommandEvent& event);
+	void OnFileShowSettings(wxCommandEvent& event);
 
-  void OnMenuOpen(wxMenuEvent& event);
+	void OnClose(wxCloseEvent& event);
 
-  void OnTab(bool forward);
-  void OnNotebookNavigation(wxNavigationKeyEvent&);
-  void OnTabNext(wxCommandEvent& event);
-  void OnTabPrev(wxCommandEvent& event);
+	void OnNotebookPageClose(wxAuiNotebookEvent& event);
+	void OnNotebookPageChanged(wxAuiNotebookEvent& event);
 
-  void BindEvents();
+	void OnMenuOpen(wxMenuEvent& event);
 
- private:
-  void SetupMenu();
-  void ShowFindWindow();
-  void ShowBuildWindow();
-  void ShowCompileWindow();
+	void OnTab(bool forward);
+	void OnNotebookNavigation(wxNavigationKeyEvent&);
+	void OnTabNext(wxCommandEvent& event);
+	void OnTabPrev(wxCommandEvent& event);
 
-  void SaveSession();
-  void RestoreSession();
-  bool OpenProject(const wxString project_file);
+	void BindEvents();
 
-  void UpdateTitle();
-  void UpdateAllEdits();
-  void CreateNotebook();
-  FileEdit* GetSelectedEditorNull();
-  FileEdit* AddAllCompilerMessages(FileEdit* file_edit);
+private:
 
-  void UpdateMenuItemView();
+	void SetupMenu();
+	void ShowFindWindow();
+	void ShowBuildWindow();
+	void ShowCompileWindow();
 
- private:
-  bool closing_;
-  wxAuiManager aui_;
-  wxAuiNotebook* notebook_;
-  OutputDirector build_output_;
-  OutputDirector compiler_output_;
-  OutputControl* findres_window_;
-  ProjectExplorer* project_explorer_;
+	void SaveSession();
+	void RestoreSession();
+	bool OpenProject(const wxString project_file);
 
-  ride::Settings settings_;
-  ride::MachineSettings machine_;
-  std::unique_ptr<Project> project_;
-  wxString app_name_;
+	void UpdateTitle();
+	void UpdateAllEdits();
+	void CreateNotebook();
+	FileEdit* GetSelectedEditorNull();
+	FileEdit* AddAllCompilerMessages(FileEdit* file_edit);
 
-  wxString windows_locations_;
+	void UpdateMenuItemView();
 
-  wxMenuItem* menuItemViewFind_;
-  wxMenuItem* menuItemViewProject_;
-  wxMenuItem* menuItemViewBuild_;
-  wxMenuItem* menuItemViewCompile_;
+private:
 
-  wxStatusBarGeneric* statusbar_;
+	bool closing_;
+	wxAuiManager aui_;
+	wxAuiNotebook* notebook_;
+	OutputDirector build_output_;
+	OutputDirector compiler_output_;
+	OutputControl* findres_window_;
+	ProjectExplorer* project_explorer_;
 
-  Languages languages_;
-  std::vector<OpenDocument> mru_;
+	ride::Settings settings_;
+	ride::MachineSettings machine_;
+	std::unique_ptr<Project> project_;
+	wxString app_name_;
+
+	wxString windows_locations_;
+
+	wxMenuItem* menuItemViewFind_;
+	wxMenuItem* menuItemViewProject_;
+	wxMenuItem* menuItemViewBuild_;
+	wxMenuItem* menuItemViewCompile_;
+
+	wxStatusBarGeneric* statusbar_;
+
+	Languages languages_;
+	std::vector<OpenDocument> mru_;
 };
 
-#endif  // RIDE_MAINWINDOW_H_
+#endif	// RIDE_MAINWINDOW_H_

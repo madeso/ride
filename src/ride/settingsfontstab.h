@@ -9,31 +9,35 @@
 
 class MainWindow;
 
-class SettingsFontsTab : public ui::SettingsFontsPanel {
- public:
-  SettingsFontsTab(wxWindow* parent, SettingsCommon* common);
+class SettingsFontsTab : public ui::SettingsFontsPanel
+{
+public:
 
-  void StyleToGui(bool togui);
+	SettingsFontsTab(wxWindow* parent, SettingsCommon* common);
 
- protected:
-  virtual void OnlyAllowNumberChars(wxKeyEvent& event);
+	void StyleToGui(bool togui);
 
-  void OnOnlyFixedSysChanged(wxCommandEvent& event);
-  void OnSelectedStyleChanged(wxCommandEvent& event);
-  void OnStyleFontChanged(wxCommandEvent& event);
-  void OnStyleCheckChanged(wxCommandEvent& event);
-  void OnStyleTextChanged(wxCommandEvent& event);
-  void OnStyleColorChanged(wxColourPickerEvent& event);
+protected:
 
- private:
-  SettingsCommon* common_;
-  bool allow_send_style_to_main_;
+	virtual void OnlyAllowNumberChars(wxKeyEvent& event);
 
-  void UpdateStyleEnable();
-  void SendStyleToMain();
-  void UpdateStyleFonts();
-  void StyleUpdateFontDisplay();
-  void StyleSaveSelectedIndex();
+	void OnOnlyFixedSysChanged(wxCommandEvent& event);
+	void OnSelectedStyleChanged(wxCommandEvent& event);
+	void OnStyleFontChanged(wxCommandEvent& event);
+	void OnStyleCheckChanged(wxCommandEvent& event);
+	void OnStyleTextChanged(wxCommandEvent& event);
+	void OnStyleColorChanged(wxColourPickerEvent& event);
+
+private:
+
+	SettingsCommon* common_;
+	bool allow_send_style_to_main_;
+
+	void UpdateStyleEnable();
+	void SendStyleToMain();
+	void UpdateStyleFonts();
+	void StyleUpdateFontDisplay();
+	void StyleSaveSelectedIndex();
 };
 
-#endif  // RIDE_SETTINGSFONTSTAB_H_
+#endif	// RIDE_SETTINGSFONTSTAB_H_

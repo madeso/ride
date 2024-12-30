@@ -15,111 +15,118 @@ class Project;
 class OutputControl;
 class Languages;
 
-namespace ride {
+namespace ride
+{
 class Settings;
 }
 
-class FileEdit : public wxControl {
- public:
-  FileEdit(wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file,
-           Languages* languages);
-  const wxString& filename() const;
-  void SetSelection(int start_line, int start_index, int end_line,
-                    int end_index);
-  void GetSelection(int* start_line, int* start_index, int* end_line,
-                    int* end_index);
-  void AddCompilerMessage(const CompilerMessage& mess);
-  void ClearCompilerMessages();
-  wxString GetLanguageName();
+class FileEdit : public wxControl
+{
+public:
 
-  bool CanClose(bool canAbort);
-  void UpdateTextControl();
-  void ReloadFileIfNeeded();
-  void FileHasBeenRenamed(const wxString& new_path);
+	FileEdit(
+		wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file, Languages* languages
+	);
+	const wxString& filename() const;
+	void SetSelection(int start_line, int start_index, int end_line, int end_index);
+	void GetSelection(int* start_line, int* start_index, int* end_line, int* end_index);
+	void AddCompilerMessage(const CompilerMessage& mess);
+	void ClearCompilerMessages();
+	wxString GetLanguageName();
 
-  void Find(OutputControl* output, const wxString& project);
-  void Replace(OutputControl* output, const wxString& project);
-  void FindInFiles(OutputControl* output, const wxString& project);
-  void ReplaceInFiles(OutputControl* output, const wxString& project);
+	bool CanClose(bool canAbort);
+	void UpdateTextControl();
+	void ReloadFileIfNeeded();
+	void FileHasBeenRenamed(const wxString& new_path);
 
-  void SetFocus();
-  void SetFocusFromKbd();
-  bool AcceptsFocusRecursively() const;
-  bool AcceptsFocus() const;
-  bool AcceptsFocusFromKeyboard() const;
+	void Find(OutputControl* output, const wxString& project);
+	void Replace(OutputControl* output, const wxString& project);
+	void FindInFiles(OutputControl* output, const wxString& project);
+	void ReplaceInFiles(OutputControl* output, const wxString& project);
 
-  wxStyledTextCtrl* GetStc();
+	void SetFocus();
+	void SetFocusFromKbd();
+	bool AcceptsFocusRecursively() const;
+	bool AcceptsFocus() const;
+	bool AcceptsFocusFromKeyboard() const;
 
-  void UpdateStatusText();
+	wxStyledTextCtrl* GetStc();
 
- public:
-  bool Save();
-  bool SaveAs();
-  void Undo();
-  void Redo();
-  void Cut();
-  void Copy();
-  void Paste();
-  void Duplicate();
-  void Delete();
-  void MatchBrace();
-  void SelectBrace();
-  void GotoLine();
-  void Indent();
-  void UnIndent();
-  void SelectAll();
-  void SelectLine();
-  void ToUpper();
-  void ToLower();
-  void MoveLinesUp();
-  void MoveLinesDown();
-  void OpenInOnlineDocumentation();
-  void ShowProperties();
+	void UpdateStatusText();
 
-  void ShowAutocomplete();
+public:
 
- public:
-  /** Event callback when a margin is clicked, used here for code folding */
-  void OnMarginClick(wxStyledTextEvent& event);
-  void OnCharAdded(wxStyledTextEvent& event);
-  void OnUpdateUi(wxStyledTextEvent& event);
-  void OnChanged(wxStyledTextEvent& event);
-  void OnSelectionUpdated(wxCommandEvent& event);
+	bool Save();
+	bool SaveAs();
+	void Undo();
+	void Redo();
+	void Cut();
+	void Copy();
+	void Paste();
+	void Duplicate();
+	void Delete();
+	void MatchBrace();
+	void SelectBrace();
+	void GotoLine();
+	void Indent();
+	void UnIndent();
+	void SelectAll();
+	void SelectLine();
+	void ToUpper();
+	void ToLower();
+	void MoveLinesUp();
+	void MoveLinesDown();
+	void OpenInOnlineDocumentation();
+	void ShowProperties();
 
-  bool ProcessCharEvent(wxChar c);
-  bool ProcessKey(wxKeyCode key, wxKeyModifier mod);
+	void ShowAutocomplete();
 
-  ~FileEdit();
+public:
 
- private:
-  void UpdateFilename();
-  void UpdateTitle();
-  bool SaveTo(const wxString& target);
+	/** Event callback when a margin is clicked, used here for code folding */
+	void OnMarginClick(wxStyledTextEvent& event);
+	void OnCharAdded(wxStyledTextEvent& event);
+	void OnUpdateUi(wxStyledTextEvent& event);
+	void OnChanged(wxStyledTextEvent& event);
+	void OnSelectionUpdated(wxCommandEvent& event);
 
-  bool ShouldBeSaved();
-  void HighlightCurrentWord();
-  void UpdateBraceMatching();
+	bool ProcessCharEvent(wxChar c);
+	bool ProcessKey(wxKeyCode key, wxKeyModifier mod);
 
-  wxString CalculateDocumentName() const;
-  void LoadFile();
-  void UpdateFileTime();
+	~FileEdit();
 
- private:
-  Tab tab_;
-  MainWindow* main_;
-  wxStyledTextCtrl* text_;
-  wxAuiNotebook* notebook_;
-  wxString filename_;
-  Languages* languages_;
+private:
 
-  Language* current_language_;
+	void UpdateFilename();
+	void UpdateTitle();
+	bool SaveTo(const wxString& target);
 
-  int highlight_current_word_last_start_position_;
-  int highlight_current_word_last_end_position_;
-  wxDateTime last_modification_time_;
+	bool ShouldBeSaved();
+	void HighlightCurrentWord();
+	void UpdateBraceMatching();
 
- private:
-  void BindEvents();
+	wxString CalculateDocumentName() const;
+	void LoadFile();
+	void UpdateFileTime();
+
+private:
+
+	Tab tab_;
+	MainWindow* main_;
+	wxStyledTextCtrl* text_;
+	wxAuiNotebook* notebook_;
+	wxString filename_;
+	Languages* languages_;
+
+	Language* current_language_;
+
+	int highlight_current_word_last_start_position_;
+	int highlight_current_word_last_end_position_;
+	wxDateTime last_modification_time_;
+
+private:
+
+	void BindEvents();
 };
 
-#endif  // RIDE_FILEEDIT_H_
+#endif	// RIDE_FILEEDIT_H_

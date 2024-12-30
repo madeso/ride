@@ -7,10 +7,13 @@
 #include <map>
 
 const std::map<wxString, wxString> CollectRideSpecificEnviroment(
-    const ride::MachineSettings& settings) {
-  std::map<wxString, wxString> ret;
-  if (settings.rust_src_path != "") {
-    ret["RUST_SRC_PATH"] = settings.rust_src_path;
-  }
-  return ret;
+	const ride::MachineSettings& settings
+)
+{
+	std::map<wxString, wxString> ret;
+	if (settings.rust_src_path != "")
+	{
+		ret["RUST_SRC_PATH"] = settings.rust_src_path;
+	}
+	return ret;
 }

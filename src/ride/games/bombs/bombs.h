@@ -23,63 +23,63 @@ class BombsFrame : public wxPanel
 {
 public:
 
-  BombsFrame(wxWindow* parent, BombsGame *bombsGame);
+	BombsFrame(wxWindow* parent, BombsGame* bombsGame);
 
-    void NewGame(int level, bool query);
+	void NewGame(int level, bool query);
 
 private:
 
-    void OnNewGame(wxCommandEvent& event);
-    void OnEasyGame(wxCommandEvent& event);
-    void OnMediumGame(wxCommandEvent& event);
-    void OnHardGame(wxCommandEvent& event);
+	void OnNewGame(wxCommandEvent& event);
+	void OnEasyGame(wxCommandEvent& event);
+	void OnMediumGame(wxCommandEvent& event);
+	void OnHardGame(wxCommandEvent& event);
 
-    void OnEasyCorner(wxCommandEvent& event);
+	void OnEasyCorner(wxCommandEvent& event);
 
-    void OnExit(wxCommandEvent& event);
+	void OnExit(wxCommandEvent& event);
 
-    void OnAbout(wxCommandEvent& event);
+	void OnAbout(wxCommandEvent& event);
 
-    BombsGame *m_game;
-    bool m_easyCorner;
-    int m_lastLevel;
+	BombsGame* m_game;
+	bool m_easyCorner;
+	int m_lastLevel;
 
-    // Subwindows for reference within the program.
-    BombsCanvas *m_canvas;
+	// Subwindows for reference within the program.
+	BombsCanvas* m_canvas;
 
-    // DECLARE_EVENT_TABLE()
+	// DECLARE_EVENT_TABLE()
 };
 
 class BombsCanvas : public wxPanel
 {
 public:
 
-    // Constructor and destructor
+	// Constructor and destructor
 
-  BombsCanvas(BombsFrame *parent, BombsGame *game);
+	BombsCanvas(BombsFrame* parent, BombsGame* game);
 
-    void UpdateGridSize();
+	void UpdateGridSize();
 
-    wxSize GetGridSizeInPixels() const;
+	wxSize GetGridSizeInPixels() const;
 
-    virtual ~BombsCanvas();
+	virtual ~BombsCanvas();
 
 private:
 
-    void OnPaint(wxPaintEvent& event);
-    void DrawField(wxDC *, int xc1, int yc1, int xc2, int yc2);
-    void RefreshField(int xc1, int yc1, int xc2, int yc2);
-    void Uncover(int x, int y);
-    void OnMouseEvent(wxMouseEvent& event);
-    void OnChar(wxKeyEvent& event);
+	void OnPaint(wxPaintEvent& event);
+	void DrawField(wxDC*, int xc1, int yc1, int xc2, int yc2);
+	void RefreshField(int xc1, int yc1, int xc2, int yc2);
+	void Uncover(int x, int y);
+	void OnMouseEvent(wxMouseEvent& event);
+	void OnChar(wxKeyEvent& event);
 
-    BombsGame *m_game;
+	BombsGame* m_game;
 
-    // Cell size in pixels
-    int m_cellWidth;
-    int m_cellHeight;
+	// Cell size in pixels
+	int m_cellWidth;
+	int m_cellHeight;
 
-    DECLARE_EVENT_TABLE()
+	DECLARE_EVENT_TABLE()
 };
 
 /* The following sizes should probably be redefined */
@@ -92,10 +92,9 @@ private:
  */
 
 #ifdef __WXWINCE__
-#define BOMBS_FONT wxFont(12, wxSWISS, wxNORMAL, wxNORMAL)
+	#define BOMBS_FONT wxFont(12, wxSWISS, wxNORMAL, wxNORMAL)
 #else
-#define BOMBS_FONT wxFont(14, wxROMAN, wxNORMAL, wxNORMAL)
+	#define BOMBS_FONT wxFont(14, wxROMAN, wxNORMAL, wxNORMAL)
 #endif
 
-#endif // #ifndef _WX_DEMOS_BOMBS_BOMBS_H_
-
+#endif	// #ifndef _WX_DEMOS_BOMBS_BOMBS_H_

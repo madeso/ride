@@ -7,43 +7,47 @@
 
 #include "item.h"
 
-namespace switcher {
+namespace switcher
+{
 
 class Style;
 
-class Group {
- public:
-  explicit Group(const wxString& title);
-  Group(const wxString& title, const std::vector<Item>& items);
+class Group
+{
+public:
 
-  void set_title(const wxString& title);
-  const wxString& title() const;
+	explicit Group(const wxString& title);
+	Group(const wxString& title, const std::vector<Item>& items);
 
-  Group& set_rect(const wxRect& rect);
-  const wxRect& rect() const;
+	void set_title(const wxString& title);
+	const wxString& title() const;
 
-  Item& AddItem(const Item& item);
+	Group& set_rect(const wxRect& rect);
+	const wxRect& rect() const;
 
-  // Find the index for the item associated with the current focus
-  int GetIndexForFocus() const;
+	Item& AddItem(const Item& item);
 
-  // Hit test, returning an index or -1
-  int HitTest(const wxPoint& pt) const;
+	// Find the index for the item associated with the current focus
+	int GetIndexForFocus() const;
 
-  const Item& GetItem(int i) const;
-  Item& GetItem(int i);
+	// Hit test, returning an index or -1
+	int HitTest(const wxPoint& pt) const;
 
-  int GetItemCount() const;
+	const Item& GetItem(int i) const;
+	Item& GetItem(int i);
 
-  void PaintItems(wxDC* dc, const Style& style, int selection);
-  void CalculateItemSize(wxDC* dc, const Style& style, wxSize* sz);
+	int GetItemCount() const;
 
- protected:
-  std::vector<Item> items_;
-  wxRect rect_;
-  wxString title_;
+	void PaintItems(wxDC* dc, const Style& style, int selection);
+	void CalculateItemSize(wxDC* dc, const Style& style, wxSize* sz);
+
+protected:
+
+	std::vector<Item> items_;
+	wxRect rect_;
+	wxString title_;
 };
 
-}  // switcher
+}  //  namespace switcher
 
-#endif  // RIDE_SWITCHERGROUP_H_
+#endif	// RIDE_SWITCHERGROUP_H_

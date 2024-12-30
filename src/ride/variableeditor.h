@@ -9,4 +9,4 @@
 
 bool DoVariableEditor(wxWindow* parent, std::string* text);
 
-#endif  // RIDE_VARIABLEEDITOR_H_
+#endif	// RIDE_VARIABLEEDITOR_H_

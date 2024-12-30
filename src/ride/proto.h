@@ -7,16 +7,15 @@
 #include <ride/wx.h>
 #include <wx/filename.h>
 
-
 namespace ride
 {
-  struct MachineSettings;
-  struct Settings;
-  struct Session;
-  struct Project;
-  struct UserProject;
-  struct Theme;
-}
+struct MachineSettings;
+struct Settings;
+struct Session;
+struct Project;
+struct UserProject;
+struct Theme;
+}  //  namespace ride
 
 wxString LoadProtoJson(ride::MachineSettings* mess, const wxFileName& file);
 wxString SaveProtoJson(const ride::MachineSettings& mess, const wxFileName& file);
@@ -51,4 +50,4 @@ wxString SaveProtoJson(const google::protobuf::Message& t,
                        const wxFileName& path);
 */
 
-#endif  // RIDE_PROTO_H_
+#endif	// RIDE_PROTO_H_

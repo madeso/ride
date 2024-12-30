@@ -5,7 +5,7 @@
 
 #include <wx/colour.h>
 
-#include "settings.proto.h"  // NOLINT this is how we include it
+#include "settings.proto.h"	 // NOLINT this is how we include it
 
 class wxWindow;
 
@@ -21,4 +21,4 @@ bool SaveSession(wxWindow* main, const ::ride::Session& session);
 wxColor C(const ride::Color& c);
 ride::Color C(const wxColor& c);
 
-#endif  // RIDE_SETTINGS_H_
+#endif	// RIDE_SETTINGS_H_

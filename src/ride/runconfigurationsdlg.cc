@@ -21,156 +21,191 @@
 #include "ride/project.h"
 #include "ride/wxutils.h"
 
-struct ProjectRunFunctions {
-  static const wxString ADD_TEXT;
-  static const wxString EDIT_TEXT;
+struct ProjectRunFunctions
+{
+	static const wxString ADD_TEXT;
+	static const wxString EDIT_TEXT;
 
-  static int Size(ride::UserProject* p) { return p->run.size(); }
+	static int Size(ride::UserProject* p)
+	{
+		return p->run.size();
+	}
 
-  static wxString GetDisplayString(ride::UserProject* p, int i) {
-    return p->run[i].name;
-  }
+	static wxString GetDisplayString(ride::UserProject* p, int i)
+	{
+		return p->run[i].name;
+	}
 
-  static void SetDisplayString(ride::UserProject* p, int i,
-                               const wxString& new_string) {
-    p->run[i].name = new_string;
-  }
+	static void SetDisplayString(ride::UserProject* p, int i, const wxString& new_string)
+	{
+		p->run[i].name = new_string;
+	}
 
-  static void Add(ride::UserProject* p, const wxString& name) {
-    auto build = ride::RunSetting{};
-    build.name = name;
-    p->run.push_back(build);
-  }
+	static void Add(ride::UserProject* p, const wxString& name)
+	{
+		auto build = ride::RunSetting{};
+		build.name = name;
+		p->run.push_back(build);
+	}
 
-  static void Remove(ride::UserProject* p, int i) {
-    p->run.erase(p->run.begin() + i);
-  }
+	static void Remove(ride::UserProject* p, int i)
+	{
+		p->run.erase(p->run.begin() + i);
+	}
 
-  static void Swap(ride::UserProject* p, int selection, int next_index) {
-    std::swap(p->run[selection], p->run[next_index]);
-  }
+	static void Swap(ride::UserProject* p, int selection, int next_index)
+	{
+		std::swap(p->run[selection], p->run[next_index]);
+	}
 };
 
 const wxString ProjectRunFunctions::ADD_TEXT = "Name of run to create";
-const wxString ProjectRunFunctions::EDIT_TEXT =
-    "Please specify the new run name";
+const wxString ProjectRunFunctions::EDIT_TEXT = "Please specify the new run name";
 
 typedef ui::Configurations Configurations;
 
-class RunConfigurationsDlg : public Configurations {
- public:
-  RunConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                       Project* project, int selected);
+class RunConfigurationsDlg : public Configurations
+{
+public:
 
-  bool has_applied() const { return has_applied_; }
+	RunConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project, int selected);
 
- protected:
-  void OnApply(wxCommandEvent& event) override;
-  void OnCancel(wxCommandEvent& event) override;
-  void OnOk(wxCommandEvent& event) override;
+	bool has_applied() const
+	{
+		return has_applied_;
+	}
 
- protected:
-  bool Apply();
-  void AllToGui(bool togui);
+protected:
 
- protected:
-  void OnAdd(wxCommandEvent& event) override;
-  void OnEdit(wxCommandEvent& event) override;
-  void OnRemove(wxCommandEvent& event) override;
-  void OnUp(wxCommandEvent& event) override;
-  void OnDown(wxCommandEvent& event) override;
+	void OnApply(wxCommandEvent& event) override;
+	void OnCancel(wxCommandEvent& event) override;
+	void OnOk(wxCommandEvent& event) override;
 
- private:
-  Project* project_;
-  ride::UserProject user_backup_;
-  GuiList<ride::UserProject, ProjectRunFunctions> feature_list_;
-  bool has_applied_;
+protected:
+
+	bool Apply();
+	void AllToGui(bool togui);
+
+protected:
+
+	void OnAdd(wxCommandEvent& event) override;
+	void OnEdit(wxCommandEvent& event) override;
+	void OnRemove(wxCommandEvent& event) override;
+	void OnUp(wxCommandEvent& event) override;
+	void OnDown(wxCommandEvent& event) override;
+
+private:
+
+	Project* project_;
+	ride::UserProject user_backup_;
+	GuiList<ride::UserProject, ProjectRunFunctions> feature_list_;
+	bool has_applied_;
 };
 
-bool DoRunConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                            Project* project, int selected) {
-  RunConfigurationsDlg dlg(parent, mainwindow, project, selected);
-  dlg.ShowModal();
+bool DoRunConfigurationsDlg(
+	wxWindow* parent, MainWindow* mainwindow, Project* project, int selected
+)
+{
+	RunConfigurationsDlg dlg(parent, mainwindow, project, selected);
+	dlg.ShowModal();
 
-  return dlg.has_applied();
+	return dlg.has_applied();
 }
 
-RunConfigurationsDlg::RunConfigurationsDlg(wxWindow* parent,
-                                           MainWindow* mainwindow,
-                                           Project* project, int selected)
-    : ::ui::Configurations(parent, wxID_ANY),
-      project_(project),
-      user_backup_(project->user()),
-      feature_list_(uiList, this),
-      has_applied_(false) {
-  AllToGui(true);
-  Configurations::SetTitle("Run Configuration Manager");
+RunConfigurationsDlg::RunConfigurationsDlg(
+	wxWindow* parent, MainWindow* mainwindow, Project* project, int selected
+)
+	: ::ui::Configurations(parent, wxID_ANY)
+	, project_(project)
+	, user_backup_(project->user())
+	, feature_list_(uiList, this)
+	, has_applied_(false)
+{
+	AllToGui(true);
+	Configurations::SetTitle("Run Configuration Manager");
 
-  feature_list_.Select(selected, project->user_ptr());
-  feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp,
-                      uiListDown);
+	feature_list_.Select(selected, project->user_ptr());
+	feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp, uiListDown);
 }
 
-void RunConfigurationsDlg::OnApply(wxCommandEvent& event) { Apply(); }
-
-void RunConfigurationsDlg::OnCancel(wxCommandEvent& event) {
-  project_->set_user(user_backup_);
-  EndModal(wxCANCEL);
+void RunConfigurationsDlg::OnApply(wxCommandEvent& event)
+{
+	Apply();
 }
 
-void RunConfigurationsDlg::OnOk(wxCommandEvent& event) {
-  if (Apply()) {
-    EndModal(wxOK);
-  }
+void RunConfigurationsDlg::OnCancel(wxCommandEvent& event)
+{
+	project_->set_user(user_backup_);
+	EndModal(wxCANCEL);
 }
 
-void RunConfigurationsDlg::AllToGui(bool togui) {
-  feature_list_.ToGui(project_->user_ptr(), togui);
+void RunConfigurationsDlg::OnOk(wxCommandEvent& event)
+{
+	if (Apply())
+	{
+		EndModal(wxOK);
+	}
+}
+
+void RunConfigurationsDlg::AllToGui(bool togui)
+{
+	feature_list_.ToGui(project_->user_ptr(), togui);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-bool RunConfigurationsDlg::Apply() {
-  AllToGui(false);
+bool RunConfigurationsDlg::Apply()
+{
+	AllToGui(false);
 
-  user_backup_ = project_->user();
+	user_backup_ = project_->user();
 
-  has_applied_ = true;
-  return true;
+	has_applied_ = true;
+	return true;
 }
 
-void RunConfigurationsDlg::OnAdd(wxCommandEvent& event) {
-  if (false == feature_list_.Add(project_->user_ptr())) {
-    return;
-  }
-  AllToGui(true);
+void RunConfigurationsDlg::OnAdd(wxCommandEvent& event)
+{
+	if (false == feature_list_.Add(project_->user_ptr()))
+	{
+		return;
+	}
+	AllToGui(true);
 }
 
-void RunConfigurationsDlg::OnEdit(wxCommandEvent& event) {
-  if (false == feature_list_.Edit(project_->user_ptr())) {
-    return;
-  }
-  AllToGui(true);
+void RunConfigurationsDlg::OnEdit(wxCommandEvent& event)
+{
+	if (false == feature_list_.Edit(project_->user_ptr()))
+	{
+		return;
+	}
+	AllToGui(true);
 }
 
-void RunConfigurationsDlg::OnRemove(wxCommandEvent& event) {
-  if (false == feature_list_.Remove(project_->user_ptr())) {
-    return;
-  }
+void RunConfigurationsDlg::OnRemove(wxCommandEvent& event)
+{
+	if (false == feature_list_.Remove(project_->user_ptr()))
+	{
+		return;
+	}
 
-  AllToGui(true);
+	AllToGui(true);
 }
 
-void RunConfigurationsDlg::OnUp(wxCommandEvent& event) {
-  if (false == feature_list_.Up(project_->user_ptr())) {
-    return;
-  }
-  AllToGui(true);
+void RunConfigurationsDlg::OnUp(wxCommandEvent& event)
+{
+	if (false == feature_list_.Up(project_->user_ptr()))
+	{
+		return;
+	}
+	AllToGui(true);
 }
 
-void RunConfigurationsDlg::OnDown(wxCommandEvent& event) {
-  if (false == feature_list_.Down(project_->user_ptr())) {
-    return;
-  }
-  AllToGui(true);
+void RunConfigurationsDlg::OnDown(wxCommandEvent& event)
+{
+	if (false == feature_list_.Down(project_->user_ptr()))
+	{
+		return;
+	}
+	AllToGui(true);
 }

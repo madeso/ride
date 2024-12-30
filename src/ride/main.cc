@@ -2,28 +2,30 @@
 
 #include <ride/wx.h>
 
-#include "settings.proto.h"  // NOLINT this is how we include it
+#include "settings.proto.h"	 // NOLINT this is how we include it
 
 #include "ride/mainwindow.h"
 
-class MyApp : public wxApp {
- public:
-  bool OnInit() override;
+class MyApp : public wxApp
+{
+public:
+
+	bool OnInit() override;
 };
 
 wxIMPLEMENT_APP(MyApp);
 
-bool MyApp::OnInit() {
-  const wxString DISPLAY_NAME = "Ride";
+bool MyApp::OnInit()
+{
+	const wxString DISPLAY_NAME = "Ride";
 
-  wxAppConsole* app_console = wxAppConsole::GetInstance();
-  app_console->SetAppName("ride");
-  app_console->SetAppDisplayName(DISPLAY_NAME);
-  app_console->SetVendorName("madeso");
-  app_console->SetVendorDisplayName("madeso");
+	wxAppConsole* app_console = wxAppConsole::GetInstance();
+	app_console->SetAppName("ride");
+	app_console->SetAppDisplayName(DISPLAY_NAME);
+	app_console->SetVendorName("madeso");
+	app_console->SetVendorDisplayName("madeso");
 
-  auto main_window =
-      new MainWindow(DISPLAY_NAME, wxPoint(50, 50), wxSize(450, 340));
-  main_window->Show(true);
-  return true;
+	auto main_window = new MainWindow(DISPLAY_NAME, wxPoint(50, 50), wxSize(450, 340));
+	main_window->Show(true);
+	return true;
 }

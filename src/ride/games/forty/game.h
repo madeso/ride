@@ -18,126 +18,170 @@ class Game;
 
 const int MaxMoves = 800;
 
-
 //---------------------------------------//
 // A class which holds the pack of cards //
 //---------------------------------------//
-class Pack : public Pile {
+class Pack : public Pile
+{
 public:
-  Pack(FortyFrame* frame, Game* game, int x, int y);
-    virtual ~Pack();
-    void Redraw(wxDC& dc);
-    void ResetPile() { m_topCard = NumCards - 1; }
-    void Shuffle();
-    void AddCard(Card* card); // Add card
-    void AddCard(wxDC& dc, Card* card) { AddCard(card); Redraw(dc); }
-};
 
+	Pack(FortyFrame* frame, Game* game, int x, int y);
+	virtual ~Pack();
+	void Redraw(wxDC& dc);
+
+	void ResetPile()
+	{
+		m_topCard = NumCards - 1;
+	}
+
+	void Shuffle();
+	void AddCard(Card* card);  // Add card
+
+	void AddCard(wxDC& dc, Card* card)
+	{
+		AddCard(card);
+		Redraw(dc);
+	}
+};
 
 //----------------------------------------------------------//
 // A class which holds a base i.e. the initial 10 x 4 cards //
 //----------------------------------------------------------//
-class Base : public Pile {
+class Base : public Pile
+{
 public:
-  Base(FortyFrame* frame, int x, int y);
-    virtual ~Base(){}
-    bool AcceptCard(Card* card);
-};
 
+	Base(FortyFrame* frame, int x, int y);
+
+	virtual ~Base()
+	{
+	}
+
+	bool AcceptCard(Card* card);
+};
 
 //----------------------------------------------------//
 // A class which holds a foundation i.e. Ace, 2, 3... //
 //----------------------------------------------------//
-class Foundation : public Pile {
+class Foundation : public Pile
+{
 public:
-  Foundation(FortyFrame* frame, int x, int y);
-    virtual ~Foundation(){}
-    bool AcceptCard(Card* card);
-};
 
+	Foundation(FortyFrame* frame, int x, int y);
+
+	virtual ~Foundation()
+	{
+	}
+
+	bool AcceptCard(Card* card);
+};
 
 //--------------------------------------//
 // A class which holds the discard pile //
 //--------------------------------------//
-class Discard : public Pile {
+class Discard : public Pile
+{
 public:
-  Discard(FortyFrame* frame, int x, int y);
-    virtual ~Discard(){}
-    void Redraw(wxDC& dc);
-    void GetTopCardPos(int& x, int& y);
-    Card* RemoveTopCard(wxDC& dc, int m_xOffset, int m_yOffset);
+
+	Discard(FortyFrame* frame, int x, int y);
+
+	virtual ~Discard()
+	{
+	}
+
+	void Redraw(wxDC& dc);
+	void GetTopCardPos(int& x, int& y);
+	Card* RemoveTopCard(wxDC& dc, int m_xOffset, int m_yOffset);
 };
 
-
-class Game {
+class Game
+{
 public:
-  Game(FortyFrame* frame, int wins, int games, int score);
-    virtual ~Game();
 
-    wxBitmap* symbolBitmap();
-    wxBitmap* pictureBitmap();
+	Game(FortyFrame* frame, int wins, int games, int score);
+	virtual ~Game();
 
-    void Layout();
-    void NewPlayer(int wins, int games, int score);
-    void Deal(); // Shuffle and deal a new game
-    bool CanYouGo(int x, int y); // can card under (x,y) go somewhere?
-    bool HaveYouWon(); // have you won the game?
+	wxBitmap* symbolBitmap();
+	wxBitmap* pictureBitmap();
 
-    void Undo(wxDC& dc); // Undo the last go
-    void Redo(wxDC& dc); // Redo the last go
+	void Layout();
+	void NewPlayer(int wins, int games, int score);
+	void Deal();  // Shuffle and deal a new game
+	bool CanYouGo(int x, int y);  // can card under (x,y) go somewhere?
+	bool HaveYouWon();	// have you won the game?
 
-    void Redraw(wxDC& dc);
-    void DisplayScore(wxDC& dc);
-    bool LButtonDown(wxDC& dc, int mx, int my);
-    void LButtonUp(wxDC& dc, int mx, int my);
-    void LButtonDblClk(wxDC& dc, int mx, int my);
-    void MouseMove(wxDC& dc, int mx, int my);
+	void Undo(wxDC& dc);  // Undo the last go
+	void Redo(wxDC& dc);  // Redo the last go
 
-    int GetNumWins() const { return m_numWins; }
-    int GetNumGames() const { return m_numGames; }
-    int GetScore() const { return m_currentScore + m_totalScore; }
+	void Redraw(wxDC& dc);
+	void DisplayScore(wxDC& dc);
+	bool LButtonDown(wxDC& dc, int mx, int my);
+	void LButtonUp(wxDC& dc, int mx, int my);
+	void LButtonDblClk(wxDC& dc, int mx, int my);
+	void MouseMove(wxDC& dc, int mx, int my);
 
-    bool InPlay() const { return m_inPlay; }
+	int GetNumWins() const
+	{
+		return m_numWins;
+	}
+
+	int GetNumGames() const
+	{
+		return m_numGames;
+	}
+
+	int GetScore() const
+	{
+		return m_currentScore + m_totalScore;
+	}
+
+	bool InPlay() const
+	{
+		return m_inPlay;
+	}
 
 private:
-    bool DropCard(int x, int y, Pile* pile, Card* card);
-            //  can the card at (x, y) be dropped on the pile?
-    Pile* WhichPile(int x, int y); // which pile is (x, y) over?
-    void DoMove(wxDC& dc, Pile* src, Pile* dest);
 
-    bool m_inPlay; // flag indicating that the game has started
+	bool DropCard(int x, int y, Pile* pile, Card* card);
+	//  can the card at (x, y) be dropped on the pile?
+	Pile* WhichPile(int x, int y);	// which pile is (x, y) over?
+	void DoMove(wxDC& dc, Pile* src, Pile* dest);
 
-    // undo buffer
-    struct {
-        Pile* src;
-        Pile* dest;
-    } m_moves[MaxMoves];
-    int m_moveIndex; // current position in undo/redo buffer
-    int m_redoIndex; // max move index available for redo
+	bool m_inPlay;	// flag indicating that the game has started
 
-    // the various piles of cards
-    Pack* m_pack;
-    Discard* m_discard;
-    Base* m_bases[10];
-    Foundation* m_foundations[8];
+	// undo buffer
+	struct
+	{
+		Pile* src;
+		Pile* dest;
+	} m_moves[MaxMoves];
 
-    // variables to do with dragging cards
-    Pile* m_srcPile;
-    Card* m_liftedCard;
-    int m_xPos, m_yPos; // current coords of card being dragged
-    int m_xOffset, m_yOffset; // card/mouse offset when dragging a card
+	int m_moveIndex;  // current position in undo/redo buffer
+	int m_redoIndex;  // max move index available for redo
 
-    wxBitmap* m_bmap;
-    wxBitmap* m_bmapCard;
+	// the various piles of cards
+	Pack* m_pack;
+	Discard* m_discard;
+	Base* m_bases[10];
+	Foundation* m_foundations[8];
 
-    wxBitmap* symbol;
-    wxBitmap* picture;
+	// variables to do with dragging cards
+	Pile* m_srcPile;
+	Card* m_liftedCard;
+	int m_xPos, m_yPos;	 // current coords of card being dragged
+	int m_xOffset, m_yOffset;  // card/mouse offset when dragging a card
 
-    // variables to do with scoring
-    int m_numGames;
-    int m_numWins;
-    int m_totalScore;
-    int m_currentScore;
+	wxBitmap* m_bmap;
+	wxBitmap* m_bmapCard;
+
+	wxBitmap* symbol;
+	wxBitmap* picture;
+
+	// variables to do with scoring
+	int m_numGames;
+	int m_numWins;
+	int m_totalScore;
+	int m_currentScore;
 };
 
-#endif // _GAME_H_
+#endif	// _GAME_H_

@@ -19,40 +19,55 @@ class Card;
 class ScoreFile;
 class PlayerSelectionDialog;
 
-class FortyCanvas: public wxScrolledWindow
+class FortyCanvas : public wxScrolledWindow
 {
 public:
-  FortyCanvas(FortyFrame* parent, const wxPoint& pos, const wxSize& size);
-    virtual ~FortyCanvas();
 
-    virtual void OnDraw(wxDC& dc);
-    bool OnCloseCanvas();
-    void OnMouseEvent(wxMouseEvent& event);
-    void SetCursorStyle(int x, int y);
+	FortyCanvas(FortyFrame* parent, const wxPoint& pos, const wxSize& size);
+	virtual ~FortyCanvas();
 
-    void NewGame();
-    void Undo();
-    void Redo();
+	virtual void OnDraw(wxDC& dc);
+	bool OnCloseCanvas();
+	void OnMouseEvent(wxMouseEvent& event);
+	void SetCursorStyle(int x, int y);
 
-    ScoreFile* GetScoreFile() { return &m_scoreFile; }
-    void UpdateScores();
-    void EnableHelpingHand(bool enable) { m_helpingHand = enable; }
-    void EnableRightButtonUndo(bool enable) { m_rightBtnUndo = enable; }
-    void LayoutGame();
-    void ShowPlayerDialog();
+	void NewGame();
+	void Undo();
+	void Redo();
 
-    DECLARE_EVENT_TABLE()
+	ScoreFile* GetScoreFile()
+	{
+		return &m_scoreFile;
+	}
+
+	void UpdateScores();
+
+	void EnableHelpingHand(bool enable)
+	{
+		m_helpingHand = enable;
+	}
+
+	void EnableRightButtonUndo(bool enable)
+	{
+		m_rightBtnUndo = enable;
+	}
+
+	void LayoutGame();
+	void ShowPlayerDialog();
+
+	DECLARE_EVENT_TABLE()
 
 private:
-    wxFont* m_font;
-    Game m_game;
-    ScoreFile m_scoreFile;
-    wxCursor m_arrowCursor;
-    wxCursor m_handCursor;
-    bool m_helpingHand;
-    bool m_rightBtnUndo;
-    wxString m_player;
-    bool m_leftBtnDown;
+
+	wxFont* m_font;
+	Game m_game;
+	ScoreFile m_scoreFile;
+	wxCursor m_arrowCursor;
+	wxCursor m_handCursor;
+	bool m_helpingHand;
+	bool m_rightBtnUndo;
+	wxString m_player;
+	bool m_leftBtnDown;
 };
 
 #endif

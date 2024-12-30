@@ -112,4 +112,4 @@ class StatusBarGeneric : public wxStatusBarGeneric {
 };
 #endif
 
-#endif  // RIDE_AUIX_H_
+#endif	// RIDE_AUIX_H_

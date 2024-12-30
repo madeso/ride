@@ -8,7 +8,6 @@
 class MainWindow;
 class Project;
 
-void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
-                          Project* project);
+void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project);
 
-#endif  // RIDE_PROJECTSETTINGSDLG_H_
+#endif	// RIDE_PROJECTSETTINGSDLG_H_

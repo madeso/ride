@@ -9,24 +9,28 @@
 
 class MainWindow;
 
-class SettingsEditorTab : public ui::SettingsEditorPanel {
- public:
-  SettingsEditorTab(wxWindow* parent, SettingsCommon* common);
+class SettingsEditorTab : public ui::SettingsEditorPanel
+{
+public:
 
-  void EditToGui(bool togui);
+	SettingsEditorTab(wxWindow* parent, SettingsCommon* common);
 
- protected:
-  void OnCheckboxChanged(wxCommandEvent& event);
-  void OnComboboxChanged(wxCommandEvent& event);
-  void OnColorChanged(wxColourPickerEvent& event);
-  void OnEditChanged(wxCommandEvent& event);
-  void OnlyAllowNumberChars(wxKeyEvent& event);
+	void EditToGui(bool togui);
 
- private:
-  SettingsCommon* common_;
+protected:
 
-  bool allow_send_edit_to_main_;
-  void SendEditToMain();
+	void OnCheckboxChanged(wxCommandEvent& event);
+	void OnComboboxChanged(wxCommandEvent& event);
+	void OnColorChanged(wxColourPickerEvent& event);
+	void OnEditChanged(wxCommandEvent& event);
+	void OnlyAllowNumberChars(wxKeyEvent& event);
+
+private:
+
+	SettingsCommon* common_;
+
+	bool allow_send_edit_to_main_;
+	void SendEditToMain();
 };
 
-#endif  // RIDE_SETTINGSEDITORTAB_H_
+#endif	// RIDE_SETTINGSEDITORTAB_H_

@@ -21,157 +21,193 @@
 #include "ride/project.h"
 #include "ride/wxutils.h"
 
-struct ProjectBuildFunctions {
-  static const wxString ADD_TEXT;
-  static const wxString EDIT_TEXT;
+struct ProjectBuildFunctions
+{
+	static const wxString ADD_TEXT;
+	static const wxString EDIT_TEXT;
 
-  static int Size(ride::Project* p) { return p->build_settings.size(); }
+	static int Size(ride::Project* p)
+	{
+		return p->build_settings.size();
+	}
 
-  static wxString GetDisplayString(ride::Project* p, int i) {
-    return p->build_settings[i].name;
-  }
+	static wxString GetDisplayString(ride::Project* p, int i)
+	{
+		return p->build_settings[i].name;
+	}
 
-  static void SetDisplayString(ride::Project* p, int i,
-                               const wxString& new_string) {
-    p->build_settings[i].name = new_string;
-  }
+	static void SetDisplayString(ride::Project* p, int i, const wxString& new_string)
+	{
+		p->build_settings[i].name = new_string;
+	}
 
-  static void Add(ride::Project* p, const wxString& name) {
-    ride::BuildSetting build;
-    build.name = name;
-    p->build_settings.emplace_back(build);
-  }
+	static void Add(ride::Project* p, const wxString& name)
+	{
+		ride::BuildSetting build;
+		build.name = name;
+		p->build_settings.emplace_back(build);
+	}
 
-  static void Remove(ride::Project* p, int i) {
-    p->build_settings.erase(p->build_settings.begin() + i);
-  }
+	static void Remove(ride::Project* p, int i)
+	{
+		p->build_settings.erase(p->build_settings.begin() + i);
+	}
 
-  static void Swap(ride::Project* p, int selection, int next_index) {
-    std::swap(p->build_settings[selection],
-              p->build_settings[next_index]);
-  }
+	static void Swap(ride::Project* p, int selection, int next_index)
+	{
+		std::swap(p->build_settings[selection], p->build_settings[next_index]);
+	}
 };
 
 const wxString ProjectBuildFunctions::ADD_TEXT = "Name of build to create";
-const wxString ProjectBuildFunctions::EDIT_TEXT =
-    "Please specify the new build name";
+const wxString ProjectBuildFunctions::EDIT_TEXT = "Please specify the new build name";
 
 typedef ui::Configurations Configurations;
 
-class BuildConfigurationsDlg : public Configurations {
- public:
-  BuildConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                         Project* project, int selected);
+class BuildConfigurationsDlg : public Configurations
+{
+public:
 
-  bool has_applied() const { return has_applied_; }
+	BuildConfigurationsDlg(
+		wxWindow* parent, MainWindow* mainwindow, Project* project, int selected
+	);
 
- protected:
-  void OnApply(wxCommandEvent& event) override;
-  void OnCancel(wxCommandEvent& event) override;
-  void OnOk(wxCommandEvent& event) override;
+	bool has_applied() const
+	{
+		return has_applied_;
+	}
 
- protected:
-  bool Apply();
-  void AllToGui(bool togui);
+protected:
 
- protected:
-  void OnAdd(wxCommandEvent& event) override;
-  void OnEdit(wxCommandEvent& event) override;
-  void OnRemove(wxCommandEvent& event) override;
-  void OnUp(wxCommandEvent& event) override;
-  void OnDown(wxCommandEvent& event) override;
+	void OnApply(wxCommandEvent& event) override;
+	void OnCancel(wxCommandEvent& event) override;
+	void OnOk(wxCommandEvent& event) override;
 
- private:
-  Project* project_;
-  ride::Project project_backup_;
-  GuiList<ride::Project, ProjectBuildFunctions> feature_list_;
-  bool has_applied_;
+protected:
+
+	bool Apply();
+	void AllToGui(bool togui);
+
+protected:
+
+	void OnAdd(wxCommandEvent& event) override;
+	void OnEdit(wxCommandEvent& event) override;
+	void OnRemove(wxCommandEvent& event) override;
+	void OnUp(wxCommandEvent& event) override;
+	void OnDown(wxCommandEvent& event) override;
+
+private:
+
+	Project* project_;
+	ride::Project project_backup_;
+	GuiList<ride::Project, ProjectBuildFunctions> feature_list_;
+	bool has_applied_;
 };
 
-bool DoBuildConfigurationsDlg(wxWindow* parent, MainWindow* mainwindow,
-                              Project* project, int selected) {
-  BuildConfigurationsDlg dlg(parent, mainwindow, project, selected);
-  dlg.ShowModal();
+bool DoBuildConfigurationsDlg(
+	wxWindow* parent, MainWindow* mainwindow, Project* project, int selected
+)
+{
+	BuildConfigurationsDlg dlg(parent, mainwindow, project, selected);
+	dlg.ShowModal();
 
-  return dlg.has_applied();
+	return dlg.has_applied();
 }
 
-BuildConfigurationsDlg::BuildConfigurationsDlg(wxWindow* parent,
-                                               MainWindow* mainwindow,
-                                               Project* project, int selected)
-    : ::ui::Configurations(parent, wxID_ANY),
-      project_(project),
-      project_backup_(project->project()),
-      feature_list_(uiList, this),
-      has_applied_(false) {
-  AllToGui(true);
-  Configurations::SetTitle("Build Configuration Manager");
+BuildConfigurationsDlg::BuildConfigurationsDlg(
+	wxWindow* parent, MainWindow* mainwindow, Project* project, int selected
+)
+	: ::ui::Configurations(parent, wxID_ANY)
+	, project_(project)
+	, project_backup_(project->project())
+	, feature_list_(uiList, this)
+	, has_applied_(false)
+{
+	AllToGui(true);
+	Configurations::SetTitle("Build Configuration Manager");
 
-  feature_list_.Select(selected, project->project_ptr());
-  feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp,
-                      uiListDown);
+	feature_list_.Select(selected, project->project_ptr());
+	feature_list_.Setup(uiListAdd, uiListRemove, uiListChange, uiListUp, uiListDown);
 }
 
-void BuildConfigurationsDlg::OnApply(wxCommandEvent& event) { Apply(); }
-
-void BuildConfigurationsDlg::OnCancel(wxCommandEvent& event) {
-  project_->set_project(project_backup_);
-  EndModal(wxCANCEL);
+void BuildConfigurationsDlg::OnApply(wxCommandEvent& event)
+{
+	Apply();
 }
 
-void BuildConfigurationsDlg::OnOk(wxCommandEvent& event) {
-  if (Apply()) {
-    EndModal(wxOK);
-  }
+void BuildConfigurationsDlg::OnCancel(wxCommandEvent& event)
+{
+	project_->set_project(project_backup_);
+	EndModal(wxCANCEL);
 }
 
-void BuildConfigurationsDlg::AllToGui(bool togui) {
-  feature_list_.ToGui(project_->project_ptr(), togui);
+void BuildConfigurationsDlg::OnOk(wxCommandEvent& event)
+{
+	if (Apply())
+	{
+		EndModal(wxOK);
+	}
+}
+
+void BuildConfigurationsDlg::AllToGui(bool togui)
+{
+	feature_list_.ToGui(project_->project_ptr(), togui);
 }
 
 //////////////////////////////////////////////////////////////////////////
 
-bool BuildConfigurationsDlg::Apply() {
-  AllToGui(false);
+bool BuildConfigurationsDlg::Apply()
+{
+	AllToGui(false);
 
-  project_backup_ = project_->project();
+	project_backup_ = project_->project();
 
-  has_applied_ = true;
-  return true;
+	has_applied_ = true;
+	return true;
 }
 
-void BuildConfigurationsDlg::OnAdd(wxCommandEvent& event) {
-  if (false == feature_list_.Add(project_->project_ptr())) {
-    return;
-  }
-  AllToGui(true);
+void BuildConfigurationsDlg::OnAdd(wxCommandEvent& event)
+{
+	if (false == feature_list_.Add(project_->project_ptr()))
+	{
+		return;
+	}
+	AllToGui(true);
 }
 
-void BuildConfigurationsDlg::OnEdit(wxCommandEvent& event) {
-  if (false == feature_list_.Edit(project_->project_ptr())) {
-    return;
-  }
-  AllToGui(true);
+void BuildConfigurationsDlg::OnEdit(wxCommandEvent& event)
+{
+	if (false == feature_list_.Edit(project_->project_ptr()))
+	{
+		return;
+	}
+	AllToGui(true);
 }
 
-void BuildConfigurationsDlg::OnRemove(wxCommandEvent& event) {
-  if (false == feature_list_.Remove(project_->project_ptr())) {
-    return;
-  }
+void BuildConfigurationsDlg::OnRemove(wxCommandEvent& event)
+{
+	if (false == feature_list_.Remove(project_->project_ptr()))
+	{
+		return;
+	}
 
-  AllToGui(true);
+	AllToGui(true);
 }
 
-void BuildConfigurationsDlg::OnUp(wxCommandEvent& event) {
-  if (false == feature_list_.Up(project_->project_ptr())) {
-    return;
-  }
-  AllToGui(true);
+void BuildConfigurationsDlg::OnUp(wxCommandEvent& event)
+{
+	if (false == feature_list_.Up(project_->project_ptr()))
+	{
+		return;
+	}
+	AllToGui(true);
 }
 
-void BuildConfigurationsDlg::OnDown(wxCommandEvent& event) {
-  if (false == feature_list_.Down(project_->project_ptr())) {
-    return;
-  }
-  AllToGui(true);
+void BuildConfigurationsDlg::OnDown(wxCommandEvent& event)
+{
+	if (false == feature_list_.Down(project_->project_ptr()))
+	{
+		return;
+	}
+	AllToGui(true);
 }

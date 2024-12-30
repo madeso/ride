@@ -12,25 +12,30 @@ class MainWindow;
 class wxAuiManager;
 class FileEdit;
 
-class OutputDirector {
- public:
-  OutputDirector();
-  void Create(MainWindow* window, wxAuiManager* aui, const wxString& name,
-              const wxString& caption);
+class OutputDirector
+{
+public:
 
-  void Clear();
-  void Append(const wxString& str);
-  void UpdateStyles();
-  void AddAllCompilerMessages(FileEdit* edit);
+	OutputDirector();
+	void Create(
+		MainWindow* window, wxAuiManager* aui, const wxString& name, const wxString& caption
+	);
 
- protected:
-  void AddCompilerMessage(const CompilerMessage& mess);
+	void Clear();
+	void Append(const wxString& str);
+	void UpdateStyles();
+	void AddAllCompilerMessages(FileEdit* edit);
 
- private:
-  MainWindow* main_;
-  OutputControl* control_;
-  std::vector<wxString> files_;
-  std::vector<CompilerMessage> compiler_messages_;
+protected:
+
+	void AddCompilerMessage(const CompilerMessage& mess);
+
+private:
+
+	MainWindow* main_;
+	OutputControl* control_;
+	std::vector<wxString> files_;
+	std::vector<CompilerMessage> compiler_messages_;
 };
 
-#endif  // RIDE_OUTPUTDIRECTOR_H_
+#endif	// RIDE_OUTPUTDIRECTOR_H_

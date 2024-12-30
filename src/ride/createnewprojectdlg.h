@@ -6,25 +6,28 @@
 #include <ride/wx.h>
 #include "ride/settings.h"
 
-class CreateNewProjectDlgHandler {
- public:
-  explicit CreateNewProjectDlgHandler(wxWindow* parent);
+class CreateNewProjectDlgHandler
+{
+public:
 
-  bool ShowModal(const ride::MachineSettings& machine);
+	explicit CreateNewProjectDlgHandler(wxWindow* parent);
 
-  const wxString project_folder() const;
-  const wxString project_name() const;
+	bool ShowModal(const ride::MachineSettings& machine);
 
-  wxString target() const;
-  wxString cargo_command_line() const;
+	const wxString project_folder() const;
+	const wxString project_name() const;
 
- private:
-  wxWindow* parent_;
+	wxString target() const;
+	wxString cargo_command_line() const;
 
-  wxString project_folder_;
-  wxString project_name_;
-  wxString target_;
-  wxString cargo_command_line_;
+private:
+
+	wxWindow* parent_;
+
+	wxString project_folder_;
+	wxString project_name_;
+	wxString target_;
+	wxString cargo_command_line_;
 };
 
-#endif  // RIDE_CREATENEWPROJECTDLG_H_
+#endif	// RIDE_CREATENEWPROJECTDLG_H_

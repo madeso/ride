@@ -24,24 +24,27 @@ const std::string kSpaceCharacters = " \n\r\t";
 @param trimCharacters the characters to remove.
 @returns the trimmed string.
  */
-std::string TrimRight(const std::string& stringToTrim,
-                      const std::string& trimCharacters = kSpaceCharacters);
+std::string TrimRight(
+	const std::string& stringToTrim, const std::string& trimCharacters = kSpaceCharacters
+);
 
 /** Remove characters from the left, stops at invalid character.
 @param stringToTrim the string to remove characters from.
 @param trimCharacters the characters to remove.
 @returns the trimmed string.
  */
-std::string TrimLeft(const std::string& stringToTrim,
-                     const std::string& trimCharacters = kSpaceCharacters);
+std::string TrimLeft(
+	const std::string& stringToTrim, const std::string& trimCharacters = kSpaceCharacters
+);
 
 /** Remove characters from both the start and the end.
 @param stringToTrim the string to remove characters from.
 @param trimCharacters the characters to remove.
 @returns the trimmed string.
  */
-std::string Trim(const std::string& stringToTrim,
-                 const std::string& trimCharacters = kSpaceCharacters);
+std::string Trim(
+	const std::string& stringToTrim, const std::string& trimCharacters = kSpaceCharacters
+);
 
 /** Tests if a string starts with another string.
 @param stringToTest the string to test.
@@ -68,8 +71,7 @@ std::string ToLower(const std::string& string);
 @param toFind the string to find.
 @param toReplace the string to replace it.
  */
-void StringReplace(std::string* string, const std::string& toFind,
-                   const std::string& toReplace);
+void StringReplace(std::string* string, const std::string& toFind, const std::string& toReplace);
 
 /** Replace all occurrences in a string.
 @param string the source string.
@@ -77,9 +79,9 @@ void StringReplace(std::string* string, const std::string& toFind,
 @param toReplace the string to replace it.
 @returns the modified string.
  */
-const std::string StringReplace(const std::string& string,
-                                const std::string& toFind,
-                                const std::string& toReplace);
+const std::string StringReplace(
+	const std::string& string, const std::string& toFind, const std::string& toReplace
+);
 
 /** Copy a string to a character buffer, adding null terminator at the end.
 @param dst the destination buffer.
@@ -87,15 +89,14 @@ const std::string StringReplace(const std::string& string,
 @param count the maximum number of characters to copy (including null
 terminator)
  */
-void Copy(char* dst, const std::string& src,
-          const std::string::size_type& count);
+void Copy(char* dst, const std::string& src, const std::string::size_type& count);
 
 std::string RemoveFromEnd(const std::string& str, const std::string& end);
 
-std::vector<std::string> Tokenize(const std::string& input,
-                                  const std::string& delimiters,
-                                  bool remove_empties);
+std::vector<std::string> Tokenize(
+	const std::string& input, const std::string& delimiters, bool remove_empties
+);
 
 /** @} */
 
-#endif  // RIDE_STRINGUTILS_H_
+#endif	// RIDE_STRINGUTILS_H_

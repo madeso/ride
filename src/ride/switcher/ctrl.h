@@ -10,57 +10,73 @@
 #include "itemlist.h"
 #include "style.h"
 
-namespace switcher {
+namespace switcher
+{
 
-class Ctrl : public wxControl {
- public:
-  explicit Ctrl(const ItemList& items, const Style& style);
+class Ctrl : public wxControl
+{
+public:
 
-  bool Create(wxWindow* parent, wxWindowID id,
-              const wxPoint& pos = wxDefaultPosition,
-              const wxSize& size = wxDefaultSize, long style = 0);  // NOLINT
+	explicit Ctrl(const ItemList& items, const Style& style);
 
-  // Public API
-  void set_items(const ItemList& items);
-  const ItemList& items() const;
-  ItemList& items();
+	bool Create(
+		wxWindow* parent,
+		wxWindowID id,
+		const wxPoint& pos = wxDefaultPosition,
+		const wxSize& size = wxDefaultSize,
+		long style = 0
+	);	// NOLINT
 
-  void SelectOrFirst(Index index, int group, bool forward);
+	// Public API
+	void set_items(const ItemList& items);
+	const ItemList& items() const;
+	ItemList& items();
 
-  Index selection() const;
+	void SelectOrFirst(Index index, int group, bool forward);
 
-  // Event handlers
+	Index selection() const;
 
-  void OnPaint(wxPaintEvent& event);
-  void OnMouseClick(wxMouseEvent& event);
-  void OnMouseMove(wxMouseEvent& event);
-  void OnChar(wxKeyEvent& event);
-  void OnKey(wxKeyEvent& event);
-  void OnEraseBackground(wxEraseEvent& event);
+	// Event handlers
 
-  void OnTab(bool forward);
-  void OnTabNext(wxCommandEvent& event) { OnTab(true); }
-  void OnTabPrev(wxCommandEvent& event) { OnTab(false); }
+	void OnPaint(wxPaintEvent& event);
+	void OnMouseClick(wxMouseEvent& event);
+	void OnMouseMove(wxMouseEvent& event);
+	void OnChar(wxKeyEvent& event);
+	void OnKey(wxKeyEvent& event);
+	void OnEraseBackground(wxEraseEvent& event);
 
-  // Overrides
-  virtual wxSize DoGetBestClientSize() const;
+	void OnTab(bool forward);
 
-  // Implementation
+	void OnTabNext(wxCommandEvent& event)
+	{
+		OnTab(true);
+	}
 
-  void CalculateLayout();
-  void CalculateLayout(wxDC& dc);  // NOLINT
-  void InvalidateLayout();
-  void GenerateSelectionEvent();
-  void SendCloseEvent();
-  void AdvanceToNextSelection(bool forward);
+	void OnTabPrev(wxCommandEvent& event)
+	{
+		OnTab(false);
+	}
 
- protected:
-  ItemList items_;
-  Index selection_;
-  Style style_;
-  wxSize overall_size_;
+	// Overrides
+	virtual wxSize DoGetBestClientSize() const;
+
+	// Implementation
+
+	void CalculateLayout();
+	void CalculateLayout(wxDC& dc);	 // NOLINT
+	void InvalidateLayout();
+	void GenerateSelectionEvent();
+	void SendCloseEvent();
+	void AdvanceToNextSelection(bool forward);
+
+protected:
+
+	ItemList items_;
+	Index selection_;
+	Style style_;
+	wxSize overall_size_;
 };
 
-}  // switcher
+}  //  namespace switcher
 
-#endif  // RIDE_SWITCHERCTRL_H_
+#endif	// RIDE_SWITCHERCTRL_H_

@@ -9,25 +9,29 @@
 
 class MainWindow;
 
-class SettingsIndicatorTab : public ui::SettingsIndicatorsPanel {
- public:
-  SettingsIndicatorTab(wxWindow* parent, SettingsCommon* common);
+class SettingsIndicatorTab : public ui::SettingsIndicatorsPanel
+{
+public:
 
-  void IndicatorToGui(bool togui);
+	SettingsIndicatorTab(wxWindow* parent, SettingsCommon* common);
 
- protected:
-  void OnIndicatorListChanged(wxCommandEvent& event);
-  void OnIndicatorCombobox(wxCommandEvent& event);
-  void OnIndicatorColor(wxColourPickerEvent& event);
-  void OnIndicatorCheckbox(wxCommandEvent& event);
-  void OnIndicatorText(wxCommandEvent& event);
+	void IndicatorToGui(bool togui);
 
- private:
-  SettingsCommon* common_;
-  //////////////////////////////////////////////////////////////////////////
-  // Indicator tab
-  bool allow_send_indicator_to_main_;
-  void SendIndicatorToMain();
+protected:
+
+	void OnIndicatorListChanged(wxCommandEvent& event);
+	void OnIndicatorCombobox(wxCommandEvent& event);
+	void OnIndicatorColor(wxColourPickerEvent& event);
+	void OnIndicatorCheckbox(wxCommandEvent& event);
+	void OnIndicatorText(wxCommandEvent& event);
+
+private:
+
+	SettingsCommon* common_;
+	//////////////////////////////////////////////////////////////////////////
+	// Indicator tab
+	bool allow_send_indicator_to_main_;
+	void SendIndicatorToMain();
 };
 
-#endif  // RIDE_SETTINGSINDICATORTAB_H_
+#endif	// RIDE_SETTINGSINDICATORTAB_H_

@@ -5,17 +5,20 @@
 
 #include <ride/wx.h>
 
-class LoadResult {
- public:
-  static LoadResult Ok();
-  static LoadResult Error(const wxString& message);
-  const wxString& message() const;
-  bool IsOk() const;
+class LoadResult
+{
+public:
 
- private:
-  LoadResult();
-  wxString message_;
-  bool ok_;
+	static LoadResult Ok();
+	static LoadResult Error(const wxString& message);
+	const wxString& message() const;
+	bool IsOk() const;
+
+private:
+
+	LoadResult();
+	wxString message_;
+	bool ok_;
 };
 
-#endif  // RIDE_LOADRESULT_H_
+#endif	// RIDE_LOADRESULT_H_

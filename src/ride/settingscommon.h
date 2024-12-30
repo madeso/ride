@@ -7,27 +7,30 @@
 
 class MainWindow;
 
-class SettingsCommon {
- public:
-  explicit SettingsCommon(MainWindow* main_window);
+class SettingsCommon
+{
+public:
 
-  const ride::Settings& current_settings() const;
-  ride::Settings* current_settings_mod();
+	explicit SettingsCommon(MainWindow* main_window);
 
-  const ride::MachineSettings& current_machine() const;
-  ride::MachineSettings* current_machine_mod();
+	const ride::Settings& current_settings() const;
+	ride::Settings* current_settings_mod();
 
-  void UpdateMain();
-  void Revert();
-  void Apply(wxWindow* main);
+	const ride::MachineSettings& current_machine() const;
+	ride::MachineSettings* current_machine_mod();
 
- private:
-  MainWindow* main_window_;
-  ride::Settings global_settings_;
-  ride::Settings current_settings_;
+	void UpdateMain();
+	void Revert();
+	void Apply(wxWindow* main);
 
-  ride::MachineSettings global_machine_;
-  ride::MachineSettings current_machine_;
+private:
+
+	MainWindow* main_window_;
+	ride::Settings global_settings_;
+	ride::Settings current_settings_;
+
+	ride::MachineSettings global_machine_;
+	ride::MachineSettings current_machine_;
 };
 
-#endif  // RIDE_SETTINGSCOMMON_H_
+#endif	// RIDE_SETTINGSCOMMON_H_
