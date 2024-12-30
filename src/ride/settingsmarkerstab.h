@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_SETTINGSMARKERSTAB_H_
 #define RIDE_SETTINGSMARKERSTAB_H_
 

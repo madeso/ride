@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_VARIABLEEDITOR_H_
 #define RIDE_VARIABLEEDITOR_H_
 

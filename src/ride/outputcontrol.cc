@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/outputcontrol.h"
 
 #include <wx/clipbrd.h>

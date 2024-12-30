@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_FORM_H_
 #define RIDE_FORM_H_
 

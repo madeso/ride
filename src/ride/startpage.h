@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_STARTPAGE_H_
 #define RIDE_STARTPAGE_H_
 

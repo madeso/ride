@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_CMDRUNNER_H_
 #define RIDE_CMDRUNNER_H_
 

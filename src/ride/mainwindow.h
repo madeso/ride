@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_MAINWINDOW_H_
 #define RIDE_MAINWINDOW_H_
 

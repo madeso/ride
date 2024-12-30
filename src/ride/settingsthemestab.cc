@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/settingsthemestab.h"
 
 #include <vector>

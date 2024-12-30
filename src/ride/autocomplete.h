@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_AUTOCOMPLETE_H_
 #define RIDE_AUTOCOMPLETE_H_
 

@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_MENUEVENT_H_
 #define RIDE_MENUEVENT_H_
 

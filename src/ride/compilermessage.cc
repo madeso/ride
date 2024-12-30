@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/compilermessage.h"
 #include <wx/regex.h>
 #include <wx/filename.h>

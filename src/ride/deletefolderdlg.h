@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_DELETEFOLDERDLG_H_
 #define RIDE_DELETEFOLDERDLG_H_
 

@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/auix.h"
 
 #include <wx/renderer.h>

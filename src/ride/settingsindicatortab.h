@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_SETTINGSINDICATORTAB_H_
 #define RIDE_SETTINGSINDICATORTAB_H_
 

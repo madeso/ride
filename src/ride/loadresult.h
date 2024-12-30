@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_LOADRESULT_H_
 #define RIDE_LOADRESULT_H_
 

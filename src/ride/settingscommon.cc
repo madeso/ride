@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/settingscommon.h"
 #include "ride/mainwindow.h"
 #include "ride/wxutils.h"

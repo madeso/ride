@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/form.h"
 #include <ride/wx.h>
 #include <wx/editlbox.h>

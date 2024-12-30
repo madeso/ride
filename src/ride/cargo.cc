@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/cargo.h"
 #include <string>
 #include <algorithm>

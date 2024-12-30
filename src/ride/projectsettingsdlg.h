@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_PROJECTSETTINGSDLG_H_
 #define RIDE_PROJECTSETTINGSDLG_H_
 

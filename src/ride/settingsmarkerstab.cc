@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/settingsmarkerstab.h"
 
 #include <ride/wx.h>

@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_FILEEDIT_H_
 #define RIDE_FILEEDIT_H_
 

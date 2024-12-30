@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/settingsfontstab.h"
 
 #include <vector>

@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_WX_H_
 #define RIDE_WX_H_
 

@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/runner.h"
 #include <wx/utils.h>
 #include <wx/process.h>

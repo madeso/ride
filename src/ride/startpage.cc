@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 // TODO(gustav) move to a config or a better place
 // #define RIDE_USE_WEBVIEW
 

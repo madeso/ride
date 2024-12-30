@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/proto.h"
 
 wxString LoadProtoJson(ride::MachineSettings* mess, const wxFileName& file)

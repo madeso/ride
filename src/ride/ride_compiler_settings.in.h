@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_RIDE_COMPILER_SETTINGS_IN_H_
 #define RIDE_RIDE_COMPILER_SETTINGS_IN_H_
 

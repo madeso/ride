@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_BUILTINTHEMES_H_
 #define RIDE_BUILTINTHEMES_H_
 

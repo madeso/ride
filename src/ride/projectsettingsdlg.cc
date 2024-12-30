@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/projectsettingsdlg.h"
 
 #include <wx/editlbox.h>

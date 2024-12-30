@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_SETTINGSWINDOWTAB_H_
 #define RIDE_SETTINGSWINDOWTAB_H_
 

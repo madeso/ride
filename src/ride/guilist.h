@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_GUILIST_H_
 #define RIDE_GUILIST_H_
 

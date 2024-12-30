@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/createnewfiledlg.h"
 
 #include <ride/wx.h>

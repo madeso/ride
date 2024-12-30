@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_CARGO_H_
 #define RIDE_CARGO_H_
 

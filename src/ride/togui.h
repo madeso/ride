@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_TOGUI_H_
 #define RIDE_TOGUI_H_
 

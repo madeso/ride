@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_VERSION_H_
 #define RIDE_VERSION_H_
 
@@ -12,7 +10,7 @@
 #define VER_COMPANYNAME_STR "madeso"
 #define VER_FILEDESCRIPTION_STR "Rust IDE"
 #define VER_INTERNALNAME_STR VER_FILEDESCRIPTION_STR
-#define VER_LEGALCOPYRIGHT_STR "Copyright © 2014 madeso"  // NOLINT(*)
+#define VER_LEGALCOPYRIGHT_STR "Copyright ï¿½ 2014 madeso"  // NOLINT(*)
 #define VER_LEGALTRADEMARKS1_STR "All Rights Reserved"
 #define VER_LEGALTRADEMARKS2_STR VER_LEGALTRADEMARKS1_STR
 #define VER_ORIGINALFILENAME_STR "ride.exe"

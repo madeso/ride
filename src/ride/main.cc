@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include <ride/wx.h>
 
 #include "settings.proto.h"	 // NOLINT this is how we include it

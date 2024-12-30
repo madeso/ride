@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #include "ride/variableeditor.h"
 
 #include <wx/filedlg.h>

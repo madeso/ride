@@ -1,5 +1,3 @@
-// Copyright (2015) Gustav
-
 #ifndef RIDE_PATHTESTER_H_
 #define RIDE_PATHTESTER_H_
 
