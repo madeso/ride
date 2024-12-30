@@ -40,18 +40,17 @@ bool LoadProto(T* message, const wxFileName& file, wxWindow* main, const wxStrin
 		const wxString jsonerr = LoadProtoJson(message, json);
 		if (jsonerr != "")
 		{
-			ShowError(
-				main, "Unable to load " + name + " as json: " + jsonerr, "Error while loading"
-			);
+			ShowError(main, "Unable to load " + name + "(" + json.GetAbsolutePath() + ") as json: " + jsonerr, "Error while loading");
 			return false;
 		}
 	}
 	else
 	{
+		if(file.FileExists() == false) return false;
 		const wxString jsonerr = LoadProtoJson(message, file);
 		if (jsonerr != "")
 		{
-			ShowError(main, "Unable to load " + name + ": " + jsonerr, "Error while loading");
+			ShowError(main, "Unable to load " + name + "(" + file.GetAbsolutePath() + "): " + jsonerr, "Error while loading");
 			return false;
 		}
 	}
