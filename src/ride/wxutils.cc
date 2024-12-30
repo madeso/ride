@@ -264,16 +264,16 @@ int FindStcText(
 )
 {
 	assert(stc);
-#ifdef USE_WXWIDGETS_LEGACY_FINDTEXT
+	/*
+	// old code
 	const int ret = stc->FindText(minPos, maxPos, text, flags);
 	if (findEnd)
 	{
 		*findEnd = ret;
 	}
 	return ret;
-#else
+	*/
 	return stc->FindText(minPos, maxPos, text, flags, findEnd);
-#endif
 }
 
 class FontLister : public wxFontEnumerator

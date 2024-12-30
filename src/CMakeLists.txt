@@ -5,13 +5,13 @@
 SET(RIDE_WX_COMPONENTS core aui base stc adv html)
 
 if(${MSVC})
-# on windows and visual-studio it requires scintilla
-LIST(APPEND RIDE_WX_COMPONENTS scintilla)
+	# on windows and visual-studio it requires scintilla
+	LIST(APPEND RIDE_WX_COMPONENTS scintilla)
 endif()
 
 if(${RIDE_USE_WEBVIEW})
-# only try to find webview if it's required
-LIST(APPEND RIDE_WX_COMPONENTS webview)
+	# only try to find webview if it's required
+	LIST(APPEND RIDE_WX_COMPONENTS webview)
 endif()
 
 message(STATUS "wxWidgets components: ${RIDE_WX_COMPONENTS}")
@@ -27,25 +27,25 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 configure_file (
-  "${CMAKE_CURRENT_SOURCE_DIR}/ride/ride_compiler_settings.in.h"
-  "${CMAKE_CURRENT_BINARY_DIR}/ride_compiler_settings.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/ride/ride_compiler_settings.in.h"
+	"${CMAKE_CURRENT_BINARY_DIR}/ride_compiler_settings.h"
 )
 
 set(src
-  ride/settings.proto.cc
-  ride/settings.proto.h
-  ride/resources/resources.rc
-  ${src_glob}
+	ride/settings.proto.cc
+	ride/settings.proto.h
+	ride/resources/resources.rc
+	${src_glob}
 )
 set(generated_src
-  ride/generated/ui.cpp
-  ride/generated/ui.h
+	ride/generated/ui.cpp
+	ride/generated/ui.h
 )
 
 set(tinyxml_src
 	${CMAKE_SOURCE_DIR}/external/tinyxml2/tinyxml2.cpp
 	${CMAKE_SOURCE_DIR}/external/tinyxml2/tinyxml2.h
-	)
+)
 include_directories(${CMAKE_SOURCE_DIR}/external/tinyxml2/)
 
 set(switcher_src
@@ -61,7 +61,7 @@ set(switcher_src
 	ride/switcher/itemlist.h
 	ride/switcher/style.cc
 	ride/switcher/style.h
-	)
+)
 
 set(bombs_src
 	ride/games/bombs/bombs.cpp
@@ -71,7 +71,7 @@ set(bombs_src
 	ride/games/bombs/bombscanvas.cpp
 	ride/games/bombs/game.cpp
 	ride/games/bombs/game.h
-	)
+)
 
 set(forty_src
 	ride/games/forty/forty_glue.cc
@@ -109,8 +109,7 @@ if(APPLE)
 	set(generated_src ${generated_src} ${OSX_ICON_FILES})
 ENDIF()
 
-add_executable(
-	ride WIN32 MACOSX_BUNDLE
+add_executable(ride WIN32 MACOSX_BUNDLE
 	${src} ${generated_src} ${switcher_src} ${games_src} ${tinyxml_src} ${pbjson_src}
 )
 
@@ -118,7 +117,7 @@ install(TARGETS ride DESTINATION ".")
 
 # install dependencies
 if(APPLE)
-  install(SCRIPT macdylibbundler.cmake)
+	install(SCRIPT macdylibbundler.cmake)
 endif()
 
 # make apple installer look prettier
@@ -127,10 +126,7 @@ if(APPLE)
 	set_target_properties(ride PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/bundle-info.plist")
 ENDIF()
 
-target_link_libraries(
-	ride
-	${wxWidgets_LIBRARIES}
-)
+target_link_libraries(ride ${wxWidgets_LIBRARIES})
 
 
 # Amend manifest to tell Windows that the application is DPI aware (needed for Windows 8.1 and up)

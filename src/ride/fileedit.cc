@@ -910,18 +910,14 @@ void GoHomeEnd(
 			switch (selection_state)
 			{
 			case SelectionState::NONE:
-#ifdef RIDE_WXWIDGETS_USE_NEW_GO_HOME_END
-				text_->VCHomeDisplay();
-#else
+				// todo(Gustav): figure out what is better
+				// text_->VCHomeDisplay();
 				text_->HomeDisplay();
-#endif
 				break;
 			case SelectionState::STREAM:
-#ifdef RIDE_WXWIDGETS_USE_NEW_GO_HOME_END
-				text_->VCHomeDisplayExtend();
-#else
+				// todo(Gustav): figure out what is better
+				// text_->VCHomeDisplayExtend();
 				text_->HomeDisplayExtend();
-#endif
 				break;
 			case SelectionState::RECT: text_->VCHomeRectExtend(); break;
 			default: assert(false && "Unhandled selection state");

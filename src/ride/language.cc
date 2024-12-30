@@ -387,12 +387,6 @@ public:
 	}
 };
 
-#ifdef USE_CPP_AS_RUST
-	#ifdef wxSTC_LEX_RUST
-		#undef wxSTC_LEX_RUST
-	#endif
-	#define wxSTC_LEX_RUST wxSTC_LEX_CPP
-#endif
 
 class RustLanguage : public Language
 {
@@ -460,7 +454,6 @@ public:
 
 	void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override
 	{
-#ifndef USE_CPP_AS_RUST
 		SetStyle(text, wxSTC_RUST_DEFAULT, settings.fonts_and_colors.default_style, true);
 		SetStyle(text, wxSTC_RUST_COMMENTBLOCK, settings.fonts_and_colors.style_comment);
 		SetStyle(text, wxSTC_RUST_COMMENTLINE, settings.fonts_and_colors.style_commentline);
@@ -506,9 +499,7 @@ public:
 		SetProperty(text, wxT("fold.rust.explicit.start"), _T("//{"));
 		SetProperty(text, wxT("fold.rust.explicit.end"), _T("//}"));
 		SetProperty(text, wxT("lexer.rust.fold.at.else"), b2s01(settings.fold_at_else));
-#else
-		DefaultStyleDocument(text, settings, this);
-#endif
+
 		// end of setstyle/setprop fallback
 
 		const wxString keyword_types
@@ -520,11 +511,8 @@ public:
 		SetKeys(text, 2, "");  // Other keywords
 		SetKeys(text, 3, "");
 		SetKeys(text, 4, "");
-
-#ifndef USE_CPP_AS_RUST
 		SetKeys(text, 5, "");
 		SetKeys(text, 6, "");
-#endif
 	}
 };
 
