@@ -607,23 +607,6 @@ void MainWindow::SetStatusBarText(const wxString& text, StatusBarWidgets widget)
 	statusbar_->SetStatusText(text, widget);
 }
 
-void TestPaths(wxWindow* main, const ride::MachineSettings& machine)
-{
-	// TODO(Gustav): Provide option to disable startup test
-	PathTester pt(machine);
-	if (pt.CargoIsValid() == false)
-		ShowWarning(main, "Unable to run cargo, please check settings", "Configuration error!");
-	if (pt.RustcIsValid() == false)
-		ShowWarning(main, "Unable to run rustc, please check settings", "Configuration error!");
-	if (pt.RacerIsValid() == false)
-		ShowWarning(main, "Unable to run racer, please check settings", "Configuration error!");
-
-	/*
-  if (pt.protoc().IsEmpty())
-    ShowWarning(main, "Unable to run protoc, please check settings",
-                "Configuration error!");
-  */
-}
 
 MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
 	: wxFrame(nullptr, wxID_ANY, app_name, pos, size)
@@ -718,8 +701,6 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 	// TODO(Gustav): Investigate why...
 	SetupMenu();
 #endif
-
-	TestPaths(this, machine_);
 }
 
 void MainWindow::UpdateTheme()
