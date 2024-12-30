@@ -21,17 +21,26 @@ find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
 include( "${wxWidgets_USE_FILE}" )
 message(STATUS "wxWidgets use file: ${wxWidgets_USE_FILE}")
 
-FILE(GLOB src_glob *.cc;*.h)
+FILE(GLOB src_glob ride/*.cc;ride/*.h)
 
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 configure_file (
-  "${CMAKE_CURRENT_SOURCE_DIR}/ride_compiler_settings.in.h"
+  "${CMAKE_CURRENT_SOURCE_DIR}/ride/ride_compiler_settings.in.h"
   "${CMAKE_CURRENT_BINARY_DIR}/ride_compiler_settings.h"
 )
 
-set(src settings.proto.cc settings.proto.h resources/resources.rc ${src_glob})
-set(generated_src generated/ui.cpp generated/ui.h)
+set(src
+  ride/settings.proto.cc
+  ride/settings.proto.h
+  ride/resources/resources.rc
+  ${src_glob}
+)
+set(generated_src
+  ride/generated/ui.cpp
+  ride/generated/ui.h
+)
 
 set(tinyxml_src
 	${CMAKE_SOURCE_DIR}/external/tinyxml2/tinyxml2.cpp
@@ -40,48 +49,48 @@ set(tinyxml_src
 include_directories(${CMAKE_SOURCE_DIR}/external/tinyxml2/)
 
 set(switcher_src
-	switcher/ctrl.cc
-	switcher/ctrl.h
-	switcher/dialog.cc
-	switcher/dialog.h
-	switcher/group.cc
-	switcher/group.h
-	switcher/item.cc
-	switcher/item.h
-	switcher/itemlist.cc
-	switcher/itemlist.h
-	switcher/style.cc
-	switcher/style.h
+	ride/switcher/ctrl.cc
+	ride/switcher/ctrl.h
+	ride/switcher/dialog.cc
+	ride/switcher/dialog.h
+	ride/switcher/group.cc
+	ride/switcher/group.h
+	ride/switcher/item.cc
+	ride/switcher/item.h
+	ride/switcher/itemlist.cc
+	ride/switcher/itemlist.h
+	ride/switcher/style.cc
+	ride/switcher/style.h
 	)
 
 set(bombs_src
-	games/bombs/bombs.cpp
-	games/bombs/bombs.h
-	games/bombs/bombs_glue.cc
-	games/bombs/bombs_glue.h
-	games/bombs/bombscanvas.cpp
-	games/bombs/game.cpp
-	games/bombs/game.h
+	ride/games/bombs/bombs.cpp
+	ride/games/bombs/bombs.h
+	ride/games/bombs/bombs_glue.cc
+	ride/games/bombs/bombs_glue.h
+	ride/games/bombs/bombscanvas.cpp
+	ride/games/bombs/game.cpp
+	ride/games/bombs/game.h
 	)
 
 set(forty_src
-	games/forty/forty_glue.cc
-	games/forty/forty_glue.h
-	games/forty/canvas.cpp
-	games/forty/canvas.h
-	games/forty/card.cpp
-	games/forty/card.h
-	games/forty/forty.cpp
-	games/forty/forty.h
-	games/forty/game.cpp
-	games/forty/game.h
-	games/forty/pictures.xpm
-	games/forty/pile.cpp
-	games/forty/pile.h
-	games/forty/scorefil.cpp
-	games/forty/scorefil.h
-	games/forty/symbols.xpm
-	)
+	ride/games/forty/forty_glue.cc
+	ride/games/forty/forty_glue.h
+	ride/games/forty/canvas.cpp
+	ride/games/forty/canvas.h
+	ride/games/forty/card.cpp
+	ride/games/forty/card.h
+	ride/games/forty/forty.cpp
+	ride/games/forty/forty.h
+	ride/games/forty/game.cpp
+	ride/games/forty/game.h
+	ride/games/forty/pictures.xpm
+	ride/games/forty/pile.cpp
+	ride/games/forty/pile.h
+	ride/games/forty/scorefil.cpp
+	ride/games/forty/scorefil.h
+	ride/games/forty/symbols.xpm
+)
 
 set(games_src ${bombs_src} ${forty_src})
 
@@ -101,11 +110,11 @@ if(APPLE)
 ENDIF()
 
 add_executable(
-	${PROJECT_NAME} WIN32 MACOSX_BUNDLE
+	ride WIN32 MACOSX_BUNDLE
 	${src} ${generated_src} ${switcher_src} ${games_src} ${tinyxml_src} ${pbjson_src}
 )
 
-install(TARGETS ${PROJECT_NAME} DESTINATION ".")
+install(TARGETS ride DESTINATION ".")
 
 # install dependencies
 if(APPLE)
@@ -114,12 +123,12 @@ endif()
 
 # make apple installer look prettier
 if(APPLE)
-	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE "application")
-	set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/bundle-info.plist")
+	set_target_properties(ride PROPERTIES MACOSX_BUNDLE_ICON_FILE "application")
+	set_target_properties(ride PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/bundle-info.plist")
 ENDIF()
 
 target_link_libraries(
-	${PROJECT_NAME}
+	ride
 	${wxWidgets_LIBRARIES}
 )
 
@@ -130,9 +139,9 @@ IF (MSVC)
 		MESSAGE(WARNING "CMake version 3.0 or newer is required use build variable TARGET_FILE")
 	ELSE()
 		ADD_CUSTOM_COMMAND(
-			TARGET ${PROJECT_NAME}
+			TARGET ride
 			POST_BUILD
-			COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\dpiaware.manifest.xml\" -inputresource:\"$<TARGET_FILE:${PROJECT_NAME}>\"\;\#1 -outputresource:\"$<TARGET_FILE:${PROJECT_NAME}>\"\;\#1
+			COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\dpiaware.manifest.xml\" -inputresource:\"$<TARGET_FILE:ride>\"\;\#1 -outputresource:\"$<TARGET_FILE:ride>\"\;\#1
 			COMMENT "Adding display aware manifest..."
 		)
 	ENDIF()

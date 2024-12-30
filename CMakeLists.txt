@@ -87,6 +87,5 @@ endif(BUILD_USE_DOXYGEN_GLOBAL)
 
 message(STATUS "Cmake cxx flags ${CMAKE_CXX_FLAGS}")
 
-include_directories(${CMAKE_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/external/cpptoml/include)
-add_subdirectory(ride)
+add_subdirectory(src)
