@@ -27,10 +27,10 @@ wxString RunTest(const ride::MachineSettings& machine, const std::string& app,
 }
 
 PathTester::PathTester(const ride::MachineSettings& machine)
-    : cargo_(RunTest(machine, machine.cargo(), " --version")),
-      rustc_(RunTest(machine, machine.rustc(), " --version")),
-      racer_(RunTest(machine, machine.racer(), " complete std::io::B")),
-      protoc_(RunTest(machine, machine.protoc(), " --version")) {}
+    : cargo_(RunTest(machine, machine.cargo, " --version")),
+      rustc_(RunTest(machine, machine.rustc, " --version")),
+      racer_(RunTest(machine, machine.racer, " complete std::io::B")),
+      protoc_(RunTest(machine, machine.protoc, " --version")) {}
 
 const wxString PathTester::cargo() const { return cargo_; }
 const wxString PathTester::rustc() const { return rustc_; }

@@ -203,6 +203,6 @@ wxString CreateNewProjectDlg::GenerateCargoCommandline(
       GetPtt(uiTemplates) == PTT_BINARY ? "--bin " : "";
   const wxString travis_cmd = uiTravis->GetValue() ? "--travis " : "";
   const wxString vcs_name = GetVcsName();
-  return wxString::Format((machine.cargo() + " new --vcs %s %s%s%s").c_str(),
+  return wxString::Format((machine.cargo + " new --vcs %s %s%s%s").c_str(),
                           vcs_name, template_cmd, travis_cmd, project_name());
 }

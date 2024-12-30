@@ -25,29 +25,30 @@ struct ProjectBuildFunctions {
   static const wxString ADD_TEXT;
   static const wxString EDIT_TEXT;
 
-  static int Size(ride::Project* p) { return p->build_settings_size(); }
+  static int Size(ride::Project* p) { return p->build_settings.size(); }
 
   static wxString GetDisplayString(ride::Project* p, int i) {
-    return p->build_settings(i).name();
+    return p->build_settings[i].name;
   }
 
   static void SetDisplayString(ride::Project* p, int i,
                                const wxString& new_string) {
-    return p->mutable_build_settings(i)->set_name(new_string);
+    p->build_settings[i].name = new_string;
   }
 
   static void Add(ride::Project* p, const wxString& name) {
-    ride::BuildSetting* build = p->add_build_settings();
-    build->set_name(name);
+    ride::BuildSetting build;
+    build.name = name;
+    p->build_settings.emplace_back(build);
   }
 
   static void Remove(ride::Project* p, int i) {
-    p->mutable_build_settings()->DeleteSubrange(i, 1);
+    p->build_settings.erase(p->build_settings.begin() + i);
   }
 
   static void Swap(ride::Project* p, int selection, int next_index) {
-    std::swap(*p->mutable_build_settings(selection),
-              *p->mutable_build_settings(next_index));
+    std::swap(p->build_settings[selection],
+              p->build_settings[next_index]);
   }
 };
 

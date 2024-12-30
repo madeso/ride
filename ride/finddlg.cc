@@ -63,25 +63,24 @@ FindDlg::FindDlg(wxWindow* parent, const wxString& find,
   uiFindTarget->Append("Regex");
   uiFindTarget->Append("Posix");
 
-  uiIncludeSubFolders->SetValue(data.sub_folders());
-  uiMatchCase->SetValue(data.match_case());
-  uiMatchWholeWord->SetValue(data.match_whole_word());
-  uiFindWordStart->SetValue(data.match_start());
-  uiFileTypes->SetValue(data.file_types().c_str());
-  uiFindTarget->SetSelection(data.target());
+  uiIncludeSubFolders->SetValue(data.sub_folders);
+  uiMatchCase->SetValue(data.match_case);
+  uiMatchWholeWord->SetValue(data.match_whole_word);
+  uiFindWordStart->SetValue(data.match_start);
+  uiFileTypes->SetValue(data.file_types);
+  uiFindTarget->SetSelection(data.target);
 
   uiReplaceStatic->Enable(find_action == FindAction::Replace);
   uiReplaceText->Enable(find_action == FindAction::Replace);
 }
 
 void FindDlg::ToData(ride::FindDlg* data) const {
-  data->set_sub_folders(uiIncludeSubFolders->GetValue());
-  data->set_match_case(uiMatchCase->GetValue());
-  data->set_match_whole_word(uiMatchWholeWord->GetValue());
-  data->set_match_start(uiFindWordStart->GetValue());
-  data->set_file_types(uiFileTypes->GetValue());
-  data->set_target(
-      static_cast<ride::FindDlgTarget>(uiFindTarget->GetSelection()));
+  data->sub_folders = uiIncludeSubFolders->GetValue();
+  data->match_case = uiMatchCase->GetValue();
+  data->match_whole_word = uiMatchWholeWord->GetValue();
+  data->match_start = uiFindWordStart->GetValue();
+  data->file_types = uiFileTypes->GetValue();
+  data->target = static_cast<ride::FindDlgTarget>(uiFindTarget->GetSelection());
 }
 
 void FindDlg::OnCancel(wxCommandEvent& event) { EndModal(wxID_CANCEL); }
@@ -269,7 +268,7 @@ bool ShowFindDlg(MainWindow* parent, const wxString& current_selection,
   } else {
     wxArrayString files;
     const std::vector<wxString> patterns =
-        Split(find_dlg_data.file_types(), ";");
+        Split(find_dlg_data.file_types, ";");
     size_t count = 0;
     for (const auto pattern : patterns) {
       count += wxDir::GetAllFiles(

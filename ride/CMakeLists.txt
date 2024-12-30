@@ -21,20 +21,16 @@ find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
 include( "${wxWidgets_USE_FILE}" )
 message(STATUS "wxWidgets use file: ${wxWidgets_USE_FILE}")
 
-find_package(Protobuf REQUIRED)
-include_directories(${PROTOBUF_INCLUDE_DIRS})
-
 FILE(GLOB src_glob *.cc;*.h)
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
-PROTOBUF_GENERATE_CPP(SETTINGS_PROTO_SRCS SETTINGS_PROTO_HDRS settings.proto)
 
 configure_file (
   "${CMAKE_CURRENT_SOURCE_DIR}/ride_compiler_settings.in.h"
   "${CMAKE_CURRENT_BINARY_DIR}/ride_compiler_settings.h"
 )
 
-set(src settings.proto resources/resources.rc ${src_glob} ${SETTINGS_PROTO_SRCS} ${SETTINGS_PROTO_HDRS})
+set(src settings.proto.cc settings.proto.h resources/resources.rc ${src_glob})
 set(generated_src generated/ui.cpp generated/ui.h)
 
 set(tinyxml_src
@@ -125,7 +121,6 @@ ENDIF()
 target_link_libraries(
 	${PROJECT_NAME}
 	${wxWidgets_LIBRARIES}
-	${PROTOBUF_LIBRARIES}
 )
 
 

@@ -26,8 +26,8 @@ wxFileName GetMachineFile() {
   return wxFileName(GetConfigFolder(), "machine", "data");
 }
 
-void LoadProto(google::protobuf::Message* message, const wxFileName& file,
-               wxWindow* main, const wxString& name) {
+template<typename T>
+bool LoadProto(T* message, const wxFileName& file, wxWindow* main, const wxString& name) {
   wxFileName json = file;
   json.SetExt("json");
   if (json.FileExists()) {
@@ -35,17 +35,21 @@ void LoadProto(google::protobuf::Message* message, const wxFileName& file,
     if (jsonerr != "") {
       ShowError(main, "Unable to load " + name + " as json: " + jsonerr,
                 "Error while loading");
+      return false;
     }
   } else {
-    if (false == LoadProtoBinary(message, file)) {
-      if (false == LoadProtoText(message, file)) {
-        ShowError(main, "Unable to load " + name + "!", "Error while loading");
-      }
+    const wxString jsonerr = LoadProtoJson(message, file);
+    if (jsonerr != "") {
+      ShowError(main, "Unable to load " + name + ": " + jsonerr,
+                "Error while loading");
+      return false;
     }
   }
+  return true;
 }
 
-void SaveProto(const google::protobuf::Message& message, const wxFileName file,
+template<typename T>
+bool SaveProto(const T& message, const wxFileName file,
                wxWindow* main, const wxString& name) {
   wxFileName json = file;
   json.SetExt("json");
@@ -53,45 +57,44 @@ void SaveProto(const google::protobuf::Message& message, const wxFileName file,
   if (jsonerr != "") {
     ShowError(main, "Error while saving " + name + " as json: " + jsonerr,
               "Unable to save");
+    return false;
   }
 
-  if (false == SaveProtoBinary(message, file)) {
-    ShowError(main, "Error while saving " + name + " as binary!",
-              "Error saving binary");
-  }
+  return true;
 }
 
-void LoadSettings(wxWindow* main, ::ride::MachineSettings* settings) {
-  LoadProto(settings, GetMachineFile(), main, "machine settings");
+bool LoadSettings(wxWindow* main, ::ride::MachineSettings* settings) {
+  return LoadProto(settings, GetMachineFile(), main, "machine settings");
 }
 
-void SaveSettings(wxWindow* main, const ::ride::MachineSettings& settings) {
+bool SaveSettings(wxWindow* main, const ::ride::MachineSettings& settings) {
   return SaveProto(settings, GetMachineFile(), main, "machine settings");
 }
 
-void LoadSettings(wxWindow* main, ::ride::Settings* settings) {
-  LoadProto(settings, GetSettingsFile(), main, "settings");
+bool LoadSettings(wxWindow* main, ::ride::Settings* settings) {
+  const auto r = LoadProto(settings, GetSettingsFile(), main, "settings");
   AddBuiltInThemes(settings);
+  return r;
 }
 
-void SaveSettings(wxWindow* main, const ::ride::Settings& settings) {
-  SaveProto(settings, GetSettingsFile(), main, "settings");
+bool SaveSettings(wxWindow* main, const ::ride::Settings& settings) {
+  return SaveProto(settings, GetSettingsFile(), main, "settings");
 }
 
-void LoadSession(wxWindow* main, ::ride::Session* settings) {
-  LoadProto(settings, GetSessionFile(), main, "last session");
+bool LoadSession(wxWindow* main, ::ride::Session* settings) {
+  return LoadProto(settings, GetSessionFile(), main, "last session");
 }
 
-void SaveSession(wxWindow* main, const ::ride::Session& settings) {
-  SaveProto(settings, GetSessionFile(), main, "current session");
+bool SaveSession(wxWindow* main, const ::ride::Session& settings) {
+  return SaveProto(settings, GetSessionFile(), main, "current session");
 }
 
-wxColor C(const ride::Color& c) { return wxColor(c.r(), c.g(), c.b()); }
+wxColor C(const ride::Color& c) { return wxColor(c.r, c.g, c.b); }
 
 ride::Color C(const wxColor& c) {
   ride::Color r;
-  r.set_r(c.Red());
-  r.set_g(c.Green());
-  r.set_b(c.Blue());
+  r.r = c.Red();
+  r.g = c.Green();
+  r.b = c.Blue();
   return r;
 }

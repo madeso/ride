@@ -35,10 +35,9 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
 }
 
 void ProjectExplorer::UpdateColors() {
-  const ride::Style& style =
-      main_->settings().fonts_and_colors().default_style();
-  wxTreeCtrl::SetBackgroundColour(C(style.background()));
-  wxTreeCtrl::SetForegroundColour(C(style.foreground()));
+  const ride::Style& style = main_->settings().fonts_and_colors.default_style;
+  wxTreeCtrl::SetBackgroundColour(C(style.background));
+  wxTreeCtrl::SetForegroundColour(C(style.foreground));
 }
 
 void ProjectExplorer::SetFolder(const wxString& folder) {

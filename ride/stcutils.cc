@@ -10,7 +10,7 @@
 #include <vector>
 #include <algorithm>
 
-#include "settings.pb.h"  // NOLINT this is how we include it
+#include "settings.proto.h"  // NOLINT this is how we include it
 
 #include "ride/language.h"
 #include "ride/project.h"
@@ -63,19 +63,19 @@ int C(ride::WrapMode e) {
 int C(ride::FoldFlags f) {
   int ret = 0;
 
-  if (f.linebefore_expanded()) {
+  if (f.LINEBEFORE_EXPANDED) {
     ret |= wxSTC_FOLDFLAG_LINEBEFORE_EXPANDED;
   }
-  if (f.linebefore_contracted()) {
+  if (f.LINEBEFORE_CONTRACTED) {
     ret |= wxSTC_FOLDFLAG_LINEBEFORE_CONTRACTED;
   }
-  if (f.lineafter_expanded()) {
+  if (f.LINEAFTER_EXPANDED) {
     ret |= wxSTC_FOLDFLAG_LINEAFTER_EXPANDED;
   }
-  if (f.lineafter_contracted()) {
+  if (f.LINEAFTER_CONTRACTED) {
     ret |= wxSTC_FOLDFLAG_LINEAFTER_CONTRACTED;
   }
-  if (f.levelnumbers()) {
+  if (f.LEVELNUMBERS) {
     ret |= wxSTC_FOLDFLAG_LEVELNUMBERS;
   }
 
@@ -128,41 +128,26 @@ std::string DetermineTypeface(const std::string& suggestion) {
   return "";
 }
 
-void SetStyle(wxStyledTextCtrl* text, int id, const ride::Style& style,
-              bool force) {
-  if (style.use_typeface() || force) {
-    const std::string typeface = DetermineTypeface(style.typeface());
+void SetStyle(wxStyledTextCtrl* text, int id, const std::optional<ride::Style>& arg_style, bool force) {
+  if(arg_style.has_value() == false && force == false) {
+    return;
+  }
+  ride::Style style;
+  if(arg_style) style = *arg_style;
+
+  {
+    const std::string typeface = DetermineTypeface(style.typeface);
     if (false == typeface.empty()) {
       text->StyleSetFaceName(id, typeface);
     }
   }
 
-  if (style.use_bold() || force) {
-    // optional bool bold = 4;
-    text->StyleSetBold(id, style.bold());
-  }
-
-  if (style.use_italic() || force) {
-    // optional bool italic = 6;
-    text->StyleSetItalic(id, style.italic());
-  }
-
-  if (style.use_underline() || force) {
-    // optional bool underline = 8;
-    text->StyleSetUnderline(id, style.underline());
-  }
-
-  if (style.use_font_size() || force) {
-    // optional int32 font_size = 10;
-    text->StyleSetSize(id, style.font_size());
-  }
-
-  if (style.use_foreground() || force) {
-    text->StyleSetForeground(id, C(style.foreground()));
-  }
-  if (style.use_background() || force) {
-    text->StyleSetBackground(id, C(style.background()));
-  }
+  text->StyleSetBold(id, style.bold);
+  text->StyleSetItalic(id, style.italic);
+  text->StyleSetUnderline(id, style.underline);
+  text->StyleSetSize(id, style.font_size);
+  text->StyleSetForeground(id, C(style.foreground));
+  text->StyleSetBackground(id, C(style.background));
 }
 
 int C(const ride::IndicatorStyle style) {
@@ -243,13 +228,13 @@ int C(ride::WrapIndentMode mode) {
 
 int C(ride::WrapVisualFlags flags) {
   int ret = wxSTC_WRAPVISUALFLAG_NONE;
-  if (flags.end()) {
+  if (flags.end) {
     ret |= wxSTC_WRAPVISUALFLAG_END;
   }
-  if (flags.start()) {
+  if (flags.start) {
     ret |= wxSTC_WRAPVISUALFLAG_START;
   }
-  if (flags.margin()) {
+  if (flags.margin) {
     ret |= wxSTC_WRAPVISUALFLAG_MARGIN;
   }
   return ret;
@@ -300,55 +285,46 @@ int C(ride::CaretSticky st) {
 void SetIndicator(wxStyledTextCtrl* text, int index,
                   const ride::Indicator& indicator,
                   const ride::IndicatorStyle indicator_style) {
-  text->IndicatorSetUnder(index, indicator.under());
-  text->IndicatorSetAlpha(index, indicator.alpha());
-  text->IndicatorSetOutlineAlpha(index, indicator.outline_alpha());
-  text->IndicatorSetForeground(index, C(indicator.foreground()));
+  text->IndicatorSetUnder(index, indicator.under);
+  text->IndicatorSetAlpha(index, indicator.alpha);
+  text->IndicatorSetOutlineAlpha(index, indicator.outline_alpha);
+  text->IndicatorSetForeground(index, C(indicator.foreground));
   text->IndicatorSetStyle(index, C(indicator_style));
 }
 
 void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl,
                                const ride::Settings& set) {
-  text_ctrl->SetCaretLineBackground(C(set.fonts_and_colors().selected_line()));
-  if (set.current_line_overdraw()) {
-    text_ctrl->SetCaretLineBackAlpha(set.current_line_alpha());
+  text_ctrl->SetCaretLineBackground(C(set.fonts_and_colors.selected_line));
+  if (set.current_line_overdraw) {
+    text_ctrl->SetCaretLineBackAlpha(set.current_line_alpha);
   } else {
     text_ctrl->SetCaretLineBackAlpha(wxSTC_ALPHA_NOALPHA);
   }
-  text_ctrl->SetCaretLineVisible(set.current_line_visible());
+  text_ctrl->SetCaretLineVisible(set.current_line_visible);
 
   // text_ctrl->SetCaretLineVisibleAlways(true);
   // todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier
   // to change settings and caret
 
-  text_ctrl->SetCaretForeground(C(set.fonts_and_colors().caret_foreground()));
-  text_ctrl->SetCaretPeriod(set.caret_period());
-  text_ctrl->SetCaretWidth(set.caret_width());
-  text_ctrl->SetCaretSticky(C(set.caret_sticky()));
-  text_ctrl->SetCaretStyle(C(set.caret_style()));
+  text_ctrl->SetCaretForeground(C(set.fonts_and_colors.caret_foreground));
+  text_ctrl->SetCaretPeriod(set.caret_period);
+  text_ctrl->SetCaretWidth(set.caret_width);
+  text_ctrl->SetCaretSticky(C(set.caret_sticky));
+  text_ctrl->SetCaretStyle(C(set.caret_style));
 }
 
 void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl,
                                  const ride::Settings& set) {
-  SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT,
-           set.fonts_and_colors().default_style(), true);
-  SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER,
-           set.fonts_and_colors().line_number_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT,
-           set.fonts_and_colors().bracelight_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD,
-           set.fonts_and_colors().bracebad_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR,
-           set.fonts_and_colors().controlchar_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE,
-           set.fonts_and_colors().indentguide_style());
-  SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP,
-           set.fonts_and_colors().calltip_style());
+  SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT, set.fonts_and_colors.default_style, true);
+  SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER, set.fonts_and_colors.line_number_style);
+  SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors.bracelight_style);
+  SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors.bracebad_style);
+  SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors.controlchar_style);
+  SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors.indentguide_style);
+  SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP, set.fonts_and_colors.calltip_style);
 
-  SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR,
-           set.fonts_and_colors().annotation_error_style());
-  SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING,
-           set.fonts_and_colors().annotation_warning_style());
+  SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR, set.fonts_and_colors.annotation_error_style);
+  SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.fonts_and_colors.annotation_warning_style);
 }
 
 int C(ride::MarkerSymbol sym) {
@@ -392,13 +368,11 @@ void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set) {
 
   int line_margin_width_ = text_ctrl->TextWidth(
       wxSTC_STYLE_LINENUMBER, wxString::Format("_%s", maximum_line_numbers));
-  text_ctrl->SetMarginWidth(ID_MARGIN_LINENUMBER,
-                            set.linenumberenable() ? line_margin_width_ : 0);
+  text_ctrl->SetMarginWidth(ID_MARGIN_LINENUMBER, set.lineNumberEnable ? line_margin_width_ : 0);
 }
 
-void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set,
-                    Language* language, Project* project) {
-  const ride::FontsAndColors& cols = set.fonts_and_colors();
+void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language, Project* project) {
+  const ride::FontsAndColors& cols = set.fonts_and_colors;
   // initialize styles
   text_ctrl->StyleClearAll();
 
@@ -423,95 +397,76 @@ void SetupScintilla(wxStyledTextCtrl* text_ctrl, const ride::Settings& set,
   text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING, 15);
   text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, true);
 
-  text_ctrl->SetFoldMarginColour(true,
-                                 C(set.fonts_and_colors().fold_margin_low()));
-  text_ctrl->SetFoldMarginHiColour(true,
-                                   C(set.fonts_and_colors().fold_margin_hi()));
+  text_ctrl->SetFoldMarginColour(true, C(set.fonts_and_colors.fold_margin_low));
+  text_ctrl->SetFoldMarginHiColour(true, C(set.fonts_and_colors.fold_margin_hi));
 
-  text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING,
-                            set.foldenable() ? FOLDING_WIDTH : 0);
-  text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldenable());
-  text_ctrl->SetFoldFlags(C(set.foldflags()));
+  text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING, set.foldEnable ? FOLDING_WIDTH : 0);
+  text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldEnable);
+  text_ctrl->SetFoldFlags(C(set.foldflags));
 
-#define FRONT_AND_BACK(x) x##_foreground(), x##_background()
-  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEREND, set.folderend(),
-            FRONT_AND_BACK(set.fonts_and_colors().folderend));
-  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPENMID, set.folderopenmid(),
-            FRONT_AND_BACK(set.fonts_and_colors().folderopenmid));
-  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERMIDTAIL, set.foldermidtail(),
-            FRONT_AND_BACK(set.fonts_and_colors().foldermidtail));
-  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERTAIL, set.foldertail(),
-            FRONT_AND_BACK(set.fonts_and_colors().foldertail));
-  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERSUB, set.foldersub(),
-            FRONT_AND_BACK(set.fonts_and_colors().foldersub));
-  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDER, set.folder(),
-            FRONT_AND_BACK(set.fonts_and_colors().folder));
-  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPEN, set.folderopen(),
-            FRONT_AND_BACK(set.fonts_and_colors().folderopen));
+#define FRONT_AND_BACK(x) x##_foreground, x##_background
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEREND, set.folderend, FRONT_AND_BACK(set.fonts_and_colors.folderend));
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPENMID, set.folderopenmid, FRONT_AND_BACK(set.fonts_and_colors.folderopenmid));
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERMIDTAIL, set.foldermidtail, FRONT_AND_BACK(set.fonts_and_colors.foldermidtail));
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERTAIL, set.foldertail, FRONT_AND_BACK(set.fonts_and_colors.foldertail));
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERSUB, set.foldersub, FRONT_AND_BACK(set.fonts_and_colors.foldersub));
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDER, set.folder, FRONT_AND_BACK(set.fonts_and_colors.folder));
+  SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPEN, set.folderopen, FRONT_AND_BACK(set.fonts_and_colors.folderopen));
 #undef FRONT_AND_BACK
 
   // set spaces and indention
-  const int tabwidth = project ? project->tabwidth() : set.tabwidth();
+  const int tabwidth = project ? project->tabwidth() : set.tabWidth;
   text_ctrl->SetTabWidth(tabwidth);
-  text_ctrl->SetUseTabs(project ? project->usetabs() : set.usetabs());
-  text_ctrl->SetTabIndents(set.tabindents());
-  text_ctrl->SetBackSpaceUnIndents(set.backspaceunindents());
+  text_ctrl->SetUseTabs(project ? project->usetabs() : set.useTabs);
+  text_ctrl->SetTabIndents(set.tabIndents);
+  text_ctrl->SetBackSpaceUnIndents(set.backspaceUnindents);
   text_ctrl->SetIndent(tabwidth);
 
-  text_ctrl->SetViewEOL(set.displayeolenable());
-  text_ctrl->SetIndentationGuides(set.indentguideenable());
-  text_ctrl->SetEdgeMode(C(set.edgestyle()));
-  text_ctrl->SetEdgeColour(C(set.fonts_and_colors().edgecolor()));
-  text_ctrl->SetEdgeColumn(set.edgecolumn());
-  text_ctrl->SetViewWhiteSpace(C(set.whitespace()));
+  text_ctrl->SetViewEOL(set.displayEOLEnable);
+  text_ctrl->SetIndentationGuides(set.indentGuideEnable);
+  text_ctrl->SetEdgeMode(C(set.edgeStyle));
+  text_ctrl->SetEdgeColour(C(set.fonts_and_colors.edgeColor));
+  text_ctrl->SetEdgeColumn(set.edgeColumn);
+  text_ctrl->SetViewWhiteSpace(C(set.whitespace));
   text_ctrl->SetOvertype(false);
   text_ctrl->SetReadOnly(false);
-  text_ctrl->SetWrapMode(C(set.wordwrap()));
+  text_ctrl->SetWrapMode(C(set.wordWrap));
 
   // set visibility
   // todo: investigate this
   text_ctrl->SetVisiblePolicy(wxSTC_VISIBLE_STRICT | wxSTC_VISIBLE_SLOP, 1);
-  text_ctrl->SetXCaretPolicy(
-      wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
-  text_ctrl->SetYCaretPolicy(
-      wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+  text_ctrl->SetXCaretPolicy( wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
+  text_ctrl->SetYCaretPolicy( wxSTC_CARET_EVEN | wxSTC_VISIBLE_STRICT | wxSTC_CARET_SLOP, 1);
 
   text_ctrl->SetAdditionalSelectionTyping(true);
   text_ctrl->SetAdditionalCaretsBlink(true);
   text_ctrl->SetAdditionalCaretsVisible(true);
 
-  SetIndicator(text_ctrl, ID_INDICATOR_ERROR,
-               set.fonts_and_colors().indicator_error(), set.indicator_error());
-  SetIndicator(text_ctrl, ID_INDICATOR_WARNING,
-               set.fonts_and_colors().indicator_warning(),
-               set.indicator_warning());
-  SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT,
-               set.fonts_and_colors().indicator_search_highlight(),
-               set.indicator_search_highlight());
-  SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT,
-               set.fonts_and_colors().indicator_select_highlight(),
-               set.indicator_select_highlight());
+  SetIndicator(text_ctrl, ID_INDICATOR_ERROR, set.fonts_and_colors.indicator_error, set.indicator_error);
+  SetIndicator(text_ctrl, ID_INDICATOR_WARNING, set.fonts_and_colors.indicator_warning, set.indicator_warning);
+  SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT, set.fonts_and_colors.indicator_search_highlight, set.indicator_search_highlight);
+  SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT, set.fonts_and_colors.indicator_select_highlight, set.indicator_select_highlight);
 
   SetupScintillaDefaultStyles(text_ctrl, set);
 
-  text_ctrl->SetEndAtLastLine(set.end_at_last_line());
-  text_ctrl->SetVirtualSpaceOptions(C(set.virtual_space()));
-  text_ctrl->SetUseVerticalScrollBar(set.vertical_scrollbar());
-  text_ctrl->SetUseHorizontalScrollBar(set.horizontal_scrollbar());
+  text_ctrl->SetEndAtLastLine(set.end_at_last_line);
+  text_ctrl->SetVirtualSpaceOptions(C(set.virtual_space));
+  text_ctrl->SetUseVerticalScrollBar(set.vertical_scrollbar);
+  text_ctrl->SetUseHorizontalScrollBar(set.horizontal_scrollbar);
 
-  text_ctrl->SetWrapVisualFlags(C(set.wrap_visual_flags()));
-  text_ctrl->SetWrapVisualFlagsLocation(C(set.wrap_visual_flags_location()));
-  text_ctrl->SetWrapIndentMode(C(set.wrap_indent_mode()));
-  text_ctrl->SetWrapStartIndent(set.wrap_start_indent());
+  text_ctrl->SetWrapVisualFlags(C(set.wrap_visual_flags));
+  text_ctrl->SetWrapVisualFlagsLocation(C(set.wrap_visual_flags_location));
+  text_ctrl->SetWrapIndentMode(C(set.wrap_indent_mode));
+  text_ctrl->SetWrapStartIndent(set.wrap_start_indent);
 
-  text_ctrl->AnnotationSetVisible(C(set.annotations()));
+  text_ctrl->AnnotationSetVisible(C(set.annotations));
 
-  if (cols.use_selection_foreground()) {
-    text_ctrl->SetSelForeground(true, C(cols.selection_foreground()));
+  if (cols.use_selection_foreground) {
+    text_ctrl->SetSelForeground(true, C(cols.selection_foreground));
   }
 
-  if (cols.use_selection_background()) {
-    text_ctrl->SetSelBackground(true, C(cols.selection_background()));
+  if (cols.use_selection_background) {
+    text_ctrl->SetSelBackground(true, C(cols.selection_background));
   }
 
   SetupScintillaCurrentLine(text_ctrl, set);

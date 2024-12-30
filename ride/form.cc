@@ -44,11 +44,11 @@ void SetImageAndRemoveText(wxButton* button, const char* const* xpm) {
 void ToGui(bool data, wxCheckBox* gui) { gui->SetValue(data); }
 bool ToData(wxCheckBox* gui) { return gui->GetValue(); }
 
-void ToGui(google::protobuf::int32 data, wxTextCtrl* gui) {
+void ToGui(int data, wxTextCtrl* gui) {
   wxString value = wxString::FromDouble(data, 0);
   gui->SetValue(value);
 }
-google::protobuf::int32 ToData_I32(wxTextCtrl* gui) {
+int ToData_I32(wxTextCtrl* gui) {
   const wxString value = gui->GetValue();
   WXID ret = 0;
   if (true == value.ToLong(&ret)) {

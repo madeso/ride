@@ -2,7 +2,7 @@
 
 #include <ride/wx.h>
 
-#include "settings.pb.h"  // NOLINT this is how we include it
+#include "settings.proto.h"  // NOLINT this is how we include it
 
 #include "ride/mainwindow.h"
 
@@ -14,8 +14,6 @@ class MyApp : public wxApp {
 wxIMPLEMENT_APP(MyApp);
 
 bool MyApp::OnInit() {
-  GOOGLE_PROTOBUF_VERIFY_VERSION;
-
   const wxString DISPLAY_NAME = "Ride";
 
   wxAppConsole* app_console = wxAppConsole::GetInstance();

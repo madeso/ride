@@ -6,7 +6,7 @@
 #include <wx/regex.h>
 #include <wx/uri.h>
 
-#include "settings.pb.h"  // NOLINT this is how we include it
+#include "settings.proto.h"  // NOLINT this is how we include it
 
 #include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"
@@ -71,7 +71,7 @@ void OutputControl::UpdateStyle() {
   const ride::Settings& set = main_->settings();
   SetupScintillaCurrentLine(text_, set);
   SetupScintillaDefaultStyles(text_, set);
-  text_->SetEndAtLastLine(set.end_at_last_line());
+  text_->SetEndAtLastLine(set.end_at_last_line);
 }
 
 void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
@@ -119,18 +119,15 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event) {
 const wxString ReplaceCmd(const ride::MachineSettings& machine,
                           const wxString& cmd) {
   if (cmd.StartsWith("rustc")) {
-    return machine.rustc() +
-           cmd.Right(cmd.Length() - wxString("rustc").length());
+    return machine.rustc + cmd.Right(cmd.Length() - wxString("rustc").length());
   }
 
   if (cmd.StartsWith("cargo")) {
-    return machine.cargo() +
-           cmd.Right(cmd.Length() - wxString("cargo").length());
+    return machine.cargo + cmd.Right(cmd.Length() - wxString("cargo").length());
   }
 
   if (cmd.StartsWith("protoc")) {
-    return machine.protoc() +
-           cmd.Right(cmd.Length() - wxString("protoc").length());
+    return machine.protoc + cmd.Right(cmd.Length() - wxString("protoc").length());
   }
 
   return cmd;

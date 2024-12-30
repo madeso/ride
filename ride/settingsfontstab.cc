@@ -34,20 +34,33 @@ class StyleLink {
 std::vector<StyleLink*> BuildStyleLinks() {
   std::vector<StyleLink*> ret;
 
-#define DEF_STYLE(NAME, STYLE)                                     \
+#define DEF_STYLE_X(NAME, STYLE)                                   \
   struct StyleLink##STYLE : public StyleLink {                     \
     StyleLink##STYLE() : StyleLink(NAME) {}                        \
     const ride::Style get(const ride::FontsAndColors& co) {        \
-      return co.has_##STYLE() ? co.STYLE() : ride::Style();        \
+      return co.STYLE;                                             \
     }                                                              \
     void set(ride::FontsAndColors& co, const ride::Style& style) { \
-      co.set_allocated_##STYLE(Allocate(style));                   \
+      co.STYLE = style;                   \
     }                                                              \
   };                                                               \
   static StyleLink##STYLE styleLink##STYLE;                        \
   ret.push_back(&styleLink##STYLE)
 
-  DEF_STYLE("Default", default_style);
+#define DEF_STYLE(NAME, STYLE)                                     \
+  struct StyleLink##STYLE : public StyleLink {                     \
+    StyleLink##STYLE() : StyleLink(NAME) {}                        \
+    const ride::Style get(const ride::FontsAndColors& co) {        \
+      return co.STYLE.has_value() ? *co.STYLE : ride::Style{};        \
+    }                                                              \
+    void set(ride::FontsAndColors& co, const ride::Style& style) { \
+      co.STYLE = style;                   \
+    }                                                              \
+  };                                                               \
+  static StyleLink##STYLE styleLink##STYLE;                        \
+  ret.push_back(&styleLink##STYLE)
+
+  DEF_STYLE_X("Default", default_style);
   DEF_STYLE("Line number", line_number_style);
   DEF_STYLE("Brace light", bracelight_style);
   DEF_STYLE("Brace bad", bracebad_style);
@@ -242,7 +255,7 @@ void SettingsFontsTab::StyleToGui(bool togui) {
   assert(link);
   if (link == nullptr) return;
 
-  ride::Style style = link->get(common_->current_settings().fonts_and_colors());
+  ride::Style style = link->get(common_->current_settings().fonts_and_colors);
 
   DIALOG_DATA(style, use_bold, uiStyleUseBold, );
   DIALOG_DATA(style, bold, uiStyleBold, );
@@ -263,11 +276,10 @@ void SettingsFontsTab::StyleToGui(bool togui) {
   DIALOG_DATAX(style, background, uiStyleBackground);
 
   if (togui == false) {
-    ride::FontsAndColors color = common_->current_settings().fonts_and_colors();
+    ride::FontsAndColors color = common_->current_settings().fonts_and_colors;
     link->set(color, style);
 
-    common_->current_settings_mod()->set_allocated_fonts_and_colors(
-        Allocate(color));
+    common_->current_settings_mod()->fonts_and_colors = color;
   }
 }
 

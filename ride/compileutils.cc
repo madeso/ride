@@ -40,7 +40,7 @@ void CompileProtoFile(const ride::MachineSettings& machine,
   const wxString folder = full_path.SubString(0, index);
   const wxString file = full_path.substr(index + 1);
   const wxString cmd =
-      wxString::Format((machine.protoc() + " --rust_out . %s").c_str(), file);
+      wxString::Format((machine.protoc + " --rust_out . %s").c_str(), file);
   wxString result;
   const bool proto_compile_successful = CmdRunner::Run(
       folder, cmd, CollectRideSpecificEnviroment(machine), &result);

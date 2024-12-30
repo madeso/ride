@@ -25,28 +25,29 @@ struct ProjectRunFunctions {
   static const wxString ADD_TEXT;
   static const wxString EDIT_TEXT;
 
-  static int Size(ride::UserProject* p) { return p->run_size(); }
+  static int Size(ride::UserProject* p) { return p->run.size(); }
 
   static wxString GetDisplayString(ride::UserProject* p, int i) {
-    return p->run(i).name();
+    return p->run[i].name;
   }
 
   static void SetDisplayString(ride::UserProject* p, int i,
                                const wxString& new_string) {
-    return p->mutable_run(i)->set_name(new_string);
+    p->run[i].name = new_string;
   }
 
   static void Add(ride::UserProject* p, const wxString& name) {
-    ride::RunSetting* build = p->add_run();
-    build->set_name(name);
+    auto build = ride::RunSetting{};
+    build.name = name;
+    p->run.push_back(build);
   }
 
   static void Remove(ride::UserProject* p, int i) {
-    p->mutable_run()->DeleteSubrange(i, 1);
+    p->run.erase(p->run.begin() + i);
   }
 
   static void Swap(ride::UserProject* p, int selection, int next_index) {
-    std::swap(*p->mutable_run(selection), *p->mutable_run(next_index));
+    std::swap(p->run[selection], p->run[next_index]);
   }
 };
 

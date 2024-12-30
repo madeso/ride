@@ -37,9 +37,7 @@ void SettingsThemesTab::OnThemeApplySelected(wxCommandEvent& event) {
   if (selected == -1) {
     return;
   }
-  common_->current_settings_mod()->set_allocated_fonts_and_colors(
-      new ride::FontsAndColors(
-          common_->current_settings().themes(selected).data()));
+  common_->current_settings_mod()->fonts_and_colors = common_->current_settings().themes[selected].data;
 
   allow_to_gui_ = false;
   main_->SendToGui(true);
@@ -59,10 +57,9 @@ void SettingsThemesTab::OnThemeExportSelected(wxCommandEvent& event) {
                               wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
   if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
 
-  bool saved = SaveProtoBinary(common_->current_settings().themes(selected),
-                               saveFileDialog.GetPath());
-  if (saved == false) {
-    ShowError(this, "Failed to save theme", "Failed to save");
+  const auto saved = SaveProtoJson(common_->current_settings().themes[selected], saveFileDialog.GetPath());
+  if (saved != "") {
+    ShowError(this, "Failed to save theme: " + saved, "Failed to save");
   }
 }
 
@@ -73,14 +70,13 @@ void SettingsThemesTab::OnThemeImport(wxCommandEvent& event) {
   if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
 
   ride::Theme theme;
-  bool saved = LoadProtoBinary(&theme, saveFileDialog.GetPath());
-  if (saved == false) {
-    ShowError(this, "Failed to import theme", "Failed to import");
+  const auto saved = LoadProtoJson(&theme, saveFileDialog.GetPath());
+  if (saved != "") {
+    ShowError(this, "Failed to import theme:" + saved, "Failed to import");
     return;
   }
 
-  ride::Theme* new_theme = common_->current_settings_mod()->add_themes();
-  new_theme->CopyFrom(theme);
+  common_->current_settings_mod()->themes.push_back(theme);
   ThemeToGui(true);
 }
 

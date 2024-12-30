@@ -18,29 +18,29 @@ struct ThemeFunctions {
   static const wxString ADD_TEXT;
   static const wxString EDIT_TEXT;
 
-  static int Size(ride::Settings* bs) { return bs->themes_size(); }
+  static int Size(ride::Settings* bs) { return bs->themes.size(); }
 
   static wxString GetDisplayString(ride::Settings* bs, int i) {
-    return bs->themes(i).name();
+    return bs->themes[i].name;
   }
 
-  static void SetDisplayString(ride::Settings* bs, int i,
-                               const wxString& new_string) {
-    bs->mutable_themes(i)->set_name(new_string);
+  static void SetDisplayString(ride::Settings* bs, int i, const wxString& new_string) {
+    bs->themes[i].name = new_string;
   }
 
   static void Add(ride::Settings* bs, const wxString& name) {
-    ride::Theme* theme = bs->add_themes();
-    theme->set_name(name);
-    theme->set_allocated_data(new ride::FontsAndColors(bs->fonts_and_colors()));
+    ride::Theme theme;
+    theme.name = name;
+    theme.data = bs->fonts_and_colors;
+    bs->themes.push_back(theme);
   }
 
   static void Remove(ride::Settings* bs, int i) {
-    bs->mutable_themes()->DeleteSubrange(i, 1);
+    bs->themes.erase(bs->themes.begin() + i);
   }
 
   static void Swap(ride::Settings* bs, int selection, int next_index) {
-    std::swap(*bs->mutable_themes(selection), *bs->mutable_themes(next_index));
+    std::swap(bs->themes[selection], bs->themes[next_index]);
   }
 };
 

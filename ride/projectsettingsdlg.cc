@@ -28,29 +28,28 @@ struct FeatureFunctions {
   static const wxString ADD_TEXT;
   static const wxString EDIT_TEXT;
 
-  static int Size(ride::BuildSetting* bs) { return bs->features_size(); }
+  static int Size(ride::BuildSetting* bs) { return bs->features.size(); }
 
   static wxString GetDisplayString(ride::BuildSetting* bs, int i) {
-    return bs->features(i);
+    return bs->features[i].c_str();
   }
 
   static void SetDisplayString(ride::BuildSetting* bs, int i,
                                const wxString& new_string) {
-    bs->set_features(i, new_string);
+    bs->features[i] = new_string.c_str().AsChar();
   }
 
   static void Add(ride::BuildSetting* bs, const wxString& name) {
-    std::string* new_feature = bs->add_features();
-    *new_feature = name;
+    bs->features.push_back(name.c_str().AsChar());
   }
 
   static void Remove(ride::BuildSetting* bs, int i) {
-    bs->mutable_features()->DeleteSubrange(i, 1);
+    bs->features.erase(bs->features.begin() + i);
   }
 
   static void Swap(ride::BuildSetting* bs, int selection, int next_index) {
-    std::swap(*bs->mutable_features(selection),
-              *bs->mutable_features(next_index));
+    std::swap(bs->features[selection],
+              bs->features[next_index]);
   }
 };
 
@@ -208,11 +207,11 @@ bool ProjectSettingsDlg::Apply() {
 //////////////////////////////////////////////////////////////////////////
 
 void ProjectSettingsDlg::CargoToGui(bool togui) {
-  DIALOG_DATA(cargo_, name, uiCargoName, _Str);
-  DIALOG_DATA(cargo_, version, uiCargoVersion, _Str);
-  DIALOG_DATA(cargo_, authors, uiCargoAuthors, _Content);
-  DIALOG_DATA(cargo_, dependencies, uiCargoDependencies, _Content);
-  DIALOG_DATA(cargo_, features, uiCargoFeatures, _Content);
+  DIALOG_DATA(cargo_, name_, uiCargoName, _Str);
+  DIALOG_DATA(cargo_, version_, uiCargoVersion, _Str);
+  DIALOG_DATA(cargo_, authors_, uiCargoAuthors, _Content);
+  DIALOG_DATA(cargo_, dependencies_, uiCargoDependencies, _Content);
+  DIALOG_DATA(cargo_, features_, uiCargoFeatures, _Content);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -221,8 +220,8 @@ void ProjectSettingsDlg::EditorToGui(bool togui) {
   if (allow_editor_to_gui_ == false) return;
   allow_editor_to_gui_ = false;
   ride::Project& project = *project_->project_ptr();
-  DIALOG_DATA(project, tabwidth, uiEditorTabWidth, _I32);
-  DIALOG_DATA(project, usetabs, uiEditorUseTabs, );
+  DIALOG_DATA(project, tabWidth, uiEditorTabWidth, _I32);
+  DIALOG_DATA(project, useTabs, uiEditorUseTabs, );
 
   if (togui == false) {
     main_window_->ProjectSettingsHasChanged();
@@ -273,13 +272,11 @@ void ProjectSettingsDlg::OnBuildCustomArgHelp(wxCommandEvent& event) {
 
 void ProjectSettingsDlg::BuildToGui(bool togui) {
   if (togui && static_cast<wxItemContainer*>(uiBuildConfiguration)->IsEmpty()) {
-    for (int i = 0; i < project_->project().build_settings_size(); ++i) {
-      ride::BuildSetting* bs =
-          project_->project_ptr()->mutable_build_settings(i);
-      uiBuildConfiguration->Append(bs->name().c_str(),
-                                   reinterpret_cast<void*>(bs));
+    for (int i = 0; i < project_->project().build_settings.size(); ++i) {
+      ride::BuildSetting* bs = &project_->project_ptr()->build_settings[i];
+      uiBuildConfiguration->Append(bs->name.c_str(), reinterpret_cast<void*>(bs));
     }
-    uiBuildConfiguration->Select(project_->user().build_setting());
+    uiBuildConfiguration->Select(project_->user().build_setting);
   }
 
   ride::BuildSetting* setting_ptr = GetSelectedBuildSetting();
@@ -376,12 +373,11 @@ void ProjectSettingsDlg::RunToGui(bool togui) {
   allow_run_to_gui_ = false;
 
   if (togui && static_cast<wxItemContainer*>(uiRunConfigurations)->IsEmpty()) {
-    for (int i = 0; i < project_->user().run_size(); ++i) {
-      ride::RunSetting* rs = project_->user_ptr()->mutable_run(i);
-      uiRunConfigurations->Append(rs->name().c_str(),
-                                  reinterpret_cast<void*>(rs));
+    for (int i = 0; i < project_->user().run.size(); ++i) {
+      ride::RunSetting* rs = &project_->user_ptr()->run[i];
+      uiRunConfigurations->Append(rs->name.c_str(), reinterpret_cast<void*>(rs));
     }
-    uiRunConfigurations->Select(project_->user().run_setting());
+    uiRunConfigurations->Select(project_->user().run_setting);
   }
 
   ride::RunSetting* setting_ptr = GetSelectedRunSetting();
@@ -422,33 +418,33 @@ void ProjectSettingsDlg::OnRunText(wxCommandEvent& event) { RunToGui(false); }
 
 void ProjectSettingsDlg::OnRunApplication(wxCommandEvent& event) {
   ride::RunSetting* r = GetSelectedRunSetting();
-  std::string s = r->application();
+  std::string s = r->application;
   if (false == DoVariableEditor(this, &s)) return;
-  r->set_application(s);
+  r->application = s;
   RunToGui(true);
 }
 
 void ProjectSettingsDlg::OnRunArguments(wxCommandEvent& event) {
   ride::RunSetting* r = GetSelectedRunSetting();
-  std::string s = r->arguments();
+  std::string s = r->arguments;
   if (false == DoVariableEditor(this, &s)) return;
-  r->set_arguments(s);
+  r->arguments = s;
   RunToGui(true);
 }
 
 void ProjectSettingsDlg::OnRunFolder(wxCommandEvent& event) {
   ride::RunSetting* r = GetSelectedRunSetting();
-  std::string s = r->folder();
+  std::string s = r->folder;
   if (false == DoVariableEditor(this, &s)) return;
-  r->set_folder(s);
+  r->folder = s;
   RunToGui(true);
 }
 
 void ProjectSettingsDlg::OnCmdBeforeLaunch(wxCommandEvent& event) {
   ride::RunSetting* r = GetSelectedRunSetting();
-  std::string s = r->cmd_before_launch();
+  std::string s = r->cmd_before_launch;
   if (false == DoVariableEditor(this, &s)) return;
-  r->set_cmd_before_launch(s);
+  r->cmd_before_launch = s;
   RunToGui(true);
 }
 

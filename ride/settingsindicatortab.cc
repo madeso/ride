@@ -86,7 +86,7 @@ std::vector<IndicatorLink*> BuildIndicatorLinks() {
                         wxTextCtrl* uiIndicatorAlpha,                      \
                         wxTextCtrl* uiIndicatorOutlineAlpha) {             \
       DIALOG_DATA(set, ID, uiIndicatorStyle, _IS);                         \
-      ride::Indicator ind = col->ID();                                     \
+      ride::Indicator ind = col->ID;                                       \
                                                                            \
       DIALOG_DATAX(ind, foreground, uiIndicatorColor);                     \
       DIALOG_DATA(ind, under, uiIndicatorUnder, );                         \
@@ -94,7 +94,7 @@ std::vector<IndicatorLink*> BuildIndicatorLinks() {
       DIALOG_DATA(ind, outline_alpha, uiIndicatorOutlineAlpha, _I32);      \
                                                                            \
       if (togui == false) {                                                \
-        col->set_allocated_##ID(Allocate(ind));                            \
+        col->ID = ind;                                                     \
       }                                                                    \
     }                                                                      \
   };                                                                       \
@@ -117,7 +117,7 @@ const std::vector<IndicatorLink*>& GetIndicatorLinks() {
 
 void SettingsIndicatorTab::IndicatorToGui(bool togui) {
   ride::FontsAndColors fonts_and_colors =
-      common_->current_settings().fonts_and_colors();
+      common_->current_settings().fonts_and_colors;
 
   int selected_item = uiIndicatorList->GetSelection();
   if (selected_item == -1) return;
@@ -132,8 +132,7 @@ void SettingsIndicatorTab::IndicatorToGui(bool togui) {
                        uiIndicatorOutlineAlpha);
 
   if (togui == false) {
-    common_->current_settings_mod()->set_allocated_fonts_and_colors(
-        Allocate(fonts_and_colors));
+    common_->current_settings_mod()->fonts_and_colors = fonts_and_colors;
   }
 }
 

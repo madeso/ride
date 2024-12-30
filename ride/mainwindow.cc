@@ -630,25 +630,19 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos,
 }
 
 void MainWindow::UpdateTheme() {
-  const ride::FontsAndColors& c = settings_.fonts_and_colors();
+  const ride::FontsAndColors& c = settings_.fonts_and_colors;
 
   wxAuiDockArt* dock_art = new wxAuiDefaultDockArt();
-  dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, C(c.dock_background()));
-  dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, C(c.dock_sash()));
-  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_COLOUR,
-                     C(c.dock_active_caption()));
-  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR,
-                     C(c.dock_active_caption_gradient()));
-  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_COLOUR,
-                     C(c.dock_inactive_caption()));
-  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR,
-                     C(c.dock_inactive_caption_gradient()));
-  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR,
-                     C(c.dock_active_caption_text()));
-  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR,
-                     C(c.dock_inactive_caption_text()));
-  dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, C(c.dock_border()));
-  dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, C(c.dock_gripper()));
+  dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, C(c.dock_background));
+  dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, C(c.dock_sash));
+  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_COLOUR, C(c.dock_active_caption));
+  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR, C(c.dock_active_caption_gradient));
+  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_COLOUR, C(c.dock_inactive_caption));
+  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR, C(c.dock_inactive_caption_gradient));
+  dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR, C(c.dock_active_caption_text));
+  dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR, C(c.dock_inactive_caption_text));
+  dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, C(c.dock_border));
+  dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, C(c.dock_gripper));
   aui_.SetArtProvider(dock_art);
 
   // we have to create a new tab art each time as wx copies it around
@@ -664,20 +658,18 @@ void MainWindow::UpdateTheme() {
   // tab_art->set_activeTabText(C(c.tab_active_text()));
   // tab_art->set_inactiveTabText(C(c.tab_inactive_text()));
   notebook_->SetArtProvider(tab_art);
-  notebook_->GetAuiManager().GetArtProvider()->SetColour(
-      wxAUI_DOCKART_BORDER_COLOUR, C(c.tab_border()));
-  notebook_->GetAuiManager().GetArtProvider()->SetColour(
-      wxAUI_DOCKART_SASH_COLOUR, C(c.tab_sash()));
+  notebook_->GetAuiManager().GetArtProvider()->SetColour(wxAUI_DOCKART_BORDER_COLOUR, C(c.tab_border));
+  notebook_->GetAuiManager().GetArtProvider()->SetColour(wxAUI_DOCKART_SASH_COLOUR, C(c.tab_sash));
 
   // TODO(Gustav) Add style
   // statusbar_->set_highlight(C(c.statusbar_highlight()));
   // statusbar_->set_shadow(C(c.statusbar_shadow()));
-  statusbar_->SetForegroundColour(C(c.statusbar_foreground()));
-  statusbar_->SetBackgroundColour(C(c.statusbar_background()));
+  statusbar_->SetForegroundColour(C(c.statusbar_foreground));
+  statusbar_->SetBackgroundColour(C(c.statusbar_background));
   // statusbar_->InitColours();
 
   wxFrame::SetForegroundColour(wxColor(255, 0, 0));
-  wxFrame::SetBackgroundColour(C(c.dock_background()));
+  wxFrame::SetBackgroundColour(C(c.dock_background));
 
   aui_.Update();       // we changed the tab art, update all the sizes
   wxFrame::Refresh();  // and then force a repaint
@@ -879,37 +871,37 @@ void MainWindow::OnTab(bool forward) {
     }
   }
 
-  bool vs_focus = settings_.switcher_vs_focus();
+  bool vs_focus = settings_.switcher_vs_focus;
 
   const switcher::Index focus =
       vs_focus ? switcher::Index(files_group_index, files.GetIndexForFocus())
                : items.GetIndexForFocus();
   int group = vs_focus ? files_group_index : 0;
 
-  const ride::FontsAndColors& colors = settings_.fonts_and_colors();
+  const ride::FontsAndColors& colors = settings_.fonts_and_colors;
 
   switcher::Style style;
-  style.set_row_count(settings_.switcher_row_count());
-  style.set_text_margin_x(settings_.switcher_text_margin_x());
-  style.set_text_margin_y(settings_.switcher_text_margin_y());
-  style.set_background_color(C(colors.switcher_background_color()));
-  style.set_text_color(C(colors.switcher_text_color()));
-  style.set_selection_color(C(colors.switcher_selection_color()));
-  style.set_selection_outline_color(
-      C(colors.switcher_selection_outline_color()));
-  style.set_x_margin(settings_.switcher_x_margin());
-  style.set_y_margin(settings_.switcher_y_margin());
-  style.set_row_spacing(settings_.switcher_row_spacing());
-  style.set_col_spacing(settings_.switcher_col_spacing());
-  style.set_item_maxwidth(settings_.switcher_item_maxwidth());
-  style.set_item_maxheight(settings_.switcher_item_maxheight());
-  style.set_dlg_main_border(settings_.switcher_dlg_main_border());
-  style.set_dlg_item_border(settings_.switcher_dlg_item_border());
-  style.set_dialog_color(C(colors.switcher_dialog_color()));
-  style.set_base_color(C(colors.switcher_base_color()));
+  style.set_background_color(C(colors.switcher_background_color));
+  style.set_text_color(C(colors.switcher_text_color));
+  style.set_selection_color(C(colors.switcher_selection_color));
+  style.set_selection_outline_color(C(colors.switcher_selection_outline_color));
+  style.set_dialog_color(C(colors.switcher_dialog_color));
+  style.set_base_color(C(colors.switcher_base_color));
 
-  style.set_min_width(settings_.switcher_min_width());
-  style.set_min_height(settings_.switcher_min_height());
+  style.set_row_count(settings_.switcher_row_count);
+  style.set_text_margin_x(settings_.switcher_text_margin_x);
+  style.set_text_margin_y(settings_.switcher_text_margin_y);
+  style.set_x_margin(settings_.switcher_x_margin);
+  style.set_y_margin(settings_.switcher_y_margin);
+  style.set_row_spacing(settings_.switcher_row_spacing);
+  style.set_col_spacing(settings_.switcher_col_spacing);
+  style.set_item_maxwidth(settings_.switcher_item_maxwidth);
+  style.set_item_maxheight(settings_.switcher_item_maxheight);
+  style.set_dlg_main_border(settings_.switcher_dlg_main_border);
+  style.set_dlg_item_border(settings_.switcher_dlg_item_border);
+
+  style.set_min_width(settings_.switcher_min_width);
+  style.set_min_height(settings_.switcher_min_height);
 
   switcher::Dialog dlg(items, focus, group, forward, style, this);
 
@@ -999,9 +991,6 @@ MainWindow::~MainWindow() {
   // release the currently loaded project, allowing it to save proto files
   // before we kill the proto library below
   project_.reset();
-
-  // shutdown protobuf now, to avoid spewing out memory leaks...
-  google::protobuf::ShutdownProtobufLibrary();
 }
 
 void MainWindow::ReloadFilesIfNeeded() {
@@ -1397,14 +1386,13 @@ void MainWindow::SaveSession() {
   const wxSize size = GetSize();
   const wxString perspective = aui_.SavePerspective();
 
-  session.set_window_x(pos.x);
-  session.set_window_y(pos.y);
-  session.set_window_width(size.x);
-  session.set_window_height(size.y);
-  session.set_state(state);
-  session.set_project(project_->GetCargoFile());
-
-  session.set_aui_perspective(perspective);
+  session.window_x = pos.x;
+  session.window_y = pos.y;
+  session.window_width = size.x;
+  session.window_height = size.y;
+  session.state = state;
+  session.project = project_->GetCargoFile();
+  session.aui_perspective = perspective;
 
   for (FileEdit* edit : IterateOverFileEdits(notebook_)) {
     int start_line = 0;
@@ -1412,12 +1400,13 @@ void MainWindow::SaveSession() {
     int end_line = 0;
     int end_index = 0;
     edit->GetSelection(&start_line, &start_index, &end_line, &end_index);
-    auto* f = session.mutable_files()->Add();
-    f->set_path(edit->filename());
-    f->set_start_line(start_line);
-    f->set_start_index(start_index);
-    f->set_end_line(end_line);
-    f->set_end_index(end_index);
+    ride::OpenFile f;
+    f.path = edit->filename();
+    f.start_line = start_line;
+    f.start_index = start_index;
+    f.end_line = end_line;
+    f.end_index = end_index;
+    session.files.emplace_back(f);
   }
 
   ::SaveSession(this, session);
@@ -1425,36 +1414,32 @@ void MainWindow::SaveSession() {
 
 void MainWindow::RestoreSession() {
   ride::Session session;
-  ::LoadSession(this, &session);
-  if (session.has_window_x()) {
-    // if we have set the window x, we assume we have set them all
-    SetSize(session.window_x(), session.window_y(), session.window_width(),
-            session.window_height());
+  bool loaded = ::LoadSession(this, &session);
+  if (loaded) {
+    SetSize(session.window_x, session.window_y, session.window_width, session.window_height);
   }
 
-  if (session.state() == ride::WINDOWSTATE_MAXIMIZED) {
+  if (session.state == ride::WINDOWSTATE_MAXIMIZED) {
     wxFrame::Maximize();
   }
 
-  if (session.state() == ride::WINDOWSTATE_MAXIMIZED) {
+  if (session.state == ride::WINDOWSTATE_MAXIMIZED) {
     wxFrame::ShowFullScreen(true);
-  } else if (session.state() == ride::WINDOWSTATE_ICONIZED) {
+  } else if (session.state == ride::WINDOWSTATE_ICONIZED) {
     // if we quit in a iconized/minimized state... should we restore to the same
     // state or to the normal state...?
     wxFrame::Iconize();
   }
 
-  wxString cargo_file = session.project();
+  wxString cargo_file = session.project;
   if (cargo_file.IsEmpty() == false) {
     OpenProject(cargo_file);
   }
 
-  for (auto f : session.files()) {
-    OpenFile(f.path(), f.start_line(), f.start_index(), f.end_line(),
-             f.end_index());
+  for (auto f : session.files) {
+    OpenFile(f.path, f.start_line, f.start_index, f.end_line,
+             f.end_index);
   }
 
-  if (session.has_aui_perspective()) {
-    aui_.LoadPerspective(session.aui_perspective());
-  }
+  aui_.LoadPerspective(session.aui_perspective);
 }

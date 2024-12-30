@@ -28,7 +28,7 @@ void SettingsWindowTab::SendWindowToMain() {
 void SettingsWindowTab::WindowToGui(bool togui) {
   ride::Settings& current_settings_ = *common_->current_settings_mod();
 
-  ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors();
+  ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors;
 
   DIALOG_DATAX(fonts_and_colors, dock_background, uiWindowDockCommonBackground);
   DIALOG_DATAX(fonts_and_colors, dock_sash, uiWindowDockCommonSash);
@@ -103,8 +103,7 @@ void SettingsWindowTab::WindowToGui(bool togui) {
   DIALOG_DATAX(fonts_and_colors, switcher_base_color, uiSwitcherBackground);
 
   if (togui == false) {
-    current_settings_.set_allocated_fonts_and_colors(
-        Allocate(fonts_and_colors));
+    current_settings_.fonts_and_colors = fonts_and_colors;
   }
 }
 void SettingsWindowTab::OnWindowColorChange(wxColourPickerEvent& event) {

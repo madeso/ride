@@ -57,8 +57,8 @@ void SettingsEnviromentTab::SettingsToGui(bool togui) {
   uiRacerStatus->SetLabelText(InfoBool(p.RacerIsValid()) + p.racer());
   uiProtocStatus->SetLabelText(InfoBool(p.ProtocIsValid()) + p.protoc());
 
-  const wxString path = m.rust_src_path() != ""
-                            ? wxString(m.rust_src_path().c_str())
+  const wxString path = m.rust_src_path != ""
+                            ? wxString(m.rust_src_path.c_str())
                             : GetEnv("RUST_SRC_PATH", "No path available");
   uiRustSrcStatus->SetLabelText(path);
 
@@ -68,28 +68,28 @@ void SettingsEnviromentTab::SettingsToGui(bool togui) {
 void SettingsEnviromentTab::OnCargo(wxCommandEvent& event) {
   wxFileDialog fd(this, "Choose cargo");
   if (wxID_CANCEL == fd.ShowModal()) return;
-  common_->current_machine_mod()->set_cargo(fd.GetPath().c_str().AsChar());
+  common_->current_machine_mod()->cargo = fd.GetPath().c_str().AsChar();
   SettingsToGui(true);
 }
 
 void SettingsEnviromentTab::OnRustc(wxCommandEvent& event) {
   wxFileDialog fd(this, "Choose rustc");
   if (wxID_CANCEL == fd.ShowModal()) return;
-  common_->current_machine_mod()->set_rustc(fd.GetPath().c_str().AsChar());
+  common_->current_machine_mod()->rustc = fd.GetPath().c_str().AsChar();
   SettingsToGui(true);
 }
 
 void SettingsEnviromentTab::OnRacer(wxCommandEvent& event) {
   wxFileDialog fd(this, "Choose racer");
   if (wxID_CANCEL == fd.ShowModal()) return;
-  common_->current_machine_mod()->set_racer(fd.GetPath().c_str().AsChar());
+  common_->current_machine_mod()->racer = fd.GetPath().c_str().AsChar();
   SettingsToGui(true);
 }
 
 void SettingsEnviromentTab::OnProtoc(wxCommandEvent& event) {
   wxFileDialog fd(this, "Choose protoc");
   if (wxID_CANCEL == fd.ShowModal()) return;
-  common_->current_machine_mod()->set_protoc(fd.GetPath().c_str().AsChar());
+  common_->current_machine_mod()->protoc = fd.GetPath().c_str().AsChar();
   SettingsToGui(true);
 }
 
@@ -97,8 +97,7 @@ void SettingsEnviromentTab::OnRustSrc(wxCommandEvent& event) {
   wxDirDialog fd(this, "Choose RUST_SRC_PATH", "",
                  wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
   if (wxID_CANCEL == fd.ShowModal()) return;
-  common_->current_machine_mod()->set_rust_src_path(
-      fd.GetPath().c_str().AsChar());
+  common_->current_machine_mod()->rust_src_path = fd.GetPath().c_str().AsChar();
   SettingsToGui(true);
 }
 

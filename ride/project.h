@@ -4,7 +4,7 @@
 #define RIDE_PROJECT_H_
 
 #include <ride/wx.h>
-#include "settings.pb.h"  // NOLINT this is how we include it
+#include "settings.proto.h"  // NOLINT this is how we include it
 #include "ride/runner.h"
 
 class MainWindow;

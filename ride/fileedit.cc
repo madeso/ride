@@ -286,7 +286,7 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
   const bool is_warning = mess.type() == CompilerMessage::TYPE_WARNING;
   const bool is_note = mess.type() == CompilerMessage::TYPE_NOTE;
 
-  if (main_->settings().show_compiler_messages_as_annotations() &&
+  if (main_->settings().show_compiler_messages_as_annotations &&
       (is_error || is_warning || is_note)) {
     const int style =
         is_error ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
@@ -304,7 +304,7 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess) {
     if (is_warning || is_error) {
       // only do indicators for errors and warnings, not for notes
       const bool on_single_line = mess.start_line() == mess.end_line();
-      if (main_->settings().show_multiline_indicators() || on_single_line) {
+      if (main_->settings().show_multiline_indicators || on_single_line) {
         int from = FromLineColToTextOffset(text_, mess.start_line(),
                                            mess.start_index());
         int to =
@@ -606,22 +606,22 @@ bool FileEdit::ProcessCharEvent(wxChar c) {
   const int tab_width = main_->project()->tabwidth();
 
   if (HandleParaEditCommon(tab_width,
-                           main_->settings().autocomplete_parentheses(), c,
+                           main_->settings().autocomplete_parentheses, c,
                            text_, false, '(', ')'))
     return true;
   if (HandleParaEditCommon(tab_width,
-                           main_->settings().autocomplete_curly_braces(), c,
+                           main_->settings().autocomplete_curly_braces, c,
                            text_, true, '{', '}'))
     return true;
-  if (HandleParaEditCommon(tab_width, main_->settings().autocomplete_brackets(),
+  if (HandleParaEditCommon(tab_width, main_->settings().autocomplete_brackets,
                            c, text_, false, '[', ']'))
     return true;
 
-  if (HandleParaEditQuote(c, main_->settings().autocomplete_singlequote(),
+  if (HandleParaEditQuote(c, main_->settings().autocomplete_singlequote,
                           text_, SINGLE_QUOTE, StringType::SINGLE_QUOTE))
     return true;
 
-  if (HandleParaEditQuote(c, main_->settings().autocomplete_doublequote(),
+  if (HandleParaEditQuote(c, main_->settings().autocomplete_doublequote,
                           text_, DOUBLE_QUOTE, StringType::DOUBLE_QUOTE))
     return true;
 
@@ -939,7 +939,7 @@ bool FileEdit::ProcessKey(wxKeyCode key, wxKeyModifier mod) {
       ) {
     const bool right = key == WXK_RIGHT || key == WXK_END;
     // TODO(Gustav): Expose home/end style in the gui
-    GoHomeEnd(text_, right, main_->settings().home_end_style(),
+    GoHomeEnd(text_, right, main_->settings().home_end_style,
               selection_state);
     return true;
   }
@@ -1241,11 +1241,11 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event) {
         text_->GetTextRange(line_end, next_end);
 
     const int indent_change =
-        main_->settings().auto_indentation() == ride::AUTOINDENTATION_SMART
+        main_->settings().auto_indentation == ride::AUTOINDENTATION_SMART
             ? CalculateIndentationChange(previous_line_content)
             : 0;
     const int indent_change_in_spaces =
-        indent_change * main_->settings().tabwidth();
+        indent_change * main_->settings().tabWidth;
 
     const int smart_indent = indent_change_in_spaces;
 
@@ -1256,19 +1256,19 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event) {
             : smart_indent;
 
     const int indentation_in_tabs =
-        indentation_in_spaces / main_->settings().tabwidth();
+        indentation_in_spaces / main_->settings().tabWidth;
 
     // if we use tabs, divide the number of character by the char width to get
     // the actual width
-    const int indentation_in_chars = main_->settings().usetabs()
+    const int indentation_in_chars = main_->settings().useTabs
                                          ? indentation_in_tabs
                                          : indentation_in_spaces;
 
     // adjust to remove weird spaces from indentation settings
     const int indentation_in_spaces_ajdusted =
-        indentation_in_tabs * main_->settings().tabwidth();
+        indentation_in_tabs * main_->settings().tabWidth;
 
-    if (main_->settings().auto_indentation() != ride::AUTOINDENTATION_NONE) {
+    if (main_->settings().auto_indentation != ride::AUTOINDENTATION_NONE) {
       if (indentation_in_spaces_ajdusted != 0) {
         text_->SetLineIndentation(current_line, indentation_in_spaces_ajdusted);
         text_->GotoPos(text_->PositionFromLine(current_line) +
@@ -1283,7 +1283,7 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event) {
         // ...set that newline - 1 indentation of the current row
         text_->SetLineIndentation(
             current_line + 1,
-            indentation_in_spaces_ajdusted - main_->settings().tabwidth());
+            indentation_in_spaces_ajdusted - main_->settings().tabWidth);
       }
     }
   }
@@ -1324,7 +1324,7 @@ void FileEdit::HighlightCurrentWord() {
       }
 
       const bool highlight_keyword =
-          main_->settings().highlight_word_also_highlight_keywords();
+          main_->settings().highlight_word_also_highlight_keywords;
       const bool is_keyword =
           highlight_keyword
               ? false

@@ -164,31 +164,3 @@ LoadResult Cargo::Load(const wxString& file) {
     return LoadResult::Error(e.what());
   }
 }
-
-const wxString& Cargo::name() const { return name_; }
-
-void Cargo::set_name(const wxString& name) { name_ = name; }
-
-const wxString& Cargo::version() const { return version_; }
-
-void Cargo::set_version(const wxString& version) { version_ = version; }
-
-const std::vector<wxString>& Cargo::authors() const { return authors_; }
-
-void Cargo::set_authors(const std::vector<wxString>& authors) {
-  authors_ = authors;
-}
-
-const std::vector<wxString>& Cargo::dependencies() const {
-  return dependencies_;
-}
-
-void Cargo::set_dependencies(const std::vector<wxString>& dependencies) {
-  dependencies_ = dependencies;
-}
-
-const std::vector<wxString>& Cargo::features() const { return features_; }
-
-void Cargo::set_features(const std::vector<wxString>& features) {
-  features_ = features;
-}

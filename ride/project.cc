@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include "settings.pb.h"  // NOLINT this is how we include it
+#include "settings.proto.h"  // NOLINT this is how we include it
 
 #include "ride/wxutils.h"
 #include "ride/mainwindow.h"
@@ -22,24 +22,26 @@
 Project::Project(MainWindow* output, const wxString& root_folder)
     : main_(output), root_folder_(root_folder) {
   if (root_folder_.IsEmpty() == false) {
-    if (LoadProtoText(&project_, GetProjectFile()) == false) {
+    if (LoadProtoJson(&project_, GetProjectFile()) != "") {
     }
-    if (project_.build_settings_size() == 0) {
+    if (project_.build_settings.size() == 0) {
       // add default build settings to the project
-      ride::BuildSetting* debug = project_.add_build_settings();
-      debug->set_name("Debug");
-      debug->set_release(false);
+      ride::BuildSetting debug;
+      debug.name = "Debug";
+      debug.release = false;
+      project_.build_settings.push_back(debug);
 
-      ride::BuildSetting* release = project_.add_build_settings();
-      release->set_name("Release");
-      release->set_release(true);
+      ride::BuildSetting release;
+      release.name = "Release";
+      release.release = true;
+      project_.build_settings.push_back(release);
     }
 
-    if (LoadProtoText(&user_, GetUserFile()) == false) {
+    if (LoadProtoJson(&user_, GetUserFile()) != "") {
     }
 
-    if (user_.run_size() == 0) {
-      user_.add_run();
+    if (user_.run.size() == 0) {
+      user_.run.push_back({});
       SaveUser();
     }
 
@@ -54,16 +56,16 @@ const wxString& Project::root_folder() const { return root_folder_; }
 
 bool Project::Save() {
   if (root_folder_.IsEmpty()) return false;
-  bool project_saved = SaveProtoText(project_, GetProjectFile());
+  bool project_saved = SaveProtoJson(project_, GetProjectFile()) != "";
   bool user_saved = SaveUser();
   return project_saved && user_saved;
 }
 
-int Project::tabwidth() const { return project_.tabwidth(); }
-bool Project::usetabs() const { return project_.usetabs(); }
+int Project::tabwidth() const { return project_.tabWidth; }
+bool Project::usetabs() const { return project_.useTabs; }
 
-void Project::set_tabwidth(int tabwidth) { project_.set_tabwidth(tabwidth); }
-void Project::set_usetabs(bool usetabs) { project_.set_usetabs(usetabs); }
+void Project::set_tabwidth(int tabwidth) { project_.tabWidth = tabwidth; }
+void Project::set_usetabs(bool usetabs) { project_.useTabs = usetabs; }
 
 const ride::Project& Project::project() const { return project_; }
 ride::Project* Project::project_ptr() { return &project_; }
@@ -103,36 +105,36 @@ void Project::Settings() { DoProjectSettingsDlg(main_, main_, this); }
 
 void Project::SelectActiveBuild() {
   std::vector<wxString> names;
-  names.reserve(project_.build_settings_size());
-  for (const ride::BuildSetting& setting : project_.build_settings()) {
-    names.push_back(setting.name());
+  names.reserve(project_.build_settings.size());
+  for (const ride::BuildSetting& setting : project_.build_settings) {
+    names.push_back(setting.name);
   }
 
   wxSingleChoiceDialog dlg(nullptr, "Select build", "Build", names.size(),
                            &names[0]);
-  dlg.SetSelection(user_.build_setting());
+  dlg.SetSelection(user_.build_setting);
   const int dialog_result = dlg.ShowModal();
 
   if (dialog_result != wxID_OK) return;
-  user_.set_build_setting(dlg.GetSelection());
+  user_.build_setting = dlg.GetSelection();
   SaveUser();
   SetMainStatusbarText();
 }
 
 void Project::SelectActiveRun() {
   std::vector<wxString> names;
-  names.reserve(user_.run_size());
-  for (const ride::RunSetting& setting : user_.run()) {
-    names.push_back(setting.name());
+  names.reserve(user_.run.size());
+  for (const ride::RunSetting& setting : user_.run) {
+    names.push_back(setting.name);
   }
 
   wxSingleChoiceDialog dlg(nullptr, "Select run", "Build", names.size(),
                            &names[0]);
-  dlg.SetSelection(user_.run_setting());
+  dlg.SetSelection(user_.run_setting);
   const int dialog_result = dlg.ShowModal();
 
   if (dialog_result != wxID_OK) return;
-  user_.set_run_setting(dlg.GetSelection());
+  user_.run_setting = dlg.GetSelection();
   SaveUser();
   SetMainStatusbarText();
 }
@@ -144,33 +146,33 @@ void Project::SaveAllFiles() {
 
 wxString BuildCommandLine(const ride::MachineSettings& machine,
                           const ride::BuildSetting& build) {
-  wxString cmd = machine.cargo() + " build";
+  wxString cmd = machine.cargo + " build";
 
-  if (build.release()) {
+  if (build.release) {
     cmd += " --release";
   }
 
-  if (build.features_size() > 0) {
+  if (build.features.size() > 0) {
     cmd += " --features";
-    for (const std::string& f : build.features()) {
+    for (const std::string& f : build.features) {
       cmd += " " + f;
     }
   }
 
-  if (build.default_features() == false) {
+  if (build.default_features == false) {
     cmd += " --no-default-features";
   }
 
-  if (build.target().empty() == false) {
-    cmd += " --target " + build.target();
+  if (build.target.empty() == false) {
+    cmd += " --target " + build.target;
   }
 
-  if (build.verbose()) {
+  if (build.verbose) {
     cmd += " --verbose";
   }
 
-  if (build.custom_arguments().empty() == false) {
-    cmd += " " + build.custom_arguments();
+  if (build.custom_arguments.empty() == false) {
+    cmd += " " + build.custom_arguments;
   }
 
   return cmd;
@@ -195,7 +197,7 @@ void Project::Clean(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(main_->machine().cargo() + " clean");
+  RunCmd(main_->machine().cargo + " clean");
 }
 
 void Project::Rebuild(bool origin_main) {
@@ -214,7 +216,7 @@ void Project::Doc(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(main_->machine().cargo() + " doc");
+  RunCmd(main_->machine().cargo + " doc");
 }
 
 void Project::Run(bool origin_main) {
@@ -234,7 +236,7 @@ void Project::Test(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(main_->machine().cargo() + " test");
+  RunCmd(main_->machine().cargo + " test");
 }
 
 void Project::Bench(bool origin_main) {
@@ -244,7 +246,7 @@ void Project::Bench(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(main_->machine().cargo() + " bench");
+  RunCmd(main_->machine().cargo + " bench");
 }
 
 void Project::Update(bool origin_main) {
@@ -254,7 +256,7 @@ void Project::Update(bool origin_main) {
   }
 
   // todo: expand commandline with arguments
-  RunCmd(main_->machine().cargo() + " update");
+  RunCmd(main_->machine().cargo + " update");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -274,51 +276,50 @@ void Project::RunCmd(const wxString& cmd) {
                               CollectRideSpecificEnviroment(main_->machine())));
 }
 
-bool Project::SaveUser() { return SaveProtoText(user_, GetUserFile()); }
+bool Project::SaveUser() { return SaveProtoJson(user_, GetUserFile()) != ""; }
 
 int Project::GetSelectedBuildIndex() {
-  if (project_.build_settings_size() <= 0) return -1;
+  if (project_.build_settings.size() <= 0) return -1;
 
-  if (user_.build_setting() < 0 ||
-      user_.build_setting() >= project_.build_settings_size()) {
-    user_.set_build_setting(0);
+  if (user_.build_setting < 0 ||
+      user_.build_setting >= project_.build_settings.size()) {
+    user_.build_setting = 0;
     SaveUser();
     SetMainStatusbarText();
   }
 
-  return user_.build_setting();
+  return user_.build_setting;
 }
 
 const ride::BuildSetting& Project::GetCurrentBuildSetting() {
   int index = GetSelectedBuildIndex();
   if (index == -1)
-    return ride::BuildSetting::default_instance();
+    return ride::BuildSetting{};
   else
-    return project_.build_settings(index);
+    return project_.build_settings[index];
 }
 
 int Project::GetSelectedRunIndex() {
-  if (user_.run_size() <= 0) return -1;
+  if (user_.run.size() <= 0) return -1;
 
-  if (user_.run_setting() < 0 || user_.run_setting() >= user_.run_size()) {
-    user_.set_run_setting(0);
+  if (user_.run_setting < 0 || user_.run_setting >= user_.run.size()) {
+    user_.run_setting = 0;
     SaveUser();
     SetMainStatusbarText();
   }
 
-  return user_.run_setting();
+  return user_.run_setting;
 }
 
 const ride::RunSetting& Project::GetCurrentRunSetting() {
   int index = GetSelectedRunIndex();
   if (index == -1)
-    return ride::RunSetting::default_instance();
+    return ride::RunSetting{};
   else
-    return user_.run(index);
+    return user_.run[index];
 }
 
 void Project::SetMainStatusbarText() {
-  main_->SetStatusBarText(GetCurrentBuildSetting().name(),
-                          STATUSBAR_BUILD_CONF);
-  main_->SetStatusBarText(GetCurrentRunSetting().name(), STATUSBAR_RUN_CONF);
+  main_->SetStatusBarText(GetCurrentBuildSetting().name, STATUSBAR_BUILD_CONF);
+  main_->SetStatusBarText(GetCurrentRunSetting().name, STATUSBAR_RUN_CONF);
 }

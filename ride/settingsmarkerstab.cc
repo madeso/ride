@@ -103,8 +103,7 @@ void SettingsMarkersTab::SendMarkerToMain() {
 }
 
 void SettingsMarkersTab::MarkerToGui(bool togui) {
-  ride::FontsAndColors fonts_and_colors =
-      common_->current_settings().fonts_and_colors();
+  ride::FontsAndColors fonts_and_colors = common_->current_settings().fonts_and_colors;
 
   int selected_item = uiMarkerList->GetSelection();
   if (selected_item == -1) return;
@@ -118,8 +117,7 @@ void SettingsMarkersTab::MarkerToGui(bool togui) {
                     uiMarkerBackgroundColor);
 
   if (togui == false) {
-    common_->current_settings_mod()->set_allocated_fonts_and_colors(
-        Allocate(fonts_and_colors));
+    common_->current_settings_mod()->fonts_and_colors = fonts_and_colors;
   }
 }
 

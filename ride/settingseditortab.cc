@@ -100,34 +100,34 @@ void SettingsEditorTab::SendEditToMain() {
 
 void SettingsEditorTab::EditToGui(bool togui) {
   ride::Settings& current_settings_ = *common_->current_settings_mod();
-  ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors();
-  ride::FoldFlags foldflags = current_settings_.foldflags();
+  ride::FontsAndColors fonts_and_colors = current_settings_.fonts_and_colors;
+  ride::FoldFlags foldflags = current_settings_.foldflags;
 
-  DIALOG_DATA(current_settings_, displayeolenable, uiDisplayEOL, );
-  DIALOG_DATA(current_settings_, linenumberenable, uiShowLineNumbers, );
-  DIALOG_DATA(current_settings_, indentguideenable, uiIndentGuide, );
+  DIALOG_DATA(current_settings_, displayEOLEnable, uiDisplayEOL, );
+  DIALOG_DATA(current_settings_, lineNumberEnable, uiShowLineNumbers, );
+  DIALOG_DATA(current_settings_, indentGuideEnable, uiIndentGuide, );
 
-  DIALOG_DATA(current_settings_, tabwidth, uiTabWidth, _I32);
-  DIALOG_DATA(current_settings_, edgecolumn, uiEdgeColumn, _I32);
+  DIALOG_DATA(current_settings_, tabWidth, uiTabWidth, _I32);
+  DIALOG_DATA(current_settings_, edgeColumn, uiEdgeColumn, _I32);
 
   DIALOG_DATA(current_settings_, whitespace, uiViewWhitespace, _VW);
-  DIALOG_DATA(current_settings_, wordwrap, uiWordwrap, _WM);
-  DIALOG_DATA(current_settings_, edgestyle, uiEdgeStyle, _ES);
+  DIALOG_DATA(current_settings_, wordWrap, uiWordwrap, _WM);
+  DIALOG_DATA(current_settings_, edgeStyle, uiEdgeStyle, _ES);
   DIALOG_DATA(current_settings_, auto_indentation, uiEditIndentation, _AI);
 
-  DIALOG_DATA(current_settings_, tabindents, uiTabIndents, );
-  DIALOG_DATA(current_settings_, usetabs, uiUseTabs, );
-  DIALOG_DATA(current_settings_, backspaceunindents, uiBackspaceUnindents, );
+  DIALOG_DATA(current_settings_, tabIndents, uiTabIndents, );
+  DIALOG_DATA(current_settings_, useTabs, uiUseTabs, );
+  DIALOG_DATA(current_settings_, backspaceUnindents, uiBackspaceUnindents, );
 
-  DIALOG_DATA(current_settings_, foldenable, uiAllowFolding, );
+  DIALOG_DATA(current_settings_, foldEnable, uiAllowFolding, );
 
-  DIALOG_DATA(foldflags, levelnumbers, uiFoldLevelNumbers, );
-  DIALOG_DATA(foldflags, linebefore_expanded, uiFoldLineBeforeExpanded, );
-  DIALOG_DATA(foldflags, linebefore_contracted, uiFoldLineBeforeContracted, );
-  DIALOG_DATA(foldflags, lineafter_expanded, uiFoldLineAfterExpanded, );
-  DIALOG_DATA(foldflags, lineafter_contracted, uiFoldLineAfterContracted, );
+  DIALOG_DATA(foldflags, LEVELNUMBERS, uiFoldLevelNumbers, );
+  DIALOG_DATA(foldflags, LINEBEFORE_EXPANDED, uiFoldLineBeforeExpanded, );
+  DIALOG_DATA(foldflags, LINEBEFORE_CONTRACTED, uiFoldLineBeforeContracted, );
+  DIALOG_DATA(foldflags, LINEAFTER_EXPANDED, uiFoldLineAfterExpanded, );
+  DIALOG_DATA(foldflags, LINEAFTER_CONTRACTED, uiFoldLineAfterContracted, );
 
-  DIALOG_DATAX(fonts_and_colors, edgecolor, uiEdgeColor);
+  DIALOG_DATAX(fonts_and_colors, edgeColor, uiEdgeColor);
 
   DIALOG_DATA(fonts_and_colors, use_selection_foreground,
               uiEditUseSelectionForeground, );
@@ -168,9 +168,8 @@ void SettingsEditorTab::EditToGui(bool togui) {
               uiEditShowCompilerAnnotations, );
 
   if (togui == false) {
-    current_settings_.set_allocated_fonts_and_colors(
-        Allocate(fonts_and_colors));
-    current_settings_.set_allocated_foldflags(Allocate(foldflags));
+    current_settings_.fonts_and_colors = fonts_and_colors;
+    current_settings_.foldflags = foldflags;
   }
 }
 

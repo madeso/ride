@@ -3,50 +3,52 @@
 #include "ride/builtinthemes.h"
 
 #include <string>
+#include <optional>
 
-typedef google::protobuf::RepeatedPtrField<ride::Theme> ThemeList;
+typedef std::vector<ride::Theme> ThemeList;
 
 ride::Theme* GetOrCreateTheme(ThemeList* themes, const std::string& name) {
   for (ride::Theme& t : *themes) {
-    if (t.name() == name) return &t;
+    if (t.name == name) return &t;
   }
 
-  ride::Theme* temp = themes->Add();
-  temp->set_name(name);
-  temp->set_can_remove(false);
+  themes->push_back({});
+  ride::Theme* temp = &(*themes->rbegin());
+  temp->name = name;
+  temp->can_remove = false;
   return temp;
 }
 
-ride::Color Color(google::protobuf::int32 r, google::protobuf::int32 g,
-                  google::protobuf::int32 b) {
+ride::Color Color(int r, int g,
+                  int b) {
   ride::Color c;
 
-  c.set_r(r);
-  c.set_g(g);
-  c.set_b(b);
+  c.r = r;
+  c.g = g;
+  c.b = b;
 
   return c;
 }
 
-ride::Color Color(google::protobuf::int32 c) { return Color(c, c, c); }
+ride::Color Color(int c) { return Color(c, c, c); }
 
-ride::Style Style(ride::Color* front, ride::Color* back = nullptr,
+ride::Style Style(std::optional<ride::Color> front, std::optional<ride::Color> back = std::nullopt,
                   bool bold = false) {
   ride::Style style;
 
   if (front) {
-    style.set_use_foreground(true);
-    style.set_allocated_foreground(front);
+    style.use_foreground = true;
+    style.foreground = *front;
   }
 
   if (back) {
-    style.set_use_background(true);
-    style.set_allocated_background(back);
+    style.use_background = true;
+    style.background = *back;
   }
 
   if (bold) {
-    style.set_use_bold(true);
-    style.set_bold(true);
+    style.use_bold = true;
+    style.bold = true;
   }
 
   return style;
@@ -59,7 +61,7 @@ T* New(const T& t) {
 
 ride::Indicator Indicator(const ride::Color& c) {
   ride::Indicator ind;
-  ind.set_allocated_foreground(New(c));
+  ind.foreground = c;
   return ind;
 }
 
@@ -174,91 +176,86 @@ class BasicThemeBuilder {
   const ride::Color& caret_color() { return caret_color_; }
 
   void Setup(ride::FontsAndColors* colors) {
-    colors->set_use_selection_background(true);
-    colors->set_use_selection_foreground(true);
-    colors->set_allocated_selection_foreground(New(selection_foreground_));
-    colors->set_allocated_selection_background(New(selection_background_));
+    colors->use_selection_background = true;
+    colors->use_selection_foreground = true;
+    colors->selection_foreground = selection_foreground_;
+    colors->selection_background = selection_background_;
 
-    colors->set_allocated_default_style(New(Style(New(front_), New(bkg_))));
-    colors->set_allocated_line_number_style(New(Style(nullptr, New(bkg_))));
-    colors->set_allocated_fold_margin_hi(New(fold_hi_));
-    colors->set_allocated_fold_margin_low(New(fold_lo_));
+    colors->default_style = Style(front_, bkg_);
+    colors->line_number_style = Style(std::nullopt, bkg_);
+    colors->fold_margin_hi = fold_hi_;
+    colors->fold_margin_low = fold_lo_;
 
-    colors->set_allocated_selected_line(New(selected_line_));  // yellow
+    colors->selected_line = selected_line_;  // yelw
 
-    colors->set_allocated_style_comment(New(Style(New(comment_))));
-    colors->set_allocated_style_commentline(New(Style(New(comment_))));
-    colors->set_allocated_style_commentdoc(New(Style(New(comment_))));
-    colors->set_allocated_style_commentlinedoc(New(Style(New(comment_))));
-    colors->set_allocated_style_keyword(
-        New(Style(New(keyword_), nullptr, true)));
+    colors->style_comment = Style(comment_);
+    colors->style_commentline = Style(comment_);
+    colors->style_commentdoc = Style(comment_);
+    colors->style_commentlinedoc = Style(comment_);
+    colors->style_keyword = Style(keyword_, std::nullopt, true);
 
-    colors->set_allocated_folderend_foreground(New(front_));
-    colors->set_allocated_folderopenmid_foreground(New(front_));
-    colors->set_allocated_foldermidtail_foreground(New(front_));
-    colors->set_allocated_foldertail_foreground(New(front_));
-    colors->set_allocated_foldersub_foreground(New(front_));
-    colors->set_allocated_folder_foreground(New(front_));
-    colors->set_allocated_folderopen_foreground(New(front_));
+    colors->folderend_foreground = front_;
+    colors->folderopenmid_foreground = front_;
+    colors->foldermidtail_foreground = front_;
+    colors->foldertail_foreground = front_;
+    colors->foldersub_foreground = front_;
+    colors->folder_foreground = front_;
+    colors->folderopen_foreground = front_;
 
-    colors->set_allocated_folderend_background(New(bkg_));
-    colors->set_allocated_folderopenmid_background(New(bkg_));
-    colors->set_allocated_foldermidtail_background(New(bkg_));
-    colors->set_allocated_foldertail_background(New(bkg_));
-    colors->set_allocated_foldersub_background(New(bkg_));
-    colors->set_allocated_folder_background(New(bkg_));
-    colors->set_allocated_folderopen_background(New(bkg_));
+    colors->folderend_background = bkg_;
+    colors->folderopenmid_background = bkg_;
+    colors->foldermidtail_background = bkg_;
+    colors->foldertail_background = bkg_;
+    colors->foldersub_background = bkg_;
+    colors->folder_background = bkg_;
+    colors->folderopen_background = bkg_;
 
-    colors->set_allocated_props_key(New(Style(New(keyword_))));
-    colors->set_allocated_props_section(New(Style(nullptr, nullptr, true)));
+    colors->props_key = Style(keyword_);
+    colors->props_section = Style(std::nullopt, std::nullopt, true);
 
-    colors->set_allocated_indicator_error(New(Indicator(error_)));
-    colors->set_allocated_indicator_warning(New(Indicator(warning_)));
-    colors->set_allocated_indicator_search_highlight(
-        New(Indicator(search_hi_)));
-    colors->set_allocated_indicator_select_highlight(
-        New(Indicator(select_hi_)));
+    colors->indicator_error = Indicator(error_);
+    colors->indicator_warning = Indicator(warning_);
+    colors->indicator_search_highlight = Indicator(search_hi_);
+    colors->indicator_select_highlight = Indicator(select_hi_);
 
-    colors->set_allocated_annotation_error_style(
-        New(Style(New(error_front_), New(error_))));
-    colors->set_allocated_annotation_warning_style(
-        New(Style(New(warning_front_), New(warning_))));
+    colors->annotation_error_style = Style(error_front_, error_);
+    colors->annotation_warning_style = Style(warning_front_, warning_);
 
-    colors->set_allocated_edgecolor(New(edge_color_));
+    colors->edgeColor = edge_color_;
 
-    colors->set_allocated_caret_foreground(New(caret_color_));
+    colors->caret_foreground = caret_color_;
 
-    colors->set_allocated_switcher_background_color(New(switcher_background_));
-    colors->set_allocated_switcher_dialog_color(New(front_));
-    colors->set_allocated_switcher_base_color(New(switcher_background_));
-    colors->set_allocated_switcher_selection_color(New(selected_line_));
-    colors->set_allocated_switcher_selection_outline_color(New(selected_line_));
-    colors->set_allocated_switcher_text_color(New(front_));
+    colors->switcher_background_color = switcher_background_;
+    colors->switcher_dialog_color = front_;
+    colors->switcher_base_color = switcher_background_;
+    colors->switcher_selection_color = selected_line_;
+    colors->switcher_selection_outline_color = selected_line_;
+    colors->switcher_text_color = front_;
 
-    colors->set_allocated_dock_background(New(ui_background_));
-    colors->set_allocated_dock_sash(New(ui_background_));
-    colors->set_allocated_dock_active_caption(New(title_bkg_));
-    colors->set_allocated_dock_active_caption_gradient(New(title_bkg_));
-    colors->set_allocated_dock_inactive_caption(New(title_bkg_));
-    colors->set_allocated_dock_inactive_caption_gradient(New(title_bkg_));
-    colors->set_allocated_dock_active_caption_text(New(title_front_));
-    colors->set_allocated_dock_inactive_caption_text(New(title_front_));
-    colors->set_allocated_dock_border(New(ui_background_));
-    colors->set_allocated_dock_gripper(New(ui_background_));
-    colors->set_allocated_tab_background(New(ui_background_));
-    colors->set_allocated_tab_border(New(ui_background_));
-    colors->set_allocated_tab_sash(New(front_));
-    colors->set_allocated_tab_active_tab(New(bkg_));
-    colors->set_allocated_tab_inactive_tab(New(bkg_));
-    colors->set_allocated_tab_active_border(New(front_));
-    colors->set_allocated_tab_inactive_border(New(front_));
-    colors->set_allocated_tab_active_text(New(front_));
-    colors->set_allocated_tab_inactive_text(New(front_));
+    colors->dock_background = ui_background_;
+    colors->dock_sash = ui_background_;
+    colors->dock_active_caption = title_bkg_;
+    colors->dock_active_caption_gradient = title_bkg_;
+    colors->dock_inactive_caption = title_bkg_;
+    colors->dock_inactive_caption_gradient = title_bkg_;
+    colors->dock_active_caption_text = title_front_;
+    colors->dock_inactive_caption_text = title_front_;
+    colors->dock_border = ui_background_;
+    colors->dock_gripper = ui_background_;
+    colors->tab_background = ui_background_;
+    colors->tab_border = ui_background_;
+    colors->tab_sash = front_;
+    colors->tab_active_tab = bkg_;
+    colors->tab_inactive_tab = bkg_;
+    colors->tab_active_border = front_;
+    colors->tab_inactive_border = front_;
+    colors->tab_active_text = front_;
+    colors->tab_inactive_text = front_;
 
-    colors->set_allocated_statusbar_shadow(New(ui_background_));
-    colors->set_allocated_statusbar_highlight(New(front_));
-    colors->set_allocated_statusbar_foreground(New(front_));
-    colors->set_allocated_statusbar_background(New(ui_background_));
+    colors->statusbar_shadow = ui_background_;
+    colors->statusbar_highlight = front_;
+    colors->statusbar_foreground = front_;
+    colors->statusbar_background = ui_background_;
   }
 
  private:
@@ -365,19 +362,18 @@ void SetupSolarizedDarkTheme(ride::FontsAndColors* colors) {
 //////////////////////////////////////////////////////////////////////////
 
 void AddBuiltInThemes(::ride::Settings* settings) {
-  ThemeList* themes = settings->mutable_themes();
+  ThemeList* themes = &settings->themes;
 
   ride::Theme* default_theme = GetOrCreateTheme(themes, "Ride (default)");
-  SetupDefaultTheme(default_theme->mutable_data());
+  SetupDefaultTheme(&default_theme->data);
 
-  ride::Theme* solarized_dark_theme =
-      GetOrCreateTheme(themes, "Solarized (dark)");
-  SetupSolarizedDarkTheme(solarized_dark_theme->mutable_data());
+  ride::Theme* solarized_dark_theme = GetOrCreateTheme(themes, "Solarized (dark)");
+  SetupSolarizedDarkTheme(&solarized_dark_theme->data);
 
-  if (false == settings->has_fonts_and_colors()) {
+  if (false == settings->has_fonts_and_colors) {
     // if the current settings is missing the fonts and colors
     // apply the default theme
-    settings->set_allocated_fonts_and_colors(
-        new ride::FontsAndColors(default_theme->data()));
+    settings->fonts_and_colors = ride::FontsAndColors(default_theme->data);
+    settings->has_fonts_and_colors = true;
   }
 }

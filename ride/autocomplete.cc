@@ -263,7 +263,7 @@ wxString RunRacer(const ride::MachineSettings& machine, WordEntryList& wordlist,
   const int charnum =
       text_->GetCurrentPos() - text_->PositionFromLine(text_->GetCurrentLine());
   const wxString cmd =
-      wxString::Format((machine.racer() + " complete %d %d \"%s\"").c_str(),
+      wxString::Format((machine.racer + " complete %d %d \"%s\"").c_str(),
                        linenum, charnum, path);
   CmdRunner::Run(root_folder, cmd, CollectRideSpecificEnviroment(machine),
                  &output);
