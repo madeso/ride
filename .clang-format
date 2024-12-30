@@ -1,0 +1,195 @@
+BasedOnStyle: Google
+# required clang-format 16
+
+Language: Cpp
+Standard: c++20
+UseTab: Always
+TabWidth: 4
+IndentWidth: 4
+PPIndentWidth: 4
+ContinuationIndentWidth: 4
+
+# clang 17
+# BracedInitializerIndentWidth: 4
+ConstructorInitializerIndentWidth: 4
+LineEnding: LF
+ColumnLimit: 100
+
+InsertNewlineAtEOF: true
+NamespaceIndentation: Inner
+PackConstructorInitializers: Never
+SeparateDefinitionBlocks: Always
+Cpp11BracedListStyle: true
+AllowShortIfStatementsOnASingleLine: WithoutElse
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: true
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+# AlignConsecutiveAssignments: None
+AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Never
+AllowAllParametersOfDeclarationOnNextLine: true
+# clang 18
+# AllowShortCompoundRequirementOnASingleLine: false
+AllowShortEnumsOnASingleLine: false
+AllowShortLambdasOnASingleLine: Inline
+AllowShortLoopsOnASingleLine: false
+
+FixNamespaceComments: true
+ShortNamespaceLines: 1 # todo(Gustav): increase or remove?
+
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+AlwaysBreakBeforeMultilineStrings: true
+BitFieldColonSpacing: Both
+BreakAfterAttributes: Always
+BreakBeforeConceptDeclarations: Always
+BreakBeforeInlineASMColon: Always
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+BreakStringLiterals: false
+BreakArrays: false
+
+AlignAfterOpenBracket: BlockIndent
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+ReferenceAlignment: Left
+SpaceAroundPointerQualifiers: Default
+QualifierAlignment: Custom
+QualifierOrder:
+  [
+    "static",
+    "const",
+    "constexpr",
+    "type",
+    "inline",
+    "friend",
+    "volatile",
+    "restrict",
+  ]
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+EmptyLineAfterAccessModifier: Always
+EmptyLineBeforeAccessModifier: Always
+MaxEmptyLinesToKeep: 3
+
+# bug: if this is set to anything other than none, the add calls in mesh.builder.cc fails
+AlignArrayOfStructures: None
+
+AlignConsecutiveMacros:
+  Enabled: false
+AlignConsecutiveDeclarations:
+  Enabled: false
+AlignConsecutiveBitFields:
+  Enabled: false
+AlignConsecutiveAssignments:
+  Enabled: false
+AlignTrailingComments: Never
+
+# clang 17
+# AlignConsecutiveShortCaseStatements:
+#  Enabled: true
+#  AcrossEmptyLines: true
+#  AcrossComments: true
+#  AlignCaseColons: false
+
+AlignEscapedNewlines: DontAlign
+
+AlignOperands: AlignAfterOperator
+BreakBeforeBinaryOperators: All
+
+AllowAllArgumentsOnNextLine: true
+BinPackArguments: false
+BinPackParameters: false
+InsertBraces: false
+ReflowComments: false
+
+# clang 17
+# KeepEmptyLinesAtEOF: 1
+
+IndentAccessModifiers: false
+AccessModifierOffset: -4
+IndentCaseBlocks: true
+IndentCaseLabels: false
+IndentExternBlock: Indent # collides with BraceWrapping.AfterExternBlock?
+IndentGotoLabels: false
+IndentPPDirectives: BeforeHash
+IndentWrappedFunctionNames: true
+LambdaBodyIndentation: Signature
+
+IndentRequiresClause: true
+RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: OuterScope
+
+SortUsingDeclarations: LexicographicNumeric
+
+# should be used? issue: no newline separation...!
+SortIncludes: Never # CaseInsensitive
+IncludeBlocks: Preserve # Regroup
+
+IncludeCategories:
+  - Regex: '^"klotter\\/render\/'
+    Priority: 2
+  - Regex: '^"klotter\\/'
+    Priority: 3
+  - Regex: '^"imgui'
+    Priority: 3
+  - Regex: '^"SDL_'
+    Priority: 4
+  - Regex: '^"klotter\\/dependency_'
+    Priority: 4
+  - Regex: '^"catchy\\/'
+    Priority: 4
+  - Regex: '^"embed\\/'
+    Priority: 4
+  - Regex: ".*"
+    Priority: 5
+  - Regex: "<"
+    Priority: 100
+IncludeIsMainRegex: "(\\.test)?$"
+IncludeIsMainSourceRegex: (.inl)$
+
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: true
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+# clang format 17
+# SpaceBeforeJsonColon: false
+SpaceBeforeParens: ControlStatements # todo(Gustav): change to custom?
+SpaceBeforeRangeBasedForLoopColon: false
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+SpacesInAngles: Never
+SpacesInContainerLiterals: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpacesInLineCommentPrefix:
+  Minimum: 2
+  Maximum: 2
+SpacesBeforeTrailingComments: 2
+# issues:
+# min 3 lines between functions: manual task, clang doesnt support this
+# header include order
+# switches that don't return should line-break klotter.cc case SDL_WINDOWEVENT
