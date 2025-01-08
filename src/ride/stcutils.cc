@@ -150,12 +150,12 @@ void SetStyle(
 		}
 	}
 
-	text->StyleSetBold(id, style.bold);
-	text->StyleSetItalic(id, style.italic);
-	text->StyleSetUnderline(id, style.underline);
-	text->StyleSetSize(id, style.font_size);
-	text->StyleSetForeground(id, C(style.foreground));
-	text->StyleSetBackground(id, C(style.background));
+	if(style.use_bold) text->StyleSetBold(id, style.bold);
+	if(style.use_italic) text->StyleSetItalic(id, style.italic);
+	if(style.use_underline) text->StyleSetUnderline(id, style.underline);
+	if(style.use_font_size) text->StyleSetSize(id, style.font_size);
+	if(style.use_foreground) text->StyleSetForeground(id, C(style.foreground));
+	if(style.use_background) text->StyleSetBackground(id, C(style.background));
 }
 
 int C(const ride::IndicatorStyle style)
