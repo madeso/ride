@@ -387,7 +387,10 @@ const ride::BuildSetting& Project::GetCurrentBuildSetting()
 {
 	int index = GetSelectedBuildIndex();
 	if (index == -1)
-		return ride::BuildSetting{};
+	{
+		static const ride::BuildSetting invalid_index;
+		return invalid_index;
+	}
 	else
 		return project_.build_settings[index];
 }
@@ -410,7 +413,10 @@ const ride::RunSetting& Project::GetCurrentRunSetting()
 {
 	int index = GetSelectedRunIndex();
 	if (index == -1)
-		return ride::RunSetting{};
+	{
+		static const ride::RunSetting invalid_index;
+		return invalid_index;
+	}
 	else
 		return user_.run[index];
 }
