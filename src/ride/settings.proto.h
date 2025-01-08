@@ -61,16 +61,22 @@ enum VirtualSpace
 
 enum WrapVisualFlagsLocation
 {
-	WRAPVISUALFLAGLOC_DEFAULT,	// Visual flags drawn near border
-	WRAPVISUALFLAGLOC_END_BY_TEXT,	// Visual flag at end of subline drawn near text
-	WRAPVISUALFLAGLOC_START_BY_TEXT,  // Visual flag at beginning of subline drawn near text
+	/// Visual flags drawn near border
+	WRAPVISUALFLAGLOC_DEFAULT,
+	/// Visual flag at end of subline drawn near text
+	WRAPVISUALFLAGLOC_END_BY_TEXT,
+	/// Visual flag at beginning of subline drawn near text
+	WRAPVISUALFLAGLOC_START_BY_TEXT,
 };
 
 enum WrapIndentMode
 {
-	WRAPINDENT_FIXED,  // Wrapped sublines aligned to left of window plus amount set by wrap_start_indent
-	WRAPINDENT_SAME,  // Wrapped sublines are aligned to first subline indent
-	WRAPINDENT_INDENT,	// Wrapped sublines are aligned to first subline indent plus one more level of indentation
+	/// Wrapped sublines aligned to left of window plus amount set by wrap_start_indent
+	WRAPINDENT_FIXED,
+	/// Wrapped sublines are aligned to first subline indent
+	WRAPINDENT_SAME,
+	/// Wrapped sublines are aligned to first subline indent plus one more level of indentation
+	WRAPINDENT_INDENT,
 };
 
 enum Annotation
@@ -149,16 +155,16 @@ enum FindDlgTarget
 
 struct Color
 {
-	int r;
-	int g;
-	int b;
+	int r = 0;
+	int g = 0;
+	int b = 0;
 };
 
 struct Indicator
 {
 	Color foreground;
 	bool under = true;
-	int alpha;
+	int alpha = 0;
 	int outline_alpha;
 };
 
@@ -195,17 +201,17 @@ struct Style
 	Color background;
 };
 
-// the idea of moving out all fonts and colors is that likely theese are
-// what people want share: obsidian/zenburn/monokai and https://studiostyl.es/
+/// the idea of moving out all fonts and colors is that likely theese are
+/// what people want share: obsidian/zenburn/monokai and https://studiostyl.es/
 struct FontsAndColors
 {
 	Color selected_line;
 	Color fold_margin_hi;
 	Color fold_margin_low;
 
-	bool use_selection_foreground;
+	bool use_selection_foreground = false;
 	Color selection_foreground;
-	bool use_selection_background;
+	bool use_selection_background = false;
 	Color selection_background;
 
 	Color edgeColor;
@@ -388,10 +394,12 @@ struct Theme
 
 struct WrapVisualFlags
 {
-	bool end = false;  // Visual flag at end of subline of a wrapped line.
-	bool start
-		= false;  // Visual flag at begin of subline of a wrapped line. Subline is indented by at least 1 to make room for the flag.
-	bool margin = false;  // Visual flag in line number margin.
+	/// Visual flag at end of subline of a wrapped line.
+	bool end = false;
+	/// Visual flag at begin of subline of a wrapped line. Subline is indented by at least 1 to make room for the flag.
+	bool start = false;
+	/// Visual flag in line number margin.
+	bool margin = false;
 };
 
 struct Settings
@@ -400,8 +408,8 @@ struct Settings
 	bool foldEnable = true;
 	bool displayEOLEnable;
 	bool indentGuideEnable = true;
-	ViewWhitespace whitespace;
-	WrapMode wordWrap;
+	ViewWhitespace whitespace = VIEWWHITESPACE_AFTER_IDENT;
+	WrapMode wordWrap = WRAPMODE_NONE;
 
 	EdgeStyle edgeStyle = EDGESTYLE_LINE;
 
@@ -422,9 +430,9 @@ struct Settings
 	bool horizontal_scrollbar = true;
 
 	WrapVisualFlags wrap_visual_flags;
-	WrapVisualFlagsLocation wrap_visual_flags_location;
-	WrapIndentMode wrap_indent_mode;
-	int wrap_start_indent;
+	WrapVisualFlagsLocation wrap_visual_flags_location = WRAPVISUALFLAGLOC_DEFAULT;
+	WrapIndentMode wrap_indent_mode = WRAPINDENT_FIXED;
+	int wrap_start_indent = 120;
 	Annotation annotations = ANNOTATION_BOXED;
 
 	bool current_line_visible = false;
@@ -472,27 +480,28 @@ struct Settings
 	bool foldComment = true;
 	bool foldCompact = true;
 	bool foldPreproc = true;
-	bool styling_within_preprocessor
-		= false;  //  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
-	bool lexer_cpp_allow_dollars
-		= false;  // Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
-	bool lexer_cpp_track_preprocessor
-		= false;  //  Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
-	bool lexer_cpp_update_preprocessor
-		= false;  //  Set to 1 to update preprocessor definitions when #define found.
-	bool lexer_cpp_triplequoted_strings
-		= false;  //  Set to 1 to enable highlighting of triple-quoted std::strings.
-	bool lexer_cpp_hashquoted_strings
-		= false;  //  Set to 1 to enable highlighting of hash-quoted std::strings.
-	bool fold_cpp_syntax_based = true;	//  Set this property to 0 to disable syntax based folding.
-	bool fold_cpp_comment_multiline
-		= true;	 //  Set this property to 0 to disable folding multi-line comments when fold.comment=1.
-	bool fold_cpp_comment_explicit
-		= true;	 //  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
-	bool fold_cpp_explicit_anywhere
-		= false;  //  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
-	bool fold_at_else
-		= true;	 //  This option enables C++ folding on a "} else {" line of an if statement.
+	///  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
+	bool styling_within_preprocessor = false;
+	/// Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
+	bool lexer_cpp_allow_dollars = false;
+	///  Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
+	bool lexer_cpp_track_preprocessor = false;
+	///  Set to 1 to update preprocessor definitions when #define found.
+	bool lexer_cpp_update_preprocessor = false;
+	///  Set to 1 to enable highlighting of triple-quoted std::strings.
+	bool lexer_cpp_triplequoted_strings = false;
+	///  Set to 1 to enable highlighting of hash-quoted std::strings.
+	bool lexer_cpp_hashquoted_strings = false;
+	///  Set this property to 0 to disable syntax based folding.
+	bool fold_cpp_syntax_based = true;
+	///  Set this property to 0 to disable folding multi-line comments when fold.comment=1.
+	bool fold_cpp_comment_multiline = true;
+	///  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
+	bool fold_cpp_comment_explicit = true;
+	///  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
+	bool fold_cpp_explicit_anywhere = false;
+	///  This option enables C++ folding on a "} else {" line of an if statement.
+	bool fold_at_else = true;
 
 	// settings for ctrl-tab
 
@@ -528,10 +537,10 @@ struct OpenFile
 
 struct Session
 {
-	int window_x;
-	int window_y;
-	int window_width;
-	int window_height;
+	int window_x = 0;
+	int window_y = 0;
+	int window_width = 0;
+	int window_height = 0;
 	WindowState state = WINDOWSTATE_NORMAL;
 
 	std::vector<OpenFile> files;
