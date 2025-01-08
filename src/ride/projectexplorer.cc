@@ -132,8 +132,10 @@ public:
 		wxFileName fn(path_);
 		fn.SetFullName(wxEmptyString);
 		const wxString native_path = fn.GetFullPath(wxPATH_NATIVE);
-		assert(native_path.StartsWith(root));
-		const wxString relative_native = native_path.Right(native_path.length() - root.length());
+		const wxString relative_native = native_path.StartsWith(root)
+			? native_path.Right(native_path.length() - root.length())
+			: native_path
+			;
 		const wxString native_path_sep = wxString(1, wxFileName::GetPathSeparator());
 		wxString ret = relative_native;
 		ret.Replace(native_path_sep, "/");
