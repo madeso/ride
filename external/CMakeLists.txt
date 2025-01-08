@@ -8,7 +8,7 @@ add_library(cpptoml INTERFACE)
 add_library(external::cpptoml ALIAS cpptoml)
 target_include_directories(cpptoml
 	INTERFACE
-		${CMAKE_CURRENT_SOURCE_DIR}/../external/cpptoml/include
+		${CMAKE_CURRENT_SOURCE_DIR}/cpptoml/include
 )
 
 ###################################################################################################
@@ -55,13 +55,13 @@ target_compile_definitions(wxw
 ###################################################################################################
 ## tinyxml
 add_library(tinyxml STATIC
-	${CMAKE_CURRENT_SOURCE_DIR}/../external/tinyxml2/tinyxml2.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/../external/tinyxml2/tinyxml2.h
+	${CMAKE_CURRENT_SOURCE_DIR}/tinyxml2/tinyxml2.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/tinyxml2/tinyxml2.h
 )
 add_library(external::tinyxml ALIAS tinyxml)
 target_include_directories(tinyxml
 	PUBLIC
-		${CMAKE_CURRENT_SOURCE_DIR}/../external/tinyxml2/
+		${CMAKE_CURRENT_SOURCE_DIR}/tinyxml2/
 )
 target_link_libraries(tinyxml
 	PRIVATE
@@ -71,4 +71,23 @@ target_link_libraries(tinyxml
 
 
 ###################################################################################################
-## wxWidgets
+## nlohmann json
+
+include(FetchContent)
+
+FetchContent_Declare(json
+	URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
+	DOWNLOAD_EXTRACT_TIMESTAMP true
+)
+FetchContent_MakeAvailable(json)
+
+add_library(json INTERFACE)
+add_library(external::json ALIAS json)
+target_link_libraries(json
+	INTERFACE
+		nlohmann_json::nlohmann_json
+)
+
+
+###################################################################################################
+## 

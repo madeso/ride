@@ -35,5 +35,9 @@ add_library(project_options INTERFACE)
 add_library(common::options ALIAS project_options)
 target_compile_features(project_options INTERFACE cxx_std_17)
 
+target_compile_options(project_options INTERFACE
+	-Wno-deprecated-declarations
+)
+
 add_subdirectory(external)
 add_subdirectory(src)

@@ -108,6 +108,7 @@ target_link_libraries(ride
 		external::wxWidgets
 		external::cpptoml
 		external::tinyxml
+		external::json
 		common::options
 )
 
