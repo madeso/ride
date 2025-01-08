@@ -1509,7 +1509,7 @@ void MainWindow::OnProjectNew(wxCommandEvent& event)
 void MainWindow::OnProjectOpen(wxCommandEvent& event)
 {
 	wxFileDialog open_project_dialog(
-		this, _("Open project"), "", "", "Cargo files|*.toml", wxFD_OPEN | wxFD_FILE_MUST_EXIST
+		this, _("Open project"), "", "", "Cargo files|*.toml|All files|*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST
 	);
 	if (open_project_dialog.ShowModal() == wxID_CANCEL) return;
 	wxFileName cargo_file(open_project_dialog.GetPath());
@@ -1525,12 +1525,6 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event)
 
 bool MainWindow::OpenProject(const wxString full_path)
 {
-	const bool is_really_a_cargo_file = full_path.Lower().EndsWith("cargo.toml");
-	if (is_really_a_cargo_file == false)
-	{
-		return false;
-	}
-
 	wxFileName cargo_file(full_path);
 
 	if (false == cargo_file.Exists()) return false;
