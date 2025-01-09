@@ -58,10 +58,16 @@ void ProjectExplorer::SetFolder(const wxString& folder)
 wxString GetRelativePath(const wxString& root, const wxString& f)
 {
 	if (f == "") return "";
-	assert(f.StartsWith(root));
-	wxString p = f.substr(root.Length());
-	p.Replace("\\", "/");
-	return p;
+	if(f.StartsWith(root))
+	{
+		wxString p = f.substr(root.Length());
+		p.Replace("\\", "/");
+		return p;
+	}
+	else
+	{
+		return f;
+	}
 }
 
 void ProjectExplorer::HighlightOpenFile(const wxString& f)
