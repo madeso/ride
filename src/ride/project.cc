@@ -133,14 +133,14 @@ const wxString Project::GetCargoFile() const
 const wxString Project::GetProjectFile() const
 {
 	if (root_folder_.IsEmpty()) return "";
-	wxFileName cargo(root_folder_, "project.ride");
+	wxFileName cargo(root_folder_  + wxFileName::GetPathSeparator() + ".ride", "project.json");
 	return cargo.GetFullPath();
 }
 
 const wxString Project::GetUserFile() const
 {
 	if (root_folder_.IsEmpty()) return "";
-	wxFileName cargo(root_folder_, "project.ride.user");
+	wxFileName cargo(root_folder_  + wxFileName::GetPathSeparator() + ".ride", "project.user.json");
 	return cargo.GetFullPath();
 }
 

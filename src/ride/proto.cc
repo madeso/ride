@@ -706,6 +706,16 @@ wxString GenericSave(T* mess, const wxFileName& file)
 {
 	auto filer = Filer{false, {}};
 	ser(&filer, mess);
+
+	// make sure dir exist
+	const auto dir = file.GetPath();
+	if(wxFileName::DirExists(dir) == false)
+	{
+		if(false == wxFileName::Mkdir(dir))
+		{
+			return "failed to create dir: " + file.GetFullPath();
+		}
+	}
 	
 	std::ofstream f(file.GetFullPath().ToStdString());
 	f << filer.json.dump(4);

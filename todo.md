@@ -4,7 +4,6 @@
 * rebind 'open file in project' to ctrl+p
 * open project from commandline (not attached)
 * Have a list of projects when nothing is opened and a selector to reopen latest project with files
-* place project specifc files in the `.ride` folder instead of in the root
 * store session in the project `.ride` folder
 * task/action search and run `ctrl+shift+p`
 * change project browser to a folder dialog (preference since windows is crappy?)
