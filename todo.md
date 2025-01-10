@@ -2,7 +2,7 @@
 * expand json parser with better error detection/error log
 * Replace ugly rgb json structure with hexstring
 * rebind 'open file in project' to ctrl+p
-* open project from commandline (not attached)
+* add attached (ie default to non attached) to the cmd line
 * Have a list of projects when nothing is opened and a selector to reopen latest project with files
 * store session in the project `.ride` folder
 * task/action search and run `ctrl+shift+p`

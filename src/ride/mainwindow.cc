@@ -608,7 +608,10 @@ void MainWindow::SetStatusBarText(const wxString& text, StatusBarWidgets widget)
 }
 
 
-MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSize& size)
+MainWindow::MainWindow(const wxString& app_name,
+	const std::vector<wxFileName>& files_to_open,
+	const std::optional<wxFileName> project_to_open,
+	const wxPoint& pos, const wxSize& size)
 	: wxFrame(nullptr, wxID_ANY, app_name, pos, size)
 	, closing_(false)
 	, aui_(nullptr, AUI_OPTIONS)
@@ -701,6 +704,16 @@ MainWindow::MainWindow(const wxString& app_name, const wxPoint& pos, const wxSiz
 	// TODO(Gustav): Investigate why...
 	SetupMenu();
 #endif
+
+	if (project_to_open)
+	{
+		OpenProjectWithFolder(project_to_open->GetPathWithSep());
+	}
+
+	for (auto f: files_to_open)
+	{
+		OpenFile(f.GetFullPath(), 0, 0, 0, 0);
+	}
 }
 
 void MainWindow::UpdateTheme()
@@ -1532,6 +1545,18 @@ bool MainWindow::OpenProject(const wxString full_path)
 	// don't load the cargo file, load the whole folder instead as cargo files
 	// should be named in a specific way!
 	const wxString project_folder = cargo_file.GetPathWithSep();
+
+	return OpenProjectWithFolder(project_folder);
+}
+
+bool MainWindow::OpenProjectWithFolder(const wxString project_folder)
+{
+	wxFileName dir{project_folder};
+	if(dir.DirExists() == false)
+	{
+		return false;
+	}
+
 	project_.reset(new Project(this, project_folder));
 	project_explorer_->SetFolder(project_folder);
 	UpdateTitle();
@@ -1622,10 +1647,14 @@ void MainWindow::SaveSession()
 	session.window_width = size.x;
 	session.window_height = size.y;
 	session.state = state;
-	session.project = project_->GetCargoFile();
 	session.aui_perspective = perspective;
 
-	for (FileEdit* edit: IterateOverFileEdits(notebook_))
+	::SaveSession(this, &session);
+}
+
+// todo(Gustav): implement project session
+/*
+for (FileEdit* edit: IterateOverFileEdits(notebook_))
 	{
 		int start_line = 0;
 		int start_index = 0;
@@ -1640,9 +1669,7 @@ void MainWindow::SaveSession()
 		f.end_index = end_index;
 		session.files.emplace_back(f);
 	}
-
-	::SaveSession(this, &session);
-}
+*/
 
 void MainWindow::RestoreSession()
 {
@@ -1667,17 +1694,6 @@ void MainWindow::RestoreSession()
 		// if we quit in a iconized/minimized state... should we restore to the same
 		// state or to the normal state...?
 		wxFrame::Iconize();
-	}
-
-	wxString cargo_file = session.project;
-	if (cargo_file.IsEmpty() == false)
-	{
-		OpenProject(cargo_file);
-	}
-
-	for (auto f: session.files)
-	{
-		OpenFile(f.path, f.start_line, f.start_index, f.end_line, f.end_index);
 	}
 
 	aui_.LoadPerspective(session.aui_perspective);

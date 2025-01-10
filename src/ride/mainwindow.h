@@ -2,8 +2,10 @@
 #define RIDE_MAINWINDOW_H_
 
 #include <wx/aui/aui.h>
+#include "wx/filename.h"
 
 #include <vector>
+#include <optional>
 
 #include "ride/language.h"
 #include "ride/settings.h"
@@ -71,7 +73,10 @@ class MainWindow : public wxFrame
 {
 public:
 
-	MainWindow(const wxString& title, const wxPoint& pos, const wxSize& size);
+	MainWindow(const wxString& title,
+	const std::vector<wxFileName>& files_to_open,
+	const std::optional<wxFileName> project_to_open,
+	const wxPoint& pos, const wxSize& size);
 	~MainWindow();
 
 	const ride::Settings& settings() const;
@@ -201,6 +206,7 @@ private:
 	void SaveSession();
 	void RestoreSession();
 	bool OpenProject(const wxString project_file);
+	bool OpenProjectWithFolder(const wxString project_folder);
 
 	void UpdateTitle();
 	void UpdateAllEdits();

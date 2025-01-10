@@ -543,9 +543,21 @@ struct Session
 	int window_height = 0;
 	WindowState state = WINDOWSTATE_NORMAL;
 
-	std::vector<OpenFile> files;
-	std::string project;
+	// move perspective to project session?
 	std::string aui_perspective;
+};
+
+struct ProjectSession
+{
+	std::vector<OpenFile> files;
+
+	// todo(Gustav): implement project session
+	/*
+	for (auto f: session.files)
+	{
+		OpenFile(f.path, f.start_line, f.start_index, f.end_line, f.end_index);
+	}
+	*/
 };
 
 /* ******************************************************************************************* */

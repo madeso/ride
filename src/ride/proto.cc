@@ -610,10 +610,13 @@ F_STRUCT(Session)
 	S_PROP(window_width, "window_width");
 	S_PROP(window_height, "window_height");
 	S_PROP(state, "state");
-	S_PROP_V(files, "files");
-	S_PROP(project, "project");
 	S_PROP(aui_perspective, "aui_perspective");
 };
+
+F_STRUCT(ProjectSession)
+{
+	S_PROP_V(files, "files");
+}
 
 /* ******************************************************************************************* */
 
