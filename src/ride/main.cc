@@ -17,11 +17,10 @@ bool MyApp::OnInit()
 {
 	const wxString DISPLAY_NAME = "Ride";
 
-	wxAppConsole* app_console = wxAppConsole::GetInstance();
-	app_console->SetAppName("ride");
-	app_console->SetAppDisplayName(DISPLAY_NAME);
-	app_console->SetVendorName("madeso");
-	app_console->SetVendorDisplayName("madeso");
+	SetAppName("ride");
+	SetAppDisplayName(DISPLAY_NAME);
+	SetVendorName("madeso");
+	SetVendorDisplayName("madeso");
 
 	auto main_window = new MainWindow(DISPLAY_NAME, wxPoint(50, 50), wxSize(450, 340));
 	main_window->Show(true);
