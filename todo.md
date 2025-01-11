@@ -1,4 +1,7 @@
 * speed up compilation/build time
+* don't expand folders when project is opened
+* remember expanded folders
+* grab the fil and dir api from blaggen and replace strings and wxWfileName with it
 * expand json parser with better error detection/error log
 * Replace ugly rgb json structure with hexstring
 * rebind 'open file in project' to ctrl+p
