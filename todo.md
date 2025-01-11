@@ -4,7 +4,6 @@
 * expand json parser with better error detection/error log
 * Replace ugly rgb json structure with hexstring
 * rebind 'open file in project' to ctrl+p
-* don't open project with all folders expanded
 * look into cmdline dir handling when folder doesn't end with /
 * look into possible threading when opening large folders
 * read menu from json file?
