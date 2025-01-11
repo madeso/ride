@@ -82,6 +82,11 @@ add_executable(ride WIN32 MACOSX_BUNDLE
 	${games_src}
 )
 
+target_precompile_headers(ride
+    PUBLIC ride/pch.public.h
+    PRIVATE ride/pch.private.h
+)
+
 install(TARGETS ride DESTINATION ".")
 
 if(APPLE)
