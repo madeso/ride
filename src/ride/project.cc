@@ -285,18 +285,6 @@ void Project::Rebuild(bool origin_main)
 	Build(false);
 }
 
-void Project::Doc(bool origin_main)
-{
-	if (origin_main)
-	{
-		CleanOutput();
-		SaveAllFiles();
-	}
-
-	// todo: expand commandline with arguments
-	RunCmd(main_->machine().cargo + " doc");
-}
-
 void Project::Run(bool origin_main)
 {
 	if (origin_main)
@@ -309,41 +297,6 @@ void Project::Run(bool origin_main)
 	// todo: run the application
 }
 
-void Project::Test(bool origin_main)
-{
-	if (origin_main)
-	{
-		CleanOutput();
-		SaveAllFiles();
-	}
-
-	// todo: expand commandline with arguments
-	RunCmd(main_->machine().cargo + " test");
-}
-
-void Project::Bench(bool origin_main)
-{
-	if (origin_main)
-	{
-		CleanOutput();
-		SaveAllFiles();
-	}
-
-	// todo: expand commandline with arguments
-	RunCmd(main_->machine().cargo + " bench");
-}
-
-void Project::Update(bool origin_main)
-{
-	if (origin_main)
-	{
-		CleanOutput();
-		SaveAllFiles();
-	}
-
-	// todo: expand commandline with arguments
-	RunCmd(main_->machine().cargo + " update");
-}
 
 //////////////////////////////////////////////////////////////////////////
 

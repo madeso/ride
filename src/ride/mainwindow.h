@@ -153,12 +153,8 @@ private:
 	void OnProjectSelectActiveBuild(wxCommandEvent& event);
 	void OnProjectClean(wxCommandEvent& event);
 	void OnProjectRebuild(wxCommandEvent& event);
-	void OnProjectDoc(wxCommandEvent& event);
 	void OnProjectRun(wxCommandEvent& event);
 	void OnProjectSelectActiveRun(wxCommandEvent& event);
-	void OnProjectTest(wxCommandEvent& event);
-	void OnProjectBench(wxCommandEvent& event);
-	void OnProjectUpdate(wxCommandEvent& event);
 	void OnProjectFileNew(wxCommandEvent& event);
 	void OnProjectQuickOpen(wxCommandEvent& event);
 	void OnProjectFindInFiles(wxCommandEvent& event);

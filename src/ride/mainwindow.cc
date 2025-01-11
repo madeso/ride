@@ -324,13 +324,6 @@ void MainWindow::SetupMenu()
 	);
 	AddMenuItem(menu_project, ID_PROJECT_REBUILD, "Rebuild", "Clean + Build", project_rebuild_xpm);
 	AddMenuItem(
-		menu_project,
-		ID_PROJECT_DOC,
-		"Doc",
-		"Build this project's and its dependencies' documentation",
-		project_doc_xpm
-	);
-	AddMenuItem(
 		menu_project, ID_PROJECT_RUN, "Run\tF5", "Build and execute src/main.rs", project_run_xpm
 	);
 	AddMenuItem(
@@ -338,15 +331,6 @@ void MainWindow::SetupMenu()
 		ID_PROJECT_SELECT_ACTIVE_RUN,
 		"Select active run...\tShift-F5",
 		"Select the active run configuration"
-	);
-	AddMenuItem(menu_project, ID_PROJECT_TEST, "Test", "Run the tests", project_test_xpm);
-	AddMenuItem(menu_project, ID_PROJECT_BENCH, "Bench", "Run the benchmarks", project_bench_xpm);
-	AddMenuItem(
-		menu_project,
-		ID_PROJECT_UPDATE,
-		"Update",
-		"Update dependencies listed in Cargo.lock",
-		project_update_xpm
 	);
 	menu_project->AppendSeparator();
 	AddMenuItem(menu_project, wxID_NEW, "", "", file_normal_xpm);
@@ -463,12 +447,8 @@ void MainWindow::BindEvents()
 	Bind(wxEVT_MENU, &MainWindow::OnProjectSelectActiveBuild, this, ID_PROJECT_SELECT_ACTIVE_BUILD);
 	Bind(wxEVT_MENU, &MainWindow::OnProjectClean, this, ID_PROJECT_CLEAN);
 	Bind(wxEVT_MENU, &MainWindow::OnProjectRebuild, this, ID_PROJECT_REBUILD);
-	Bind(wxEVT_MENU, &MainWindow::OnProjectDoc, this, ID_PROJECT_DOC);
 	Bind(wxEVT_MENU, &MainWindow::OnProjectRun, this, ID_PROJECT_RUN);
 	Bind(wxEVT_MENU, &MainWindow::OnProjectSelectActiveRun, this, ID_PROJECT_SELECT_ACTIVE_RUN);
-	Bind(wxEVT_MENU, &MainWindow::OnProjectTest, this, ID_PROJECT_TEST);
-	Bind(wxEVT_MENU, &MainWindow::OnProjectBench, this, ID_PROJECT_BENCH);
-	Bind(wxEVT_MENU, &MainWindow::OnProjectUpdate, this, ID_PROJECT_UPDATE);
 	Bind(wxEVT_MENU, &MainWindow::OnProjectFileNew, this, wxID_NEW);
 	Bind(wxEVT_MENU, &MainWindow::OnProjectQuickOpen, this, ID_QUICK_OPEN);
 	Bind(wxEVT_MENU, &MainWindow::OnProjectFindInFiles, this, ID_FIND_IN_FILES);
@@ -1667,12 +1647,8 @@ MEM_FUN(Build)
 MEM_FUN(SelectActiveBuild)
 MEM_FUN(Clean)
 MEM_FUN(Rebuild)
-MEM_FUN(Doc)
 MEM_FUN(Run)
 MEM_FUN(SelectActiveRun)
-MEM_FUN(Test)
-MEM_FUN(Bench)
-MEM_FUN(Update)
 #undef MEM_FUN
 
 ride::WindowState GetState(wxFrame* main)

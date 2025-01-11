@@ -47,11 +47,7 @@ public:
 	void Build(bool origin_main = true);
 	void Clean(bool origin_main = true);
 	void Rebuild(bool origin_main = true);
-	void Doc(bool origin_main = true);
 	void Run(bool origin_main = true);
-	void Test(bool origin_main = true);
-	void Bench(bool origin_main = true);
-	void Update(bool origin_main = true);
 
 public:
 
