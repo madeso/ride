@@ -550,14 +550,6 @@ struct Session
 struct ProjectSession
 {
 	std::vector<OpenFile> files;
-
-	// todo(Gustav): implement project session
-	/*
-	for (auto f: session.files)
-	{
-		OpenFile(f.path, f.start_line, f.start_index, f.end_line, f.end_index);
-	}
-	*/
 };
 
 /* ******************************************************************************************* */

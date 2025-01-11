@@ -615,6 +615,7 @@ F_STRUCT(Session)
 
 F_STRUCT(ProjectSession)
 {
+	// todo(Gustav): add support for project explorer
 	S_PROP_V(files, "files");
 }
 
@@ -736,6 +737,7 @@ wxString SaveProtoJson(ride::Settings* mess, const wxFileName& file) { return Ge
 wxString SaveProtoJson(ride::Session* mess, const wxFileName& file) { return GenericSave(mess, file); }
 wxString SaveProtoJson(ride::Project* mess, const wxFileName& file) { return GenericSave(mess, file); }
 wxString SaveProtoJson(ride::MachineSettings* mess, const wxFileName& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::ProjectSession* mess, const wxFileName& file) { return GenericSave(mess, file); }
 
 wxString LoadProtoJson(ride::UserProject* mess, const wxFileName& file) { return GenericLoad(mess, file); }
 wxString LoadProtoJson(ride::Theme* mess, const wxFileName& file) { return GenericLoad(mess, file); }
@@ -743,6 +745,7 @@ wxString LoadProtoJson(ride::Settings* mess, const wxFileName& file) { return Ge
 wxString LoadProtoJson(ride::Session* mess, const wxFileName& file) { return GenericLoad(mess, file); }
 wxString LoadProtoJson(ride::Project* mess, const wxFileName& file) { return GenericLoad(mess, file); }
 wxString LoadProtoJson(ride::MachineSettings* mess, const wxFileName& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(ride::ProjectSession* mess, const wxFileName& file) { return GenericLoad(mess, file); }
 
 
 

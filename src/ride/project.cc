@@ -144,6 +144,13 @@ const wxString Project::GetUserFile() const
 	return cargo.GetFullPath();
 }
 
+wxFileName Project::GetSessionsFile() const
+{
+	assert(!root_folder_.IsEmpty());
+	wxFileName cargo(root_folder_  + wxFileName::GetPathSeparator() + ".ride", "session.json");
+	return cargo;
+}
+
 bool Project::IsPartOfProject(const wxString& filename)
 {
 	// todo: implement a better logic for checking if the file is part of the

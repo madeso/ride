@@ -10,7 +10,6 @@
 * read menu from json file?
 * add attached (ie default to non attached) to the cmd line
 * Have a list of projects when nothing is opened and a selector to reopen latest project with files
-* store session in the project `.ride` folder
 * task/action search and run `ctrl+shift+p`
 * change project browser to a folder dialog (preference since windows is crappy?)
 * json tab completion for settings file

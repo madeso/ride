@@ -22,6 +22,7 @@
 
 #include "ride/games/bombs/bombs_glue.h"
 #include "ride/games/forty/forty_glue.h"
+#include "ride/proto.h"
 
 #include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"
@@ -712,7 +713,7 @@ MainWindow::MainWindow(const wxString& app_name,
 
 	for (auto f: files_to_open)
 	{
-		OpenFile(f.GetFullPath(), 0, 0, 0, 0);
+		OpenFile(f.GetFullPath());
 	}
 }
 
@@ -1301,6 +1302,8 @@ void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& event)
 			event.Veto();
 		}
 	}
+
+	OnSaveProjectSession();
 }
 
 FoundEdit MainWindow::GetEditFromFileName(const wxString& file)
@@ -1353,6 +1356,7 @@ void MainWindow::OnClose(wxCloseEvent& event)
 	}
 
 	SaveSession();
+	OnSaveProjectSession();
 
 	event.Skip();
 }
@@ -1561,7 +1565,63 @@ bool MainWindow::OpenProjectWithFolder(const wxString project_folder)
 	project_explorer_->SetFolder(project_folder);
 	UpdateTitle();
 	project_->SetMainStatusbarText();
+	OpenFilesFromProjectSession();
 	return true;
+}
+
+void MainWindow::OpenFilesFromProjectSession()
+{
+	if(!project_) { return; }
+	
+
+	const auto filename = project_->GetSessionsFile();
+	if(filename.FileExists() == false) return;
+
+	ride::ProjectSession session;
+	const wxString error = LoadProtoJson(&session, filename);
+	if(error.IsEmpty() == false)
+	{
+		ShowError(
+			this, error, "Failed to load last session!"
+		);
+	}
+
+	for (auto f: session.files)
+	{
+		OpenFile(f.path, f.start_line, f.start_index, f.end_line, f.end_index);
+	}
+}
+
+void MainWindow::OnSaveProjectSession()
+{
+	if(!project_) { return; }
+
+	ride::ProjectSession session;
+
+	for (FileEdit* edit: IterateOverFileEdits(notebook_))
+	{
+		int start_line = 0;
+		int start_index = 0;
+		int end_line = 0;
+		int end_index = 0;
+		edit->GetSelection(&start_line, &start_index, &end_line, &end_index);
+		ride::OpenFile f;
+		f.path = edit->filename();
+		f.start_line = start_line;
+		f.start_index = start_index;
+		f.end_line = end_line;
+		f.end_index = end_index;
+		session.files.emplace_back(f);
+	}
+
+	const auto filename = project_->GetSessionsFile();
+	const wxString error = SaveProtoJson(&session, filename);
+	if(error.IsEmpty() == false)
+	{
+		ShowError(
+			this, error, "Failed to save current session!"
+		);
+	}
 }
 
 void MainWindow::SaveAllChangedProjectFiles()
@@ -1651,25 +1711,6 @@ void MainWindow::SaveSession()
 
 	::SaveSession(this, &session);
 }
-
-// todo(Gustav): implement project session
-/*
-for (FileEdit* edit: IterateOverFileEdits(notebook_))
-	{
-		int start_line = 0;
-		int start_index = 0;
-		int end_line = 0;
-		int end_index = 0;
-		edit->GetSelection(&start_line, &start_index, &end_line, &end_index);
-		ride::OpenFile f;
-		f.path = edit->filename();
-		f.start_line = start_line;
-		f.start_index = start_index;
-		f.end_line = end_line;
-		f.end_index = end_index;
-		session.files.emplace_back(f);
-	}
-*/
 
 void MainWindow::RestoreSession()
 {

@@ -4,6 +4,7 @@
 #include <ride/wx.h>
 #include "settings.proto.h"	 // NOLINT this is how we include it
 #include "ride/runner.h"
+#include "wx/filename.h"
 
 class MainWindow;
 
@@ -34,6 +35,7 @@ public:
 	const wxString GetCargoFile() const;
 	const wxString GetProjectFile() const;
 	const wxString GetUserFile() const;
+	wxFileName GetSessionsFile() const;
 
 	bool IsPartOfProject(const wxString& filename);
 

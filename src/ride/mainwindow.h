@@ -207,6 +207,9 @@ private:
 	void RestoreSession();
 	bool OpenProject(const wxString project_file);
 	bool OpenProjectWithFolder(const wxString project_folder);
+	
+	void OpenFilesFromProjectSession();
+	void OnSaveProjectSession();
 
 	void UpdateTitle();
 	void UpdateAllEdits();

@@ -12,6 +12,7 @@ struct Settings;
 struct Session;
 struct Project;
 struct UserProject;
+struct ProjectSession;
 struct Theme;
 }  //  namespace ride
 
@@ -29,6 +30,9 @@ wxString SaveProtoJson(ride::Project* mess, const wxFileName& file);
 
 wxString LoadProtoJson(ride::UserProject* mess, const wxFileName& file);
 wxString SaveProtoJson(ride::UserProject* mess, const wxFileName& file);
+
+wxString LoadProtoJson(ride::ProjectSession* mess, const wxFileName& file);
+wxString SaveProtoJson(ride::ProjectSession* mess, const wxFileName& file);
 
 wxString LoadProtoJson(ride::Theme* mess, const wxFileName& file);
 wxString SaveProtoJson(ride::Theme* mess, const wxFileName& file);
