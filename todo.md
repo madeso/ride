@@ -17,7 +17,8 @@
 * `ctrl+.` shortcut for quick actions
 * external file change detection
 * Remove or replace rust specific things with generic
-* Just have 2 build command, build selected config and enter build config each time, the new build command should be a list of commands that are chained
+* add new option to enter build config each time
+* expand build command so that it is a list of commands that are chained
 * Replace settings dialog with json hot reload
 * Ctr-b shortcut to switch between perspectives
 * view commands should be able to show the panes again (arch/i3 issue?)

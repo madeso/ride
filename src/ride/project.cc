@@ -30,14 +30,10 @@ Project::Project(MainWindow* output, const wxString& root_folder)
 		{
 			// add default build settings to the project
 			ride::BuildSetting debug;
-			debug.name = "Debug";
-			debug.release = false;
+			debug.name = "Build (make)";
+			debug.build = "make";
+			debug.clean = "make clean";
 			project_.build_settings.push_back(debug);
-
-			ride::BuildSetting release;
-			release.name = "Release";
-			release.release = true;
-			project_.build_settings.push_back(release);
 		}
 
 		if (LoadProtoJson(&user_, GetUserFile()) != "")
@@ -207,47 +203,6 @@ void Project::SaveAllFiles()
 	Save();
 }
 
-wxString BuildCommandLine(const ride::MachineSettings& machine, const ride::BuildSetting& build)
-{
-	wxString cmd = machine.cargo + " build";
-
-	if (build.release)
-	{
-		cmd += " --release";
-	}
-
-	if (build.features.size() > 0)
-	{
-		cmd += " --features";
-		for (const std::string& f: build.features)
-		{
-			cmd += " " + f;
-		}
-	}
-
-	if (build.default_features == false)
-	{
-		cmd += " --no-default-features";
-	}
-
-	if (build.target.empty() == false)
-	{
-		cmd += " --target " + build.target;
-	}
-
-	if (build.verbose)
-	{
-		cmd += " --verbose";
-	}
-
-	if (build.custom_arguments.empty() == false)
-	{
-		cmd += " " + build.custom_arguments;
-	}
-
-	return cmd;
-}
-
 void Project::Build(bool origin_main)
 {
 	if (origin_main)
@@ -257,9 +212,7 @@ void Project::Build(bool origin_main)
 	}
 
 	const ride::BuildSetting& build = GetCurrentBuildSetting();
-	const wxString cmd = BuildCommandLine(main_->machine(), build);
-
-	RunCmd(cmd);
+	RunCmd(build.build, build.folder);
 }
 
 void Project::Clean(bool origin_main)
@@ -270,8 +223,8 @@ void Project::Clean(bool origin_main)
 		SaveAllFiles();
 	}
 
-	// todo: expand commandline with arguments
-	RunCmd(main_->machine().cargo + " clean");
+	const ride::BuildSetting& build = GetCurrentBuildSetting();
+	RunCmd(build.clean, build.folder);
 }
 
 void Project::Rebuild(bool origin_main)
@@ -310,7 +263,7 @@ void Project::Append(const wxString& str)
 	main_->build_output().Append(str);
 }
 
-void Project::RunCmd(const wxString& cmd)
+void Project::RunCmd(const wxString& cmd, const wxString& folder)
 {
 	if (root_folder_.IsEmpty())
 	{
@@ -320,8 +273,15 @@ void Project::RunCmd(const wxString& cmd)
 		return;
 	}
 
-	MultiRunner::RunCmd(Command(root_folder_, cmd, CollectRideSpecificEnviroment(main_->machine()))
-	);
+	wxString the_folder = root_folder();
+
+	if(folder.IsEmpty() == false)
+	{
+		// todo(Gustav): is this the correct way to join 2 folders?
+		the_folder = the_folder + folder;
+	}
+
+	MultiRunner::RunCmd(Command(the_folder, cmd, CollectRideSpecificEnviroment(main_->machine())));
 }
 
 bool Project::SaveUser()

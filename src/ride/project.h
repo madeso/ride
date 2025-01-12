@@ -57,7 +57,7 @@ private:
 
 	void SaveAllFiles();
 	void CleanOutput();
-	void RunCmd(const wxString& cmd);
+	void RunCmd(const wxString& cmd, const wxString& folder);
 
 	bool SaveUser();
 	int GetSelectedBuildIndex();
@@ -74,7 +74,5 @@ private:
 	ride::Project project_;
 	ride::UserProject user_;
 };
-
-wxString BuildCommandLine(const ride::MachineSettings& machine, const ride::BuildSetting& build);
 
 #endif	// RIDE_PROJECT_H_

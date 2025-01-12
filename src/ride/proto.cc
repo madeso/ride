@@ -642,12 +642,9 @@ F_STRUCT(DialogData)
 F_STRUCT(BuildSetting)
 {
 	S_PROP(name, "name");
-	S_PROP(release, "release");
-	S_PROP_V(features, "features");
-	S_PROP(default_features, "default_features");
-	S_PROP(target, "target");
-	S_PROP(verbose, "verbose");
-	S_PROP(custom_arguments, "custom_arguments");
+	S_PROP(folder, "folder");
+	S_PROP(build, "build");
+	S_PROP(clean, "clean");
 };
 
 F_STRUCT(Project)

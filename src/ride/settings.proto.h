@@ -575,13 +575,10 @@ struct DialogData
 struct BuildSetting
 {
 	std::string name = "<untitled build setting>";
-	bool release = false;
-	std::vector<std::string> features;
-	bool default_features = true;
-	std::string target = "";
-	bool verbose = false;
 
-	std::string custom_arguments = "";
+	std::string folder = "";
+	std::string build = "";
+	std::string clean = "";
 };
 
 struct Project

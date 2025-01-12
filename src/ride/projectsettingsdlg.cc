@@ -22,44 +22,6 @@
 #include "ride/runconfigurationsdlg.h"
 #include "ride/variableeditor.h"
 
-struct FeatureFunctions
-{
-	static const wxString ADD_TEXT;
-	static const wxString EDIT_TEXT;
-
-	static int Size(ride::BuildSetting* bs)
-	{
-		return bs->features.size();
-	}
-
-	static wxString GetDisplayString(ride::BuildSetting* bs, int i)
-	{
-		return bs->features[i].c_str();
-	}
-
-	static void SetDisplayString(ride::BuildSetting* bs, int i, const wxString& new_string)
-	{
-		bs->features[i] = new_string.c_str().AsChar();
-	}
-
-	static void Add(ride::BuildSetting* bs, const wxString& name)
-	{
-		bs->features.push_back(name.c_str().AsChar());
-	}
-
-	static void Remove(ride::BuildSetting* bs, int i)
-	{
-		bs->features.erase(bs->features.begin() + i);
-	}
-
-	static void Swap(ride::BuildSetting* bs, int selection, int next_index)
-	{
-		std::swap(bs->features[selection], bs->features[next_index]);
-	}
-};
-
-const wxString FeatureFunctions::ADD_TEXT = "Name of the feature to add";
-const wxString FeatureFunctions::EDIT_TEXT = "Please specify the new feature name";
 
 class ProjectSettingsDlg : public ui::ProjectSettings
 {
@@ -126,7 +88,6 @@ private:
 	bool allow_editor_to_gui_;
 	bool allow_build_to_gui_;
 	bool allow_run_to_gui_;
-	GuiList<ride::BuildSetting, FeatureFunctions> feature_list_;
 };
 
 void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* project)
@@ -137,19 +98,7 @@ void DoProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow, Project* pro
 
 bool LoadCargoFile(const wxString& cargo_file, Cargo* cargo, wxStaticText* error_display)
 {
-	if (cargo_file.IsEmpty())
-	{
-		error_display->SetLabelText("No project loaded");
-		return false;
-	}
-	const auto result = cargo->Load(cargo_file);
-	if (result.IsOk())
-	{
-		error_display->SetLabelText("");
-		return true;
-	}
-
-	error_display->SetLabelText(result.message());
+	error_display->SetLabelText("cargo features removed");
 	return false;
 }
 
@@ -162,7 +111,6 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
 	, allow_editor_to_gui_(true)
 	, allow_build_to_gui_(true)
 	, allow_run_to_gui_(true)
-	, feature_list_(uiBuildFeatures, this)
 {
 	LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
 
@@ -177,14 +125,6 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
 
 	SetImageAndRemoveText(uiBuildConfigurationTargetHelp, wxART_HELP);
 	SetImageAndRemoveText(uiBuildConfigurationCustomArgsHelp, wxART_TIP);
-
-	feature_list_.Setup(
-		uiBuildFeatureAdd,
-		uiBuildFeatureRemove,
-		uiBuildFeatureEdit,
-		uiBuildFeatureUp,
-		uiBuildFeatureDown
-	);
 }
 
 void ProjectSettingsDlg::OnApply(wxCommandEvent& event)
@@ -323,9 +263,11 @@ void ProjectSettingsDlg::BuildToGui(bool togui)
 	}
 
 	ride::BuildSetting* setting_ptr = GetSelectedBuildSetting();
-	EnableDisable(setting_ptr != nullptr)
+	EnableDisable(false)
 		<< uiBuildConfigurationRelease << uiBuildConfigurationDefaultFeatures
-		<< uiBuildConfigurationVerbose << uiBuildConfigurationTarget
+		<< uiBuildConfigurationVerbose;
+	EnableDisable(setting_ptr != nullptr)
+		<< uiBuildConfigurationTarget
 		<< uiBuildConfigurationTargetHelp << uiBuildConfigurationCustomArgs
 		<< uiBuildConfigurationCustomArgsHelp << uiBuildFeatures << uiBuildFeatureAdd
 		<< uiBuildFeatureRemove << uiBuildFeatureUp << uiBuildFeatureDown << uiBuildFeatureEdit;
@@ -334,19 +276,13 @@ void ProjectSettingsDlg::BuildToGui(bool togui)
 
 	ride::BuildSetting& setting = *setting_ptr;
 
-	DIALOG_DATA(setting, release, uiBuildConfigurationRelease, );
-	DIALOG_DATA(setting, default_features, uiBuildConfigurationDefaultFeatures, );
-	DIALOG_DATA(setting, verbose, uiBuildConfigurationVerbose, );
-
-	DIALOG_DATA(setting, target, uiBuildConfigurationTarget, _Str);
-	DIALOG_DATA(setting, custom_arguments, uiBuildConfigurationCustomArgs, _Str);
-
-	feature_list_.ToGui(&setting, togui);
+	DIALOG_DATA(setting, folder, uiBuildConfigurationTarget, _Str);
+	DIALOG_DATA(setting, build, uiBuildConfigurationCustomArgs, _Str);
 
 	if (togui == false)
 	{
 		// since this is for display only, use the default shorter path
-		uiBuildCommandLine->SetValue(BuildCommandLine(ride::MachineSettings(), setting));
+		uiBuildCommandLine->SetValue("to be removed");
 	}
 }
 
@@ -364,48 +300,22 @@ ride::BuildSetting* ProjectSettingsDlg::GetSelectedBuildSetting()
 
 void ProjectSettingsDlg::OnBuildFeatureAdd(wxCommandEvent& event)
 {
-	if (false == feature_list_.Add(GetSelectedBuildSetting()))
-	{
-		return;
-	}
-	BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureEdit(wxCommandEvent& event)
 {
-	if (false == feature_list_.Edit(GetSelectedBuildSetting()))
-	{
-		return;
-	}
-	BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureRemove(wxCommandEvent& event)
 {
-	if (false == feature_list_.Remove(GetSelectedBuildSetting()))
-	{
-		return;
-	}
-
-	BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureUp(wxCommandEvent& event)
 {
-	if (false == feature_list_.Up(GetSelectedBuildSetting()))
-	{
-		return;
-	}
-	BuildToGui(true);
 }
 
 void ProjectSettingsDlg::OnBuildFeatureDown(wxCommandEvent& event)
 {
-	if (false == feature_list_.Down(GetSelectedBuildSetting()))
-	{
-		return;
-	}
-	BuildToGui(true);
 }
 
 //////////////////////////////////////////////////////////////////////////
