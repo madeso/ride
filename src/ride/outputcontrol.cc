@@ -275,8 +275,10 @@ void OutputControl::OnDoubleClick(wxMouseEvent& event)
 
 void OutputControl::BindEvents()
 {
+	text_->Bind(wxEVT_LEFT_DCLICK, &OutputControl::OnDoubleClick, this);
 	Bind(wxEVT_LEFT_DCLICK, &OutputControl::OnDoubleClick, this);
 	Bind(wxEVT_CONTEXT_MENU, &OutputControl::OnContextMenu, this);
+	text_->Bind(wxEVT_CONTEXT_MENU, &OutputControl::OnContextMenu, this);
 	Bind(
 		wxEVT_MENU,
 		&OutputControl::OnSearchForThisCompilerMessage,
