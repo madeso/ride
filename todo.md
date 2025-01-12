@@ -1,6 +1,10 @@
 * don't expand folders when project is opened
 * remember expanded folders
+* can't stop build
+* build output is slow
+* select opened file in outliner
 * remember active file (and old tab order?) from last session
+* sometimes building doesn't respond directly
 * grab the fil and dir api from blaggen and replace strings and wxWfileName with it
 * expand json parser with better error detection/error log
 * Replace ugly rgb json structure with hexstring
