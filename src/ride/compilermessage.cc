@@ -85,6 +85,15 @@ const wxString ComplexRegexOutput()
 		 + Ws() + "\\:" + Ws() + Int() + Ws() + Id() + Ws() + "\\:" + Ws() + Text() + "$";
 }
 
+// /home/gustav/dev/ride/src/ride/compilermessage.cc:195:5: error: expected
+const wxString ClangRegex()
+{
+	return "^" + Ws() + File() + "\\:" +
+		Int() + Ws() + "\\:" + Ws() +
+		Int() + Ws() + "\\:" + Ws() +
+		Id() + Ws() + "\\:" + Ws() + Text() + "$";
+}
+
 // C:\Users\gustav\WorkingFolder\librust\src\crc32.rs:4 pub struct Crc32 {
 const wxString SimpleRegexOutput()
 {
@@ -138,6 +147,13 @@ const wxRegEx& ProtocRegexOutput()
 	return ret;
 }
 
+const wxRegEx& ClangRegexOutput()
+{
+	static wxRegEx ret(regex::ClangRegex(), wxRE_ADVANCED);
+	assert(ret.IsValid() && "Protoc regex failed to compile");
+	return ret;
+}
+
 CompilerMessage::Type ParseCMT(const wxString& str)
 {
 	if (str == "warning")
@@ -172,7 +188,29 @@ bool CompilerMessage::Parse(
 	Source source, const wxString& root, const wxString& text, CompilerMessage* output
 )
 {
-	if (source == SOURCE_RUSTC)
+	{
+		const wxRegEx& complex = ClangRegexOutput();
+		if (complex.Matches(text))
+		{
+			const wxString file = complex.GetMatch(text, 1);
+			const int start_line = wxAtoi(complex.GetMatch(text, 2));
+			const int start_index = wxAtoi(complex.GetMatch(text, 3));
+			const wxString type = complex.GetMatch(text, 4).Trim();
+			const wxString message = complex.GetMatch(text, 5);
+
+			*output = CompilerMessage(
+				CleanupFilePath(root, file),
+				start_line,
+				start_index,
+				start_line,
+				start_index,
+				type == "error" ? CompilerMessage::TYPE_ERROR : CompilerMessage::TYPE_WARNING,
+				message
+			);
+			return true;
+		}
+	}
+
 	{
 		const wxRegEx& complex = ComplexRegexOutput();
 		if (complex.Matches(text))
@@ -216,7 +254,7 @@ bool CompilerMessage::Parse(
 			return true;
 		}
 	}
-	else if (source == SOURCE_PROTOC)
+
 	{
 		const wxRegEx& complex = ProtocRegexOutput();
 		if (complex.Matches(text))
@@ -237,10 +275,6 @@ bool CompilerMessage::Parse(
 			);
 			return true;
 		}
-	}
-	else
-	{
-		assert(false && "Invalid source");
 	}
 
 	return false;

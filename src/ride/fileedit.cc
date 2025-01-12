@@ -374,8 +374,10 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess)
 	const bool is_warning = mess.type() == CompilerMessage::TYPE_WARNING;
 	const bool is_note = mess.type() == CompilerMessage::TYPE_NOTE;
 
-	if (main_->settings().show_compiler_messages_as_annotations
-		&& (is_error || is_warning || is_note))
+	const auto show_annoations = main_->settings().show_compiler_messages_as_annotations;
+	const auto is_annotation = is_error || is_warning || is_note;
+
+	if (show_annoations && is_annotation)
 	{
 		const int style = is_error ? STYLE_ANNOTATION_ERROR : STYLE_ANNOTATION_WARNING;
 		// todo: setup note annotations!

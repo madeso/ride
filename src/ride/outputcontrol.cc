@@ -257,7 +257,11 @@ void OutputControl::OnDoubleClick(wxMouseEvent& event)
 	WXID col = 0;
 	WXID index = text_->GetInsertionPoint();
 	text_->PositionToXY(index, &col, &line_number);
-	if (line_number == -1) return;
+	if (line_number == -1)
+	{
+		wxPrintf("ERROR: Couldn't figure out line number...\n");
+		return;
+	}
 	wxString line_content = text_->GetLineText(line_number);
 
 	CompilerMessage message;
