@@ -8,7 +8,15 @@
 * grab the fil and dir api from blaggen and replace strings and wxWfileName with it
 * expand json parser with better error detection/error log
 * Replace ugly rgb json structure with hexstring
-* rebind 'open file in project' to ctrl+p
+* output list
+	- files should be bold
+	- clang parser needs to detect 'note' class
+	- fold errors and notes into single entry
+	- fold file into single entry
+* with 'open file in project'
+	- shortcut should be ctrl p
+	- arrow key should change selection
+	- doubleclick should accept the selection
 * look into cmdline dir handling when folder doesn't end with /
 * look into possible threading when opening large folders
 * read menu from json file?
