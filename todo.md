@@ -1,3 +1,4 @@
+# Todo
 * don't expand folders when project is opened
 * remember expanded folders
 * can't stop build
@@ -34,16 +35,13 @@
 * Replace settings dialog with json hot reload
 * Ctr-b shortcut to switch between perspectives
 * view commands should be able to show the panes again (arch/i3 issue?)
-* Replace shitty colors with
-  > color palette -> grouping -> binding (-> stc)
-  > color palette: `{ red: #4e2f00 }`
-  >   essentially just a list of named color
-  > group: `{ keyword: red }`
-  > should perhaps be a layer here so we can switch between disco/
-  > binding: `{ linecomment: [linecomment, comment] } `
-  > binding keys are stc names, arrays is a basic priority/inheritence
+* Replace shitty colors with: color palette -> grouping -> binding (-> stc)
+  - color palette is `{ red: #4e2f00 }` essentially just a list of named color
+  - group: `{ keyword: red }`, assigns meaningful names to colors
+  - There should perhaps be a layer here so we can switch between disco/muted schemes
+  - binding: `{ linecomment: [linecomment, comment] } `. The binding keys are stc names, arrays is a basic priority/inheritence
 * multi line editing show be able to be moved with arrow keys
 * go to next error
 * Implement basic lua extension
-* move file mode/extension to config
+* move file mode/extension code to a config
 
