@@ -1224,20 +1224,16 @@ void MainWindow::FileHasBeenRenamed(const wxString& old_path, const wxString& ne
 }
 
 FileEdit* MainWindow::OpenFile(
-	const wxString& file, int start_line, int start_index, int end_line, int end_index
+	const Fil& file, int start_line, int start_index, int end_line, int end_index
 )
 {
-	wxFileName file_name(file);
-
-	const wxString full_path = file_name.GetFullPath();
-
-	if (false == file_name.Exists())
+	if (false == file.exist())
 	{
-		ShowError(this, wxString::Format("Unable to open '%s'", full_path), "Unable to open file!");
+		ShowError(this, wxString::Format("Unable to open '%s'", file.get_display()), "Unable to open file!");
 		return nullptr;
 	}
 
-	FoundEdit found_edit = GetEditFromFileName(full_path);
+	FoundEdit found_edit = GetEditFromFileName(file);
 	if (found_edit)
 	{
 		notebook_->SetSelection(found_edit.index);
@@ -1245,20 +1241,16 @@ FileEdit* MainWindow::OpenFile(
 	FileEdit* found_edit_or_new
 		= found_edit.edit != nullptr
 			? found_edit.edit
-			: AddAllCompilerMessages(new FileEdit(notebook_, this, full_path, &languages_));
+			: AddAllCompilerMessages(new FileEdit(notebook_, this, file, &languages_));
 	found_edit_or_new->SetSelection(start_line, start_index, end_line, end_index);
 	found_edit_or_new->SetFocus();
 
 	return found_edit_or_new;
 }
 
-FileEdit* MainWindow::GetFile(const wxString& file)
+FileEdit* MainWindow::GetFile(const Fil& file)
 {
-	wxFileName file_name(file);
-	file_name.Normalize();
-	const wxString full_path = file_name.GetFullPath();
-
-	FoundEdit found_edit = GetEditFromFileName(full_path);
+	FoundEdit found_edit = GetEditFromFileName(file);
 	return found_edit.edit;
 }
 

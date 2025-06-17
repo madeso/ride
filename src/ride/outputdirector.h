@@ -4,6 +4,7 @@
 #include <ride/wx.h>
 #include <vector>
 #include "ride/compilermessage.h"
+#include "ride/path.h"
 
 class OutputControl;
 class MainWindow;
@@ -32,7 +33,7 @@ private:
 
 	MainWindow* main_;
 	OutputControl* control_;
-	std::vector<wxString> files_;
+	std::vector<Fil> files_;
 	std::vector<CompilerMessage> compiler_messages_;
 };
 

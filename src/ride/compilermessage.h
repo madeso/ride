@@ -3,6 +3,8 @@
 
 #include <ride/wx.h>
 
+#include "ride/path.h"
+
 class CompilerMessage
 {
 public:
@@ -22,9 +24,8 @@ public:
 		SOURCE_PROTOC
 	};
 
-	CompilerMessage();
 	CompilerMessage(
-		const wxString& file,
+		const Fil& file,
 		int start_line,
 		int start_index,
 		int end_line,
@@ -32,13 +33,11 @@ public:
 		Type type,
 		wxString message
 	);
-	static bool Parse(
-		const Source source, const wxString& root, const wxString& text, CompilerMessage* output
-	);
+	static std::optional<CompilerMessage> Parse( const Source source, const Dir& root, const wxString& text );
 
 	wxString ToStringRepresentation(const Source source);
 
-	const wxString& file() const;
+	const Fil& file() const;
 
 	// 1 based
 	int start_line() const;
@@ -56,7 +55,7 @@ public:
 
 private:
 
-	wxString file_;
+	Fil file_;
 	int start_line_;
 	int start_index_;
 	int end_line_;

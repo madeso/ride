@@ -90,13 +90,13 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event)
 
 	const bool has_selected = text_->GetSelectedText().IsEmpty() == false;
 	const wxString line_content = GetContextLineContent();
-	CompilerMessage compiler_message;
-	const bool has_compiler_message = CompilerMessage::Parse(
-		CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &compiler_message
-	);
-	const wxString message
-		= has_compiler_message ? ToShortString(compiler_message.message(), 45) : "<none>";
-	const wxString commandline = has_compiler_message ? GetCommandLine(compiler_message) : "";
+	const compiler_message CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content);
+	const wxString message = compiler_message.has_value()
+        ? ToShortString(compiler_message->message(), 45)
+        : "<none>";
+	const wxString commandline = compiler_message.has_value()
+        ? GetCommandLine(*compiler_message)
+        : "";
 
 	wxMenu menu;
 	AppendEnabled(menu, ID_COPY, "Copy", has_selected);
@@ -158,12 +158,10 @@ void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event)
 {
 	const wxString line_content = GetContextLineContent();
 
-	CompilerMessage message;
-	if (CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &message
-		))
+	if (const auto message = CompilerMessage::Parse(
+			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content); message)
 	{
-		const wxString cmd = ReplaceCmd(main_->machine(), GetCommandLine(message));
+		const wxString cmd = ReplaceCmd(main_->machine(), GetCommandLine(*message));
 		wxString output;
 		CmdRunner::Run(
 			main_->root_folder(), cmd, CollectRideSpecificEnviroment(main_->machine()), &output
@@ -175,15 +173,12 @@ void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event)
 void OutputControl::OnCopyThisCompilerMessage(wxCommandEvent& event)
 {
 	const wxString line_content = GetContextLineContent();
-
-	CompilerMessage message;
-	if (CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &message
-		))
+	if (const auto message = CompilerMessage::Parse(
+			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content); message)
 	{
 		if (wxTheClipboard->Open())
 		{
-			wxTheClipboard->SetData(new wxTextDataObject(message.message()));
+			wxTheClipboard->SetData(new wxTextDataObject(message->message()));
 			wxTheClipboard->Close();
 		}
 	}
@@ -233,14 +228,13 @@ void OutputControl::OnSearchForThisCompilerMessage(wxCommandEvent& event)
 {
 	const wxString line_content = GetContextLineContent();
 
-	CompilerMessage message;
-	if (CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &message
-		))
+	if (const auto message = CompilerMessage::Parse(
+			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content); message)
 	{
-		wxString mess = message.message();
+		wxString mess = message->message();
 		mess.Replace("#", "%23");
 		const wxString escaped_message = wxURI(mess).BuildURI();
+        // todo(Gustav): make search url custom
 		const wxString url_to_open
 			= wxString::Format("http://www.google.com/search?q=%s", escaped_message);
 		wxLaunchDefaultBrowser(url_to_open);
@@ -264,12 +258,10 @@ void OutputControl::OnDoubleClick(wxMouseEvent& event)
 	}
 	wxString line_content = text_->GetLineText(line_number);
 
-	CompilerMessage message;
-	if (CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content, &message
-		))
+	if (const auto message = CompilerMessage::Parse(
+			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content); message)
 	{
-		main_->OpenCompilerMessage(message);
+		main_->OpenCompilerMessage(*message);
 	}
 }
 

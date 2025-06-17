@@ -278,7 +278,7 @@ int FindInStc(
 void FindInFiles(
 	MainWindow* parent,
 	wxStyledTextCtrl* fallback,
-	const wxString& file,
+	const Fil& file,
 	const wxString& text,
 	int flags,
 	std::vector<FindResult>* res,
@@ -327,8 +327,8 @@ void FindInFiles(
 bool ShowFindDlg(
 	MainWindow* parent,
 	const wxString& current_selection,
-	const wxString& current_file,
-	const wxString root_folder,
+	const Fil& current_file,
+	const Dir& root_folder,
 	OutputControl* output,
 	FindAction find_action,
 	FindScope find_scope

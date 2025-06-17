@@ -297,13 +297,13 @@ AutoIcon ParseRacerType(const wxString& aname)
 wxString RunRacer(
 	const ride::MachineSettings& machine,
 	WordEntryList& wordlist,
-	const wxString& filename_,
+	const Fil& filename_,
 	wxStyledTextCtrl* text_,
-	const wxString& root_folder
+	const Dir& root_folder
 )
 {
 	// save temp file
-	wxFileName target(filename_);
+	wxFileName target = filename_.path;
 	target.SetExt("racertmp");
 	const wxString path = target.GetFullPath();
 	{
@@ -339,8 +339,8 @@ void Autocomplete(
 	const ride::MachineSettings& machine,
 	wxStyledTextCtrl* text,
 	Language* current_language,
-	const wxString& filename,
-	const wxString& root_folder,
+	const Fil& filename,
+	const Dir& root_folder,
 	wxWindow* self,
 	ShowAutoCompleteAction action
 )
@@ -350,7 +350,7 @@ void Autocomplete(
 	const bool racer = true;
 
 	// only autocomplete rust files
-	if (filename.EndsWith(".rs") == false)
+	if (filename.is_extension(".rs") == false)
 	{
 		return;
 	}

@@ -3,6 +3,7 @@
 #include "settings.proto.h"	 // NOLINT this is how we include it
 
 #include "ride/mainwindow.h"
+#include "ride/path.h"
 
 class MyApp : public wxApp
 {
@@ -28,8 +29,8 @@ bool MyApp::OnInit()
 		}
 	*/
 
-	std::vector<wxFileName> files_to_open;
-	std::vector<wxFileName> dirs_to_open;
+	std::vector<Fil> files_to_open;
+	std::vector<Dir> dirs_to_open;
 	bool ok = true;
 	for (int i = 1; i < argc; ++i)
 	{
@@ -69,7 +70,7 @@ bool MyApp::OnInit()
 		return false;
 	}
 
-	using OptionalFileName = std::optional<wxFileName>;
+	using OptionalFileName = std::optional<Dir>;
 	const OptionalFileName project_to_open
 		= dirs_to_open.size() == 1
 		? OptionalFileName{dirs_to_open[0]}
@@ -80,18 +81,18 @@ bool MyApp::OnInit()
 		wxPrintf("ERROR: too many directories specified!\n");
 		for(const auto& dir: dirs_to_open)
 		{
-			wxPrintf(" * was asked to open: %s\n", dir.GetPath());
+			wxPrintf(" * was asked to open: %s\n", dir.get_display());
 		}
 		return false;
 	}
 
 	for(const auto& f: files_to_open)
 	{
-		wxPrintf("Will open file: %s\n", f.GetFullPath());
+		wxPrintf("Will open file: %s\n", f.get_display());
 	}
 	if(project_to_open)
 	{
-		wxPrintf("Will open project: %s\n", project_to_open->GetPathWithSep());
+		wxPrintf("Will open project: %s\n", project_to_open->get_display());
 	}
 
 	SetAppName("ride");

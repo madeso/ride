@@ -2,19 +2,8 @@
 #include <wx/regex.h>
 #include <wx/filename.h>
 
-CompilerMessage::CompilerMessage()
-	: file_("")
-	, start_line_(-1)
-	, start_index_(-1)
-	, end_line_(-1)
-	, end_index_(-1)
-	, type_(CompilerMessage::TYPE_UNKNOWN)
-	, message_("")
-{
-}
-
 CompilerMessage::CompilerMessage(
-	const wxString& file,
+	const Fil& file,
 	int start_line,
 	int start_index,
 	int end_line,
@@ -166,27 +155,24 @@ CompilerMessage::Type ParseCMT(const wxString& str)
 		return CompilerMessage::TYPE_UNKNOWN;
 }
 
-wxString CleanupFilePath(const wxString& root, const wxString& path)
+std::optional<Fil> CleanupFilePath(const Dir& root, const wxString& path)
 {
 	wxFileName file_name(path);
-	if (false == file_name.IsRelative()) return path;
+	if (false == file_name.IsRelative()) return Fil{file_name};
 	// if a relative path, it might be relative to the project root folder, try
 	// that...
-	const wxString new_path = root + path;
-	wxFileName new_file(new_path);
-	if (new_file.Exists())
+	auto new_file = root.join_file(path);
+	if (new_file.exist())
 	{
-		return new_path;
+		return Fil{new_file};
 	}
 	else
 	{
-		return path;
+		return std::nullopt;
 	}
 }
 
-bool CompilerMessage::Parse(
-	Source source, const wxString& root, const wxString& text, CompilerMessage* output
-)
+std::optional<CompilerMessage> CompilerMessage::Parse(Source source, const Dir& root, const wxString& text)
 {
 	{
 		const wxRegEx& complex = ClangRegexOutput();
@@ -198,8 +184,15 @@ bool CompilerMessage::Parse(
 			const wxString type = complex.GetMatch(text, 4).Trim();
 			const wxString message = complex.GetMatch(text, 5);
 
-			*output = CompilerMessage(
-				CleanupFilePath(root, file),
+			const auto cleaned_file = CleanupFilePath(root, file);
+
+			if(!cleaned_file) {
+				assert(false && "what should be done with an invalid path...?");
+				return std::nullopt;
+			}
+
+			return CompilerMessage(
+				*cleaned_file,
 				start_line,
 				start_index,
 				start_line,
@@ -207,7 +200,6 @@ bool CompilerMessage::Parse(
 				type == "error" ? CompilerMessage::TYPE_ERROR : CompilerMessage::TYPE_WARNING,
 				message
 			);
-			return true;
 		}
 	}
 
@@ -215,7 +207,8 @@ bool CompilerMessage::Parse(
 		const wxRegEx& complex = ComplexRegexOutput();
 		if (complex.Matches(text))
 		{
-			const wxString file = complex.GetMatch(text, 1);
+			const wxString suggested_file = complex.GetMatch(text, 1);
+			const auto file = CleanupFilePath(root, suggested_file);
 			const int start_line = wxAtoi(complex.GetMatch(text, 2));
 			const int start_index = wxAtoi(complex.GetMatch(text, 3));
 			const int end_line = wxAtoi(complex.GetMatch(text, 4));
@@ -223,35 +216,40 @@ bool CompilerMessage::Parse(
 			const CompilerMessage::Type type = ParseCMT(complex.GetMatch(text, 6));
 			const wxString message = complex.GetMatch(text, 7);
 
-			*output = CompilerMessage(
-				CleanupFilePath(root, file),
-				start_line,
-				start_index,
-				end_line,
-				end_index,
-				type,
-				message
-			);
-			return true;
+			if(file)
+			{
+				return CompilerMessage{
+					*file,
+					start_line,
+					start_index,
+					end_line,
+					end_index,
+					type,
+					message
+				};
+			}
 		}
 
 		const wxRegEx& related = RegexOutputRelated();
 		if (related.Matches(text))
 		{
-			const wxString file = related.GetMatch(text, 1);
+			const wxString suggested_file = related.GetMatch(text, 1);
+			const auto file = CleanupFilePath(root, suggested_file);
 			const int start_line = wxAtoi(related.GetMatch(text, 2));
 			const wxString message = related.GetMatch(text, 3);
 
-			*output = CompilerMessage(
-				CleanupFilePath(root, file),
-				start_line,
-				-1,
-				-1,
-				-1,
-				CompilerMessage::TYPE_RELATED,
-				message
-			);
-			return true;
+			if(file)
+			{
+				return CompilerMessage{
+					*file,
+					start_line,
+					-1,
+					-1,
+					-1,
+					CompilerMessage::TYPE_RELATED,
+					message
+				};
+			}
 		}
 	}
 
@@ -259,25 +257,28 @@ bool CompilerMessage::Parse(
 		const wxRegEx& complex = ProtocRegexOutput();
 		if (complex.Matches(text))
 		{
-			const wxString file = complex.GetMatch(text, 1);
+			const wxString suggested_file = complex.GetMatch(text, 1);
+			const auto file = CleanupFilePath(root, suggested_file);
 			const int start_line = wxAtoi(complex.GetMatch(text, 2));
 			const int start_index = wxAtoi(complex.GetMatch(text, 3));
 			const wxString message = complex.GetMatch(text, 4);
 
-			*output = CompilerMessage(
-				CleanupFilePath(root, file),
-				start_line,
-				start_index,
-				start_line,
-				start_index,
-				CompilerMessage::TYPE_ERROR,
-				message
-			);
-			return true;
+			if(file)
+			{
+				return CompilerMessage{
+					*file,
+					start_line,
+					start_index,
+					start_line,
+					start_index,
+					CompilerMessage::TYPE_ERROR,
+					message
+				};
+			}
 		}
 	}
 
-	return false;
+	return std::nullopt;
 }
 
 wxString CompilerMessage::ToStringRepresentation(const Source source)
@@ -291,7 +292,7 @@ wxString CompilerMessage::ToStringRepresentation(const Source source)
 		// #[warn(missing_copy_implementations)] on by default
 		return wxString::Format(
 			"%s:%d : %d : %d : %d %s : %s",
-			file(),
+			file().get_display(),
 			start_line(),
 			start_index(),
 			end_line(),
@@ -309,7 +310,7 @@ wxString CompilerMessage::ToStringRepresentation(const Source source)
 
 //////////////////////////////////////////////////////////////////////////
 
-const wxString& CompilerMessage::file() const
+const Fil& CompilerMessage::file() const
 {
 	return file_;
 }

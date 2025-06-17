@@ -7,6 +7,9 @@
 
 class Language;
 
+struct Fil;
+struct Dir;
+
 enum class ShowAutoCompleteAction
 {
 	// no forcing at all
@@ -24,8 +27,8 @@ void Autocomplete(
 	const ride::MachineSettings& settings,
 	wxStyledTextCtrl* text,
 	Language* current_language,
-	const wxString& filename,
-	const wxString& root_folder,
+	const Fil& filename,
+	const Dir& root_folder,
 	wxWindow* self,
 	ShowAutoCompleteAction action
 );

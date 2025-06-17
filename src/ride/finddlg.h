@@ -21,8 +21,8 @@ enum class FindScope
 bool ShowFindDlg(
 	MainWindow* main,
 	const wxString& current_selection,
-	const wxString& current_file,
-	const wxString root_folder,
+	const Fil& current_file,
+	const Dir& root_folder,
 	OutputControl* output,
 	FindAction find,
 	FindScope find_scope

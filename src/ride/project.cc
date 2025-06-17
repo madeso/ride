@@ -147,7 +147,7 @@ wxFileName Project::GetSessionsFile() const
 	return cargo;
 }
 
-bool Project::IsPartOfProject(const wxString& filename)
+bool Project::IsPartOfProject(const Fil& filename)
 {
 	// todo: implement a better logic for checking if the file is part of the
 	// project

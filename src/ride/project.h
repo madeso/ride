@@ -7,6 +7,7 @@
 #include "wx/filename.h"
 
 class MainWindow;
+struct Fil;
 
 class Project : public MultiRunner
 {
@@ -37,7 +38,7 @@ public:
 	const wxString GetUserFile() const;
 	wxFileName GetSessionsFile() const;
 
-	bool IsPartOfProject(const wxString& filename);
+	bool IsPartOfProject(const Fil& filename);
 
 	void Settings();
 	void SelectActiveBuild();

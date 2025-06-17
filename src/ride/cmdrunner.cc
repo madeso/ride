@@ -12,7 +12,7 @@ void CmdRunner::Append(const wxString& str)
 }
 
 const bool CmdRunner::Run(
-	const wxString& root,
+	const Dir& root,
 	const wxString& cmd,
 	const std::map<wxString, wxString>& enviroment,
 	wxString* out

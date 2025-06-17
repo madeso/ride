@@ -11,6 +11,7 @@
 #include "ride/settings.h"
 #include "ride/project.h"
 #include "ride/outputdirector.h"
+#include "ride/path.h"
 
 class FileEdit;
 class SettingsDlg;
@@ -57,7 +58,7 @@ enum StatusBarWidgets
 
 struct OpenDocument
 {
-	OpenDocument(const wxString& i, const wxString& p, const wxString& d)
+	OpenDocument(const wxString& i, const Fil& p, const wxString& d)
 		: id(i)
 		, path(p)
 		, description(d)
@@ -65,7 +66,7 @@ struct OpenDocument
 	}
 
 	wxString id;
-	wxString path;
+	Fil path;
 	wxString description;
 };
 
@@ -74,9 +75,9 @@ class MainWindow : public wxFrame
 public:
 
 	MainWindow(const wxString& title,
-	const std::vector<wxFileName>& files_to_open,
-	const std::optional<wxFileName> project_to_open,
-	const wxPoint& pos, const wxSize& size);
+		const std::vector<Fil>& files_to_open,
+		const std::optional<Dir> project_to_open,
+		const wxPoint& pos, const wxSize& size);
 	~MainWindow();
 
 	const ride::Settings& settings() const;
@@ -90,24 +91,24 @@ public:
 	void SetStatusBarText(const wxString& text, StatusBarWidgets widget);
 
 	void OpenCompilerMessage(const CompilerMessage& message);
-	void FileHasBeenRenamed(const wxString& old_path, const wxString& new_path);
+	void FileHasBeenRenamed(const Fil& old_path, const Fil& new_path);
 	void ProjectSettingsHasChanged();
 
 	void SaveAllChangedProjectFiles();
 	void ReloadFilesIfNeeded();
 
 	FileEdit* OpenFile(
-		const wxString& file,
+		const Fil& file,
 		int start_line = -1,
 		int start_index = -1,
 		int end_line = -1,
 		int end_index = -1
 	);
-	FileEdit* GetFile(const wxString& file);
+	FileEdit* GetFile(const Fil& file);
 
-	const wxString& root_folder() const;
+	const Dir& root_folder() const;
 
-	FoundEdit GetEditFromFileName(const wxString& file);
+	FoundEdit GetEditFromFileName(const Fil& file);
 
 	OutputDirector& build_output();
 	OutputDirector& compiler_output();
@@ -201,8 +202,8 @@ private:
 
 	void SaveSession();
 	void RestoreSession();
-	bool OpenProject(const wxString project_file);
-	bool OpenProjectWithFolder(const wxString project_folder);
+	bool OpenProject(const Fil& project_file);
+	bool OpenProjectWithFolder(const Dir& project_folder);
 	
 	void OpenFilesFromProjectSession();
 	void OnSaveProjectSession();

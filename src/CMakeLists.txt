@@ -1,11 +1,121 @@
 FILE(GLOB src_glob ride/*.cc;ride/*.h)
 
+set(src_glob
+	ride/auix.cc
+	ride/autocomplete.cc
+	ride/buildconfigurationsdlg.cc
+	# ride/builtinthemes.cc
+	# ride/cargo.cc
+	# ride/cmdrunner.cc
+	# ride/compilermessage.cc
+	# ride/createnewfiledlg.cc
+	# ride/createnewprojectdlg.cc
+	# ride/deletefolderdlg.cc
+	# ride/enabledisable.cc
+	# ride/enviroment.cc
+	# ride/fileedit.cc
+	# ride/filepropertiesdlg.cc
+	# ride/finddlg.cc
+	# ride/form.cc
+	# ride/language.cc
+	# ride/loadresult.cc
+	# ride/main.cc
+	# ride/mainwindow.cc
+	# ride/outputcontrol.cc
+	# ride/outputdirector.cc
+	ride/path.cc
+	# ride/pathtester.cc
+	# ride/project.cc
+	# ride/projectexplorer.cc
+	# ride/projectsettingsdlg.cc
+	# ride/proto.cc
+	# ride/quickopendlg.cc
+	# ride/runconfigurationsdlg.cc
+	# ride/runner.cc
+	# ride/settings.cc
+	# ride/settingscommon.cc
+	# ride/settingsdlg.cc
+	# ride/settingseditortab.cc
+	# ride/settingsenviromenttab.cc
+	# ride/settingsfontstab.cc
+	# ride/settingsindicatortab.cc
+	# ride/settingsmarkerstab.cc
+	# ride/settings.proto.cc
+	# ride/settingsthemestab.cc
+	# ride/settingswindowtab.cc
+	# ride/startpage.cc
+	# ride/stcutils.cc
+	# ride/stringutils.cc
+	# ride/tab.cc
+	# ride/togui.cc
+	# ride/variableeditor.cc
+	# ride/wxutils.cc
+
+	ride/auix.h
+	ride/autocomplete.h
+	ride/buildconfigurationsdlg.h
+	ride/builtinthemes.h
+	ride/cargo.h
+	ride/cmdrunner.h
+	ride/compilermessage.h
+	ride/createnewfiledlg.h
+	ride/createnewprojectdlg.h
+	ride/deletefolderdlg.h
+	ride/enabledisable.h
+	ride/enviroment.h
+	ride/fileedit.h
+	ride/filepropertiesdlg.h
+	ride/finddlg.h
+	ride/form.h
+	ride/guilist.h
+	ride/language.h
+	ride/loadresult.h
+	ride/mainwindow.h
+	ride/menuevent.h
+	ride/outputcontrol.h
+	ride/outputdirector.h
+	ride/path.h
+	ride/pathtester.h
+	ride/pch.private.h
+	ride/pch.public.h
+	ride/projectexplorer.h
+	ride/project.h
+	ride/projectsettingsdlg.h
+	ride/proto.h
+	ride/quickopendlg.h
+	ride/ride_compiler_settings.in.h
+	ride/runconfigurationsdlg.h
+	ride/runner.h
+	ride/settingscommon.h
+	ride/settingsdlg.h
+	ride/settingseditortab.h
+	ride/settingsenviromenttab.h
+	ride/settingsfontstab.h
+	ride/settings.h
+	ride/settingsindicatortab.h
+	ride/settingsmarkerstab.h
+	ride/settings.proto.h
+	ride/settingsthemestab.h
+	ride/settingswindowtab.h
+	ride/startpage.h
+	ride/stcutils.h
+	ride/stringutils.h
+	ride/tab.h
+	ride/togui.h
+	ride/variableeditor.h
+	ride/version.h
+	ride/wx.h
+	ride/wxid.h
+	ride/wxutils.h
+)
+
 configure_file (
 	"${CMAKE_CURRENT_SOURCE_DIR}/ride/ride_compiler_settings.in.h"
 	"${CMAKE_CURRENT_BINARY_DIR}/ride_compiler_settings.h"
 )
 
 set(src
+	ride/path.cc ride/path.h
 	ride/settings.proto.cc
 	ride/settings.proto.h
 	ride/resources/resources.rc

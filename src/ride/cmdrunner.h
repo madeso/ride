@@ -7,6 +7,8 @@
 
 #include "ride/runner.h"
 
+struct Dir;
+
 class CmdRunner : public SingleRunner
 {
 private:
@@ -20,7 +22,7 @@ private:
 public:
 
 	static const bool Run(
-		const wxString& root,
+		const Dir& root,
 		const wxString& cmd,
 		const std::map<wxString, wxString>& enviroment,
 		wxString* out

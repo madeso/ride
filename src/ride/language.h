@@ -8,6 +8,7 @@
 #include "ride/settings.h"
 
 class wxStyledTextCtrl;
+struct Fil;
 
 class Language
 {
@@ -15,7 +16,7 @@ public:
 
 	// internal
 	// todo: move to protected/private
-	bool MatchPattern(const wxString& file) const;
+	bool MatchPattern(const Fil& file) const;
 
 	const wxString& language_name() const;
 

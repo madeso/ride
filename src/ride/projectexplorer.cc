@@ -101,16 +101,17 @@ bool IsDirectory(const wxFileName& root, const wxString directory)
 	return ret;
 }
 
+/// Contains either a Dir or a Fil structure
+// todo(Gustav) replace a better structure
 class FileEntry : public wxTreeItemData
 {
 public:
-
 	FileEntry(bool is_directory, const wxString& path)
 		: is_directory_(is_directory)
 		, path_(path)
 	{
 	}
-
+	
 	const wxString& path() const
 	{
 		return path_;
@@ -479,7 +480,8 @@ void OpenFile(TreeItemFileEntry tife, MainWindow* main)
 {
 	if (tife.second && false == tife.second->is_directory())
 	{
-		main->OpenFile(tife.second->path());
+		const wxFileName path{tife.second->path()};
+		main->OpenFile(Fil{path});
 	}
 }
 
@@ -723,7 +725,8 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event)
 	}
 	else
 	{
-		wxFileName new_name(old_path);
+		const wxFileName old_name{old_path};
+		wxFileName new_name{old_path};
 		new_name.SetFullName(text);
 		const wxString new_path = new_name.GetFullPath();
 		const bool renamed_file = wxRenameFile(old_path, new_path, false);
@@ -733,7 +736,7 @@ void ProjectExplorer::OnEditLabelEnd(wxTreeEvent& event)
 			ShowError(this, "Unable to change file name", "Unable to rename");
 			return;
 		}
-		main_->FileHasBeenRenamed(old_path, new_path);
+		main_->FileHasBeenRenamed(Fil{old_name}, Fil{new_name});
 		file->set_path(new_path);
 		return;
 	}

@@ -32,9 +32,9 @@ void OutputDirector::Clear()
 	// todo: this probably needs to happen in the gui thread instead of here... or
 	// does it?
 	control_->ClearOutput();
-	compiler_messages_.resize(0);
+	compiler_messages_.clear();
 
-	for (const wxString file: files_)
+	for (const auto& file: files_)
 	{
 		FoundEdit edit = main_->GetEditFromFileName(file);
 		if (edit)
@@ -50,10 +50,9 @@ void OutputDirector::Append(const wxString& str)
 	// does it?
 	control_->WriteLine(str);
 
-	CompilerMessage mess;
-	if (CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), str, &mess))
+	if (const auto mess = CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), str); mess)
 	{
-		AddCompilerMessage(mess);
+		AddCompilerMessage(*mess);
 	}
 }
 

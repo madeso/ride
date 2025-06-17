@@ -1,9 +1,12 @@
 #ifndef RIDE_FILEEDIT_H_
 #define RIDE_FILEEDIT_H_
 
+#include <optional>
+
 #include <ride/wx.h>
 #include <wx/stc/stc.h>
 #include "ride/tab.h"
+#include "ride/path.h"
 
 class wxAuiNotebook;
 class MainWindow;
@@ -23,9 +26,9 @@ class FileEdit : public wxControl
 public:
 
 	FileEdit(
-		wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file, Languages* languages
+		wxAuiNotebook* anotebook, MainWindow* parent, const Fil& file, Languages* languages
 	);
-	const wxString& filename() const;
+	const std::optional<Fil>& filename() const;
 	void SetSelection(int start_line, int start_index, int end_line, int end_index);
 	void GetSelection(int* start_line, int* start_index, int* end_line, int* end_index);
 	void AddCompilerMessage(const CompilerMessage& mess);
@@ -35,12 +38,12 @@ public:
 	bool CanClose(bool canAbort);
 	void UpdateTextControl();
 	void ReloadFileIfNeeded();
-	void FileHasBeenRenamed(const wxString& new_path);
+	void FileHasBeenRenamed(const Fil& new_path);
 
-	void Find(OutputControl* output, const wxString& project);
-	void Replace(OutputControl* output, const wxString& project);
-	void FindInFiles(OutputControl* output, const wxString& project);
-	void ReplaceInFiles(OutputControl* output, const wxString& project);
+	void Find(OutputControl* output, const Dir& project);
+	void Replace(OutputControl* output, const Dir& project);
+	void FindInFiles(OutputControl* output, const Dir& project);
+	void ReplaceInFiles(OutputControl* output, const Dir& project);
 
 	void SetFocus();
 	void SetFocusFromKbd();
@@ -97,7 +100,7 @@ private:
 
 	void UpdateFilename();
 	void UpdateTitle();
-	bool SaveTo(const wxString& target);
+	bool SaveTo(const Fil& target);
 
 	bool ShouldBeSaved();
 	void HighlightCurrentWord();
@@ -113,7 +116,7 @@ private:
 	MainWindow* main_;
 	wxStyledTextCtrl* text_;
 	wxAuiNotebook* notebook_;
-	wxString filename_;
+	std::optional<Fil> filename_; // if unset, this is a new file that isn't saved
 	Languages* languages_;
 
 	Language* current_language_;

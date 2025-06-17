@@ -10,6 +10,7 @@
 #include "ride/settings.h"
 #include "ride/wxutils.h"
 #include "ride/stcutils.h"
+#include "ride/path.h"
 
 wxString b2s01(bool b);
 
@@ -907,11 +908,11 @@ wxString Languages::GetFilePattern()
 	return ret;
 }
 
-Language* Languages::DetermineLanguage(const wxString& filepath)
+Language* Languages::DetermineLanguage(const Fil& filepath)
 {
 	for (auto lang: pimpl_->LanguageList)
 	{
-		if (lang->MatchPattern(filepath))
+		if (lang->MatchPattern(filepath.full_path()))
 		{
 			return lang;
 		}

@@ -1,7 +1,8 @@
 #ifndef RIDE_RUNNER_H_
 #define RIDE_RUNNER_H_
 
-#include <ride/wx.h>
+#include "ride/wx.h"
+#include "ride/path.h"
 
 #include <vector>
 #include <memory>
@@ -14,9 +15,9 @@ class Command
 {
 public:
 
-	Command(const wxString& root, const wxString& cmd, const std::map<wxString, wxString>& env);
+	Command(const Dir& root, const wxString& cmd, const std::map<wxString, wxString>& env);
 
-	wxString root;
+	Dir root;
 	wxString cmd;
 	std::map<wxString, wxString> enviroment;
 };

@@ -89,7 +89,7 @@ void FileEdit::Delete()
 	UpdateTitle();
 }
 
-void FileEdit::Find(OutputControl* output, const wxString& project)
+void FileEdit::Find(OutputControl* output, const Dir& project)
 {
 	ShowFindDlg(
 		main_,
@@ -102,7 +102,7 @@ void FileEdit::Find(OutputControl* output, const wxString& project)
 	);
 }
 
-void FileEdit::Replace(OutputControl* output, const wxString& project)
+void FileEdit::Replace(OutputControl* output, const Dir& project)
 {
 	ShowFindDlg(
 		main_,
@@ -115,7 +115,7 @@ void FileEdit::Replace(OutputControl* output, const wxString& project)
 	);
 }
 
-void FileEdit::FindInFiles(OutputControl* output, const wxString& project)
+void FileEdit::FindInFiles(OutputControl* output, const Dir& project)
 {
 	ShowFindDlg(
 		main_,
@@ -128,7 +128,7 @@ void FileEdit::FindInFiles(OutputControl* output, const wxString& project)
 	);
 }
 
-void FileEdit::ReplaceInFiles(OutputControl* output, const wxString& project)
+void FileEdit::ReplaceInFiles(OutputControl* output, const Dir& project)
 {
 	ShowFindDlg(
 		main_,
@@ -258,12 +258,12 @@ void FileEdit::ShowProperties()
 
 //////////////////////////////////////////////////////////////////////////
 
-const wxString& FileEdit::filename() const
+const std::optional<Fil>& FileEdit::filename() const
 {
 	return filename_;
 }
 
-void FileEdit::FileHasBeenRenamed(const wxString& new_path)
+void FileEdit::FileHasBeenRenamed(const Fil& new_path)
 {
 	filename_ = new_path;
 	UpdateFilename();
@@ -369,7 +369,7 @@ void FileEdit::ClearCompilerMessages()
 
 void FileEdit::AddCompilerMessage(const CompilerMessage& mess)
 {
-	assert(filename_ == mess.file());
+	assert(filename_.has_value() && *filename_ == mess.file());
 	const bool is_error = mess.type() == CompilerMessage::TYPE_ERROR;
 	const bool is_warning = mess.type() == CompilerMessage::TYPE_WARNING;
 	const bool is_note = mess.type() == CompilerMessage::TYPE_NOTE;
@@ -411,10 +411,9 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess)
 	}
 }
 
-wxDateTime GetFileDetectionTime(const wxString file)
+wxDateTime GetFileDetectionTime(const Fil& file)
 {
-	wxFileName file_name(file);
-	return file_name.GetModificationTime();
+	return file.path.GetModificationTime();
 }
 
 class StyledTextCtrl : public wxStyledTextCtrl
@@ -1061,7 +1060,7 @@ bool FileEdit::ProcessKey(wxKeyCode key, wxKeyModifier mod)
 }
 
 FileEdit::FileEdit(
-	wxAuiNotebook* anotebook, MainWindow* parent, const wxString& file, Languages* languages
+	wxAuiNotebook* anotebook, MainWindow* parent, const Fil& file, Languages* languages
 )
 	: wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE)
 	, tab_(this)
@@ -1075,7 +1074,6 @@ FileEdit::FileEdit(
 	assert(anotebook);
 	assert(parent);
 	assert(languages);
-	assert(false == file.IsEmpty());
 	this->SetClientData(&tab_);
 	BindEvents();
 	text_ = new StyledTextCtrl(this);
@@ -1096,13 +1094,15 @@ FileEdit::FileEdit(
 
 void FileEdit::LoadFile()
 {
-	text_->LoadFile(filename_);
+	if(!filename_) return;
+	text_->LoadFile(filename_.full_path());
 	UpdateFileTime();
 }
 
 void FileEdit::UpdateFileTime()
 {
-	last_modification_time_ = GetFileDetectionTime(filename_);
+	if(!filename_) return;
+	last_modification_time_ = GetFileDetectionTime(*filename_);
 }
 
 class TrueFalse
@@ -1129,12 +1129,14 @@ public:
 
 void FileEdit::ReloadFileIfNeeded()
 {
+	if(!filename_) return;
+
 	// basic check for infinite activation->question loop
 	static bool inside = false;
 	if (inside) return;
 	TrueFalse inside_capture(&inside);
 
-	const bool exist = wxFileName(filename_).FileExists();
+	const bool exist = filename_->exists();
 	if (exist == false)
 	{
 		if (DialogResult::YES
@@ -1143,8 +1145,8 @@ void FileEdit::ReloadFileIfNeeded()
 				"Close file",
 				"Close file",
 				"Keep open",
-				filename_ + " has been removed",
-				filename_ + " has been removed, close it?"
+				filename_->get_display() + " has been removed",
+				filename_->get_display() + " has been removed, close it?"
 			))
 		{
 			size_t index = notebook_->GetPageIndex(this);
@@ -1157,7 +1159,7 @@ void FileEdit::ReloadFileIfNeeded()
 		return;
 	}
 
-	wxDateTime latest_file_time = GetFileDetectionTime(filename_);
+	wxDateTime latest_file_time = GetFileDetectionTime(*filename_);
 	if (last_modification_time_ != latest_file_time)
 	{
 		// ask to reload or not?
@@ -1166,11 +1168,11 @@ void FileEdit::ReloadFileIfNeeded()
 				"File modified!",
 				"Reload the file",
 				"Keep my changes",
-				wxString::Format("%s\nThis file has been modified by another program.", filename_),
+				wxString::Format("%s\nThis file has been modified by another program.", *filename_),
 				wxString::Format(
 					"%s\nThis file has been modified by another program.\nDo "
 					"you want to reload it?",
-					filename_
+					*filename_
 				)
 			)
 			== DialogResult::YES)
@@ -1190,15 +1192,7 @@ void FileEdit::ReloadFileIfNeeded()
 bool FileEdit::Save()
 {
 	if (ShouldBeSaved() == false) return true;
-	const bool save_successful = filename_.IsEmpty() ? SaveAs() : SaveTo(filename_);
-
-	// compile proto file
-	if (save_successful)
-	{
-		// if we managed to successfully save a protobuf file, then
-		// run the protobuf compiler automatically
-		CompileProtoFile(main_->machine(), filename_, main_);
-	}
+	const bool save_successful = filename_.has_value() == false ? SaveAs() : SaveTo(*filename_);
 	return save_successful;
 }
 
@@ -1216,9 +1210,9 @@ bool FileEdit::SaveAs()
 	return SaveTo(saveFileDialog.GetPath());
 }
 
-bool FileEdit::SaveTo(const wxString& target)
+bool FileEdit::SaveTo(const Fil& target)
 {
-	if (false == text_->SaveFile(target))
+	if (false == text_->SaveFile(target.full_path()))
 	{
 		return false;
 	}
@@ -1239,24 +1233,24 @@ wxString b2s01(bool b)
 
 wxString FileEdit::CalculateDocumentName() const
 {
-	if (filename_.IsEmpty())
+	if (!filename_)
 	{
 		return "Untitled";
 	}
 	else
 	{
-		wxFileName fn(filename_);
-		return fn.GetFullName();
+		return filename_->get_display();
 	}
 }
 
 void FileEdit::ShowAutocomplete()
 {
+	if(!filename_) return;
 	Autocomplete(
 		main_->machine(),
 		text_,
 		current_language_,
-		filename_,
+		*filename_,
 		main_->root_folder(),
 		this,
 		ShowAutoCompleteAction::FORCE_KEEP
@@ -1270,7 +1264,7 @@ void FileEdit::UpdateTextControl()
 	Project* project = main_->project();
 
 	SetupScintilla(
-		text_, set, current_language_, project->IsPartOfProject(filename_) ? project : nullptr
+		text_, set, current_language_, filename_ && project->IsPartOfProject(*filename_) ? project : nullptr
 	);
 	SetupScintillaAutoCompleteImages(text_);
 }
@@ -1278,13 +1272,12 @@ void FileEdit::UpdateTextControl()
 void FileEdit::UpdateFilename()
 {
 	UpdateStatusText();
-	if (filename_.IsEmpty() == false)
+	if (filename_)
 	{
 		size_t index = notebook_->GetPageIndex(this);
-		notebook_->SetPageToolTip(index, filename_);
+		notebook_->SetPageToolTip(index, filename_->get_display());
 
-		wxFileName fname(filename_);
-		current_language_ = languages_->DetermineLanguage(fname.GetFullName());
+		current_language_ = languages_->DetermineLanguage(*filename_);
 		UpdateTextControl();
 		UpdateTextControl();  // update colors again, doing it twice seems to be
 			// needed to apply the colors
@@ -1300,7 +1293,7 @@ void FileEdit::UpdateTitle()
 
 bool FileEdit::ShouldBeSaved()
 {
-	return text_->IsModified() || filename_.IsEmpty();
+	return text_->IsModified() || !filename_;
 }
 
 bool FileEdit::CanClose(bool can_abort)
@@ -1405,15 +1398,18 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 	const bool force = (character_before_entered == ":" && entered_character == ':')
 					|| (character_before_entered != "." && entered_character == '.');
 
-	Autocomplete(
-		main_->machine(),
-		text_,
-		current_language_,
-		filename_,
-		main_->root_folder(),
-		this,
-		force ? ShowAutoCompleteAction::FORCE_SIMPLE : ShowAutoCompleteAction::NO_FORCE
-	);
+	if(filename_)
+	{
+		Autocomplete(
+			main_->machine(),
+			text_,
+			current_language_,
+			*filename_,
+			main_->root_folder(),
+			this,
+			force ? ShowAutoCompleteAction::FORCE_SIMPLE : ShowAutoCompleteAction::NO_FORCE
+		);
+	}
 
 	if (entered_character == '\n' || entered_character == '\r')
 	{
@@ -1600,7 +1596,7 @@ void FileEdit::OnChanged(wxStyledTextEvent& event)
 void FileEdit::UpdateStatusText()
 {
 	main_->SetStatusText(
-		filename_,
+		filename_ ? filename_->get_display() : "",
 		STATUSBAR_GENERAL
 	);	// change to only display the last 127 characters?
 	const auto line = text_->GetCurrentLine();
