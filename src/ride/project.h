@@ -13,9 +13,9 @@ class Project : public MultiRunner
 {
 public:
 
-	Project(MainWindow* output, const wxString& root_folder);
+	Project(MainWindow* output, const std::optional<Dir>& root_folder);
 	~Project();
-	const wxString& root_folder() const;
+	const std::optional<Dir>& root_folder() const;
 
 	bool Save();
 
@@ -33,10 +33,10 @@ public:
 	ride::UserProject* user_ptr();
 	void set_user(const ride::UserProject& user);
 
-	const wxString GetCargoFile() const;
-	const wxString GetProjectFile() const;
-	const wxString GetUserFile() const;
-	wxFileName GetSessionsFile() const;
+	const std::optional<Fil> GetCargoFile() const;
+	const std::optional<Fil> GetProjectFile() const;
+	const std::optional<Fil> GetUserFile() const;
+	Fil GetSessionsFile() const;
 
 	bool IsPartOfProject(const Fil& filename);
 
@@ -70,7 +70,7 @@ private:
 private:
 
 	MainWindow* main_;
-	wxString root_folder_;
+	std::optional<Dir> root_folder_;
 
 	ride::Project project_;
 	ride::UserProject user_;

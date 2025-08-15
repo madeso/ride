@@ -17,9 +17,9 @@ class CreateNewFileDlg : public ui::CreateNewFile
 {
 public:
 
-	CreateNewFileDlg(wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint);
+	CreateNewFileDlg(wxWindow* parent, const Dir& project_folder, const wxString& fodler_hint);
 
-	const wxString GetFilePath() const;
+	const std::optional<Fil> GetFilePath() const;
 	const wxString GetTemplateSource() const;
 
 protected:
@@ -35,13 +35,13 @@ protected:
 private:
 
 	void UpdateTemplateSource();
-	wxString project_folder_;
+	Dir project_folder_;
 };
 
 //////////////////////////////////////////////////////////////////////////
 
 CreateNewFileDlgHandler::CreateNewFileDlgHandler(
-	wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint
+	wxWindow* parent, const Dir& project_folder, const Dir& fodler_hint
 )
 	: parent_(parent)
 	, project_folder_(project_folder)
@@ -61,7 +61,7 @@ bool CreateNewFileDlgHandler::ShowModal()
 	return ret;
 }
 
-const wxString CreateNewFileDlgHandler::file_path() const
+const std::optional<Fil> CreateNewFileDlgHandler::file_path() const
 {
 	return file_path_;
 }
@@ -179,7 +179,7 @@ void CreateNewFileDlg::OnOk(wxCommandEvent& event)
 	EndModal(wxOK);
 }
 
-const wxString CreateNewFileDlg::GetFilePath() const
+const std::optional<Fil> CreateNewFileDlg::GetFilePath() const
 {
 	wxString file_name = uiName->GetValue();
 	if (uiLowerCase->IsChecked())
@@ -198,7 +198,7 @@ const wxString CreateNewFileDlg::GetFilePath() const
 	default: assert(false && "Invalid replace action!");
 	}
 
-	wxFileName fn(project_folder_);
+	Dir fn = project_folder_;
 	const wxString path = uiPath->GetValue();
 	if (path != wxEmptyString)
 	{
@@ -207,20 +207,17 @@ const wxString CreateNewFileDlg::GetFilePath() const
 		{
 			if (d != wxEmptyString)
 			{
-				fn.AppendDir(d);
+				fn = fn.subdir(d);
 			}
 		}
 	}
 	if (file_name != wxEmptyString)
 	{
-		fn.SetFullName(file_name);
-		if (fn.GetExt() == wxEmptyString)
-		{
-			fn.SetExt("rs");  // todo: use the extension from the template instead..
-		}
+		// todo: use the extension from the template instead..
+		return fn.file(file_name).set_extension_if_missing("rs");
 	}
 
-	return fn.GetFullPath();
+	return std::nullopt;
 }
 
 FileTemplate* GetFt(wxListCtrl* list)
@@ -260,3 +257,4 @@ void CreateNewFileDlg::UpdateTemplateSource()
 {
 	uiSuggestedFilePath->SetLabel(GetFilePath());
 }
+

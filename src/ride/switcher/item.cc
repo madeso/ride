@@ -78,13 +78,13 @@ const wxString& Item::description() const
 	return description_;
 }
 
-Item& Item::set_path(const wxString& path)
+Item& Item::set_path(const std::optional<Fil>& path)
 {
 	path_ = path;
 	return (*this);
 }
 
-const wxString& Item::path() const
+const std::optional<Fil>& Item::path() const
 {
 	return path_;
 }

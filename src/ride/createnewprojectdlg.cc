@@ -57,7 +57,7 @@ bool CreateNewProjectDlgHandler::ShowModal(const ride::MachineSettings& machine)
 	{
 		project_folder_ = dlg.project_folder();
 		project_name_ = dlg.project_name();
-		target_ = dlg.GetTarget();
+		target_ = Dir::from_full_path(dlg.GetTarget());
 		cargo_command_line_ = dlg.GenerateCargoCommandline(machine);
 	}
 	return ret;
@@ -73,9 +73,9 @@ const wxString CreateNewProjectDlgHandler::project_name() const
 	return project_name_;
 }
 
-wxString CreateNewProjectDlgHandler::target() const
+Dir CreateNewProjectDlgHandler::target() const
 {
-	return target_;
+	return *target_;
 }
 
 wxString CreateNewProjectDlgHandler::cargo_command_line() const

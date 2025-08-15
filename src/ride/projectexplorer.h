@@ -1,5 +1,4 @@
-#ifndef RIDE_PROJECTEXPLORER_H_
-#define RIDE_PROJECTEXPLORER_H_
+#pragma once
 
 #include <ride/wx.h>
 #include <wx/treectrl.h>
@@ -7,15 +6,15 @@
 #include <map>
 #include <vector>
 
+#include "ride/path.h"
+
 class wxFileName;
 class MainWindow;
 
-typedef std::map<wxString, wxTreeItemId> StringIdMap;
-
 struct FilesAndFolders
 {
-	StringIdMap files;
-	StringIdMap folders;
+	std::map<Fil, wxTreeItemId> files;
+	std::map<Dir, wxTreeItemId> folders;
 };
 
 class ProjectExplorer : public wxTreeCtrl
@@ -26,14 +25,13 @@ public:
 
 	void UpdateColors();
 
-	void SetFolder(const wxString& folder);
+	void SetFolder(const Dir& folder);
 	void UpdateFolderStructure();
-	void HighlightOpenFile(const wxString& file_path);
+	void HighlightOpenFile(const Fil& file_path);
 
-	wxString GetPathOfSelected() const;
-	wxString GetRelativePathOfSelected() const;
+	std::optional<Fil> GetPathOfSelected() const;
 
-	std::vector<wxString> GetFiles();
+	std::vector<Fil> GetFiles();
 
 private:
 
@@ -62,10 +60,10 @@ private:
 
 	wxImageList images_;
 	MainWindow* main_;
-	wxString folder_;
+	std::optional<Dir> folder_;
 	wxTreeItemId last_highlighted_item_;
 
 	FilesAndFolders files_;
 };
 
-#endif	// RIDE_PROJECTEXPLORER_H_
+

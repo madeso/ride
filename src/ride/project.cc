@@ -17,13 +17,13 @@
 #include "ride/projectsettingsdlg.h"
 #include "ride/enviroment.h"
 
-Project::Project(MainWindow* output, const wxString& root_folder)
+Project::Project(MainWindow* output, const std::optional<Dir>& root_folder)
 	: main_(output)
 	, root_folder_(root_folder)
 {
-	if (root_folder_.IsEmpty() == false)
+	if (root_folder_.has_value())
 	{
-		if (LoadProtoJson(&project_, GetProjectFile()) != "")
+		if (LoadProtoJson(&project_, *GetProjectFile()) != "")
 		{
 		}
 		if (project_.build_settings.size() == 0)
@@ -36,7 +36,7 @@ Project::Project(MainWindow* output, const wxString& root_folder)
 			project_.build_settings.push_back(debug);
 		}
 
-		if (LoadProtoJson(&user_, GetUserFile()) != "")
+		if (LoadProtoJson(&user_, *GetUserFile()) != "")
 		{
 		}
 
@@ -56,15 +56,15 @@ Project::~Project()
 	Save();
 }
 
-const wxString& Project::root_folder() const
+const std::optional<Dir>& Project::root_folder() const
 {
 	return root_folder_;
 }
 
 bool Project::Save()
 {
-	if (root_folder_.IsEmpty()) return false;
-	bool project_saved = SaveProtoJson(&project_, GetProjectFile()) != "";
+	if (root_folder_.has_value() == false) return false;
+	bool project_saved = SaveProtoJson(&project_, *GetProjectFile()) != "";
 	bool user_saved = SaveUser();
 	return project_saved && user_saved;
 }
@@ -119,31 +119,31 @@ void Project::set_user(const ride::UserProject& user)
 	user_ = user;
 }
 
-const wxString Project::GetCargoFile() const
+const std::optional<Fil> Project::GetCargoFile() const
 {
-	if (root_folder_.IsEmpty()) return "";
-	wxFileName cargo(root_folder_, "cargo.toml");
-	return cargo.GetFullPath();
+	if (root_folder_.has_value() == false) return std::nullopt;
+	const auto cargo = root_folder_->file("cargo.toml");
+	return cargo;
 }
 
-const wxString Project::GetProjectFile() const
+const std::optional<Fil> Project::GetProjectFile() const
 {
-	if (root_folder_.IsEmpty()) return "";
-	wxFileName cargo(root_folder_  + wxFileName::GetPathSeparator() + ".ride", "project.json");
-	return cargo.GetFullPath();
+	if (root_folder_.has_value() == false) return std::nullopt;
+	const auto cargo = root_folder_->subdir(".ride").file("project.json");
+	return cargo;
 }
 
-const wxString Project::GetUserFile() const
+const std::optional<Fil> Project::GetUserFile() const
 {
-	if (root_folder_.IsEmpty()) return "";
-	wxFileName cargo(root_folder_  + wxFileName::GetPathSeparator() + ".ride", "project.user.json");
-	return cargo.GetFullPath();
+	if (root_folder_.has_value() == false) return std::nullopt;
+	const auto cargo = root_folder_->subdir(".ride").file("project.user.json");
+	return cargo;
 }
 
-wxFileName Project::GetSessionsFile() const
+Fil Project::GetSessionsFile() const
 {
-	assert(!root_folder_.IsEmpty());
-	wxFileName cargo(root_folder_  + wxFileName::GetPathSeparator() + ".ride", "session.json");
+	assert(root_folder_.has_value());
+	const auto cargo = root_folder_->subdir(".ride").file("session.json");
 	return cargo;
 }
 
@@ -265,7 +265,7 @@ void Project::Append(const wxString& str)
 
 void Project::RunCmd(const wxString& cmd, const wxString& folder)
 {
-	if (root_folder_.IsEmpty())
+	if (root_folder_.has_value() == false)
 	{
 		ShowInfo(
 			main_, "No project open, you need to open a cargo project first!", "No project open!"
@@ -273,12 +273,11 @@ void Project::RunCmd(const wxString& cmd, const wxString& folder)
 		return;
 	}
 
-	wxString the_folder = root_folder();
+	Dir the_folder = *root_folder_;
 
 	if(folder.IsEmpty() == false)
 	{
-		// todo(Gustav): is this the correct way to join 2 folders?
-		the_folder = the_folder + folder;
+		the_folder = the_folder.subdir(folder);
 	}
 
 	MultiRunner::RunCmd(Command(the_folder, cmd, CollectRideSpecificEnviroment(main_->machine())));
@@ -286,7 +285,7 @@ void Project::RunCmd(const wxString& cmd, const wxString& folder)
 
 bool Project::SaveUser()
 {
-	return SaveProtoJson(&user_, GetUserFile()) != "";
+	return SaveProtoJson(&user_, *GetUserFile()) != "";
 }
 
 int Project::GetSelectedBuildIndex()

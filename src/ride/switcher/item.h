@@ -1,8 +1,10 @@
 #ifndef RIDE_SWITCHERITEM_H_
 #define RIDE_SWITCHERITEM_H_
 
-#include <ride/wx.h>
-#include <wx/html/htmlwin.h>
+#include "wx/html/htmlwin.h"
+
+#include "ride/wx.h"
+#include "ride/path.h"
 
 namespace switcher
 {
@@ -30,8 +32,8 @@ public:
 	Item& set_description(const wxString& descr);
 	const wxString& description() const;
 
-	Item& set_path(const wxString& descr);
-	const wxString& path() const;
+	Item& set_path(const std::optional<Fil>& descr);
+	const std::optional<Fil>& path() const;
 
 	Item& set_id(int id);
 	int id() const;
@@ -56,7 +58,7 @@ protected:
 	wxString title_;
 	wxString name_;
 	wxString description_;
-	wxString path_;
+	std::optional<Fil> path_;
 	int id_;
 	wxRect rect_;
 	wxBitmap bitmap_;

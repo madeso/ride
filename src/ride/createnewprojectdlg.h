@@ -1,7 +1,8 @@
 #ifndef RIDE_CREATENEWPROJECTDLG_H_
 #define RIDE_CREATENEWPROJECTDLG_H_
 
-#include <ride/wx.h>
+#include "ride/wx.h"
+#include "ride/path.h"
 #include "ride/settings.h"
 
 class CreateNewProjectDlgHandler
@@ -15,16 +16,16 @@ public:
 	const wxString project_folder() const;
 	const wxString project_name() const;
 
-	wxString target() const;
+	Dir target() const;
 	wxString cargo_command_line() const;
 
 private:
 
 	wxWindow* parent_;
 
-	wxString project_folder_;
+	Dir project_folder_;
 	wxString project_name_;
-	wxString target_;
+	std::optional<Dir> target_;
 	wxString cargo_command_line_;
 };
 

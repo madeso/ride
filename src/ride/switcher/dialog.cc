@@ -129,7 +129,7 @@ void Dialog::ShowDescription(const Item& item)
 {
 	title_ctrl_->SetLabel(item.title());
 	description_ctrl_->SetLabel(item.description());
-	path_ctrl_->SetLabel(item.path());
+	path_ctrl_->SetLabel(item.path()->get_display());
 }
 
 void Dialog::UpdateDescription()

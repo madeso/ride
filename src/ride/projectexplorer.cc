@@ -49,7 +49,7 @@ void ProjectExplorer::UpdateColors()
 	wxTreeCtrl::SetForegroundColour(C(style.foreground));
 }
 
-void ProjectExplorer::SetFolder(const wxString& folder)
+void ProjectExplorer::SetFolder(const Dir& folder)
 {
 	folder_ = folder;
 	UpdateFolderStructure();
@@ -70,10 +70,9 @@ wxString GetRelativePath(const wxString& root, const wxString& f)
 	}
 }
 
-void ProjectExplorer::HighlightOpenFile(const wxString& f)
+void ProjectExplorer::HighlightOpenFile(const Fil& f)
 {
-	auto file_path = GetRelativePath(folder_, f);
-	auto res = files_.files.find(file_path);
+	auto res = files_.files.find(f);
 	const wxTreeItemId id = res != files_.files.end() ? res->second : wxTreeItemId();
 	if (id.IsOk())
 	{
@@ -86,19 +85,9 @@ void ProjectExplorer::HighlightOpenFile(const wxString& f)
 	last_highlighted_item_ = id;
 }
 
-wxFileName SubFolder(const wxFileName& root, const wxString& sub_folder)
+Dir SubFolder(const Dir& root, const wxString& sub_folder)
 {
-	wxFileName folder(root);
-	folder.AppendDir(sub_folder);
-	return folder;
-}
-
-bool IsDirectory(const wxFileName& root, const wxString directory)
-{
-	const wxFileName temp = SubFolder(root, directory);
-	const wxString full_path = temp.GetFullPath();
-	const bool ret = wxDir::Exists(full_path);
-	return ret;
+	return root.subdir(sub_folder);
 }
 
 /// Contains either a Dir or a Fil structure
@@ -111,7 +100,7 @@ public:
 		, path_(path)
 	{
 	}
-	
+
 	const wxString& path() const
 	{
 		return path_;
@@ -125,28 +114,6 @@ public:
 	bool is_directory() const
 	{
 		return is_directory_;
-	}
-
-	const wxString GetRelativePath(const wxString root) const
-	{
-		if (is_directory_) return GetRelativeFolderPath(root);
-		const wxString ret = GetRelativeFolderPath(root) + wxFileName(path_).GetFullName();
-		return ret;
-	}
-
-	const wxString GetRelativeFolderPath(const wxString root) const
-	{
-		wxFileName fn(path_);
-		fn.SetFullName(wxEmptyString);
-		const wxString native_path = fn.GetFullPath(wxPATH_NATIVE);
-		const wxString relative_native = native_path.StartsWith(root)
-			? native_path.Right(native_path.length() - root.length())
-			: native_path
-			;
-		const wxString native_path_sep = wxString(1, wxFileName::GetPathSeparator());
-		wxString ret = relative_native;
-		ret.Replace(native_path_sep, "/");
-		return ret;
 	}
 
 private:
@@ -178,42 +145,55 @@ TreeItemFileEntry GetFocused(const ProjectExplorer* pe)
 	return GetTreeItemData(pe, selected);
 }
 
-wxString ProjectExplorer::GetPathOfSelected() const
+FileEntry* GetFocusedFileEntry(const ProjectExplorer* pe)
 {
-	TreeItemFileEntry file = GetFocused(this);
-	if (file.second == nullptr) return wxEmptyString;
-	return file.second->path();
+	auto entry = GetFocused(pe);
+	return entry.second;
 }
 
-wxString ProjectExplorer::GetRelativePathOfSelected() const
+std::optional<Fil> ProjectExplorer::GetPathOfSelected() const
 {
-	TreeItemFileEntry file = GetFocused(this);
-	if (file.second == nullptr) return wxEmptyString;
-	return file.second->GetRelativeFolderPath(folder_);
+	FileEntry* file = GetFocusedFileEntry(this);
+	if (file == nullptr) return std::nullopt;
+	if(file->is_directory()) return std::nullopt;
+	return Fil::from_full_path(file->path());
 }
 
-std::vector<wxString> TraverseFilesAndFolders(
-	const wxFileName& root, const wxString filespec, const int flags
-)
+struct Traversed
 {
-	const wxString root_full_path = root.GetFullPath();
+	std::vector<Fil> files;
+	std::vector<Dir> dirs;
+};
 
-	if (root_full_path.IsEmpty()) return std::vector<wxString>();
-
+template<typename F>
+void Traverse(wxString root_full_path, int flags, const wxString filespec, F&& callback)
+{
 	wxDir directory(root_full_path);
-
 	directory.Open(root_full_path);
 
-	std::vector<wxString> ret;
 	wxString file_or_directory_name;
 	bool cont = directory.GetFirst(&file_or_directory_name, filespec, flags);
 	while (cont)
 	{
-		ret.push_back(file_or_directory_name);
+		callback(file_or_directory_name);
 		cont = directory.GetNext(&file_or_directory_name);
 	}
-
 	directory.Close();
+}
+
+Traversed TraverseFilesAndFolders(const Dir& root, const wxString filespec, const int flags)
+{
+	const wxString root_full_path = root.full_path();
+
+	Traversed ret;
+
+	Traverse(root_full_path, flags | wxDIR_DIRS, filespec, [&](const wxString& dir) {
+		ret.dirs.emplace_back(Dir::from_full_path(dir));
+	});
+	Traverse(root_full_path, flags | wxDIR_FILES, filespec, [&](const wxString& file) {
+		ret.files.emplace_back(Fil::from_full_path(file));
+	});
+
 	return ret;
 }
 
@@ -231,43 +211,31 @@ wxTreeItemId TreeItemIdNull()
 
 void ListFilesAndFolders(
 	FilesAndFolders* ret,
-	const wxString& root,
-	const wxString& relative_path_root,
+	const Dir& root,
 	const wxString& filespec,
 	const int flags,
 	int depth
 )
 {
-	ret->folders.insert(StringIdMap::value_type(relative_path_root, TreeItemIdNull()));
+	ret->folders.insert({root, TreeItemIdNull()});
 
-	const std::vector<wxString> files_and_folders = TraverseFilesAndFolders(root, filespec, flags);
+	const auto traversed = TraverseFilesAndFolders(root, filespec, flags);
 
-	for (const wxString file_or_directory_name: files_and_folders)
+	for (const auto& file: traversed.files)
 	{
-		if (file_or_directory_name == "target" && depth == 0) continue;
+		ret->files.insert({file, TreeItemIdNull()});
+	}
 
-		const bool is_dir = IsDirectory(root, file_or_directory_name);
-
-		const wxString path = JoinPath(root, file_or_directory_name);
-		const wxString relative_path = is_dir ? relative_path_root + file_or_directory_name + "/"
-											  : relative_path_root + file_or_directory_name;
-
-		if (is_dir)
-		{
-			const wxString dir_path = wxDir(path).GetNameWithSep();
-			ListFilesAndFolders(ret, dir_path, relative_path, filespec, flags, depth + 1);
-		}
-		else
-		{
-			ret->files.insert(StringIdMap::value_type(relative_path, TreeItemIdNull()));
-		}
+	for (const auto& dir: traversed.dirs)
+	{
+		ListFilesAndFolders(ret, dir, filespec, flags, depth + 1);
 	}
 }
 
-FilesAndFolders ListFilesAndFolders(const wxString& root, const wxString& filespec, int flags)
+FilesAndFolders ListFilesAndFolders(const Dir& root, const wxString& filespec, int flags)
 {
 	FilesAndFolders ff;
-	ListFilesAndFolders(&ff, root, "", filespec, flags, 0);
+	ListFilesAndFolders(&ff, root, filespec, flags, 0);
 	return ff;
 }
 
@@ -295,18 +263,19 @@ FileEntry* GetFileEntryOrNull(wxTreeCtrl* tree, const wxTreeItemId& id)
 void ListTree(
 	FilesAndFolders* ff,
 	wxTreeCtrl* tree,
-	const wxString& root,
+	const Dir& root,
 	const wxTreeItemId& id,
 	FileEntry* data
 )
 {
 	assert(id.IsOk());
 	assert(data);
-	const wxString path = data->GetRelativePath(root);
 	assert(data->is_directory());
-	ff->folders.insert(StringIdMap::value_type(path, id));
+
+	ff->folders.insert({Dir::from_full_path(data->path()), id});
+
 	const std::vector<wxTreeItemId> children = ListChildren(tree, id);
-	for (wxTreeItemId child: children)
+	for (const auto& child: children)
 	{
 		FileEntry* entry = GetFileEntryOrNull(tree, child);
 		if (entry->is_directory())
@@ -315,13 +284,12 @@ void ListTree(
 		}
 		else
 		{
-			const wxString child_path = entry->GetRelativePath(root);
-			ff->files.insert(StringIdMap::value_type(child_path, child));
+			ff->files.insert({Fil::from_full_path(entry->path()), child});
 		}
 	}
 }
 
-FilesAndFolders ListTree(wxTreeCtrl* tree, const wxString& root)
+FilesAndFolders ListTree(wxTreeCtrl* tree, const Dir& root)
 {
 	FilesAndFolders ret;
 
@@ -344,7 +312,9 @@ wxString FindParentPath(const wxString& pp)
 	return t + "/";
 }
 
-wxTreeItemId FindRoot(wxTreeCtrl* tree, const wxString& root, const wxString& path)
+wxTreeItemId FindRoot(wxTreeCtrl* tree, const Dir& root, const wxString& path)
+;
+/*
 {
 	if (path == "") return tree->GetRootItem();
 	// TODO(Gustav): Optimize
@@ -353,8 +323,9 @@ wxTreeItemId FindRoot(wxTreeCtrl* tree, const wxString& root, const wxString& pa
 	auto f = ff.folders.find(root_path);
 	assert(f != ff.folders.end());
 	return f->second;
-}
+}*/
 
+/*
 wxString ToAbsolutePath(const wxString& root, const wxString& relative)
 {
 	return root + relative;
@@ -373,69 +344,66 @@ const wxString ToDisplayName(const wxString& relative_path)
 	if (i == -1) return without_ending_slash;
 	wxString name = without_ending_slash.substr(i + 1);
 	return name;
-}
+}*/
 
 void ProjectExplorer::UpdateFolderStructure()
 {
-	const int flags = wxDIR_FILES | wxDIR_DIRS;	 // walk files and folders
+	if(!folder_)
+	{
+		// todo(Gustav): clear items
+		return;
+	}
+
+	// todo(Gustav): add option to include wxDIR_HIDDEN
+	const int flags = wxDIR_NO_FOLLOW; // walk files and folders
 	const wxString filespec = "";
 
-	const FilesAndFolders current = ListFilesAndFolders(folder_, filespec, flags);
-	const FilesAndFolders tree = ListTree(this, folder_);
+	const FilesAndFolders current = ListFilesAndFolders(*folder_, filespec, flags);
+	const FilesAndFolders tree = ListTree(this, *folder_);
 
 	this->Freeze();
+
 	// add missing folders
 	for (auto i: current.folders)
 	{
 		if (tree.folders.find(i.first) == tree.folders.end())
 		{
-			if (i.first == "")
-			{
-				this->AppendItem(
-					this->GetRootItem(),
-					"Project",
-					ICON_FOLDER_NORMAL,
-					ICON_FOLDER_NORMAL,
-					new FileEntry(true, folder_)
-				);
-			}
-			else
-			{
-				auto root = FindRoot(this, folder_, i.first);
-				const auto absolute_path = ToAbsolutePath(folder_, i.first);
-				const auto display_name = ToDisplayName(i.first);
-				this->AppendItem(
-					root,
-					display_name,
-					ICON_FOLDER_NORMAL,
-					ICON_FOLDER_NORMAL,
-					new FileEntry(true, absolute_path)
-				);
-			}
+			auto root = i.first == * folder_ ? this->GetRootItem() : FindRoot(this, *folder_, i.first);
+			const auto absolute_path = i.first;
+			const auto display_name = i.first.get_display();
+			this->AppendItem(
+				root,
+				display_name,
+				ICON_FOLDER_NORMAL,
+				ICON_FOLDER_NORMAL,
+				new FileEntry(true, absolute_path.full_path())
+			);
 		}
 	}
-	const FilesAndFolders all_folders = ListTree(this, folder_);
+
 	// add missing files
+	const FilesAndFolders all_folders = ListTree(this, folder_);
 	for (auto i: current.files)
 	{
 		if (tree.files.find(i.first) == tree.files.end())
 		{
-			const auto parent_path = FindParentPath(i.first);
+			const auto parent_path = i.first.dir();
 			auto parent = all_folders.folders.find(parent_path);
 			assert(parent != all_folders.folders.end());
-			const auto absolute_path = ToAbsolutePath(folder_, i.first);
-			const auto display_name = ToDisplayName(i.first);
+			const auto absolute_path = i.first;
+			const auto display_name = i.first.get_display();
 			this->AppendItem(
 				parent->second,
 				display_name,
 				ICON_FILE_NORMAL,
 				ICON_FILE_NORMAL,
-				new FileEntry(false, absolute_path)
+				new FileEntry(false, absolute_path.full_path())
 			);
 		}
 	}
-	const FilesAndFolders all_files = ListTree(this, folder_);
+
 	// remove files
+	const FilesAndFolders all_files = ListTree(this, folder_);
 	for (auto i: all_files.files)
 	{
 		if (current.files.find(i.first) == current.files.end())
@@ -447,6 +415,7 @@ void ProjectExplorer::UpdateFolderStructure()
 			this->Delete(i.second);
 		}
 	}
+
 	// remove folders in reverse to remove child before parent
 	for (auto i = all_files.folders.rbegin(); i != all_files.folders.rend(); ++i)
 	{

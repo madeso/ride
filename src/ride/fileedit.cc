@@ -89,7 +89,7 @@ void FileEdit::Delete()
 	UpdateTitle();
 }
 
-void FileEdit::Find(OutputControl* output, const Dir& project)
+void FileEdit::Find(OutputControl* output, const std::optional<Dir>& project)
 {
 	ShowFindDlg(
 		main_,
@@ -102,7 +102,7 @@ void FileEdit::Find(OutputControl* output, const Dir& project)
 	);
 }
 
-void FileEdit::Replace(OutputControl* output, const Dir& project)
+void FileEdit::Replace(OutputControl* output, const std::optional<Dir>& project)
 {
 	ShowFindDlg(
 		main_,
@@ -115,7 +115,7 @@ void FileEdit::Replace(OutputControl* output, const Dir& project)
 	);
 }
 
-void FileEdit::FindInFiles(OutputControl* output, const Dir& project)
+void FileEdit::FindInFiles(OutputControl* output, const std::optional<Dir>& project)
 {
 	ShowFindDlg(
 		main_,
@@ -128,7 +128,7 @@ void FileEdit::FindInFiles(OutputControl* output, const Dir& project)
 	);
 }
 
-void FileEdit::ReplaceInFiles(OutputControl* output, const Dir& project)
+void FileEdit::ReplaceInFiles(OutputControl* output, const std::optional<Dir>& project)
 {
 	ShowFindDlg(
 		main_,

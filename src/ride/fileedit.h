@@ -40,10 +40,10 @@ public:
 	void ReloadFileIfNeeded();
 	void FileHasBeenRenamed(const Fil& new_path);
 
-	void Find(OutputControl* output, const Dir& project);
-	void Replace(OutputControl* output, const Dir& project);
-	void FindInFiles(OutputControl* output, const Dir& project);
-	void ReplaceInFiles(OutputControl* output, const Dir& project);
+	void Find(OutputControl* output, const std::optional<Dir>& project);
+	void Replace(OutputControl* output, const std::optional<Dir>& project);
+	void FindInFiles(OutputControl* output, const std::optional<Dir>& project);
+	void ReplaceInFiles(OutputControl* output, const std::optional<Dir>& project);
 
 	void SetFocus();
 	void SetFocusFromKbd();

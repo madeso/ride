@@ -4,11 +4,13 @@
 #include <ride/wx.h>
 #include <vector>
 
+#include "ride/path.h"
+
 bool ShowQuickOpenDlg(
 	wxWindow* parent,
-	const wxString& root,
-	const std::vector<wxString>& files,
-	std::vector<wxString>* selected
+	const Dir& root,
+	const std::vector<Fil>& files,
+	std::vector<Fil>* selected
 );
 
 #endif	// RIDE_QUICKOPENDLG_H_

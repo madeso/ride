@@ -16,26 +16,26 @@ struct ProjectSession;
 struct Theme;
 }  //  namespace ride
 
-wxString LoadProtoJson(ride::MachineSettings* mess, const wxFileName& file);
-wxString SaveProtoJson(ride::MachineSettings* mess, const wxFileName& file);
+wxString LoadProtoJson(ride::MachineSettings* mess, const Fil& file);
+wxString SaveProtoJson(ride::MachineSettings* mess, const Fil& file);
 
-wxString LoadProtoJson(ride::Settings* mess, const wxFileName& file);
-wxString SaveProtoJson(ride::Settings* mess, const wxFileName& file);
+wxString LoadProtoJson(ride::Settings* mess, const Fil& file);
+wxString SaveProtoJson(ride::Settings* mess, const Fil& file);
 
-wxString LoadProtoJson(ride::Session* mess, const wxFileName& file);
-wxString SaveProtoJson(ride::Session* mess, const wxFileName& file);
+wxString LoadProtoJson(ride::Session* mess, const Fil& file);
+wxString SaveProtoJson(ride::Session* mess, const Fil& file);
 
-wxString LoadProtoJson(ride::Project* mess, const wxFileName& file);
-wxString SaveProtoJson(ride::Project* mess, const wxFileName& file);
+wxString LoadProtoJson(ride::Project* mess, const Fil& file);
+wxString SaveProtoJson(ride::Project* mess, const Fil& file);
 
-wxString LoadProtoJson(ride::UserProject* mess, const wxFileName& file);
-wxString SaveProtoJson(ride::UserProject* mess, const wxFileName& file);
+wxString LoadProtoJson(ride::UserProject* mess, const Fil& file);
+wxString SaveProtoJson(ride::UserProject* mess, const Fil& file);
 
-wxString LoadProtoJson(ride::ProjectSession* mess, const wxFileName& file);
-wxString SaveProtoJson(ride::ProjectSession* mess, const wxFileName& file);
+wxString LoadProtoJson(ride::ProjectSession* mess, const Fil& file);
+wxString SaveProtoJson(ride::ProjectSession* mess, const Fil& file);
 
-wxString LoadProtoJson(ride::Theme* mess, const wxFileName& file);
-wxString SaveProtoJson(ride::Theme* mess, const wxFileName& file);
+wxString LoadProtoJson(ride::Theme* mess, const Fil& file);
+wxString SaveProtoJson(ride::Theme* mess, const Fil& file);
 
 
 /*

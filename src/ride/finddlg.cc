@@ -328,7 +328,7 @@ bool ShowFindDlg(
 	MainWindow* parent,
 	const wxString& current_selection,
 	const Fil& current_file,
-	const Dir& root_folder,
+	const std::optional<Dir>& root_folder,
 	OutputControl* output,
 	FindAction find_action,
 	FindScope find_scope

@@ -58,7 +58,7 @@ enum StatusBarWidgets
 
 struct OpenDocument
 {
-	OpenDocument(const wxString& i, const Fil& p, const wxString& d)
+	OpenDocument(const wxString& i, const std::optional<Fil>& p, const wxString& d)
 		: id(i)
 		, path(p)
 		, description(d)
@@ -66,7 +66,7 @@ struct OpenDocument
 	}
 
 	wxString id;
-	Fil path;
+	std::optional<Fil> path;
 	wxString description;
 };
 
@@ -106,7 +106,7 @@ public:
 	);
 	FileEdit* GetFile(const Fil& file);
 
-	const Dir& root_folder() const;
+	const std::optional<Dir>& root_folder() const;
 
 	FoundEdit GetEditFromFileName(const Fil& file);
 
@@ -204,7 +204,7 @@ private:
 	void RestoreSession();
 	bool OpenProject(const Fil& project_file);
 	bool OpenProjectWithFolder(const Dir& project_folder);
-	
+
 	void OpenFilesFromProjectSession();
 	void OnSaveProjectSession();
 

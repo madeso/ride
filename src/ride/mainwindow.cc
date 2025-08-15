@@ -162,16 +162,16 @@ OpenDocument OpenDocumentFromTab(Tab* tab)
 	StartPageTab* start = tab->ToStartPage();
 	if (start)
 	{
-		return OpenDocument("start", "", "");
+		return OpenDocument("start", std::nullopt, "");
 	}
 
 	FileEdit* edit = tab->ToFileEdit();
 	if (edit)
 	{
-		return OpenDocument(edit->filename(), edit->filename(), edit->GetLanguageName());
+		return OpenDocument(edit->filename()->get_display(), edit->filename(), edit->GetLanguageName());
 	}
 
-	return OpenDocument("", "", "");
+	return OpenDocument("", std::nullopt, "");
 }
 
 struct AddMenuItem
@@ -491,7 +491,7 @@ void MainWindow::BindEvents()
 
 void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& event)
 {
-	wxString file_name = wxEmptyString;
+	std::optional<Fil> file_name = std::nullopt;
 
 	Tab* tab = GetSelectedTabOrNull(notebook_);
 
@@ -515,10 +515,13 @@ void MainWindow::OnNotebookPageChanged(wxAuiNotebookEvent& event)
 	}
 
 	SetupMenu();
-	project_explorer_->HighlightOpenFile(file_name);
+	if(file_name)
+	{
+		project_explorer_->HighlightOpenFile(*file_name);
+	}
 }
 
-const wxString& MainWindow::root_folder() const
+const std::optional<Dir>& MainWindow::root_folder() const
 {
 	assert(project_);
 	return project_->root_folder();
@@ -590,8 +593,8 @@ void MainWindow::SetStatusBarText(const wxString& text, StatusBarWidgets widget)
 
 
 MainWindow::MainWindow(const wxString& app_name,
-	const std::vector<wxFileName>& files_to_open,
-	const std::optional<wxFileName> project_to_open,
+	const std::vector<Fil>& files_to_open,
+	const std::optional<Dir> project_to_open,
 	const wxPoint& pos, const wxSize& size)
 	: wxFrame(nullptr, wxID_ANY, app_name, pos, size)
 	, closing_(false)
@@ -605,7 +608,7 @@ MainWindow::MainWindow(const wxString& app_name,
 #endif
 	CreateNotebook();
 	BindEvents();
-	project_.reset(new Project(this, wxEmptyString));
+	project_.reset(new Project(this, std::nullopt));
 #ifdef _WIN32
 	SetIcon(wxICON(aaaaa_logo));
 #else
@@ -688,12 +691,12 @@ MainWindow::MainWindow(const wxString& app_name,
 
 	if (project_to_open)
 	{
-		OpenProjectWithFolder(project_to_open->GetPathWithSep());
+		OpenProjectWithFolder(*project_to_open);
 	}
 
 	for (auto f: files_to_open)
 	{
-		OpenFile(f.GetFullPath());
+		OpenFile(f);
 	}
 }
 
@@ -1063,27 +1066,25 @@ void MainWindow::OnTabPrev(wxCommandEvent& event)
 }
 
 void CreateNewFile(
-	const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer
+	const std::optional<Dir>& project_root, MainWindow* main, ProjectExplorer* project_explorer
 )
 {
-	if (project_root == wxEmptyString)
+	if (project_root.has_value() == false)
 	{
 		ShowError(main, "Unable to create file, no project open.", "Unable to create");
 		return;
 	}
-	CreateNewFileDlgHandler dlg(main, project_root, project_explorer->GetRelativePathOfSelected());
+	CreateNewFileDlgHandler dlg(main, *project_root, project_explorer->GetPathOfSelected().dir());
 	if (false == dlg.ShowModal())
 	{
 		return;
 	}
 
-	{
-		wxFile file(dlg.file_path(), wxFile::write);
-		file.Write(dlg.template_source());
-		// file is written here
-	}
+	const auto path = *dlg.file_path();
+
+	path.write(dlg.template_source());
 	project_explorer->UpdateFolderStructure();
-	main->OpenFile(dlg.file_path());
+	main->OpenFile(path);
 }
 
 void MainWindow::OnProjectFileNew(wxCommandEvent& event)
@@ -1199,7 +1200,7 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
 	open_file.GetPaths(paths_to_open);
 	for (auto& path: paths_to_open)
 	{
-		OpenFile(path);
+		OpenFile(Fil::from_full_path(path));
 	}
 }
 
@@ -1210,7 +1211,7 @@ FileEdit* MainWindow::AddAllCompilerMessages(FileEdit* file_edit)
 	return file_edit;
 }
 
-void MainWindow::FileHasBeenRenamed(const wxString& old_path, const wxString& new_path)
+void MainWindow::FileHasBeenRenamed(const Fil& old_path, const Fil& new_path)
 {
 	auto found_edit = GetEditFromFileName(old_path);
 	if (false == found_edit)
@@ -1278,7 +1279,7 @@ void MainWindow::OnNotebookPageClose(wxAuiNotebookEvent& event)
 	OnSaveProjectSession();
 }
 
-FoundEdit MainWindow::GetEditFromFileName(const wxString& file)
+FoundEdit MainWindow::GetEditFromFileName(const Fil& file)
 {
 	for (auto it = IterateOverFileEdits(notebook_).begin();
 		 it != IterateOverFileEdits(notebook_).end();
@@ -1456,10 +1457,10 @@ MEM_FUN(ShowAutocomplete)
 void MainWindow::UpdateTitle()
 {
 	const wxString new_title
-		= project_->root_folder().IsEmpty()
+		= project_->root_folder().has_value()
 			? app_name_
 			// todo: only display project folder name instead of the whole path?
-			: wxString::Format("%s - %s", project_->root_folder(), app_name_);
+			: wxString::Format("%s - %s", project_->root_folder()->get_display(), app_name_);
 	wxFrame::SetTitle(new_title);
 }
 
@@ -1471,23 +1472,12 @@ void MainWindow::OnProjectNew(wxCommandEvent& event)
 	{
 		return;
 	}
-	// run cargo new
 
-	wxString output;
-	if (CmdRunner::Run(
-			dlg.project_folder(),
-			dlg.cargo_command_line(),
-			CollectRideSpecificEnviroment(machine_),
-			&output
-		)
-		== false)
-	{
-		ShowError(this, output, "Unable to create project!");
-		return;
-	}
+	// todo(Gustav): create dir
+	// todo(Gustav): perhaps some basic template thing?
 
 	// open project
-	if (false == OpenProject(dlg.target()))
+	if (false == OpenProjectWithFolder(dlg.target()))
 	{
 		ShowError(this, "Unable to open cargo project", "Unable to open");
 	}
@@ -1501,34 +1491,29 @@ void MainWindow::OnProjectOpen(wxCommandEvent& event)
 		this, _("Open project"), "", "", "Cargo files|*.toml|All files|*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST
 	);
 	if (open_project_dialog.ShowModal() == wxID_CANCEL) return;
-	wxFileName cargo_file(open_project_dialog.GetPath());
-	cargo_file.Normalize();
+	const auto path = Fil::from_full_path(open_project_dialog.GetPath());
 
-	const wxString full_path = cargo_file.GetFullPath();
-
-	if (false == OpenProject(full_path))
+	if (false == OpenProject(path))
 	{
 		ShowError(this, "You didn't select a proper cargo file", "No cargo file");
 	}
 }
 
-bool MainWindow::OpenProject(const wxString full_path)
+bool MainWindow::OpenProject(const Fil& cargo_file)
 {
-	wxFileName cargo_file(full_path);
-
-	if (false == cargo_file.Exists()) return false;
+	if (false == cargo_file.exist()) return false;
 
 	// don't load the cargo file, load the whole folder instead as cargo files
 	// should be named in a specific way!
-	const wxString project_folder = cargo_file.GetPathWithSep();
+	const auto project_folder = cargo_file.dir();
 
 	return OpenProjectWithFolder(project_folder);
 }
 
-bool MainWindow::OpenProjectWithFolder(const wxString project_folder)
+bool MainWindow::OpenProjectWithFolder(const Dir& project_folder)
 {
-	wxFileName dir{project_folder};
-	if(dir.DirExists() == false)
+	Dir dir = project_folder;
+	if(dir.exist() == false)
 	{
 		return false;
 	}
@@ -1544,10 +1529,10 @@ bool MainWindow::OpenProjectWithFolder(const wxString project_folder)
 void MainWindow::OpenFilesFromProjectSession()
 {
 	if(!project_) { return; }
-	
+
 
 	const auto filename = project_->GetSessionsFile();
-	if(filename.FileExists() == false) return;
+	if(filename.exist() == false) return;
 
 	ride::ProjectSession session;
 	const wxString error = LoadProtoJson(&session, filename);
@@ -1560,7 +1545,15 @@ void MainWindow::OpenFilesFromProjectSession()
 
 	for (auto f: session.files)
 	{
-		OpenFile(f.path, f.start_line, f.start_index, f.end_line, f.end_index);
+		const auto path = Fil::from_full_path(f.path);
+		if(path.exist())
+		{
+			OpenFile(path, f.start_line, f.start_index, f.end_line, f.end_index);
+		}
+		else
+		{
+			// log error: invalid path
+		}
 	}
 }
 
@@ -1577,13 +1570,18 @@ void MainWindow::OnSaveProjectSession()
 		int end_line = 0;
 		int end_index = 0;
 		edit->GetSelection(&start_line, &start_index, &end_line, &end_index);
-		ride::OpenFile f;
-		f.path = edit->filename();
-		f.start_line = start_line;
-		f.start_index = start_index;
-		f.end_line = end_line;
-		f.end_index = end_index;
-		session.files.emplace_back(f);
+		const auto fn = edit->filename();
+		if(fn)
+		{
+			// todo(Gustav): save content of file in a .ride session folder
+			ride::OpenFile f;
+			f.path = fn->full_path();
+			f.start_line = start_line;
+			f.start_index = start_index;
+			f.end_line = end_line;
+			f.end_index = end_index;
+			session.files.emplace_back(f);
+		}
 	}
 
 	const auto filename = project_->GetSessionsFile();
@@ -1603,7 +1601,8 @@ void MainWindow::SaveAllChangedProjectFiles()
 		FileEdit* edit = NotebookFromIndexOrNull(notebook_, i);
 		if (edit)
 		{
-			if (project_->IsPartOfProject(edit->filename()))
+			const auto fn = edit->filename();
+			if (fn && project_->IsPartOfProject(*fn))
 			{
 				edit->Save();
 			}
@@ -1613,10 +1612,17 @@ void MainWindow::SaveAllChangedProjectFiles()
 
 void MainWindow::OnProjectQuickOpen(wxCommandEvent& event)
 {
-	std::vector<wxString> selected;
+	const auto root = project_->root_folder();
+	if(!root)
+	{
+		// todo(Gustav): show errror message about no project
+		return;
+	}
+
+	std::vector<Fil> selected;
 	if (false
 		== ShowQuickOpenDlg(
-			this, project_->root_folder(), project_explorer_->GetFiles(), &selected
+			this, *root, project_explorer_->GetFiles(), &selected
 		))
 	{
 		return;
