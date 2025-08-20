@@ -13,40 +13,66 @@ target_include_directories(cpptoml
 
 ###################################################################################################
 ## wxWidgets
+if(WIN32)
+	include(FetchContent)
+	FetchContent_Declare(
+		wxWidgets
+		URL https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.4/wxWidgets-3.2.4.tar.bz2
+		DOWNLOAD_EXTRACT_TIMESTAMP true
+	)
+	FetchContent_MakeAvailable(wxWidgets)
 
-SET(RIDE_WX_COMPONENTS core aui base stc adv html)
+	set(wxWidgets_ROOT_DIR ${wxWidgets_SOURCE_DIR})
+	set(wxWidgets_LIB_DIR ${wxWidgets_BINARY_DIR}/lib)
+	set(wxWidgets_INCLUDE_DIRS ${wxWidgets_SOURCE_DIR}/include;${wxWidgets_BINARY_DIR}/lib/vc_x64_dll/mswu)
+	set(wxWidgets_USE_STATIC OFF)
 
-if(${MSVC})
-	# on windows and visual-studio it requires scintilla
-	LIST(APPEND RIDE_WX_COMPONENTS scintilla)
+	add_library(wxw INTERFACE)
+	add_library(external::wxWidgets ALIAS wxw)
+	target_link_libraries(wxw
+		INTERFACE
+			wx::core
+			wx::aui
+			wx::base
+			wx::stc
+			wx::adv
+			wx::html
+	)
+else()
+	SET(RIDE_WX_COMPONENTS core aui base stc adv html)
+
+	if(${MSVC})
+		# on windows and visual-studio it requires scintilla
+		LIST(APPEND RIDE_WX_COMPONENTS scintilla)
+	endif()
+
+	if(${RIDE_USE_WEBVIEW})
+		# only try to find webview if it's required
+		LIST(APPEND RIDE_WX_COMPONENTS webview)
+	endif()
+
+	message(STATUS "wxWidgets components: ${RIDE_WX_COMPONENTS}")
+	set(wxWidgets_USE_STATIC ON)
+	find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
+
+	# include( "${wxWidgets_USE_FILE}" )
+	# message(STATUS "wxWidgets use file: ${wxWidgets_USE_FILE}")
+
+	add_library(wxw INTERFACE)
+	add_library(external::wxWidgets ALIAS wxw)
+	target_include_directories(wxw
+		INTERFACE
+			${wxWidgets_INCLUDE_DIRS}
+	)
+	target_link_libraries(wxw
+		INTERFACE
+			${wxWidgets_LIBRARIES}
+	)
+	target_compile_definitions(wxw
+		INTERFACE
+			${wxWidgets_DEFINITIONS}
+	)
 endif()
-
-if(${RIDE_USE_WEBVIEW})
-	# only try to find webview if it's required
-	LIST(APPEND RIDE_WX_COMPONENTS webview)
-endif()
-
-message(STATUS "wxWidgets components: ${RIDE_WX_COMPONENTS}")
-set(wxWidgets_USE_STATIC ON)
-find_package(wxWidgets COMPONENTS ${RIDE_WX_COMPONENTS} REQUIRED)
-
-# include( "${wxWidgets_USE_FILE}" )
-# message(STATUS "wxWidgets use file: ${wxWidgets_USE_FILE}")
-
-add_library(wxw INTERFACE)
-add_library(external::wxWidgets ALIAS wxw)
-target_include_directories(wxw
-	INTERFACE
-		${wxWidgets_INCLUDE_DIRS}
-)
-target_link_libraries(wxw
-	INTERFACE
-		${wxWidgets_LIBRARIES}
-)
-target_compile_definitions(wxw
-	INTERFACE
-		${wxWidgets_DEFINITIONS}
-)
 
 # include?
 # wxWidgets_DEFINITIONS_DEBUG

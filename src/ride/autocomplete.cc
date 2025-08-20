@@ -148,7 +148,8 @@ public:
 
 void RegisterImage(wxStyledTextCtrl* t, AutoIcon icon, const char** xpm)
 {
-#ifndef RIDE_OS_UNIX
+// #ifndef RIDE_OS_UNIX
+#if 0
 	wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
 	/*
    On Ubuntu 15.10:

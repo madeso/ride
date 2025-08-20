@@ -1,8 +1,9 @@
 #ifndef RIDE_MAINWINDOW_H_
 #define RIDE_MAINWINDOW_H_
 
-#include <wx/aui/aui.h>
+#include "wx/aui/aui.h"
 #include "wx/filename.h"
+#include "wx/generic/statusbr.h"
 
 #include <vector>
 #include <optional>

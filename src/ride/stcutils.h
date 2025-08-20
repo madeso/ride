@@ -12,7 +12,7 @@ class Project;
 
 namespace ride
 {
-class Settings;
+struct Settings;
 }
 
 enum

@@ -18,7 +18,7 @@ class Languages;
 
 namespace ride
 {
-class Settings;
+struct Settings;
 }
 
 class FileEdit : public wxControl
