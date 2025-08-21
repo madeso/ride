@@ -17,7 +17,7 @@ class CreateNewFileDlg : public ui::CreateNewFile
 {
 public:
 
-	CreateNewFileDlg(wxWindow* parent, const Dir& project_folder, const wxString& fodler_hint);
+	CreateNewFileDlg(wxWindow* parent, const Dir& project_folder, const Dir& fodler_hint);
 
 	const std::optional<Fil> GetFilePath() const;
 	const wxString GetTemplateSource() const;
@@ -131,7 +131,7 @@ enum
 };
 
 CreateNewFileDlg::CreateNewFileDlg(
-	wxWindow* parent, const wxString& project_folder, const wxString& fodler_hint
+	wxWindow* parent, const Dir& project_folder, const Dir& fodler_hint
 )
 	: ui::CreateNewFile(parent)
 	, project_folder_(project_folder)
@@ -150,7 +150,7 @@ CreateNewFileDlg::CreateNewFileDlg(
 	AddFileTemplate(uiTemplates, "Empty Rust file", 0, &g_empty_file_template);
 	AddFileTemplate(uiTemplates, "Rust class", 0, &g_rust_class_file_template);
 
-	uiPath->SetValue(fodler_hint);
+	uiPath->SetValue(fodler_hint.path.GetFullPath());
 
 	uiReplaceAction->AppendString("Don't replace spaces");
 	uiReplaceAction->AppendString("Remove spaces");
@@ -255,6 +255,13 @@ void CreateNewFileDlg::OnCheckChanged(wxCommandEvent& event)
 
 void CreateNewFileDlg::UpdateTemplateSource()
 {
-	uiSuggestedFilePath->SetLabel(GetFilePath());
+	const auto fp = GetFilePath();
+	if (fp.has_value() == false)
+	{
+		uiSuggestedFilePath->SetLabel("");
+		return;
+	}
+
+	uiSuggestedFilePath->SetLabel(fp->full_path());
 }
 

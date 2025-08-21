@@ -1,5 +1,4 @@
-#ifndef RIDE_CREATENEWPROJECTDLG_H_
-#define RIDE_CREATENEWPROJECTDLG_H_
+#pragma once
 
 #include "ride/wx.h"
 #include "ride/path.h"
@@ -13,8 +12,8 @@ public:
 
 	bool ShowModal(const ride::MachineSettings& machine);
 
-	const wxString project_folder() const;
-	const wxString project_name() const;
+	Dir project_folder() const;
+	wxString project_name() const;
 
 	Dir target() const;
 	wxString cargo_command_line() const;
@@ -28,5 +27,3 @@ private:
 	std::optional<Dir> target_;
 	wxString cargo_command_line_;
 };
-
-#endif	// RIDE_CREATENEWPROJECTDLG_H_

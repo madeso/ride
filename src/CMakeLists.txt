@@ -4,52 +4,52 @@ set(src_glob
 	ride/auix.cc
 	ride/autocomplete.cc
 	ride/buildconfigurationsdlg.cc
-	# ride/builtinthemes.cc
-	# ride/cargo.cc
-	# ride/cmdrunner.cc
-	# ride/compilermessage.cc
-	# ride/createnewfiledlg.cc
-	# ride/createnewprojectdlg.cc
-	# ride/deletefolderdlg.cc
-	# ride/enabledisable.cc
-	# ride/enviroment.cc
-	# ride/fileedit.cc
-	# ride/filepropertiesdlg.cc
-	# ride/finddlg.cc
-	# ride/form.cc
-	# ride/language.cc
-	# ride/loadresult.cc
-	# ride/main.cc
-	# ride/mainwindow.cc
-	# ride/outputcontrol.cc
-	# ride/outputdirector.cc
+	ride/builtinthemes.cc
+	ride/cargo.cc
+	ride/cmdrunner.cc
+	ride/compilermessage.cc
+	ride/createnewfiledlg.cc
+	ride/createnewprojectdlg.cc
+	ride/deletefolderdlg.cc
+	ride/enabledisable.cc
+	ride/enviroment.cc
+	ride/fileedit.cc
+	ride/filepropertiesdlg.cc
+	ride/finddlg.cc
+	ride/form.cc
+	ride/language.cc
+	ride/loadresult.cc
+	ride/main.cc
+	ride/mainwindow.cc
+	ride/outputcontrol.cc
+	ride/outputdirector.cc
 	ride/path.cc
-	# ride/pathtester.cc
-	# ride/project.cc
-	# ride/projectexplorer.cc
-	# ride/projectsettingsdlg.cc
-	# ride/proto.cc
-	# ride/quickopendlg.cc
-	# ride/runconfigurationsdlg.cc
-	# ride/runner.cc
-	# ride/settings.cc
-	# ride/settingscommon.cc
-	# ride/settingsdlg.cc
-	# ride/settingseditortab.cc
-	# ride/settingsenviromenttab.cc
-	# ride/settingsfontstab.cc
-	# ride/settingsindicatortab.cc
-	# ride/settingsmarkerstab.cc
-	# ride/settings.proto.cc
-	# ride/settingsthemestab.cc
-	# ride/settingswindowtab.cc
-	# ride/startpage.cc
-	# ride/stcutils.cc
-	# ride/stringutils.cc
-	# ride/tab.cc
-	# ride/togui.cc
-	# ride/variableeditor.cc
-	# ride/wxutils.cc
+	ride/pathtester.cc
+	ride/project.cc
+	ride/projectexplorer.cc
+	ride/projectsettingsdlg.cc
+	ride/proto.cc
+	ride/quickopendlg.cc
+	ride/runconfigurationsdlg.cc
+	ride/runner.cc
+	ride/settings.cc
+	ride/settingscommon.cc
+	ride/settingsdlg.cc
+	ride/settingseditortab.cc
+	ride/settingsenviromenttab.cc
+	ride/settingsfontstab.cc
+	ride/settingsindicatortab.cc
+	ride/settingsmarkerstab.cc
+	ride/settings.proto.cc
+	ride/settingsthemestab.cc
+	ride/settingswindowtab.cc
+	ride/startpage.cc
+	ride/stcutils.cc
+	ride/stringutils.cc
+	ride/tab.cc
+	ride/togui.cc
+	ride/variableeditor.cc
+	ride/wxutils.cc
 
 	ride/auix.h
 	ride/autocomplete.h

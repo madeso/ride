@@ -21,7 +21,7 @@ private:
 
 	wxWindow* parent_;
 	Dir project_folder_;
-	wxString fodler_hint_;
+	Dir fodler_hint_;
 
 	std::optional<Fil> file_path_;
 	wxString template_source_;

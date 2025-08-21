@@ -26,6 +26,7 @@ include(cpack-config.cmake)
 if(${UNIX})
 	set(RIDE_OS_UNIX "1")
 endif()
+
 if(${APPLE})
 	set(RIDE_OS_APPLE "1")
 	set(RIDE_OS_UNIX "0")

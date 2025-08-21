@@ -164,7 +164,7 @@ const int FindDlg::GetFlags()
 struct FindResult
 {
 	FindResult(
-		const wxString& f,
+		const std::optional<Fil>& f,
 		const wxString& co,
 		const int sl,
 		const int sc,
@@ -180,7 +180,7 @@ struct FindResult
 	{
 	}
 
-	wxString file;
+	std::optional<Fil> file;
 	wxString content;
 	int start_line;
 	int start_col;
@@ -209,7 +209,7 @@ public:
 
 int FindInStc(
 	wxStyledTextCtrl* stc,
-	const wxString& file,
+	const std::optional<Fil>& file,
 	const wxString& text,
 	int flags,
 	std::vector<FindResult>* res,
@@ -278,7 +278,8 @@ int FindInStc(
 void FindInFiles(
 	MainWindow* parent,
 	wxStyledTextCtrl* fallback,
-	const Fil& file,
+	const std::optional<Fil>& file,
+	FileEdit* edit,
 	const wxString& text,
 	int flags,
 	std::vector<FindResult>* res,
@@ -287,17 +288,27 @@ void FindInFiles(
 	bool keepFilesOpen
 )
 {
-	FileEdit* edit = parent->GetFile(file);
 	wxStyledTextCtrl* stc = nullptr;
+
+	if (edit == nullptr && file.has_value())
+	{
+		edit = parent->GetFile(*file);
+	}
+
 	if (edit)
 	{
 		stc = edit->GetStc();
 	}
 	else
 	{
+		if (file.has_value() == false)
+		{
+			return;
+		}
+
 		// use fallback stc
 		stc = fallback;
-		fallback->LoadFile(file);
+		fallback->LoadFile(file->full_path());
 
 		// if we are replacing with keep-open, do a find to see if we should
 		// open the file and if so use that file instead of the 'fallback file'
@@ -306,7 +317,7 @@ void FindInFiles(
 			int found = FindStcText(fallback, 0, stc->GetLength(), text, flags, nullptr);
 			if (found > 0)
 			{
-				FileEdit* opened_edit = parent->OpenFile(file);
+				FileEdit* opened_edit = parent->OpenFile(*file);
 				stc = opened_edit->GetStc();
 			}
 		}
@@ -317,7 +328,8 @@ void FindInFiles(
 
 	if (find_action == FindAction::Replace && count > 0 && stc == fallback)
 	{
-		if (false == stc->SaveFile(file))
+		assert(file.has_value());
+		if (false == stc->SaveFile(file->full_path()))
 		{
 			ShowError(parent, "Failed to save after replace!", "Error saving!");
 		}
@@ -327,7 +339,8 @@ void FindInFiles(
 bool ShowFindDlg(
 	MainWindow* parent,
 	const wxString& current_selection,
-	const Fil& current_file,
+	const std::optional<Fil>& current_file,
+	FileEdit* file_edit,
 	const std::optional<Dir>& root_folder,
 	OutputControl* output,
 	FindAction find_action,
@@ -341,7 +354,7 @@ bool ShowFindDlg(
 	dlg.ToData(&find_dlg_data);
 
 	std::vector<FindResult> results;
-	wxString file_info = current_file;
+	wxString file_info = current_file ? current_file->get_display() : "";
 
 	// we can't create a styled ctrl so we cheat by having a 0x0 widget on the
 	// find dlg
@@ -354,6 +367,7 @@ bool ShowFindDlg(
 			parent,
 			fallback,
 			current_file,
+			file_edit,
 			dlg.GetText(),
 			dlg.GetFlags(),
 			&results,
@@ -364,26 +378,32 @@ bool ShowFindDlg(
 	}
 	else
 	{
+		if (root_folder.has_value() == false)
+		{
+			return false;
+		}
+
 		wxArrayString files;
 		const std::vector<wxString> patterns = Split(find_dlg_data.file_types, ";");
 		size_t count = 0;
-		for (const auto pattern: patterns)
+		for (const auto& pattern: patterns)
 		{
 			count += wxDir::GetAllFiles(
-				root_folder,
+				root_folder->full_path(),
 				&files,
 				pattern,
 				dlg.IsRecursive() ? wxDIR_FILES | wxDIR_DIRS : wxDIR_FILES
 			);
 		}
 
-		file_info = wxString::Format("%d files in %s", count, root_folder);
-		for (const auto file: files)
+		file_info = wxString::Format("%d files in %s", count, root_folder->get_display());
+		for (const auto& file: files)
 		{
 			FindInFiles(
 				parent,
 				fallback,
-				file,
+				Fil::from_full_path(file),
+				nullptr,
 				dlg.GetText(),
 				dlg.GetFlags(),
 				&results,
@@ -407,13 +427,13 @@ bool ShowFindDlg(
 		"%s %d matches", find_action == FindAction::Find ? "Found" : "Replaced", count
 	));
 	output->WriteLine("");
-	for (auto res: results)
+	for (const auto& res: results)
 	{
 		// try to format the same way rust related error looks like so we can reuse
 		// the parser code for both and get some synergy effects
 		const wxString mess = wxString::Format(
 			"%s:%d : %d : %d : %d %s: %s",
-			res.file,
+			res.file ? res.file->get_display() : "<unknown file>",
 			res.start_line,
 			res.start_col,
 			res.end_line,

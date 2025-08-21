@@ -46,6 +46,7 @@ private:
 
 CreateNewProjectDlgHandler::CreateNewProjectDlgHandler(wxWindow* parent)
 	: parent_(parent)
+	, project_folder_({})
 {
 }
 
@@ -55,7 +56,7 @@ bool CreateNewProjectDlgHandler::ShowModal(const ride::MachineSettings& machine)
 	const bool ret = wxID_OK == dlg.ShowModal();
 	if (ret)
 	{
-		project_folder_ = dlg.project_folder();
+		project_folder_ = Dir::from_full_path(dlg.project_folder());
 		project_name_ = dlg.project_name();
 		target_ = Dir::from_full_path(dlg.GetTarget());
 		cargo_command_line_ = dlg.GenerateCargoCommandline(machine);
@@ -63,12 +64,12 @@ bool CreateNewProjectDlgHandler::ShowModal(const ride::MachineSettings& machine)
 	return ret;
 }
 
-const wxString CreateNewProjectDlgHandler::project_folder() const
+Dir CreateNewProjectDlgHandler::project_folder() const
 {
 	return project_folder_;
 }
 
-const wxString CreateNewProjectDlgHandler::project_name() const
+wxString CreateNewProjectDlgHandler::project_name() const
 {
 	return project_name_;
 }
@@ -221,8 +222,7 @@ void CreateNewProjectDlg::OnOk(wxCommandEvent& event)
 
 wxString CreateNewProjectDlg::GetVcsName() const
 {
-	const int selected_item = uiVcs->GetSelection();
-	switch (selected_item)
+	switch (uiVcs->GetSelection())
 	{
 	case 0: return "none";
 	case 1: return "git";

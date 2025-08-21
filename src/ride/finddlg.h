@@ -1,8 +1,10 @@
-#ifndef RIDE_FINDDLG_H_
-#define RIDE_FINDDLG_H_
+#pragma once
 
 #include <ride/wx.h>
 
+class FileEdit;
+struct Dir;
+struct Fil;
 class OutputControl;
 class MainWindow;
 
@@ -19,13 +21,12 @@ enum class FindScope
 };
 
 bool ShowFindDlg(
-	MainWindow* main,
+	MainWindow* parent,
 	const wxString& current_selection,
-	const Fil& current_file,
-	const Dir& root_folder,
+	const std::optional<Fil>& current_file,
+	FileEdit* file_edit,
+	const std::optional<Dir>& root_folder,
 	OutputControl* output,
-	FindAction find,
+	FindAction find_action,
 	FindScope find_scope
 );
-
-#endif	// RIDE_FINDDLG_H_

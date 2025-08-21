@@ -23,7 +23,7 @@
 #include "ride/autocomplete.h"
 #include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"
-#include "ride/compileutils.h"
+// #include "ride/compileutils.h"
 #include "ride/filepropertiesdlg.h"
 #include "ride/finddlg.h"
 #include "ride/mainwindow.h"
@@ -95,6 +95,7 @@ void FileEdit::Find(OutputControl* output, const std::optional<Dir>& project)
 		main_,
 		text_->GetSelectedText(),
 		filename_,
+		this,
 		project,
 		output,
 		FindAction::Find,
@@ -108,6 +109,7 @@ void FileEdit::Replace(OutputControl* output, const std::optional<Dir>& project)
 		main_,
 		text_->GetSelectedText(),
 		filename_,
+		this,
 		project,
 		output,
 		FindAction::Replace,
@@ -121,6 +123,7 @@ void FileEdit::FindInFiles(OutputControl* output, const std::optional<Dir>& proj
 		main_,
 		text_->GetSelectedText(),
 		filename_,
+		nullptr,
 		project,
 		output,
 		FindAction::Find,
@@ -134,6 +137,7 @@ void FileEdit::ReplaceInFiles(OutputControl* output, const std::optional<Dir>& p
 		main_,
 		text_->GetSelectedText(),
 		filename_,
+		nullptr,
 		project,
 		output,
 		FindAction::Replace,
