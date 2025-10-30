@@ -37,7 +37,7 @@ bool LoadProto(T* message, const wxFileName& file, wxWindow* main, const wxStrin
 	json.SetExt("json");
 	if (json.FileExists())
 	{
-		const wxString jsonerr = LoadProtoJson(message, json);
+		const wxString jsonerr = LoadProtoJson(message, Fil{json});
 		if (jsonerr != "")
 		{
 			ShowError(main, "Unable to load " + name + "(" + json.GetAbsolutePath() + ") as json: " + jsonerr, "Error while loading");
@@ -47,7 +47,7 @@ bool LoadProto(T* message, const wxFileName& file, wxWindow* main, const wxStrin
 	else
 	{
 		if(file.FileExists() == false) return false;
-		const wxString jsonerr = LoadProtoJson(message, file);
+		const wxString jsonerr = LoadProtoJson(message, Fil{file});
 		if (jsonerr != "")
 		{
 			ShowError(main, "Unable to load " + name + "(" + file.GetAbsolutePath() + "): " + jsonerr, "Error while loading");
@@ -62,7 +62,7 @@ bool SaveProto(T* message, const wxFileName file, wxWindow* main, const wxString
 {
 	wxFileName json = file;
 	json.SetExt("json");
-	const wxString jsonerr = SaveProtoJson(message, json);
+	const wxString jsonerr = SaveProtoJson(message, Fil{json});
 	if (jsonerr != "")
 	{
 		ShowError(main, "Error while saving " + name + " as json: " + jsonerr, "Unable to save");

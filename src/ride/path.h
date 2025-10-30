@@ -13,6 +13,8 @@ struct Fil
 
 	bool exist() const;
 
+	bool ends_with(const wxString& suffix) const;
+
 	wxString get_display() const;
 
 	Dir dir() const;
@@ -41,11 +43,15 @@ struct Dir
 
 	bool exist() const;
 
+	std::optional<Dir> parent() const;
+
 	Dir subdir(const wxString& p) const;
 	Fil file(const wxString& p) const;
 
 	// p may be a relative path
 	Fil join_file(const wxString& p) const;
+
+	bool create() const;
 };
 
 bool operator==(const Fil& lhs, const Fil& rhs);
@@ -58,3 +64,5 @@ bool operator==(const Dir& lhs, const Dir& rhs);
 
 bool operator!=(const Dir& lhs, const Dir& rhs);
 
+bool operator<(const Fil& lhs, const Fil& rhs);
+bool operator<(const Dir& lhs, const Dir& rhs);

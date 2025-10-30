@@ -50,10 +50,19 @@ void OutputDirector::Append(const wxString& str)
 	// does it?
 	control_->WriteLine(str);
 
-	if (const auto mess = CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), str); mess)
+	const auto rf = main_->root_folder();
+	if (! rf)
 	{
-		AddCompilerMessage(*mess);
+		return;
 	}
+
+	const auto mess = CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, *rf, str);
+	if (! mess)
+	{
+		return;
+	}
+
+	AddCompilerMessage(*mess);
 }
 
 void OutputDirector::AddCompilerMessage(const CompilerMessage& mess)

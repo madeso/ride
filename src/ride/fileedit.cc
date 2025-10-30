@@ -1063,6 +1063,7 @@ bool FileEdit::ProcessKey(wxKeyCode key, wxKeyModifier mod)
 	return false;
 }
 
+
 FileEdit::FileEdit(
 	wxAuiNotebook* anotebook, MainWindow* parent, const Fil& file, Languages* languages
 )
@@ -1099,7 +1100,7 @@ FileEdit::FileEdit(
 void FileEdit::LoadFile()
 {
 	if(!filename_) return;
-	text_->LoadFile(filename_.full_path());
+	text_->LoadFile(filename_->full_path());
 	UpdateFileTime();
 }
 
@@ -1133,6 +1134,8 @@ public:
 
 void FileEdit::ReloadFileIfNeeded()
 {
+
+
 	if(!filename_) return;
 
 	// basic check for infinite activation->question loop
@@ -1140,7 +1143,8 @@ void FileEdit::ReloadFileIfNeeded()
 	if (inside) return;
 	TrueFalse inside_capture(&inside);
 
-	const bool exist = filename_->exists();
+	
+	const bool exist = filename_->exist();
 	if (exist == false)
 	{
 		if (DialogResult::YES
@@ -1164,19 +1168,21 @@ void FileEdit::ReloadFileIfNeeded()
 	}
 
 	wxDateTime latest_file_time = GetFileDetectionTime(*filename_);
+
 	if (last_modification_time_ != latest_file_time)
 	{
 		// ask to reload or not?
+		// todo(Gustav): use full_name or some display name?
 		if (ShowYesNo(
 				this,
 				"File modified!",
 				"Reload the file",
 				"Keep my changes",
-				wxString::Format("%s\nThis file has been modified by another program.", *filename_),
+				wxString::Format("%s\nThis file has been modified by another program.", filename_->full_path()),
 				wxString::Format(
 					"%s\nThis file has been modified by another program.\nDo "
 					"you want to reload it?",
-					*filename_
+					filename_->full_path()
 				)
 			)
 			== DialogResult::YES)
@@ -1192,6 +1198,8 @@ void FileEdit::ReloadFileIfNeeded()
 		}
 	}
 }
+
+
 
 bool FileEdit::Save()
 {
@@ -1211,7 +1219,7 @@ bool FileEdit::SaveAs()
 		wxFD_SAVE | wxFD_OVERWRITE_PROMPT
 	);
 	if (saveFileDialog.ShowModal() == wxID_CANCEL) return false;
-	return SaveTo(saveFileDialog.GetPath());
+	return SaveTo(Fil{saveFileDialog.GetPath()});
 }
 
 bool FileEdit::SaveTo(const Fil& target)
@@ -1276,16 +1284,18 @@ void FileEdit::UpdateTextControl()
 void FileEdit::UpdateFilename()
 {
 	UpdateStatusText();
-	if (filename_)
+	if (! filename_)
 	{
-		size_t index = notebook_->GetPageIndex(this);
-		notebook_->SetPageToolTip(index, filename_->get_display());
-
-		current_language_ = languages_->DetermineLanguage(*filename_);
-		UpdateTextControl();
-		UpdateTextControl();  // update colors again, doing it twice seems to be
-			// needed to apply the colors
+		return;
 	}
+
+	size_t index = notebook_->GetPageIndex(this);
+	notebook_->SetPageToolTip(index, filename_->get_display());
+
+	current_language_ = languages_->DetermineLanguage(*filename_);
+	UpdateTextControl();
+	UpdateTextControl();  // update colors again, doing it twice seems to be
+	// needed to apply the colors
 }
 
 void FileEdit::UpdateTitle()
@@ -1475,6 +1485,7 @@ void FileEdit::OnCharAdded(wxStyledTextEvent& event)
 		}
 	}
 }
+
 
 void FileEdit::HighlightCurrentWord()
 {

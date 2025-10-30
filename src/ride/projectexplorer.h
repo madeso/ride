@@ -29,7 +29,8 @@ public:
 	void UpdateFolderStructure();
 	void HighlightOpenFile(const Fil& file_path);
 
-	std::optional<Fil> GetPathOfSelected() const;
+	std::optional<Fil> GetSelectedFile() const;
+	std::optional<Dir> GetSelectedDir() const;
 
 	std::vector<Fil> GetFiles();
 

@@ -67,8 +67,9 @@ void SettingsThemesTab::OnThemeExportSelected(wxCommandEvent& event)
 	);
 	if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
 
-	const auto saved
-		= SaveProtoJson(&common_->current_settings_.themes[selected], saveFileDialog.GetPath());
+	const auto saved = SaveProtoJson(
+		&common_->current_settings_.themes[selected], Fil{saveFileDialog.GetPath()}
+	);
 	if (saved != "")
 	{
 		ShowError(this, "Failed to save theme: " + saved, "Failed to save");
@@ -88,7 +89,7 @@ void SettingsThemesTab::OnThemeImport(wxCommandEvent& event)
 	if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
 
 	ride::Theme theme;
-	const auto saved = LoadProtoJson(&theme, saveFileDialog.GetPath());
+	const auto saved = LoadProtoJson(&theme, Fil{saveFileDialog.GetPath()});
 	if (saved != "")
 	{
 		ShowError(this, "Failed to import theme:" + saved, "Failed to import");

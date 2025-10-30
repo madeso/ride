@@ -188,7 +188,7 @@ struct AddMenuItem
 		int id,
 		const wxString& title = wxEmptyString,
 		const wxString& help = wxEmptyString,
-		const char** xpm = nullptr
+		const char* xpm[] = nullptr
 	)
 	{
 		item = new wxMenuItem(nullptr, id, title, help);
@@ -197,7 +197,7 @@ struct AddMenuItem
 		{
 			// it's important to set the icon before adding the item
 			// otherwise it will silently fail on some wxWidgets versions
-			wxBitmap bitmap(xpm, wxBITMAP_TYPE_XPM);
+			wxBitmap bitmap(wxImage(xpm), wxBITMAP_TYPE_XPM);
 			item->SetBitmap(bitmap);
 		}
 #endif
@@ -1074,7 +1074,16 @@ void CreateNewFile(
 		ShowError(main, "Unable to create file, no project open.", "Unable to create");
 		return;
 	}
-	CreateNewFileDlgHandler dlg(main, *project_root, project_explorer->GetPathOfSelected().dir());
+
+	const auto selected_path = project_explorer->GetSelectedDir();
+
+	if (!selected_path)
+	{
+		ShowError(main, "Please select a folder in the project explorer to create the file in.", "Unable to create");
+		return;
+	}
+
+	CreateNewFileDlgHandler dlg(main, *project_root, *selected_path);
 	if (false == dlg.ShowModal())
 	{
 		return;

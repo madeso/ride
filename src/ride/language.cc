@@ -159,11 +159,11 @@ void Language::AddExtension(const wxString& ext)
 	file_patterns_.push_back(ext);
 }
 
-bool Language::MatchPattern(const wxString& file) const
+bool Language::MatchPattern(const Fil& file) const
 {
 	for (const auto& elem: file_patterns_)
 	{
-		if (file.EndsWith(elem))
+		if (file.ends_with(elem))
 		{
 			return true;
 		}
@@ -912,7 +912,7 @@ Language* Languages::DetermineLanguage(const Fil& filepath)
 {
 	for (auto lang: pimpl_->LanguageList)
 	{
-		if (lang->MatchPattern(filepath.full_path()))
+		if (lang->MatchPattern(filepath))
 		{
 			return lang;
 		}

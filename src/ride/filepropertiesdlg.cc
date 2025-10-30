@@ -133,7 +133,11 @@ FilePropertiesDlg::FilePropertiesDlg(FileEdit* parent, wxStyledTextCtrl* ctrl)
 	: ::ui::FileProperties(parent, wxID_ANY)
 	, ctrl_(ctrl)
 {
-	uiFileName->SetLabel(parent->filename());
+	const auto fn = parent->filename();
+	if (fn)
+	{
+		uiFileName->SetLabel(fn->full_path());
+	}
 	uiLanguage->SetLabelText(parent->GetLanguageName());
 	UpdateGui();
 }

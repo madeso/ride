@@ -84,13 +84,19 @@ void OutputControl::UpdateStyle()
 
 void OutputControl::OnContextMenu(wxContextMenuEvent& event)
 {
+	const auto root_folder = main_->root_folder();
+	if (!root_folder)
+	{
+		return;
+	}
+
 	const wxPoint mouse_point = GetContextEventPosition(event);
 	const wxPoint client_point = ScreenToClient(mouse_point);
 	context_positon_ = text_->PositionFromPoint(client_point);
 
 	const bool has_selected = text_->GetSelectedText().IsEmpty() == false;
 	const wxString line_content = GetContextLineContent();
-	const compiler_message CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content);
+	const auto compiler_message = CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, *root_folder, line_content);
 	const wxString message = compiler_message.has_value()
         ? ToShortString(compiler_message->message(), 45)
         : "<none>";
@@ -119,14 +125,14 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event)
 			menu,
 			ID_SEARCH_FOR_THIS_COMPILER_MESSAGE,
 			wxString::Format("Search for \"%s\" online", message),
-			has_compiler_message
+			compiler_message.has_value()
 		);
 	}
 	AppendEnabled(
 		menu,
 		ID_COPY_THIS_COMPILER_MESSAGE,
 		wxString::Format("Copy \"%s\" to clipboard", message),
-		has_compiler_message
+		compiler_message.has_value()
 	);
 	menu.AppendSeparator();
 	AppendEnabled(menu, ID_CLEAR_COMPILER_OUTPUT, "Clear output", true);
@@ -156,15 +162,21 @@ const wxString ReplaceCmd(const ride::MachineSettings& machine, const wxString& 
 
 void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event)
 {
+	const auto root_folder = main_->root_folder();
+	if (!root_folder)
+	{
+		return;
+	}
+
 	const wxString line_content = GetContextLineContent();
 
 	if (const auto message = CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content); message)
+			CompilerMessage::SOURCE_RUSTC, *root_folder, line_content); message)
 	{
 		const wxString cmd = ReplaceCmd(main_->machine(), GetCommandLine(*message));
 		wxString output;
 		CmdRunner::Run(
-			main_->root_folder(), cmd, CollectRideSpecificEnviroment(main_->machine()), &output
+			*root_folder, cmd, CollectRideSpecificEnviroment(main_->machine()), &output
 		);
 		ShowInfo(this, output, "Command result");
 	}
@@ -172,9 +184,14 @@ void OutputControl::OnRunThisCompilerMessage(wxCommandEvent& event)
 
 void OutputControl::OnCopyThisCompilerMessage(wxCommandEvent& event)
 {
+	const auto root_folder = main_->root_folder();
+	if (!root_folder)
+	{
+		return;
+	}
 	const wxString line_content = GetContextLineContent();
 	if (const auto message = CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content); message)
+			CompilerMessage::SOURCE_RUSTC, *root_folder, line_content); message)
 	{
 		if (wxTheClipboard->Open())
 		{
@@ -226,10 +243,16 @@ void OutputControl::WriteLine(const wxString& str)
 
 void OutputControl::OnSearchForThisCompilerMessage(wxCommandEvent& event)
 {
+	const auto root_folder = main_->root_folder();
+	if (!root_folder)
+	{
+		return;
+	}
+
 	const wxString line_content = GetContextLineContent();
 
 	if (const auto message = CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content); message)
+			CompilerMessage::SOURCE_RUSTC, *root_folder, line_content); message)
 	{
 		wxString mess = message->message();
 		mess.Replace("#", "%23");
@@ -247,9 +270,16 @@ void OutputControl::OnSearchForThisCompilerMessage(wxCommandEvent& event)
 
 void OutputControl::OnDoubleClick(wxMouseEvent& event)
 {
+	const auto root_folder = main_->root_folder();
+	if (!root_folder)
+	{
+		return;
+	}
+
 	WXID line_number = 0;
 	WXID col = 0;
 	WXID index = text_->GetInsertionPoint();
+
 	text_->PositionToXY(index, &col, &line_number);
 	if (line_number == -1)
 	{
@@ -259,7 +289,7 @@ void OutputControl::OnDoubleClick(wxMouseEvent& event)
 	wxString line_content = text_->GetLineText(line_number);
 
 	if (const auto message = CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, main_->root_folder(), line_content); message)
+			CompilerMessage::SOURCE_RUSTC, *root_folder, line_content); message)
 	{
 		main_->OpenCompilerMessage(*message);
 	}

@@ -112,8 +112,6 @@ ProjectSettingsDlg::ProjectSettingsDlg(wxWindow* parent, MainWindow* mainwindow,
 	, allow_build_to_gui_(true)
 	, allow_run_to_gui_(true)
 {
-	LoadCargoFile(project_->GetCargoFile(), &cargo_, uiCargoLoadError);
-
 	AllToGui(true);
 
 	// disable all cargo related gui as we can't save toml files yet

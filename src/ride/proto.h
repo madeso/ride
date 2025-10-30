@@ -5,6 +5,8 @@
 #include <ride/wx.h>
 #include <wx/filename.h>
 
+#include "path.h"
+
 namespace ride
 {
 struct MachineSettings;

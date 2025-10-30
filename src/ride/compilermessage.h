@@ -33,7 +33,7 @@ public:
 		Type type,
 		wxString message
 	);
-	static std::optional<CompilerMessage> Parse( const Source source, const Dir& root, const wxString& text );
+	static std::optional<CompilerMessage> Parse(const Source source, const Dir& root, const wxString& text );
 
 	wxString ToStringRepresentation(const Source source);
 

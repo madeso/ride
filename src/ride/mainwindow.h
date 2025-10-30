@@ -42,7 +42,7 @@ struct FoundEdit
 };
 
 void CreateNewFile(
-	const wxString& project_root, MainWindow* main, ProjectExplorer* project_explorer
+	const std::optional<Dir>& project_root, MainWindow* main, ProjectExplorer* project_explorer
 );
 
 enum StatusBarWidgets

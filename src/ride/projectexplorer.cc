@@ -151,12 +151,21 @@ FileEntry* GetFocusedFileEntry(const ProjectExplorer* pe)
 	return entry.second;
 }
 
-std::optional<Fil> ProjectExplorer::GetPathOfSelected() const
+std::optional<Fil> ProjectExplorer::GetSelectedFile() const
 {
 	FileEntry* file = GetFocusedFileEntry(this);
 	if (file == nullptr) return std::nullopt;
 	if(file->is_directory()) return std::nullopt;
 	return Fil::from_full_path(file->path());
+}
+
+
+std::optional<Dir> ProjectExplorer::GetSelectedDir() const
+{
+	FileEntry* file = GetFocusedFileEntry(this);
+	if (file == nullptr) return std::nullopt;
+	if (file->is_directory() == false) return std::nullopt;
+	return Dir::from_full_path(file->path());
 }
 
 struct Traversed
@@ -312,18 +321,20 @@ wxString FindParentPath(const wxString& pp)
 	return t + "/";
 }
 
-wxTreeItemId FindRoot(wxTreeCtrl* tree, const Dir& root, const wxString& path)
-;
-/*
+wxTreeItemId FindRoot(wxTreeCtrl* tree, const Dir& root, const Dir& path)
 {
-	if (path == "") return tree->GetRootItem();
 	// TODO(Gustav): Optimize
 	FilesAndFolders ff = ListTree(tree, root);
-	const wxString root_path = FindParentPath(path);
-	auto f = ff.folders.find(root_path);
+	const auto root_path = path.parent();
+	if (!root_path)
+	{
+		return tree->GetRootItem();
+	}
+
+	auto f = ff.folders.find(*root_path);
 	assert(f != ff.folders.end());
 	return f->second;
-}*/
+}
 
 /*
 wxString ToAbsolutePath(const wxString& root, const wxString& relative)
@@ -382,7 +393,7 @@ void ProjectExplorer::UpdateFolderStructure()
 	}
 
 	// add missing files
-	const FilesAndFolders all_folders = ListTree(this, folder_);
+	const FilesAndFolders all_folders = ListTree(this, *folder_);
 	for (auto i: current.files)
 	{
 		if (tree.files.find(i.first) == tree.files.end())
@@ -403,7 +414,7 @@ void ProjectExplorer::UpdateFolderStructure()
 	}
 
 	// remove files
-	const FilesAndFolders all_files = ListTree(this, folder_);
+	const FilesAndFolders all_files = ListTree(this, *folder_);
 	for (auto i: all_files.files)
 	{
 		if (current.files.find(i.first) == current.files.end())
@@ -425,7 +436,7 @@ void ProjectExplorer::UpdateFolderStructure()
 		}
 	}
 
-	files_ = ListTree(this, folder_);
+	files_ = ListTree(this, *folder_);
 
 	this->Thaw();
 	if (tree.files.empty())
@@ -434,9 +445,9 @@ void ProjectExplorer::UpdateFolderStructure()
 	}
 }
 
-std::vector<wxString> ProjectExplorer::GetFiles()
+std::vector<Fil> ProjectExplorer::GetFiles()
 {
-	std::vector<wxString> r;
+	std::vector<Fil> r;
 	r.reserve(files_.files.size());
 	for (auto i: files_.files)
 	{
@@ -515,21 +526,24 @@ void ProjectExplorer::OnContextMenu(wxContextMenuEvent& event)
 
 void ProjectExplorer::OnCreateNewFolder(wxCommandEvent& event)
 {
-	const wxString path_of_selected = GetPathOfSelected();
+	const auto path_of_selected = GetSelectedDir();
+	if (!path_of_selected)
+	{
+		return;
+	}
+
 	wxTextEntryDialog dlg(this, "Please enter folder name:", "Folder name");
 	if (dlg.ShowModal() != wxID_OK) return;
+
 	const wxString folder_name = dlg.GetValue();
-	wxFileName fn(path_of_selected);
-	fn.AppendDir(folder_name);
-	const wxString dir = fn.GetPathWithSep();
-	const bool folder_exists = wxDir::Exists(dir);
-	if (folder_exists)
+	const auto fn = path_of_selected->subdir(folder_name);
+	if (fn.exist())
 	{
 		ShowWarning(this, "Entered folder exist", "Unable to create");
 		return;
 	}
-	const bool created_folder = wxDir::Make(dir);
-	if (false == created_folder)
+
+	if (false == fn.create())
 	{
 		ShowError(this, "Unable to create folder", "Unable to create");
 		return;

@@ -28,7 +28,7 @@ void Autocomplete(
 	wxStyledTextCtrl* text,
 	Language* current_language,
 	const Fil& filename,
-	const Dir& root_folder,
+	const std::optional<Dir>& root_folder,
 	wxWindow* self,
 	ShowAutoCompleteAction action
 );

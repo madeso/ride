@@ -72,6 +72,11 @@ Dir Dir::from_full_path(const wxString& p)
 	return Dir{cargo_file};
 }
 
+wxString Dir::full_path() const
+{
+	return path.GetPathWithSep();
+}
+
 Dir Dir::subdir(const wxString& p) const
 {
 	wxFileName folder = path;
@@ -84,6 +89,12 @@ Fil Dir::file(const wxString& p) const
 	wxFileName folder = path;
 	folder.SetFullName(p);
 	return Fil{folder};
+}
+
+bool Dir::create() const
+{
+	const wxString dir = path.GetFullPath();
+	return wxDir::Make(dir);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -112,5 +123,15 @@ bool operator!=(const Fil& lhs, const Fil& rhs)
 bool operator!=(const std::optional<Fil>& lhs, const std::optional<Fil>& rhs)
 {
 	return !(lhs == rhs);
+}
+
+bool operator<(const Fil& lhs, const Fil& rhs)
+{
+	return lhs.path.GetFullPath() < rhs.path.GetFullPath();
+}
+
+bool operator<(const Dir& lhs, const Dir& rhs)
+{
+	return lhs.path.GetFullPath() < rhs.path.GetFullPath();
 }
 

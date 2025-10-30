@@ -341,11 +341,16 @@ void Autocomplete(
 	wxStyledTextCtrl* text,
 	Language* current_language,
 	const Fil& filename,
-	const Dir& root_folder,
+	const std::optional<Dir>& root_folder,
 	wxWindow* self,
 	ShowAutoCompleteAction action
 )
 {
+	if (!root_folder)
+	{
+		return;
+	}
+
 	const bool ignore_case = true;
 	const int word_wait_chars = 3;
 	const bool racer = true;
@@ -402,7 +407,7 @@ void Autocomplete(
 		wxString racer_output;
 		if (racer)
 		{
-			racer_output = RunRacer(machine, wordlist, filename, text, root_folder);
+			racer_output = RunRacer(machine, wordlist, filename, text, *root_folder);
 		}
 
 		// setting it here instead of when spawning eats the entered '.' but

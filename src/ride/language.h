@@ -62,7 +62,7 @@ public:
 	~Languages();
 
 	Language* GetNullLanguage();
-	Language* DetermineLanguage(const wxString& filepath);
+	Language* DetermineLanguage(const Fil& filepath);
 	wxString GetFilePattern();
 
 private:

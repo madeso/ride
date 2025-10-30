@@ -6,6 +6,11 @@
 #include "ride/stringutils.h"
 #include "ride/enviroment.h"
 
+wxString RunTest(const ride::MachineSettings&, const std::string&, const wxString&)
+{
+	return "";
+}
+#if 0
 wxString RunTest(const ride::MachineSettings& machine, const std::string& app, const wxString& cmd)
 {
 	wxString output;
@@ -26,7 +31,9 @@ wxString RunTest(const ride::MachineSettings& machine, const std::string& app, c
 		return "";
 	}
 }
+#endif
 
+// todo(Gustav): this is rust specific, remove???
 PathTester::PathTester(const ride::MachineSettings& machine)
 	: cargo_(RunTest(machine, machine.cargo, " --version"))
 	, rustc_(RunTest(machine, machine.rustc, " --version"))

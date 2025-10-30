@@ -19,7 +19,7 @@ const int RUNNER_CONSOLE_OPTION = wxEXEC_HIDE_CONSOLE;
 
 //////////////////////////////////////////////////////////////////////////
 
-Command::Command(const wxString& r, const wxString& c, const std::map<wxString, wxString>& env)
+Command::Command(const Dir& r, const wxString& c, const std::map<wxString, wxString>& env)
 	: root(r)
 	, cmd(c)
 	, enviroment(env)
@@ -233,7 +233,7 @@ bool SingleRunner::Pimpl::RunCmd(const Command& c)
 	Append("> " + c.cmd);
 
 	wxExecuteEnv env;
-	env.cwd = c.root;
+	env.cwd = c.root.full_path();
 
 	wxString before = ListEnviroment(env.env);
 
