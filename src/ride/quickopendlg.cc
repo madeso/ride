@@ -16,8 +16,8 @@ class QuickOpenDlg : public ui::QuickOpen
 {
 public:
 
-	QuickOpenDlg(wxWindow* parent, const wxString& root, const std::vector<wxString>& files);
-	std::vector<wxString> GetSelectedFiles();
+	QuickOpenDlg(wxWindow* parent, const Dir& root, const std::vector<Fil>& files);
+	std::vector<Fil> GetSelectedFiles();
 
 private:
 
@@ -52,9 +52,9 @@ protected:
 private:
 
 	void BindEvents();
-	wxString root_;
-	std::vector<wxString> files_;
-	std::vector<wxString> filtered_paths_;
+	Dir root_;
+	std::vector<Fil> files_;
+	std::vector<Fil> filtered_paths_;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -234,10 +234,10 @@ bool MatchFilter(const wxString& filter, const wxString file, int* count, bool l
 
 struct FilterMatch
 {
-	wxString path;
+	Fil path;
 	int count;
 
-	FilterMatch(const wxString& p, int c)
+	FilterMatch(const Fil& p, int c)
 		: path(p)
 		, count(c)
 	{
@@ -257,10 +257,10 @@ void QuickOpenDlg::UpdateFilters()
 	const wxString filter = uiFilterName->GetValue();
 	const bool case_insensitivity = false == uiCaseSensitive->GetValue();
 	std::set<FilterMatch> matches;
-	for (const wxString& file: files_)
+	for (const auto& file: files_)
 	{
 		int count = 0;
-		if (MatchFilter(filter, file, &count, case_insensitivity))
+		if (MatchFilter(filter, file.full_path(), &count, case_insensitivity))
 		{
 			FilterMatch m(file, count);
 			assert(matches.find(m) == matches.end());
@@ -270,18 +270,18 @@ void QuickOpenDlg::UpdateFilters()
 
 	uiFileList->Freeze();
 	uiFileList->DeleteAllItems();
-	std::vector<wxString> paths;
+	std::vector<Fil> paths;
 	for (const FilterMatch& match: matches)
 	{
 		int i = uiFileList->InsertItem(0, "");
-		uiFileList->SetItem(i, 0, wxFileName(match.path).GetFullName());
-		uiFileList->SetItem(i, 1, match.path);
+		uiFileList->SetItem(i, 0, match.path.get_display()); // todo(Gustav): use relative to root?
+		uiFileList->SetItem(i, 1, match.path.full_path());
 		uiFileList->SetItem(i, 2, wxString::Format("%d", match.count));
 
-		paths.push_back(wxFileName(root_ + match.path).GetFullPath());
+		paths.push_back(match.path);
 	}
 	// we added the elements in reverse, so let's reverse the vector
-	filtered_paths_ = std::vector<wxString>(paths.rbegin(), paths.rend());
+	filtered_paths_ = std::vector<Fil>(paths.rbegin(), paths.rend());
 	if (matches.empty() == false)
 	{
 		SetSelection(uiFileList, 0, true);
@@ -290,7 +290,7 @@ void QuickOpenDlg::UpdateFilters()
 }
 
 QuickOpenDlg::QuickOpenDlg(
-	wxWindow* parent, const wxString& root, const std::vector<wxString>& files
+	wxWindow* parent, const Dir& root, const std::vector<Fil>& files
 )
 	: ui::QuickOpen(parent, wxID_ANY)
 	, root_(root)
@@ -341,10 +341,10 @@ void QuickOpenDlg::OnOk(wxCommandEvent& event)
 	EndModal(wxID_OK);
 }
 
-std::vector<wxString> QuickOpenDlg::GetSelectedFiles()
+std::vector<Fil> QuickOpenDlg::GetSelectedFiles()
 {
 	const auto selection = GetSelection(uiFileList);
-	std::vector<wxString> ret;
+	std::vector<Fil> ret;
 	for (auto sel: selection)
 	{
 		ret.push_back(filtered_paths_[sel]);
@@ -353,10 +353,7 @@ std::vector<wxString> QuickOpenDlg::GetSelectedFiles()
 }
 
 bool ShowQuickOpenDlg(
-	wxWindow* parent,
-	const wxString& root,
-	const std::vector<wxString>& files,
-	std::vector<wxString>* selected
+	wxWindow* parent, const Dir& root, const std::vector<Fil>& files, std::vector<Fil>* selected
 )
 {
 	assert(selected);

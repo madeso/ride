@@ -234,7 +234,7 @@ IF (MSVC)
 	ADD_CUSTOM_COMMAND(
 		TARGET ride
 		POST_BUILD
-		COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\dpiaware.manifest.xml\" -inputresource:\"$<TARGET_FILE:ride>\"\;\#1 -outputresource:\"$<TARGET_FILE:ride>\"\;\#1
+		COMMAND "mt.exe" -manifest \"${CMAKE_CURRENT_SOURCE_DIR}\\ride\\dpiaware.manifest.xml\" -inputresource:\"$<TARGET_FILE:ride>\"\;\#1 -outputresource:\"$<TARGET_FILE:ride>\"\;\#1
 		COMMENT "Adding display aware manifest..."
 	)
 ENDIF(MSVC)

@@ -689,9 +689,9 @@ F_STRUCT(MachineSettings)
 // facade
 
 template<typename T>
-wxString GenericLoad(T* mess, const wxFileName& file)
+wxString GenericLoad(T* mess, const Fil& file)
 {
-	std::ifstream f(file.GetFullPath().ToStdString());
+	std::ifstream f(file.full_path().ToStdString());
 	if(f.good() == false)
 	{
 		return "failed to open file";
@@ -703,46 +703,46 @@ wxString GenericLoad(T* mess, const wxFileName& file)
 }
 
 template<typename T>
-wxString GenericSave(T* mess, const wxFileName& file)
+wxString GenericSave(T* mess, const Fil& file)
 {
 	auto filer = Filer{false, {}};
 	ser(&filer, mess);
 
 	// make sure dir exist
-	const auto dir = file.GetPath();
-	if(wxFileName::DirExists(dir) == false)
+	const auto dir = file.dir();
+	if(dir.exist() == false)
 	{
-		if(false == wxFileName::Mkdir(dir))
+		if(false == dir.create())
 		{
-			return "failed to create dir: " + file.GetFullPath();
+			return "failed to create dir: " + file.full_path();
 		}
 	}
 	
-	std::ofstream f(file.GetFullPath().ToStdString());
+	std::ofstream f(file.full_path().ToStdString());
 	f << filer.json.dump(4);
 	if(!f.good())
 	{
-		return "failed to write file to " + file.GetFullPath();
+		return "failed to write file to " + file.full_path();
 	}
 
 	return "";
 }
 
-wxString SaveProtoJson(ride::UserProject* mess, const wxFileName& file) { return GenericSave(mess, file); }
-wxString SaveProtoJson(ride::Theme* mess, const wxFileName& file) { return GenericSave(mess, file); }
-wxString SaveProtoJson(ride::Settings* mess, const wxFileName& file) { return GenericSave(mess, file); }
-wxString SaveProtoJson(ride::Session* mess, const wxFileName& file) { return GenericSave(mess, file); }
-wxString SaveProtoJson(ride::Project* mess, const wxFileName& file) { return GenericSave(mess, file); }
-wxString SaveProtoJson(ride::MachineSettings* mess, const wxFileName& file) { return GenericSave(mess, file); }
-wxString SaveProtoJson(ride::ProjectSession* mess, const wxFileName& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::UserProject* mess, const Fil& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::Theme* mess, const Fil& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::Settings* mess, const Fil& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::Session* mess, const Fil& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::Project* mess, const Fil& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::MachineSettings* mess, const Fil& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::ProjectSession* mess, const Fil& file) { return GenericSave(mess, file); }
 
-wxString LoadProtoJson(ride::UserProject* mess, const wxFileName& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::Theme* mess, const wxFileName& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::Settings* mess, const wxFileName& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::Session* mess, const wxFileName& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::Project* mess, const wxFileName& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::MachineSettings* mess, const wxFileName& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::ProjectSession* mess, const wxFileName& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(ride::UserProject* mess, const Fil& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(ride::Theme* mess, const Fil& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(ride::Settings* mess, const Fil& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(ride::Session* mess, const Fil& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(ride::Project* mess, const Fil& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(ride::MachineSettings* mess, const Fil& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(ride::ProjectSession* mess, const Fil& file) { return GenericLoad(mess, file); }
 
 
 

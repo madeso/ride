@@ -47,6 +47,7 @@ struct Dir
 
 	Dir subdir(const wxString& p) const;
 	Fil file(const wxString& p) const;
+	Fil file(const wxString& name, const wxString& ext) const;
 
 	// p may be a relative path
 	Fil join_file(const wxString& p) const;
