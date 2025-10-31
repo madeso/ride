@@ -81,18 +81,18 @@ bool MyApp::OnInit()
 		wxPrintf("ERROR: too many directories specified!\n");
 		for(const auto& dir: dirs_to_open)
 		{
-			wxPrintf(" * was asked to open: %s\n", dir.get_display());
+			wxPrintf(" * was asked to open: %s\n", dir.get_name());
 		}
 		return false;
 	}
 
 	for(const auto& f: files_to_open)
 	{
-		wxPrintf("Will open file: %s\n", f.get_display());
+		wxPrintf("Will open file: %s\n", f.get_name_with_extension());
 	}
 	if(project_to_open)
 	{
-		wxPrintf("Will open project: %s\n", project_to_open->get_display());
+		wxPrintf("Will open project: %s\n", project_to_open->get_name());
 	}
 
 	SetAppName("ride");

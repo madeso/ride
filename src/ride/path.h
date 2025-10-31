@@ -15,7 +15,7 @@ struct Fil
 
 	bool ends_with(const wxString& suffix) const;
 
-	wxString get_display() const;
+	wxString get_name_with_extension() const;
 
 	Dir dir() const;
 
@@ -38,7 +38,7 @@ struct Dir
 
 	explicit Dir(const wxFileName d);
 
-	wxString get_display() const;
+	wxString get_name() const;
 
 	static Dir from_full_path(const wxString& p);
 	wxString full_path() const;

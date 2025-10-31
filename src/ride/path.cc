@@ -33,9 +33,9 @@ Dir Fil::dir() const
 	return Dir::from_full_path(folder);
 }
 
-wxString Fil::get_display() const
+wxString Fil::get_name_with_extension() const
 {
-	return wxFileName{path}.GetFullPath();
+	return wxFileName{path}.GetFullName();
 }
 
 bool Fil::is_extension(const wxString& ext) const
@@ -75,10 +75,10 @@ Dir::Dir(const wxFileName d)
 {
 }
 
-wxString Dir::get_display() const
+wxString Dir::get_name() const
 {
-	// or GetPathWithSep ?
-	return wxFileName{path}.GetPath();
+	const auto dirs = wxFileName{path}.GetDirs();
+	return dirs[dirs.Count() - 1];
 }
 
 bool Dir::exist() const

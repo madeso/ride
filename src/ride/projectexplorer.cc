@@ -336,27 +336,6 @@ wxTreeItemId FindRoot(wxTreeCtrl* tree, const Dir& root, const Dir& path)
 	return f->second;
 }
 
-/*
-wxString ToAbsolutePath(const wxString& root, const wxString& relative)
-{
-	return root + relative;
-}
-
-const wxString ToDisplayName(const wxString& relative_path)
-{
-	if (relative_path == "") return "Project";
-	wxString without_ending_slash = relative_path;
-	if (without_ending_slash.EndsWith('/'))
-	{
-		without_ending_slash = without_ending_slash.substr(0, without_ending_slash.Length() - 1);
-	}
-
-	auto i = without_ending_slash.find_last_of('/');
-	if (i == -1) return without_ending_slash;
-	wxString name = without_ending_slash.substr(i + 1);
-	return name;
-}*/
-
 void ProjectExplorer::UpdateFolderStructure()
 {
 	if(!folder_)
@@ -381,7 +360,7 @@ void ProjectExplorer::UpdateFolderStructure()
 		{
 			auto root = i.first == * folder_ ? this->GetRootItem() : FindRoot(this, *folder_, i.first);
 			const auto absolute_path = i.first;
-			const auto display_name = i.first.get_display();
+			const auto display_name = i.first.get_name();
 			this->AppendItem(
 				root,
 				display_name,
@@ -402,7 +381,7 @@ void ProjectExplorer::UpdateFolderStructure()
 			auto parent = all_folders.folders.find(parent_path);
 			assert(parent != all_folders.folders.end());
 			const auto absolute_path = i.first;
-			const auto display_name = i.first.get_display();
+			const auto display_name = i.first.get_name_with_extension();
 			this->AppendItem(
 				parent->second,
 				display_name,

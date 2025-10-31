@@ -1153,8 +1153,8 @@ void FileEdit::ReloadFileIfNeeded()
 				"Close file",
 				"Close file",
 				"Keep open",
-				filename_->get_display() + " has been removed",
-				filename_->get_display() + " has been removed, close it?"
+				filename_->get_name_with_extension() + " has been removed",
+				filename_->get_name_with_extension() + " has been removed, close it?"
 			))
 		{
 			size_t index = notebook_->GetPageIndex(this);
@@ -1251,7 +1251,7 @@ wxString FileEdit::CalculateDocumentName() const
 	}
 	else
 	{
-		return filename_->get_display();
+		return filename_->get_name_with_extension();
 	}
 }
 
@@ -1290,7 +1290,7 @@ void FileEdit::UpdateFilename()
 	}
 
 	size_t index = notebook_->GetPageIndex(this);
-	notebook_->SetPageToolTip(index, filename_->get_display());
+	notebook_->SetPageToolTip(index, filename_->get_name_with_extension());
 
 	current_language_ = languages_->DetermineLanguage(*filename_);
 	UpdateTextControl();
@@ -1611,7 +1611,7 @@ void FileEdit::OnChanged(wxStyledTextEvent& event)
 void FileEdit::UpdateStatusText()
 {
 	main_->SetStatusText(
-		filename_ ? filename_->get_display() : "",
+		filename_ ? filename_->get_name_with_extension() : "",
 		STATUSBAR_GENERAL
 	);	// change to only display the last 127 characters?
 	const auto line = text_->GetCurrentLine();

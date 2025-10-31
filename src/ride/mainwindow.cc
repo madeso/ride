@@ -168,7 +168,7 @@ OpenDocument OpenDocumentFromTab(Tab* tab)
 	FileEdit* edit = tab->ToFileEdit();
 	if (edit)
 	{
-		return OpenDocument(edit->filename()->get_display(), edit->filename(), edit->GetLanguageName());
+		return OpenDocument(edit->filename()->get_name_with_extension(), edit->filename(), edit->GetLanguageName());
 	}
 
 	return OpenDocument("", std::nullopt, "");
@@ -1239,7 +1239,7 @@ FileEdit* MainWindow::OpenFile(
 {
 	if (false == file.exist())
 	{
-		ShowError(this, wxString::Format("Unable to open '%s'", file.get_display()), "Unable to open file!");
+		ShowError(this, wxString::Format("Unable to open '%s'", file.get_name_with_extension()), "Unable to open file!");
 		return nullptr;
 	}
 
@@ -1469,7 +1469,7 @@ void MainWindow::UpdateTitle()
 		= project_->root_folder().has_value() == false
 			? app_name_
 			// todo: only display project folder name instead of the whole path?
-			: wxString::Format("%s - %s", project_->root_folder()->get_display(), app_name_);
+			: wxString::Format("%s - %s", project_->root_folder()->get_name(), app_name_);
 	wxFrame::SetTitle(new_title);
 }
 

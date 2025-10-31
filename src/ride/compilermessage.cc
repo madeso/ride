@@ -292,7 +292,7 @@ wxString CompilerMessage::ToStringRepresentation(const Source source)
 		// #[warn(missing_copy_implementations)] on by default
 		return wxString::Format(
 			"%s:%d : %d : %d : %d %s : %s",
-			file().get_display(),
+			file().get_name_with_extension(),
 			start_line(),
 			start_index(),
 			end_line(),

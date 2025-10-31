@@ -274,7 +274,7 @@ void QuickOpenDlg::UpdateFilters()
 	for (const FilterMatch& match: matches)
 	{
 		int i = uiFileList->InsertItem(0, "");
-		uiFileList->SetItem(i, 0, match.path.get_display()); // todo(Gustav): use relative to root?
+		uiFileList->SetItem(i, 0, match.path.get_name_with_extension()); // todo(Gustav): use relative to root?
 		uiFileList->SetItem(i, 1, match.path.full_path());
 		uiFileList->SetItem(i, 2, wxString::Format("%d", match.count));
 
