@@ -90,7 +90,12 @@ bool Dir::exist() const
 Dir Dir::from_full_path(const wxString& p)
 {
 	wxFileName cargo_file(p);
-	cargo_file.Normalize();
+	cargo_file.Normalize(
+		wxPATH_NORM_DOTS
+		| wxPATH_NORM_TILDE
+		| wxPATH_NORM_CASE
+		| wxPATH_NORM_ABSOLUTE
+	);
 	return Dir{cargo_file};
 }
 
