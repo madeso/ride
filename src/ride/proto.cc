@@ -356,6 +356,9 @@ F_STRUCT(FontsAndColors)
 	S_PROP_O(annotation_warning_style, "annotation_warning_style");
 	S_PROP_O(annotation_error_style, "annotation_error_style");
 
+	S_PROP(explorer_foreground, "explorer_foreground");
+	S_PROP(explorer_background, "explorer_background");
+
 	S_PROP(folderend_foreground, "folderend_foreground");
 	S_PROP(folderopenmid_foreground, "folderopenmid_foreground");
 	S_PROP(foldermidtail_foreground, "foldermidtail_foreground");

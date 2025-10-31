@@ -150,7 +150,7 @@ CreateNewFileDlg::CreateNewFileDlg(
 	AddFileTemplate(uiTemplates, "Empty Rust file", 0, &g_empty_file_template);
 	AddFileTemplate(uiTemplates, "Rust class", 0, &g_rust_class_file_template);
 
-	uiPath->SetValue(fodler_hint.path.GetFullPath());
+	uiPath->SetValue(fodler_hint.full_path());
 
 	uiReplaceAction->AppendString("Don't replace spaces");
 	uiReplaceAction->AppendString("Remove spaces");

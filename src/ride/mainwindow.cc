@@ -608,7 +608,7 @@ MainWindow::MainWindow(const wxString& app_name,
 #endif
 	CreateNotebook();
 	BindEvents();
-	project_.reset(new Project(this, std::nullopt));
+	project_.reset(new Project(this, std::nullopt)); // todo(Gustav): should this be a pointer?
 #ifdef _WIN32
 	SetIcon(wxICON(aaaaa_logo));
 #else
@@ -1466,7 +1466,7 @@ MEM_FUN(ShowAutocomplete)
 void MainWindow::UpdateTitle()
 {
 	const wxString new_title
-		= project_->root_folder().has_value()
+		= project_->root_folder().has_value() == false
 			? app_name_
 			// todo: only display project folder name instead of the whole path?
 			: wxString::Format("%s - %s", project_->root_folder()->get_display(), app_name_);
@@ -1569,6 +1569,7 @@ void MainWindow::OpenFilesFromProjectSession()
 void MainWindow::OnSaveProjectSession()
 {
 	if(!project_) { return; }
+	if (! project_->root_folder().has_value()) { return; }
 
 	ride::ProjectSession session;
 

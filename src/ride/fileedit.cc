@@ -417,7 +417,7 @@ void FileEdit::AddCompilerMessage(const CompilerMessage& mess)
 
 wxDateTime GetFileDetectionTime(const Fil& file)
 {
-	return file.path.GetModificationTime();
+	return file.get_modification_time();
 }
 
 class StyledTextCtrl : public wxStyledTextCtrl

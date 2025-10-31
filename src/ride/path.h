@@ -7,7 +7,7 @@ struct Dir;
 
 struct Fil
 {
-	wxFileName path;
+	wxString path;
 
 	explicit Fil(const wxFileName f);
 
@@ -28,11 +28,13 @@ struct Fil
 
 	static Fil from_full_path(const wxString& path);
 	Fil set_extension_if_missing(const wxString& ext) const;
+
+	wxDateTime get_modification_time() const;
 };
 
 struct Dir
 {
-	wxFileName path;
+	wxString path;
 
 	explicit Dir(const wxFileName d);
 

@@ -232,6 +232,9 @@ struct FontsAndColors
 	std::optional<Style> annotation_warning_style;
 	std::optional<Style> annotation_error_style;
 
+	Color explorer_foreground;
+	Color explorer_background;
+
 	Color folderend_foreground;
 	Color folderopenmid_foreground;
 	Color foldermidtail_foreground;

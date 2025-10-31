@@ -314,6 +314,9 @@ public:
 		colors->style_commentlinedoc = Style(comment_);
 		colors->style_keyword = Style(keyword_, std::nullopt, true);
 
+		colors->explorer_foreground = front_;
+		colors->explorer_background = bkg_;
+
 		colors->folderend_foreground = front_;
 		colors->folderopenmid_foreground = front_;
 		colors->foldermidtail_foreground = front_;
@@ -489,16 +492,24 @@ void AddBuiltInThemes(::ride::Settings* settings)
 {
 	ThemeList* themes = &settings->themes;
 
-	ride::Theme* default_theme = GetOrCreateTheme(themes, "Ride (default)");
-	SetupDefaultTheme(&default_theme->data);
+	const std::string default_name = "Ride (default)";
+	const std::string solarized_dark_name = "Solarized (dark)";
 
-	ride::Theme* solarized_dark_theme = GetOrCreateTheme(themes, "Solarized (dark)");
-	SetupSolarizedDarkTheme(&solarized_dark_theme->data);
+	{
+		ride::Theme* default_theme = GetOrCreateTheme(themes, default_name);
+		SetupDefaultTheme(&default_theme->data);
+	}
+
+	{
+		ride::Theme* solarized_dark_theme = GetOrCreateTheme(themes, solarized_dark_name);
+		SetupSolarizedDarkTheme(&solarized_dark_theme->data);
+	}
 
 	if (false == settings->has_fonts_and_colors)
 	{
 		// if the current settings is missing the fonts and colors
 		// apply the default theme
+		ride::Theme* default_theme = GetOrCreateTheme(themes, default_name);
 		settings->fonts_and_colors = ride::FontsAndColors(default_theme->data);
 		settings->has_fonts_and_colors = true;
 	}

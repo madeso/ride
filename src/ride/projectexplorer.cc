@@ -44,9 +44,9 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
 
 void ProjectExplorer::UpdateColors()
 {
-	const ride::Style& style = main_->settings().fonts_and_colors.default_style;
-	wxTreeCtrl::SetBackgroundColour(C(style.background));
-	wxTreeCtrl::SetForegroundColour(C(style.foreground));
+	const auto& style = main_->settings().fonts_and_colors;
+	wxTreeCtrl::SetBackgroundColour(C(style.explorer_background));
+	wxTreeCtrl::SetForegroundColour(C(style.explorer_foreground));
 }
 
 void ProjectExplorer::SetFolder(const Dir& folder)
@@ -197,10 +197,10 @@ Traversed TraverseFilesAndFolders(const Dir& root, const wxString filespec, cons
 	Traversed ret;
 
 	Traverse(root_full_path, flags | wxDIR_DIRS, filespec, [&](const wxString& dir) {
-		ret.dirs.emplace_back(Dir::from_full_path(dir));
+		ret.dirs.emplace_back(root.subdir(dir));
 	});
 	Traverse(root_full_path, flags | wxDIR_FILES, filespec, [&](const wxString& file) {
-		ret.files.emplace_back(Fil::from_full_path(file));
+		ret.files.emplace_back(root.file(file));
 	});
 
 	return ret;
