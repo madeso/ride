@@ -14,30 +14,32 @@ target_include_directories(cpptoml
 ###################################################################################################
 ## wxWidgets
 if(WIN32)
-	include(FetchContent)
-	FetchContent_Declare(
-		wxWidgets
-		URL https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.4/wxWidgets-3.2.4.tar.bz2
-		DOWNLOAD_EXTRACT_TIMESTAMP true
-	)
-	FetchContent_MakeAvailable(wxWidgets)
+       include(FetchContent)
+       set(wxBUILD_SHARED OFF CACHE BOOL "Build shared libraries" FORCE)
+       set(wxBUILD_STATIC ON CACHE BOOL "Build static libraries" FORCE)
+       FetchContent_Declare(
+	       wxWidgets
+	       URL https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.4/wxWidgets-3.2.4.tar.bz2
+	       DOWNLOAD_EXTRACT_TIMESTAMP true
+       )
+       FetchContent_MakeAvailable(wxWidgets)
 
-	set(wxWidgets_ROOT_DIR ${wxWidgets_SOURCE_DIR})
-	set(wxWidgets_LIB_DIR ${wxWidgets_BINARY_DIR}/lib)
-	set(wxWidgets_INCLUDE_DIRS ${wxWidgets_SOURCE_DIR}/include;${wxWidgets_BINARY_DIR}/lib/vc_x64_dll/mswu)
-	set(wxWidgets_USE_STATIC OFF)
+       set(wxWidgets_ROOT_DIR ${wxWidgets_SOURCE_DIR})
+       set(wxWidgets_LIB_DIR ${wxWidgets_BINARY_DIR}/lib)
+       set(wxWidgets_INCLUDE_DIRS ${wxWidgets_SOURCE_DIR}/include;${wxWidgets_BINARY_DIR}/lib/vc_x64_lib/mswu)
+       set(wxWidgets_USE_STATIC ON)
 
-	add_library(wxw INTERFACE)
-	add_library(external::wxWidgets ALIAS wxw)
-	target_link_libraries(wxw
-		INTERFACE
-			wx::core
-			wx::aui
-			wx::base
-			wx::stc
-			wx::adv
-			wx::html
-	)
+       add_library(wxw INTERFACE)
+       add_library(external::wxWidgets ALIAS wxw)
+       target_link_libraries(wxw
+	       INTERFACE
+		       wx::core
+		       wx::aui
+		       wx::base
+		       wx::stc
+		       wx::adv
+		       wx::html
+       )
 else()
 	SET(RIDE_WX_COMPONENTS core aui base stc adv html)
 
