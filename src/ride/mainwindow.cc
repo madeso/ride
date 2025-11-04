@@ -24,7 +24,6 @@
 #include "ride/games/forty/forty_glue.h"
 #include "ride/proto.h"
 
-#include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"
 #include "ride/createnewfiledlg.h"
 #include "ride/createnewprojectdlg.h"
@@ -32,15 +31,11 @@
 #include "ride/outputcontrol.h"
 #include "ride/projectexplorer.h"
 #include "ride/quickopendlg.h"
-#include "ride/runner.h"
-#include "ride/settingsdlg.h"
 #include "ride/startpage.h"
 #include "ride/tab.h"
 #include "ride/wxutils.h"
 #include "ride/auix.h"
 #include "ride/menuevent.h"
-#include "ride/pathtester.h"
-#include "ride/enviroment.h"
 
 FoundEdit FoundEdit::NOT_FOUND(0, nullptr);
 
@@ -1380,7 +1375,7 @@ void MainWindow::UpdateAllEdits()
 
 void MainWindow::OnFileShowSettings(wxCommandEvent& event)
 {
-	ShowSettingsDlg(this, this);
+	OpenFile(GetSettingsFile());
 }
 
 void MainWindow::OnFileSave(wxCommandEvent& event)

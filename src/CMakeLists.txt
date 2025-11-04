@@ -33,15 +33,6 @@ set(src_glob
 	ride/runner.cc ride/runner.h
 	ride/settings.cc ride/settings.h
 	ride/settings.proto.cc ride/settings.proto.h
-	ride/settingscommon.cc ride/settingscommon.h
-	ride/settingsdlg.cc ride/settingsdlg.h
-	ride/settingseditortab.cc ride/settingseditortab.h
-	ride/settingsenviromenttab.cc ride/settingsenviromenttab.h
-	ride/settingsfontstab.cc ride/settingsfontstab.h
-	ride/settingsindicatortab.cc ride/settingsindicatortab.h
-	ride/settingsmarkerstab.cc ride/settingsmarkerstab.h
-	ride/settingsthemestab.cc ride/settingsthemestab.h
-	ride/settingswindowtab.cc ride/settingswindowtab.h
 	ride/startpage.cc ride/startpage.h
 	ride/stcutils.cc ride/stcutils.h
 	ride/stringutils.cc ride/stringutils.h

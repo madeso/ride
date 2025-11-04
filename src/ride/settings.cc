@@ -15,42 +15,46 @@ wxString GetConfigFolder()
 	return wxStandardPaths::Get().GetUserDataDir();
 }
 
-wxFileName GetSettingsFile()
+Fil GetSettingsFile()
 {
-	return wxFileName(GetConfigFolder(), "settings", "data");
+	auto f = wxFileName(GetConfigFolder(), "settings", "data");
+	f.SetExt("json");
+	return Fil{f};
 }
 
-wxFileName GetSessionFile()
+Fil GetSessionFile()
 {
-	return wxFileName(GetConfigFolder(), "session", "data");
+	auto f = wxFileName(GetConfigFolder(), "session", "data");
+	f.SetExt("json");
+	return Fil{f};
 }
 
-wxFileName GetMachineFile()
+Fil GetMachineFile()
 {
-	return wxFileName(GetConfigFolder(), "machine", "data");
+	auto f = wxFileName(GetConfigFolder(), "machine", "data");
+	f.SetExt("json");
+	return Fil{f};
 }
 
 template<typename T>
-bool LoadProto(T* message, const wxFileName& file, wxWindow* main, const wxString& name)
+bool LoadProto(T* message, const Fil& file, wxWindow* main, const wxString& name)
 {
-	wxFileName json = file;
-	json.SetExt("json");
-	if (json.FileExists())
+	if (file.exist())
 	{
-		const wxString jsonerr = LoadProtoJson(message, Fil{json});
+		const wxString jsonerr = LoadProtoJson(message, file);
 		if (jsonerr != "")
 		{
-			ShowError(main, "Unable to load " + name + "(" + json.GetAbsolutePath() + ") as json: " + jsonerr, "Error while loading");
+			ShowError(main, "Unable to load " + name + "(" + file.full_path() + ") as json: " + jsonerr, "Error while loading");
 			return false;
 		}
 	}
 	else
 	{
-		if(file.FileExists() == false) return false;
-		const wxString jsonerr = LoadProtoJson(message, Fil{file});
+		if(file.exist() == false) return false;
+		const wxString jsonerr = LoadProtoJson(message, file);
 		if (jsonerr != "")
 		{
-			ShowError(main, "Unable to load " + name + "(" + file.GetAbsolutePath() + "): " + jsonerr, "Error while loading");
+			ShowError(main, "Unable to load " + name + "(" + file.full_path() + "): " + jsonerr, "Error while loading");
 			return false;
 		}
 	}
@@ -58,11 +62,9 @@ bool LoadProto(T* message, const wxFileName& file, wxWindow* main, const wxStrin
 }
 
 template<typename T>
-bool SaveProto(T* message, const wxFileName file, wxWindow* main, const wxString& name)
+bool SaveProto(T* message, const Fil& file, wxWindow* main, const wxString& name)
 {
-	wxFileName json = file;
-	json.SetExt("json");
-	const wxString jsonerr = SaveProtoJson(message, Fil{json});
+	const wxString jsonerr = SaveProtoJson(message, file);
 	if (jsonerr != "")
 	{
 		ShowError(main, "Error while saving " + name + " as json: " + jsonerr, "Unable to save");
@@ -84,8 +86,13 @@ bool SaveSettings(wxWindow* main, ::ride::MachineSettings* settings)
 
 bool LoadSettings(wxWindow* main, ::ride::Settings* settings)
 {
-	const auto r = LoadProto(settings, GetSettingsFile(), main, "settings");
+	const auto file = GetSettingsFile();
+	const auto r = LoadProto(settings, file, main, "settings");
 	AddBuiltInThemes(settings);
+	if (file.exist() == false)
+	{
+		SaveSettings(main, settings);
+	}
 	return r;
 }
 

@@ -4,8 +4,14 @@
 #include <wx/colour.h>
 
 #include "settings.proto.h"	 // NOLINT this is how we include it
+#include "path.h"
 
 class wxWindow;
+
+Fil GetSettingsFile();
+Fil GetSessionFile();
+Fil GetMachineFile();
+
 
 bool LoadSettings(wxWindow* main, ::ride::MachineSettings* settings);
 bool SaveSettings(wxWindow* main, ::ride::MachineSettings* settings);
