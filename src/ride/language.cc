@@ -367,6 +367,11 @@ public:
 	{
 		DefaultStyleDocument(text, settings, this);
 
+		SetProperty(text, "lexer.cpp.verbatim.strings.allow.escapes", "1"); //  Set to 1 to allow verbatim strings to contain escape sequences.
+		SetProperty(text, "lexer.cpp.backquoted.strings", "1"); //  Set to 1 to enable highlighting of back-quoted raw strings .
+		SetProperty(text, "lexer.cpp.escape.sequence", "1"); //  Set to 1 to enable highlighting of escape sequences in strings
+		SetProperty(text, "fold.cpp.preprocessor.at.else", "1"); //  This option enables folding on a preprocessor #else or #endif line of an #if statement.
+
 		const wxString CppWordlist2 = "file";
 		const wxString CppWordlist3
 			= "a addindex addtogroup anchor arg attention author b brief bug c "
@@ -385,6 +390,7 @@ public:
 
 		SetKeys(text, 3, "");  // global classes and typedefs
 		SetKeys(text, 4, "");  // preprocessor defines
+		SetKeys(text, 5, "todo error"); // Task marker and error marker keywords
 	}
 };
 
@@ -849,11 +855,10 @@ public:
 	{
 		const auto& unknown = settings.fonts_and_colors.default_style;
 
-		text->SetProperty("lexer.json.escape.sequence", "1"); //  Set to 1 to enable highlighting of escape sequences in strings
-		text->SetProperty("lexer.json.allow.comments", "1"); // 1 Set to 1 to enable highlighting of line/block comments in JSON
-		text->SetProperty("fold.compact", "1");
-		text->SetProperty("fold", "1");
-		text->SetProperty("lexer.json.allow.comments", "1");
+		SetProperty(text, "lexer.json.escape.sequence", "1"); //  Set to 1 to enable highlighting of escape sequences in strings
+		SetProperty(text, "lexer.json.allow.comments", "1"); // 1 Set to 1 to enable highlighting of line/block comments in JSON
+		SetProperty(text, "fold", settings.foldEnable ? "1" : "0");
+		SetProperty(text, "fold.compact", settings.foldCompact ? "1" : "0");
 		
 		SetStyle(text, wxSTC_JSON_DEFAULT, settings.fonts_and_colors.default_style, true);
 		SetStyle(text, wxSTC_JSON_BLOCKCOMMENT, settings.fonts_and_colors.style_comment);
