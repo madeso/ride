@@ -359,20 +359,8 @@ F_STRUCT(FontsAndColors)
 	S_PROP(explorer_foreground, "explorer_foreground");
 	S_PROP(explorer_background, "explorer_background");
 
-	S_PROP(folderend_foreground, "folderend_foreground");
-	S_PROP(folderopenmid_foreground, "folderopenmid_foreground");
-	S_PROP(foldermidtail_foreground, "foldermidtail_foreground");
-	S_PROP(foldertail_foreground, "foldertail_foreground");
-	S_PROP(foldersub_foreground, "foldersub_foreground");
-	S_PROP(folder_foreground, "folder_foreground");
-	S_PROP(folderopen_foreground, "folderopen_foreground");
-	S_PROP(folderend_background, "folderend_background");
-	S_PROP(folderopenmid_background, "folderopenmid_background");
-	S_PROP(foldermidtail_background, "foldermidtail_background");
-	S_PROP(foldertail_background, "foldertail_background");
-	S_PROP(foldersub_background, "foldersub_background");
-	S_PROP(folder_background, "folder_background");
-	S_PROP(folderopen_background, "folderopen_background");
+	S_PROP(marker_foreground, "marker_foreground");
+	S_PROP(marker_background, "marker_background");
 	S_PROP(caret_foreground, "caret_foreground");
 
 	S_PROP_O(style_comment, "style_comment");
@@ -541,13 +529,13 @@ F_STRUCT(Settings)
 	S_PROP(current_line_overdraw, "current_line_overdraw");
 	S_PROP(highlight_word_also_highlight_keywords, "highlight_word_also_highlight_keywords");
 	S_PROP(auto_indentation, "auto_indentation");
-	S_PROP(folderend, "folderend");
-	S_PROP(folderopenmid, "folderopenmid");
-	S_PROP(foldermidtail, "foldermidtail");
-	S_PROP(foldertail, "foldertail");
-	S_PROP(foldersub, "foldersub");
-	S_PROP(folder, "folder");
-	S_PROP(folderopen, "folderopen");
+	// S_PROP(folderend, "folderend");
+	// S_PROP(folderopenmid, "folderopenmid");
+	// S_PROP(foldermidtail, "foldermidtail");
+	// S_PROP(foldertail, "foldertail");
+	// S_PROP(foldersub, "foldersub");
+	// S_PROP(folder, "folder");
+	// S_PROP(folderopen, "folderopen");
 	S_PROP(autocomplete_curly_braces, "autocomplete_curly_braces");
 	S_PROP(autocomplete_parentheses, "autocomplete_parentheses");
 	S_PROP(autocomplete_brackets, "autocomplete_brackets");

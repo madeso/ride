@@ -235,21 +235,8 @@ struct FontsAndColors
 	Color explorer_foreground;
 	Color explorer_background;
 
-	Color folderend_foreground;
-	Color folderopenmid_foreground;
-	Color foldermidtail_foreground;
-	Color foldertail_foreground;
-	Color foldersub_foreground;
-	Color folder_foreground;
-	Color folderopen_foreground;
-
-	Color folderend_background;
-	Color folderopenmid_background;
-	Color foldermidtail_background;
-	Color foldertail_background;
-	Color foldersub_background;
-	Color folder_background;
-	Color folderopen_background;
+	Color marker_foreground;
+	Color marker_background;
 
 	Color caret_foreground;
 
@@ -446,13 +433,13 @@ struct Settings
 
 	AutoIndentation auto_indentation = AUTOINDENTATION_SMART;
 
-	MarkerSymbol folderend = MARKERSYMBOL_EMPTY;
-	MarkerSymbol folderopenmid = MARKERSYMBOL_EMPTY;
-	MarkerSymbol foldermidtail = MARKERSYMBOL_EMPTY;
-	MarkerSymbol foldertail = MARKERSYMBOL_EMPTY;
-	MarkerSymbol foldersub = MARKERSYMBOL_EMPTY;
-	MarkerSymbol folder = MARKERSYMBOL_EMPTY;
-	MarkerSymbol folderopen = MARKERSYMBOL_EMPTY;
+	// MarkerSymbol folderend = MARKERSYMBOL_EMPTY;
+	// MarkerSymbol folderopenmid = MARKERSYMBOL_EMPTY;
+	// MarkerSymbol foldermidtail = MARKERSYMBOL_EMPTY;
+	// MarkerSymbol foldertail = MARKERSYMBOL_EMPTY;
+	// MarkerSymbol foldersub = MARKERSYMBOL_EMPTY;
+	// MarkerSymbol folder = MARKERSYMBOL_EMPTY;
+	// MarkerSymbol folderopen = MARKERSYMBOL_EMPTY;
 
 	AutoComplete autocomplete_curly_braces = AUTOCOMPLETE_PARA;
 	AutoComplete autocomplete_parentheses = AUTOCOMPLETE_PARA;

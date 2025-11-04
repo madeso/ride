@@ -317,21 +317,8 @@ public:
 		colors->explorer_foreground = front_;
 		colors->explorer_background = bkg_;
 
-		colors->folderend_foreground = front_;
-		colors->folderopenmid_foreground = front_;
-		colors->foldermidtail_foreground = front_;
-		colors->foldertail_foreground = front_;
-		colors->foldersub_foreground = front_;
-		colors->folder_foreground = front_;
-		colors->folderopen_foreground = front_;
-
-		colors->folderend_background = bkg_;
-		colors->folderopenmid_background = bkg_;
-		colors->foldermidtail_background = bkg_;
-		colors->foldertail_background = bkg_;
-		colors->foldersub_background = bkg_;
-		colors->folder_background = bkg_;
-		colors->folderopen_background = bkg_;
+		colors->marker_foreground = front_;
+		colors->marker_background = bkg_;
 
 		colors->props_key = Style(keyword_);
 		colors->props_section = Style(std::nullopt, std::nullopt, true);

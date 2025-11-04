@@ -335,12 +335,11 @@ int C(ride::MarkerSymbol sym)
 void SetMarker(
 	wxStyledTextCtrl* text_ctrl,
 	int number,
-	ride::MarkerSymbol mark_symbol,
-	ride::Color foreground,
-	ride::Color background
+	int mark_symbol, // todo(Gustav): switch to ride::MarkerSymbol
+	const ride::FontsAndColors& colors
 )
 {
-	text_ctrl->MarkerDefine(number, C(mark_symbol), C(foreground), C(background));
+	text_ctrl->MarkerDefine(number, mark_symbol, C(colors.marker_foreground), C(colors.marker_background));
 }
 
 void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set)
@@ -393,47 +392,39 @@ void SetupScintilla(
 	text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldEnable);
 	text_ctrl->SetFoldFlags(C(set.foldflags));
 
-#define FRONT_AND_BACK(x) x##_foreground, x##_background
+#define FRONT_AND_BACK(x) set.fonts_and_colors
 	SetMarker(
 		text_ctrl,
-		wxSTC_MARKNUM_FOLDEREND,
-		set.folderend,
-		FRONT_AND_BACK(set.fonts_and_colors.folderend)
-	);
-	SetMarker(
-		text_ctrl,
-		wxSTC_MARKNUM_FOLDEROPENMID,
-		set.folderopenmid,
-		FRONT_AND_BACK(set.fonts_and_colors.folderopenmid)
+		wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUSCONNECTED,
+		set.fonts_and_colors
 	);
 	SetMarker(
 		text_ctrl,
-		wxSTC_MARKNUM_FOLDERMIDTAIL,
-		set.foldermidtail,
-		FRONT_AND_BACK(set.fonts_and_colors.foldermidtail)
+		wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUSCONNECTED,
+		set.fonts_and_colors
 	);
 	SetMarker(
 		text_ctrl,
-		wxSTC_MARKNUM_FOLDERTAIL,
-		set.foldertail,
-		FRONT_AND_BACK(set.fonts_and_colors.foldertail)
+		wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,
+		set.fonts_and_colors
 	);
 	SetMarker(
 		text_ctrl,
-		wxSTC_MARKNUM_FOLDERSUB,
-		set.foldersub,
-		FRONT_AND_BACK(set.fonts_and_colors.foldersub)
-	);
-	SetMarker(
-		text_ctrl, wxSTC_MARKNUM_FOLDER, set.folder, FRONT_AND_BACK(set.fonts_and_colors.folder)
+		wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,
+		set.fonts_and_colors
 	);
 	SetMarker(
 		text_ctrl,
-		wxSTC_MARKNUM_FOLDEROPEN,
-		set.folderopen,
-		FRONT_AND_BACK(set.fonts_and_colors.folderopen)
+		wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,
+		set.fonts_and_colors
 	);
-#undef FRONT_AND_BACK
+	SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS, set.fonts_and_colors
+	);
+	SetMarker(
+		text_ctrl,
+		wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS,
+		set.fonts_and_colors
+	);
 
 	// set spaces and indention
 	const int tabwidth = project ? project->tabwidth() : set.tabWidth;
