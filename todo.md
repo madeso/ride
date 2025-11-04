@@ -1,4 +1,5 @@
 # Todo
+* mark local files to the project and non local files different, different tab colors?
 * don't expand folders when project is opened
 * remember expanded folders
 * can't stop build
