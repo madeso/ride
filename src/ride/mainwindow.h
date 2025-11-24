@@ -116,6 +116,8 @@ public:
 
 	Project* project();
 
+	void FileWasSaved(const Fil& file);
+
 private:
 
 	void OnActivated(wxActivateEvent& event);

@@ -1235,6 +1235,9 @@ bool FileEdit::SaveTo(const Fil& target)
 	UpdateFilename();
 	UpdateTitle();
 	UpdateFileTime();
+
+	main_->FileWasSaved(target);
+
 	return true;
 }
 

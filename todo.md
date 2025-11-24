@@ -35,7 +35,6 @@
 * Remove or replace rust specific things with generic
 * add new option to enter build config each time
 * expand build command so that it is a list of commands that are chained
-* Replace settings dialog with json hot reload
 * Ctr-b shortcut to switch between perspectives
 * view commands should be able to show the panes again (arch/i3 issue?)
 * Replace shitty colors with: color palette -> grouping -> binding (-> stc)

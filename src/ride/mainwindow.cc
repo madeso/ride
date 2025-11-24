@@ -1373,6 +1373,19 @@ void MainWindow::UpdateAllEdits()
 	compiler_output_.UpdateStyles();
 }
 
+void MainWindow::FileWasSaved(const Fil& f)
+{
+	if (GetSettingsFile() == f)
+	{
+		LoadSettings(this, &settings_);
+		ProjectSettingsHasChanged();
+	}
+	else if (GetMachineFile() == f)
+	{
+		LoadSettings(this, &machine_);
+	}
+}
+
 void MainWindow::OnFileShowSettings(wxCommandEvent& event)
 {
 	OpenFile(GetSettingsFile());
