@@ -21,13 +21,6 @@ struct Filer
 // ------------------------------------------------------------------------------------------------
 // filing
 
-template<typename T>
-void tser(Filer* filer, std::optional<T>* val)
-{
-	T t;
-	ser(filer, &t);
-	*val = t;
-}
 
 void ser(Filer* filer, bool* value)
 {
@@ -73,35 +66,96 @@ void ser(Filer* filer, std::string* value)
 	{ if(*value == ride::x) { filer->json = n; } } } while(false)
 
 #define F_STRUCT(STRUCT) void ser(Filer* filer, ride::STRUCT* value)
-#define S_PROP(PROP, NAME) do { if(filer->is_loading) \
-	{auto prop = filer->json.find(NAME); if(prop != filer->json.end()) { Filer ff{true, *prop}; ser(&ff, &value->PROP);} } else \
-	{Filer ff{false, {}}; ser(&ff, &value->PROP); if(ff.json.is_null() == false) { filer->json[NAME] = ff.json;} } } while(false)
-#define S_PROP_O(PROP, NAME) do { if(filer->is_loading) \
-	{auto prop = filer->json.find(NAME); if(prop != filer->json.end()) { Filer ff{true, *prop}; tser(&ff, &value->PROP);} } else \
-	{ if(value->PROP.has_value()) { Filer ff{false, {}}; ser(&ff, &(*value->PROP)); if(ff.json.is_null() == false) { filer->json[NAME] = ff.json;} } } } while(false)
-#define S_PROP_V(PROP, NAME) do {\
-	if(filer->is_loading) \
-	{\
-		auto prop = filer->json.find(NAME);\
-		value->PROP = {};\
-		if(prop != filer->json.end()) for(auto it: *prop) {\
-			Filer ff{true, it};\
-			decltype(value->PROP)::value_type v;\
-			ser(&ff, &v);\
-			value->PROP.emplace_back(v);\
-		}\
-	} else \
-	{\
-		nlohmann::json o = nlohmann::json::array();\
-		for(auto& s: value->PROP) {\
-			Filer ff{false, {}};\
-			ser(&ff, &s);\
-			if(ff.json.is_null() == false) {\
-				o.push_back(ff.json);\
-			}\
-		}\
-		filer->json[NAME] = o;\
-	} } while(false)
+
+template<typename T>
+void s_prop(Filer* filer, const std::string& NAME, T* out)
+{
+	if (filer->is_loading)
+	{
+		auto prop = filer->json.find(NAME);
+		if (prop != filer->json.end())
+		{
+			Filer ff{true, *prop};
+			ser(&ff, out);
+		}
+	}
+	else
+	{
+		Filer ff{false, {}};
+		ser(&ff, out);
+		if (ff.json.is_null() == false)
+		{
+			filer->json[NAME] = ff.json;
+		}
+	}
+}
+
+template<typename T>
+void s_prop_o(Filer* filer, const std::string& NAME, std::optional<T>* PROP)
+{
+	if (filer->is_loading)
+	{
+		auto prop = filer->json.find(NAME);
+		if (prop != filer->json.end())
+		{
+			Filer ff{true, *prop};
+			T temp;
+			ser(&ff, &temp);
+			*PROP = temp;
+		}
+	}
+	else
+	{
+		if (PROP->has_value())
+		{
+			Filer ff{false, {}};
+			T temp = PROP->value();
+			ser(&ff, &temp);
+			if (ff.json.is_null() == false)
+			{
+				filer->json[NAME] = ff.json;
+			}
+		}
+	}
+}
+
+template<typename T>
+void s_prop_v(Filer* filer, const std::string& NAME, std::vector<T>* PROP)
+{
+	if (filer->is_loading)
+	{
+		auto prop = filer->json.find(NAME);
+		*PROP = {};
+		if (prop != filer->json.end())
+		{
+			for (auto it: *prop)
+			{
+				Filer ff{true, it};
+				T v;
+				ser(&ff, &v);
+				PROP->emplace_back(v);
+			}
+		}
+	}
+	else
+	{
+		nlohmann::json o = nlohmann::json::array();
+		for (auto& s: *PROP)
+		{
+			Filer ff{false, {}};
+			ser(&ff, &s);
+			if (ff.json.is_null() == false)
+			{
+				o.push_back(ff.json);
+			}
+		}
+		filer->json[NAME] = o;
+	}
+}
+
+#define S_PROP(PROP, NAME) s_prop(filer, NAME, &value->PROP)
+#define S_PROP_O(PROP, NAME) s_prop_o(filer, NAME, &value->PROP)
+#define S_PROP_V(PROP, NAME) s_prop_v(filer, NAME, &value->PROP)
 
 F_ENUM(EdgeStyle)
 {
