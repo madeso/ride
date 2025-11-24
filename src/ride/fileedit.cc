@@ -1157,11 +1157,14 @@ void FileEdit::ReloadFileIfNeeded()
 				filename_->get_name_with_extension() + " has been removed, close it?"
 			))
 		{
-			size_t index = notebook_->GetPageIndex(this);
-			const bool file_closed = notebook_->DeletePage(index);
-			if (false == file_closed)
+			const auto index = notebook_->GetPageIndex(this);
+			if (index != wxNOT_FOUND)
 			{
-				ShowError(this, "Unable to close file", "Error");
+				const bool file_closed = notebook_->DeletePage(index);
+				if (false == file_closed)
+				{
+					ShowError(this, "Unable to close file", "Error");
+				}
 			}
 		}
 		return;
@@ -1289,8 +1292,11 @@ void FileEdit::UpdateFilename()
 		return;
 	}
 
-	size_t index = notebook_->GetPageIndex(this);
-	notebook_->SetPageToolTip(index, filename_->get_name_with_extension());
+	const auto index = notebook_->GetPageIndex(this);
+	if (index != wxNOT_FOUND)
+	{
+		notebook_->SetPageToolTip(index, filename_->get_name_with_extension());
+	}
 
 	current_language_ = languages_->DetermineLanguage(*filename_);
 	UpdateTextControl();
@@ -1300,9 +1306,12 @@ void FileEdit::UpdateFilename()
 
 void FileEdit::UpdateTitle()
 {
-	size_t index = notebook_->GetPageIndex(this);
+	const auto index = notebook_->GetPageIndex(this);
 	const wxString modified_star = text_->IsModified() ? "*" : "";
-	notebook_->SetPageText(index, CalculateDocumentName() + modified_star);
+	if (index != wxNOT_FOUND)
+	{
+		notebook_->SetPageText(index, CalculateDocumentName() + modified_star);
+	}
 }
 
 bool FileEdit::ShouldBeSaved()
