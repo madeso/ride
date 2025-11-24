@@ -1,4 +1,6 @@
 # Todo
+* split settings and colors
+* remove themes concept
 * mark local files to the project and non local files different, different tab colors?
 * don't expand folders when project is opened
 * remember expanded folders
