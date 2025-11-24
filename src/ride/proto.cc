@@ -59,14 +59,6 @@ void ser(Filer* filer, std::string* value)
 }
 
 
-#define F_ENUM(ENUM) void ser(Filer* filer, ride::ENUM* value)
-#define S_ENUM_DECLARE(ENUM) const auto prop = filer->is_loading ? filer->require_string_prop(#ENUM) : ""
-#define S_ENUM_VAL(x, n) do { if(filer->is_loading) { if(prop == n) \
-	{*value = ride::x; return; } } else \
-	{ if(*value == ride::x) { filer->json = n; } } } while(false)
-
-#define F_STRUCT(STRUCT) void ser(Filer* filer, ride::STRUCT* value)
-
 template<typename T>
 void s_prop(Filer* filer, const std::string& NAME, T* out)
 {
@@ -153,6 +145,14 @@ void s_prop_v(Filer* filer, const std::string& NAME, std::vector<T>* PROP)
 	}
 }
 
+
+#define F_ENUM(ENUM) void ser(Filer* filer, ride::ENUM* value)
+#define S_ENUM_DECLARE(ENUM) const auto prop = filer->is_loading ? filer->require_string_prop(#ENUM) : ""
+#define S_ENUM_VAL(x, n) do { if(filer->is_loading) { if(prop == n) \
+	{*value = ride::x; return; } } else \
+	{ if(*value == ride::x) { filer->json = n; } } } while(false)
+
+#define F_STRUCT(STRUCT) void ser(Filer* filer, ride::STRUCT* value)
 #define S_PROP(PROP, NAME) s_prop(filer, NAME, &value->PROP)
 #define S_PROP_O(PROP, NAME) s_prop_o(filer, NAME, &value->PROP)
 #define S_PROP_V(PROP, NAME) s_prop_v(filer, NAME, &value->PROP)
