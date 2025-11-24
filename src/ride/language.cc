@@ -91,39 +91,35 @@ private:
 	std::vector<wxString> keywords_;
 };
 
-void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings)
+void Language::WarnAboutProperties(wxStyledTextCtrl* text) const
 {
-#ifdef _DEBUG
-	used_properties_.clear();
-	used_keywords_.clear();
-#endif
-	text->SetLexer(lexer_style_);
-	DoStyleDocument(text, settings);
-#ifdef _DEBUG
-	const std::vector<wxString> available_props = Split(text->PropertyNames(), '\n');
-	const std::vector<wxString> available_keywords = Split(text->DescribeKeyWordSets(), '\n');
+	const auto available_props_vec = Split(text->PropertyNames(), '\n');
+	const auto available_props = std::set(available_props_vec.begin(), available_props_vec.end());
 
-	for (std::vector<wxString>::const_iterator p = available_props.begin();
-		 p != available_props.end();
-		 ++p)
+	for (const auto& prop_name: available_props)
 	{
-		const wxString prop_name = *p;
-		if (used_properties_.find(prop_name) == used_properties_.end())
-		{
-			const wxString desc = text->DescribeProperty(prop_name);
-			const wxString value = text->GetProperty(prop_name);
-			const wxString type = PropTypeToString(text->PropertyType(prop_name));
-			wxLogWarning(
-				_("Property for %s was not set: %s %s; // %s %s"),
-				language_name_,
-				type,
-				prop_name,
-				value,
-				desc
-			);
-		}
+		if (used_properties_.find(prop_name) != used_properties_.end()) continue;
+		const wxString desc = text->DescribeProperty(prop_name);
+		const wxString value = text->GetProperty(prop_name);
+		const wxString type = PropTypeToString(text->PropertyType(prop_name));
+		wxLogWarning(
+			_("Property for %s was not set: %s %s; // %s %s"),
+			language_name_, type, prop_name, value, desc
+		);
 	}
 
+	for (const auto& prop: used_properties_)
+	{
+		if (available_props.find(prop) == available_props.end())
+		{
+			wxLogWarning(_("Property %s for %s was set, but does not exist."), prop, language_name_);
+		}
+	}
+}
+
+void Language::WarnAboutKeywords(const wxStyledTextCtrl* text) const
+{
+	const auto available_keywords = Split(text->DescribeKeyWordSets(), '\n');
 	for (unsigned int i = 0; i < available_keywords.size(); ++i)
 	{
 		if (used_keywords_.find(i) == used_keywords_.end())
@@ -133,6 +129,19 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 			);
 		}
 	}
+}
+
+void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings)
+{
+#ifdef _DEBUG
+	used_properties_.clear();
+	used_keywords_.clear();
+#endif
+	text->SetLexer(lexer_style_);
+	DoStyleDocument(text, settings);
+#ifdef _DEBUG
+	WarnAboutProperties(text);
+	WarnAboutKeywords(text);
 #endif
 }
 

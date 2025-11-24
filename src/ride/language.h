@@ -26,6 +26,8 @@ public:
 
 	bool IsKeyword(const wxString word) const;
 
+	void WarnAboutProperties(wxStyledTextCtrl* text) const;
+	void WarnAboutKeywords(const wxStyledTextCtrl* text) const;
 	void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
 	wxString GetFilePattern() const;
 
