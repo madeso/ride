@@ -19,7 +19,7 @@ if(WIN32)
        set(wxBUILD_STATIC ON CACHE BOOL "Build static libraries" FORCE)
        FetchContent_Declare(
 	       wxWidgets
-	       URL https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.4/wxWidgets-3.2.4.tar.bz2
+	       URL https://github.com/wxWidgets/wxWidgets/releases/download/v3.3.1/wxWidgets-3.3.1.tar.bz2
 	       DOWNLOAD_EXTRACT_TIMESTAMP true
        )
        FetchContent_MakeAvailable(wxWidgets)
