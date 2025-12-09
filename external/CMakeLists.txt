@@ -99,23 +99,12 @@ target_link_libraries(tinyxml
 
 
 ###################################################################################################
-## nlohmann json
+## madeso json(h)
 
-include(FetchContent)
-
-FetchContent_Declare(json
-	URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz
-	DOWNLOAD_EXTRACT_TIMESTAMP true
-)
-FetchContent_MakeAvailable(json)
+add_subdirectory(json)
 
 add_library(json INTERFACE)
-add_library(external::json ALIAS json)
-target_link_libraries(json
-	INTERFACE
-		nlohmann_json::nlohmann_json
-)
-
+add_library(external::json ALIAS jsonh)
 
 ###################################################################################################
 ## 

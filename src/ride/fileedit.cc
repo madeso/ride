@@ -24,6 +24,7 @@
 #include "ride/cmdrunner.h"
 #include "ride/compilermessage.h"
 // #include "ride/compileutils.h"
+#include "proto.h"
 #include "ride/filepropertiesdlg.h"
 #include "ride/finddlg.h"
 #include "ride/mainwindow.h"
@@ -1236,7 +1237,34 @@ bool FileEdit::SaveTo(const Fil& target)
 	UpdateTitle();
 	UpdateFileTime();
 
-	main_->FileWasSaved(target);
+	// hotload functionality: if settings file was saved, reload settings
+
+	bool was_saved = true;
+
+	if (GetSettingsFile() == target)
+	{
+		SerLog settings_log;
+		ride::Settings junk_settings;
+		LoadSettings(&settings_log, this, &junk_settings);
+
+		ClearCompilerMessages();
+		for (const auto& err: settings_log.errors)
+		{
+			AddCompilerMessage(CompilerMessage(
+				target, err.line, err.column, err.line, err.column + 1, CompilerMessage::TYPE_ERROR, err.msg
+			));
+		}
+
+		if (settings_log.errors.empty() == false)
+		{
+			was_saved = false;
+		}
+	}
+
+	if (was_saved)
+	{
+		main_->FileWasSaved(target);
+	}
 
 	return true;
 }

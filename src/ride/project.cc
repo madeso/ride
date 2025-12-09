@@ -23,10 +23,11 @@ Project::Project(MainWindow* output, const std::optional<Dir>& root_folder)
 {
 	if (root_folder_.has_value())
 	{
-		if (LoadProtoJson(&project_, *GetProjectFile()) != "")
 		{
+			SerLog log;
+			LoadProtoJson(&log, &project_, *GetProjectFile());
 		}
-		if (project_.build_settings.size() == 0)
+		if (project_.build_settings.empty())
 		{
 			// add default build settings to the project
 			ride::BuildSetting debug;
@@ -36,11 +37,12 @@ Project::Project(MainWindow* output, const std::optional<Dir>& root_folder)
 			project_.build_settings.push_back(debug);
 		}
 
-		if (LoadProtoJson(&user_, *GetUserFile()) != "")
 		{
+			SerLog log;
+			LoadProtoJson(&log, &user_, *GetUserFile());
 		}
 
-		if (user_.run.size() == 0)
+		if (user_.run.empty())
 		{
 			user_.run.push_back({});
 			SaveUser();

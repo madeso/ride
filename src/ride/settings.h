@@ -7,19 +7,20 @@
 #include "path.h"
 
 class wxWindow;
+struct SerLog;
 
 Fil GetSettingsFile();
 Fil GetSessionFile();
 Fil GetMachineFile();
 
 
-bool LoadSettings(wxWindow* main, ::ride::MachineSettings* settings);
+bool LoadSettings(SerLog* log, wxWindow* main, ::ride::MachineSettings* settings);
 bool SaveSettings(wxWindow* main, ::ride::MachineSettings* settings);
 
-bool LoadSettings(wxWindow* main, ::ride::Settings* settings);
+bool LoadSettings(SerLog* log, wxWindow* main, ::ride::Settings* settings);
 bool SaveSettings(wxWindow* main, ::ride::Settings* settings);
 
-bool LoadSession(wxWindow* main, ::ride::Session* session);
+bool LoadSession(SerLog* log, wxWindow* main, ::ride::Session* session);
 bool SaveSession(wxWindow* main, ::ride::Session* session);
 
 wxColor C(const ride::Color& c);

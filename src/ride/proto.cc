@@ -1,16 +1,19 @@
 #include "ride/proto.h"
 
 #include <fstream>
+#include <set>
+
 #include "ride/settings.proto.h"
 
-#include "nlohmann/json.hpp"
+#include "jsonh/jsonh.h"
 
 // ------------------------------------------------------------------------------------------------
 // filer
 struct Filer
 {
 	bool is_loading;
-	nlohmann::json json;
+	jsonh::Document* doc;
+	jsonh::Value json;
 
 	std::string require_string_prop(const std::string& name)
 	{
@@ -21,141 +24,148 @@ struct Filer
 // ------------------------------------------------------------------------------------------------
 // filing
 
+std::pair<std::string, jsonh::Location> describe(jsonh::Value val, jsonh::Document* doc)
+{
+	switch (val.type)
+	{
+	case jsonh::ValueType::Object: return {"Object", val.AsObject(doc)->location};
+	case jsonh::ValueType::Array: return {"Array", val.AsArray(doc)->location};
+	case jsonh::ValueType::String: return {"String", val.AsString(doc)->location};
+	case jsonh::ValueType::Number: return {"Number", val.AsNumber(doc)->location};
+	case jsonh::ValueType::Int: return {"Int", val.AsInt(doc)->location};
+	case jsonh::ValueType::Bool: return {"Bool", val.AsBool(doc)->location};
+	case jsonh::ValueType::Null: return {"Null", val.AsNull(doc)->location};
+	default: assert(false);
+	}
+	return {"Invalid", jsonh::Location{0, 0}};
+}
 
-void ser(Filer* filer, bool* value)
+void add_expected(SerLog* log, const std::string& what, jsonh::Value value, jsonh::Document* doc)
+{
+	const auto [type, loc] = describe(value, doc);
+	log->errors.emplace_back(SerError{"Expected " + what + " but found " + type, loc.line, loc.column});
+}
+
+void add_expected(SerLog* log, const std::string& what, Filer* filer)
+{
+	add_expected(log, what, filer->json, filer->doc);
+}
+
+
+void ser(SerLog* log, Filer* filer, bool* value)
 {
 	if(filer->is_loading)
 	{
-		*value = filer->json;
+		jsonh::Bool* read = filer->json.AsBool(filer->doc);
+		if (read == nullptr)
+		{
+			add_expected(log, "bool", filer);
+			return;
+		}
+		*value = read->value;
 	}
 	else
 	{
-		filer->json = *value;
+		filer->json = filer->doc->add(jsonh::Bool{{}, *value});
 	}
 }
 
-void ser(Filer* filer, int* value)
-{
-	if(filer->is_loading)
-	{
-		*value = filer->json;
-	}
-	else
-	{
-		filer->json = *value;
-	}
-}
-
-void ser(Filer* filer, std::string* value)
-{
-	if(filer->is_loading)
-	{
-		*value = filer->json;
-	}
-	else
-	{
-		filer->json = *value;
-	}
-}
-
-
-template<typename T>
-void s_prop(Filer* filer, const std::string& NAME, T* out)
+void ser(SerLog* log, Filer* filer, int* value)
 {
 	if (filer->is_loading)
 	{
-		auto prop = filer->json.find(NAME);
-		if (prop != filer->json.end())
+		jsonh::Int* read = filer->json.AsInt(filer->doc);
+		if (read == nullptr)
 		{
-			Filer ff{true, *prop};
-			ser(&ff, out);
+			add_expected(log, "int", filer);
+			return;
 		}
+		*value = read->value;
 	}
 	else
 	{
-		Filer ff{false, {}};
-		ser(&ff, out);
-		if (ff.json.is_null() == false)
-		{
-			filer->json[NAME] = ff.json;
-		}
+		filer->json = filer->doc->add(jsonh::Int{{}, *value});
 	}
 }
 
-template<typename T>
-void s_prop_o(Filer* filer, const std::string& NAME, std::optional<T>* PROP)
+void ser(SerLog* log, Filer* filer, std::string* value)
 {
 	if (filer->is_loading)
 	{
-		auto prop = filer->json.find(NAME);
-		if (prop != filer->json.end())
+		jsonh::String* read = filer->json.AsString(filer->doc);
+		if (read == nullptr)
 		{
-			Filer ff{true, *prop};
-			T temp;
-			ser(&ff, &temp);
-			*PROP = temp;
+			add_expected(log, "string", filer);
+			return;
 		}
+		*value = read->value;
 	}
 	else
 	{
-		if (PROP->has_value())
-		{
-			Filer ff{false, {}};
-			T temp = PROP->value();
-			ser(&ff, &temp);
-			if (ff.json.is_null() == false)
-			{
-				filer->json[NAME] = ff.json;
-			}
-		}
+		filer->json = filer->doc->add(jsonh::String{{}, *value});
 	}
 }
+
+
 
 template<typename T>
-void s_prop_v(Filer* filer, const std::string& NAME, std::vector<T>* PROP)
+struct EnumBuilder
 {
-	if (filer->is_loading)
+	std::map<T, std::string> enum_to_name;
+	std::map<std::string, T> name_to_enum;
+
+	void add(T t, const std::string& n)
 	{
-		auto prop = filer->json.find(NAME);
-		*PROP = {};
-		if (prop != filer->json.end())
+		enum_to_name[t] = n;
+		name_to_enum[n] = t;
+	}
+
+	void complete(const std::string& name, SerLog* log, Filer* filer, T* value)
+	{
+		if (filer->is_loading)
 		{
-			for (auto it: *prop)
+			jsonh::String* string = filer->json.AsString(filer->doc);
+			if (string == nullptr)
 			{
-				Filer ff{true, it};
-				T v;
-				ser(&ff, &v);
-				PROP->emplace_back(v);
+				add_expected(log, name + "as a string", filer);
+				return;
 			}
+			const auto found = name_to_enum.find(string->value);
+			if (found == name_to_enum.end())
+			{
+				log->errors.emplace_back(
+					SerError{
+						name + " enum not a valid string",
+						string->location.line,
+						string->location.column
+					}
+				);
+				return;
+			}
+			*value = found->second;
+		}
+		else
+		{
+			const auto found = enum_to_name.find(*value);
+			std::string val = "???";
+			if (found != enum_to_name.end())
+			{
+				val = found->second;
+			}
+			else
+			{
+				assert(false && "enum value not found in enum builder");
+			}
+
+			filer->json = filer->doc->add(jsonh::String{{}, val});
 		}
 	}
-	else
-	{
-		nlohmann::json o = nlohmann::json::array();
-		for (auto& s: *PROP)
-		{
-			Filer ff{false, {}};
-			ser(&ff, &s);
-			if (ff.json.is_null() == false)
-			{
-				o.push_back(ff.json);
-			}
-		}
-		filer->json[NAME] = o;
-	}
-}
+};
 
-
-#define F_ENUM(ENUM) void ser(Filer* filer, ride::ENUM* value)
-#define S_ENUM_DECLARE(ENUM) const auto prop = filer->is_loading ? filer->require_string_prop(#ENUM) : ""
-#define S_ENUM_VAL(x, n) do { if(filer->is_loading) { if(prop == n) \
-	{*value = ride::x; return; } } else \
-	{ if(*value == ride::x) { filer->json = n; } } } while(false)
-
-#define F_STRUCT(STRUCT) void ser(Filer* filer, ride::STRUCT* value)
-#define S_PROP(PROP, NAME) s_prop(filer, NAME, &value->PROP)
-#define S_PROP_O(PROP, NAME) s_prop_o(filer, NAME, &value->PROP)
-#define S_PROP_V(PROP, NAME) s_prop_v(filer, NAME, &value->PROP)
+#define F_ENUM(ENUM) void ser(SerLog* log, Filer* filer, ride::ENUM* value)
+#define S_ENUM_DECLARE(ENUM) const std::string_view name = #ENUM; EnumBuilder<ride::ENUM> builder;
+#define S_ENUM_VAL(x, n) builder.add(ride::x, n)
+#define S_ENUM_COMPLETE() builder.complete(std::string(name), log, filer, value)
 
 F_ENUM(EdgeStyle)
 {
@@ -163,6 +173,7 @@ F_ENUM(EdgeStyle)
 	S_ENUM_VAL(EDGESTYLE_NONE, "none");
 	S_ENUM_VAL(EDGESTYLE_LINE, "line");
 	S_ENUM_VAL(EDGESTYLE_BACKGROUND, "background");
+	S_ENUM_COMPLETE();
 }
 
 F_ENUM(ViewWhitespace)
@@ -171,6 +182,7 @@ F_ENUM(ViewWhitespace)
 	S_ENUM_VAL(VIEWWHITESPACE_HIDDEN, "hidden");
 	S_ENUM_VAL(VIEWWHITESPACE_ALWAYS, "always");
 	S_ENUM_VAL(VIEWWHITESPACE_AFTER_IDENT, "after_ident");
+	S_ENUM_COMPLETE();
 }
 
 F_ENUM(WrapMode)
@@ -179,6 +191,7 @@ F_ENUM(WrapMode)
 	S_ENUM_VAL(WRAPMODE_NONE, "none");
 	S_ENUM_VAL(WRAPMODE_CHAR, "char");
 	S_ENUM_VAL(WRAPMODE_WORD, "word");
+ S_ENUM_COMPLETE();
 }
 
 F_ENUM(AutoIndentation)
@@ -187,6 +200,7 @@ F_ENUM(AutoIndentation)
 	S_ENUM_VAL(AUTOINDENTATION_NONE, "none");
 	S_ENUM_VAL(AUTOINDENTATION_KEEP, "keep");
 	S_ENUM_VAL(AUTOINDENTATION_SMART, "mart");
+	S_ENUM_COMPLETE();
 }
 
 F_ENUM(IndicatorStyle)
@@ -205,6 +219,7 @@ F_ENUM(IndicatorStyle)
 	S_ENUM_VAL(INDICATORSTYLE_DOTS, "dots");
 	S_ENUM_VAL(INDICATORSTYLE_SQUIGGLELOW, "squigglelow");
 	S_ENUM_VAL(INDICATORSTYLE_DOTBOX, "dotbox");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(VirtualSpace)
@@ -213,6 +228,7 @@ F_ENUM(VirtualSpace)
 	S_ENUM_VAL(VIRTUALSPACE_NONE, "none");
 	S_ENUM_VAL(VIRTUALSPACE_RECTANGULARSELECTION, "rectangularselection");
 	S_ENUM_VAL(VIRTUALSPACE_USERACCESSIBLE, "useraccessible");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(WrapVisualFlagsLocation)
@@ -221,6 +237,7 @@ F_ENUM(WrapVisualFlagsLocation)
 	S_ENUM_VAL(WRAPVISUALFLAGLOC_DEFAULT, "default");
 	S_ENUM_VAL(WRAPVISUALFLAGLOC_END_BY_TEXT, "end_by_text");
 	S_ENUM_VAL(WRAPVISUALFLAGLOC_START_BY_TEXT, "start_by_text");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(WrapIndentMode)
@@ -229,6 +246,7 @@ F_ENUM(WrapIndentMode)
 	S_ENUM_VAL(WRAPINDENT_FIXED, "fixed");
 	S_ENUM_VAL(WRAPINDENT_SAME, "same");
 	S_ENUM_VAL(WRAPINDENT_INDENT, "indent");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(Annotation)
@@ -237,6 +255,7 @@ F_ENUM(Annotation)
 	S_ENUM_VAL(ANNOTATION_HIDDEN, "hidden");
 	S_ENUM_VAL(ANNOTATION_STANDARD, "standard");
 	S_ENUM_VAL(ANNOTATION_BOXED, "boxed");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(MarkerSymbol)
@@ -251,6 +270,7 @@ F_ENUM(MarkerSymbol)
 	S_ENUM_VAL(MARKERSYMBOL_ARROWDOWN, "arrowdown");
 	S_ENUM_VAL(MARKERSYMBOL_MINUS, "minus");
 	S_ENUM_VAL(MARKERSYMBOL_PLUS, "plus");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(CaretStyle)
@@ -259,6 +279,7 @@ F_ENUM(CaretStyle)
 	S_ENUM_VAL(CARETSTYLE_INVISIBLE, "invisible");
 	S_ENUM_VAL(CARETSTYLE_LINE, "line");
 	S_ENUM_VAL(CARETSTYLE_BLOCK, "block");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(CaretSticky)
@@ -267,6 +288,7 @@ F_ENUM(CaretSticky)
 	S_ENUM_VAL(CARETSTICKY_OFF, "off");
 	S_ENUM_VAL(CARETSTICKY_WHITESPACE, "whitespace");
 	S_ENUM_VAL(CARETSTICKY_ON, "on");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(StatusbarStyle)
@@ -276,6 +298,7 @@ F_ENUM(StatusbarStyle)
 	S_ENUM_VAL(STATUSBAR_STYLE_BAR, "bar");
 	S_ENUM_VAL(STATUSBAR_STYLE_RAISED, "raised");
 	S_ENUM_VAL(STATUSBAR_STYLE_SUNKEN, "sunken");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(AutoComplete)
@@ -283,6 +306,7 @@ F_ENUM(AutoComplete)
 	S_ENUM_DECLARE(AutoComplete);
 	S_ENUM_VAL(AUTOCOMPLETE_NONE, "none");
 	S_ENUM_VAL(AUTOCOMPLETE_PARA, "para");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(HomeEndStyle)
@@ -295,15 +319,17 @@ F_ENUM(HomeEndStyle)
 	S_ENUM_VAL(HES_VCDISPLAY, "vcdisplay");
 	S_ENUM_VAL(HES_VCWRAP, "vcwrap");
 	S_ENUM_VAL(HES_SCROLL, "scroll");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(WindowState)
 {
 	S_ENUM_DECLARE(WindowState);
 	S_ENUM_VAL(WINDOWSTATE_NORMAL, "normal");
-	S_ENUM_VAL(WINDOWSTATE_ICONIZED, "iconized");
+ S_ENUM_VAL(WINDOWSTATE_ICONIZED, "iconized");
 	S_ENUM_VAL(WINDOWSTATE_MAXIMIZED, "maximized");
 	S_ENUM_VAL(WINDOWSTATE_FULLSCREEN, "fullscreen");
+	S_ENUM_COMPLETE();
 };
 
 F_ENUM(FindDlgTarget)
@@ -312,8 +338,172 @@ F_ENUM(FindDlgTarget)
 	S_ENUM_VAL(FDT_NORMAL_TEXT, "text");
 	S_ENUM_VAL(FDT_NORMAL_REGEX, "regex");
 	S_ENUM_VAL(FDT_NORMAL_POSIX, "posix");
+	S_ENUM_COMPLETE();
 };
 
+
+struct StructParser {
+	SerLog* log;
+	Filer* filer;
+	std::string struct_name;
+	std::set<std::string> names;
+	
+	jsonh::Object* get()
+	{
+		jsonh::Object* ret = filer->json.AsObject(filer->doc);
+		assert(ret && "non object was not expected");
+		return ret;
+	}
+
+	StructParser(SerLog* l, Filer* f, std::string name)
+		: log(l)
+		, filer(f)
+		, struct_name(std::move(name))
+	{
+	}
+
+	void complete()
+	{
+		if (!filer->is_loading)
+			return;
+
+		// check for specified but never read properties
+		jsonh::Object* obj = get();
+		for (const auto& [key, _] : obj->object)
+		{
+			if (names.find(key) == names.end())
+			{
+				log->errors.emplace_back(
+					SerError{"property '" + key + "' in struct '" + struct_name + "' was never read", obj->location.line, obj->location.column}
+				);
+			}
+		}
+	}
+
+	bool setup()
+	{
+		if (! filer->is_loading)
+		{
+			// filer->json = filer->doc->add(jsonh::Object{});
+			return true;
+		}
+
+		jsonh::Object* obj = filer->json.AsObject(filer->doc);
+		if (obj == nullptr)
+		{
+			add_expected(log, "object for struct " + struct_name, filer);
+			return false;
+		}
+		
+		filer->json = filer->doc->add(*obj);
+		return true;
+	}
+};
+
+template<typename T>
+void s_prop(StructParser* parser, const std::string& NAME, T* out)
+{
+	parser->names.emplace(NAME);
+	if (parser->filer->is_loading)
+	{
+		auto* obj = parser->get();
+		auto found = obj->object.find(NAME);
+		if (found == obj->object.end())
+		{
+			parser->log->errors.emplace_back(SerError{"missing property " + NAME, obj->location.line, obj->location.column});
+			return;
+		}
+		Filer ff{true, parser->filer->doc, found->second};
+		ser(parser->log, &ff, out);
+	}
+	else
+	{
+		Filer ff{false, parser->filer->doc, {}};
+		ser(parser->log, &ff, out);
+		parser->get()->object.emplace(NAME, ff.json);
+	}
+}
+
+template<typename T>
+void s_prop_o(StructParser* parser, const std::string& NAME, std::optional<T>* out)
+{
+	parser->names.emplace(NAME);
+	if (parser->filer->is_loading)
+	{
+		auto* obj = parser->get();
+		auto found = obj->object.find(NAME);
+		if (found == obj->object.end())
+		{
+			return;
+		}
+		Filer ff{true, parser->filer->doc, found->second};
+		
+		T temp;
+		ser(parser->log, &ff, &temp);
+		*out = temp;
+	}
+	else if (out->has_value())
+	{
+		Filer ff{false, parser->filer->doc, {}};
+		T temp = out->value();
+		ser(parser->log, &ff, &temp);
+		parser->get()->object.emplace(NAME, ff.json);
+	}
+}
+
+template<typename T>
+void s_prop_v(StructParser* parser, const std::string& NAME, std::vector<T>* out)
+{
+	parser->names.emplace(NAME);
+	if (parser->filer->is_loading)
+	{
+		auto* obj = parser->get();
+		auto found = obj->object.find(NAME);
+		if (found == obj->object.end())
+		{
+			parser->log->errors.emplace_back(
+				SerError{"missing property " + NAME, obj->location.line, obj->location.column}
+			);
+			return;
+		}
+
+		auto arr_val = found->second;
+		auto* arr = arr_val.AsArray(parser->filer->doc);
+		if (arr == nullptr)
+		{
+			add_expected(parser->log, "array", arr_val, parser->filer->doc);
+			return;
+		}
+
+		for (const auto& item: arr->array)
+		{
+			Filer ff{true, parser->filer->doc, item};
+			T v;
+			ser(parser->log, &ff, &v);
+			out->emplace_back(v);
+		}
+	}
+	else
+	{
+		jsonh::Value ret = parser->filer->doc->add(jsonh::Array());
+		for (auto& s: *out)
+		{
+			Filer ff{false, parser->filer->doc, {}};
+			ser(parser->log, &ff, &s);
+			ret.AsArray(parser->filer->doc)->array.emplace_back(ff.json);
+		}
+		parser->get()->object.emplace(NAME, ret);
+	}
+}
+
+#define F_STRUCT(STRUCT) void ser(SerLog* log, Filer* filer, ride::STRUCT* value)
+#define S_BEGIN(STRUCT) \
+	StructParser parser(log, filer, #STRUCT); \
+	if (! parser.setup()) return
+#define S_PROP(PROP, NAME) s_prop(&parser, NAME, &value->PROP)
+#define S_PROP_O(PROP, NAME) s_prop_o(&parser, NAME, &value->PROP)
+#define S_PROP_V(PROP, NAME) s_prop_v(&parser, NAME, &value->PROP)
+#define S_END() parser.complete()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // forward declare all structs
@@ -343,30 +533,37 @@ F_STRUCT(MachineSettings);
 
 F_STRUCT(Color)
 {
+	S_BEGIN(Color);
 	S_PROP(r, "r");
 	S_PROP(g, "g");
 	S_PROP(b, "b");
+	S_END();
 };
 
 F_STRUCT(Indicator)
 {
+	S_BEGIN(Indicator);
 	S_PROP(foreground, "foreground");
 	S_PROP(under, "under");
 	S_PROP(alpha, "alpha");
 	S_PROP(outline_alpha, "outline_alpha");
+	S_END();
 };
 
 F_STRUCT(FoldFlags)
 {
+	S_BEGIN(FoldFlags);
 	S_PROP(LINEBEFORE_EXPANDED, "linebefore_expanded");
 	S_PROP(LINEBEFORE_CONTRACTED, "linebefore_contracted");
 	S_PROP(LINEAFTER_EXPANDED, "lineafter_expanded");
 	S_PROP(LINEAFTER_CONTRACTED, "lineafter_contracted");
 	S_PROP(LEVELNUMBERS, "levelnumbers");
+	S_END();
 };
 
 F_STRUCT(Style)
 {
+	S_BEGIN(Style);
 	S_PROP(use_typeface, "use_typeface");
 	S_PROP(typeface, "typeface");
 	S_PROP(use_bold, "use_bold");
@@ -381,12 +578,14 @@ F_STRUCT(Style)
 	S_PROP(foreground, "foreground");
 	S_PROP(use_background, "use_background");
 	S_PROP(background, "background");
+	S_END();
 };
 
 // the idea of moving out all fonts and colors is that likely theese are
 // what people want share: obsidian/zenburn/monokai and https://studiostyl.es/
 F_STRUCT(FontsAndColors)
 {
+	S_BEGIN(FontsAndColors);
 	S_PROP(selected_line, "selected_line");
 	S_PROP(fold_margin_hi, "fold_margin_hi");
 	S_PROP(fold_margin_low, "fold_margin_low");
@@ -536,24 +735,31 @@ F_STRUCT(FontsAndColors)
 	S_PROP(switcher_selection_outline_color, "switcher_selection_outline_color");
 	S_PROP(switcher_dialog_color, "switcher_dialog_color");
 	S_PROP(switcher_base_color, "switcher_base_color");
+
+	S_END();
 };
 
 F_STRUCT(Theme)
 {
+	S_BEGIN(Theme);
 	S_PROP(name, "name");
 	S_PROP(can_remove, "can_remove");
 	S_PROP(data, "data");
+	S_END();
 };
 
 F_STRUCT(WrapVisualFlags)
 {
+	S_BEGIN(WrapVisualFlags);
 	S_PROP(end, "end");
 	S_PROP(start, "start");
 	S_PROP(margin, "margin");
+	S_END();
 };
 
 F_STRUCT(Settings)
 {
+	S_BEGIN(Settings);
 	S_PROP(lineNumberEnable, "lineNumberEnable");
 	S_PROP(foldEnable, "foldEnable");
 	S_PROP(displayEOLEnable, "displayEOLEnable");
@@ -635,33 +841,40 @@ F_STRUCT(Settings)
 	S_PROP(switcher_dlg_item_border, "switcher_dlg_item_border");
 	S_PROP(switcher_min_width, "switcher_min_width");
 	S_PROP(switcher_min_height, "switcher_min_height");
+	S_END();
 };
 
 /* ******************************************************************************************* */
 
 F_STRUCT(OpenFile)
 {
+	S_BEGIN(OpenFile);
 	S_PROP(path, "path");
-	S_PROP(start_line, "start_line");
+ S_PROP(start_line, "start_line");
 	S_PROP(start_index, "start_index");
 	S_PROP(end_line, "end_line");
 	S_PROP(end_index, "end_index");
+	S_END();
 };
 
 F_STRUCT(Session)
 {
+	S_BEGIN(Session);
 	S_PROP(window_x, "window_x");
 	S_PROP(window_y, "window_y");
 	S_PROP(window_width, "window_width");
 	S_PROP(window_height, "window_height");
 	S_PROP(state, "state");
 	S_PROP(aui_perspective, "aui_perspective");
+	S_END();
 };
 
 F_STRUCT(ProjectSession)
 {
+	S_BEGIN(ProjectSession)
 	// todo(Gustav): add support for project explorer
 	S_PROP_V(files, "files");
+	S_END();
 }
 
 /* ******************************************************************************************* */
@@ -669,64 +882,78 @@ F_STRUCT(ProjectSession)
 
 F_STRUCT(FindDlg)
 {
+	S_BEGIN(FindDlg);
 	S_PROP(sub_folders, "sub_folders");
 	S_PROP(match_case, "match_case");
 	S_PROP(match_whole_word, "match_whole_word");
 	S_PROP(match_start, "match_start");
 	S_PROP(target, "target");
 	S_PROP(file_types, "file_types");
+	S_END();
 };
 
 F_STRUCT(DialogData)
 {
+	S_BEGIN(DialogData);
 	S_PROP(find_dlg, "find_dlg");
+	S_END();
 };
 
 /* ******************************************************************************************* */
 
 F_STRUCT(BuildSetting)
 {
+	S_BEGIN(BuildSetting);
 	S_PROP(name, "name");
 	S_PROP(folder, "folder");
 	S_PROP(build, "build");
 	S_PROP(clean, "clean");
+	S_END();
 };
 
 F_STRUCT(Project)
 {
+	S_BEGIN(Project);
 	S_PROP(tabWidth, "tabWidth");
 	S_PROP(useTabs, "useTabs");
 	S_PROP_V(build_settings, "build_settings");
+	S_END();
 };
 
 /* ******************************************************************************************* */
 
 F_STRUCT(RunSetting)
 {
+	S_BEGIN(RunSetting);
 	S_PROP(name, "name");
 	S_PROP(application, "application");
 	S_PROP(arguments, "arguments");
 	S_PROP(folder, "folder");
 	S_PROP(cmd_before_launch, "cmd_before_launch");
 	S_PROP(wait_for_exit, "wait_for_exit");
+	S_END();
 };
 
 F_STRUCT(UserProject)
 {
+	S_BEGIN(UserProject);
 	S_PROP(build_setting, "build_setting");
 	S_PROP(run_setting, "run_setting");
 	S_PROP_V(run, "run");
+	S_END();
 };
 
 /* ****************************************************************************************** */
 
 F_STRUCT(MachineSettings)
 {
+	S_BEGIN(MachineSettings);
 	S_PROP(cargo, "cargo");
 	S_PROP(rustc, "rustc");
 	S_PROP(protoc, "protoc");
 	S_PROP(racer, "racer");
 	S_PROP(rust_src_path, "rust_src_path");
+	S_END();
 };
 
 
@@ -734,7 +961,7 @@ F_STRUCT(MachineSettings)
 // facade
 
 template<typename T>
-wxString GenericLoad(T* mess, const Fil& file)
+wxString GenericLoad(SerLog* log, T* mess, const Fil& file)
 {
 	std::ifstream f(file.full_path().ToStdString());
 	if(f.good() == false)
@@ -742,16 +969,31 @@ wxString GenericLoad(T* mess, const Fil& file)
 		return "failed to open file";
 	}
 
-	auto filer = Filer{true, nlohmann::json::parse(f)};
-	ser(&filer, mess);
+	std::ostringstream buffer;
+	buffer << f.rdbuf();
+	auto parsed = jsonh::Parse(buffer.str(), static_cast<jsonh::parse_flags::Type>(jsonh::parse_flags::IgnoreAllCommas | jsonh::parse_flags::IdentifierAsString));
+	if (parsed.HasError())
+	{
+		for (const auto& err: parsed.errors)
+		{
+			log->errors.emplace_back(SerError{wxString::FromUTF8(err.message.c_str()), err.location.line, err.location.column});
+		}
+		return "Parsing failed";
+	}
+
+	auto filer = Filer{true, &parsed.doc, *parsed.root};
+	ser(log, &filer, mess);
 	return "";
 }
 
 template<typename T>
 wxString GenericSave(T* mess, const Fil& file)
 {
-	auto filer = Filer{false, {}};
-	ser(&filer, mess);
+	jsonh::Document doc;
+	auto root = doc.add(jsonh::Object{});
+	auto filer = Filer{false, &doc, root};
+	SerLog log;
+	ser(&log, &filer, mess);
 
 	// make sure dir exist
 	const auto dir = file.dir();
@@ -764,7 +1006,7 @@ wxString GenericSave(T* mess, const Fil& file)
 	}
 	
 	std::ofstream f(file.full_path().ToStdString());
-	f << filer.json.dump(4);
+	f << jsonh::Print(root, &doc, jsonh::print_flags::StringAsIdent, jsonh::Pretty);
 	if(!f.good())
 	{
 		return "failed to write file to " + file.full_path();
@@ -781,13 +1023,13 @@ wxString SaveProtoJson(ride::Project* mess, const Fil& file) { return GenericSav
 wxString SaveProtoJson(ride::MachineSettings* mess, const Fil& file) { return GenericSave(mess, file); }
 wxString SaveProtoJson(ride::ProjectSession* mess, const Fil& file) { return GenericSave(mess, file); }
 
-wxString LoadProtoJson(ride::UserProject* mess, const Fil& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::Theme* mess, const Fil& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::Settings* mess, const Fil& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::Session* mess, const Fil& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::Project* mess, const Fil& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::MachineSettings* mess, const Fil& file) { return GenericLoad(mess, file); }
-wxString LoadProtoJson(ride::ProjectSession* mess, const Fil& file) { return GenericLoad(mess, file); }
+wxString LoadProtoJson(SerLog* log, ride::UserProject* mess, const Fil& file) { return GenericLoad(log, mess, file); }
+wxString LoadProtoJson(SerLog* log, ride::Theme* mess, const Fil& file) { return GenericLoad(log, mess, file); }
+wxString LoadProtoJson(SerLog* log, ride::Settings* mess, const Fil& file) { return GenericLoad(log, mess, file); }
+wxString LoadProtoJson(SerLog* log, ride::Session* mess, const Fil& file) { return GenericLoad(log, mess, file); }
+wxString LoadProtoJson(SerLog* log, ride::Project* mess, const Fil& file) { return GenericLoad(log, mess, file); }
+wxString LoadProtoJson(SerLog* log, ride::MachineSettings* mess, const Fil& file) { return GenericLoad(log, mess, file); }
+wxString LoadProtoJson(SerLog* log, ride::ProjectSession* mess, const Fil& file) { return GenericLoad(log, mess, file); }
 
 
 

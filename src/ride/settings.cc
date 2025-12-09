@@ -37,11 +37,11 @@ Fil GetMachineFile()
 }
 
 template<typename T>
-bool LoadProto(T* message, const Fil& file, wxWindow* main, const wxString& name)
+bool LoadProto(SerLog* log, T* message, const Fil& file, wxWindow* main, const wxString& name)
 {
 	if (file.exist())
 	{
-		const wxString jsonerr = LoadProtoJson(message, file);
+		const wxString jsonerr = LoadProtoJson(log, message, file);
 		if (jsonerr != "")
 		{
 			ShowError(main, "Unable to load " + name + "(" + file.full_path() + ") as json: " + jsonerr, "Error while loading");
@@ -51,7 +51,7 @@ bool LoadProto(T* message, const Fil& file, wxWindow* main, const wxString& name
 	else
 	{
 		if(file.exist() == false) return false;
-		const wxString jsonerr = LoadProtoJson(message, file);
+		const wxString jsonerr = LoadProtoJson(log, message, file);
 		if (jsonerr != "")
 		{
 			ShowError(main, "Unable to load " + name + "(" + file.full_path() + "): " + jsonerr, "Error while loading");
@@ -74,9 +74,9 @@ bool SaveProto(T* message, const Fil& file, wxWindow* main, const wxString& name
 	return true;
 }
 
-bool LoadSettings(wxWindow* main, ::ride::MachineSettings* settings)
+bool LoadSettings(SerLog* log, wxWindow* main, ::ride::MachineSettings* settings)
 {
-	return LoadProto(settings, GetMachineFile(), main, "machine settings");
+	return LoadProto(log, settings, GetMachineFile(), main, "machine settings");
 }
 
 bool SaveSettings(wxWindow* main, ::ride::MachineSettings* settings)
@@ -84,10 +84,10 @@ bool SaveSettings(wxWindow* main, ::ride::MachineSettings* settings)
 	return SaveProto(settings, GetMachineFile(), main, "machine settings");
 }
 
-bool LoadSettings(wxWindow* main, ::ride::Settings* settings)
+bool LoadSettings(SerLog* log, wxWindow* main, ::ride::Settings* settings)
 {
 	const auto file = GetSettingsFile();
-	const auto r = LoadProto(settings, file, main, "settings");
+	const auto r = LoadProto(log, settings, file, main, "settings");
 	AddBuiltInThemes(settings);
 	if (file.exist() == false)
 	{
@@ -101,9 +101,9 @@ bool SaveSettings(wxWindow* main, ::ride::Settings* settings)
 	return SaveProto(settings, GetSettingsFile(), main, "settings");
 }
 
-bool LoadSession(wxWindow* main, ::ride::Session* settings)
+bool LoadSession(SerLog* log, wxWindow* main, ::ride::Session* settings)
 {
-	return LoadProto(settings, GetSessionFile(), main, "last session");
+	return LoadProto(log, settings, GetSessionFile(), main, "last session");
 }
 
 bool SaveSession(wxWindow* main, ::ride::Session* settings)

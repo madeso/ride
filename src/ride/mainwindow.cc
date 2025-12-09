@@ -611,8 +611,10 @@ MainWindow::MainWindow(const wxString& app_name,
 #endif
 	aui_.SetManagedWindow(this);
 
-	LoadSettings(this, &settings_);
-	LoadSettings(this, &machine_);
+	SerLog settings_log;
+	SerLog machine_log;
+	LoadSettings(&settings_log, this, &settings_);
+	LoadSettings(&machine_log, this, &machine_);
 
 	int sbstyle = wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
 	statusbar_ = new wxStatusBarGeneric(this, wxID_ANY, sbstyle);
@@ -1377,12 +1379,14 @@ void MainWindow::FileWasSaved(const Fil& f)
 {
 	if (GetSettingsFile() == f)
 	{
-		LoadSettings(this, &settings_);
+		SerLog settings_log;
+		LoadSettings(&settings_log, this, &settings_);
 		ProjectSettingsHasChanged();
 	}
 	else if (GetMachineFile() == f)
 	{
-		LoadSettings(this, &machine_);
+		SerLog machine_log;
+		LoadSettings(&machine_log, this, &machine_);
 	}
 }
 
@@ -1552,7 +1556,8 @@ void MainWindow::OpenFilesFromProjectSession()
 	if(filename.exist() == false) return;
 
 	ride::ProjectSession session;
-	const wxString error = LoadProtoJson(&session, filename);
+	SerLog log;
+	const wxString error = LoadProtoJson(&log, &session, filename);
 	if(error.IsEmpty() == false)
 	{
 		ShowError(
@@ -1707,7 +1712,8 @@ void MainWindow::SaveSession()
 void MainWindow::RestoreSession()
 {
 	ride::Session session;
-	bool loaded = ::LoadSession(this, &session);
+	SerLog log;
+	bool loaded = ::LoadSession(&log, this, &session);
 	if (loaded)
 	{
 		SetSize(session.window_x, session.window_y, session.window_width, session.window_height);
