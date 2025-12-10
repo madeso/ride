@@ -31,6 +31,7 @@
 #include "ride/project.h"
 #include "ride/stcutils.h"
 #include "ride/wxutils.h"
+#include "wx/wupdlock.h"
 
 wxDEFINE_EVENT(EVENT_UPDATE_SELECTION, wxCommandEvent);
 
@@ -364,12 +365,15 @@ bool FileEdit::AcceptsFocusFromKeyboard() const
 
 void FileEdit::ClearCompilerMessages()
 {
+	inside_compiler_message_update = true;
+	wxWindowUpdateLocker noUpdates(this);
 	text_->AnnotationClearAll();
 	text_->SetIndicatorCurrent(ID_INDICATOR_WARNING);
 	text_->IndicatorClearRange(0, text_->GetLength());
 
 	text_->SetIndicatorCurrent(ID_INDICATOR_ERROR);
 	text_->IndicatorClearRange(0, text_->GetLength());
+	inside_compiler_message_update = false;
 }
 
 void FileEdit::AddCompilerMessage(const CompilerMessage& mess)
@@ -1643,6 +1647,16 @@ void FileEdit::OnSelectionUpdated(wxCommandEvent& event)
 
 void FileEdit::OnChanged(wxStyledTextEvent& event)
 {
+	// this is a hack...? perhaps should look into a different event?
+	if (inside_compiler_message_update) return;
+	/*
+	wxEVT_STC_MODIFIED
+    Generated when the contents of the control have changed or are about to change.
+    You should not attempt to make any changes to the control inside a handler for this event.
+	https://docs.wxwidgets.org/3.2/classwx_styled_text_event.html
+	*/
+
+
 	UpdateTitle();
 	HighlightCurrentWord();
 	UpdateBraceMatching();

@@ -125,6 +125,8 @@ private:
 	int highlight_current_word_last_end_position_;
 	wxDateTime last_modification_time_;
 
+	bool inside_compiler_message_update = false;
+
 private:
 
 	void BindEvents();
