@@ -384,7 +384,7 @@ struct StructParser {
 	{
 		if (! filer->is_loading)
 		{
-			// filer->json = filer->doc->add(jsonh::Object{});
+			filer->json = filer->doc->add(jsonh::Object{});
 			return true;
 		}
 
@@ -990,10 +990,11 @@ template<typename T>
 wxString GenericSave(T* mess, const Fil& file)
 {
 	jsonh::Document doc;
-	auto root = doc.add(jsonh::Object{});
-	auto filer = Filer{false, &doc, root};
+	// note: intentionally adding invalid object as that will be later overwritten
+	auto filer = Filer{false, &doc, {}};
 	SerLog log;
 	ser(&log, &filer, mess);
+	jsonh::Value root = filer.json;
 
 	// make sure dir exist
 	const auto dir = file.dir();
