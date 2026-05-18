@@ -119,7 +119,7 @@ private:
 	std::optional<Fil> filename_; // if unset, this is a new file that isn't saved
 	Languages* languages_;
 
-	Language* current_language_;
+	Language const* current_language_;
 
 	int highlight_current_word_last_start_position_;
 	int highlight_current_word_last_end_position_;

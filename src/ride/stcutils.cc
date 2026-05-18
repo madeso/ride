@@ -357,7 +357,7 @@ void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set)
 }
 
 void SetupScintilla(
-	wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language, Project* project
+	wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language const* language, Project* project
 )
 {
 	const ride::FontsAndColors& cols = set.fonts_and_colors;

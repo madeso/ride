@@ -16,9 +16,9 @@ wxString b2s01(bool b);
 
 //////////////////////////////////////////////////////////////////////////
 
-Language::Language(const wxString& name, int style)
-	: language_name_(name)
-	, lexer_style_(style)
+Language::Language()
+	: language_name_(_("NULL"))
+	, lexer_style_(wxSTC_LEX_NULL)
 {
 }
 
@@ -51,11 +51,26 @@ bool Language::IsKeyword(const wxString word) const
 	return false;
 }
 
+wxString keywords_to_string(const std::vector<wxString>& keywords_)
+{
+	wxString ret;
+	bool first = true;
+	for (const auto& keyword: keywords_)
+	{
+		if (first)
+			ret = keyword;
+		else
+			ret += " " + keyword;
+		first = false;
+	}
+	return ret;
+}
+
 class KeywordBuilder
 {
 public:
 
-	KeywordBuilder& operator<<(const wxString keyword)
+	KeywordBuilder& operator<<(const wxString& keyword)
 	{
 		keywords_.push_back(keyword);
 		return *this;
@@ -68,17 +83,7 @@ public:
 
 	wxString ToString() const
 	{
-		wxString ret;
-		bool first = true;
-		for (const auto& keyword: keywords_)
-		{
-			if (first)
-				ret = keyword;
-			else
-				ret += " " + keyword;
-			first = false;
-		}
-		return ret;
+		return keywords_to_string(keywords_);
 	}
 
 	operator const wxString() const
@@ -180,29 +185,6 @@ bool Language::MatchPattern(const Fil& file) const
 	return false;
 }
 
-wxString Language::GetFilePattern() const
-{
-	wxString patterns;
-
-	for (const auto& elem: file_patterns_)
-	{
-		// if the pattern starts with a dot, assume it's a extension and we
-		// need a star, if not we need to match the whole file
-		const wxString patt = elem.StartsWith(".") ? "*" + elem : elem;
-
-		// build a *.txt;*.pdf list
-		if (patterns.IsEmpty())
-		{
-			patterns = patt;
-		}
-		else
-		{
-			patterns += ";" + patt;
-		}
-	}
-
-	return language_name_ + " files (" + patterns + ")|" + patterns;
-}
 
 const std::vector<wxString>& Language::GetKeywords() const
 {
@@ -288,10 +270,74 @@ void DefaultStyleDocument(
 	language->SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 }
 
+Language MakeCppLanguage()
+{
+	Language cpp;
+	cpp.language_name_ = "C++";
+	cpp.lexer_style_ = wxSTC_LEX_CPP;
+	cpp.file_patterns_ = {".c", ".cc", ".cpp", ".cs", ".h", ".hh", ".hpp", ".hxx"};
+
+	// primary
+	cpp.keywords[0] = {"asm",		   "auto",		"bool",
+					   "break",		   "case",		"catch",
+					   "char",		   "class",		"const",
+					   "const_cast",   "continue",	"default",
+					   "delete",	   "do",		"double",
+					   "dynamic_cast", "else",		"enum",
+					   "explicit",	   "export",	"extern",
+					   "false",		   "float",		"for",
+					   "friend",	   "goto",		"if",
+					   "inline",	   "int",		"long",
+					   "mutable",	   "namespace", "new",
+					   "operator",	   "private",	"protected",
+					   "public",	   "register",	"reinterpret_cast",
+					   "return",	   "short",		"signed",
+					   "sizeof",	   "static",	"static_cast",
+					   "struct",	   "switch",	"template",
+					   "this",		   "throw",		"true",
+					   "try",		   "typedef",	"typeid",
+					   "typename",	   "union",		"unsigned",
+					   "using",		   "virtual",	"void",
+					   "volatile",	   "wchar_t",	"while"};
+
+	// secondary
+	cpp.keywords[1] = {"file"};
+
+	// documentation
+	cpp.keywords[2] = {
+		"a", "addindex", "addtogroup", "anchor", "arg", "attention", "author", "b", "brief", "bug", "c", "class", "code",
+		"date", "def", "defgroup", "deprecated", "dontinclude", "e", "em", "endcode", "endhtmlonly", "endif", "endlatexonly",
+		"endlink", "endverbatim", "enum", "example", "exception", "f$", "f[", "f]", "file", "fn", "hideinitializer",
+		"htmlinclude", "htmlonly", "if", "image", "include", "ingroup", "internal", "invariant", "interface", "latexonly",
+		"li", "line", "link", "mainpage", "name", "namespace", "nosubgrouping", "note", "overload", "p", "page", "par",
+		"param", "post", "pre", "ref", "relates", "remarks", "return", "retval", "sa", "section", "see", "showinitializer",
+		"since", "skip", "skipline", "struct", "subsection", "test", "throw", "todo", "typedef", "union", "until", "var", "verbatim",
+		"verbinclude", "version", "warning", "weakgroup", "$", "@", "\"\"", "&", "<", ">", "#", "{", "}"
+	};
+
+	// global classes and typedefs
+	cpp.keywords[3] = {};
+
+	// preprocessor defines
+	cpp.keywords[4] = {};
+
+	// Task marker and error marker keywords
+	cpp.keywords[5] = {"todo", "error"};
+
+	//  Set to 1 to allow verbatim strings to contain escape sequences.
+	cpp.properties["lexer.cpp.verbatim.strings.allow.escapes"] = "1";
+	//  Set to 1 to enable highlighting of back-quoted raw strings .
+	cpp.properties["lexer.cpp.backquoted.strings"] = "1";
+	//  Set to 1 to enable highlighting of escape sequences in strings
+	cpp.properties["lexer.cpp.escape.sequence"] = "1";
+	//  This option enables folding on a preprocessor #else or #endif line of an #if statement.
+	cpp.properties["fold.cpp.preprocessor.at.else"] = "1";
+
+	return cpp;
+}
+
 class CppLanguage : public Language
 {
-public:
-
 	CppLanguage()
 		: Language(_("C++"), wxSTC_LEX_CPP)
 	{
@@ -303,70 +349,16 @@ public:
 		AddExtension(".hh");
 		AddExtension(".hpp");
 		AddExtension(".hxx");
-		const KeywordBuilder temp = KeywordBuilder() << "asm"
-													 << "auto"
-													 << "bool"
-													 << "break"
-													 << "case"
-													 << "catch"
-													 << "char"
-													 << "class"
-													 << "const"
-													 << "const_cast"
-													 << "continue"
-													 << "default"
-													 << "delete"
-													 << "do"
-													 << "double"
-													 << "dynamistyle_cast"
-													 << "else"
-													 << "enum"
-													 << "explicit"
-													 << "export"
-													 << "extern"
-													 << "false"
-													 << "float"
-													 << "for"
-													 << "friend"
-													 << "goto"
-													 << "if"
-													 << "inline"
-													 << "int"
-													 << "long"
-													 << "mutable"
-													 << "namespace"
-													 << "new"
-													 << "operator"
-													 << "private"
-													 << "protected"
-													 << "public"
-													 << "register"
-													 << "reinterpret_cast"
-													 << "return"
-													 << "short"
-													 << "signed"
-													 << "sizeof"
-													 << "static"
-													 << "statistyle_cast"
-													 << "struct"
-													 << "switch"
-													 << "template"
-													 << "this"
-													 << "throw"
-													 << "true"
-													 << "try"
-													 << "typedef"
-													 << "typeid"
-													 << "typename"
-													 << "union"
-													 << "unsigned"
-													 << "using"
-													 << "virtual"
-													 << "void"
-													 << "volatile"
-													 << "wchar_t"
-													 << "while";
-		keywords_ = temp.ToVector();
+		const std::vector<wxString> temp = {
+			"asm", "auto", "bool", "break", "case", "catch", "char", "class", "const", "const_cast", "continue",
+			"default", "delete", "do", "double", "dynamic_cast", "else", "enum", "explicit", "export", "extern",
+			"false", "float", "for", "friend", "goto", "if", "inline", "int", "long", "mutable", "namespace", "new",
+			"operator", "private", "protected", "public", "register", "reinterpret_cast", "return",
+			"short", "signed", "sizeof", "static", "static_cast", "struct", "switch",
+			"template", "this", "throw", "true", "try", "typedef", "typeid", "typename",
+			"union", "unsigned", "using", "virtual", "void", "volatile", "wchar_t", "while"
+		};
+		keywords_ = temp;
 		primary_keywords_ = temp.ToString();
 	}
 
@@ -903,81 +895,56 @@ public:
 	}
 };
 
-struct Languages::LanguagesPimpl
-{
-	LanguagesPimpl()
-		: LanguageList(BuildLanguageList())
-	{
-	}
-
-	std::vector<Language*> BuildLanguageList()
-	{
-		std::vector<Language*> ret;
-		ret.push_back(&language_rust_);
-		ret.push_back(&language_protobuf_);
-		ret.push_back(&language_properties_);
-		ret.push_back(&language_cpp_);
-		ret.push_back(&language_markdown_);
-		ret.push_back(&language_xml_);
-		ret.push_back(&language_cmake_);
-		ret.push_back(&language_lua_);
-		ret.push_back(&language_yaml_);
-		ret.push_back(&language_json);
-		return ret;
-	}
-
-	CppLanguage language_cpp_;
-	RustLanguage language_rust_;
-	ProtobufLanguage language_protobuf_;
-	NullLanguage language_null_;
-	MarkdownLanguage language_markdown_;
-	PropertiesLanguage language_properties_;
-	XmlLanguage language_xml_;
-	CmakeLanguage language_cmake_;
-	LuaLanguage language_lua_;
-	YamlLanguage language_yaml_;
-	JsonLanguage language_json;
-
-	const std::vector<Language*> LanguageList;
-};
-
-Languages::Languages()
-	: pimpl_(new Languages::LanguagesPimpl())
-{
-}
-
-Languages::~Languages()
-{
-}
-
 wxString Languages::GetFilePattern()
 {
 	wxString ret = "All files (*.*)|*.*";
 
-	// need to loop from back to front to get the LanguageList in order for
-	// display
+	// need to loop from back to front to get the LanguageList in order for displaying
 	// since we are adding 'back to front'
-	for (auto l = pimpl_->LanguageList.rbegin(); l != pimpl_->LanguageList.rend(); ++l)
+	for (auto l = languages.rbegin(); l != languages.rend(); ++l)
 	{
-		Language* lang = *l;
-		ret = lang->GetFilePattern() + "|" + ret;
+		const auto Language& lang = *l;
+
+		wxString patterns;
+
+		for (const auto& elem: lang.file_patterns_)
+		{
+			// if the pattern starts with a dot, assume it's a extension and we
+			// need a star, if not we need to match the whole file
+			const wxString patt = elem.StartsWith(".") ? "*" + elem : elem;
+
+			// build a *.txt;*.pdf list
+			if (patterns.IsEmpty())
+			{
+				patterns = patt;
+			}
+			else
+			{
+				patterns += ";" + patt;
+			}
+		}
+
+		const auto filter_name = lang.language_name_ + " files (" + patterns + ")|" + patterns;
+	
+
+		ret = filter_name + "|" + ret;
 	}
 	return ret;
 }
 
-Language* Languages::DetermineLanguage(const Fil& filepath)
+const Language* Languages::DetermineLanguage(const Fil& filepath)
 {
-	for (auto lang: pimpl_->LanguageList)
+	for (const auto& lang: languages)
 	{
-		if (lang->MatchPattern(filepath))
+		if (lang.MatchPattern(filepath))
 		{
-			return lang;
+			return &lang;
 		}
 	}
-	return &pimpl_->language_null_;
+	return &null_language;
 }
 
 Language* Languages::GetNullLanguage()
 {
-	return &pimpl_->language_null_;
+	return &null_language;
 }

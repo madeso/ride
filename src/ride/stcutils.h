@@ -42,7 +42,7 @@ void SetStyle(
 );
 
 void SetupScintilla(
-	wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language* language, Project* project
+	wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language const* language, Project* project
 );
 void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
 void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
