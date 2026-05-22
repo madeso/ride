@@ -183,10 +183,10 @@ int C(const ride::VirtualSpace space)
 {
 	switch (space)
 	{
-	case ride::VIRTUALSPACE_NONE: return wxSTC_SCVS_NONE;
-	case ride::VIRTUALSPACE_RECTANGULARSELECTION: return wxSTC_SCVS_RECTANGULARSELECTION;
-	case ride::VIRTUALSPACE_USERACCESSIBLE: return wxSTC_SCVS_USERACCESSIBLE;
-	default: assert(0 && "Unknown virtual space"); return wxSTC_SCVS_NONE;
+	case ride::VIRTUALSPACE_NONE: return wxSTC_VS_NONE;
+	case ride::VIRTUALSPACE_RECTANGULARSELECTION: return wxSTC_VS_RECTANGULARSELECTION;
+	case ride::VIRTUALSPACE_USERACCESSIBLE: return wxSTC_VS_USERACCESSIBLE;
+	default: assert(0 && "Unknown virtual space"); return wxSTC_VS_NONE;
 	}
 }
 

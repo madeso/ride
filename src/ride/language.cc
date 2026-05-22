@@ -38,17 +38,12 @@ wxString PropTypeToString(int type)
 	}
 }
 
-bool Language::IsKeyword(const wxString word) const
+bool Language::IsKeyword(int group, const wxString& word) const
 {
-	for (const auto& keyword: keywords_)
-	{
-		if (keyword == word)
-		{
-			return true;
-		}
-	}
-
-	return false;
+	const auto it = keywords.find(group);
+	if (it == keywords.end()) return false;
+	const auto& keyword_list = it->second;
+	return keyword_list.find(word) != keyword_list.end();
 }
 
 wxString keywords_to_string(const std::vector<wxString>& keywords_)
@@ -96,100 +91,82 @@ private:
 	std::vector<wxString> keywords_;
 };
 
-void Language::WarnAboutProperties(wxStyledTextCtrl* text) const
+struct PropsAndKeywords
 {
-	const auto available_props_vec = Split(text->PropertyNames(), '\n');
-	const auto available_props = std::set(available_props_vec.begin(), available_props_vec.end());
+#ifdef _DEBUG
+	// todo(Gustav): move to local variables
+	std::set<wxString> used_properties_;
+	std::set<unsigned int> used_keywords_;
+#endif
 
-	for (const auto& prop_name: available_props)
+	void SetProperty(wxStyledTextCtrl* text, const wxString& name, const wxString& value)
 	{
-		if (used_properties_.find(prop_name) != used_properties_.end()) continue;
-		const wxString desc = text->DescribeProperty(prop_name);
-		const wxString value = text->GetProperty(prop_name);
-		const wxString type = PropTypeToString(text->PropertyType(prop_name));
-		wxLogWarning(
-			_("Property for %s was not set: %s %s; // %s %s"),
-			language_name_, type, prop_name, value, desc
-		);
+		text->SetProperty(name, value);
+	#ifdef _DEBUG
+		assert(used_properties_.find(name) == used_properties_.end());
+		used_properties_.insert(name);
+	#endif
 	}
 
-	for (const auto& prop: used_properties_)
+	
+	void SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords)
 	{
-		if (available_props.find(prop) == available_props.end())
-		{
-			wxLogWarning(_("Property %s for %s was set, but does not exist."), prop, language_name_);
-		}
+		text->SetKeyWords(id, keywords);
+#ifdef _DEBUG
+		assert(used_keywords_.find(id) == used_keywords_.end());
+		used_keywords_.insert(id);
+#endif
 	}
-}
-
-void Language::WarnAboutKeywords(const wxStyledTextCtrl* text) const
-{
-	const auto available_keywords = Split(text->DescribeKeyWordSets(), '\n');
-	for (unsigned int i = 0; i < available_keywords.size(); ++i)
+		
+	void WarnAboutProperties(wxStyledTextCtrl* text, const wxString& language_name_) const
 	{
-		if (used_keywords_.find(i) == used_keywords_.end())
+		const auto available_props_vec = Split(text->PropertyNames(), '\n');
+		const auto available_props
+			= std::set(available_props_vec.begin(), available_props_vec.end());
+
+		for (const auto& prop_name: available_props)
 		{
+			if (used_properties_.find(prop_name) != used_properties_.end()) continue;
+			const wxString desc = text->DescribeProperty(prop_name);
+			const wxString value = text->GetProperty(prop_name);
+			const wxString type = PropTypeToString(text->PropertyType(prop_name));
 			wxLogWarning(
-				_("Keyword %d for %s was not set: %s"), i, language_name_, available_keywords[i]
+				_("Property for %s was not set: %s %s; // %s %s"),
+				language_name_,
+				type,
+				prop_name,
+				value,
+				desc
 			);
 		}
-	}
-}
 
-void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings)
-{
-#ifdef _DEBUG
-	used_properties_.clear();
-	used_keywords_.clear();
-#endif
-	text->SetLexer(lexer_style_);
-	DoStyleDocument(text, settings);
-#ifdef _DEBUG
-	WarnAboutProperties(text);
-	WarnAboutKeywords(text);
-#endif
-}
-
-void Language::SetProperty(wxStyledTextCtrl* text, const wxString& name, const wxString& value)
-{
-	text->SetProperty(name, value);
-#ifdef _DEBUG
-	assert(used_properties_.find(name) == used_properties_.end());
-	used_properties_.insert(name);
-#endif
-}
-
-void Language::SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords)
-{
-	text->SetKeyWords(id, keywords);
-#ifdef _DEBUG
-	assert(used_keywords_.find(id) == used_keywords_.end());
-	used_keywords_.insert(id);
-#endif
-}
-
-void Language::AddExtension(const wxString& ext)
-{
-	file_patterns_.push_back(ext);
-}
-
-bool Language::MatchPattern(const Fil& file) const
-{
-	for (const auto& elem: file_patterns_)
-	{
-		if (file.ends_with(elem))
+		for (const auto& prop: used_properties_)
 		{
-			return true;
+			if (available_props.find(prop) == available_props.end())
+			{
+				wxLogWarning(
+					_("Property %s for %s was set, but does not exist."), prop, language_name_
+				);
+			}
 		}
 	}
-	return false;
-}
+
+	void WarnAboutKeywords(const wxStyledTextCtrl* text, const wxString& language_name_) const
+	{
+		const auto available_keywords = Split(text->DescribeKeyWordSets(), '\n');
+		for (unsigned int i = 0; i < available_keywords.size(); ++i)
+		{
+			if (used_keywords_.find(i) == used_keywords_.end())
+			{
+				wxLogWarning(
+					_("Keyword %d for %s was not set: %s"), i, language_name_, available_keywords[i]
+				);
+			}
+		}
+	}
+};
 
 
-const std::vector<wxString>& Language::GetKeywords() const
-{
-	return keywords_;
-}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -214,7 +191,7 @@ void CommonDocumentStyle(wxStyledTextCtrl* text, const ride::Settings& settings)
 }
 
 void DefaultStyleDocument(
-	wxStyledTextCtrl* text, const ride::Settings& settings, Language* language
+	wxStyledTextCtrl* text, const ride::Settings& settings, PropsAndKeywords* language
 )
 {
 	SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors.default_style, true);
@@ -269,6 +246,50 @@ void DefaultStyleDocument(
 	language->SetProperty(text, wxT("fold.cpp.explicit.start"), _T("//{"));
 	language->SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 }
+
+void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const
+{
+	PropsAndKeywords props_and_keywords;
+
+	text->SetLexer(lexer_style_);
+	
+	// DoStyleDocument(text, settings);
+	DefaultStyleDocument(text, settings, &props_and_keywords);
+	for (const auto& [name, value]: properties)
+	{
+		props_and_keywords.SetProperty(text, name, value);
+	}
+	for (const auto& [kwclass, kws]: keywords)
+	{
+		for (const auto& kw: kws)
+		{
+			props_and_keywords.SetKeys(text, kwclass, kw);
+		}
+	}
+
+#ifdef _DEBUG
+	props_and_keywords.WarnAboutProperties(text, language_name_);
+	props_and_keywords.WarnAboutKeywords(text, language_name_);
+#endif
+}
+
+void Language::AddExtension(const wxString& ext)
+{
+	file_patterns_.push_back(ext);
+}
+
+bool Language::MatchPattern(const Fil& file) const
+{
+	for (const auto& elem: file_patterns_)
+	{
+		if (file.ends_with(elem))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 
 Language MakeCppLanguage()
 {
@@ -336,62 +357,13 @@ Language MakeCppLanguage()
 	return cpp;
 }
 
+// todo(Gustav): implement cpp first, then the rest
+#if 0
 class CppLanguage : public Language
 {
-	CppLanguage()
-		: Language(_("C++"), wxSTC_LEX_CPP)
-	{
-		AddExtension(".c");
-		AddExtension(".cc");
-		AddExtension(".cpp");
-		AddExtension(".cs");
-		AddExtension(".h");
-		AddExtension(".hh");
-		AddExtension(".hpp");
-		AddExtension(".hxx");
-		const std::vector<wxString> temp = {
-			"asm", "auto", "bool", "break", "case", "catch", "char", "class", "const", "const_cast", "continue",
-			"default", "delete", "do", "double", "dynamic_cast", "else", "enum", "explicit", "export", "extern",
-			"false", "float", "for", "friend", "goto", "if", "inline", "int", "long", "mutable", "namespace", "new",
-			"operator", "private", "protected", "public", "register", "reinterpret_cast", "return",
-			"short", "signed", "sizeof", "static", "static_cast", "struct", "switch",
-			"template", "this", "throw", "true", "try", "typedef", "typeid", "typename",
-			"union", "unsigned", "using", "virtual", "void", "volatile", "wchar_t", "while"
-		};
-		keywords_ = temp;
-		primary_keywords_ = temp.ToString();
-	}
-
-	wxString primary_keywords_;
-
-	void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) override
+	void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings)
 	{
 		DefaultStyleDocument(text, settings, this);
-
-		SetProperty(text, "lexer.cpp.verbatim.strings.allow.escapes", "1"); //  Set to 1 to allow verbatim strings to contain escape sequences.
-		SetProperty(text, "lexer.cpp.backquoted.strings", "1"); //  Set to 1 to enable highlighting of back-quoted raw strings .
-		SetProperty(text, "lexer.cpp.escape.sequence", "1"); //  Set to 1 to enable highlighting of escape sequences in strings
-		SetProperty(text, "fold.cpp.preprocessor.at.else", "1"); //  This option enables folding on a preprocessor #else or #endif line of an #if statement.
-
-		const wxString CppWordlist2 = "file";
-		const wxString CppWordlist3
-			= "a addindex addtogroup anchor arg attention author b brief bug c "
-			  "class code date def defgroup deprecated dontinclude e em endcode "
-			  "endhtmlonly endif endlatexonly endlink endverbatim enum example "
-			  "exception f$ f[ f] file fn hideinitializer htmlinclude "
-			  "htmlonly if image include ingroup internal invariant interface "
-			  "latexonly li line link mainpage name namespace nosubgrouping note "
-			  "overload p page par param post pre ref relates remarks return "
-			  "retval sa section see showinitializer since skip skipline struct "
-			  "subsection test throw todo typedef union until var verbatim "
-			  "verbinclude version warning weakgroup $ @ \"\" & < > # { }";
-		SetKeys(text, 0, primary_keywords_);  // primary
-		SetKeys(text, 1, CppWordlist2);	 // secondary
-		SetKeys(text, 2, CppWordlist3);	 // documentation
-
-		SetKeys(text, 3, "");  // global classes and typedefs
-		SetKeys(text, 4, "");  // preprocessor defines
-		SetKeys(text, 5, "todo error"); // Task marker and error marker keywords
 	}
 };
 
@@ -894,6 +866,7 @@ public:
 	{
 	}
 };
+#endif
 
 wxString Languages::GetFilePattern()
 {
@@ -903,7 +876,7 @@ wxString Languages::GetFilePattern()
 	// since we are adding 'back to front'
 	for (auto l = languages.rbegin(); l != languages.rend(); ++l)
 	{
-		const auto Language& lang = *l;
+		const Language& lang = *l;
 
 		wxString patterns;
 

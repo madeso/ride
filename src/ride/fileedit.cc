@@ -1573,7 +1573,8 @@ void FileEdit::HighlightCurrentWord()
 			const bool is_keyword
 				= highlight_keyword
 					? false
-					: (current_language_ ? current_language_->IsKeyword(current_text) : false);
+					: (current_language_ ? current_language_->IsKeyword(0, current_text) : false);
+			// todo(Gustav): change setting to specify the highlight keyword settings
 
 			if (is_keyword == false)
 			{

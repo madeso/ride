@@ -9,9 +9,12 @@
 class wxStyledTextCtrl;
 struct Fil;
 
-using KeywordList = std::vector<wxString>;
+using KeywordList = std::set<wxString>;
 
-class Style;
+class Style
+{
+	// todo(Gustav): implement
+};
 
 class Language
 {
@@ -28,20 +31,9 @@ public:
 	// todo: move to protected/private
 	void AddExtension(const wxString& ext);
 
-	bool IsKeyword(const wxString word) const;
+	bool IsKeyword(int group, const wxString& word) const;
 
-	void WarnAboutProperties(wxStyledTextCtrl* text) const;
-	void WarnAboutKeywords(const wxStyledTextCtrl* text) const;
-	void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
-
-	const std::vector<wxString>& GetKeywords() const;
-
-	void SetProperty(wxStyledTextCtrl* text, const wxString& name, const wxString& value);
-
-
-	
-	void DoStyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings);
-	void SetKeys(wxStyledTextCtrl* text, unsigned int id, const wxString& keywords);
+	void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const;
 
 	wxString language_name_;
 	int lexer_style_;
@@ -51,11 +43,6 @@ public:
 	std::unordered_map<int, KeywordList> keywords;
 	std::unordered_map<wxString, wxString> properties;
 	std::unordered_map<int, std::optional<Style>> styles;
-#ifdef _DEBUG
-	// todo(Gustav): move to local variables
-	std::set<wxString> used_properties_;
-	std::set<unsigned int> used_keywords_;
-#endif
 };
 
 class Languages

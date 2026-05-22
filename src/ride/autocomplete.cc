@@ -379,10 +379,13 @@ void Autocomplete(
 		{
 			if (current_language)
 			{
-				const auto kw = current_language->GetKeywords();
-				for (const wxString& k: kw)
+				const auto& kw = current_language->keywords;
+				for (const auto& kwclass: kw)
 				{
-					wordlist.Add(WordEntry(k, AI_Keyword));
+					for (const auto& k: kwclass.second)
+					{
+						wordlist.Add(WordEntry(k, AI_Keyword));
+					}
 				}
 			}
 		}
