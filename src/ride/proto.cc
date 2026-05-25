@@ -971,7 +971,7 @@ wxString GenericLoad(SerLog* log, T* mess, const Fil& file)
 
 	std::ostringstream buffer;
 	buffer << f.rdbuf();
-	auto parsed = jsonh::Parse(buffer.str(), static_cast<jsonh::parse_flags::Type>(jsonh::parse_flags::IgnoreAllCommas | jsonh::parse_flags::IdentifierAsString));
+	auto parsed = jsonh::Parse(buffer.str(), jsonh::parse_flags::IgnoreAllCommas);
 	if (parsed.HasError())
 	{
 		for (const auto& err: parsed.errors)
@@ -1007,7 +1007,7 @@ wxString GenericSave(T* mess, const Fil& file)
 	}
 	
 	std::ofstream f(file.full_path().ToStdString());
-	f << jsonh::Print(root, &doc, jsonh::print_flags::StringAsIdent, jsonh::Pretty);
+	f << jsonh::Print(root, &doc, jsonh::print_flags::Json, jsonh::Pretty);
 	if(!f.good())
 	{
 		return "failed to write file to " + file.full_path();
