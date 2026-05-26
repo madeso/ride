@@ -1666,7 +1666,7 @@ void FileEdit::OnChanged(wxStyledTextEvent& event)
 void FileEdit::UpdateStatusText()
 {
 	main_->SetStatusText(
-		filename_ ? filename_->get_name_with_extension() : "",
+		filename_ ? filename_->get_name_with_extension() : wxString{""},
 		STATUSBAR_GENERAL
 	);	// change to only display the last 127 characters?
 	const auto line = text_->GetCurrentLine();

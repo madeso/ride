@@ -99,10 +99,10 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event)
 	const auto compiler_message = CompilerMessage::Parse(CompilerMessage::SOURCE_RUSTC, *root_folder, line_content);
 	const wxString message = compiler_message.has_value()
         ? ToShortString(compiler_message->message(), 45)
-        : "<none>";
+        : wxString{"<none>"};
 	const wxString commandline = compiler_message.has_value()
         ? GetCommandLine(*compiler_message)
-        : "";
+        : wxString{""};
 
 	wxMenu menu;
 	AppendEnabled(menu, ID_COPY, "Copy", has_selected);
@@ -114,7 +114,7 @@ void OutputControl::OnContextMenu(wxContextMenuEvent& event)
 			menu,
 			ID_RUN_THIS_COMPILER_MESSAGE,
 			wxString::Format(
-				"Run '%s'", commandline.IsEmpty() ? "<no command found>" : commandline
+				"Run '%s'", commandline.IsEmpty() ? wxString{"<no command found>"} : commandline
 			),
 			commandline.IsEmpty() == false
 		);

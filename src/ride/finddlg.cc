@@ -354,7 +354,7 @@ bool ShowFindDlg(
 	dlg.ToData(&find_dlg_data);
 
 	std::vector<FindResult> results;
-	wxString file_info = current_file ? current_file->get_name_with_extension() : "";
+	wxString file_info = current_file ? current_file->get_name_with_extension() : wxString{""};
 
 	// we can't create a styled ctrl so we cheat by having a 0x0 widget on the
 	// find dlg
@@ -433,7 +433,7 @@ bool ShowFindDlg(
 		// the parser code for both and get some synergy effects
 		const wxString mess = wxString::Format(
 			"%s:%d : %d : %d : %d %s: %s",
-			res.file ? res.file->get_name_with_extension() : "<unknown file>",
+			res.file ? res.file->get_name_with_extension() : wxString{"<unknown file>"},
 			res.start_line,
 			res.start_col,
 			res.end_line,
