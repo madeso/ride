@@ -57,8 +57,8 @@ Dialog::Dialog(
 	auto root = new wxBoxSizer(wxVERTICAL);
 	auto sizer = new wxBoxSizer(wxVERTICAL);
 
-	const int mainborder = style_.dlg_main_border();
-	const int border = style_.dlg_item_border();
+	const int mainborder = style_.dlg_main_border_;
+	const int border = style_.dlg_item_border_;
 
 	root->Add(sizer, 0, wxALL | wxEXPAND, mainborder);
 	SetSizer(root);
@@ -76,8 +76,8 @@ Dialog::Dialog(
 
 	list_ctrl_->SelectOrFirst(index, group, forward);
 
-	wxDialog::SetBackgroundColour(style_.base_color());
-	const wxColor foreground = style_.dialog_color();
+	wxDialog::SetBackgroundColour(style_.base_color_);
+	const wxColor foreground = style_.dialog_color_;
 	wxDialog::SetForegroundColour(foreground);
 
 	title_ctrl_->SetForegroundColour(foreground);
@@ -129,7 +129,7 @@ void Dialog::ShowDescription(const Item& item)
 {
 	title_ctrl_->SetLabel(item.title());
 	description_ctrl_->SetLabel(item.description());
-	path_ctrl_->SetLabel(item.path()->get_name_with_extension());
+	path_ctrl_->SetLabel(item.path_ ? item.path_->get_name_with_extension() : wxString("(no file)"));
 }
 
 void Dialog::UpdateDescription()

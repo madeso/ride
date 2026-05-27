@@ -5,18 +5,18 @@
 
 typedef std::vector<ride::Theme> ThemeList;
 
-ride::Theme* GetOrCreateTheme(ThemeList* themes, const std::string& name)
+std::pair<ride::Theme*, bool> GetOrCreateTheme(ThemeList* themes, const std::string& name)
 {
 	for (ride::Theme& t: *themes)
 	{
-		if (t.name == name) return &t;
+		if (t.name == name) return {&t, false};
 	}
 
 	themes->push_back({});
 	ride::Theme* temp = &(*themes->rbegin());
 	temp->name = name;
 	temp->can_remove = false;
-	return temp;
+	return {temp, true};
 }
 
 ride::Color Color(int r, int g, int b)
@@ -474,13 +474,19 @@ void AddBuiltInThemes(::ride::Settings* settings)
 	const std::string solarized_dark_name = "Solarized (dark)";
 
 	{
-		ride::Theme* default_theme = GetOrCreateTheme(themes, default_name);
-		SetupDefaultTheme(&default_theme->data);
+		auto [default_theme, created] = GetOrCreateTheme(themes, default_name);
+		if (created)
+		{
+			SetupDefaultTheme(&default_theme->data);
+		}
 	}
 
 	{
-		ride::Theme* solarized_dark_theme = GetOrCreateTheme(themes, solarized_dark_name);
-		SetupSolarizedDarkTheme(&solarized_dark_theme->data);
+		auto [solarized_dark_theme, created] = GetOrCreateTheme(themes, solarized_dark_name);
+		if (created)
+		{
+			SetupSolarizedDarkTheme(&solarized_dark_theme->data);
+		}
 	}
 
 	if (settings->current_theme.empty())

@@ -117,7 +117,7 @@ int ItemList::column_count() const
 void ItemList::PaintItems(wxDC* dc, const Style& style, Index selection, wxWindow* win)
 {
 	dc->SetLogicalFunction(wxCOPY);
-	dc->SetBrush(wxBrush(style.background_color()));
+	dc->SetBrush(wxBrush(style.background_color_));
 	dc->SetPen(*wxTRANSPARENT_PEN);
 	dc->DrawRectangle(win->GetClientRect());
 	dc->SetBackgroundMode(wxTRANSPARENT);
@@ -144,8 +144,8 @@ wxSize ItemList::CalculateItemSize(wxDC* dc, const Style& style)
 	}
 	else
 	{
-		sz.x += style.col_spacing() * 2;
-		sz.y += style.row_spacing() * 2;
+		sz.x += style.col_spacing_ * 2;
+		sz.y += style.row_spacing_ * 2;
 	}
 
 	return sz;

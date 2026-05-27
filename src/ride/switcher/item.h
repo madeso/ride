@@ -53,8 +53,6 @@ public:
 	Item& set_window(wxWindow* win);
 	wxWindow* window() const;
 
-protected:
-
 	wxString title_;
 	wxString name_;
 	wxString description_;

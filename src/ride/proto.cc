@@ -452,6 +452,7 @@ void s_prop_o(StructParser* parser, const std::string& NAME, std::optional<T>* o
 		auto found = obj->object.find(NAME);
 		if (found == obj->object.end())
 		{
+			*out = std::nullopt;
 			return;
 		}
 		Filer ff{true, parser->filer->doc, found->second};
@@ -475,6 +476,7 @@ void s_prop_v(StructParser* parser, const std::string& NAME, std::vector<T>* out
 	parser->names.emplace(NAME);
 	if (parser->filer->is_loading)
 	{
+		out->resize(0);
 		auto* obj = parser->get();
 		auto found = obj->object.find(NAME);
 		if (found == obj->object.end())

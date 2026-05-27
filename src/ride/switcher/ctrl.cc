@@ -155,7 +155,7 @@ Index GoToNextItem(const ItemList& items, Index i, bool local)
 
 Index GoHorizontal(const ItemList& items, Index i, const Style& style, int change)
 {
-	const int row_count = style.row_count() - 1;  // -1 since we should ignore the group header item
+	const int row_count = style.row_count_ - 1;  // -1 since we should ignore the group header item
 	// first, try to move withing the group
 	const int internal_item = i.second + change * row_count;
 	const int first_group_count = items.GetGroup(i.first).GetItemCount();
@@ -457,11 +457,11 @@ public:
 		columnCount = 1;
 
 		itemSize = is;
-		overall_size_ = wxSize(style.min_width(), style.min_height());
+		overall_size_ = wxSize(style_.min_width_, style_.min_height_);
 
 		currentRow = 0;
-		x = style_.x_margin();
-		y = style_.y_margin();
+		x = style_.x_margin_;
+		y = style_.y_margin_;
 	}
 
 	wxRect rect() const
@@ -483,21 +483,21 @@ public:
 	{
 		currentRow = 0;
 		columnCount++;
-		x += (style_.col_spacing() + itemSize.x);
-		y = style_.y_margin();
+		x += (style_.col_spacing_ + itemSize.x);
+		y = style_.y_margin_;
 	}
 
 	void GoToNextRow()
 	{
 		currentRow++;
-		y += (style_.row_spacing() + itemSize.y);
+		y += (style_.row_spacing_ + itemSize.y);
 	}
 
 	void UpdateOverallSize()
 	{
 		wxRect r = rect();
-		overall_size_.y = std::max(overall_size_.y, r.GetBottom() + 1 + style_.y_margin());
-		overall_size_.x = std::max(overall_size_.x, r.GetRight() + 1 + style_.x_margin());
+		overall_size_.y = std::max(overall_size_.y, r.GetBottom() + 1 + style_.y_margin_);
+		overall_size_.x = std::max(overall_size_.x, r.GetRight() + 1 + style_.x_margin_);
 	}
 
 	int get_currentRow() const
@@ -533,8 +533,8 @@ void Ctrl::CalculateLayout(wxDC& dc)
 	if (selection_ == SWITCHER_NOT_FOUND) selection_ = GoToFirstItem(items_);
 
 	wxSize items_size = items_.CalculateItemSize(&dc, style_);
-	items_size.x = std::min(items_size.x, style_.item_maxwidth());
-	items_size.y = std::min(items_size.y, style_.item_maxheight());
+	items_size.x = std::min(items_size.x, style_.item_maxwidth_);
+	items_size.y = std::min(items_size.y, style_.item_maxheight_);
 	LayoutCalculator calc(items_size, style_);
 
 	for (size_t group_index = 0; group_index < items_.GetGroupCount(); ++group_index)
@@ -547,7 +547,7 @@ void Ctrl::CalculateLayout(wxDC& dc)
 
 		for (size_t item_index = 0; item_index < group.GetItemCount(); ++item_index)
 		{
-			if (calc.get_currentRow() >= style_.row_count())
+			if (calc.get_currentRow() >= style_.row_count_ - 1)
 			{
 				calc.GoToNextCol();
 				calc.GoToNextRow();	 // only groups are on first row
@@ -570,8 +570,8 @@ void Ctrl::CalculateLayout(wxDC& dc)
 	overall_size_ = calc.overall_size();
 
 	// fix b/c margin isn't considered in client size with boxsizer
-	overall_size_.x += style_.dlg_main_border() * 2;
-	overall_size_.y += style_.dlg_main_border() * 2;
+	overall_size_.x += style_.dlg_main_border_ * 2;
+	overall_size_.y += style_.dlg_main_border_ * 2;
 
 	InvalidateBestSize();
 }

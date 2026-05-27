@@ -103,14 +103,14 @@ void PaintItem(
 
 	dc->SetClippingRegion(clippingRect);
 
-	dc->SetTextForeground(style.text_color());
+	dc->SetTextForeground(style.text_color_);
 	dc->SetFont(font);
 
 	int w, h;
 	dc->GetTextExtent(title, &w, &h);
 
 	int x = rect.x;
-	x += style.text_margin_x();
+	x += style.text_margin_x_;
 
 	if (draw_image)
 	{
@@ -121,7 +121,7 @@ void PaintItem(
 
 		x += 16;
 
-		x += style.text_margin_x();
+		x += style.text_margin_x_;
 	}
 
 	int y = rect.y + (rect.height - h) / 2;
@@ -133,12 +133,12 @@ void PaintItem(
 void Group::PaintItems(wxDC* dc, const Style& style, int selection)
 {
 	const wxFont groupFont(
-		style.item_font().GetPointSize(),
-		style.item_font().GetFamily(),
-		style.item_font().GetStyle(),
+		style.item_font_.GetPointSize(),
+		style.item_font_.GetFamily(),
+		style.item_font_.GetStyle(),
 		wxBOLD,
-		style.item_font().GetUnderlined(),
-		style.item_font().GetFaceName()
+		style.item_font_.GetUnderlined(),
+		style.item_font_.GetFaceName()
 	);
 
 	PaintItem(rect_, title_, wxNullBitmap, dc, style, groupFont, false);
@@ -150,12 +150,12 @@ void Group::PaintItems(wxDC* dc, const Style& style, int selection)
 
 		if (selected)
 		{
-			dc->SetPen(wxPen(style.selection_outline_color()));
-			dc->SetBrush(wxBrush(style.selection_color()));
+			dc->SetPen(wxPen(style.selection_outline_color_));
+			dc->SetBrush(wxBrush(style.selection_color_));
 			dc->DrawRectangle(item.rect());
 		}
 
-		PaintItem(item.rect(), item.title(), item.bitmap(), dc, style, style.item_font(), true);
+		PaintItem(item.rect(), item.title(), item.bitmap(), dc, style, style.item_font_, true);
 	}
 }
 
@@ -167,7 +167,7 @@ void ExtendSize(wxDC* dc, wxFont font, wxString title, const Style& style, wxSiz
 	dc->GetTextExtent(title, &w, &h);
 
 	// TODO(Gustav): should we care if this adds 16px to the group too?
-	w += 16 + 2 * style.text_margin_x();
+	w += 16 + 2 * style.text_margin_x_;
 
 	sz->x = wxMax(w, sz->x);
 	sz->y = wxMax(h, sz->y);
@@ -176,12 +176,12 @@ void ExtendSize(wxDC* dc, wxFont font, wxString title, const Style& style, wxSiz
 void Group::CalculateItemSize(wxDC* dc, const Style& style, wxSize* sz)
 {  // NOLINT
 	const wxFont groupFont(
-		style.item_font().GetPointSize(),
-		style.item_font().GetFamily(),
-		style.item_font().GetStyle(),
+		style.item_font_.GetPointSize(),
+		style.item_font_.GetFamily(),
+		style.item_font_.GetStyle(),
 		wxBOLD,
-		style.item_font().GetUnderlined(),
-		style.item_font().GetFaceName()
+		style.item_font_.GetUnderlined(),
+		style.item_font_.GetFaceName()
 	);
 
 	ExtendSize(dc, groupFont, title_, style, sz);
@@ -191,7 +191,7 @@ void Group::CalculateItemSize(wxDC* dc, const Style& style, wxSize* sz)
 	{
 		Item& item = items_[i];
 
-		ExtendSize(dc, style.item_font(), item.title(), style, sz);
+		ExtendSize(dc, style.item_font_, item.title(), style, sz);
 	}
 }
 

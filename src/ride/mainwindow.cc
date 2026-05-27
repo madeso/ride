@@ -1001,28 +1001,27 @@ void MainWindow::OnTab(bool forward)
 	if (theme)
 	{
 		const ride::FontsAndColors& colors = *theme;
-		style.set_background_color(C(colors.switcher_background_color));
-		style.set_text_color(C(colors.switcher_text_color));
-		style.set_selection_color(C(colors.switcher_selection_color));
-		style.set_selection_outline_color(C(colors.switcher_selection_outline_color));
-		style.set_dialog_color(C(colors.switcher_dialog_color));
-		style.set_base_color(C(colors.switcher_base_color));
+		style.background_color_ = C(colors.switcher_background_color);
+		style.text_color_ = C(colors.switcher_text_color);
+		style.selection_color_ = C(colors.switcher_selection_color);
+		style.selection_outline_color_ = C(colors.switcher_selection_outline_color);
+		style.dialog_color_ = C(colors.switcher_dialog_color);
+		style.base_color_ = C(colors.switcher_base_color);
 	}
 
-	style.set_row_count(settings_.switcher_row_count);
-	style.set_text_margin_x(settings_.switcher_text_margin_x);
-	style.set_text_margin_y(settings_.switcher_text_margin_y);
-	style.set_x_margin(settings_.switcher_x_margin);
-	style.set_y_margin(settings_.switcher_y_margin);
-	style.set_row_spacing(settings_.switcher_row_spacing);
-	style.set_col_spacing(settings_.switcher_col_spacing);
-	style.set_item_maxwidth(settings_.switcher_item_maxwidth);
-	style.set_item_maxheight(settings_.switcher_item_maxheight);
-	style.set_dlg_main_border(settings_.switcher_dlg_main_border);
-	style.set_dlg_item_border(settings_.switcher_dlg_item_border);
-
-	style.set_min_width(settings_.switcher_min_width);
-	style.set_min_height(settings_.switcher_min_height);
+	style.row_count_ = settings_.switcher_row_count;
+	style.text_margin_x_ = settings_.switcher_text_margin_x;
+	style.text_margin_y_ = settings_.switcher_text_margin_y;
+	style.x_margin_ = settings_.switcher_x_margin;
+	style.y_margin_ = settings_.switcher_y_margin;
+	style.row_spacing_ = settings_.switcher_row_spacing;
+	style.col_spacing_ = settings_.switcher_col_spacing;
+	style.item_maxwidth_ = settings_.switcher_item_maxwidth;
+	style.item_maxheight_ = settings_.switcher_item_maxheight;
+	style.dlg_main_border_ = settings_.switcher_dlg_main_border;
+	style.dlg_item_border_ = settings_.switcher_dlg_item_border;
+	style.min_width_ = settings_.switcher_min_width;
+	style.min_height_ = settings_.switcher_min_height;
 
 	switcher::Dialog dlg(items, focus, group, forward, style, this);
 
