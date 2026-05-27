@@ -37,6 +37,8 @@ enum
 	ID_INDICATOR_SELECT_HIGHLIGHT
 };
 
+std::string DetermineTypeface(const std::string& suggestion);
+
 void SetStyle(
 	wxStyledTextCtrl* text, int id, const std::optional<ride::Style>& style, bool force = false
 );

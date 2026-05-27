@@ -61,6 +61,21 @@ wxString keywords_to_string(const std::vector<wxString>& keywords_)
 	return ret;
 }
 
+wxString keywords_to_string(const std::set<wxString>& keywords_)
+{
+	wxString ret;
+	bool first = true;
+	for (const auto& keyword: keywords_)
+	{
+		if (first)
+			ret = keyword;
+		else
+			ret += " " + keyword;
+		first = false;
+	}
+	return ret;
+}
+
 class KeywordBuilder
 {
 public:
@@ -172,40 +187,40 @@ struct PropsAndKeywords
 
 void CommonDocumentStyle(wxStyledTextCtrl* text, const ride::Settings& settings)
 {
-	SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors.style_string_eol);
-	SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors.style_verbatim);
-	SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors.style_regex);
-	SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors.style_commentlinedoc);
-	SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors.style_keyword_types);
-	SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors.style_commentdockeyword);
-	SetStyle(
-		text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors.style_commentdockeyworderror
-	);
-	SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors.style_globalclass);
-	SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors.style_stringraw);
-	SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors.style_tripleverbatim);
-	SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors.style_hashquotedstring);
-	SetStyle(
-		text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors.style_preprocessorcomment
-	);
+	// SetStyle(text, wxSTC_C_STRINGEOL, settings.fonts_and_colors.style_string_eol);
+	// SetStyle(text, wxSTC_C_VERBATIM, settings.fonts_and_colors.style_verbatim);
+	// SetStyle(text, wxSTC_C_REGEX, settings.fonts_and_colors.style_regex);
+	// SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.fonts_and_colors.style_commentlinedoc);
+	// SetStyle(text, wxSTC_C_WORD2, settings.fonts_and_colors.style_keyword_types);
+	// SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.fonts_and_colors.style_commentdockeyword);
+	// SetStyle(
+	// 	text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.fonts_and_colors.style_commentdockeyworderror
+	// );
+	// SetStyle(text, wxSTC_C_GLOBALCLASS, settings.fonts_and_colors.style_globalclass);
+	// SetStyle(text, wxSTC_C_STRINGRAW, settings.fonts_and_colors.style_stringraw);
+	// SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.fonts_and_colors.style_tripleverbatim);
+	// SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.fonts_and_colors.style_hashquotedstring);
+	// SetStyle(
+	// 	text, wxSTC_C_PREPROCESSORCOMMENT, settings.fonts_and_colors.style_preprocessorcomment
+	// );
 }
 
 void DefaultStyleDocument(
 	wxStyledTextCtrl* text, const ride::Settings& settings, PropsAndKeywords* language
 )
 {
-	SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors.default_style, true);
-	SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors.style_comment);
-	SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors.style_commentline);
-	SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors.style_commentdoc);
-	SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors.style_number);
-	SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors.style_keyword);
-	SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors.style_string);
-	SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors.style_character);
-	SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors.style_uuid);
-	SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors.style_preprocessor);
-	SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors.style_operator);
-	SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors.style_identifier);
+	// SetStyle(text, wxSTC_C_DEFAULT, settings.fonts_and_colors.default_style, true);
+	// SetStyle(text, wxSTC_C_COMMENT, settings.fonts_and_colors.style_comment);
+	// SetStyle(text, wxSTC_C_COMMENTLINE, settings.fonts_and_colors.style_commentline);
+	// SetStyle(text, wxSTC_C_COMMENTDOC, settings.fonts_and_colors.style_commentdoc);
+	// SetStyle(text, wxSTC_C_NUMBER, settings.fonts_and_colors.style_number);
+	// SetStyle(text, wxSTC_C_WORD, settings.fonts_and_colors.style_keyword);
+	// SetStyle(text, wxSTC_C_STRING, settings.fonts_and_colors.style_string);
+	// SetStyle(text, wxSTC_C_CHARACTER, settings.fonts_and_colors.style_character);
+	// SetStyle(text, wxSTC_C_UUID, settings.fonts_and_colors.style_uuid);
+	// SetStyle(text, wxSTC_C_PREPROCESSOR, settings.fonts_and_colors.style_preprocessor);
+	// SetStyle(text, wxSTC_C_OPERATOR, settings.fonts_and_colors.style_operator);
+	// SetStyle(text, wxSTC_C_IDENTIFIER, settings.fonts_and_colors.style_identifier);
 	CommonDocumentStyle(text, settings);
 
 	language->SetProperty(text, wxT("fold"), b2s01(settings.foldEnable));
@@ -247,6 +262,53 @@ void DefaultStyleDocument(
 	language->SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
 }
 
+
+void SetStyleNew(wxStyledTextCtrl* text, int id, const Style& style, const Language& lang)
+{
+	if (style.typeface.has_value())
+	{
+		const std::string typeface = DetermineTypeface(*style.typeface);
+		if (false == typeface.empty())
+		{
+			text->StyleSetFaceName(id, typeface);
+		}
+	}
+
+	if (style.bold.has_value())
+	{
+		text->StyleSetBold(id, *style.bold);
+	}
+	if (style.italic.has_value())
+	{
+		text->StyleSetItalic(id, *style.italic);
+	}
+	if (style.underline.has_value())
+	{
+		text->StyleSetUnderline(id, *style.underline);
+	}
+	if (style.font_size.has_value())
+	{
+		text->StyleSetSize(id, *style.font_size);
+	}
+	if (style.foreground.has_value())
+	{
+		const auto foreground = lang.colors.find(*style.foreground);
+		if (foreground != lang.colors.end())
+		{
+			text->StyleSetForeground(id, foreground->second);
+		}
+	}
+	if (style.background.has_value())
+	{
+		const auto background = lang.colors.find(*style.background);
+		if (background != lang.colors.end())
+		{
+			text->StyleSetBackground(id, background->second);
+		}
+	}
+}
+
+
 void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const
 {
 	PropsAndKeywords props_and_keywords;
@@ -255,16 +317,23 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 	
 	// DoStyleDocument(text, settings);
 	DefaultStyleDocument(text, settings, &props_and_keywords);
+
+	for (const auto& [sci_id, style_name]: bindings)
+	{
+		const auto found_style = styles.find(style_name);
+		if (found_style == styles.end()) continue;
+		const auto& style = found_style->second;
+
+		SetStyleNew(text, sci_id, style, *this);
+	}
+
 	for (const auto& [name, value]: properties)
 	{
 		props_and_keywords.SetProperty(text, name, value);
 	}
 	for (const auto& [kwclass, kws]: keywords)
 	{
-		for (const auto& kw: kws)
-		{
-			props_and_keywords.SetKeys(text, kwclass, kw);
-		}
+		props_and_keywords.SetKeys(text, kwclass, keywords_to_string(kws));
 	}
 
 #ifdef _DEBUG
@@ -354,7 +423,135 @@ Language MakeCppLanguage()
 	//  This option enables folding on a preprocessor #else or #endif line of an #if statement.
 	cpp.properties["fold.cpp.preprocessor.at.else"] = "1";
 
+	// setup solarized
+	const wxString clr_base03 = "base03";
+	const wxString clr_base02 = "base02";
+	const wxString clr_base01 = "base01";
+	const wxString clr_base00 = "base00";
+	const wxString clr_base0 = "base0";
+	const wxString clr_base1 = "base1";
+	const wxString clr_base2 = "base2";
+	const wxString clr_base3 = "base3";
+	const wxString clr_yellow = "yellow";
+	const wxString clr_orange = "orange";
+	const wxString clr_red = "red";
+	const wxString clr_magenta = "magenta";
+	const wxString clr_violet = "violet";
+	const wxString clr_blue = "blue";
+	const wxString clr_cyan = "cyan";
+	const wxString clr_green = "green";
+
+	const auto clr_emph = clr_base01;
+	const auto clr_body = clr_base00;
+	const auto clr_comment = clr_base1;
+	const auto clr_high = clr_base2;
+	const auto clr_bkg = clr_base3;
+
+	cpp.colors[clr_base03]  = {  0    , 43   , 54};
+	cpp.colors[clr_base02]  = {  7    , 54   , 66};
+	cpp.colors[clr_base01]  = { 88    ,110   ,117};
+	cpp.colors[clr_base00]  = {101    ,123   ,131};
+	cpp.colors[clr_base0 ]  = {131    ,148   ,150};
+	cpp.colors[clr_base1 ]  = {147    ,161   ,161};
+	cpp.colors[clr_base2 ]  = {238    ,232   ,213};
+	cpp.colors[clr_base3 ]  = {253    ,246   ,227};
+	cpp.colors[clr_yellow]  = {181    ,137   ,  0};
+	cpp.colors[clr_orange]  = {203    , 75   , 22};
+	cpp.colors[clr_red   ]  = {220    , 50   , 47};
+	cpp.colors[clr_magenta] = {211    , 54   ,130};
+	cpp.colors[clr_violet]  = {108    ,113   ,196};
+	cpp.colors[clr_blue  ]  = { 38    ,139   ,210};
+	cpp.colors[clr_cyan  ]  = { 42    ,161   ,152};
+	cpp.colors[clr_green ]  = {133    ,153   ,  0};
+
+	// setup alabaster light style
+	const wxString style_string = "string";
+	const wxString style_default = "default";
+	const wxString style_constant = "constant";
+	const wxString style_comment = "comment";
+	const wxString style_global = "global";
+
+	cpp.styles[style_default] = {
+		.typeface = std::nullopt,
+		.bold = false,
+		.italic = false,
+		.underline = false,
+		.font_size = 12,
+		.foreground = clr_body,
+		.background = clr_bkg,
+	};
+	cpp.styles[style_string] = Style{
+		.foreground = clr_green
+	};
+	cpp.styles[style_constant] = Style{
+		.foreground = clr_magenta
+	};
+	cpp.styles[style_comment] = Style{
+		.foreground = clr_emph
+	};
+	cpp.styles[style_global] = Style{
+		.foreground = clr_blue
+	};
+	
+	// bind cpp
+	cpp.bindings[wxSTC_C_DEFAULT] = style_default;
+	cpp.bindings[wxSTC_C_STRINGEOL] = style_string;
+	cpp.bindings[wxSTC_C_VERBATIM] = style_string;
+	cpp.bindings[wxSTC_C_REGEX] = style_string;
+	cpp.bindings[wxSTC_C_COMMENTLINEDOC] = style_comment;
+	// cpp.bindings[wxSTC_C_WORD2] = style_keyword_types;
+	cpp.bindings[wxSTC_C_COMMENTDOCKEYWORD] = style_comment;
+	cpp.bindings[wxSTC_C_COMMENTDOCKEYWORDERROR] = style_comment;
+	cpp.bindings[wxSTC_C_GLOBALCLASS] = style_global;
+	cpp.bindings[wxSTC_C_STRINGRAW] = style_string;
+	cpp.bindings[wxSTC_C_TRIPLEVERBATIM] = style_string;
+	cpp.bindings[wxSTC_C_HASHQUOTEDSTRING] = style_string;
+	// cpp.bindings[wxSTC_C_PREPROCESSORCOMMENT] = style_preprocessorcomment ;
+	// cpp.bindings[wxSTC_C_DEFAULT] = default_style;
+	cpp.bindings[wxSTC_C_COMMENT] = style_comment;
+	cpp.bindings[wxSTC_C_COMMENTLINE] = style_comment;
+	cpp.bindings[wxSTC_C_COMMENTDOC] = style_comment;
+	cpp.bindings[wxSTC_C_NUMBER] = style_constant;
+	// cpp.bindings[wxSTC_C_WORD] = style_keyword;
+	cpp.bindings[wxSTC_C_STRING] = style_string;
+	cpp.bindings[wxSTC_C_CHARACTER] = style_string;
+	cpp.bindings[wxSTC_C_UUID] = style_string;
+	cpp.bindings[wxSTC_C_PREPROCESSOR] = style_global;
+	// cpp.bindings[wxSTC_C_OPERATOR] = style_operator;
+	cpp.bindings[wxSTC_C_IDENTIFIER] = style_global;
+
+	// disco
+	// cpp.bindings[wxSTC_C_STRINGEOL] = style_string_eol;
+	// cpp.bindings[wxSTC_C_VERBATIM] = style_verbatim;
+	// cpp.bindings[wxSTC_C_REGEX] = style_regex;
+	// cpp.bindings[wxSTC_C_COMMENTLINEDOC] = style_commentlinedoc;
+	// cpp.bindings[wxSTC_C_WORD2] = style_keyword_types;
+	// cpp.bindings[wxSTC_C_COMMENTDOCKEYWORD] = style_commentdockeyword;
+	// cpp.bindings[wxSTC_C_COMMENTDOCKEYWORDERROR] = style_commentdockeyworderror ;
+	// cpp.bindings[wxSTC_C_GLOBALCLASS] = style_globalclass;
+	// cpp.bindings[wxSTC_C_STRINGRAW] = style_stringraw;
+	// cpp.bindings[wxSTC_C_TRIPLEVERBATIM] = style_tripleverbatim;
+	// cpp.bindings[wxSTC_C_HASHQUOTEDSTRING] = style_hashquotedstring;
+	// cpp.bindings[wxSTC_C_PREPROCESSORCOMMENT] = style_preprocessorcomment ;
+	// cpp.bindings[wxSTC_C_DEFAULT] = default_style, true;
+	// cpp.bindings[wxSTC_C_COMMENT] = style_comment;
+	// cpp.bindings[wxSTC_C_COMMENTLINE] = style_commentline;
+	// cpp.bindings[wxSTC_C_COMMENTDOC] = style_commentdoc;
+	// cpp.bindings[wxSTC_C_NUMBER] = style_number;
+	// cpp.bindings[wxSTC_C_WORD] = style_keyword;
+	// cpp.bindings[wxSTC_C_STRING] = style_string;
+	// cpp.bindings[wxSTC_C_CHARACTER] = style_character;
+	// cpp.bindings[wxSTC_C_UUID] = style_uuid;
+	// cpp.bindings[wxSTC_C_PREPROCESSOR] = style_preprocessor;
+	// cpp.bindings[wxSTC_C_OPERATOR] = style_operator;
+	// cpp.bindings[wxSTC_C_IDENTIFIER] = style_identifier;
+
 	return cpp;
+}
+
+Languages::Languages()
+{
+	languages.emplace_back(MakeCppLanguage());
 }
 
 // todo(Gustav): implement cpp first, then the rest
