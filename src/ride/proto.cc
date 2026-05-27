@@ -547,10 +547,56 @@ F_STRUCT(MachineSettings);
 // ------------------------------------------------------------------------------------------------
 // facade
 
-
-
-F_STRUCT(Color)
+std::string to_hex(int v)
 {
+	const char* digits = "0123456789abcdef";
+	std::string result;
+	result += digits[(v >> 4) & 0xF];
+	result += digits[v & 0xF];
+	return result;
+}
+
+void ser(SerLog* log, Filer* filer, ride::Color* value)
+{
+	if (filer->is_loading)
+	{
+		if (auto* str = filer->json.AsString(filer->doc); str != nullptr)
+		{
+			const auto color = str->value;
+			if (color.size() != 7 || color[0] != '#')
+			{
+				// Handle invalid color format
+				log->errors.emplace_back(
+					SerError{"invalid color format", str->location.line, str->location.column}
+				);
+				return;
+			}
+			try
+			{
+				const auto r = std::stoi(color.substr(1, 2), nullptr, 16);
+				const auto g = std::stoi(color.substr(3, 2), nullptr, 16);
+				const auto b = std::stoi(color.substr(5, 2), nullptr, 16);
+				value->r = r;
+				value->g = g;
+				value->b = b;
+			}
+			catch (const std::exception& x)
+			{
+				log->errors.emplace_back(
+					SerError{std::string("invalid color format: ") + x.what(), str->location.line, str->location.column}
+				);
+			}
+			return;
+		}
+		/// default handle
+	}
+	else
+	{
+		filer->json = filer->doc->add(
+			jsonh::String{{}, "#" + to_hex(value->r) + to_hex(value->g) + to_hex(value->b)}
+		);
+		return;
+	}
 	S_BEGIN(Color);
 	S_PROP(r, "r");
 	S_PROP(g, "g");
