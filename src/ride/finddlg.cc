@@ -414,7 +414,7 @@ bool ShowFindDlg(
 		}
 	}
 
-	const auto count = results.size();
+	const std::size_t count = results.size();
 
 	output->ClearOutput();
 
@@ -424,7 +424,7 @@ bool ShowFindDlg(
 			: wxString::Format("Replaced '%s' with '%s'", dlg.GetText(), dlg.getReplaceText());
 	output->WriteLine(wxString::Format("%s in %s", find_text, file_info));
 	output->WriteLine(wxString::Format(
-		"%s %d matches", find_action == FindAction::Find ? "Found" : "Replaced", count
+		"%s %zu matches", find_action == FindAction::Find ? "Found" : "Replaced", count
 	));
 	output->WriteLine("");
 	for (const auto& res: results)
@@ -433,7 +433,7 @@ bool ShowFindDlg(
 		// the parser code for both and get some synergy effects
 		const wxString mess = wxString::Format(
 			"%s:%d : %d : %d : %d %s: %s",
-			res.file ? res.file->get_name_with_extension() : wxString{"<unknown file>"},
+			res.file ? res.file->path : wxString{"<unknown file>"},
 			res.start_line,
 			res.start_col,
 			res.end_line,

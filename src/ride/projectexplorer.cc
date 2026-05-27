@@ -44,9 +44,10 @@ ProjectExplorer::ProjectExplorer(MainWindow* main)
 
 void ProjectExplorer::UpdateColors()
 {
-	const auto& style = main_->settings().fonts_and_colors;
-	wxTreeCtrl::SetBackgroundColour(C(style.explorer_background));
-	wxTreeCtrl::SetForegroundColour(C(style.explorer_foreground));
+	const auto* theme = main_->settings().find_current_theme();
+	if (! theme) return;
+	wxTreeCtrl::SetBackgroundColour(C(theme->explorer_background));
+	wxTreeCtrl::SetForegroundColour(C(theme->explorer_foreground));
 }
 
 void ProjectExplorer::SetFolder(const Dir& folder)

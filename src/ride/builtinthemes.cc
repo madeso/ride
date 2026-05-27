@@ -306,22 +306,13 @@ public:
 		colors->fold_margin_hi = fold_hi_;
 		colors->fold_margin_low = fold_lo_;
 
-		colors->selected_line = selected_line_;	 // yelw
-
-		colors->style_comment = Style(comment_);
-		colors->style_commentline = Style(comment_);
-		colors->style_commentdoc = Style(comment_);
-		colors->style_commentlinedoc = Style(comment_);
-		colors->style_keyword = Style(keyword_, std::nullopt, true);
+		colors->selected_line = selected_line_;
 
 		colors->explorer_foreground = front_;
 		colors->explorer_background = bkg_;
 
 		colors->marker_foreground = front_;
 		colors->marker_background = bkg_;
-
-		colors->props_key = Style(keyword_);
-		colors->props_section = Style(std::nullopt, std::nullopt, true);
 
 		colors->indicator_error = Indicator(error_);
 		colors->indicator_warning = Indicator(warning_);
@@ -492,12 +483,11 @@ void AddBuiltInThemes(::ride::Settings* settings)
 		SetupSolarizedDarkTheme(&solarized_dark_theme->data);
 	}
 
-	if (false == settings->has_fonts_and_colors)
+	if (settings->current_theme.empty())
 	{
 		// if the current settings is missing the fonts and colors
 		// apply the default theme
-		ride::Theme* default_theme = GetOrCreateTheme(themes, default_name);
-		settings->fonts_and_colors = ride::FontsAndColors(default_theme->data);
-		settings->has_fonts_and_colors = true;
+		GetOrCreateTheme(themes, default_name);
+		settings->current_theme = default_name;
 	}
 }

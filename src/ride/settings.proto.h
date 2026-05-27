@@ -240,103 +240,6 @@ struct FontsAndColors
 
 	Color caret_foreground;
 
-	// common styles
-	std::optional<Style> style_comment;
-	std::optional<Style> style_commentline;
-	std::optional<Style> style_commentdoc;
-	std::optional<Style> style_number;
-	std::optional<Style> style_keyword;
-	std::optional<Style> style_string;
-	std::optional<Style> style_character;
-	std::optional<Style> style_uuid;
-	std::optional<Style> style_preprocessor;
-	std::optional<Style> style_operator;
-	std::optional<Style> style_identifier;
-	std::optional<Style> style_string_eol;
-	std::optional<Style> style_verbatim;
-	std::optional<Style> style_regex;
-	std::optional<Style> style_commentlinedoc;
-	std::optional<Style> style_keyword_types;
-	std::optional<Style> style_commentdockeyword;
-	std::optional<Style> style_commentdockeyworderror;
-	std::optional<Style> style_globalclass;
-	std::optional<Style> style_stringraw;
-	std::optional<Style> style_tripleverbatim;
-	std::optional<Style> style_hashquotedstring;
-	std::optional<Style> style_preprocessorcomment;
-
-	std::optional<Style> markdown_line_begin;
-	std::optional<Style> markdown_strong1;
-	std::optional<Style> markdown_strong2;
-	std::optional<Style> markdown_em1;
-	std::optional<Style> markdown_em2;
-	std::optional<Style> markdown_header1;
-	std::optional<Style> markdown_header2;
-	std::optional<Style> markdown_header3;
-	std::optional<Style> markdown_header4;
-	std::optional<Style> markdown_header5;
-	std::optional<Style> markdown_header6;
-	std::optional<Style> markdown_prechar;
-	std::optional<Style> markdown_ulist_item;
-	std::optional<Style> markdown_olist_item;
-	std::optional<Style> markdown_blockquote;
-	std::optional<Style> markdown_strikeout;
-	std::optional<Style> markdown_hrule;
-	std::optional<Style> markdown_link;
-	std::optional<Style> markdown_code;
-	std::optional<Style> markdown_code2;
-	std::optional<Style> markdown_codebk;
-
-	std::optional<Style> props_section;
-	std::optional<Style> props_assignment;
-	std::optional<Style> props_defval;
-	std::optional<Style> props_key;
-
-	std::optional<Style> h_tag;
-	std::optional<Style> h_tagunknown;
-	std::optional<Style> h_attribute;
-	std::optional<Style> h_attributeunknown;
-	std::optional<Style> h_number;
-	std::optional<Style> h_doublestring;
-	std::optional<Style> h_singlestring;
-	std::optional<Style> h_other;
-	std::optional<Style> h_entity;
-	std::optional<Style> h_tagend;
-	std::optional<Style> h_xmlstart;
-	std::optional<Style> h_xmlend;
-	std::optional<Style> h_script;
-	std::optional<Style> h_asp;
-	std::optional<Style> h_aspat;
-	std::optional<Style> h_cdata;
-	std::optional<Style> h_question;
-	std::optional<Style> h_value;
-	std::optional<Style> h_xccomment;
-
-	std::optional<Style> cmake_stringdq;
-	std::optional<Style> cmake_stringlq;
-	std::optional<Style> cmake_stringrq;
-	std::optional<Style> cmake_commands;
-	std::optional<Style> cmake_parameters;
-	std::optional<Style> cmake_variable;
-	std::optional<Style> cmake_userdefined;
-	std::optional<Style> cmake_whiledef;
-	std::optional<Style> cmake_foreachdef;
-	std::optional<Style> cmake_ifdefinedef;
-	std::optional<Style> cmake_macrodef;
-	std::optional<Style> cmake_stringvar;
-	std::optional<Style> cmake_number;
-
-	std::optional<Style> lua_label;
-
-	std::optional<Style> yaml_number;
-	std::optional<Style> yaml_reference;
-	std::optional<Style> yaml_document;
-	std::optional<Style> yaml_text;
-	std::optional<Style> yaml_error;
-
-	std::optional<Style> rust_lifetime;
-	std::optional<Style> rust_lex_error;
-
 	Color dock_background;
 	Color dock_sash;
 	Color dock_active_caption;
@@ -396,15 +299,14 @@ struct Settings
 {
 	bool lineNumberEnable = true;
 	bool foldEnable = true;
-	bool displayEOLEnable;
+	bool displayEOL;
 	bool indentGuideEnable = true;
 	ViewWhitespace whitespace = VIEWWHITESPACE_AFTER_IDENT;
 	WrapMode wordWrap = WRAPMODE_NONE;
 
 	EdgeStyle edgeStyle = EDGESTYLE_LINE;
 
-	bool has_fonts_and_colors = false;
-	FontsAndColors fonts_and_colors;
+	std::string current_theme;
 
 	int edgeColumn = 80;
 
@@ -452,6 +354,7 @@ struct Settings
 	bool show_compiler_messages_as_annotations = true;
 
 	std::vector<Theme> themes;
+	const FontsAndColors* find_current_theme() const;
 
 	int caret_period = 500;
 	int caret_width = 1;

@@ -277,9 +277,13 @@ void SetIndicator(
 	text->IndicatorSetStyle(index, C(indicator_style));
 }
 
-void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set)
+void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, const ride::FontsAndColors& theme)
 {
-	text_ctrl->SetCaretLineBackground(C(set.fonts_and_colors.selected_line));
+	if (const ride::FontsAndColors* theme = set.find_current_theme())
+	{
+		text_ctrl->SetCaretLineBackground(C(theme->selected_line));
+	}
+
 	if (set.current_line_overdraw)
 	{
 		text_ctrl->SetCaretLineBackAlpha(set.current_line_alpha);
@@ -294,25 +298,25 @@ void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings
 	// todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier
 	// to change settings and caret
 
-	text_ctrl->SetCaretForeground(C(set.fonts_and_colors.caret_foreground));
+	text_ctrl->SetCaretForeground(C(theme.caret_foreground));
 	text_ctrl->SetCaretPeriod(set.caret_period);
 	text_ctrl->SetCaretWidth(set.caret_width);
 	text_ctrl->SetCaretSticky(C(set.caret_sticky));
 	text_ctrl->SetCaretStyle(C(set.caret_style));
 }
 
-void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::Settings& set)
+void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::FontsAndColors& set)
 {
-	SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT, set.fonts_and_colors.default_style, true);
-	SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER, set.fonts_and_colors.line_number_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT, set.fonts_and_colors.bracelight_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD, set.fonts_and_colors.bracebad_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR, set.fonts_and_colors.controlchar_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE, set.fonts_and_colors.indentguide_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP, set.fonts_and_colors.calltip_style);
+	SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT, set.default_style, true);
+	SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER, set.line_number_style);
+	SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT, set.bracelight_style);
+	SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD, set.bracebad_style);
+	SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR, set.controlchar_style);
+	SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE, set.indentguide_style);
+	SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP, set.calltip_style);
 
-	SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR, set.fonts_and_colors.annotation_error_style);
-	SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.fonts_and_colors.annotation_warning_style);
+	SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR, set.annotation_error_style);
+	SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.annotation_warning_style);
 }
 
 int C(ride::MarkerSymbol sym)
@@ -357,10 +361,12 @@ void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set)
 }
 
 void SetupScintilla(
-	wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language const* language, Project* project
+	wxStyledTextCtrl* text_ctrl,
+	const ride::Settings& set,
+	const Language* language,
+	Project* project
 )
 {
-	const ride::FontsAndColors& cols = set.fonts_and_colors;
 	// initialize styles
 	text_ctrl->StyleClearAll();
 
@@ -385,46 +391,43 @@ void SetupScintilla(
 	text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING, 15);
 	text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, true);
 
-	text_ctrl->SetFoldMarginColour(true, C(set.fonts_and_colors.fold_margin_low));
-	text_ctrl->SetFoldMarginHiColour(true, C(set.fonts_and_colors.fold_margin_hi));
-
 	text_ctrl->SetMarginWidth(ID_MARGIN_FOLDING, set.foldEnable ? FOLDING_WIDTH : 0);
 	text_ctrl->SetMarginSensitive(ID_MARGIN_FOLDING, set.foldEnable);
 	text_ctrl->SetFoldFlags(C(set.foldflags));
 
-#define FRONT_AND_BACK(x) set.fonts_and_colors
-	SetMarker(
-		text_ctrl,
-		wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUSCONNECTED,
-		set.fonts_and_colors
-	);
-	SetMarker(
-		text_ctrl,
-		wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUSCONNECTED,
-		set.fonts_and_colors
-	);
-	SetMarker(
-		text_ctrl,
-		wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER,
-		set.fonts_and_colors
-	);
-	SetMarker(
-		text_ctrl,
-		wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER,
-		set.fonts_and_colors
-	);
-	SetMarker(
-		text_ctrl,
-		wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE,
-		set.fonts_and_colors
-	);
-	SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS, set.fonts_and_colors
-	);
-	SetMarker(
-		text_ctrl,
-		wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS,
-		set.fonts_and_colors
-	);
+	if (const auto* theme = set.find_current_theme())
+	{
+		text_ctrl->SetFoldMarginColour(true, C(theme->fold_margin_low));
+		text_ctrl->SetFoldMarginHiColour(true, C(theme->fold_margin_hi));
+
+		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUSCONNECTED, *theme);
+		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUSCONNECTED, *theme);
+		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERMIDTAIL, wxSTC_MARK_TCORNER, *theme);
+		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERTAIL, wxSTC_MARK_LCORNER, *theme);
+		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDERSUB, wxSTC_MARK_VLINE, *theme);
+		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS, *theme);
+		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS, *theme);
+
+		text_ctrl->SetEdgeColour(C(theme->edgeColor));
+
+		SetIndicator(text_ctrl, ID_INDICATOR_ERROR, theme->indicator_error, set.indicator_error);
+		SetIndicator(text_ctrl, ID_INDICATOR_WARNING, theme->indicator_warning, set.indicator_warning);
+		SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT, theme->indicator_search_highlight, set.indicator_search_highlight);
+		SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT, theme->indicator_select_highlight, set.indicator_select_highlight);
+
+		if (theme->use_selection_foreground)
+		{
+			text_ctrl->SetSelForeground(true, C(theme->selection_foreground));
+		}
+
+		if (theme->use_selection_background)
+		{
+			text_ctrl->SetSelBackground(true, C(theme->selection_background));
+		}
+
+		SetupScintillaDefaultStyles(text_ctrl, *theme);
+		SetupScintillaCurrentLine(text_ctrl, set, *theme);
+	}
 
 	// set spaces and indention
 	const int tabwidth = project ? project->tabwidth() : set.tabWidth;
@@ -434,10 +437,9 @@ void SetupScintilla(
 	text_ctrl->SetBackSpaceUnIndents(set.backspaceUnindents);
 	text_ctrl->SetIndent(tabwidth);
 
-	text_ctrl->SetViewEOL(set.displayEOLEnable);
+	text_ctrl->SetViewEOL(set.displayEOL);
 	text_ctrl->SetIndentationGuides(set.indentGuideEnable);
 	text_ctrl->SetEdgeMode(C(set.edgeStyle));
-	text_ctrl->SetEdgeColour(C(set.fonts_and_colors.edgeColor));
 	text_ctrl->SetEdgeColumn(set.edgeColumn);
 	text_ctrl->SetViewWhiteSpace(C(set.whitespace));
 	text_ctrl->SetOvertype(false);
@@ -454,30 +456,6 @@ void SetupScintilla(
 	text_ctrl->SetAdditionalCaretsBlink(true);
 	text_ctrl->SetAdditionalCaretsVisible(true);
 
-	SetIndicator(
-		text_ctrl, ID_INDICATOR_ERROR, set.fonts_and_colors.indicator_error, set.indicator_error
-	);
-	SetIndicator(
-		text_ctrl,
-		ID_INDICATOR_WARNING,
-		set.fonts_and_colors.indicator_warning,
-		set.indicator_warning
-	);
-	SetIndicator(
-		text_ctrl,
-		ID_INDICATOR_SEARCH_HIGHLIGHT,
-		set.fonts_and_colors.indicator_search_highlight,
-		set.indicator_search_highlight
-	);
-	SetIndicator(
-		text_ctrl,
-		ID_INDICATOR_SELECT_HIGHLIGHT,
-		set.fonts_and_colors.indicator_select_highlight,
-		set.indicator_select_highlight
-	);
-
-	SetupScintillaDefaultStyles(text_ctrl, set);
-
 	text_ctrl->SetEndAtLastLine(set.end_at_last_line);
 	text_ctrl->SetVirtualSpaceOptions(C(set.virtual_space));
 	text_ctrl->SetUseVerticalScrollBar(set.vertical_scrollbar);
@@ -489,16 +467,4 @@ void SetupScintilla(
 	text_ctrl->SetWrapStartIndent(set.wrap_start_indent);
 
 	text_ctrl->AnnotationSetVisible(C(set.annotations));
-
-	if (cols.use_selection_foreground)
-	{
-		text_ctrl->SetSelForeground(true, C(cols.selection_foreground));
-	}
-
-	if (cols.use_selection_background)
-	{
-		text_ctrl->SetSelBackground(true, C(cols.selection_background));
-	}
-
-	SetupScintillaCurrentLine(text_ctrl, set);
 }

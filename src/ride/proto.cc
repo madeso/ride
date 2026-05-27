@@ -341,6 +341,21 @@ F_ENUM(FindDlgTarget)
 	S_ENUM_COMPLETE();
 };
 
+jsonh::Location location_of(const jsonh::Value& val, jsonh::Document* doc, const jsonh::Location& def)
+{
+	switch (val.type)
+	{
+	case jsonh::ValueType::Invalid: return def;
+	case jsonh::ValueType::Object: return val.AsObject(doc)->location;
+	case jsonh::ValueType::Array: return val.AsArray(doc)->location;
+	case jsonh::ValueType::String: return val.AsString(doc)->location;
+	case jsonh::ValueType::Number: return val.AsNumber(doc)->location;
+	case jsonh::ValueType::Int: return val.AsInt(doc)->location;
+	case jsonh::ValueType::Bool: return val.AsBool(doc)->location;
+	case jsonh::ValueType::Null: return val.AsNull(doc)->location;
+	default: return def;
+	}
+}
 
 struct StructParser {
 	SerLog* log;
@@ -373,8 +388,11 @@ struct StructParser {
 		{
 			if (names.find(key) == names.end())
 			{
+				const auto found = obj->object.find(key);
+				const auto location
+					= found == obj->object.end() ? obj->location : location_of(found->second, filer->doc, obj->location);
 				log->errors.emplace_back(
-					SerError{"property '" + key + "' in struct '" + struct_name + "' was never read", obj->location.line, obj->location.column}
+					SerError{"property '" + key + "' in struct '" + struct_name + "' was never read", location.line, location.column}
 				);
 			}
 		}
@@ -616,95 +634,6 @@ F_STRUCT(FontsAndColors)
 	S_PROP(marker_background, "marker_background");
 	S_PROP(caret_foreground, "caret_foreground");
 
-	S_PROP_O(style_comment, "style_comment");
-	S_PROP_O(style_commentline, "style_commentline");
-	S_PROP_O(style_commentdoc, "style_commentdoc");
-	S_PROP_O(style_number, "style_number");
-	S_PROP_O(style_keyword, "style_keyword");
-	S_PROP_O(style_string, "style_string");
-	S_PROP_O(style_character, "style_character");
-	S_PROP_O(style_uuid, "style_uuid");
-	S_PROP_O(style_preprocessor, "style_preprocessor");
-	S_PROP_O(style_operator, "style_operator");
-	S_PROP_O(style_identifier, "style_identifier");
-	S_PROP_O(style_string_eol, "style_string_eol");
-	S_PROP_O(style_verbatim, "style_verbatim");
-	S_PROP_O(style_regex, "style_regex");
-	S_PROP_O(style_commentlinedoc, "style_commentlinedoc");
-	S_PROP_O(style_keyword_types, "style_keyword_types");
-	S_PROP_O(style_commentdockeyword, "style_commentdockeyword");
-	S_PROP_O(style_commentdockeyworderror, "style_commentdockeyworderror");
-	S_PROP_O(style_globalclass, "style_globalclass");
-	S_PROP_O(style_stringraw, "style_stringraw");
-	S_PROP_O(style_tripleverbatim, "style_tripleverbatim");
-	S_PROP_O(style_hashquotedstring, "style_hashquotedstring");
-	S_PROP_O(style_preprocessorcomment, "style_preprocessorcomment");
-	S_PROP_O(markdown_line_begin, "markdown_line_begin");
-	S_PROP_O(markdown_strong1, "markdown_strong1");
-	S_PROP_O(markdown_strong2, "markdown_strong2");
-	S_PROP_O(markdown_em1, "markdown_em1");
-	S_PROP_O(markdown_em2, "markdown_em2");
-	S_PROP_O(markdown_header1, "markdown_header1");
-	S_PROP_O(markdown_header2, "markdown_header2");
-	S_PROP_O(markdown_header3, "markdown_header3");
-	S_PROP_O(markdown_header4, "markdown_header4");
-	S_PROP_O(markdown_header5, "markdown_header5");
-	S_PROP_O(markdown_header6, "markdown_header6");
-	S_PROP_O(markdown_prechar, "markdown_prechar");
-	S_PROP_O(markdown_ulist_item, "markdown_ulist_item");
-	S_PROP_O(markdown_olist_item, "markdown_olist_item");
-	S_PROP_O(markdown_blockquote, "markdown_blockquote");
-	S_PROP_O(markdown_strikeout, "markdown_strikeout");
-	S_PROP_O(markdown_hrule, "markdown_hrule");
-	S_PROP_O(markdown_link, "markdown_link");
-	S_PROP_O(markdown_code, "markdown_code");
-	S_PROP_O(markdown_code2, "markdown_code2");
-	S_PROP_O(markdown_codebk, "markdown_codebk");
-	S_PROP_O(props_section, "props_section");
-	S_PROP_O(props_assignment, "props_assignment");
-	S_PROP_O(props_defval, "props_defval");
-	S_PROP_O(props_key, "props_key");
-	S_PROP_O(h_tag, "h_tag");
-	S_PROP_O(h_tagunknown, "h_tagunknown");
-	S_PROP_O(h_attribute, "h_attribute");
-	S_PROP_O(h_attributeunknown, "h_attributeunknown");
-	S_PROP_O(h_number, "h_number");
-	S_PROP_O(h_doublestring, "h_doublestring");
-	S_PROP_O(h_singlestring, "h_singlestring");
-	S_PROP_O(h_other, "h_other");
-	S_PROP_O(h_entity, "h_entity");
-	S_PROP_O(h_tagend, "h_tagend");
-	S_PROP_O(h_xmlstart, "h_xmlstart");
-	S_PROP_O(h_xmlend, "h_xmlend");
-	S_PROP_O(h_script, "h_script");
-	S_PROP_O(h_asp, "h_asp");
-	S_PROP_O(h_aspat, "h_aspat");
-	S_PROP_O(h_cdata, "h_cdata");
-	S_PROP_O(h_question, "h_question");
-	S_PROP_O(h_value, "h_value");
-	S_PROP_O(h_xccomment, "h_xccomment");
-	S_PROP_O(cmake_stringdq, "cmake_stringdq");
-	S_PROP_O(cmake_stringlq, "cmake_stringlq");
-	S_PROP_O(cmake_stringrq, "cmake_stringrq");
-	S_PROP_O(cmake_commands, "cmake_commands");
-	S_PROP_O(cmake_parameters, "cmake_parameters");
-	S_PROP_O(cmake_variable, "cmake_variable");
-	S_PROP_O(cmake_userdefined, "cmake_userdefined");
-	S_PROP_O(cmake_whiledef, "cmake_whiledef");
-	S_PROP_O(cmake_foreachdef, "cmake_foreachdef");
-	S_PROP_O(cmake_ifdefinedef, "cmake_ifdefinedef");
-	S_PROP_O(cmake_macrodef, "cmake_macrodef");
-	S_PROP_O(cmake_stringvar, "cmake_stringvar");
-	S_PROP_O(cmake_number, "cmake_number");
-	S_PROP_O(lua_label, "lua_label");
-	S_PROP_O(yaml_number, "yaml_number");
-	S_PROP_O(yaml_reference, "yaml_reference");
-	S_PROP_O(yaml_document, "yaml_document");
-	S_PROP_O(yaml_text, "yaml_text");
-	S_PROP_O(yaml_error, "yaml_error");
-	S_PROP_O(rust_lifetime, "rust_lifetime");
-	S_PROP_O(rust_lex_error, "rust_lex_error");
-
 	S_PROP(dock_background, "dock_background");
 	S_PROP(dock_sash, "dock_sash");
 	S_PROP(dock_active_caption, "dock_active_caption");
@@ -762,13 +691,12 @@ F_STRUCT(Settings)
 	S_BEGIN(Settings);
 	S_PROP(lineNumberEnable, "lineNumberEnable");
 	S_PROP(foldEnable, "foldEnable");
-	S_PROP(displayEOLEnable, "displayEOLEnable");
+	S_PROP(displayEOL, "displayEOL");
 	S_PROP(indentGuideEnable, "indentGuideEnable");
 	S_PROP(whitespace, "whitespace");
 	S_PROP(wordWrap, "wordWrap");
 	S_PROP(edgeStyle, "edgeStyle");
-	S_PROP(has_fonts_and_colors, "has_fonts_and_colors");
-	S_PROP(fonts_and_colors, "fonts_and_colors");
+	S_PROP(current_theme, "current_theme");
 	S_PROP(edgeColumn, "edgeColumn");
 	S_PROP(tabWidth, "tabWidth");
 	S_PROP(useTabs, "useTabs");

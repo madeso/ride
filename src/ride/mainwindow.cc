@@ -691,7 +691,7 @@ MainWindow::MainWindow(const wxString& app_name,
 		OpenProjectWithFolder(*project_to_open);
 	}
 
-	for (auto f: files_to_open)
+	for (const auto& f: files_to_open)
 	{
 		OpenFile(f);
 	}
@@ -699,7 +699,9 @@ MainWindow::MainWindow(const wxString& app_name,
 
 void MainWindow::UpdateTheme()
 {
-	const ride::FontsAndColors& c = settings_.fonts_and_colors;
+	const ride::FontsAndColors* theme = settings_.find_current_theme();
+	if (theme == nullptr) return;
+	const ride::FontsAndColors& c = *theme;
 
 	wxAuiDockArt* dock_art = new wxAuiDefaultDockArt();
 	dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, C(c.dock_background));
@@ -994,15 +996,18 @@ void MainWindow::OnTab(bool forward)
 									: items.GetIndexForFocus();
 	int group = vs_focus ? files_group_index : 0;
 
-	const ride::FontsAndColors& colors = settings_.fonts_and_colors;
-
 	switcher::Style style;
-	style.set_background_color(C(colors.switcher_background_color));
-	style.set_text_color(C(colors.switcher_text_color));
-	style.set_selection_color(C(colors.switcher_selection_color));
-	style.set_selection_outline_color(C(colors.switcher_selection_outline_color));
-	style.set_dialog_color(C(colors.switcher_dialog_color));
-	style.set_base_color(C(colors.switcher_base_color));
+	const ride::FontsAndColors* theme = settings_.find_current_theme();
+	if (theme)
+	{
+		const ride::FontsAndColors& colors = *theme;
+		style.set_background_color(C(colors.switcher_background_color));
+		style.set_text_color(C(colors.switcher_text_color));
+		style.set_selection_color(C(colors.switcher_selection_color));
+		style.set_selection_outline_color(C(colors.switcher_selection_outline_color));
+		style.set_dialog_color(C(colors.switcher_dialog_color));
+		style.set_base_color(C(colors.switcher_base_color));
+	}
 
 	style.set_row_count(settings_.switcher_row_count);
 	style.set_text_margin_x(settings_.switcher_text_margin_x);

@@ -77,8 +77,11 @@ void OutputControl::UpdateStyle()
 	text_->SetReadOnly(true);
 
 	const ride::Settings& set = main_->settings();
-	SetupScintillaCurrentLine(text_, set);
-	SetupScintillaDefaultStyles(text_, set);
+	if (const auto* theme = set.find_current_theme())
+	{
+		SetupScintillaCurrentLine(text_, set, *theme);
+		SetupScintillaDefaultStyles(text_, *theme);
+	}
 	text_->SetEndAtLastLine(set.end_at_last_line);
 }
 

@@ -1237,9 +1237,9 @@ bool FileEdit::SaveTo(const Fil& target)
 		return false;
 	}
 	filename_ = target;
-	UpdateFilename();
 	UpdateTitle();
 	UpdateFileTime();
+
 
 	// hotload functionality: if settings file was saved, reload settings
 
@@ -1259,10 +1259,11 @@ bool FileEdit::SaveTo(const Fil& target)
 			));
 		}
 
-		if (settings_log.errors.empty() == false)
-		{
-			was_saved = false;
-		}
+		// if the file has bad settings, should the rest till be applied?
+		// if (settings_log.errors.empty() == false)
+		// {
+		// 	was_saved = false;
+		// }
 	}
 
 	if (was_saved)
@@ -1351,7 +1352,8 @@ void FileEdit::UpdateTitle()
 
 bool FileEdit::ShouldBeSaved()
 {
-	return text_->IsModified() || !filename_;
+	const auto is_modified = text_->IsModified();
+	return is_modified || !filename_;
 }
 
 bool FileEdit::CanClose(bool can_abort)

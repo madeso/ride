@@ -44,10 +44,13 @@ void SetStyle(
 );
 
 void SetupScintilla(
-	wxStyledTextCtrl* text_ctrl, const ride::Settings& set, Language const* language, Project* project
+	wxStyledTextCtrl* text_ctrl,
+	const ride::Settings& set,
+	const Language* language,
+	Project* project
 );
 void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
-void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
-void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);
+void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, const ride::FontsAndColors& theme);
+void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::FontsAndColors& theme);
 
 #endif	// RIDE_STCUTILS_H_
