@@ -155,13 +155,17 @@ CompilerMessage::Type ParseCMT(const wxString& str)
 		return CompilerMessage::TYPE_UNKNOWN;
 }
 
-std::optional<Fil> CleanupFilePath(const Dir& root, const wxString& path)
+std::optional<Fil> CleanupFilePath(const std::optional<Dir>& root, const wxString& path)
 {
 	wxFileName file_name(path);
 	if (false == file_name.IsRelative()) return Fil{file_name};
-	// if a relative path, it might be relative to the project root folder, try
-	// that...
-	auto new_file = root.join_file(path);
+	// if a relative path, it might be relative to the project root folder, try that...
+	if (! root)
+	{
+		// can't do much for a relative file without a root, just give up
+		return std::nullopt;
+	}
+	auto new_file = root->join_file(path);
 	if (new_file.exist())
 	{
 		return Fil{new_file};
@@ -172,7 +176,7 @@ std::optional<Fil> CleanupFilePath(const Dir& root, const wxString& path)
 	}
 }
 
-std::optional<CompilerMessage> CompilerMessage::Parse(Source source, const Dir& root, const wxString& text)
+std::optional<CompilerMessage> CompilerMessage::Parse(Source source, const std::optional<Dir>& root, const wxString& text)
 {
 	{
 		const wxRegEx& complex = ClangRegexOutput();

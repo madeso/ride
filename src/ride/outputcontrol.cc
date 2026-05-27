@@ -274,10 +274,6 @@ void OutputControl::OnSearchForThisCompilerMessage(wxCommandEvent& event)
 void OutputControl::OnDoubleClick(wxMouseEvent& event)
 {
 	const auto root_folder = main_->root_folder();
-	if (!root_folder)
-	{
-		return;
-	}
 
 	WXID line_number = 0;
 	WXID col = 0;
@@ -292,7 +288,7 @@ void OutputControl::OnDoubleClick(wxMouseEvent& event)
 	wxString line_content = text_->GetLineText(line_number);
 
 	if (const auto message = CompilerMessage::Parse(
-			CompilerMessage::SOURCE_RUSTC, *root_folder, line_content); message)
+			CompilerMessage::SOURCE_RUSTC, root_folder, line_content); message)
 	{
 		main_->OpenCompilerMessage(*message);
 	}
