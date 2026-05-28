@@ -40,7 +40,10 @@ enum
 std::string DetermineTypeface(const std::string& suggestion);
 
 void SetStyle(
-	wxStyledTextCtrl* text, int id, const std::optional<ride::Style>& style, bool force = false
+	wxStyledTextCtrl* text,
+	int id,
+	const std::optional<ride::Style>& style,
+	const ride::FontsAndColors& theme
 );
 
 void SetupScintilla(

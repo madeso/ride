@@ -36,30 +36,16 @@ ride::Color Color(int c)
 }
 
 ride::Style Style(
-	std::optional<ride::Color> front,
-	std::optional<ride::Color> back = std::nullopt,
+	std::optional<wxString> front,
+	std::optional<wxString> back = std::nullopt,
 	bool bold = false
 )
 {
 	ride::Style style;
 
-	if (front)
-	{
-		style.use_foreground = true;
-		style.foreground = *front;
-	}
-
-	if (back)
-	{
-		style.use_background = true;
-		style.background = *back;
-	}
-
-	if (bold)
-	{
-		style.use_bold = true;
-		style.bold = true;
-	}
+	style.foreground = front;
+	style.background = back;
+	style.bold = bold;
 
 	return style;
 }
@@ -70,7 +56,7 @@ T* New(const T& t)
 	return new T(t);
 }
 
-ride::Indicator Indicator(const ride::Color& c)
+ride::Indicator Indicator(const wxString& c)
 {
 	ride::Indicator ind;
 	ind.foreground = c;
@@ -82,6 +68,12 @@ ride::Indicator Indicator(const ride::Color& c)
 class BasicThemeBuilder
 {
 public:
+	ride::FontsAndColors* colors;
+
+	explicit BasicThemeBuilder(ride::FontsAndColors* c)
+		: colors(c)
+	{
+	}
 
 	BasicThemeBuilder& set_selection_foreground(const ride::Color& c)
 	{
@@ -209,154 +201,100 @@ public:
 		return *this;
 	}
 
-	const ride::Color& selection_foreground()
+	void Setup()
 	{
-		return selection_foreground_;
-	}
+		const wxString selection_foreground_name = "selection_foreground";
+		const wxString selection_background_name = "selection_background";
+		const wxString front_name = "front";
+		const wxString bkg_name = "bkg";
+		const wxString fold_hi_name = "fold_hi";
+		const wxString fold_lo_name = "fold_lo";
+		const wxString selected_line_name = "selected_line";
+		const wxString comment_name = "comment";
+		const wxString keyword_name = "keyword";
+		const wxString error_name = "error";
+		const wxString error_front_name = "error_front";
+		const wxString warning_name = "warning";
+		const wxString warning_front_name = "warning_front";
+		const wxString search_hi_name = "search_hi";
+		const wxString select_hi_name = "select_hi";
+		const wxString edge_color_name = "edge_color";
+		const wxString caret_color_name = "caret_color";
+		const wxString switcher_background_name = "switcher_background";
+		const wxString ui_background_name = "ui_background";
+		const wxString title_front_name = "title_front";
+		const wxString title_bkg_name = "title_bkg";
 
-	const ride::Color& selection_background()
-	{
-		return selection_background_;
-	}
+		colors->colors[selection_foreground_name] = selection_foreground_;
+		colors->colors[selection_background_name] = selection_background_;
+		colors->colors[front_name] = front_;
+		colors->colors[bkg_name] = bkg_;
+		colors->colors[fold_hi_name] = fold_hi_;
+		colors->colors[fold_lo_name] = fold_lo_;
+		colors->colors[selected_line_name] = selected_line_;
+		colors->colors[comment_name] = comment_;
+		colors->colors[keyword_name] = keyword_;
+		colors->colors[error_name] = error_;
+		colors->colors[error_front_name] = error_front_;
+		colors->colors[warning_name] = warning_;
+		colors->colors[warning_front_name] = warning_front_;
+		colors->colors[search_hi_name] = search_hi_;
+		colors->colors[select_hi_name] = select_hi_;
+		colors->colors[edge_color_name] = edge_color_;
+		colors->colors[caret_color_name] = caret_color_;
+		colors->colors[switcher_background_name] = switcher_background_;
+		colors->colors[ui_background_name] = ui_background_;
+		colors->colors[title_front_name] = title_front_;
+		colors->colors[title_bkg_name] = title_bkg_;
 
-	const ride::Color& front()
-	{
-		return front_;
-	}
-
-	const ride::Color& bkg()
-	{
-		return bkg_;
-	}
-
-	const ride::Color& fold_hi()
-	{
-		return fold_hi_;
-	}
-
-	const ride::Color& fold_lo()
-	{
-		return fold_lo_;
-	}
-
-	const ride::Color& selected_line()
-	{
-		return selected_line_;
-	}
-
-	const ride::Color& comment()
-	{
-		return comment_;
-	}
-
-	const ride::Color& keyword()
-	{
-		return keyword_;
-	}
-
-	const ride::Color& error()
-	{
-		return error_;
-	}
-
-	const ride::Color& error_front()
-	{
-		return error_front_;
-	}
-
-	const ride::Color& warning()
-	{
-		return warning_;
-	}
-
-	const ride::Color& warning_front()
-	{
-		return warning_front_;
-	}
-
-	const ride::Color& search_hi()
-	{
-		return search_hi_;
-	}
-
-	const ride::Color& select_hi()
-	{
-		return select_hi_;
-	}
-
-	const ride::Color& edge_color()
-	{
-		return edge_color_;
-	}
-
-	const ride::Color& caret_color()
-	{
-		return caret_color_;
-	}
-
-	void Setup(ride::FontsAndColors* colors)
-	{
-		colors->use_selection_background = true;
-		colors->use_selection_foreground = true;
-		colors->selection_foreground = selection_foreground_;
-		colors->selection_background = selection_background_;
-
-		colors->default_style = Style(front_, bkg_);
-		colors->line_number_style = Style(std::nullopt, bkg_);
-		colors->fold_margin_hi = fold_hi_;
-		colors->fold_margin_low = fold_lo_;
-
-		colors->selected_line = selected_line_;
-
-		colors->explorer_foreground = front_;
-		colors->explorer_background = bkg_;
-
-		colors->marker_foreground = front_;
-		colors->marker_background = bkg_;
-
-		colors->indicator_error = Indicator(error_);
-		colors->indicator_warning = Indicator(warning_);
-		colors->indicator_search_highlight = Indicator(search_hi_);
-		colors->indicator_select_highlight = Indicator(select_hi_);
-
-		colors->annotation_error_style = Style(error_front_, error_);
-		colors->annotation_warning_style = Style(warning_front_, warning_);
-
-		colors->edgeColor = edge_color_;
-
-		colors->caret_foreground = caret_color_;
-
-		colors->switcher_background_color = switcher_background_;
-		colors->switcher_dialog_color = front_;
-		colors->switcher_base_color = switcher_background_;
-		colors->switcher_selection_color = selected_line_;
-		colors->switcher_selection_outline_color = selected_line_;
-		colors->switcher_text_color = front_;
-
-		colors->dock_background = ui_background_;
-		colors->dock_sash = ui_background_;
-		colors->dock_active_caption = title_bkg_;
-		colors->dock_active_caption_gradient = title_bkg_;
-		colors->dock_inactive_caption = title_bkg_;
-		colors->dock_inactive_caption_gradient = title_bkg_;
-		colors->dock_active_caption_text = title_front_;
-		colors->dock_inactive_caption_text = title_front_;
-		colors->dock_border = ui_background_;
-		colors->dock_gripper = ui_background_;
-		colors->tab_background = ui_background_;
-		colors->tab_border = ui_background_;
-		colors->tab_sash = front_;
-		colors->tab_active_tab = bkg_;
-		colors->tab_inactive_tab = bkg_;
-		colors->tab_active_border = front_;
-		colors->tab_inactive_border = front_;
-		colors->tab_active_text = front_;
-		colors->tab_inactive_text = front_;
-
-		colors->statusbar_shadow = ui_background_;
-		colors->statusbar_highlight = front_;
-		colors->statusbar_foreground = front_;
-		colors->statusbar_background = ui_background_;
+		colors->selection_foreground = selection_foreground_name;
+		colors->selection_background = selection_background_name;
+		colors->default_style = Style(front_name, bkg_name);
+		colors->line_number_style = Style(std::nullopt, bkg_name);
+		colors->fold_margin_hi = fold_hi_name;
+		colors->fold_margin_low = fold_lo_name;
+		colors->selected_line = selected_line_name;
+		colors->explorer_foreground = front_name;
+		colors->explorer_background = bkg_name;
+		colors->marker_foreground = front_name;
+		colors->marker_background = bkg_name;
+		colors->indicator_error = Indicator(error_name);
+		colors->indicator_warning = Indicator(warning_name);
+		colors->indicator_search_highlight = Indicator(search_hi_name);
+		colors->indicator_select_highlight = Indicator(select_hi_name);
+		colors->annotation_error_style = Style(error_front_name, error_name);
+		colors->annotation_warning_style = Style(warning_front_name, warning_name);
+		colors->edgeColor = edge_color_name;
+		colors->caret_foreground = caret_color_name;
+		colors->switcher_background_color = switcher_background_name;
+		colors->switcher_dialog_color = front_name;
+		colors->switcher_base_color = switcher_background_name;
+		colors->switcher_selection_color = selected_line_name;
+		colors->switcher_selection_outline_color = selected_line_name;
+		colors->switcher_text_color = front_name;
+		colors->dock_background = ui_background_name;
+		colors->dock_sash = ui_background_name;
+		colors->dock_active_caption = title_bkg_name;
+		colors->dock_active_caption_gradient = title_bkg_name;
+		colors->dock_inactive_caption = title_bkg_name;
+		colors->dock_inactive_caption_gradient = title_bkg_name;
+		colors->dock_active_caption_text = title_front_name;
+		colors->dock_inactive_caption_text = title_front_name;
+		colors->dock_border = ui_background_name;
+		colors->dock_gripper = ui_background_name;
+		colors->tab_background = ui_background_name;
+		colors->tab_border = ui_background_name;
+		colors->tab_sash = front_name;
+		colors->tab_active_tab = bkg_name;
+		colors->tab_inactive_tab = bkg_name;
+		colors->tab_active_border = front_name;
+		colors->tab_inactive_border = front_name;
+		colors->tab_active_text = front_name;
+		colors->tab_inactive_text = front_name;
+		colors->statusbar_shadow = ui_background_name;
+		colors->statusbar_highlight = front_name;
+		colors->statusbar_foreground = front_name;
+		colors->statusbar_background = ui_background_name;
 	}
 
 private:
@@ -388,7 +326,7 @@ private:
 
 void SetupDefaultTheme(ride::FontsAndColors* colors)
 {
-	BasicThemeBuilder()
+	BasicThemeBuilder(colors)
 		.set_selection_foreground(Color(255))
 		.set_selection_background(Color(0))
 		.set_front(Color(0))
@@ -410,7 +348,7 @@ void SetupDefaultTheme(ride::FontsAndColors* colors)
 		.set_ui_background(Color(180))
 		.set_title_front(Color(200))
 		.set_title_bkg(Color(100))
-		.Setup(colors);
+		.Setup();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -439,7 +377,7 @@ const ride::Color green = Color(133, 153, 0);
 void SetupSolarizedDarkTheme(ride::FontsAndColors* colors)
 {
 	using namespace solarized;	// NOLINT
-	BasicThemeBuilder()
+	BasicThemeBuilder(colors)
 		.set_selection_foreground(base1)
 		.set_selection_background(base00)
 		.set_front(base0)
@@ -461,7 +399,7 @@ void SetupSolarizedDarkTheme(ride::FontsAndColors* colors)
 		.set_ui_background(base01)
 		.set_title_front(base03)
 		.set_title_bkg(base1)
-		.Setup(colors);
+		.Setup();
 }
 
 //////////////////////////////////////////////////////////////////////////

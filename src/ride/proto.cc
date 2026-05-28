@@ -106,6 +106,24 @@ void ser(SerLog* log, Filer* filer, std::string* value)
 	}
 }
 
+void ser(SerLog* log, Filer* filer, wxString* value)
+{
+	if (filer->is_loading)
+	{
+		jsonh::String* read = filer->json.AsString(filer->doc);
+		if (read == nullptr)
+		{
+			add_expected(log, "string", filer);
+			return;
+		}
+		*value = read->value;
+	}
+	else
+	{
+		filer->json = filer->doc->add(jsonh::String{{}, value->utf8_string()});
+	}
+}
+
 
 
 template<typename T>
@@ -482,7 +500,7 @@ void s_prop_v(StructParser* parser, const std::string& NAME, std::vector<T>* out
 		if (found == obj->object.end())
 		{
 			parser->log->errors.emplace_back(
-				SerError{"missing property " + NAME, obj->location.line, obj->location.column}
+				SerError{"missing array property " + NAME, obj->location.line, obj->location.column}
 			);
 			return;
 		}
@@ -511,6 +529,51 @@ void s_prop_v(StructParser* parser, const std::string& NAME, std::vector<T>* out
 			Filer ff{false, parser->filer->doc, {}};
 			ser(parser->log, &ff, &s);
 			ret.AsArray(parser->filer->doc)->array.emplace_back(ff.json);
+		}
+		parser->get()->object.emplace(NAME, ret);
+	}
+}
+
+template<typename T>
+void s_prop_v(StructParser* parser, const std::string& NAME, std::unordered_map<wxString, T>* out)
+{
+	parser->names.emplace(NAME);
+	if (parser->filer->is_loading)
+	{
+		auto* obj = parser->get();
+		auto found = obj->object.find(NAME);
+		if (found == obj->object.end())
+		{
+			parser->log->errors.emplace_back(
+				SerError{"missing object property " + NAME, obj->location.line, obj->location.column}
+			);
+			return;
+		}
+
+		auto arr_val = found->second;
+		auto* arr = arr_val.AsObject(parser->filer->doc);
+		if (arr == nullptr)
+		{
+			add_expected(parser->log, "object", arr_val, parser->filer->doc);
+			return;
+		}
+
+		for (const auto& [key, item]: arr->object)
+		{
+			Filer ff{true, parser->filer->doc, item};
+			T v;
+			ser(parser->log, &ff, &v);
+			out->emplace(key, v);
+		}
+	}
+	else
+	{
+		jsonh::Value ret = parser->filer->doc->add(jsonh::Object());
+		for (auto& [key, value]: *out)
+		{
+			Filer ff{false, parser->filer->doc, {}};
+			ser(parser->log, &ff, &value);
+			ret.AsObject(parser->filer->doc)->object.emplace(key, ff.json);
 		}
 		parser->get()->object.emplace(NAME, ret);
 	}
@@ -630,20 +693,13 @@ F_STRUCT(FoldFlags)
 F_STRUCT(Style)
 {
 	S_BEGIN(Style);
-	S_PROP(use_typeface, "use_typeface");
-	S_PROP(typeface, "typeface");
-	S_PROP(use_bold, "use_bold");
-	S_PROP(bold, "bold");
-	S_PROP(use_italic, "use_italic");
-	S_PROP(italic, "italic");
-	S_PROP(use_underline, "use_underline");
-	S_PROP(underline, "underline");
-	S_PROP(use_font_size, "use_font_size");
-	S_PROP(font_size, "font_size");
-	S_PROP(use_foreground, "use_foreground");
-	S_PROP(foreground, "foreground");
-	S_PROP(use_background, "use_background");
-	S_PROP(background, "background");
+	S_PROP_O(typeface, "typeface");
+	S_PROP_O(bold, "bold");
+	S_PROP_O(italic, "italic");
+	S_PROP_O(underline, "underline");
+	S_PROP_O(font_size, "font_size");
+	S_PROP_O(foreground, "foreground");
+	S_PROP_O(background, "background");
 	S_END();
 };
 
@@ -652,13 +708,16 @@ F_STRUCT(Style)
 F_STRUCT(FontsAndColors)
 {
 	S_BEGIN(FontsAndColors);
+
+	S_PROP_V(colors, "colors");
+	S_PROP_V(styles, "styles");
+	S_PROP_V(alias, "alias");
+
 	S_PROP(selected_line, "selected_line");
 	S_PROP(fold_margin_hi, "fold_margin_hi");
 	S_PROP(fold_margin_low, "fold_margin_low");
-	S_PROP(use_selection_foreground, "use_selection_foreground");
-	S_PROP(selection_foreground, "selection_foreground");
-	S_PROP(use_selection_background, "use_selection_background");
-	S_PROP(selection_background, "selection_background");
+	S_PROP_O(selection_foreground, "selection_foreground");
+	S_PROP_O(selection_background, "selection_background");
 	S_PROP(edgeColor, "edgeColor");
 	S_PROP(indicator_error, "indicator_error");
 	S_PROP(indicator_warning, "indicator_warning");
@@ -701,7 +760,6 @@ F_STRUCT(FontsAndColors)
 	S_PROP(tab_inactive_border, "tab_inactive_border");
 	S_PROP(tab_active_text, "tab_active_text");
 	S_PROP(tab_inactive_text, "tab_inactive_text");
-	S_PROP(statusbar_style, "statusbar_style");
 	S_PROP(statusbar_shadow, "statusbar_shadow");
 	S_PROP(statusbar_highlight, "statusbar_highlight");
 	S_PROP(statusbar_foreground, "statusbar_foreground");
@@ -738,6 +796,7 @@ F_STRUCT(Settings)
 {
 	S_BEGIN(Settings);
 	S_PROP(lineNumberEnable, "lineNumberEnable");
+	S_PROP(statusbar_style, "statusbar_style");
 	S_PROP(foldEnable, "foldEnable");
 	S_PROP(displayEOL, "displayEOL");
 	S_PROP(indentGuideEnable, "indentGuideEnable");

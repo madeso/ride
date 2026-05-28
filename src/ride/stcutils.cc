@@ -132,30 +132,52 @@ std::string DetermineTypeface(const std::string& suggestion)
 }
 
 void SetStyle(
-	wxStyledTextCtrl* text, int id, const std::optional<ride::Style>& arg_style, bool force
+	wxStyledTextCtrl* text,
+	int id,
+	const std::optional<ride::Style>& style,
+	const ride::FontsAndColors& theme
 )
 {
-	if (arg_style.has_value() == false && force == false)
+	if (style.has_value() == false) return;
+	if (style->typeface.has_value())
 	{
-		return;
-	}
-	ride::Style style;
-	if (arg_style) style = *arg_style;
-
-	{
-		const std::string typeface = DetermineTypeface(style.typeface);
+		const std::string typeface = DetermineTypeface(*style->typeface);
 		if (false == typeface.empty())
 		{
 			text->StyleSetFaceName(id, typeface);
 		}
 	}
 
-	if(style.use_bold) text->StyleSetBold(id, style.bold);
-	if(style.use_italic) text->StyleSetItalic(id, style.italic);
-	if(style.use_underline) text->StyleSetUnderline(id, style.underline);
-	if(style.use_font_size) text->StyleSetSize(id, style.font_size);
-	if(style.use_foreground) text->StyleSetForeground(id, C(style.foreground));
-	if(style.use_background) text->StyleSetBackground(id, C(style.background));
+	if (style->bold.has_value())
+	{
+		text->StyleSetBold(id, *style->bold);
+	}
+	if (style->italic.has_value())
+	{
+		text->StyleSetItalic(id, *style->italic);
+	}
+	if (style->underline.has_value())
+	{
+		text->StyleSetUnderline(id, *style->underline);
+	}
+	if (style->font_size.has_value())
+	{
+		text->StyleSetSize(id, *style->font_size);
+	}
+	if (style->foreground.has_value())
+	{
+		if (const auto foreground = theme.GetColor(*style->foreground, "foreground"); foreground.has_value())
+		{
+			text->StyleSetForeground(id, *foreground);
+		}
+	}
+	if (style->background.has_value())
+	{
+		if (const auto background = theme.GetColor(*style->background, "background"); background.has_value())
+		{
+			text->StyleSetBackground(id, *background);
+		}
+	}
 }
 
 int C(const ride::IndicatorStyle style)
@@ -267,21 +289,27 @@ void SetIndicator(
 	wxStyledTextCtrl* text,
 	int index,
 	const ride::Indicator& indicator,
-	const ride::IndicatorStyle indicator_style
+	const ride::IndicatorStyle indicator_style,
+	const ride::FontsAndColors& theme
 )
 {
 	text->IndicatorSetUnder(index, indicator.under);
 	text->IndicatorSetAlpha(index, indicator.alpha);
 	text->IndicatorSetOutlineAlpha(index, indicator.outline_alpha);
-	text->IndicatorSetForeground(index, C(indicator.foreground));
+
+	if (const auto found = theme.GetColor(indicator.foreground, "foreground"); found.has_value())
+	{
+		text->IndicatorSetForeground(index, *found);
+	}
+
 	text->IndicatorSetStyle(index, C(indicator_style));
 }
 
 void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings& set, const ride::FontsAndColors& theme)
 {
-	if (const ride::FontsAndColors* theme = set.find_current_theme())
+	if (const auto selected_line = LOOKUP_COLOR(theme, selected_line); selected_line.has_value())
 	{
-		text_ctrl->SetCaretLineBackground(C(theme->selected_line));
+		text_ctrl->SetCaretLineBackground(*selected_line);
 	}
 
 	if (set.current_line_overdraw)
@@ -298,7 +326,10 @@ void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings
 	// todo: set SCI_SETCARETLINEVISIBLEALWAYS to true, this will make it easier
 	// to change settings and caret
 
-	text_ctrl->SetCaretForeground(C(theme.caret_foreground));
+	if (const auto caret_foreground = LOOKUP_COLOR(theme, caret_foreground); caret_foreground.has_value())
+	{
+		text_ctrl->SetCaretForeground(*caret_foreground);
+	}
 	text_ctrl->SetCaretPeriod(set.caret_period);
 	text_ctrl->SetCaretWidth(set.caret_width);
 	text_ctrl->SetCaretSticky(C(set.caret_sticky));
@@ -307,16 +338,16 @@ void SetupScintillaCurrentLine(wxStyledTextCtrl* text_ctrl, const ride::Settings
 
 void SetupScintillaDefaultStyles(wxStyledTextCtrl* text_ctrl, const ride::FontsAndColors& set)
 {
-	SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT, set.default_style, true);
-	SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER, set.line_number_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT, set.bracelight_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD, set.bracebad_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR, set.controlchar_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE, set.indentguide_style);
-	SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP, set.calltip_style);
+	SetStyle(text_ctrl, wxSTC_STYLE_DEFAULT, set.default_style, set);
+	SetStyle(text_ctrl, wxSTC_STYLE_LINENUMBER, set.line_number_style, set);
+	SetStyle(text_ctrl, wxSTC_STYLE_BRACELIGHT, set.bracelight_style, set);
+	SetStyle(text_ctrl, wxSTC_STYLE_BRACEBAD, set.bracebad_style, set);
+	SetStyle(text_ctrl, wxSTC_STYLE_CONTROLCHAR, set.controlchar_style, set);
+	SetStyle(text_ctrl, wxSTC_STYLE_INDENTGUIDE, set.indentguide_style, set);
+	SetStyle(text_ctrl, wxSTC_STYLE_CALLTIP, set.calltip_style, set);
 
-	SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR, set.annotation_error_style);
-	SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.annotation_warning_style);
+	SetStyle(text_ctrl, STYLE_ANNOTATION_ERROR, set.annotation_error_style, set);
+	SetStyle(text_ctrl, STYLE_ANNOTATION_WARNING, set.annotation_warning_style, set);
 }
 
 int C(ride::MarkerSymbol sym)
@@ -343,7 +374,12 @@ void SetMarker(
 	const ride::FontsAndColors& colors
 )
 {
-	text_ctrl->MarkerDefine(number, mark_symbol, C(colors.marker_foreground), C(colors.marker_background));
+	text_ctrl->MarkerDefine(
+		number,
+		mark_symbol,
+		LOOKUP_COLOR(colors, marker_foreground).value_or(ride::BLACK),
+		LOOKUP_COLOR(colors, marker_background).value_or(ride::WHITE)
+	);
 }
 
 void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set)
@@ -397,8 +433,8 @@ void SetupScintilla(
 
 	if (const auto* theme = set.find_current_theme())
 	{
-		text_ctrl->SetFoldMarginColour(true, C(theme->fold_margin_low));
-		text_ctrl->SetFoldMarginHiColour(true, C(theme->fold_margin_hi));
+		text_ctrl->SetFoldMarginColour(true, LOOKUP_COLOR(*theme, fold_margin_low).value_or(ride::BLACK));
+		text_ctrl->SetFoldMarginHiColour(true, LOOKUP_COLOR(*theme, fold_margin_hi).value_or(ride::WHITE));
 
 		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUSCONNECTED, *theme);
 		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUSCONNECTED, *theme);
@@ -408,21 +444,21 @@ void SetupScintilla(
 		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS, *theme);
 		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS, *theme);
 
-		text_ctrl->SetEdgeColour(C(theme->edgeColor));
+		text_ctrl->SetEdgeColour(LOOKUP_COLOR(*theme, edgeColor).value_or(ride::BLACK));
 
-		SetIndicator(text_ctrl, ID_INDICATOR_ERROR, theme->indicator_error, set.indicator_error);
-		SetIndicator(text_ctrl, ID_INDICATOR_WARNING, theme->indicator_warning, set.indicator_warning);
-		SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT, theme->indicator_search_highlight, set.indicator_search_highlight);
-		SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT, theme->indicator_select_highlight, set.indicator_select_highlight);
+		SetIndicator(text_ctrl, ID_INDICATOR_ERROR, theme->indicator_error, set.indicator_error, *theme);
+		SetIndicator(text_ctrl, ID_INDICATOR_WARNING, theme->indicator_warning, set.indicator_warning, *theme);
+		SetIndicator(text_ctrl, ID_INDICATOR_SEARCH_HIGHLIGHT, theme->indicator_search_highlight, set.indicator_search_highlight, *theme);
+		SetIndicator(text_ctrl, ID_INDICATOR_SELECT_HIGHLIGHT, theme->indicator_select_highlight, set.indicator_select_highlight, *theme);
 
-		if (theme->use_selection_foreground)
+		if (theme->selection_foreground)
 		{
-			text_ctrl->SetSelForeground(true, C(theme->selection_foreground));
+			text_ctrl->SetSelForeground(true, LOOKUP_COLOR_R(*theme, selection_foreground).value_or(ride::BLACK));
 		}
 
-		if (theme->use_selection_background)
+		if (theme->selection_background)
 		{
-			text_ctrl->SetSelBackground(true, C(theme->selection_background));
+			text_ctrl->SetSelBackground(true, LOOKUP_COLOR_R(*theme, selection_background).value_or(ride::WHITE));
 		}
 
 		SetupScintillaDefaultStyles(text_ctrl, *theme);

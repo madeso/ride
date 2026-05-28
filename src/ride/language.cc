@@ -263,52 +263,6 @@ void DefaultStyleDocument(
 }
 
 
-void SetStyleNew(wxStyledTextCtrl* text, int id, const Style& style, const Language& lang)
-{
-	if (style.typeface.has_value())
-	{
-		const std::string typeface = DetermineTypeface(*style.typeface);
-		if (false == typeface.empty())
-		{
-			text->StyleSetFaceName(id, typeface);
-		}
-	}
-
-	if (style.bold.has_value())
-	{
-		text->StyleSetBold(id, *style.bold);
-	}
-	if (style.italic.has_value())
-	{
-		text->StyleSetItalic(id, *style.italic);
-	}
-	if (style.underline.has_value())
-	{
-		text->StyleSetUnderline(id, *style.underline);
-	}
-	if (style.font_size.has_value())
-	{
-		text->StyleSetSize(id, *style.font_size);
-	}
-	if (style.foreground.has_value())
-	{
-		const auto foreground = lang.colors.find(*style.foreground);
-		if (foreground != lang.colors.end())
-		{
-			text->StyleSetForeground(id, foreground->second);
-		}
-	}
-	if (style.background.has_value())
-	{
-		const auto background = lang.colors.find(*style.background);
-		if (background != lang.colors.end())
-		{
-			text->StyleSetBackground(id, background->second);
-		}
-	}
-}
-
-
 void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const
 {
 	PropsAndKeywords props_and_keywords;
@@ -318,13 +272,20 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 	// DoStyleDocument(text, settings);
 	DefaultStyleDocument(text, settings, &props_and_keywords);
 
-	for (const auto& [sci_id, style_name]: bindings)
+	auto* theme = settings.find_current_theme();
+	if (theme)
 	{
-		const auto found_style = styles.find(style_name);
-		if (found_style == styles.end()) continue;
-		const auto& style = found_style->second;
+		for (const auto& [sci_id, style_name]: bindings)
+		{
+			const auto found_style = theme->GetStyle(style_name);
+			if (! found_style.has_value())
+			{
+				assert(false && "Unknown style in theme");
+				continue;
+			}
 
-		SetStyleNew(text, sci_id, style, *this);
+			SetStyle(text, sci_id, *found_style, *theme);
+		}
 	}
 
 	for (const auto& [name, value]: properties)
@@ -424,6 +385,7 @@ Language MakeCppLanguage()
 	cpp.properties["fold.cpp.preprocessor.at.else"] = "1";
 
 	// setup solarized
+	/*
 	const wxString clr_base03 = "base03";
 	const wxString clr_base02 = "base02";
 	const wxString clr_base01 = "base01";
@@ -463,6 +425,7 @@ Language MakeCppLanguage()
 	cpp.colors[clr_blue  ]  = { 38    ,139   ,210};
 	cpp.colors[clr_cyan  ]  = { 42    ,161   ,152};
 	cpp.colors[clr_green ]  = {133    ,153   ,  0};
+	*/
 
 	// setup alabaster light style
 	const wxString style_string = "string";
@@ -470,7 +433,8 @@ Language MakeCppLanguage()
 	const wxString style_constant = "constant";
 	const wxString style_comment = "comment";
 	const wxString style_global = "global";
-
+	
+	/*
 	cpp.styles[style_default] = {
 		.typeface = std::nullopt,
 		.bold = false,
@@ -492,6 +456,7 @@ Language MakeCppLanguage()
 	cpp.styles[style_global] = Style{
 		.foreground = clr_blue
 	};
+	*/
 	
 	// bind cpp
 	cpp.bindings[wxSTC_C_DEFAULT] = style_default;

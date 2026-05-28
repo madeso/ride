@@ -162,7 +162,7 @@ struct Color
 
 struct Indicator
 {
-	Color foreground;
+	wxString foreground;
 	bool under = true;
 	int alpha = 0;
 	int outline_alpha;
@@ -179,42 +179,42 @@ struct FoldFlags
 
 struct Style
 {
-	bool use_typeface = false;
-	std::string typeface;
+	std::optional<std::string> typeface;
 
-	bool use_bold = false;
-	bool bold = false;
-
-	bool use_italic = false;
-	bool italic = false;
-
-	bool use_underline = false;
-	bool underline = false;
-
-	bool use_font_size = false;
-	int font_size = 10;
-
-	bool use_foreground = false;
-	Color foreground;
-
-	bool use_background = false;
-	Color background;
+	std::optional<bool> bold;
+	std::optional<bool> italic;
+	std::optional<bool> underline;
+	std::optional<int> font_size;
+	
+	std::optional<wxString> foreground;
+	std::optional<wxString> background;
 };
+
+const wxColor BLACK = wxColor(0, 0, 0);
+const wxColor WHITE = wxColor(255, 255, 255);
+
+#define LOOKUP_COLOR(c, name) (c).GetColor((c).name, #name)
+#define LOOKUP_COLOR_R(c, name) (c).GetColor(*(c).name, #name)
 
 /// the idea of moving out all fonts and colors is that likely theese are
 /// what people want share: obsidian/zenburn/monokai and https://studiostyl.es/
 struct FontsAndColors
 {
-	Color selected_line;
-	Color fold_margin_hi;
-	Color fold_margin_low;
+	std::unordered_map<wxString, Color> colors;	// named colors
+	std::unordered_map<wxString, Style> styles;	 // named styles
+	std::unordered_map<wxString, wxString> alias; // color/style alias
 
-	bool use_selection_foreground = false;
-	Color selection_foreground;
-	bool use_selection_background = false;
-	Color selection_background;
+	std::optional<Style> GetStyle(const wxString& name) const;
+	std::optional<wxColor> GetColor(const wxString& name, const char* const display_name) const;
 
-	Color edgeColor;
+	wxString selected_line;
+	wxString fold_margin_hi;
+	wxString fold_margin_low;
+
+	std::optional<wxString> selection_foreground;
+	std::optional<wxString> selection_background;
+
+	wxString edgeColor;
 
 	// indicators
 	Indicator indicator_error;
@@ -232,47 +232,46 @@ struct FontsAndColors
 	std::optional<Style> annotation_warning_style;
 	std::optional<Style> annotation_error_style;
 
-	Color explorer_foreground;
-	Color explorer_background;
+	wxString explorer_foreground;
+	wxString explorer_background;
 
-	Color marker_foreground;
-	Color marker_background;
+	wxString marker_foreground;
+	wxString marker_background;
 
-	Color caret_foreground;
+	wxString caret_foreground;
 
-	Color dock_background;
-	Color dock_sash;
-	Color dock_active_caption;
-	Color dock_active_caption_gradient;
-	Color dock_inactive_caption;
-	Color dock_inactive_caption_gradient;
-	Color dock_active_caption_text;
-	Color dock_inactive_caption_text;
-	Color dock_border;
-	Color dock_gripper;
+	wxString dock_background;
+	wxString dock_sash;
+	wxString dock_active_caption;
+	wxString dock_active_caption_gradient;
+	wxString dock_inactive_caption;
+	wxString dock_inactive_caption_gradient;
+	wxString dock_active_caption_text;
+	wxString dock_inactive_caption_text;
+	wxString dock_border;
+	wxString dock_gripper;
 
-	Color tab_background;
-	Color tab_border;
-	Color tab_sash;
-	Color tab_active_tab;
-	Color tab_inactive_tab;
-	Color tab_active_border;
-	Color tab_inactive_border;
-	Color tab_active_text;
-	Color tab_inactive_text;
+	wxString tab_background;
+	wxString tab_border;
+	wxString tab_sash;
+	wxString tab_active_tab;
+	wxString tab_inactive_tab;
+	wxString tab_active_border;
+	wxString tab_inactive_border;
+	wxString tab_active_text;
+	wxString tab_inactive_text;
 
-	StatusbarStyle statusbar_style = STATUSBAR_STYLE_BAR;
-	Color statusbar_shadow;
-	Color statusbar_highlight;
-	Color statusbar_foreground;
-	Color statusbar_background;
+	wxString statusbar_shadow;
+	wxString statusbar_highlight;
+	wxString statusbar_foreground;
+	wxString statusbar_background;
 
-	Color switcher_background_color;
-	Color switcher_text_color;
-	Color switcher_selection_color;
-	Color switcher_selection_outline_color;
-	Color switcher_dialog_color;
-	Color switcher_base_color;
+	wxString switcher_background_color;
+	wxString switcher_text_color;
+	wxString switcher_selection_color;
+	wxString switcher_selection_outline_color;
+	wxString switcher_dialog_color;
+	wxString switcher_base_color;
 };
 
 struct Theme
@@ -309,6 +308,8 @@ struct Settings
 	std::string current_theme;
 
 	int edgeColumn = 80;
+
+	StatusbarStyle statusbar_style = STATUSBAR_STYLE_BAR;
 
 	int tabWidth = 4;
 	bool useTabs = false;

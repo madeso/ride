@@ -11,18 +11,6 @@ struct Fil;
 
 using KeywordList = std::set<wxString>;
 
-struct Style
-{
-	std::optional<std::string> typeface;
-
-	std::optional<bool> bold;
-	std::optional<bool> italic;
-	std::optional<bool> underline;
-	std::optional<int> font_size;
-	std::optional<wxString> foreground;
-	std::optional<wxString> background;
-};
-
 class Language
 {
 public:
@@ -49,10 +37,6 @@ public:
 	std::vector<wxString> file_patterns_;
 	std::unordered_map<int, KeywordList> keywords;
 	std::unordered_map<wxString, wxString> properties;
-
-	// generic style information, move to a theme
-	std::unordered_map<wxString, wxColour> colors; // name color
-	std::unordered_map<wxString, Style> styles; // name how a style should look
 
 	// language specific mapping
 	std::unordered_map<int, wxString> bindings; // scintilla id to style name

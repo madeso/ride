@@ -697,6 +697,8 @@ MainWindow::MainWindow(const wxString& app_name,
 	}
 }
 
+const wxColor BLACK = wxColor(0, 0, 0);
+
 void MainWindow::UpdateTheme()
 {
 	const ride::FontsAndColors* theme = settings_.find_current_theme();
@@ -704,20 +706,20 @@ void MainWindow::UpdateTheme()
 	const ride::FontsAndColors& c = *theme;
 
 	wxAuiDockArt* dock_art = new wxAuiDefaultDockArt();
-	dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, C(c.dock_background));
-	dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, C(c.dock_sash));
-	dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_COLOUR, C(c.dock_active_caption));
+	dock_art->SetColor(wxAUI_DOCKART_BACKGROUND_COLOUR, LOOKUP_COLOR(c, dock_background).value_or(BLACK));
+	dock_art->SetColor(wxAUI_DOCKART_SASH_COLOUR, LOOKUP_COLOR(c, dock_sash).value_or(BLACK));
+	dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_COLOUR, LOOKUP_COLOR(c, dock_active_caption).value_or(BLACK));
 	dock_art->SetColor(
-		wxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR, C(c.dock_active_caption_gradient)
+		wxAUI_DOCKART_ACTIVE_CAPTION_GRADIENT_COLOUR, LOOKUP_COLOR(c, dock_active_caption_gradient).value_or(BLACK)
 	);
-	dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_COLOUR, C(c.dock_inactive_caption));
+	dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_COLOUR, LOOKUP_COLOR(c, dock_inactive_caption).value_or(BLACK));
 	dock_art->SetColor(
-		wxAUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR, C(c.dock_inactive_caption_gradient)
+		wxAUI_DOCKART_INACTIVE_CAPTION_GRADIENT_COLOUR, LOOKUP_COLOR(c, dock_inactive_caption_gradient).value_or(BLACK)
 	);
-	dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR, C(c.dock_active_caption_text));
-	dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR, C(c.dock_inactive_caption_text));
-	dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, C(c.dock_border));
-	dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, C(c.dock_gripper));
+	dock_art->SetColor(wxAUI_DOCKART_ACTIVE_CAPTION_TEXT_COLOUR, LOOKUP_COLOR(c, dock_active_caption_text).value_or(BLACK));
+	dock_art->SetColor(wxAUI_DOCKART_INACTIVE_CAPTION_TEXT_COLOUR, LOOKUP_COLOR(c, dock_inactive_caption_text).value_or(BLACK));
+	dock_art->SetColor(wxAUI_DOCKART_BORDER_COLOUR, LOOKUP_COLOR(c, dock_border).value_or(BLACK));
+	dock_art->SetColor(wxAUI_DOCKART_GRIPPER_COLOUR, LOOKUP_COLOR(c, dock_gripper).value_or(BLACK));
 	aui_.SetArtProvider(dock_art);
 
 	// we have to create a new tab art each time as wx copies it around
@@ -725,30 +727,30 @@ void MainWindow::UpdateTheme()
 	auto tab_art = new wxAuiGenericTabArt();
 	// tab_art->SetColour(wxColor(255, 0, 0, 0));
 	// tab_art->SetActiveColour(wxColor(255, 0, 0));
-	// tab_art->set_backgroundColor(C(c.tab_background()));
-	// tab_art->set_activeTabBackground(C(c.tab_active_tab()));
-	// tab_art->set_inactiveTabBackground(C(c.tab_inactive_tab()));
-	// tab_art->set_activeBorderColor(C(c.tab_active_border()));
-	// tab_art->set_inactiveBorderColor(C(c.tab_inactive_border()));
-	// tab_art->set_activeTabText(C(c.tab_active_text()));
-	// tab_art->set_inactiveTabText(C(c.tab_inactive_text()));
+	// tab_art->set_backgroundColor(res(c, c.tab_background()));
+	// tab_art->set_activeTabBackground(res(c, c.tab_active_tab()));
+	// tab_art->set_inactiveTabBackground(res(c, c.tab_inactive_tab()));
+	// tab_art->set_activeBorderColor(res(c, c.tab_active_border()));
+	// tab_art->set_inactiveBorderColor(res(c, c.tab_inactive_border()));
+	// tab_art->set_activeTabText(res(c, c.tab_active_text()));
+	// tab_art->set_inactiveTabText(res(c, c.tab_inactive_text()));
 	notebook_->SetArtProvider(tab_art);
 	notebook_->GetAuiManager().GetArtProvider()->SetColour(
-		wxAUI_DOCKART_BORDER_COLOUR, C(c.tab_border)
+		wxAUI_DOCKART_BORDER_COLOUR, LOOKUP_COLOR(c, tab_border).value_or(BLACK)
 	);
 	notebook_->GetAuiManager().GetArtProvider()->SetColour(
-		wxAUI_DOCKART_SASH_COLOUR, C(c.tab_sash)
+		wxAUI_DOCKART_SASH_COLOUR, LOOKUP_COLOR(c, tab_sash).value_or(BLACK)
 	);
 
 	// TODO(Gustav) Add style
-	// statusbar_->set_highlight(C(c.statusbar_highlight()));
-	// statusbar_->set_shadow(C(c.statusbar_shadow()));
-	statusbar_->SetForegroundColour(C(c.statusbar_foreground));
-	statusbar_->SetBackgroundColour(C(c.statusbar_background));
+	// statusbar_->set_highlight(res(c, c.statusbar_highlight()));
+	// statusbar_->set_shadow(res(c, c.statusbar_shadow()));
+	statusbar_->SetForegroundColour(LOOKUP_COLOR(c, statusbar_foreground).value_or(BLACK));
+	statusbar_->SetBackgroundColour(LOOKUP_COLOR(c, statusbar_background).value_or(BLACK));
 	// statusbar_->InitColours();
 
 	wxFrame::SetForegroundColour(wxColor(255, 0, 0));
-	wxFrame::SetBackgroundColour(C(c.dock_background));
+	wxFrame::SetBackgroundColour(LOOKUP_COLOR(c, dock_background).value_or(BLACK));
 
 	aui_.Update();	// we changed the tab art, update all the sizes
 	wxFrame::Refresh();	 // and then force a repaint
@@ -1001,12 +1003,12 @@ void MainWindow::OnTab(bool forward)
 	if (theme)
 	{
 		const ride::FontsAndColors& colors = *theme;
-		style.background_color_ = C(colors.switcher_background_color);
-		style.text_color_ = C(colors.switcher_text_color);
-		style.selection_color_ = C(colors.switcher_selection_color);
-		style.selection_outline_color_ = C(colors.switcher_selection_outline_color);
-		style.dialog_color_ = C(colors.switcher_dialog_color);
-		style.base_color_ = C(colors.switcher_base_color);
+		style.background_color_ = LOOKUP_COLOR(colors, switcher_background_color).value_or(BLACK);
+		style.text_color_ = LOOKUP_COLOR(colors, switcher_text_color).value_or(BLACK);
+		style.selection_color_ = LOOKUP_COLOR(colors, switcher_selection_color).value_or(BLACK);
+		style.selection_outline_color_ = LOOKUP_COLOR(colors, switcher_selection_outline_color).value_or(BLACK);
+		style.dialog_color_ = LOOKUP_COLOR(colors, switcher_dialog_color).value_or(BLACK);
+		style.base_color_ = LOOKUP_COLOR(colors, switcher_base_color).value_or(BLACK);
 	}
 
 	style.row_count_ = settings_.switcher_row_count;
