@@ -344,6 +344,5 @@ const ride::RunSetting& Project::GetCurrentRunSetting()
 
 void Project::SetMainStatusbarText()
 {
-	main_->SetStatusBarText(GetCurrentBuildSetting().name, STATUSBAR_BUILD_CONF);
-	main_->SetStatusBarText(GetCurrentRunSetting().name, STATUSBAR_RUN_CONF);
+	main_->UpdateStatusBar();
 }

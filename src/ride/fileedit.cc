@@ -1315,7 +1315,7 @@ void FileEdit::UpdateTextControl()
 	Project* project = main_->project();
 
 	SetupScintilla(
-		text_, set, current_language_, filename_ && project->IsPartOfProject(*filename_) ? project : nullptr
+		text_, set, current_language_, filename_ && project && project->IsPartOfProject(*filename_) ? project : nullptr
 	);
 	SetupScintillaAutoCompleteImages(text_);
 }

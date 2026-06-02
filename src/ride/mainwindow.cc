@@ -603,7 +603,7 @@ MainWindow::MainWindow(const wxString& app_name,
 #endif
 	CreateNotebook();
 	BindEvents();
-	project_.reset(new Project(this, std::nullopt)); // todo(Gustav): should this be a pointer?
+	project_.reset(); // todo(Gustav): should this be a pointer?
 #ifdef _WIN32
 	SetIcon(wxICON(aaaaa_logo));
 #else
@@ -677,7 +677,10 @@ MainWindow::MainWindow(const wxString& app_name,
 	RestoreSession();
 	UpdateMenuItemView();
 
-	project_->SetMainStatusbarText();
+	if (project_)
+	{
+		project_->SetMainStatusbarText();
+	}
 
 	SetupMenu();
 #ifdef RIDE_OS_APPLE
@@ -698,6 +701,14 @@ MainWindow::MainWindow(const wxString& app_name,
 }
 
 const wxColor BLACK = wxColor(0, 0, 0);
+
+void MainWindow::UpdateStatusBar()
+{
+	const auto build = project_ ? project_->GetCurrentBuildSetting().name : wxString();
+	const auto run = project_ ? project_->GetCurrentRunSetting().name : wxString();
+	SetStatusBarText(build, STATUSBAR_BUILD_CONF);
+	SetStatusBarText(run, STATUSBAR_RUN_CONF);
+}
 
 void MainWindow::UpdateTheme()
 {
@@ -1321,7 +1332,6 @@ OutputDirector& MainWindow::compiler_output()
 
 Project* MainWindow::project()
 {
-	assert(project_.get());
 	return project_.get();
 }
 
@@ -1484,7 +1494,7 @@ MEM_FUN(ShowAutocomplete)
 void MainWindow::UpdateTitle()
 {
 	const wxString new_title
-		= project_->root_folder().has_value() == false
+		= project_ == nullptr || project_->root_folder().has_value() == false
 			? app_name_
 			// todo: only display project folder name instead of the whole path?
 			: wxString::Format("%s - %s", project_->root_folder()->get_name(), app_name_);

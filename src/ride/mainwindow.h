@@ -118,6 +118,8 @@ public:
 
 	void FileWasSaved(const Fil& file);
 
+	void UpdateStatusBar();
+
 private:
 
 	void OnActivated(wxActivateEvent& event);

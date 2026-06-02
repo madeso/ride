@@ -54,6 +54,9 @@ public:
 
 	void Append(const wxString& str);
 
+	const ride::BuildSetting& GetCurrentBuildSetting();
+	const ride::RunSetting& GetCurrentRunSetting();
+
 private:
 
 	void SaveAllFiles();
@@ -62,10 +65,8 @@ private:
 
 	bool SaveUser();
 	int GetSelectedBuildIndex();
-	const ride::BuildSetting& GetCurrentBuildSetting();
 
 	int GetSelectedRunIndex();
-	const ride::RunSetting& GetCurrentRunSetting();
 
 private:
 
