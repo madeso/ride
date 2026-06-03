@@ -280,7 +280,11 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 			const auto found_style = theme->GetStyle(style_name);
 			if (! found_style.has_value())
 			{
-				assert(false && "Unknown style in theme");
+				wxLogWarning(
+					_("Style %s for %s was not found."),
+					style_name,
+					language_name_
+				);
 				continue;
 			}
 
