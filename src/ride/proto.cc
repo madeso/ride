@@ -558,7 +558,8 @@ void s_prop_v(StructParser* parser, const std::string& NAME, std::unordered_map<
 			return;
 		}
 
-		for (const auto& [key, item]: arr->object)
+		const auto arrobj = arr->object;
+		for (const auto& [key, item]: arrobj)
 		{
 			Filer ff{true, parser->filer->doc, item};
 			T v;
