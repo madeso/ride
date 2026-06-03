@@ -31,7 +31,7 @@ public:
 	void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const;
 
 	wxString language_name_;
-	int lexer_style_;
+	wxString lexer_style_;
 
 	// file pattern could be both a extension '.txt' or that the file must be named 'CMakeLists.txt'
 	std::vector<wxString> file_patterns_;
@@ -39,7 +39,7 @@ public:
 	std::unordered_map<wxString, wxString> properties;
 
 	// language specific mapping
-	std::unordered_map<int, wxString> bindings; // scintilla id to style name
+	std::unordered_map<wxString, wxString> bindings; // scintilla id to style name
 };
 
 class Languages

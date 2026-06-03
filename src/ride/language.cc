@@ -18,7 +18,7 @@ wxString b2s01(bool b);
 
 Language::Language()
 	: language_name_(_("NULL"))
-	, lexer_style_(wxSTC_LEX_NULL)
+	, lexer_style_("null")
 {
 }
 
@@ -184,17 +184,88 @@ struct PropsAndKeywords
 
 //////////////////////////////////////////////////////////////////////////
 
+struct LexerLookup
+{
+	int lexer;
+	std::unordered_map<wxString, int> bindings;
+};
+using AllLexerLookups = std::unordered_map<wxString, LexerLookup>;
+
+const AllLexerLookups& GetAllLexerLookups()
+{
+	static const AllLexerLookups all_lexer_lookups = []() -> AllLexerLookups
+	{
+		AllLexerLookups ret;
+
+		ret["null"] = {
+			.lexer = wxSTC_LEX_NULL,
+		    .bindings = {
+				{"default", wxSTC_STYLE_DEFAULT}
+		    }
+		};
+
+		ret["cpp"] = {
+			.lexer = wxSTC_LEX_CPP,
+			.bindings = {
+				{"default", wxSTC_C_DEFAULT},
+				{"comment", wxSTC_C_COMMENT},
+				{"commentline", wxSTC_C_COMMENTLINE},
+				{"commentdoc", wxSTC_C_COMMENTDOC},
+				{"number", wxSTC_C_NUMBER},
+				{"word", wxSTC_C_WORD},
+				{"string", wxSTC_C_STRING},
+				{"character", wxSTC_C_CHARACTER},
+				{"uuid", wxSTC_C_UUID},
+				{"preprocessor", wxSTC_C_PREPROCESSOR},
+				{"operator", wxSTC_C_OPERATOR },
+				{"identifier", wxSTC_C_IDENTIFIER },
+				{"stringeol", wxSTC_C_STRINGEOL },
+				{"verbatim", wxSTC_C_VERBATIM },
+				{"regex", wxSTC_C_REGEX },
+				{"commentlinedoc", wxSTC_C_COMMENTLINEDOC },
+				{"word2", wxSTC_C_WORD2 },
+				{"commentdockeyword", wxSTC_C_COMMENTDOCKEYWORD },
+				{"commentdockeyworderror", wxSTC_C_COMMENTDOCKEYWORDERROR },
+				{"globalclass", wxSTC_C_GLOBALCLASS },
+				{"stringraw", wxSTC_C_STRINGRAW },
+				{"tripleverbatim", wxSTC_C_TRIPLEVERBATIM },
+				{"hashquotedstring", wxSTC_C_HASHQUOTEDSTRING },
+				{"preprocessorcomment", wxSTC_C_PREPROCESSORCOMMENT },
+				{"preprocessorcommentdoc", wxSTC_C_PREPROCESSORCOMMENTDOC },
+				{"userliteral", wxSTC_C_USERLITERAL },
+				{"taskmarker", wxSTC_C_TASKMARKER },
+				{"escapesequence", wxSTC_C_ESCAPESEQUENCE }
+			}
+		};
+		return ret;
+	}();
+	return all_lexer_lookups;
+}
+
+const LexerLookup& GetLexerLookup(const wxString& lexer_style)
+{
+	const auto& lookups = GetAllLexerLookups();
+	const auto it = lookups.find(lexer_style);
+	if (it == lookups.end())
+	{
+		wxLogError(_("Unknown lexer style: %s"), lexer_style);
+		static const LexerLookup empty_lookup = {.lexer = wxSTC_LEX_NULL, .bindings = {}};
+		return empty_lookup;
+	}
+	return it->second;
+}
 
 void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const
 {
 	PropsAndKeywords props_and_keywords;
 
-	text->SetLexer(lexer_style_);
+	const auto& lookup = GetLexerLookup(lexer_style_);
+	text->SetLexer(lookup.lexer);
 
 	auto* theme = settings.find_current_theme();
 	if (theme)
 	{
-		for (const auto& [sci_id, style_name]: bindings)
+		for (const auto& [sci_name, style_name]: bindings)
 		{
 			const auto found_style = theme->GetStyle(style_name);
 			if (! found_style.has_value())
@@ -207,7 +278,20 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 				continue;
 			}
 
-			SetStyle(text, sci_id, *found_style, *theme);
+			const auto sci_id = lookup.bindings.find(sci_name);
+			if (sci_id != lookup.bindings.end())
+			{
+				SetStyle(text, sci_id->second, *found_style, *theme);
+			}
+			else
+			{
+				wxLogWarning(
+					_("Style %s for %s was set, but does not exist in lexer %s."),
+					style_name,
+					language_name_,
+					lexer_style_
+				);
+			}
 		}
 	}
 
@@ -339,32 +423,31 @@ Language MakeCppLanguage()
 	const wxString style_global = "global";
 	
 	// bind cpp
-	cpp.lexer_style_ = wxSTC_LEX_CPP;
-	cpp.bindings[wxSTC_C_DEFAULT] = style_default;
-	cpp.bindings[wxSTC_C_STRINGEOL] = style_string;
-	cpp.bindings[wxSTC_C_VERBATIM] = style_string;
-	cpp.bindings[wxSTC_C_REGEX] = style_string;
-	cpp.bindings[wxSTC_C_COMMENTLINEDOC] = style_comment;
-	// cpp.bindings[wxSTC_C_WORD2] = style_keyword_types;
-	cpp.bindings[wxSTC_C_COMMENTDOCKEYWORD] = style_comment;
-	cpp.bindings[wxSTC_C_COMMENTDOCKEYWORDERROR] = style_comment;
-	cpp.bindings[wxSTC_C_GLOBALCLASS] = style_global;
-	cpp.bindings[wxSTC_C_STRINGRAW] = style_string;
-	cpp.bindings[wxSTC_C_TRIPLEVERBATIM] = style_string;
-	cpp.bindings[wxSTC_C_HASHQUOTEDSTRING] = style_string;
-	// cpp.bindings[wxSTC_C_PREPROCESSORCOMMENT] = style_preprocessorcomment ;
-	// cpp.bindings[wxSTC_C_DEFAULT] = default_style;
-	cpp.bindings[wxSTC_C_COMMENT] = style_comment;
-	cpp.bindings[wxSTC_C_COMMENTLINE] = style_comment;
-	cpp.bindings[wxSTC_C_COMMENTDOC] = style_comment;
-	cpp.bindings[wxSTC_C_NUMBER] = style_constant;
-	// cpp.bindings[wxSTC_C_WORD] = style_keyword;
-	cpp.bindings[wxSTC_C_STRING] = style_string;
-	cpp.bindings[wxSTC_C_CHARACTER] = style_string;
-	cpp.bindings[wxSTC_C_UUID] = style_string;
-	cpp.bindings[wxSTC_C_PREPROCESSOR] = style_global;
-	// cpp.bindings[wxSTC_C_OPERATOR] = style_operator;
-	cpp.bindings[wxSTC_C_IDENTIFIER] = style_global;
+	cpp.lexer_style_ = "cpp";
+	cpp.bindings["stringeol"] = style_string;
+	cpp.bindings["verbatim"] = style_string;
+	cpp.bindings["regex"] = style_string;
+	cpp.bindings["commentlinedoc"] = style_comment;
+	// cpp.bindings["word2"] = style_keyword_types;
+	cpp.bindings["commentdockeyword"] = style_comment;
+	cpp.bindings["commentdockeyworderror"] = style_comment;
+	cpp.bindings["globalclass"] = style_global;
+	cpp.bindings["stringraw"] = style_string;
+	cpp.bindings["tripleverbatim"] = style_string;
+	cpp.bindings["hashquotedstring"] = style_string;
+	// cpp.bindings["preprocessorcomment"] = style_preprocessorcomment ;
+	// cpp.bindings["default"] = default_style;
+	cpp.bindings["comment"] = style_comment;
+	cpp.bindings["commentline"] = style_comment;
+	cpp.bindings["commentdoc"] = style_comment;
+	cpp.bindings["number"] = style_constant;
+	// cpp.bindings["word"] = style_keyword;
+	cpp.bindings["string"] = style_string;
+	cpp.bindings["character"] = style_string;
+	cpp.bindings["uuid"] = style_string;
+	cpp.bindings["preprocessor"] = style_global;
+	// cpp.bindings["operator"] = style_operator;
+	cpp.bindings["identifier"] = style_global;
 
 	return cpp;
 }
