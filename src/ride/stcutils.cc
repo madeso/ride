@@ -377,8 +377,8 @@ void SetMarker(
 	text_ctrl->MarkerDefine(
 		number,
 		mark_symbol,
-		LOOKUP_COLOR(colors, marker_foreground).value_or(ride::BLACK),
-		LOOKUP_COLOR(colors, marker_background).value_or(ride::WHITE)
+		LOOKUP_COLOR(colors, marker_foreground).value_or(wxNullColour),
+		LOOKUP_COLOR(colors, marker_background).value_or(wxNullColour)
 	);
 }
 
@@ -433,8 +433,8 @@ void SetupScintilla(
 
 	if (const auto* theme = set.find_current_theme())
 	{
-		text_ctrl->SetFoldMarginColour(true, LOOKUP_COLOR(*theme, fold_margin_low).value_or(ride::BLACK));
-		text_ctrl->SetFoldMarginHiColour(true, LOOKUP_COLOR(*theme, fold_margin_hi).value_or(ride::WHITE));
+		text_ctrl->SetFoldMarginColour(true, LOOKUP_COLOR(*theme, fold_margin_low).value_or(*wxBLACK));
+		text_ctrl->SetFoldMarginHiColour(true, LOOKUP_COLOR(*theme, fold_margin_hi).value_or(*wxWHITE));
 
 		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEREND, wxSTC_MARK_BOXPLUSCONNECTED, *theme);
 		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPENMID, wxSTC_MARK_BOXMINUSCONNECTED, *theme);
@@ -444,7 +444,7 @@ void SetupScintilla(
 		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDER, wxSTC_MARK_BOXPLUS, *theme);
 		SetMarker(text_ctrl, wxSTC_MARKNUM_FOLDEROPEN, wxSTC_MARK_BOXMINUS, *theme);
 
-		text_ctrl->SetEdgeColour(LOOKUP_COLOR(*theme, edgeColor).value_or(ride::BLACK));
+		text_ctrl->SetEdgeColour(LOOKUP_COLOR(*theme, edgeColor).value_or(*wxBLACK));
 
 		SetIndicator(text_ctrl, ID_INDICATOR_ERROR, theme->indicator_error, set.indicator_error, *theme);
 		SetIndicator(text_ctrl, ID_INDICATOR_WARNING, theme->indicator_warning, set.indicator_warning, *theme);
@@ -453,12 +453,20 @@ void SetupScintilla(
 
 		if (theme->selection_foreground)
 		{
-			text_ctrl->SetSelForeground(true, LOOKUP_COLOR_R(*theme, selection_foreground).value_or(ride::BLACK));
+			text_ctrl->SetSelForeground(true, LOOKUP_COLOR_R(*theme, selection_foreground).value_or(*wxBLACK));
+		}
+		else
+		{
+			text_ctrl->SetSelForeground(false, *wxBLACK);
 		}
 
 		if (theme->selection_background)
 		{
-			text_ctrl->SetSelBackground(true, LOOKUP_COLOR_R(*theme, selection_background).value_or(ride::WHITE));
+			text_ctrl->SetSelBackground(true, LOOKUP_COLOR_R(*theme, selection_background).value_or(*wxWHITE));
+		}
+		else
+		{
+			text_ctrl->SetSelBackground(false, *wxWHITE);
 		}
 
 		SetupScintillaDefaultStyles(text_ctrl, *theme);

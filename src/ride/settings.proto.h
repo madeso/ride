@@ -190,9 +190,6 @@ struct Style
 	std::optional<wxString> background;
 };
 
-const wxColor BLACK = wxColor(0, 0, 0);
-const wxColor WHITE = wxColor(255, 255, 255);
-
 #define LOOKUP_COLOR(c, name) (c).GetColor((c).name, #name)
 #define LOOKUP_COLOR_R(c, name) (c).GetColor(*(c).name, #name)
 
@@ -369,33 +366,6 @@ struct Settings
 	IndicatorStyle indicator_warning = INDICATORSTYLE_SQUIGGLE;
 	IndicatorStyle indicator_search_highlight = INDICATORSTYLE_SQUIGGLE;
 	IndicatorStyle indicator_select_highlight = INDICATORSTYLE_SQUIGGLE;
-
-	// settings for c++
-	bool foldComment = true;
-	bool foldCompact = true;
-	bool foldPreproc = true;
-	///  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
-	bool styling_within_preprocessor = false;
-	/// Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
-	bool lexer_cpp_allow_dollars = false;
-	///  Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
-	bool lexer_cpp_track_preprocessor = false;
-	///  Set to 1 to update preprocessor definitions when #define found.
-	bool lexer_cpp_update_preprocessor = false;
-	///  Set to 1 to enable highlighting of triple-quoted std::strings.
-	bool lexer_cpp_triplequoted_strings = false;
-	///  Set to 1 to enable highlighting of hash-quoted std::strings.
-	bool lexer_cpp_hashquoted_strings = false;
-	///  Set this property to 0 to disable syntax based folding.
-	bool fold_cpp_syntax_based = true;
-	///  Set this property to 0 to disable folding multi-line comments when fold.comment=1.
-	bool fold_cpp_comment_multiline = true;
-	///  Set this property to 0 to disable folding explicit fold points when fold.comment=1.
-	bool fold_cpp_comment_explicit = true;
-	///  Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
-	bool fold_cpp_explicit_anywhere = false;
-	///  This option enables C++ folding on a "} else {" line of an if statement.
-	bool fold_at_else = true;
 
 	// settings for ctrl-tab
 

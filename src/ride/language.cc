@@ -185,92 +185,12 @@ struct PropsAndKeywords
 
 //////////////////////////////////////////////////////////////////////////
 
-void CommonDocumentStyle(wxStyledTextCtrl* text, const ride::Settings& settings)
-{
-	// SetStyle(text, wxSTC_C_STRINGEOL, settings.current_theme.style_string_eol);
-	// SetStyle(text, wxSTC_C_VERBATIM, settings.current_theme.style_verbatim);
-	// SetStyle(text, wxSTC_C_REGEX, settings.current_theme.style_regex);
-	// SetStyle(text, wxSTC_C_COMMENTLINEDOC, settings.current_theme.style_commentlinedoc);
-	// SetStyle(text, wxSTC_C_WORD2, settings.current_theme.style_keyword_types);
-	// SetStyle(text, wxSTC_C_COMMENTDOCKEYWORD, settings.current_theme.style_commentdockeyword);
-	// SetStyle(
-	// 	text, wxSTC_C_COMMENTDOCKEYWORDERROR, settings.current_theme.style_commentdockeyworderror
-	// );
-	// SetStyle(text, wxSTC_C_GLOBALCLASS, settings.current_theme.style_globalclass);
-	// SetStyle(text, wxSTC_C_STRINGRAW, settings.current_theme.style_stringraw);
-	// SetStyle(text, wxSTC_C_TRIPLEVERBATIM, settings.current_theme.style_tripleverbatim);
-	// SetStyle(text, wxSTC_C_HASHQUOTEDSTRING, settings.current_theme.style_hashquotedstring);
-	// SetStyle(
-	// 	text, wxSTC_C_PREPROCESSORCOMMENT, settings.current_theme.style_preprocessorcomment
-	// );
-}
-
-void DefaultStyleDocument(
-	wxStyledTextCtrl* text, const ride::Settings& settings, PropsAndKeywords* language
-)
-{
-	// SetStyle(text, wxSTC_C_DEFAULT, settings.current_theme.default_style, true);
-	// SetStyle(text, wxSTC_C_COMMENT, settings.current_theme.style_comment);
-	// SetStyle(text, wxSTC_C_COMMENTLINE, settings.current_theme.style_commentline);
-	// SetStyle(text, wxSTC_C_COMMENTDOC, settings.current_theme.style_commentdoc);
-	// SetStyle(text, wxSTC_C_NUMBER, settings.current_theme.style_number);
-	// SetStyle(text, wxSTC_C_WORD, settings.current_theme.style_keyword);
-	// SetStyle(text, wxSTC_C_STRING, settings.current_theme.style_string);
-	// SetStyle(text, wxSTC_C_CHARACTER, settings.current_theme.style_character);
-	// SetStyle(text, wxSTC_C_UUID, settings.current_theme.style_uuid);
-	// SetStyle(text, wxSTC_C_PREPROCESSOR, settings.current_theme.style_preprocessor);
-	// SetStyle(text, wxSTC_C_OPERATOR, settings.current_theme.style_operator);
-	// SetStyle(text, wxSTC_C_IDENTIFIER, settings.current_theme.style_identifier);
-	CommonDocumentStyle(text, settings);
-
-	language->SetProperty(text, wxT("fold"), b2s01(settings.foldEnable));
-	language->SetProperty(text, wxT("fold.comment"), b2s01(settings.foldComment));
-	language->SetProperty(text, wxT("fold.compact"), b2s01(settings.foldCompact));
-	language->SetProperty(text, wxT("fold.preprocessor"), b2s01(settings.foldPreproc));
-	language->SetProperty(
-		text, wxT("styling.within.preprocessor"), b2s01(settings.styling_within_preprocessor)
-	);
-	language->SetProperty(
-		text, wxT("lexer.cpp.allow.dollars"), b2s01(settings.lexer_cpp_allow_dollars)
-	);
-	language->SetProperty(
-		text, wxT("lexer.cpp.track.preprocessor"), b2s01(settings.lexer_cpp_track_preprocessor)
-	);
-	language->SetProperty(
-		text, wxT("lexer.cpp.update.preprocessor"), b2s01(settings.lexer_cpp_update_preprocessor)
-	);
-	language->SetProperty(
-		text, wxT("lexer.cpp.triplequoted.strings"), b2s01(settings.lexer_cpp_triplequoted_strings)
-	);
-	language->SetProperty(
-		text, wxT("lexer.cpp.hashquoted.strings"), b2s01(settings.lexer_cpp_hashquoted_strings)
-	);
-	language->SetProperty(
-		text, wxT("fold.cpp.syntax.based"), b2s01(settings.fold_cpp_syntax_based)
-	);
-	language->SetProperty(
-		text, wxT("fold.cpp.comment.multiline"), b2s01(settings.fold_cpp_comment_multiline)
-	);
-	language->SetProperty(
-		text, wxT("fold.cpp.comment.explicit"), b2s01(settings.fold_cpp_comment_explicit)
-	);
-	language->SetProperty(
-		text, wxT("fold.cpp.explicit.anywhere"), b2s01(settings.fold_cpp_explicit_anywhere)
-	);
-	language->SetProperty(text, wxT("fold.at.else"), b2s01(settings.fold_at_else));
-	language->SetProperty(text, wxT("fold.cpp.explicit.start"), _T("//{"));
-	language->SetProperty(text, wxT("fold.cpp.explicit.end"), _T("//}"));
-}
-
 
 void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const
 {
 	PropsAndKeywords props_and_keywords;
 
 	text->SetLexer(lexer_style_);
-	
-	// DoStyleDocument(text, settings);
-	DefaultStyleDocument(text, settings, &props_and_keywords);
 
 	auto* theme = settings.find_current_theme();
 	if (theme)
@@ -388,48 +308,25 @@ Language MakeCppLanguage()
 	//  This option enables folding on a preprocessor #else or #endif line of an #if statement.
 	cpp.properties["fold.cpp.preprocessor.at.else"] = "1";
 
-	// setup solarized
-	/*
-	const wxString clr_base03 = "base03";
-	const wxString clr_base02 = "base02";
-	const wxString clr_base01 = "base01";
-	const wxString clr_base00 = "base00";
-	const wxString clr_base0 = "base0";
-	const wxString clr_base1 = "base1";
-	const wxString clr_base2 = "base2";
-	const wxString clr_base3 = "base3";
-	const wxString clr_yellow = "yellow";
-	const wxString clr_orange = "orange";
-	const wxString clr_red = "red";
-	const wxString clr_magenta = "magenta";
-	const wxString clr_violet = "violet";
-	const wxString clr_blue = "blue";
-	const wxString clr_cyan = "cyan";
-	const wxString clr_green = "green";
+	// todo(Gustav): introduce auto settings
+	cpp.properties["fold"] = "props.fold";
 
-	const auto clr_emph = clr_base01;
-	const auto clr_body = clr_base00;
-	const auto clr_comment = clr_base1;
-	const auto clr_high = clr_base2;
-	const auto clr_bkg = clr_base3;
-
-	cpp.colors[clr_base03]  = {  0    , 43   , 54};
-	cpp.colors[clr_base02]  = {  7    , 54   , 66};
-	cpp.colors[clr_base01]  = { 88    ,110   ,117};
-	cpp.colors[clr_base00]  = {101    ,123   ,131};
-	cpp.colors[clr_base0 ]  = {131    ,148   ,150};
-	cpp.colors[clr_base1 ]  = {147    ,161   ,161};
-	cpp.colors[clr_base2 ]  = {238    ,232   ,213};
-	cpp.colors[clr_base3 ]  = {253    ,246   ,227};
-	cpp.colors[clr_yellow]  = {181    ,137   ,  0};
-	cpp.colors[clr_orange]  = {203    , 75   , 22};
-	cpp.colors[clr_red   ]  = {220    , 50   , 47};
-	cpp.colors[clr_magenta] = {211    , 54   ,130};
-	cpp.colors[clr_violet]  = {108    ,113   ,196};
-	cpp.colors[clr_blue  ]  = { 38    ,139   ,210};
-	cpp.colors[clr_cyan  ]  = { 42    ,161   ,152};
-	cpp.colors[clr_green ]  = {133    ,153   ,  0};
-	*/
+	cpp.properties["fold.comment"] = "1";
+	cpp.properties["fold.compact"] = "1";
+	cpp.properties["fold.preprocessor"] = "1";
+	cpp.properties["styling.within.preprocessor"] = "0"; //  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
+	cpp.properties["lexer.cpp.allow.dollars"] = "0"; // Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
+	cpp.properties["lexer.cpp.track.preprocessor"] = "0"; // Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
+	cpp.properties["lexer.cpp.update.preprocessor"] = "0"; // Set to 1 to update preprocessor definitions when #define found.
+	cpp.properties["lexer.cpp.triplequoted.strings"] = "0"; // Set to 1 to enable highlighting of triple-quoted std::strings.
+	cpp.properties["lexer.cpp.hashquoted.strings"] = "0"; // Set to 1 to enable highlighting of hash-quoted std::strings.
+	cpp.properties["fold.cpp.syntax.based"] = "0"; // Set this property to 0 to disable syntax based folding.
+	cpp.properties["fold.cpp.comment.multiline"] = "1";	// Set this property to 0 to disable folding multi-line comments when fold.comment=1.;
+	cpp.properties["fold.cpp.comment.explicit"] = "1"; // Set this property to 0 to disable folding explicit fold points when fold.comment=1.
+	cpp.properties["fold.cpp.explicit.anywhere"] = "0"; // Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
+	cpp.properties["fold.at.else"] = "1"; // This option enables C++ folding on a "} else {" line of an if statement.
+	cpp.properties["fold.cpp.explicit.start"] = _T("//{");
+	cpp.properties["fold.cpp.explicit.end"] = _T("//}");
 
 	// setup alabaster light style
 	const wxString style_string = "string";
@@ -437,30 +334,6 @@ Language MakeCppLanguage()
 	const wxString style_constant = "constant";
 	const wxString style_comment = "comment";
 	const wxString style_global = "global";
-	
-	/*
-	cpp.styles[style_default] = {
-		.typeface = std::nullopt,
-		.bold = false,
-		.italic = false,
-		.underline = false,
-		.font_size = 12,
-		.foreground = clr_body,
-		.background = clr_bkg,
-	};
-	cpp.styles[style_string] = Style{
-		.foreground = clr_green
-	};
-	cpp.styles[style_constant] = Style{
-		.foreground = clr_magenta
-	};
-	cpp.styles[style_comment] = Style{
-		.foreground = clr_emph
-	};
-	cpp.styles[style_global] = Style{
-		.foreground = clr_blue
-	};
-	*/
 	
 	// bind cpp
 	cpp.bindings[wxSTC_C_DEFAULT] = style_default;
@@ -488,32 +361,6 @@ Language MakeCppLanguage()
 	cpp.bindings[wxSTC_C_PREPROCESSOR] = style_global;
 	// cpp.bindings[wxSTC_C_OPERATOR] = style_operator;
 	cpp.bindings[wxSTC_C_IDENTIFIER] = style_global;
-
-	// disco
-	// cpp.bindings[wxSTC_C_STRINGEOL] = style_string_eol;
-	// cpp.bindings[wxSTC_C_VERBATIM] = style_verbatim;
-	// cpp.bindings[wxSTC_C_REGEX] = style_regex;
-	// cpp.bindings[wxSTC_C_COMMENTLINEDOC] = style_commentlinedoc;
-	// cpp.bindings[wxSTC_C_WORD2] = style_keyword_types;
-	// cpp.bindings[wxSTC_C_COMMENTDOCKEYWORD] = style_commentdockeyword;
-	// cpp.bindings[wxSTC_C_COMMENTDOCKEYWORDERROR] = style_commentdockeyworderror ;
-	// cpp.bindings[wxSTC_C_GLOBALCLASS] = style_globalclass;
-	// cpp.bindings[wxSTC_C_STRINGRAW] = style_stringraw;
-	// cpp.bindings[wxSTC_C_TRIPLEVERBATIM] = style_tripleverbatim;
-	// cpp.bindings[wxSTC_C_HASHQUOTEDSTRING] = style_hashquotedstring;
-	// cpp.bindings[wxSTC_C_PREPROCESSORCOMMENT] = style_preprocessorcomment ;
-	// cpp.bindings[wxSTC_C_DEFAULT] = default_style, true;
-	// cpp.bindings[wxSTC_C_COMMENT] = style_comment;
-	// cpp.bindings[wxSTC_C_COMMENTLINE] = style_commentline;
-	// cpp.bindings[wxSTC_C_COMMENTDOC] = style_commentdoc;
-	// cpp.bindings[wxSTC_C_NUMBER] = style_number;
-	// cpp.bindings[wxSTC_C_WORD] = style_keyword;
-	// cpp.bindings[wxSTC_C_STRING] = style_string;
-	// cpp.bindings[wxSTC_C_CHARACTER] = style_character;
-	// cpp.bindings[wxSTC_C_UUID] = style_uuid;
-	// cpp.bindings[wxSTC_C_PREPROCESSOR] = style_preprocessor;
-	// cpp.bindings[wxSTC_C_OPERATOR] = style_operator;
-	// cpp.bindings[wxSTC_C_IDENTIFIER] = style_identifier;
 
 	return cpp;
 }
@@ -625,7 +472,6 @@ public:
 		SetStyle(text, wxSTC_RUST_MACRO, settings.current_theme.style_preprocessor);
 		SetStyle(text, wxSTC_RUST_LEXERROR, settings.current_theme.rust_lex_error);
 
-		CommonDocumentStyle(text, settings);
 		SetStyle(text, wxSTC_C_UUID, settings.current_theme.style_uuid);
 
 		SetProperty(text, wxT("fold"), b2s01(settings.foldEnable));
