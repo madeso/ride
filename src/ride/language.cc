@@ -40,10 +40,9 @@ wxString PropTypeToString(int type)
 
 bool Language::IsKeyword(int group, const wxString& word) const
 {
-	const auto it = keywords.find(group);
-	if (it == keywords.end()) return false;
-	const auto& keyword_list = it->second;
-	return keyword_list.find(word) != keyword_list.end();
+	if (group >= keywords.size()) return false;
+	const auto& keyword_list = keywords[group];
+	return keyword_list.contains(word);
 }
 
 wxString keywords_to_string(const std::vector<wxString>& keywords_)
@@ -216,9 +215,9 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 	{
 		props_and_keywords.SetProperty(text, name, settings.LookupSetting(value));
 	}
-	for (const auto& [kwclass, kws]: keywords)
+	for (unsigned int kwclass = 0; kwclass < keywords.size(); kwclass+=1)
 	{
-		props_and_keywords.SetKeys(text, kwclass, keywords_to_string(kws));
+		props_and_keywords.SetKeys(text, kwclass, keywords_to_string(keywords[kwclass]));
 	}
 
 #ifdef _DEBUG
@@ -249,55 +248,59 @@ Language MakeCppLanguage()
 {
 	Language cpp;
 	cpp.language_name_ = "C++";
-	cpp.lexer_style_ = wxSTC_LEX_CPP;
 	cpp.file_patterns_ = {".c", ".cc", ".cpp", ".cs", ".h", ".hh", ".hpp", ".hxx"};
 
-	// primary
-	cpp.keywords[0] = {"asm",		   "auto",		"bool",
-					   "break",		   "case",		"catch",
-					   "char",		   "class",		"const",
-					   "const_cast",   "continue",	"default",
-					   "delete",	   "do",		"double",
-					   "dynamic_cast", "else",		"enum",
-					   "explicit",	   "export",	"extern",
-					   "false",		   "float",		"for",
-					   "friend",	   "goto",		"if",
-					   "inline",	   "int",		"long",
-					   "mutable",	   "namespace", "new",
-					   "operator",	   "private",	"protected",
-					   "public",	   "register",	"reinterpret_cast",
-					   "return",	   "short",		"signed",
-					   "sizeof",	   "static",	"static_cast",
-					   "struct",	   "switch",	"template",
-					   "this",		   "throw",		"true",
-					   "try",		   "typedef",	"typeid",
-					   "typename",	   "union",		"unsigned",
-					   "using",		   "virtual",	"void",
-					   "volatile",	   "wchar_t",	"while"};
+	cpp.keywords = {
+		// primary
+		{"asm",			 "auto",	  "bool",
+		"break",		 "case",	  "catch",
+		"char",		 "class",	  "const",
+		"const_cast",	 "continue",  "default",
+		"delete",		 "do",		  "double",
+		"dynamic_cast", "else",	  "enum",
+		"explicit",	 "export",	  "extern",
+		"false",		 "float",	  "for",
+		"friend",		 "goto",	  "if",
+		"inline",		 "int",		  "long",
+		"mutable",		 "namespace", "new",
+		"operator",	 "private",	  "protected",
+		"public",		 "register",  "reinterpret_cast",
+		"return",		 "short",	  "signed",
+		"sizeof",		 "static",	  "static_cast",
+		"struct",		 "switch",	  "template",
+		"this",		 "throw",	  "true",
+		"try",			 "typedef",	  "typeid",
+		"typename",	 "union",	  "unsigned",
+		"using",		 "virtual",	  "void",
+		"volatile",	 "wchar_t",	  "while"},
+		
+		// secondary
+		{"file"},
+		
+		// documentation
+		{"a", "addindex", "addtogroup", "anchor", "arg", "attention", "author",
+		"b", "brief", "bug", "c", "class", "code", "date", "def", "defgroup",
+		"deprecated", "dontinclude", "e", "em", "endcode", "endhtmlonly",
+		"endif", "endlatexonly", "endlink", "endverbatim", "enum", "example",
+		"exception", "f$", "f[", "f]", "file", "fn", "hideinitializer",
+		"htmlinclude", "htmlonly", "if", "image", "include", "ingroup",
+		"internal", "invariant", "interface", "latexonly", "li", "line", "link",
+		"mainpage", "name", "namespace", "nosubgrouping", "note", "overload",
+		"p", "page", "par", "param", "post", "pre", "ref", "relates", "remarks",
+		"return", "retval", "sa", "section", "see", "showinitializer", "since",
+		"skip", "skipline", "struct", "subsection", "test", "throw", "todo",
+		"typedef", "union", "until", "var", "verbatim", "verbinclude", "version",
+		"warning", "weakgroup", "$", "@", "\"\"", "&", "<", ">", "#", "{", "}"},
+		
+		// global classes and typedefs
+		{},
 
-	// secondary
-	cpp.keywords[1] = {"file"};
+		// preprocessor defines
+		{},
 
-	// documentation
-	cpp.keywords[2] = {
-		"a", "addindex", "addtogroup", "anchor", "arg", "attention", "author", "b", "brief", "bug", "c", "class", "code",
-		"date", "def", "defgroup", "deprecated", "dontinclude", "e", "em", "endcode", "endhtmlonly", "endif", "endlatexonly",
-		"endlink", "endverbatim", "enum", "example", "exception", "f$", "f[", "f]", "file", "fn", "hideinitializer",
-		"htmlinclude", "htmlonly", "if", "image", "include", "ingroup", "internal", "invariant", "interface", "latexonly",
-		"li", "line", "link", "mainpage", "name", "namespace", "nosubgrouping", "note", "overload", "p", "page", "par",
-		"param", "post", "pre", "ref", "relates", "remarks", "return", "retval", "sa", "section", "see", "showinitializer",
-		"since", "skip", "skipline", "struct", "subsection", "test", "throw", "todo", "typedef", "union", "until", "var", "verbatim",
-		"verbinclude", "version", "warning", "weakgroup", "$", "@", "\"\"", "&", "<", ">", "#", "{", "}"
+		// Task marker and error marker keywords
+		{"todo", "error"}
 	};
-
-	// global classes and typedefs
-	cpp.keywords[3] = {};
-
-	// preprocessor defines
-	cpp.keywords[4] = {};
-
-	// Task marker and error marker keywords
-	cpp.keywords[5] = {"todo", "error"};
 
 	//  Set to 1 to allow verbatim strings to contain escape sequences.
 	cpp.properties["lexer.cpp.verbatim.strings.allow.escapes"] = "1";
@@ -336,6 +339,7 @@ Language MakeCppLanguage()
 	const wxString style_global = "global";
 	
 	// bind cpp
+	cpp.lexer_style_ = wxSTC_LEX_CPP;
 	cpp.bindings[wxSTC_C_DEFAULT] = style_default;
 	cpp.bindings[wxSTC_C_STRINGEOL] = style_string;
 	cpp.bindings[wxSTC_C_VERBATIM] = style_string;

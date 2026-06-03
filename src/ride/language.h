@@ -35,7 +35,7 @@ public:
 
 	// file pattern could be both a extension '.txt' or that the file must be named 'CMakeLists.txt'
 	std::vector<wxString> file_patterns_;
-	std::unordered_map<int, KeywordList> keywords;
+	std::vector<KeywordList> keywords;
 	std::unordered_map<wxString, wxString> properties;
 
 	// language specific mapping

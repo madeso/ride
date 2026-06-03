@@ -382,7 +382,7 @@ void Autocomplete(
 				const auto& kw = current_language->keywords;
 				for (const auto& kwclass: kw)
 				{
-					for (const auto& k: kwclass.second)
+					for (const auto& k: kwclass)
 					{
 						wordlist.Add(WordEntry(k, AI_Keyword));
 					}
