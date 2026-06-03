@@ -302,6 +302,8 @@ struct Settings
 
 	EdgeStyle edgeStyle = EDGESTYLE_LINE;
 
+	wxString LookupSetting(const wxString& name) const;
+
 	std::string current_theme;
 
 	int edgeColumn = 80;

@@ -20,6 +20,18 @@ const ride::FontsAndColors* Settings::find_current_theme() const
 	return nullptr;
 }
 
+wxString Settings::LookupSetting(const wxString& name) const
+{
+	// todo(Gustav): implement recursive aliases
+
+	if (name == "auto.fold")
+	{
+		return foldEnable ? "1" : "0";
+	}
+
+	return name;
+}
+
 wxString string_from_chain(const std::vector<wxString>& chain)
 {
 	wxString result;

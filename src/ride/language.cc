@@ -214,7 +214,7 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 
 	for (const auto& [name, value]: properties)
 	{
-		props_and_keywords.SetProperty(text, name, value);
+		props_and_keywords.SetProperty(text, name, settings.LookupSetting(value));
 	}
 	for (const auto& [kwclass, kws]: keywords)
 	{
@@ -309,7 +309,7 @@ Language MakeCppLanguage()
 	cpp.properties["fold.cpp.preprocessor.at.else"] = "1";
 
 	// todo(Gustav): introduce auto settings
-	cpp.properties["fold"] = "props.fold";
+	cpp.properties["fold"] = "auto.fold";
 
 	cpp.properties["fold.comment"] = "1";
 	cpp.properties["fold.compact"] = "1";
