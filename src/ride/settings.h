@@ -9,19 +9,26 @@
 class wxWindow;
 struct SerLog;
 
-Fil GetSettingsFile();
-Fil GetSessionFile();
+
 Fil GetMachineFile();
-
-
 bool LoadSettings(SerLog* log, wxWindow* main, ::ride::MachineSettings* settings);
 bool SaveSettings(wxWindow* main, ::ride::MachineSettings* settings);
 
+
+Fil GetSettingsFile();
 bool LoadSettings(SerLog* log, wxWindow* main, ::ride::Settings* settings);
 bool SaveSettings(wxWindow* main, ::ride::Settings* settings);
 
+
+Fil GetSessionFile();
 bool LoadSession(SerLog* log, wxWindow* main, ::ride::Session* session);
 bool SaveSession(wxWindow* main, ::ride::Session* session);
+
+
+Fil GetLanguageFile();
+bool LoadLanguage(SerLog* log, wxWindow* main, ::ride::Languages* language);
+bool SaveLanguage(wxWindow* main, ::ride::Languages* language);
+
 
 wxColor C(const ride::Color& c);
 ride::Color C(const wxColor& c);

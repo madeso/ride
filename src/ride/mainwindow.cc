@@ -611,10 +611,10 @@ MainWindow::MainWindow(const wxString& app_name,
 #endif
 	aui_.SetManagedWindow(this);
 
-	SerLog settings_log;
-	SerLog machine_log;
-	LoadSettings(&settings_log, this, &settings_);
-	LoadSettings(&machine_log, this, &machine_);
+	SerLog junk_log;
+	LoadLanguage(&junk_log, this, &languages_);
+	LoadSettings(&junk_log, this, &settings_);
+	LoadSettings(&junk_log, this, &machine_);
 
 	int sbstyle = wxSTB_ELLIPSIZE_END | wxSTB_SHOW_TIPS | wxFULL_REPAINT_ON_RESIZE;
 	statusbar_ = new wxStatusBarGeneric(this, wxID_ANY, sbstyle);
@@ -1403,6 +1403,12 @@ void MainWindow::FileWasSaved(const Fil& f)
 	{
 		SerLog machine_log;
 		LoadSettings(&machine_log, this, &machine_);
+	}
+	else if (GetLanguageFile() == f)
+	{
+		SerLog language_log;
+		LoadLanguage(&language_log, this, &languages_);
+		ProjectSettingsHasChanged();
 	}
 }
 

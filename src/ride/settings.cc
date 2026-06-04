@@ -29,6 +29,13 @@ Fil GetSessionFile()
 	return Fil{f};
 }
 
+Fil GetLanguageFile()
+{
+	auto f = wxFileName(GetConfigFolder(), "languages", "data");
+	f.SetExt("jsonc");
+	return Fil{f};
+}
+
 Fil GetMachineFile()
 {
 	auto f = wxFileName(GetConfigFolder(), "machine", "data");
@@ -39,24 +46,16 @@ Fil GetMachineFile()
 template<typename T>
 bool LoadProto(SerLog* log, T* message, const Fil& file, wxWindow* main, const wxString& name)
 {
-	if (file.exist())
+	if (file.exist() == false)
 	{
-		const wxString jsonerr = LoadProtoJson(log, message, file);
-		if (jsonerr != "")
-		{
-			ShowError(main, "Unable to load " + name + "(" + file.full_path() + ") as json: " + jsonerr, "Error while loading");
-			return false;
-		}
+		return false;
 	}
-	else
+	
+	const wxString jsonerr = LoadProtoJson(log, message, file);
+	if (jsonerr != "")
 	{
-		if(file.exist() == false) return false;
-		const wxString jsonerr = LoadProtoJson(log, message, file);
-		if (jsonerr != "")
-		{
-			ShowError(main, "Unable to load " + name + "(" + file.full_path() + "): " + jsonerr, "Error while loading");
-			return false;
-		}
+		ShowError(main, "Unable to load " + name + "(" + file.full_path() + ") as json: " + jsonerr, "Error while loading");
+		return false;
 	}
 	return true;
 }
@@ -110,6 +109,17 @@ bool SaveSession(wxWindow* main, ::ride::Session* settings)
 {
 	return SaveProto(settings, GetSessionFile(), main, "current session");
 }
+
+bool LoadLanguage(SerLog* log, wxWindow* main, ::ride::Languages* language)
+{
+	return LoadProto(log, language, GetLanguageFile(), main, "languages");
+}
+
+bool SaveLanguage(wxWindow* main, ::ride::Languages* language)
+{
+	return SaveProto(language, GetLanguageFile(), main, "language");
+}
+
 
 wxColor C(const ride::Color& c)
 {

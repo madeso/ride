@@ -868,11 +868,74 @@ F_STRUCT(Settings)
 
 /* ******************************************************************************************* */
 
+F_STRUCT(KeywordList)
+{
+	// todo(Gustav): implement
+	if (filer->is_loading)
+	{
+		jsonh::Array* array = filer->json.AsArray(filer->doc);
+		if (array == nullptr)
+		{
+			add_expected(log, "array", filer);
+			return;
+		}
+
+		ride::KeywordList newk;
+
+		for (size_t i = 0; i < array->array.size(); ++i)
+		{
+			auto& val = array->array[i];
+			jsonh::String* read = val.AsString(filer->doc);
+			if (read == nullptr)
+			{
+				add_expected(log, "string", val, filer->doc);
+				continue;
+			}
+			const auto [_, was_inserted] = newk.insert(read->value);
+			if (!was_inserted)
+			{
+				const auto loc = read->location;
+				log->errors.emplace_back(
+					SerError{"Warning: Keyword not unique", loc.line, loc.column}
+				);
+			}
+		}
+
+		*value = newk;
+	}
+	else
+	{
+		assert(false && "not implemented");
+	}
+}
+
+F_STRUCT(Language)
+{
+	S_BEGIN(Language);
+	S_PROP(language_name, "name");
+	S_PROP(lexer_style, "lexer");
+	S_PROP_V(file_patterns, "file_patterns");
+	S_PROP_V(keywords, "keywords");
+	S_PROP_V(properties, "properties");
+	S_PROP_V(bindings, "bindings");
+	S_END();
+}
+
+F_STRUCT(Languages)
+{
+	S_BEGIN(Languages);
+	S_PROP(null_language, "default");
+	S_PROP_V(languages, "list");
+	S_END();
+}
+
+/* ******************************************************************************************* */
+
 F_STRUCT(OpenFile)
 {
 	S_BEGIN(OpenFile);
 	S_PROP(path, "path");
- S_PROP(start_line, "start_line");
+	S_PROP(start_line, "start_line");
 	S_PROP(start_index, "start_index");
 	S_PROP(end_line, "end_line");
 	S_PROP(end_index, "end_index");
@@ -983,7 +1046,12 @@ F_STRUCT(MachineSettings)
 // facade
 
 template<typename T>
-wxString GenericLoad(SerLog* log, T* mess, const Fil& file)
+wxString GenericLoad(
+	SerLog* log,
+	T* mess,
+	const Fil& file,
+	jsonh::parse_flags::Type flags = jsonh::parse_flags::IgnoreAllCommas
+)
 {
 	std::ifstream f(file.full_path().ToStdString());
 	if(f.good() == false)
@@ -993,7 +1061,7 @@ wxString GenericLoad(SerLog* log, T* mess, const Fil& file)
 
 	std::ostringstream buffer;
 	buffer << f.rdbuf();
-	auto parsed = jsonh::Parse(buffer.str(), jsonh::parse_flags::IgnoreAllCommas);
+	auto parsed = jsonh::Parse(buffer.str(), flags);
 	if (parsed.HasError())
 	{
 		for (const auto& err: parsed.errors)
@@ -1009,7 +1077,7 @@ wxString GenericLoad(SerLog* log, T* mess, const Fil& file)
 }
 
 template<typename T>
-wxString GenericSave(T* mess, const Fil& file)
+wxString GenericSave(T* mess, const Fil& file, jsonh::print_flags::Type flags = jsonh::print_flags::Json)
 {
 	jsonh::Document doc;
 	// note: intentionally adding invalid object as that will be later overwritten
@@ -1029,7 +1097,7 @@ wxString GenericSave(T* mess, const Fil& file)
 	}
 	
 	std::ofstream f(file.full_path().ToStdString());
-	f << jsonh::Print(root, &doc, jsonh::print_flags::Json, jsonh::Pretty);
+	f << jsonh::Print(root, &doc, flags, jsonh::Pretty);
 	if(!f.good())
 	{
 		return "failed to write file to " + file.full_path();
@@ -1045,6 +1113,7 @@ wxString SaveProtoJson(ride::Session* mess, const Fil& file) { return GenericSav
 wxString SaveProtoJson(ride::Project* mess, const Fil& file) { return GenericSave(mess, file); }
 wxString SaveProtoJson(ride::MachineSettings* mess, const Fil& file) { return GenericSave(mess, file); }
 wxString SaveProtoJson(ride::ProjectSession* mess, const Fil& file) { return GenericSave(mess, file); }
+wxString SaveProtoJson(ride::Languages* mess, const Fil& file) { return GenericSave(mess, file); }
 
 wxString LoadProtoJson(SerLog* log, ride::UserProject* mess, const Fil& file) { return GenericLoad(log, mess, file); }
 wxString LoadProtoJson(SerLog* log, ride::Theme* mess, const Fil& file) { return GenericLoad(log, mess, file); }
@@ -1053,15 +1122,5 @@ wxString LoadProtoJson(SerLog* log, ride::Session* mess, const Fil& file) { retu
 wxString LoadProtoJson(SerLog* log, ride::Project* mess, const Fil& file) { return GenericLoad(log, mess, file); }
 wxString LoadProtoJson(SerLog* log, ride::MachineSettings* mess, const Fil& file) { return GenericLoad(log, mess, file); }
 wxString LoadProtoJson(SerLog* log, ride::ProjectSession* mess, const Fil& file) { return GenericLoad(log, mess, file); }
-
-
-
-
-
-
-
-
-
-
-
+wxString LoadProtoJson(SerLog* log, ride::Languages* mess, const Fil& file) { return GenericLoad(log, mess, file, jsonh::parse_flags::IgnoreAllCommas); }
 

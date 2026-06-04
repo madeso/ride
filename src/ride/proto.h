@@ -16,6 +16,7 @@ struct Project;
 struct UserProject;
 struct ProjectSession;
 struct Theme;
+struct Languages;
 }  //  namespace ride
 
 struct SerError
@@ -51,19 +52,7 @@ wxString SaveProtoJson(ride::ProjectSession* mess, const Fil& file);
 wxString LoadProtoJson(SerLog* log, ride::Theme* mess, const Fil& file);
 wxString SaveProtoJson(ride::Theme* mess, const Fil& file);
 
-
-/*
-bool LoadProtoText(google::protobuf::Message* t, const wxFileName& path);
-bool SaveProtoText(const google::protobuf::Message& t, const wxFileName& path);
-
-bool LoadProtoBinary(google::protobuf::Message* message,
-                     const wxFileName& file_name);
-bool SaveProtoBinary(const google::protobuf::Message& message,
-                     const wxFileName& file_name);
-
-wxString LoadProtoJson(google::protobuf::Message* t, const wxFileName& path);
-wxString SaveProtoJson(const google::protobuf::Message& t,
-                       const wxFileName& path);
-*/
+wxString LoadProtoJson(SerLog* log, ride::Languages* mess, const Fil& file);
+wxString SaveProtoJson(ride::Languages* mess, const Fil& file);
 
 #endif	// RIDE_PROTO_H_

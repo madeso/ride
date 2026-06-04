@@ -1230,6 +1230,23 @@ bool FileEdit::SaveAs()
 	return SaveTo(Fil{saveFileDialog.GetPath()});
 }
 
+void AddSerErrors(FileEdit* file, const SerLog& log, const Fil& target)
+{
+	file->ClearCompilerMessages();
+	for (const auto& err: log.errors)
+	{
+		file->AddCompilerMessage(CompilerMessage(
+			target,
+			err.line,
+			err.column,
+			err.line,
+			err.column + 1,
+			CompilerMessage::TYPE_ERROR,
+			err.msg
+		));
+	}
+}
+
 bool FileEdit::SaveTo(const Fil& target)
 {
 	if (false == text_->SaveFile(target.full_path()))
@@ -1251,19 +1268,21 @@ bool FileEdit::SaveTo(const Fil& target)
 		ride::Settings junk_settings;
 		LoadSettings(&settings_log, this, &junk_settings);
 
-		ClearCompilerMessages();
-		for (const auto& err: settings_log.errors)
-		{
-			AddCompilerMessage(CompilerMessage(
-				target, err.line, err.column, err.line, err.column + 1, CompilerMessage::TYPE_ERROR, err.msg
-			));
-		}
+		AddSerErrors(this, settings_log, target);
 
 		// if the file has bad settings, should the rest till be applied?
 		// if (settings_log.errors.empty() == false)
 		// {
 		// 	was_saved = false;
 		// }
+	}
+
+	if (GetLanguageFile() == target)
+	{
+		SerLog language_log;
+		ride::Languages junk_language;
+		LoadLanguage(&language_log, this, &junk_language);
+		AddSerErrors(this, language_log, target);
 	}
 
 	if (was_saved)
