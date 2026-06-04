@@ -339,7 +339,7 @@ wxString RunRacer(
 void Autocomplete(
 	const ride::MachineSettings& machine,
 	wxStyledTextCtrl* text,
-	Language const* current_language,
+	const ride::Language* current_language,
 	const Fil& filename,
 	const std::optional<Dir>& root_folder,
 	wxWindow* self,

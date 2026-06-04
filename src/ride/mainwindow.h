@@ -245,7 +245,7 @@ private:
 
 	wxStatusBarGeneric* statusbar_;
 
-	Languages languages_;
+	ride::Languages languages_;
 	std::vector<OpenDocument> mru_;
 };
 

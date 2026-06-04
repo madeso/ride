@@ -399,7 +399,7 @@ void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set)
 void SetupScintilla(
 	wxStyledTextCtrl* text_ctrl,
 	const ride::Settings& set,
-	const Language* language,
+	const ride::Language* language,
 	Project* project
 )
 {

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <set>
 
 namespace ride
 {
@@ -387,6 +388,30 @@ struct Settings
 
 	int switcher_min_width = 1;
 	int switcher_min_height = 1;
+};
+
+/* ******************************************************************************************* */
+
+using KeywordList = std::set<wxString>;
+
+struct Language
+{
+	wxString language_name;
+	wxString lexer_style;
+
+	// file pattern could be both a extension '.txt' or that the file must be named 'CMakeLists.txt'
+	std::vector<wxString> file_patterns;
+	std::vector<KeywordList> keywords;
+	std::unordered_map<wxString, wxString> properties;
+
+	// language specific mapping
+	std::unordered_map<wxString, wxString> bindings;  // scintilla id to style name
+};
+
+struct Languages
+{
+	Language null_language;
+	std::vector<Language> languages;
 };
 
 /* ******************************************************************************************* */

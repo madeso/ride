@@ -7,7 +7,6 @@
 
 #include "settings.proto.h"	 // NOLINT this is how we include it
 
-class Language;
 class Project;
 
 namespace ride
@@ -49,7 +48,7 @@ void SetStyle(
 void SetupScintilla(
 	wxStyledTextCtrl* text_ctrl,
 	const ride::Settings& set,
-	const Language* language,
+	const ride::Language* language,
 	Project* project
 );
 void SetupLineMargin(wxStyledTextCtrl* text_ctrl, const ride::Settings& set);

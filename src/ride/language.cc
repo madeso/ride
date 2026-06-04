@@ -14,13 +14,7 @@
 
 wxString b2s01(bool b);
 
-//////////////////////////////////////////////////////////////////////////
-
-Language::Language()
-	: language_name(_("NULL"))
-	, lexer_style("null")
-{
-}
+//////////////////////////////////////////////////////////////////////////	
 
 wxString PropTypeToString(int type)
 {
@@ -33,7 +27,7 @@ wxString PropTypeToString(int type)
 	}
 }
 
-bool IsKeyword(const Language& lang, int group, const wxString& word)
+bool IsKeyword(const ride::Language& lang, int group, const wxString& word)
 {
 	if (group >= lang.keywords.size()) return false;
 	const auto& keyword_list = lang.keywords[group];
@@ -205,7 +199,7 @@ const LexerLookup& GetLexerLookup(const wxString& lexer_style)
 	return it->second;
 }
 
-void StyleDocument(const Language& lang, wxStyledTextCtrl* text, const ride::Settings& settings)
+void StyleDocument(const ride::Language& lang, wxStyledTextCtrl* text, const ride::Settings& settings)
 {
 	PropsAndKeywords props_and_keywords;
 
@@ -260,7 +254,7 @@ void StyleDocument(const Language& lang, wxStyledTextCtrl* text, const ride::Set
 #endif
 }
 
-bool MatchPattern(const Language& lang, const Fil& file)
+bool MatchPattern(const ride::Language& lang, const Fil& file)
 {
 	for (const auto& elem: lang.file_patterns)
 	{
@@ -270,136 +264,6 @@ bool MatchPattern(const Language& lang, const Fil& file)
 		}
 	}
 	return false;
-}
-
-
-Language MakeCppLanguage()
-{
-	Language cpp;
-	cpp.language_name = "C++";
-	cpp.file_patterns = {".c", ".cc", ".cpp", ".cs", ".h", ".hh", ".hpp", ".hxx"};
-
-	cpp.keywords = {
-		// primary
-		{"asm",			 "auto",	  "bool",
-		"break",		 "case",	  "catch",
-		"char",		 "class",	  "const",
-		"const_cast",	 "continue",  "default",
-		"delete",		 "do",		  "double",
-		"dynamic_cast", "else",	  "enum",
-		"explicit",	 "export",	  "extern",
-		"false",		 "float",	  "for",
-		"friend",		 "goto",	  "if",
-		"inline",		 "int",		  "long",
-		"mutable",		 "namespace", "new",
-		"operator",	 "private",	  "protected",
-		"public",		 "register",  "reinterpret_cast",
-		"return",		 "short",	  "signed",
-		"sizeof",		 "static",	  "static_cast",
-		"struct",		 "switch",	  "template",
-		"this",		 "throw",	  "true",
-		"try",			 "typedef",	  "typeid",
-		"typename",	 "union",	  "unsigned",
-		"using",		 "virtual",	  "void",
-		"volatile",	 "wchar_t",	  "while"},
-		
-		// secondary
-		{"file"},
-		
-		// documentation
-		{"a", "addindex", "addtogroup", "anchor", "arg", "attention", "author",
-		"b", "brief", "bug", "c", "class", "code", "date", "def", "defgroup",
-		"deprecated", "dontinclude", "e", "em", "endcode", "endhtmlonly",
-		"endif", "endlatexonly", "endlink", "endverbatim", "enum", "example",
-		"exception", "f$", "f[", "f]", "file", "fn", "hideinitializer",
-		"htmlinclude", "htmlonly", "if", "image", "include", "ingroup",
-		"internal", "invariant", "interface", "latexonly", "li", "line", "link",
-		"mainpage", "name", "namespace", "nosubgrouping", "note", "overload",
-		"p", "page", "par", "param", "post", "pre", "ref", "relates", "remarks",
-		"return", "retval", "sa", "section", "see", "showinitializer", "since",
-		"skip", "skipline", "struct", "subsection", "test", "throw", "todo",
-		"typedef", "union", "until", "var", "verbatim", "verbinclude", "version",
-		"warning", "weakgroup", "$", "@", "\"\"", "&", "<", ">", "#", "{", "}"},
-		
-		// global classes and typedefs
-		{},
-
-		// preprocessor defines
-		{},
-
-		// Task marker and error marker keywords
-		{"todo", "error"}
-	};
-
-	//  Set to 1 to allow verbatim strings to contain escape sequences.
-	cpp.properties["lexer.cpp.verbatim.strings.allow.escapes"] = "1";
-	//  Set to 1 to enable highlighting of back-quoted raw strings .
-	cpp.properties["lexer.cpp.backquoted.strings"] = "1";
-	//  Set to 1 to enable highlighting of escape sequences in strings
-	cpp.properties["lexer.cpp.escape.sequence"] = "1";
-	//  This option enables folding on a preprocessor #else or #endif line of an #if statement.
-	cpp.properties["fold.cpp.preprocessor.at.else"] = "1";
-
-	// todo(Gustav): introduce auto settings
-	cpp.properties["fold"] = "auto.fold";
-
-	cpp.properties["fold.comment"] = "1";
-	cpp.properties["fold.compact"] = "1";
-	cpp.properties["fold.preprocessor"] = "1";
-	cpp.properties["styling.within.preprocessor"] = "0"; //  For C++ code determines whether all preprocessor code is styled in the preprocessor style (0, the default) or only from the initial # to the end of the command word(1).
-	cpp.properties["lexer.cpp.allow.dollars"] = "0"; // Set to 0 to disallow the '$' character in identifiers with the cpp lexer.
-	cpp.properties["lexer.cpp.track.preprocessor"] = "0"; // Set to 1 to interpret #if/#else/#endif to grey out code that is not active.
-	cpp.properties["lexer.cpp.update.preprocessor"] = "0"; // Set to 1 to update preprocessor definitions when #define found.
-	cpp.properties["lexer.cpp.triplequoted.strings"] = "0"; // Set to 1 to enable highlighting of triple-quoted std::strings.
-	cpp.properties["lexer.cpp.hashquoted.strings"] = "0"; // Set to 1 to enable highlighting of hash-quoted std::strings.
-	cpp.properties["fold.cpp.syntax.based"] = "0"; // Set this property to 0 to disable syntax based folding.
-	cpp.properties["fold.cpp.comment.multiline"] = "1";	// Set this property to 0 to disable folding multi-line comments when fold.comment=1.;
-	cpp.properties["fold.cpp.comment.explicit"] = "1"; // Set this property to 0 to disable folding explicit fold points when fold.comment=1.
-	cpp.properties["fold.cpp.explicit.anywhere"] = "0"; // Set this property to 1 to enable explicit fold points anywhere, not just in line comments.
-	cpp.properties["fold.at.else"] = "1"; // This option enables C++ folding on a "} else {" line of an if statement.
-	cpp.properties["fold.cpp.explicit.start"] = _T("//{");
-	cpp.properties["fold.cpp.explicit.end"] = _T("//}");
-
-	// setup alabaster light style
-	const wxString style_string = "string";
-	const wxString style_default = "default";
-	const wxString style_constant = "constant";
-	const wxString style_comment = "comment";
-	const wxString style_global = "global";
-	
-	// bind cpp
-	cpp.lexer_style = "cpp";
-	cpp.bindings["stringeol"] = style_string;
-	cpp.bindings["verbatim"] = style_string;
-	cpp.bindings["regex"] = style_string;
-	cpp.bindings["commentlinedoc"] = style_comment;
-	// cpp.bindings["word2"] = style_keyword_types;
-	cpp.bindings["commentdockeyword"] = style_comment;
-	cpp.bindings["commentdockeyworderror"] = style_comment;
-	cpp.bindings["globalclass"] = style_global;
-	cpp.bindings["stringraw"] = style_string;
-	cpp.bindings["tripleverbatim"] = style_string;
-	cpp.bindings["hashquotedstring"] = style_string;
-	// cpp.bindings["preprocessorcomment"] = style_preprocessorcomment ;
-	// cpp.bindings["default"] = default_style;
-	cpp.bindings["comment"] = style_comment;
-	cpp.bindings["commentline"] = style_comment;
-	cpp.bindings["commentdoc"] = style_comment;
-	cpp.bindings["number"] = style_constant;
-	// cpp.bindings["word"] = style_keyword;
-	cpp.bindings["string"] = style_string;
-	cpp.bindings["character"] = style_string;
-	cpp.bindings["uuid"] = style_string;
-	cpp.bindings["preprocessor"] = style_global;
-	// cpp.bindings["operator"] = style_operator;
-	cpp.bindings["identifier"] = style_global;
-
-	return cpp;
-}
-
-Languages::Languages()
-{
-	languages.emplace_back(MakeCppLanguage());
 }
 
 // todo(Gustav): implement cpp first, then the rest
@@ -912,7 +776,7 @@ public:
 };
 #endif
 
-wxString GetFilePattern(const Languages& self)
+wxString GetFilePattern(const ride::Languages& self)
 {
 	wxString ret = "All files (*.*)|*.*";
 
@@ -920,7 +784,7 @@ wxString GetFilePattern(const Languages& self)
 	// since we are adding 'back to front'
 	for (auto l = self.languages.rbegin(); l != self.languages.rend(); ++l)
 	{
-		const Language& lang = *l;
+		const ride::Language& lang = *l;
 
 		wxString patterns;
 
@@ -949,7 +813,7 @@ wxString GetFilePattern(const Languages& self)
 	return ret;
 }
 
-const Language* DetermineLanguage(const Languages& self, const Fil& filepath)
+const ride::Language* DetermineLanguage(const ride::Languages& self, const Fil& filepath)
 {
 	for (const auto& lang: self.languages)
 	{

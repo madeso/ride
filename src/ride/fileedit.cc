@@ -1070,7 +1070,7 @@ bool FileEdit::ProcessKey(wxKeyCode key, wxKeyModifier mod)
 
 
 FileEdit::FileEdit(
-	wxAuiNotebook* anotebook, MainWindow* parent, const Fil& file, Languages* languages
+	wxAuiNotebook* anotebook, MainWindow* parent, const Fil& file, ride::Languages* languages
 )
 	: wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE)
 	, tab_(this)

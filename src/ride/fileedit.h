@@ -8,17 +8,19 @@
 #include "ride/tab.h"
 #include "ride/path.h"
 
+
 class wxAuiNotebook;
 class MainWindow;
 class CompilerMessage;
-class Language;
+
 class Project;
 class OutputControl;
-class Languages;
 
 namespace ride
 {
 struct Settings;
+struct Language;
+struct Languages;
 }
 
 class FileEdit : public wxControl
@@ -26,7 +28,7 @@ class FileEdit : public wxControl
 public:
 
 	FileEdit(
-		wxAuiNotebook* anotebook, MainWindow* parent, const Fil& file, Languages* languages
+		wxAuiNotebook* anotebook, MainWindow* parent, const Fil& file, ride::Languages* languages
 	);
 	const std::optional<Fil>& filename() const;
 	void SetSelection(int start_line, int start_index, int end_line, int end_index);
@@ -117,9 +119,9 @@ private:
 	wxStyledTextCtrl* text_;
 	wxAuiNotebook* notebook_;
 	std::optional<Fil> filename_; // if unset, this is a new file that isn't saved
-	Languages* languages_;
+	ride::Languages* languages_;
 
-	Language const* current_language_;
+	const ride::Language* current_language_;
 
 	int highlight_current_word_last_start_position_;
 	int highlight_current_word_last_end_position_;
