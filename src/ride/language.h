@@ -16,10 +16,6 @@ class Language
 public:
 	Language();
 
-	bool MatchPattern(const Fil& file) const;
-	bool IsKeyword(int group, const wxString& word) const;
-	void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const;
-
 	wxString language_name;
 	wxString lexer_style;
 
@@ -32,17 +28,19 @@ public:
 	std::unordered_map<wxString, wxString> bindings; // scintilla id to style name
 };
 
+bool MatchPattern(const Language& lang, const Fil& file);
+bool IsKeyword(const Language& lang, int group, const wxString& word);
+void StyleDocument(const Language& lang, wxStyledTextCtrl* text, const ride::Settings& settings);
+
 class Languages
 {
 public:
 
 	Languages();
 
-	Language* GetNullLanguage();
-	const Language* DetermineLanguage(const Fil& filepath);
-	wxString GetFilePattern();
-
 	Language null_language;
 	std::vector<Language> languages;
 };
 
+const Language* DetermineLanguage(const Languages& lang, const Fil& filepath);
+wxString GetFilePattern(const Languages& lang);

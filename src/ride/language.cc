@@ -33,10 +33,10 @@ wxString PropTypeToString(int type)
 	}
 }
 
-bool Language::IsKeyword(int group, const wxString& word) const
+bool IsKeyword(const Language& lang, int group, const wxString& word)
 {
-	if (group >= keywords.size()) return false;
-	const auto& keyword_list = keywords[group];
+	if (group >= lang.keywords.size()) return false;
+	const auto& keyword_list = lang.keywords[group];
 	return keyword_list.contains(word);
 }
 
@@ -205,17 +205,17 @@ const LexerLookup& GetLexerLookup(const wxString& lexer_style)
 	return it->second;
 }
 
-void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const
+void StyleDocument(const Language& lang, wxStyledTextCtrl* text, const ride::Settings& settings)
 {
 	PropsAndKeywords props_and_keywords;
 
-	const auto& lookup = GetLexerLookup(lexer_style);
+	const auto& lookup = GetLexerLookup(lang.lexer_style);
 	text->SetLexer(lookup.lexer);
 
 	auto* theme = settings.find_current_theme();
 	if (theme)
 	{
-		for (const auto& [sci_name, style_name]: bindings)
+		for (const auto& [sci_name, style_name]: lang.bindings)
 		{
 			const auto found_style = theme->GetStyle(style_name);
 			if (! found_style.has_value())
@@ -223,7 +223,7 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 				wxLogWarning(
 					_("Style %s for %s was not found."),
 					style_name,
-					language_name
+					lang.language_name
 				);
 				continue;
 			}
@@ -238,31 +238,31 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 				wxLogWarning(
 					_("Style %s for %s was set, but does not exist in lexer %s."),
 					style_name,
-					language_name,
-					lexer_style
+					lang.language_name,
+					lang.lexer_style
 				);
 			}
 		}
 	}
 
-	for (const auto& [name, value]: properties)
+	for (const auto& [name, value]: lang.properties)
 	{
 		props_and_keywords.SetProperty(text, name, settings.LookupSetting(value));
 	}
-	for (unsigned int kwclass = 0; kwclass < keywords.size(); kwclass+=1)
+	for (unsigned int kwclass = 0; kwclass < lang.keywords.size(); kwclass+=1)
 	{
-		props_and_keywords.SetKeys(text, kwclass, keywords_to_string(keywords[kwclass]));
+		props_and_keywords.SetKeys(text, kwclass, keywords_to_string(lang.keywords[kwclass]));
 	}
 
 #ifdef _DEBUG
-	props_and_keywords.WarnAboutProperties(text, language_name);
-	props_and_keywords.WarnAboutKeywords(text, language_name);
+	props_and_keywords.WarnAboutProperties(text, lang.language_name);
+	props_and_keywords.WarnAboutKeywords(text, lang.language_name);
 #endif
 }
 
-bool Language::MatchPattern(const Fil& file) const
+bool MatchPattern(const Language& lang, const Fil& file)
 {
-	for (const auto& elem: file_patterns)
+	for (const auto& elem: lang.file_patterns)
 	{
 		if (file.ends_with(elem))
 		{
@@ -912,13 +912,13 @@ public:
 };
 #endif
 
-wxString Languages::GetFilePattern()
+wxString GetFilePattern(const Languages& self)
 {
 	wxString ret = "All files (*.*)|*.*";
 
 	// need to loop from back to front to get the LanguageList in order for displaying
 	// since we are adding 'back to front'
-	for (auto l = languages.rbegin(); l != languages.rend(); ++l)
+	for (auto l = self.languages.rbegin(); l != self.languages.rend(); ++l)
 	{
 		const Language& lang = *l;
 
@@ -949,19 +949,14 @@ wxString Languages::GetFilePattern()
 	return ret;
 }
 
-const Language* Languages::DetermineLanguage(const Fil& filepath)
+const Language* DetermineLanguage(const Languages& self, const Fil& filepath)
 {
-	for (const auto& lang: languages)
+	for (const auto& lang: self.languages)
 	{
-		if (lang.MatchPattern(filepath))
+		if (MatchPattern(lang, filepath))
 		{
 			return &lang;
 		}
 	}
-	return &null_language;
-}
-
-Language* Languages::GetNullLanguage()
-{
-	return &null_language;
+	return &self.null_language;
 }

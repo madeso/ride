@@ -1223,7 +1223,7 @@ bool FileEdit::SaveAs()
 		_("Save file"),
 		"",
 		"",
-		languages_->GetFilePattern(),
+		GetFilePattern(*languages_),
 		wxFD_SAVE | wxFD_OVERWRITE_PROMPT
 	);
 	if (saveFileDialog.ShowModal() == wxID_CANCEL) return false;
@@ -1334,7 +1334,7 @@ void FileEdit::UpdateFilename()
 		notebook_->SetPageToolTip(index, filename_->get_name_with_extension());
 	}
 
-	current_language_ = languages_->DetermineLanguage(*filename_);
+	current_language_ = DetermineLanguage(*languages_, *filename_);
 	UpdateTextControl();
 	UpdateTextControl();  // update colors again, doing it twice seems to be
 	// needed to apply the colors
@@ -1575,7 +1575,7 @@ void FileEdit::HighlightCurrentWord()
 			const bool is_keyword
 				= highlight_keyword
 					? false
-					: (current_language_ ? current_language_->IsKeyword(0, current_text) : false);
+					: (current_language_ ? IsKeyword(*current_language_, 0, current_text) : false);
 			// todo(Gustav): change setting to specify the highlight keyword settings
 
 			if (is_keyword == false)

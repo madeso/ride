@@ -408,7 +408,7 @@ void SetupScintilla(
 
 	// setup language color
 	assert(language);
-	language->StyleDocument(text_ctrl, set);
+	StyleDocument(*language, text_ctrl, set);
 
 	//////////////////////////////////////////////////////////////////////////
 

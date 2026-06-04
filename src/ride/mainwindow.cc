@@ -1214,7 +1214,7 @@ void MainWindow::OnFileOpen(wxCommandEvent& event)
 		_("Open file"),
 		"",
 		"",
-		languages_.GetFilePattern(),
+		GetFilePattern(languages_),
 		wxFD_OPEN | wxFD_FILE_MUST_EXIST | wxFD_MULTIPLE
 	);
 	if (open_file.ShowModal() == wxID_CANCEL) return;
