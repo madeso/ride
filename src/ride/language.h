@@ -16,25 +16,15 @@ class Language
 public:
 	Language();
 
-	// internal
-	// todo: move to protected/private
 	bool MatchPattern(const Fil& file) const;
-
-	const wxString& language_name() const;
-
-	// internal
-	// todo: move to protected/private
-	void AddExtension(const wxString& ext);
-
 	bool IsKeyword(int group, const wxString& word) const;
-
 	void StyleDocument(wxStyledTextCtrl* text, const ride::Settings& settings) const;
 
-	wxString language_name_;
-	wxString lexer_style_;
+	wxString language_name;
+	wxString lexer_style;
 
 	// file pattern could be both a extension '.txt' or that the file must be named 'CMakeLists.txt'
-	std::vector<wxString> file_patterns_;
+	std::vector<wxString> file_patterns;
 	std::vector<KeywordList> keywords;
 	std::unordered_map<wxString, wxString> properties;
 

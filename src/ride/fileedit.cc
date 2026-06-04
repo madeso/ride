@@ -45,7 +45,7 @@ void FileEdit::Undo()
 wxString FileEdit::GetLanguageName()
 {
 	if (current_language_)
-		return current_language_->language_name();
+		return current_language_->language_name;
 	else
 		return "<none>";
 }

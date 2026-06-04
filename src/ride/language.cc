@@ -17,14 +17,9 @@ wxString b2s01(bool b);
 //////////////////////////////////////////////////////////////////////////
 
 Language::Language()
-	: language_name_(_("NULL"))
-	, lexer_style_("null")
+	: language_name(_("NULL"))
+	, lexer_style("null")
 {
-}
-
-const wxString& Language::language_name() const
-{
-	return language_name_;
 }
 
 wxString PropTypeToString(int type)
@@ -45,21 +40,6 @@ bool Language::IsKeyword(int group, const wxString& word) const
 	return keyword_list.contains(word);
 }
 
-wxString keywords_to_string(const std::vector<wxString>& keywords_)
-{
-	wxString ret;
-	bool first = true;
-	for (const auto& keyword: keywords_)
-	{
-		if (first)
-			ret = keyword;
-		else
-			ret += " " + keyword;
-		first = false;
-	}
-	return ret;
-}
-
 wxString keywords_to_string(const std::set<wxString>& keywords_)
 {
 	wxString ret;
@@ -74,36 +54,6 @@ wxString keywords_to_string(const std::set<wxString>& keywords_)
 	}
 	return ret;
 }
-
-class KeywordBuilder
-{
-public:
-
-	KeywordBuilder& operator<<(const wxString& keyword)
-	{
-		keywords_.push_back(keyword);
-		return *this;
-	}
-
-	const std::vector<wxString>& ToVector() const
-	{
-		return keywords_;
-	}
-
-	wxString ToString() const
-	{
-		return keywords_to_string(keywords_);
-	}
-
-	operator const wxString() const
-	{
-		return ToString();
-	}
-
-private:
-
-	std::vector<wxString> keywords_;
-};
 
 struct PropsAndKeywords
 {
@@ -259,7 +209,7 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 {
 	PropsAndKeywords props_and_keywords;
 
-	const auto& lookup = GetLexerLookup(lexer_style_);
+	const auto& lookup = GetLexerLookup(lexer_style);
 	text->SetLexer(lookup.lexer);
 
 	auto* theme = settings.find_current_theme();
@@ -273,7 +223,7 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 				wxLogWarning(
 					_("Style %s for %s was not found."),
 					style_name,
-					language_name_
+					language_name
 				);
 				continue;
 			}
@@ -288,8 +238,8 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 				wxLogWarning(
 					_("Style %s for %s was set, but does not exist in lexer %s."),
 					style_name,
-					language_name_,
-					lexer_style_
+					language_name,
+					lexer_style
 				);
 			}
 		}
@@ -305,19 +255,14 @@ void Language::StyleDocument(wxStyledTextCtrl* text, const ride::Settings& setti
 	}
 
 #ifdef _DEBUG
-	props_and_keywords.WarnAboutProperties(text, language_name_);
-	props_and_keywords.WarnAboutKeywords(text, language_name_);
+	props_and_keywords.WarnAboutProperties(text, language_name);
+	props_and_keywords.WarnAboutKeywords(text, language_name);
 #endif
-}
-
-void Language::AddExtension(const wxString& ext)
-{
-	file_patterns_.push_back(ext);
 }
 
 bool Language::MatchPattern(const Fil& file) const
 {
-	for (const auto& elem: file_patterns_)
+	for (const auto& elem: file_patterns)
 	{
 		if (file.ends_with(elem))
 		{
@@ -331,8 +276,8 @@ bool Language::MatchPattern(const Fil& file) const
 Language MakeCppLanguage()
 {
 	Language cpp;
-	cpp.language_name_ = "C++";
-	cpp.file_patterns_ = {".c", ".cc", ".cpp", ".cs", ".h", ".hh", ".hpp", ".hxx"};
+	cpp.language_name = "C++";
+	cpp.file_patterns = {".c", ".cc", ".cpp", ".cs", ".h", ".hh", ".hpp", ".hxx"};
 
 	cpp.keywords = {
 		// primary
@@ -423,7 +368,7 @@ Language MakeCppLanguage()
 	const wxString style_global = "global";
 	
 	// bind cpp
-	cpp.lexer_style_ = "cpp";
+	cpp.lexer_style = "cpp";
 	cpp.bindings["stringeol"] = style_string;
 	cpp.bindings["verbatim"] = style_string;
 	cpp.bindings["regex"] = style_string;
@@ -979,7 +924,7 @@ wxString Languages::GetFilePattern()
 
 		wxString patterns;
 
-		for (const auto& elem: lang.file_patterns_)
+		for (const auto& elem: lang.file_patterns)
 		{
 			// if the pattern starts with a dot, assume it's a extension and we
 			// need a star, if not we need to match the whole file
@@ -996,7 +941,7 @@ wxString Languages::GetFilePattern()
 			}
 		}
 
-		const auto filter_name = lang.language_name_ + " files (" + patterns + ")|" + patterns;
+		const auto filter_name = lang.language_name + " files (" + patterns + ")|" + patterns;
 	
 
 		ret = filter_name + "|" + ret;
