@@ -12,8 +12,7 @@
 struct Filer
 {
 	bool is_loading;
-	jsonh::Document* doc;
-	jsonh::Value json;
+	std::unique_ptr<jsonh::Value> json;
 
 	std::string require_string_prop(const std::string& name)
 	{
@@ -24,31 +23,62 @@ struct Filer
 // ------------------------------------------------------------------------------------------------
 // filing
 
-std::pair<std::string, jsonh::Location> describe(jsonh::Value val, jsonh::Document* doc)
+struct NameVisitor : public jsonh::Visitor
 {
-	switch (val.type)
+	std::string name = "Invalid";
+
+	void VisitObject(jsonh::Object* o) override
 	{
-	case jsonh::ValueType::Object: return {"Object", val.AsObject(doc)->location};
-	case jsonh::ValueType::Array: return {"Array", val.AsArray(doc)->location};
-	case jsonh::ValueType::String: return {"String", val.AsString(doc)->location};
-	case jsonh::ValueType::Number: return {"Number", val.AsNumber(doc)->location};
-	case jsonh::ValueType::Int: return {"Int", val.AsInt(doc)->location};
-	case jsonh::ValueType::Bool: return {"Bool", val.AsBool(doc)->location};
-	case jsonh::ValueType::Null: return {"Null", val.AsNull(doc)->location};
-	default: assert(false);
+		name = "Object";
 	}
-	return {"Invalid", jsonh::Location{0, 0}};
+
+	void VisitArray(jsonh::Array* a) override
+	{
+		name = "Array";
+	}
+
+	void VisitString(jsonh::String* s) override
+	{
+		name = "String";
+	}
+
+	void VisitNumber(jsonh::Number* n) override
+	{
+		name = "Number";
+	}
+
+	void VisitInt(jsonh::Int* i) override
+	{
+		name = "Int";
+	}
+
+	void VisitBool(jsonh::Bool* b) override
+	{
+		name = "Bool";
+	}
+
+	void VisitNull(jsonh::Null* n) override
+	{
+		name = "Null";
+	}
+};
+
+std::pair<std::string, jsonh::Location> describe(jsonh::Value* val)
+{
+	NameVisitor visitor;
+	val->Visit(&visitor);
+	return {visitor.name, val->location};
 }
 
-void add_expected(SerLog* log, const std::string& what, jsonh::Value value, jsonh::Document* doc)
+void add_expected(SerLog* log, const std::string& what, jsonh::Value* value)
 {
-	const auto [type, loc] = describe(value, doc);
+	const auto [type, loc] = describe(value);
 	log->errors.emplace_back(SerError{"Expected " + what + " but found " + type, loc.line, loc.column});
 }
 
 void add_expected(SerLog* log, const std::string& what, Filer* filer)
 {
-	add_expected(log, what, filer->json, filer->doc);
+	add_expected(log, what, filer->json.get());
 }
 
 
@@ -56,17 +86,17 @@ void ser(SerLog* log, Filer* filer, bool* value)
 {
 	if(filer->is_loading)
 	{
-		jsonh::Bool* read = filer->json.AsBool(filer->doc);
+		jsonh::Bool* read = filer->json->AsBool();
 		if (read == nullptr)
 		{
 			add_expected(log, "bool", filer);
 			return;
 		}
-		*value = read->value;
+		*value = read->boolean;
 	}
 	else
 	{
-		filer->json = filer->doc->add(jsonh::Bool{{}, *value});
+		filer->json = std::make_unique<jsonh::Bool>(*value);
 	}
 }
 
@@ -74,17 +104,17 @@ void ser(SerLog* log, Filer* filer, int* value)
 {
 	if (filer->is_loading)
 	{
-		jsonh::Int* read = filer->json.AsInt(filer->doc);
+		jsonh::Int* read = filer->json->AsInt();
 		if (read == nullptr)
 		{
 			add_expected(log, "int", filer);
 			return;
 		}
-		*value = read->value;
+		*value = read->integer;
 	}
 	else
 	{
-		filer->json = filer->doc->add(jsonh::Int{{}, *value});
+		filer->json = std::make_unique<jsonh::Int>(*value);
 	}
 }
 
@@ -92,17 +122,17 @@ void ser(SerLog* log, Filer* filer, std::string* value)
 {
 	if (filer->is_loading)
 	{
-		jsonh::String* read = filer->json.AsString(filer->doc);
+		jsonh::String* read = filer->json->AsString();
 		if (read == nullptr)
 		{
 			add_expected(log, "string", filer);
 			return;
 		}
-		*value = read->value;
+		*value = read->string;
 	}
 	else
 	{
-		filer->json = filer->doc->add(jsonh::String{{}, *value});
+		filer->json = std::make_unique<jsonh::String>(*value);
 	}
 }
 
@@ -110,17 +140,17 @@ void ser(SerLog* log, Filer* filer, wxString* value)
 {
 	if (filer->is_loading)
 	{
-		jsonh::String* read = filer->json.AsString(filer->doc);
+		jsonh::String* read = filer->json->AsString();
 		if (read == nullptr)
 		{
 			add_expected(log, "string", filer);
 			return;
 		}
-		*value = read->value;
+		*value = read->string;
 	}
 	else
 	{
-		filer->json = filer->doc->add(jsonh::String{{}, value->utf8_string()});
+		filer->json = std::make_unique<jsonh::String>(value->utf8_string());
 	}
 }
 
@@ -142,13 +172,13 @@ struct EnumBuilder
 	{
 		if (filer->is_loading)
 		{
-			jsonh::String* string = filer->json.AsString(filer->doc);
+			jsonh::String* string = filer->json->AsString();
 			if (string == nullptr)
 			{
 				add_expected(log, name + "as a string", filer);
 				return;
 			}
-			const auto found = name_to_enum.find(string->value);
+			const auto found = name_to_enum.find(string->string);
 			if (found == name_to_enum.end())
 			{
 				log->errors.emplace_back(
@@ -175,7 +205,7 @@ struct EnumBuilder
 				assert(false && "enum value not found in enum builder");
 			}
 
-			filer->json = filer->doc->add(jsonh::String{{}, val});
+			filer->json = std::make_unique<jsonh::String>(val);
 		}
 	}
 };
@@ -344,7 +374,7 @@ F_ENUM(WindowState)
 {
 	S_ENUM_DECLARE(WindowState);
 	S_ENUM_VAL(WINDOWSTATE_NORMAL, "normal");
- S_ENUM_VAL(WINDOWSTATE_ICONIZED, "iconized");
+	S_ENUM_VAL(WINDOWSTATE_ICONIZED, "iconized");
 	S_ENUM_VAL(WINDOWSTATE_MAXIMIZED, "maximized");
 	S_ENUM_VAL(WINDOWSTATE_FULLSCREEN, "fullscreen");
 	S_ENUM_COMPLETE();
@@ -359,22 +389,6 @@ F_ENUM(FindDlgTarget)
 	S_ENUM_COMPLETE();
 };
 
-jsonh::Location location_of(const jsonh::Value& val, jsonh::Document* doc, const jsonh::Location& def)
-{
-	switch (val.type)
-	{
-	case jsonh::ValueType::Invalid: return def;
-	case jsonh::ValueType::Object: return val.AsObject(doc)->location;
-	case jsonh::ValueType::Array: return val.AsArray(doc)->location;
-	case jsonh::ValueType::String: return val.AsString(doc)->location;
-	case jsonh::ValueType::Number: return val.AsNumber(doc)->location;
-	case jsonh::ValueType::Int: return val.AsInt(doc)->location;
-	case jsonh::ValueType::Bool: return val.AsBool(doc)->location;
-	case jsonh::ValueType::Null: return val.AsNull(doc)->location;
-	default: return def;
-	}
-}
-
 struct StructParser {
 	SerLog* log;
 	Filer* filer;
@@ -383,7 +397,7 @@ struct StructParser {
 	
 	jsonh::Object* get()
 	{
-		jsonh::Object* ret = filer->json.AsObject(filer->doc);
+		jsonh::Object* ret = filer->json->AsObject();
 		assert(ret && "non object was not expected");
 		return ret;
 	}
@@ -408,7 +422,7 @@ struct StructParser {
 			{
 				const auto found = obj->object.find(key);
 				const auto location
-					= found == obj->object.end() ? obj->location : location_of(found->second, filer->doc, obj->location);
+					= found == obj->object.end() ? obj->location : found->second->location;
 				log->errors.emplace_back(
 					SerError{"property '" + key + "' in struct '" + struct_name + "' was never read", location.line, location.column}
 				);
@@ -420,18 +434,18 @@ struct StructParser {
 	{
 		if (! filer->is_loading)
 		{
-			filer->json = filer->doc->add(jsonh::Object{});
+			filer->json = std::make_unique<jsonh::Object>();
 			return true;
 		}
 
-		jsonh::Object* obj = filer->json.AsObject(filer->doc);
+		jsonh::Object* obj = filer->json->AsObject();
 		if (obj == nullptr)
 		{
 			add_expected(log, "object for struct " + struct_name, filer);
 			return false;
 		}
 		
-		filer->json = filer->doc->add(*obj);
+		// filer->json = add(*obj);
 		return true;
 	}
 };
@@ -449,14 +463,15 @@ void s_prop(StructParser* parser, const std::string& NAME, T* out)
 			parser->log->errors.emplace_back(SerError{"missing property " + NAME, obj->location.line, obj->location.column});
 			return;
 		}
-		Filer ff{true, parser->filer->doc, found->second};
+		Filer ff{true, std::move(found->second)};
 		ser(parser->log, &ff, out);
+		std::swap(found->second, ff.json);
 	}
 	else
 	{
-		Filer ff{false, parser->filer->doc, {}};
+		Filer ff{false, {}};
 		ser(parser->log, &ff, out);
-		parser->get()->object.emplace(NAME, ff.json);
+		parser->get()->object.emplace(NAME, std::move(ff.json));
 	}
 }
 
@@ -473,18 +488,19 @@ void s_prop_o(StructParser* parser, const std::string& NAME, std::optional<T>* o
 			*out = std::nullopt;
 			return;
 		}
-		Filer ff{true, parser->filer->doc, found->second};
+		Filer ff{true, std::move(found->second)};
 		
 		T temp;
 		ser(parser->log, &ff, &temp);
 		*out = temp;
+		std::swap(found->second, ff.json);
 	}
 	else if (out->has_value())
 	{
-		Filer ff{false, parser->filer->doc, {}};
+		Filer ff{false, {}};
 		T temp = out->value();
 		ser(parser->log, &ff, &temp);
-		parser->get()->object.emplace(NAME, ff.json);
+		parser->get()->object.emplace(NAME, std::move(ff.json));
 	}
 }
 
@@ -505,32 +521,33 @@ void s_prop_v(StructParser* parser, const std::string& NAME, std::vector<T>* out
 			return;
 		}
 
-		auto arr_val = found->second;
-		auto* arr = arr_val.AsArray(parser->filer->doc);
+		auto& arr_val = found->second;
+		auto* arr = arr_val->AsArray();
 		if (arr == nullptr)
 		{
-			add_expected(parser->log, "array", arr_val, parser->filer->doc);
+			add_expected(parser->log, "array", arr_val.get());
 			return;
 		}
 
-		for (const auto& item: arr->array)
+		for (auto& item: arr->array)
 		{
-			Filer ff{true, parser->filer->doc, item};
+			Filer ff{true, std::move(item)};
 			T v;
 			ser(parser->log, &ff, &v);
 			out->emplace_back(v);
+			std::swap(item, ff.json);
 		}
 	}
 	else
 	{
-		jsonh::Value ret = parser->filer->doc->add(jsonh::Array());
+		std::unique_ptr<jsonh::Value> ret = std::make_unique<jsonh::Array>();
 		for (auto& s: *out)
 		{
-			Filer ff{false, parser->filer->doc, {}};
+			Filer ff{false, {}};
 			ser(parser->log, &ff, &s);
-			ret.AsArray(parser->filer->doc)->array.emplace_back(ff.json);
+			ret->AsArray()->array.emplace_back(std::move(ff.json));
 		}
-		parser->get()->object.emplace(NAME, ret);
+		parser->get()->object.emplace(NAME, std::move(ret));
 	}
 }
 
@@ -550,33 +567,33 @@ void s_prop_v(StructParser* parser, const std::string& NAME, std::unordered_map<
 			return;
 		}
 
-		auto arr_val = found->second;
-		auto* arr = arr_val.AsObject(parser->filer->doc);
+		auto& arr_val = found->second;
+		auto* arr = arr_val->AsObject();
 		if (arr == nullptr)
 		{
-			add_expected(parser->log, "object", arr_val, parser->filer->doc);
+			add_expected(parser->log, "object", arr_val.get());
 			return;
 		}
 
-		const auto arrobj = arr->object;
-		for (const auto& [key, item]: arrobj)
+		for (auto& [key, item]: arr->object)
 		{
-			Filer ff{true, parser->filer->doc, item};
+			Filer ff{true, std::move(item)};
 			T v;
 			ser(parser->log, &ff, &v);
 			out->emplace(key, v);
+			std::swap(item, ff.json);
 		}
 	}
 	else
 	{
-		jsonh::Value ret = parser->filer->doc->add(jsonh::Object());
+		std::unique_ptr<jsonh::Value> ret = std::make_unique<jsonh::Object>();
 		for (auto& [key, value]: *out)
 		{
-			Filer ff{false, parser->filer->doc, {}};
+			Filer ff{false, {}};
 			ser(parser->log, &ff, &value);
-			ret.AsObject(parser->filer->doc)->object.emplace(key, ff.json);
+			ret->AsObject()->object.emplace(key, std::move(ff.json));
 		}
-		parser->get()->object.emplace(NAME, ret);
+		parser->get()->object.emplace(NAME, std::move(ret));
 	}
 }
 
@@ -626,9 +643,9 @@ void ser(SerLog* log, Filer* filer, ride::Color* value)
 {
 	if (filer->is_loading)
 	{
-		if (auto* str = filer->json.AsString(filer->doc); str != nullptr)
+		if (auto* str = filer->json->AsString(); str != nullptr)
 		{
-			const auto color = str->value;
+			const auto color = str->string;
 			if (color.size() != 7 || color[0] != '#')
 			{
 				// Handle invalid color format
@@ -658,8 +675,8 @@ void ser(SerLog* log, Filer* filer, ride::Color* value)
 	}
 	else
 	{
-		filer->json = filer->doc->add(
-			jsonh::String{{}, "#" + to_hex(value->r) + to_hex(value->g) + to_hex(value->b)}
+		filer->json = std::make_unique<jsonh::String>(
+			"#" + to_hex(value->r) + to_hex(value->g) + to_hex(value->b)
 		);
 		return;
 	}
@@ -873,7 +890,7 @@ F_STRUCT(KeywordList)
 	// todo(Gustav): implement
 	if (filer->is_loading)
 	{
-		jsonh::Array* array = filer->json.AsArray(filer->doc);
+		jsonh::Array* array = filer->json->AsArray();
 		if (array == nullptr)
 		{
 			add_expected(log, "array", filer);
@@ -885,13 +902,13 @@ F_STRUCT(KeywordList)
 		for (size_t i = 0; i < array->array.size(); ++i)
 		{
 			auto& val = array->array[i];
-			jsonh::String* read = val.AsString(filer->doc);
+			jsonh::String* read = val->AsString();
 			if (read == nullptr)
 			{
-				add_expected(log, "string", val, filer->doc);
+				add_expected(log, "string", val.get());
 				continue;
 			}
-			const auto [_, was_inserted] = newk.insert(read->value);
+			const auto [_, was_inserted] = newk.insert(read->string);
 			if (!was_inserted)
 			{
 				const auto loc = read->location;
@@ -1071,7 +1088,7 @@ wxString GenericLoad(
 		return "Parsing failed";
 	}
 
-	auto filer = Filer{true, &parsed.doc, *parsed.root};
+	auto filer = Filer{true, std::move(parsed.value)};
 	ser(log, &filer, mess);
 	return "";
 }
@@ -1079,12 +1096,11 @@ wxString GenericLoad(
 template<typename T>
 wxString GenericSave(T* mess, const Fil& file, jsonh::print_flags::Type flags = jsonh::print_flags::Json)
 {
-	jsonh::Document doc;
 	// note: intentionally adding invalid object as that will be later overwritten
-	auto filer = Filer{false, &doc, {}};
+	auto filer = Filer{false, {}};
 	SerLog log;
 	ser(&log, &filer, mess);
-	jsonh::Value root = filer.json;
+	auto& root = filer.json;
 
 	// make sure dir exist
 	const auto dir = file.dir();
@@ -1097,7 +1113,7 @@ wxString GenericSave(T* mess, const Fil& file, jsonh::print_flags::Type flags = 
 	}
 	
 	std::ofstream f(file.full_path().ToStdString());
-	f << jsonh::Print(root, &doc, flags, jsonh::Pretty);
+	f << jsonh::Print(root.get(), flags, jsonh::Pretty);
 	if(!f.good())
 	{
 		return "failed to write file to " + file.full_path();
