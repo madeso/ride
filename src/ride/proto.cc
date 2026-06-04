@@ -1138,5 +1138,11 @@ wxString LoadProtoJson(SerLog* log, ride::Session* mess, const Fil& file) { retu
 wxString LoadProtoJson(SerLog* log, ride::Project* mess, const Fil& file) { return GenericLoad(log, mess, file); }
 wxString LoadProtoJson(SerLog* log, ride::MachineSettings* mess, const Fil& file) { return GenericLoad(log, mess, file); }
 wxString LoadProtoJson(SerLog* log, ride::ProjectSession* mess, const Fil& file) { return GenericLoad(log, mess, file); }
-wxString LoadProtoJson(SerLog* log, ride::Languages* mess, const Fil& file) { return GenericLoad(log, mess, file, jsonh::parse_flags::IgnoreAllCommas); }
+
+wxString LoadProtoJson(SerLog* log, ride::Languages* mess, const Fil& file)
+{
+	return GenericLoad(
+		log, mess, file, static_cast<jsonh::parse_flags::Type>(jsonh::parse_flags::IgnoreAllCommas | jsonh::parse_flags::IgnoreComments)
+	);
+}
 
